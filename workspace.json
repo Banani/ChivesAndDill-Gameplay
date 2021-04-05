@@ -1,0 +1,159 @@
+{
+  "version": 2,
+  "cli": { "defaultCollection": "@nrwl/react" },
+  "defaultProject": "chives-and-dill",
+  "generators": {
+    "@nrwl/react": {
+      "application": { "style": "scss", "linter": "eslint", "babel": true },
+      "component": { "style": "scss" },
+      "library": { "style": "scss", "linter": "eslint" }
+    }
+  },
+  "projects": {
+    "chives-and-dill": {
+      "root": "apps/chives-and-dill",
+      "sourceRoot": "apps/chives-and-dill/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/chives-and-dill",
+            "index": "apps/chives-and-dill/src/index.html",
+            "main": "apps/chives-and-dill/src/main.tsx",
+            "polyfills": "apps/chives-and-dill/src/polyfills.ts",
+            "tsConfig": "apps/chives-and-dill/tsconfig.app.json",
+            "assets": [
+              "apps/chives-and-dill/src/favicon.ico",
+              "apps/chives-and-dill/src/assets"
+            ],
+            "styles": ["apps/chives-and-dill/src/styles.scss"],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/chives-and-dill/src/environments/environment.ts",
+                  "with": "apps/chives-and-dill/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/web:dev-server",
+          "options": {
+            "buildTarget": "chives-and-dill:build",
+            "proxyConfig": "apps/chives-and-dill/proxy.conf.json"
+          },
+          "configurations": {
+            "production": { "buildTarget": "chives-and-dill:build:production" }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/chives-and-dill/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/chives-and-dill"],
+          "options": {
+            "jestConfig": "apps/chives-and-dill/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "chives-and-dill-e2e": {
+      "root": "apps/chives-and-dill-e2e",
+      "sourceRoot": "apps/chives-and-dill-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/chives-and-dill-e2e/cypress.json",
+            "tsConfig": "apps/chives-and-dill-e2e/tsconfig.e2e.json",
+            "devServerTarget": "chives-and-dill:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "chives-and-dill:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/chives-and-dill-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "engine": {
+      "root": "apps/engine",
+      "sourceRoot": "apps\\engine\\src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/engine",
+            "main": "apps/engine/src/main.ts",
+            "tsConfig": "apps/engine/tsconfig.app.json",
+            "assets": ["apps/engine/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/engine/src/environments/environment.ts",
+                  "with": "apps/engine/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": { "buildTarget": "engine:build" }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["apps/engine/**/*.ts"] }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/engine"],
+          "options": {
+            "jestConfig": "apps/engine/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  }
+}

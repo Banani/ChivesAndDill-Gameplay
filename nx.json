@@ -1,0 +1,26 @@
+{
+  "implicitDependencies": {
+    "workspace.json": "*",
+    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "tsconfig.base.json": "*",
+    "tslint.json": "*",
+    ".eslintrc.json": "*",
+    "nx.json": "*"
+  },
+  "affected": { "defaultBase": "master" },
+  "npmScope": "bananos",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
+    }
+  },
+  "projects": {
+    "chives-and-dill": { "tags": [] },
+    "chives-and-dill-e2e": {
+      "tags": [],
+      "implicitDependencies": ["chives-and-dill"]
+    },
+    "engine": { "tags": [] }
+  }
+}
