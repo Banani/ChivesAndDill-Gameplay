@@ -12,6 +12,7 @@ export interface Player {
   name: string;
   location: Location;
   direction: CharacterDirection;
+  image: string
 }
 
 export interface ChangeLocationPlayload {
