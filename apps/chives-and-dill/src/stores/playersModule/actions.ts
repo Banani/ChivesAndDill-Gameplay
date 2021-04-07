@@ -2,11 +2,13 @@ import { FSAAuto } from 'flux-standard-action';
 import {
   ChangeLocationPlayload,
   InitializePlayersPlayload,
+  PlayerConnectedPayload
 } from '../../types/players';
 
 export enum PlayersActionTypes {
   INITIALIZE_CHARACTERS = '[Players] INITIALIZE_CHARACTERS',
   CHANGE_PLAYER_POSITION = '[Players] CHANGE_PLAYER_POSITION',
+  PLAYER_CONNECTED = '[Players] PLAYER_CONNECTED'
 }
 
 export type ChangePlayerPosition = FSAAuto<
@@ -17,6 +19,11 @@ export type ChangePlayerPosition = FSAAuto<
 export type InitializePlayers = FSAAuto<
   PlayersActionTypes.INITIALIZE_CHARACTERS,
   InitializePlayersPlayload
+>;
+
+export type PlayerConnected = FSAAuto<
+  PlayersActionTypes.PLAYER_CONNECTED,
+  PlayerConnectedPayload
 >;
 
 export const changePlayerPosition = (
@@ -33,4 +40,11 @@ export const initializePlayers = (
   payload,
 });
 
-export type PlayerAction = ChangePlayerPosition | InitializePlayers;
+export const playerConnected = (
+  payload: PlayerConnectedPayload
+): PlayerConnected => ({
+  type: PlayersActionTypes.PLAYER_CONNECTED,
+  payload,
+});
+
+export type PlayerAction = ChangePlayerPosition | InitializePlayers | PlayerConnected;

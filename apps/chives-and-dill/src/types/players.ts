@@ -23,3 +23,7 @@ export interface ChangeLocationPlayload {
 export interface InitializePlayersPlayload {
   characters: Record<string, Player>;
 }
+
+export interface PlayerConnectedPayload {
+  characters: Record<string, Player>;
+}

@@ -15,23 +15,6 @@ const map = () => {
     <Sprite key={i} image={image} x={location.x} y={location.y} />
   ));
 
-  useEffect(() => {
-    const URL = 'http://localhost:3000';
-    const socket = io(URL, { autoConnect: true });
-
-    socket.on(EngineEvents.Inicialization, ({ players }) => {
-      dispatch(initializePlayers({ characters: players }));
-    });
-
-    socket.on(EngineEvents.UserConnected, ({ player }) => {
-      console.log('user_connected', player);
-    });
-
-    socket.on(EngineEvents.UserDisconnected, ({ userId }) => {
-      console.log('user_disconnected', userId);
-    });
-  }, []);
-
   return (
     <Stage
       width={window.innerWidth}
