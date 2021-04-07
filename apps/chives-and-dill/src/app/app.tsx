@@ -1,19 +1,11 @@
 import React from 'react';
-import { io } from 'socket.io-client';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux-dynamic-modules-core';
 import type { IModuleStore } from 'redux-dynamic-modules-core';
 import { PlayersModule } from '../stores';
-import { ReduxDemo } from './ReduxDemo';
-
-const URL = 'http://localhost:3000';
-const socket = io(URL, { autoConnect: true });
-
-socket.on('connect', () => {
-  console.log(123);
-  socket.emit('test');
-  socket.emit('test');
-});
+import SocketContext from "./gameController/socketContext";
+import GameController from './gameController/gameController';
+import Map from './map';
 
 const store: IModuleStore<unknown> = createStore(
   {
@@ -26,8 +18,11 @@ const store: IModuleStore<unknown> = createStore(
 export default function App() {
   return (
     <Provider store={store}>
-      <span>Cześć!</span>
-      <ReduxDemo />
+      <SocketContext>
+        <GameController>
+          <Map />
+        </GameController>
+      </SocketContext>
     </Provider>
   );
 }

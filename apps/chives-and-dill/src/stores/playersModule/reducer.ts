@@ -1,15 +1,11 @@
+import classes from '*.module.css';
 import type { PlayersState } from '../../types/players';
 import { CharacterDirection } from '../../types/shared';
 import { PlayerAction, PlayersActionTypes } from './actions';
+import { selectCharacters } from './selectors';
 
 const initialState: PlayersState = {
-  characters: {
-    '1': {
-      name: 'player_1',
-      location: { x: 0, y: 0 },
-      direction: CharacterDirection.LEFT,
-    },
-  },
+  characters: {},
 };
 
 export const playersReducer = (
@@ -26,6 +22,19 @@ export const playersReducer = (
             ...state.characters[action.payload.selectedPlayerId],
             location: action.payload.newLocation,
           },
+        },
+      };
+    case PlayersActionTypes.INITIALIZE_CHARACTERS:
+      return {
+        ...state,
+        characters: action.payload.characters,
+      };
+    case PlayersActionTypes.PLAYER_CONNECTED:
+      return {
+        ...state,
+        characters: {
+          ...state.characters,
+          [action.payload.characters.name]: action.payload.characters
         },
       };
     default:
