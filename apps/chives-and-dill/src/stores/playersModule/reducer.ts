@@ -1,3 +1,4 @@
+import classes from '*.module.css';
 import type { PlayersState } from '../../types/players';
 import { CharacterDirection } from '../../types/shared';
 import { PlayerAction, PlayersActionTypes } from './actions';
@@ -40,6 +41,11 @@ export const playersReducer = (
             location: action.payload.newLocation,
           },
         },
+      };
+    case PlayersActionTypes.INITIALIZE_CHARACTERS:
+      return {
+        ...state,
+        characters: action.payload.characters,
       };
     default:
       return state;

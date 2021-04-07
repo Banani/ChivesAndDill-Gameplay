@@ -12,10 +12,14 @@ export interface Player {
   name: string;
   location: Location;
   direction: CharacterDirection;
-  image: string
+  image: string;
 }
 
 export interface ChangeLocationPlayload {
   selectedPlayerId: string;
   newLocation: Location;
+}
+
+export interface InitializePlayersPlayload {
+  characters: Record<string, Player>;
 }
