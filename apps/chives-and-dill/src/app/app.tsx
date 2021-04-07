@@ -4,7 +4,8 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux-dynamic-modules-core';
 import type { IModuleStore } from 'redux-dynamic-modules-core';
 import { PlayersModule } from '../stores';
-import { ReduxDemo } from './ReduxDemo';
+import SocketContext from "./gameController/socketContext";
+import GameController from './gameController/gameController';
 import Map from './map';
 
 const URL = 'http://localhost:3000';
@@ -27,8 +28,11 @@ const store: IModuleStore<unknown> = createStore(
 export default function App() {
   return (
     <Provider store={store}>
-      <Map />
-      <ReduxDemo />
+      <SocketContext>
+        <GameController>
+          <Map />
+        </GameController>
+      </SocketContext>
     </Provider>
   );
 }
