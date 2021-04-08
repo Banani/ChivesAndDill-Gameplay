@@ -3,7 +3,7 @@ import {
   ChangeLocationPlayload,
   InitializePlayersPlayload,
   AddPlayerPayload,
-  DeletePlayerPayload
+  DeletePlayerPayload,
 } from '../../types/players';
 
 export enum PlayersActionTypes {
@@ -47,18 +47,18 @@ export const initializePlayers = (
   payload,
 });
 
-export const addPlayer = (
-  payload: AddPlayerPayload
-): AddPlayer => ({
+export const addPlayer = (payload: AddPlayerPayload): AddPlayer => ({
   type: PlayersActionTypes.ADD_PLAYER,
   payload,
 });
 
-export const deletePlayer = (
-  payload: DeletePlayerPayload
-): DeletePlayer => ({
+export const deletePlayer = (payload: DeletePlayerPayload): DeletePlayer => ({
   type: PlayersActionTypes.DELETE_PLAYER,
   payload,
 });
 
-export type PlayerAction = ChangePlayerPosition | InitializePlayers | AddPlayer | DeletePlayer;
+export type PlayerAction =
+  | ChangePlayerPosition
+  | InitializePlayers
+  | AddPlayer
+  | DeletePlayer;

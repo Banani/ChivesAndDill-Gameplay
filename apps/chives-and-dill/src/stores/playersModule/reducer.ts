@@ -1,8 +1,5 @@
-import classes from '*.module.css';
 import type { PlayersState } from '../../types/players';
-import { CharacterDirection } from '../../types/shared';
 import { PlayerAction, PlayersActionTypes } from './actions';
-import { selectCharacters } from './selectors';
 
 const initialState: PlayersState = {
   characters: {},
@@ -34,7 +31,7 @@ export const playersReducer = (
         ...state,
         characters: {
           ...state.characters,
-          [action.payload.player.name]: action.payload.player
+          [action.payload.player.id]: action.payload.player,
         },
       };
     default:

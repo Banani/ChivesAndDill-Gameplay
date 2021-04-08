@@ -9,6 +9,7 @@ export interface PlayersAwareState {
 }
 
 export interface Player {
+  id: string;
   name: string;
   location: Location;
   direction: CharacterDirection;

@@ -44,8 +44,8 @@ export class PlayersMovement {
         );
 
         player.location = {
-          x: player.location.x + vector.x,
-          y: player.location.y + vector.y,
+          x: player.location.x + vector.x * 14,
+          y: player.location.y + vector.y * 14,
         };
 
         this.onPlayerMove(key);
