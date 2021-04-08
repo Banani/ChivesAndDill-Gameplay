@@ -1,7 +1,6 @@
 {
-  "name": "bananos",
+  "name": "chives-and-dill",
   "version": "0.0.0",
-  "license": "MIT",
   "scripts": {
     "nx": "nx",
     "start": "nx serve",
