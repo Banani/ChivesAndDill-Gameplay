@@ -8,7 +8,7 @@ import AppContext from './context';
 const socketContext = ({ children }) => {
   const [context, setContext] = useState<any>({});
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     const URL = 'http://localhost:3000';
     setContext({
