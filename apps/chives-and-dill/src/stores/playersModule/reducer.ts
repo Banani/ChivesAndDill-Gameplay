@@ -1,8 +1,7 @@
-import classes from '*.module.css';
 import type { PlayersState } from '../../types/players';
-import { CharacterDirection } from '../../types/shared';
 import { PlayerAction, PlayersActionTypes } from './actions';
-import { selectCharacters } from './selectors';
+import _ from 'lodash';
+import omit from 'lodash.omit';
 
 const initialState: PlayersState = {
   characters: {},
@@ -29,13 +28,18 @@ export const playersReducer = (
         ...state,
         characters: action.payload.characters,
       };
-    case PlayersActionTypes.PLAYER_CONNECTED:
+    case PlayersActionTypes.ADD_PLAYER:
       return {
         ...state,
         characters: {
           ...state.characters,
-          [action.payload.characters.name]: action.payload.characters
+          [action.payload.player.id]: action.payload.player,
         },
+      };
+    case PlayersActionTypes.DELETE_PLAYER:
+      return {
+        ...state,
+        characters: _.omit(state.characters, action.payload.userId),
       };
     default:
       return state;

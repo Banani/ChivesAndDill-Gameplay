@@ -23,7 +23,9 @@
     "update": "nx migrate latest",
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
-    "help": "nx help"
+    "help": "nx help",
+    "local:lint": "npm run affected:lint -- --base=master --parallel",
+    "pre-push:checks": "concurrently \"npm:local:*\" --kill-others-on-fail --max-processes=2"
   },
   "private": true,
   "dependencies": {
@@ -32,6 +34,7 @@
     "document-register-element": "1.13.1",
     "flux-standard-action": "^2.1.1",
     "lodash": "^4.17.21",
+    "lodash.omit": "^4.5.0",
     "pixi.js": "^6.0.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -78,10 +81,16 @@
     "eslint-plugin-jsx-a11y": "6.4.1",
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "4.2.0",
+    "husky": "^6.0.0",
     "jest": "26.2.2",
     "prettier": "2.2.1",
     "ts-jest": "26.4.0",
     "ts-node": "~9.1.1",
     "typescript": "~4.0.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run pre-push:checks"
+    }
   }
 }
