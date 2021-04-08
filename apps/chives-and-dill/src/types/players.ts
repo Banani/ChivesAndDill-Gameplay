@@ -24,6 +24,10 @@ export interface InitializePlayersPlayload {
   characters: Record<string, Player>;
 }
 
-export interface PlayerConnectedPayload {
-  characters: Record<string, Player>;
+export interface AddPlayerPayload {
+  player: Player;
+}
+
+export interface DeletePlayerPayload {
+  userId: string;
 }

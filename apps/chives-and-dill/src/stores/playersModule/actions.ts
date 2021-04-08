@@ -2,13 +2,15 @@ import { FSAAuto } from 'flux-standard-action';
 import {
   ChangeLocationPlayload,
   InitializePlayersPlayload,
-  PlayerConnectedPayload
+  AddPlayerPayload,
+  DeletePlayerPayload
 } from '../../types/players';
 
 export enum PlayersActionTypes {
   INITIALIZE_CHARACTERS = '[Players] INITIALIZE_CHARACTERS',
   CHANGE_PLAYER_POSITION = '[Players] CHANGE_PLAYER_POSITION',
-  PLAYER_CONNECTED = '[Players] PLAYER_CONNECTED'
+  ADD_PLAYER = '[Players] ADD_PLAYER',
+  DELETE_PLAYER = '[Players] DELETE_PLAYER',
 }
 
 export type ChangePlayerPosition = FSAAuto<
@@ -21,9 +23,14 @@ export type InitializePlayers = FSAAuto<
   InitializePlayersPlayload
 >;
 
-export type PlayerConnected = FSAAuto<
-  PlayersActionTypes.PLAYER_CONNECTED,
-  PlayerConnectedPayload
+export type AddPlayer = FSAAuto<
+  PlayersActionTypes.ADD_PLAYER,
+  AddPlayerPayload
+>;
+
+export type DeletePlayer = FSAAuto<
+  PlayersActionTypes.DELETE_PLAYER,
+  DeletePlayerPayload
 >;
 
 export const changePlayerPosition = (
@@ -40,11 +47,18 @@ export const initializePlayers = (
   payload,
 });
 
-export const playerConnected = (
-  payload: PlayerConnectedPayload
-): PlayerConnected => ({
-  type: PlayersActionTypes.PLAYER_CONNECTED,
+export const addPlayer = (
+  payload: AddPlayerPayload
+): AddPlayer => ({
+  type: PlayersActionTypes.ADD_PLAYER,
   payload,
 });
 
-export type PlayerAction = ChangePlayerPosition | InitializePlayers | PlayerConnected;
+export const deletePlayer = (
+  payload: DeletePlayerPayload
+): DeletePlayer => ({
+  type: PlayersActionTypes.DELETE_PLAYER,
+  payload,
+});
+
+export type PlayerAction = ChangePlayerPosition | InitializePlayers | AddPlayer | DeletePlayer;
