@@ -1,15 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Stage, Sprite } from '@inlet/react-pixi';
-import { useDispatch, useSelector } from 'react-redux';
-import { initializePlayers, selectCharacters } from '../stores';
-import { io } from 'socket.io-client';
+import { useSelector } from 'react-redux';
+import { selectCharacters } from '../stores';
 import _ from 'lodash';
-
-import { EngineEvents } from '@bananos/types';
 
 const map = () => {
   const players = useSelector(selectCharacters);
-  const dispatch = useDispatch();
 
   const renderPlayers = _.map(players, ({ image, location }, i) => (
     <Sprite key={i} image={image} x={location.x} y={location.y} />

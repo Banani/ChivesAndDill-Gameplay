@@ -1,4 +1,5 @@
 import { EngineEvents } from '@bananos/types';
+import { PlayersMovement } from './playersMovement';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -20,6 +21,16 @@ httpServer.listen(port, hostname, () => {
 });
 
 const players = {};
+const playerMovement = new PlayersMovement(players, (key) => {
+  io.sockets.emit('player_moved', {
+    playerId: key,
+    newLocation: players[key].location,
+  });
+});
+
+setInterval(() => {
+  playerMovement.doAction();
+}, 1000 / 60);
 
 io.on('connection', (socket) => {
   const player = {
@@ -36,6 +47,15 @@ io.on('connection', (socket) => {
 
   socket.broadcast.emit(EngineEvents.UserConnected, { player });
   console.log('new player connected', player, socket.id);
+
+  socket.on(EngineEvents.PlayerMove, (movement) => {
+    console.log(movement);
+    playerMovement.startNewMovement(socket.id, movement);
+  });
+
+  socket.on(EngineEvents.PlayerStopMove, (movement) => {
+    playerMovement.stopMovement(socket.id, movement);
+  });
 
   socket.on('disconnect', () => {
     console.log('disconnect');
