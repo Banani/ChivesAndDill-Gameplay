@@ -30,5 +30,6 @@ export interface AddPlayerPayload {
 }
 
 export interface DeletePlayerPayload {
+  characters: Record<string, Player>;
   userId: string;
 }

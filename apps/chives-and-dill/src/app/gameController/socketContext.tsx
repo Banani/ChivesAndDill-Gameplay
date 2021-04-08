@@ -1,6 +1,6 @@
 import { EngineEvents } from '@bananos/types';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import { initializePlayers, addPlayer, changePlayerPosition, deletePlayer } from '../../stores';
 import AppContext from './context';
@@ -8,7 +8,7 @@ import AppContext from './context';
 const socketContext = ({ children }) => {
   const [context, setContext] = useState<any>({});
   const dispatch = useDispatch();
-
+  
   useEffect(() => {
     const URL = 'http://localhost:3000';
     setContext({
