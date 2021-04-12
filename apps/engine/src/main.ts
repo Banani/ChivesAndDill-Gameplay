@@ -1,4 +1,4 @@
-import { EngineEvents } from '@bananos/types';
+import { CharacterDirection, ClientMessages, EngineMessages, Player } from '@bananos/types';
 import { PlayersMovement } from './playersMovement';
 
 const hostname = '127.0.0.1';
@@ -20,10 +20,19 @@ httpServer.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
 
+const createNewPlayer = (increment: number): Player => ({
+    id: increment.toString(),
+    name: `#player_${increment}`,
+    location: { x: Math.random() * 300, y: Math.random() * 300 },
+    direction: CharacterDirection.DOWN,
+    sprites: "nakedFemale",
+    isInMove: false
+  });
+
 let increment = 0;
 const players = {};
 const playerMovement = new PlayersMovement(players, (key) => {
-  io.sockets.emit('player_moved', {
+  io.sockets.emit(EngineMessages.PlayerMoved, {
     playerId: key,
     newLocation: players[key].location,
   });
@@ -33,36 +42,38 @@ setInterval(() => {
   playerMovement.doAction();
 }, 1000 / 60);
 
+
 io.on('connection', (socket) => {
   increment++;
-  const player = {
-    id: increment,
-    name: `#player_${increment}`,
-    location: { x: Math.random() * 300, y: Math.random() * 300 },
-    direction: 2,
-    image: 'http://localhost:4200/assets/spritesheets/teemo.png',
-  };
+  const player = createNewPlayer(increment);
   players[increment] = player;
 
-  socket.emit(EngineEvents.Inicialization, {
+  socket.emit(EngineMessages.Inicialization, {
     players,
   });
 
-  socket.broadcast.emit(EngineEvents.UserConnected, { player });
-  console.log('new player connected', player, player.id);
+  socket.broadcast.emit(EngineMessages.UserConnected, { player });
 
-  socket.on(EngineEvents.PlayerMove, (movement) => {
-    console.log(movement);
+  socket.on(ClientMessages.PlayerStartMove, (movement) => {
+    socket.broadcast.emit(EngineMessages.PlayerStartedMovement, {userId: player.id});
     playerMovement.startNewMovement(player.id, movement);
+    players[player.id] = {
+        ...players[player.id],
+        isInMove: true
+    };
   });
 
-  socket.on(EngineEvents.PlayerStopMove, (movement) => {
+  socket.on(ClientMessages.PlayerStopMove, (movement) => {
+    socket.broadcast.emit(EngineMessages.PlayerStoppedMovement, {userId: player.id});
     playerMovement.stopMovement(player.id, movement);
+    players[player.id] = {
+        ...players[player.id],
+        isInMove: false
+    };
   });
 
   socket.on('disconnect', () => {
-    console.log('disconnect');
+    socket.broadcast.emit(EngineMessages.UserDisconnected, { userId: player.id });
     delete players[player.id];
-    socket.broadcast.emit(EngineEvents.UserDisconnected, { userId: player.id });
   });
 });

@@ -1,6 +1,6 @@
-import { EngineEvents } from '@bananos/types';
+import { EngineMessages } from '@bananos/types';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 import { initializePlayers, addPlayer, changePlayerPosition, deletePlayer } from '../../stores';
 import AppContext from './context';
@@ -19,23 +19,19 @@ const socketContext = ({ children }) => {
 
   useEffect(() => {
     if (context.socket) {
-      context.socket.on(EngineEvents.Inicialization, ({ players }) => {
-        console.log(players);
+      context.socket.on(EngineMessages.Inicialization, ({ players }) => {
         dispatch(initializePlayers({ characters: players }));
       });
 
-      context.socket.on('player_moved', ({ playerId, newLocation }) => {
+      context.socket.on(EngineMessages.PlayerMoved, ({ playerId, newLocation }) => {
         dispatch(changePlayerPosition({ selectedPlayerId: playerId, newLocation }));
-        console.log(playerId, newLocation);
       });
 
-      context.socket.on(EngineEvents.UserConnected, ({ player }) => {
-        console.log('user_connected', player);
+      context.socket.on(EngineMessages.UserConnected, ({ player }) => {
         dispatch(addPlayer({ player }));
       });
 
-      context.socket.on(EngineEvents.UserDisconnected, ({ userId }) => {
-        console.log('user_disconnected', userId);
+      context.socket.on(EngineMessages.UserDisconnected, ({ userId }) => {
         dispatch(deletePlayer({ userId }));
       });
     }

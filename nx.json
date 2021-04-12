@@ -17,10 +17,6 @@
   },
   "projects": {
     "chives-and-dill": { "tags": [] },
-    "chives-and-dill-e2e": {
-      "tags": [],
-      "implicitDependencies": ["chives-and-dill"]
-    },
     "engine": { "tags": [] },
     "types": { "tags": [] }
   }

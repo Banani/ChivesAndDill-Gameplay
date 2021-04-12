@@ -1,7 +1,6 @@
 import type { PlayersState } from '../../types/players';
 import { PlayerAction, PlayersActionTypes } from './actions';
 import _ from 'lodash';
-import omit from 'lodash.omit';
 
 const initialState: PlayersState = {
   characters: {},

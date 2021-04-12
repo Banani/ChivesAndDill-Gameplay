@@ -1,4 +1,5 @@
-import type { Location, CharacterDirection } from './shared';
+import { Player, Location } from "@bananos/types";
+
 
 export interface PlayersState {
   characters: Record<string, Player>;
@@ -6,14 +7,6 @@ export interface PlayersState {
 
 export interface PlayersAwareState {
   playersModule: PlayersState;
-}
-
-export interface Player {
-  id: string;
-  name: string;
-  location: Location;
-  direction: CharacterDirection;
-  image: string;
 }
 
 export interface ChangeLocationPlayload {

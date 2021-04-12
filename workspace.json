@@ -83,32 +83,6 @@
         }
       }
     },
-    "chives-and-dill-e2e": {
-      "root": "apps/chives-and-dill-e2e",
-      "sourceRoot": "apps/chives-and-dill-e2e/src",
-      "projectType": "application",
-      "targets": {
-        "e2e": {
-          "executor": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/chives-and-dill-e2e/cypress.json",
-            "tsConfig": "apps/chives-and-dill-e2e/tsconfig.e2e.json",
-            "devServerTarget": "chives-and-dill:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "chives-and-dill:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/chives-and-dill-e2e/**/*.{js,ts}"]
-          }
-        }
-      }
-    },
     "engine": {
       "root": "apps/engine",
       "sourceRoot": "apps\\engine\\src",

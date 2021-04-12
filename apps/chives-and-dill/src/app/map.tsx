@@ -8,9 +8,9 @@ const map = () => {
   const players = useSelector(selectCharacters);
 
   const renderPlayers = _.map(players, ({ image, location }, i) => (
-    <Sprite key={i} image={image} x={location.x} y={location.y} />
+    <Sprite key={i} image={'http://localhost:4200/assets/spritesheets/teemo.png'} x={location.x} y={location.y} />
   ));
-
+    
   return (
     <Stage
       width={window.innerWidth}
