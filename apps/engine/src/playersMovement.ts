@@ -1,12 +1,16 @@
+import { CharacterDirection } from '@bananos/types';
 import _ from 'lodash';
+import { areLinesIntersecting } from './mathUtils';
 
 export class PlayersMovement {
+  areas: any;
   players: any;
   movements = new WeakMap();
   onPlayerMove = (id: string) => {};
 
-  constructor(players, onPlayerMove) {
+  constructor(players, areas, onPlayerMove) {
     this.players = players;
+    this.areas = areas;
     this.onPlayerMove = onPlayerMove;
   }
 
@@ -31,6 +35,37 @@ export class PlayersMovement {
     );
   }
 
+  isPlayerInMove(playerId) {
+    return (
+      this.movements.has(this.players[playerId]) &&
+      this.movements.get(this.players[playerId]).length > 0
+    );
+  }
+
+  getNewDirection(lastMovement) {
+    return {
+      [(lastMovement.x > 0).toString()]: CharacterDirection.RIGHT,
+      [(lastMovement.x < 0).toString()]: CharacterDirection.LEFT,
+      [(lastMovement.y > 0).toString()]: CharacterDirection.DOWN,
+      [(lastMovement.y < 0).toString()]: CharacterDirection.UP,
+    }['true'];
+  }
+
+  canMove(movementSegment) {
+    return !this.areas.find((polygon) => {
+      for (let i = 0; i < polygon.length; i++) {
+        if (
+          areLinesIntersecting(movementSegment, [
+            polygon[i],
+            polygon[(i + 1) % polygon.length],
+          ])
+        ) {
+          return true;
+        }
+      }
+    });
+  }
+
   doAction() {
     _.each(this.players, (player, key) => {
       const movement = this.movements.get(player);
@@ -43,12 +78,24 @@ export class PlayersMovement {
           { x: 0, y: 0 }
         );
 
-        player.location = {
+        const newPosition = {
           x: player.location.x + vector.x * 14,
           y: player.location.y + vector.y * 14,
         };
 
-        this.onPlayerMove(key);
+        const movementSegment = [
+          [player.location.x, player.location.y],
+          [newPosition.x, newPosition.y],
+        ];
+
+        if (this.canMove(movementSegment)) {
+          player.location = newPosition;
+
+          const lastMovement = movement[movement.length - 1];
+          player.direction = this.getNewDirection(lastMovement);
+
+          this.onPlayerMove(key);
+        }
       }
     });
   }
