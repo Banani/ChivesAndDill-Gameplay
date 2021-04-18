@@ -6,7 +6,7 @@ export class PlayersMovement {
   areas: any;
   players: any;
   movements = new WeakMap();
-  onPlayerMove = (id: string) => {};
+  onPlayerMove = (id: string) => { };
 
   constructor(players, areas, onPlayerMove) {
     this.players = players;
@@ -67,10 +67,10 @@ export class PlayersMovement {
   }
 
   doAction() {
-    _.each(this.players, (player, key) => {
+    _.each(this.players, (player: Player, key) => {
       const movement = this.movements.get(player);
       if (movement && movement.length) {
-        const vector = movement?.reduce(
+        const vector = movement.reduce(
           (prev, move) => ({
             x: move.x ?? prev.x,
             y: move.y ?? prev.y,

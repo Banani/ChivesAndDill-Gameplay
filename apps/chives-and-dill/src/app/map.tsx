@@ -1,29 +1,87 @@
 import React from 'react';
-import { Stage, Sprite } from '@inlet/react-pixi';
+import { Stage, Sprite, Graphics } from '@inlet/react-pixi';
 import { useSelector } from 'react-redux';
-import { selectCharacters } from '../stores';
+import {
+  selectCharacters,
+  selectCharacterViewsSettings,
+  selectAreas,
+  selectActivePlayer,
+} from '../stores';
 import _ from 'lodash';
+import Player from './Player';
 
 const map = () => {
   const players = useSelector(selectCharacters);
+  const characterViewsSettings = useSelector(selectCharacterViewsSettings);
+  const activePlayerId = useSelector(selectActivePlayer);
+  const areas = useSelector(selectAreas);
 
-  const renderPlayers = _.map(players, ({ image, location }, i) => (
-    <Sprite
-      key={i}
-      image={'http://localhost:4200/assets/spritesheets/teemo.png'}
-      x={location.x}
-      y={location.y}
-    />
-  ));
+  const renderPlayers = _.map(
+    _.omit(players, [activePlayerId ?? 0]),
+    (player, i) => (
+      <Player
+        key={i}
+        player={player}
+        characterViewsSettings={characterViewsSettings}
+      />
+    )
+  );
+
+  const drawAreas = React.useCallback(
+    (g) => {
+      areas.forEach((obstacle) => {
+        g.beginFill(0xff3300);
+        g.lineStyle(4, 0xffffff, 1);
+        g.drawPolygon(obstacle.flat());
+        g.endFill();
+      });
+    },
+    [areas]
+  );
+
+  let gameWidth;
+  let gameHeight;
+
+  const resizeGame = () => {
+    gameWidth = window.innerWidth;
+    gameHeight = window.innerHeight;
+    let ratio = 16 / 9;
+
+    if (gameHeight < gameWidth / ratio) {
+      gameWidth = gameHeight * ratio;
+    } else {
+      gameHeight = gameWidth / ratio;
+    }
+  };
+
+  resizeGame();
+
+  window.addEventListener('resize', () => {
+    resizeGame();
+  });
+
+  let scale = gameWidth / 1000;
 
   return (
     <Stage
-      width={window.innerWidth}
-      height={window.innerHeight}
-      options={{ backgroundColor: 0xeef1f5 }}
+      width={gameWidth}
+      height={gameHeight}
+      options={{ backgroundColor: 0xeef1f5, autoDensity: true }}
     >
-      <Sprite image="http://localhost:4200/assets/maps/map1.png" x={0} y={0}>
+      <Sprite
+        image="http://localhost:4200/assets/maps/map1.png"
+        scale={scale}
+        x={-players[activePlayerId]?.location.x * scale + gameWidth / 2 ?? 0}
+        y={-players[activePlayerId]?.location.y * scale + gameHeight / 2 ?? 0}
+      >
         {renderPlayers}
+        {players[activePlayerId] ? (
+          <Player
+            player={players[activePlayerId]}
+            characterViewsSettings={characterViewsSettings}
+          />
+        ) : null}
+        {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
       </Sprite>
     </Stage>
   );

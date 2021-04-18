@@ -83,28 +83,31 @@ const Player = ({ player, characterViewsSettings }) => {
 
   useEffect(() => {
     getPlayerSheets();
-  }, []);
+  }, [])
 
   useEffect(() => {
     getDirection(player.direction);
-  }, [player.direction, isCharacterMoving]);
+  }, [player.direction, isCharacterMoving])
 
   useEffect(() => {
     setIsCharacterMoving(player.isInMove);
-  }, [player.isInMove]);
+  }, [player.isInMove])
 
   return (
     <>
-      {playerSheet['movementDown'] && (
-        <Sprite
-          key={0}
-          texture={playerSheet[characterDirection][i % 8]}
-          x={player?.location.x}
-          y={player?.location.y}
-        />
-      )}
+      <Text
+        text={player.name}
+        anchor={0.5}
+        x={player?.location.x + (window.innerWidth / 2)}
+        y={player?.location.y + (window.innerHeight / 2 - h / 2)}
+        style={
+          new PIXI.TextStyle({
+            fontSize: 20
+          })}
+      />
+      {playerSheet['movementDown'] && <Sprite key={0} texture={playerSheet[characterDirection][i % 8]} x={player?.location.x - (w / 2)} y={player?.location.y - (h / 2)} />}
     </>
-  );
-};
+  )
+}
 
 export default Player;

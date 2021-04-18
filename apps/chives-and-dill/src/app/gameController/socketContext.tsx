@@ -1,8 +1,14 @@
 import { EngineMessages } from '@bananos/types';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
-import { initializePlayers, addPlayer, changePlayerPosition, deletePlayer } from '../../stores';
+import {
+  initialize,
+  addPlayer,
+  changePlayerPosition,
+  deletePlayer,
+  changePlayerMovingStatus,
+} from '../../stores';
 import AppContext from './context';
 
 const socketContext = ({ children }) => {
@@ -19,12 +25,32 @@ const socketContext = ({ children }) => {
 
   useEffect(() => {
     if (context.socket) {
-      context.socket.on(EngineMessages.Inicialization, ({ players }) => {
-        dispatch(initializePlayers({ characters: players }));
+      context.socket.on(
+        EngineMessages.Inicialization,
+        ({ players, areas, activePlayer }) => {
+          dispatch(initialize({ characters: players, areas, activePlayer }));
+        }
+      );
+
+      context.socket.on(
+        EngineMessages.PlayerMoved,
+        ({ playerId, newLocation, newDirection }) => {
+          dispatch(
+            changePlayerPosition({
+              selectedPlayerId: playerId,
+              newLocation,
+              newDirection,
+            })
+          );
+        }
+      );
+
+      context.socket.on(EngineMessages.PlayerStartedMovement, ({ userId }) => {
+        dispatch(changePlayerMovingStatus({ userId, isInMove: true }));
       });
 
-      context.socket.on(EngineMessages.PlayerMoved, ({ playerId, newLocation }) => {
-        dispatch(changePlayerPosition({ selectedPlayerId: playerId, newLocation }));
+      context.socket.on(EngineMessages.PlayerStoppedMovement, ({ userId }) => {
+        dispatch(changePlayerMovingStatus({ userId, isInMove: false }));
       });
 
       context.socket.on(EngineMessages.UserConnected, ({ player }) => {

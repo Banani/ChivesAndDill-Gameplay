@@ -4,7 +4,7 @@ import {
   EngineMessages,
   Player,
 } from '@bananos/types';
-import { AREAS } from './map';
+import { AREAS, BORDER } from './map';
 import { PlayersMovement } from './playersMovement';
 
 const hostname = '127.0.0.1';
@@ -29,7 +29,7 @@ httpServer.listen(port, hostname, () => {
 const createNewPlayer = (increment: number): Player => ({
   id: increment.toString(),
   name: `#player_${increment}`,
-  location: { x: 0, y: 0 },
+  location: { x: 20, y: 20 },
   direction: CharacterDirection.DOWN,
   sprites: 'nakedFemale',
   isInMove: false,
@@ -38,13 +38,17 @@ const createNewPlayer = (increment: number): Player => ({
 let increment = 0;
 const players = {};
 const areas = AREAS;
-const playerMovement = new PlayersMovement(players, areas, (key) => {
-  io.sockets.emit(EngineMessages.PlayerMoved, {
-    playerId: key,
-    newLocation: players[key].location,
-    newDirection: players[key].direction,
-  });
-});
+const playerMovement = new PlayersMovement(
+  players,
+  [...areas, ...BORDER],
+  (key) => {
+    io.sockets.emit(EngineMessages.PlayerMoved, {
+      playerId: key,
+      newLocation: players[key].location,
+      newDirection: players[key].direction,
+    });
+  }
+);
 
 setInterval(() => {
   playerMovement.doAction();
@@ -56,6 +60,7 @@ io.on('connection', (socket) => {
   players[increment] = player;
 
   socket.emit(EngineMessages.Inicialization, {
+    activePlayer: increment,
     players,
     areas,
   });
@@ -68,10 +73,7 @@ io.on('connection', (socket) => {
       userId: player.id,
     });
     playerMovement.startNewMovement(player.id, movement);
-    players[player.id] = {
-      ...players[player.id],
-      isInMove: true,
-    };
+    players[player.id].isInMove = true;
   });
 
   socket.on(ClientMessages.PlayerStopMove, (movement) => {

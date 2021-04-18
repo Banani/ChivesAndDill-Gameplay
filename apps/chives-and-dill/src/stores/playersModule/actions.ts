@@ -1,26 +1,28 @@
 import { FSAAuto } from 'flux-standard-action';
 import {
-  ChangeLocationPlayload,
-  InitializePlayersPlayload,
+  ChangeLocationPayload,
+  InitializePayload,
   AddPlayerPayload,
   DeletePlayerPayload,
+  ChangePlayerMovingStatusPayload,
 } from '../../types/players';
 
 export enum PlayersActionTypes {
-  INITIALIZE_CHARACTERS = '[Players] INITIALIZE_CHARACTERS',
+  INITIALIZE = '[Players] INITIALIZE',
   CHANGE_PLAYER_POSITION = '[Players] CHANGE_PLAYER_POSITION',
   ADD_PLAYER = '[Players] ADD_PLAYER',
   DELETE_PLAYER = '[Players] DELETE_PLAYER',
+  CHANGE_PLAYER_MOVING_STATUS = '[Players] CHANGE_PLAYER_MOVING_STATUS'
 }
 
 export type ChangePlayerPosition = FSAAuto<
   PlayersActionTypes.CHANGE_PLAYER_POSITION,
-  ChangeLocationPlayload
+  ChangeLocationPayload
 >;
 
-export type InitializePlayers = FSAAuto<
-  PlayersActionTypes.INITIALIZE_CHARACTERS,
-  InitializePlayersPlayload
+export type Initialize = FSAAuto<
+  PlayersActionTypes.INITIALIZE,
+  InitializePayload
 >;
 
 export type AddPlayer = FSAAuto<
@@ -33,17 +35,29 @@ export type DeletePlayer = FSAAuto<
   DeletePlayerPayload
 >;
 
+export type ChangePlayerMovingStatus = FSAAuto<
+  PlayersActionTypes.CHANGE_PLAYER_MOVING_STATUS,
+  ChangePlayerMovingStatusPayload
+>;
+
 export const changePlayerPosition = (
-  payload: ChangeLocationPlayload
+  payload: ChangeLocationPayload
 ): ChangePlayerPosition => ({
   type: PlayersActionTypes.CHANGE_PLAYER_POSITION,
   payload,
 });
 
-export const initializePlayers = (
-  payload: InitializePlayersPlayload
-): InitializePlayers => ({
-  type: PlayersActionTypes.INITIALIZE_CHARACTERS,
+export const changePlayerMovingStatus = (
+  payload: ChangePlayerMovingStatusPayload
+): ChangePlayerMovingStatus => ({
+  type: PlayersActionTypes.CHANGE_PLAYER_MOVING_STATUS,
+  payload,
+});
+
+export const initialize = (
+  payload: InitializePayload
+): Initialize => ({
+  type: PlayersActionTypes.INITIALIZE,
   payload,
 });
 
@@ -59,6 +73,7 @@ export const deletePlayer = (payload: DeletePlayerPayload): DeletePlayer => ({
 
 export type PlayerAction =
   | ChangePlayerPosition
-  | InitializePlayers
+  | Initialize
   | AddPlayer
-  | DeletePlayer;
+  | DeletePlayer
+  | ChangePlayerMovingStatus;
