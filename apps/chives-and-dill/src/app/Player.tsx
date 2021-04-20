@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as PIXI from 'pixi.js';
 import { Sprite, Text } from '@inlet/react-pixi';
-import PlayerImage from '../assets/spritesheets/player/malePlayer.png';
 import _ from 'lodash';
 
 const Player = ({ player, characterViewsSettings }) => {
@@ -10,11 +9,10 @@ const Player = ({ player, characterViewsSettings }) => {
   const [characterDirection, setCharacterDirection] = useState('standingDown');
   const [isCharacterMoving, setIsCharacterMoving] = useState(false);
 
-  const malePlayer = characterViewsSettings.nakedMale;
-
-  let sheet = PIXI.BaseTexture.from(PlayerImage);
-  let w = malePlayer.spriteWidth;
-  let h = malePlayer.spriteHeight;
+  const playerSprite = characterViewsSettings[player.sprites];
+  let sheet = PIXI.BaseTexture.from(`../assets${characterViewsSettings[player.sprites].image}`);
+  let w = playerSprite.spriteWidth;
+  let h = playerSprite.spriteHeight;
 
   const getPlayerSheets = () => {
     let newPlayerSheets = {
@@ -29,12 +27,12 @@ const Player = ({ player, characterViewsSettings }) => {
     };
 
     _.forOwn(newPlayerSheets, function (value, key) {
-      for (let i = 0; i < malePlayer[key].spriteAmount; i++) {
+      for (let i = 0; i < playerSprite[key].spriteAmount; i++) {
         newPlayerSheets[key][i] = new PIXI.Texture(
           sheet,
           new PIXI.Rectangle(
-            i * w + malePlayer[key].xOffSet,
-            malePlayer[key].yOffSet,
+            i * w + playerSprite[key].xOffSet,
+            playerSprite[key].yOffSet,
             w,
             h
           )
