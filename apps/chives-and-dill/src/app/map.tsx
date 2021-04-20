@@ -66,7 +66,7 @@ const map = () => {
     <Stage
       width={gameWidth}
       height={gameHeight}
-      options={{ backgroundColor: 0xeef1f5, autoDensity: true }}
+      options={{ backgroundColor: 0xa1a1a1, autoDensity: true }}
     >
       <Sprite
         image="http://localhost:4200/assets/maps/map1.png"

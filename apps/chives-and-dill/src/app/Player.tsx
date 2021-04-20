@@ -98,8 +98,8 @@ const Player = ({ player, characterViewsSettings }) => {
       <Text
         text={player.name}
         anchor={0.5}
-        x={player?.location.x + (window.innerWidth / 2)}
-        y={player?.location.y + (window.innerHeight / 2 - h / 2)}
+        x={player?.location.x}
+        y={player?.location.y - h / 2}
         style={
           new PIXI.TextStyle({
             fontSize: 20
