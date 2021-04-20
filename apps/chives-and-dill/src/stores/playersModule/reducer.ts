@@ -6,10 +6,10 @@ const initialState: PlayersState = {
   characters: {},
   areas: [],
   characterViewsSettings: {
-    nakedMale: {
+    nakedFemale: {
       spriteHeight: 64,
       spriteWidth: 64,
-      image: '/spritesheets/player/malePlayer.png',
+      image: '/spritesheets/player/femalePlayer.png',
       movementDown: {
         yOffSet: 128,
         xOffSet: 64,
@@ -47,6 +47,51 @@ const initialState: PlayersState = {
       },
       standingLeft: {
         yOffSet: 64,
+        xOffSet: 0,
+        spriteAmount: 1,
+      },
+    },
+    pigMan: {
+      spriteHeight: 51,
+      spriteWidth: 36,
+      image: '/spritesheets/monsters/pigMan.png',
+      movementDown: {
+        yOffSet: 0,
+        xOffSet: 0,
+        spriteAmount: 3,
+      },
+      movementRight: {
+        yOffSet: 102,
+        xOffSet: 0,
+        spriteAmount: 3,
+      },
+      movementUp: {
+        yOffSet: 153,
+        xOffSet: 0,
+        spriteAmount: 3,
+      },
+      movementLeft: {
+        yOffSet: 51,
+        xOffSet: 0,
+        spriteAmount: 3,
+      },
+      standingDown: {
+        yOffSet: 0,
+        xOffSet: 0,
+        spriteAmount: 1,
+      },
+      standingRight: {
+        yOffSet: 102,
+        xOffSet: 0,
+        spriteAmount: 1,
+      },
+      standingUp: {
+        yOffSet: 153,
+        xOffSet: 0,
+        spriteAmount: 1,
+      },
+      standingLeft: {
+        yOffSet: 51,
         xOffSet: 0,
         spriteAmount: 1,
       },
