@@ -17,7 +17,6 @@ export class PlayerMovementService extends EventParser {
 
   init(engineEventCrator: EngineEventCrator, services) {
     super.init(engineEventCrator);
-    this.engineEventCrator = engineEventCrator;
     this.movementEngine.init(services);
   }
 

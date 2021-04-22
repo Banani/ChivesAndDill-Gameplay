@@ -1,12 +1,13 @@
-import { PlayersMovement } from './app/engines/playersMovement';
+import { PlayersMovement, ProjectileMovement } from './app/engines';
 import _ from 'lodash';
 import {
   CharactersService,
   PlayerMovementService,
   SocketConnectionService,
+  ProjectilesService,
 } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
-import { PlayerMovementNotifier } from './app/notifiers/PlayerMovementNotifier';
+import { PlayerMovementNotifier, ProjectileNotifier } from './app/notifiers';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -27,13 +28,16 @@ httpServer.listen(port, hostname, () => {
 });
 
 const playerMovementEngine = new PlayersMovement();
+const projectileMovement = new ProjectileMovement();
 
-const engines = [playerMovementEngine];
+const engines = [playerMovementEngine, projectileMovement];
 
 const services = {
   characterService: new CharactersService(),
   playerMovementService: new PlayerMovementService(playerMovementEngine),
+  projectilesService: new ProjectilesService(projectileMovement),
   playerMovementNotifier: new PlayerMovementNotifier(),
+  projectileNotifier: new ProjectileNotifier(),
   socketConnectionService: new SocketConnectionService(io),
 };
 
