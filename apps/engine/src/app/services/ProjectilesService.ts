@@ -13,6 +13,7 @@ export class ProjectilesService extends EventParser {
     this.eventsToHandlersMap = {
       [EngineEvents.PlayerCastedSpell]: this.handlePlayerCastedSpell,
       [EngineEvents.ProjectileMoved]: this.handleProjectileMoved,
+      [EngineEvents.RemoveProjectile]: this.handleRemoveProjectile,
     };
   }
 
@@ -44,6 +45,15 @@ export class ProjectilesService extends EventParser {
       ...this.projectiles[event.projectileId],
       currentLocation: event.newLocation,
     };
+  };
+
+  handleRemoveProjectile = ({ event, services }) => {
+    delete this.projectiles[event.projectileId];
+
+    this.engineEventCrator.createEvent({
+      type: EngineEvents.ProjectileRemoved,
+      projectileId: event.projectileId,
+    });
   };
 
   getAllProjectiles = () => this.projectiles;

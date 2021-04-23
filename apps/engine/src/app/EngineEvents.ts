@@ -9,4 +9,6 @@ export enum EngineEvents {
   PlayerCastedSpell = 'PlayerCastedSpell',
   ProjectileCreated = 'ProjectileCreated',
   ProjectileMoved = 'ProjectileMoved',
+  RemoveProjectile = 'RemoveProjectile',
+  ProjectileRemoved = 'ProjectileRemoved',
 }

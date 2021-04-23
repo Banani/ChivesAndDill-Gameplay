@@ -1,7 +1,5 @@
-import { CharacterDirection, Player } from '@bananos/types';
 import _ from 'lodash';
-import { areLinesIntersecting } from '../math/lines';
-import { AREAS, BORDER } from '../../map';
+import { distanceBetweenTwoPoints } from '../math/lines';
 import { EngineEvents } from '../EngineEvents';
 
 export class ProjectileMovement {
@@ -40,20 +38,32 @@ export class ProjectileMovement {
           targetLocation.x - projectile.startLocation.x
         );
 
-        this.services.eventCreatorService.createEvent({
-          ...projectile,
-          angle,
-          type: EngineEvents.ProjectileMoved,
-          projectileId,
-          newLocation: {
-            x:
-              projectile.currentLocation.x +
-              Math.cos(angle) * projectile.spell.speed,
-            y:
-              projectile.currentLocation.y +
-              Math.sin(angle) * projectile.spell.speed,
-          },
-        });
+        const newLocation = {
+          x:
+            projectile.currentLocation.x +
+            Math.cos(angle) * projectile.spell.speed,
+          y:
+            projectile.currentLocation.y +
+            Math.sin(angle) * projectile.spell.speed,
+        };
+
+        if (
+          distanceBetweenTwoPoints(projectile.startLocation, newLocation) >
+          projectile.spell.range
+        ) {
+          this.services.eventCreatorService.createEvent({
+            type: EngineEvents.RemoveProjectile,
+            projectileId,
+          });
+        } else {
+          this.services.eventCreatorService.createEvent({
+            ...projectile,
+            angle,
+            type: EngineEvents.ProjectileMoved,
+            projectileId,
+            newLocation,
+          });
+        }
       }
     );
   }
