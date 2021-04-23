@@ -7,36 +7,36 @@ const initialState: PlayersState = {
   areas: [],
   characterViewsSettings: {
     nakedFemale: {
-      spriteHeight: 64,
-      spriteWidth: 64,
+      spriteHeight: 48,
+      spriteWidth: 28,
       image: '/spritesheets/player/femalePlayer.png',
       movementDown: {
-        yOffSet: 128,
-        xOffSet: 64,
+        yOffSet: 96,
+        xOffSet: 28,
         spriteAmount: 8,
       },
       movementRight: {
-        yOffSet: 192,
-        xOffSet: 64,
+        yOffSet: 144,
+        xOffSet: 28,
         spriteAmount: 8,
       },
       movementUp: {
         yOffSet: 0,
-        xOffSet: 64,
+        xOffSet: 28,
         spriteAmount: 8,
       },
       movementLeft: {
-        yOffSet: 64,
-        xOffSet: 64,
+        yOffSet: 48,
+        xOffSet: 28,
         spriteAmount: 8,
       },
       standingDown: {
-        yOffSet: 128,
+        yOffSet: 96,
         xOffSet: 0,
         spriteAmount: 1,
       },
       standingRight: {
-        yOffSet: 192,
+        yOffSet: 144,
         xOffSet: 0,
         spriteAmount: 1,
       },
@@ -46,7 +46,7 @@ const initialState: PlayersState = {
         spriteAmount: 1,
       },
       standingLeft: {
-        yOffSet: 64,
+        yOffSet: 48,
         xOffSet: 0,
         spriteAmount: 1,
       },

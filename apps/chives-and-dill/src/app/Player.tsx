@@ -95,15 +95,17 @@ const Player = ({ player, characterViewsSettings }) => {
     <>
       <Text
         text={player.name}
-        anchor={0.5}
         x={player?.location.x}
         y={player?.location.y - h / 2}
+        anchor={{ x: 0.5, y: 1.1 }}
+
         style={
+
           new PIXI.TextStyle({
             fontSize: 20
           })}
       />
-      {playerSheet['movementDown'] && <Sprite key={0} texture={playerSheet[characterDirection][i % 8]} x={player?.location.x - (w / 2)} y={player?.location.y - (h / 2)} />}
+      {playerSheet['movementDown'] && <Sprite key={0} width={w} height={h} texture={playerSheet[characterDirection][i % 8]} x={player?.location.x - (w / 2)} y={player?.location.y - (h / 2)} />}
     </>
   )
 }
