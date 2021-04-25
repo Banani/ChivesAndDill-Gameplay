@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import * as PIXI from 'pixi.js';
-import { Sprite, Text } from '@inlet/react-pixi';
+import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import _ from 'lodash';
+import { clearLine } from 'node:readline';
 
 const Player = ({ player, characterViewsSettings }) => {
   const [i, setI] = useState(0);
@@ -39,7 +40,6 @@ const Player = ({ player, characterViewsSettings }) => {
         );
       }
     });
-
     setPlayerSheet(newPlayerSheets);
   };
 
@@ -91,18 +91,31 @@ const Player = ({ player, characterViewsSettings }) => {
     setIsCharacterMoving(player.isInMove);
   }, [player.isInMove])
 
+  let hpGreenBar=50
+  const hpBar = useCallback((g) => {
+    g.clear();
+    g.beginFill(0xff0000);
+    g.drawRect(player?.location.x - 25, player?.location.y-h/1.5, 50, 5);
+    g.endFill();
+    g.beginFill(0x00ff00);
+    g.drawRect(player?.location.x - 25, player?.location.y-h/1.5, hpGreenBar, 5);
+    g.endFill();
+  }, [player]);
+  
   return (
     <>
       <Text
         text={player.name}
-        anchor={0.5}
+        anchor={[0.5, 3.25]}
         x={player?.location.x}
-        y={player?.location.y - h / 2}
+        y={player?.location.y}
         style={
           new PIXI.TextStyle({
-            fontSize: 20
+            fontSize: 15
           })}
+          
       />
+      <Graphics draw={hpBar} />
       {playerSheet['movementDown'] && <Sprite key={0} texture={playerSheet[characterDirection][i % 8]} x={player?.location.x - (w / 2)} y={player?.location.y - (h / 2)} />}
     </>
   )

@@ -3,6 +3,11 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: black;  
+  background-color: black; 
+  #root { 
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  }
 }
-
