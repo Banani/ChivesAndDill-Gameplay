@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import * as PIXI from 'pixi.js';
 import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import _ from 'lodash';
-import { clearLine } from 'node:readline';
 
 const Player = ({ player, characterViewsSettings }) => {
   const [i, setI] = useState(0);
@@ -90,15 +89,15 @@ const Player = ({ player, characterViewsSettings }) => {
   useEffect(() => {
     setIsCharacterMoving(player.isInMove);
   }, [player.isInMove])
-
-  let hpGreenBar=50
+  let maxHP = 50
+  let currentHealth = 50
   const hpBar = useCallback((g) => {
     g.clear();
     g.beginFill(0xff0000);
-    g.drawRect(player?.location.x - 25, player?.location.y-h/1.5, 50, 5);
+    g.drawRect(player?.location.x - maxHP / 2, player?.location.y-h/1.5, maxHP, 5);
     g.endFill();
     g.beginFill(0x00ff00);
-    g.drawRect(player?.location.x - 25, player?.location.y-h/1.5, hpGreenBar, 5);
+    g.drawRect(player?.location.x - maxHP / 2, player?.location.y-h/1.5, currentHealth, 5);
     g.endFill();
   }, [player]);
   
