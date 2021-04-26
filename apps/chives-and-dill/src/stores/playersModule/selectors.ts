@@ -13,3 +13,6 @@ export const selectActivePlayer = (state: PlayersAwareState) =>
 
 export const selectCharacterViewsSettings = (state: PlayersAwareState) =>
   getPlayerModule(state).characterViewsSettings;
+
+export const selectSpells = (state: PlayersAwareState) =>
+  getPlayerModule(state).projectiles;

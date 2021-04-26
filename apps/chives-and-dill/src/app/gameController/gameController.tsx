@@ -75,10 +75,21 @@ const GameController = ({ children }) => {
     }
   };
 
+  const clickHandler = (event) => {
+    socket?.emit(ClientMessages.PerformBasicAttack, {
+      directionLocation: {
+        x: event.pageX,
+        y: event.pageY,
+      },
+      spellName: "Potato-Inator",
+    });
+  }
+
   return (
     <div
       onKeyDown={(event) => keyPressHandler(event)}
       onKeyUp={keyUpHandler}
+      onClick={(event) => clickHandler(event)}
       tabIndex={0}
     >
       {children}

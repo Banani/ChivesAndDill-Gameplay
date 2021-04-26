@@ -42,6 +42,7 @@ export class SocketConnectionService extends EventParser {
     currentSocket.emit(EngineMessages.Inicialization, {
       activePlayer: currentCharacter.id,
       players: services.characterService.getAllCharacters(),
+      projectiles: services.projectilesService.getAllProjectiles(),
       areas: AREAS,
     });
 

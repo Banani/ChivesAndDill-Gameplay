@@ -8,6 +8,8 @@ import {
   changePlayerPosition,
   deletePlayer,
   changePlayerMovingStatus,
+  addSpell,
+  updateSpell
 } from '../../stores';
 import AppContext from './context';
 
@@ -27,8 +29,8 @@ const socketContext = ({ children }) => {
     if (context.socket) {
       context.socket.on(
         EngineMessages.Inicialization,
-        ({ players, areas, activePlayer }) => {
-          dispatch(initialize({ characters: players, areas, activePlayer }));
+        ({ players, areas, activePlayer, projectiles }) => {
+          dispatch(initialize({ characters: players, areas, activePlayer, projectiles }));
         }
       );
 
@@ -59,6 +61,14 @@ const socketContext = ({ children }) => {
 
       context.socket.on(EngineMessages.UserDisconnected, ({ userId }) => {
         dispatch(deletePlayer({ userId }));
+      });
+
+      context.socket.on(EngineMessages.ProjectileCreated, ({ projectileId, spell, currentLocation }) => {
+        dispatch(addSpell({ projectileId, spell, currentLocation }));
+      });
+
+      context.socket.on(EngineMessages.ProjectileMoved, ({ angle, newLocation, projectileId }) => {
+        dispatch(updateSpell({ projectileId, angle, newLocation }));
       });
     }
   }, [context]);

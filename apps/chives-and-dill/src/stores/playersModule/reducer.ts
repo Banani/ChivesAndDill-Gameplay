@@ -5,6 +5,7 @@ import _ from 'lodash';
 const initialState: PlayersState = {
   characters: {},
   areas: [],
+  projectiles: {},
   characterViewsSettings: {
     nakedFemale: {
       spriteHeight: 48,
@@ -98,6 +99,7 @@ const initialState: PlayersState = {
     },
   },
 };
+
 export const playersReducer = (
   state: PlayersState = initialState,
   action: PlayerAction
@@ -146,6 +148,33 @@ export const playersReducer = (
           },
         },
       };
+    case PlayersActionTypes.ADD_SPELL: {
+      return {
+        ...state,
+        projectiles: {
+          ...state.projectiles,
+          [action.payload.projectileId]: {
+            spell: action.payload.spell,
+            newLocation: action.payload.currentLocation,
+          }
+        },
+      };
+    }
+
+    case PlayersActionTypes.UPDATE_SPELL:
+      return {
+        ...state,
+        projectiles: {
+          ...state.projectiles,
+          [action.payload.projectileId]: {
+            ...state.projectiles[action.payload.projectileId],
+            angle: action.payload.angle,
+            newLocation: action.payload.newLocation,
+          }
+        },
+
+      }
+
     default:
       return state;
   }

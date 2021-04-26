@@ -6,12 +6,14 @@ import {
   selectCharacterViewsSettings,
   selectAreas,
   selectActivePlayer,
+  selectSpells,
 } from '../stores';
 import _ from 'lodash';
 import Player from './Player';
 
 const map = () => {
   const players = useSelector(selectCharacters);
+  const spells = useSelector(selectSpells);
   const characterViewsSettings = useSelector(selectCharacterViewsSettings);
   const activePlayerId = useSelector(selectActivePlayer);
   const areas = useSelector(selectAreas);
@@ -26,6 +28,15 @@ const map = () => {
       />
     )
   );
+
+  const renderSpells = _.map(spells, (spell, i) => (
+    <Sprite
+      key={i}
+      image="../assets/spritesheets/spells/potato.png"
+      x={spell.newLocation.x}
+      y={spell.newLocation.y}
+    ></Sprite>
+  ))
 
   const drawAreas = React.useCallback(
     (g) => {
@@ -57,11 +68,11 @@ const map = () => {
   resizeGame();
 
   window.addEventListener('resize', () => {
+
     resizeGame();
   });
 
   let scale = gameWidth / 1000;
-
   return (
     <Stage
       width={gameWidth}
@@ -74,6 +85,7 @@ const map = () => {
         x={-players[activePlayerId]?.location.x * scale + gameWidth / 2 ?? 0}
         y={-players[activePlayerId]?.location.y * scale + gameHeight / 2 ?? 0}
       >
+        {renderSpells}
         {renderPlayers}
         {players[activePlayerId] ? (
           <Player

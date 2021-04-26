@@ -35,6 +35,7 @@ export class ProjectilesService extends EventParser {
     this.engineEventCrator.createEvent({
       type: EngineEvents.ProjectileCreated,
       projectileId: this.increment,
+      currentLocation: character.location,
       spell: event.spellData.spell.name,
     });
   };

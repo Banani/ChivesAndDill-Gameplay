@@ -27,6 +27,7 @@ export class ProjectileNotifier extends EventParser {
       .getIO()
       .sockets.emit(EngineMessages.ProjectileCreated, {
         projectileId: event.projectileId,
+        currentLocation: event.currentLocation,
         spell: event.spell,
       });
   };
@@ -47,7 +48,7 @@ export class ProjectileNotifier extends EventParser {
             spell: {
               name: spellName,
               range: 400,
-              speed: 4,
+              speed: 40,
             },
             directionLocation,
           },
