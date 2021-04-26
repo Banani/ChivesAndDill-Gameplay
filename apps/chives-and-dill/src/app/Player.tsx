@@ -100,12 +100,12 @@ const Player = ({ player, characterViewsSettings }) => {
     g.drawRect(player?.location.x - maxHP / 2, player?.location.y-h/1.5, currentHealth, 5);
     g.endFill();
   }, [player]);
-  
+  let anchorY=3.25
   return (
     <>
       <Text
         text={player.name}
-        anchor={[0.5, 3.25]}
+        anchor={[0.5, anchorY]}
         x={player?.location.x}
         y={player?.location.y}
         style={
