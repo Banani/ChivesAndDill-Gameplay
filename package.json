@@ -21,8 +21,9 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
+    "prepare": "husky install",
     "local:lint": "npm run affected:lint -- --base=master --parallel",
-    "pre-push:checks": "concurrently \"npm:local:*\" --kill-others-on-fail --max-processes=2"
+    "pre-push:checks": "npm run lint"
   },
   "private": true,
   "dependencies": {
@@ -78,6 +79,7 @@
     "eslint-plugin-jsx-a11y": "6.4.1",
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "4.2.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "husky": "^6.0.0",
     "jest": "26.2.2",
     "prettier": "2.2.1",

@@ -45,4 +45,4 @@ const engineEventCreator = new EngineEventCrator(services);
 
 setInterval(() => {
   engines.forEach((engine) => engine.doAction());
-}, 1000 / 60);
+}, 1);

@@ -26,11 +26,16 @@ export class ProjectilesService extends EventParser {
     const character = services.characterService.getCharacterById(
       event.spellData.characterId
     );
+
     this.increment++;
-    this.projectiles[this.increment] = {
+    const projectile = {
       ...event.spellData,
       startLocation: character.location,
       currentLocation: character.location,
+    };
+    this.projectiles[this.increment] = {
+      ...projectile,
+      ...this.projectileEngine.calculateAngles(projectile),
     };
 
     this.engineEventCrator.createEvent({

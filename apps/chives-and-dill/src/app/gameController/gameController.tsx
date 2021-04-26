@@ -14,7 +14,10 @@ const GameController = ({ children }) => {
       case 'a':
         {
           if (!keyState.a) {
-            socket?.emit(ClientMessages.PlayerStartMove, { x: -1, source: 'key-a' });
+            socket?.emit(ClientMessages.PlayerStartMove, {
+              x: -1,
+              source: 'key-a',
+            });
             setKeyState({ ...keyState, a: true });
           }
         }
@@ -22,7 +25,10 @@ const GameController = ({ children }) => {
       case 'd':
         {
           if (!keyState.d) {
-            socket?.emit(ClientMessages.PlayerStartMove, { x: 1, source: 'key-d' });
+            socket?.emit(ClientMessages.PlayerStartMove, {
+              x: 1,
+              source: 'key-d',
+            });
             setKeyState({ ...keyState, d: true });
           }
         }
@@ -30,7 +36,10 @@ const GameController = ({ children }) => {
       case 'w':
         {
           if (!keyState.w) {
-            socket?.emit(ClientMessages.PlayerStartMove, { y: -1, source: 'key-w' });
+            socket?.emit(ClientMessages.PlayerStartMove, {
+              y: -1,
+              source: 'key-w',
+            });
             setKeyState({ ...keyState, w: true });
           }
         }
@@ -38,7 +47,10 @@ const GameController = ({ children }) => {
       case 's':
         {
           if (!keyState.s) {
-            socket?.emit(ClientMessages.PlayerStartMove, { y: 1, source: 'key-s' });
+            socket?.emit(ClientMessages.PlayerStartMove, {
+              y: 1,
+              source: 'key-s',
+            });
             setKeyState({ ...keyState, s: true });
           }
         }
@@ -81,9 +93,9 @@ const GameController = ({ children }) => {
         x: event.pageX,
         y: event.pageY,
       },
-      spellName: "Potato-Inator",
+      spellName: 'Potato-Inator',
     });
-  }
+  };
 
   return (
     <div
