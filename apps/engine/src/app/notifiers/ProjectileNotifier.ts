@@ -9,6 +9,7 @@ export class ProjectileNotifier extends EventParser {
       [EngineEvents.NewCharacterCreated]: this.NewCharacterCreated,
       [EngineEvents.ProjectileCreated]: this.ProjectileCreated,
       [EngineEvents.ProjectileMoved]: this.ProjectileMoved,
+      [EngineEvents.ProjectileRemoved]: this.ProjectileRemoved,
     };
   }
 
@@ -29,6 +30,14 @@ export class ProjectileNotifier extends EventParser {
         projectileId: event.projectileId,
         currentLocation: event.currentLocation,
         spell: event.spell,
+      });
+  };
+
+  ProjectileRemoved = ({ event, services }) => {
+    services.socketConnectionService
+      .getIO()
+      .sockets.emit(EngineMessages.ProjectileRemoved, {
+        projectileId: event.projectileId,
       });
   };
 

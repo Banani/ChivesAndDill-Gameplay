@@ -20,8 +20,8 @@ export interface Player {
 }
 
 export interface Spell {
-  projectileId: string,
-  name: string,
-  angle: number,
-  newLocation: Location,
+  projectileId: string;
+  name: string;
+  angle: number;
+  newLocation: Location;
 }

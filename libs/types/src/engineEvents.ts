@@ -7,6 +7,7 @@ export enum EngineMessages {
   PlayerMoved = 'PlayerMoved',
   ProjectileCreated = 'ProjectileCreated',
   ProjectileMoved = 'ProjectileMoved',
+  ProjectileRemoved = 'ProjectileRemoved',
 }
 
 export enum ClientMessages {
