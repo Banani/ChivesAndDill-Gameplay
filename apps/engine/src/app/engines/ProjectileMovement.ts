@@ -1,12 +1,28 @@
 import _ from 'lodash';
-import { distanceBetweenTwoPoints } from '../math/lines';
+import { distanceBetweenTwoPoints, areLinesIntersecting } from '../math/lines';
 import { EngineEvents } from '../EngineEvents';
+import { AREAS, BORDER } from '../../map';
 
 export class ProjectileMovement {
   services: any;
 
   init(services) {
     this.services = services;
+  }
+
+  isMovementCrossingWall(movementSegment) {
+    return [...BORDER, ...AREAS].find((polygon) => {
+      for (let i = 0; i < polygon.length; i++) {
+        if (
+          areLinesIntersecting(movementSegment, [
+            polygon[i],
+            polygon[(i + 1) % polygon.length],
+          ])
+        ) {
+          return true;
+        }
+      }
+    });
   }
 
   doAction() {
@@ -47,9 +63,15 @@ export class ProjectileMovement {
             Math.sin(angle) * projectile.spell.speed,
         };
 
+        const movementSegment = [
+          [projectile.currentLocation.x, projectile.currentLocation.y],
+          [newLocation.x, newLocation.y],
+        ];
+
         if (
           distanceBetweenTwoPoints(projectile.startLocation, newLocation) >
-          projectile.spell.range
+            projectile.spell.range ||
+          this.isMovementCrossingWall(movementSegment)
         ) {
           this.services.eventCreatorService.createEvent({
             type: EngineEvents.RemoveProjectile,

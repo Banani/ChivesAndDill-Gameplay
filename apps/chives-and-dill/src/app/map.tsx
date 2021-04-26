@@ -36,7 +36,7 @@ const map = () => {
       x={spell.newLocation.x}
       y={spell.newLocation.y}
     ></Sprite>
-  ))
+  ));
 
   const drawAreas = React.useCallback(
     (g) => {
@@ -68,9 +68,10 @@ const map = () => {
   resizeGame();
 
   window.addEventListener('resize', () => {
-
     resizeGame();
   });
+
+  console.log(players[activePlayerId]?.location.x);
 
   let scale = gameWidth / 1000;
   return (
