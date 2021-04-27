@@ -1,5 +1,9 @@
 import _ from 'lodash';
-import { distanceBetweenTwoPoints, areLinesIntersecting } from '../math/lines';
+import {
+  distanceBetweenTwoPoints,
+  areLinesIntersecting,
+  isSegmentIntersectingWithACircle,
+} from '../math/lines';
 import { EngineEvents } from '../EngineEvents';
 import { AREAS, BORDER } from '../../map';
 
@@ -52,6 +56,26 @@ export class ProjectileMovement {
     };
   }
 
+  isItOutOfRange(projectile, newLocation) {
+    return (
+      distanceBetweenTwoPoints(projectile.startLocation, newLocation) >
+      projectile.spell.range
+    );
+  }
+
+  getCrossingCharacter(movementSegment) {
+    return _.pickBy(
+      this.services.characterService.getAllCharacters(),
+      (character) => {
+        return isSegmentIntersectingWithACircle(movementSegment, [
+          character.location.x,
+          character.location.y,
+          character.size / 2,
+        ]);
+      }
+    );
+  }
+
   doAction() {
     _.each(
       this.services.projectilesService.getAllProjectiles(),
@@ -70,9 +94,23 @@ export class ProjectileMovement {
           [newLocation.x, newLocation.y],
         ];
 
-        if (
-          distanceBetweenTwoPoints(projectile.startLocation, newLocation) >
-            projectile.spell.range ||
+        const hitCharacter = _.filter(
+          this.getCrossingCharacter(movementSegment),
+          (character) => character.id !== projectile.characterId
+        ).pop();
+
+        if (hitCharacter) {
+          this.services.eventCreatorService.createEvent({
+            type: EngineEvents.RemoveProjectile,
+            projectileId,
+          });
+          this.services.eventCreatorService.createEvent({
+            type: EngineEvents.CharacterHit,
+            spell: projectile.spell,
+            target: hitCharacter,
+          });
+        } else if (
+          this.isItOutOfRange(projectile, newLocation) ||
           this.isMovementCrossingWall(movementSegment)
         ) {
           this.services.eventCreatorService.createEvent({

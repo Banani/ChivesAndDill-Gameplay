@@ -74,6 +74,20 @@ export function areLinesIntersecting(segment1, segment2) {
   );
 }
 
+export function isSegmentIntersectingWithACircle(segment, circle) {
+  const line = getLine(segment);
+
+  const perpenticularLine = Object.assign({}, { ...line, a: -1 / line.a });
+  perpenticularLine.b = circle[1] - circle[0] * perpenticularLine.a;
+
+  const linesIntersectionPoint = crossPoint(line, perpenticularLine);
+  const distance = distanceBetweenTwoPoints(
+    { x: circle[0], y: circle[1] },
+    linesIntersectionPoint
+  );
+  return distance < circle[2];
+}
+
 export const distanceBetweenTwoPoints = (point1, point2) =>
   Math.sqrt(
     Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2)

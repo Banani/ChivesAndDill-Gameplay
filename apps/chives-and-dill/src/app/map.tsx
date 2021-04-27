@@ -71,8 +71,6 @@ const map = () => {
     resizeGame();
   });
 
-  console.log(players[activePlayerId]?.location.x);
-
   let scale = gameWidth / 1000;
   return (
     <Stage

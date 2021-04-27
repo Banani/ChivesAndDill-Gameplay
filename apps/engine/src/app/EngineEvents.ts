@@ -11,4 +11,7 @@ export enum EngineEvents {
   ProjectileMoved = 'ProjectileMoved',
   RemoveProjectile = 'RemoveProjectile',
   ProjectileRemoved = 'ProjectileRemoved',
+  CharacterHit = 'CharacterHit',
+  CharacterLostHp = 'CharacterLostHp',
+  CharacterDied = 'CharacterDied',
 }

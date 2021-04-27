@@ -8,6 +8,8 @@ export enum EngineMessages {
   ProjectileCreated = 'ProjectileCreated',
   ProjectileMoved = 'ProjectileMoved',
   ProjectileRemoved = 'ProjectileRemoved',
+  CharacterLostHp = 'CharacterLostHp',
+  CharacterDied = 'CharacterDied',
 }
 
 export enum ClientMessages {
