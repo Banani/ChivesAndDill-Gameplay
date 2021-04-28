@@ -1,4 +1,4 @@
-import { PlayersAwareState } from '../../types/players';
+import type { PlayersAwareState } from '../../types/players';
 
 const getPlayerModule = (state: PlayersAwareState) => state.playersModule;
 

@@ -11,7 +11,7 @@ import {
 import _ from 'lodash';
 import Player from './Player';
 
-const map = () => {
+const Map = () => {
   const players = useSelector(selectCharacters);
   const spells = useSelector(selectSpells);
   const characterViewsSettings = useSelector(selectCharacterViewsSettings);
@@ -56,7 +56,7 @@ const map = () => {
   const resizeGame = () => {
     gameWidth = window.innerWidth;
     gameHeight = window.innerHeight;
-    let ratio = 16 / 9;
+    const ratio = 16 / 9;
 
     if (gameHeight < gameWidth / ratio) {
       gameWidth = gameHeight * ratio;
@@ -71,9 +71,7 @@ const map = () => {
     resizeGame();
   });
 
-  console.log(players[activePlayerId]?.location.x);
-
-  let scale = gameWidth / 1000;
+  const scale = 1;
   return (
     <Stage
       width={gameWidth}
@@ -100,4 +98,4 @@ const map = () => {
   );
 };
 
-export default map;
+export default Map;

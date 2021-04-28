@@ -1,5 +1,6 @@
 import type { PlayersState } from '../../types/players';
-import { PlayerAction, PlayersActionTypes } from './actions';
+import type { PlayerAction } from './actions';
+import { PlayersActionTypes } from './actions';
 import _ from 'lodash';
 
 const initialState: PlayersState = {

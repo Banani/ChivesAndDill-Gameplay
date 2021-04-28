@@ -1,9 +1,9 @@
-import { Player, Location, Spell } from '@bananos/types';
+import type { Player, Location, Spell, SpriteSheet } from '@bananos/types';
 
 export interface PlayersState {
   activePlayer: string;
   characters: Record<string, Player>;
-  characterViewsSettings: any;
+  characterViewsSettings: Record<string, SpriteSheet>;
   areas: [][];
   projectiles: Record<string, Spell>
 }

@@ -1,6 +1,6 @@
 import { EngineMessages } from '@bananos/types';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 import {
   initialize,
@@ -13,10 +13,9 @@ import {
 } from '../../stores';
 import AppContext from './context';
 
-const socketContext = ({ children }) => {
+const SocketContext = ({ children }) => {
   const [context, setContext] = useState<any>({});
   const dispatch = useDispatch();
-
   useEffect(() => {
     const URL = 'http://localhost:3000';
     setContext({
@@ -76,4 +75,4 @@ const socketContext = ({ children }) => {
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
 };
 
-export default socketContext;
+export default SocketContext;

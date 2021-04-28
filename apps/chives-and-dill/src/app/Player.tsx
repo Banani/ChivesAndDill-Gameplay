@@ -2,23 +2,22 @@ import React, { useState, useEffect, useCallback } from 'react';
 import * as PIXI from 'pixi.js';
 import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import _ from 'lodash';
-import { clearLine } from 'node:readline';
 
 const Player = ({ player, characterViewsSettings }) => {
-  const [i, setI] = useState(0);
+  const [timer, setTimer] = useState(0);
   const [playerSheet, setPlayerSheet] = useState({});
   const [characterDirection, setCharacterDirection] = useState('standingDown');
   const [isCharacterMoving, setIsCharacterMoving] = useState(false);
 
   const playerSprite = characterViewsSettings[player.sprites];
-  let sheet = PIXI.BaseTexture.from(
+  const sheet = PIXI.BaseTexture.from(
     `../assets${characterViewsSettings[player.sprites].image}`
   );
-  let w = playerSprite.spriteWidth;
-  let h = playerSprite.spriteHeight;
+  const w = playerSprite.spriteWidth;
+  const h = playerSprite.spriteHeight;
 
   const getPlayerSheets = () => {
-    let newPlayerSheets = {
+    const newPlayerSheets = {
       movementDown: [],
       movementUp: [],
       movementRight: [],
@@ -77,7 +76,7 @@ const Player = ({ player, characterViewsSettings }) => {
 
   useEffect(() => {
     setInterval(() => {
-      setI((zxc) => zxc + 1);
+      setTimer((zxc) => zxc + 1);
     }, 20);
   }, []);
 
@@ -93,7 +92,7 @@ const Player = ({ player, characterViewsSettings }) => {
     setIsCharacterMoving(player.isInMove);
   }, [player.isInMove]);
 
-  let hpGreenBar = 50;
+  const hpGreenBar = 50;
   const hpBar = useCallback(
     (g) => {
       g.clear();
@@ -109,7 +108,7 @@ const Player = ({ player, characterViewsSettings }) => {
       );
       g.endFill();
     },
-    [player]
+    [player, h]
   );
 
   return (
@@ -131,7 +130,7 @@ const Player = ({ player, characterViewsSettings }) => {
           key={0}
           width={w}
           height={h}
-          texture={playerSheet[characterDirection][i % 8]}
+          texture={playerSheet[characterDirection][timer % 8]}
           x={player?.location.x - w / 2}
           y={player?.location.y - h / 2}
         />

@@ -1,5 +1,5 @@
-import { FSAAuto } from 'flux-standard-action';
-import {
+import type { FSAAuto } from 'flux-standard-action';
+import type {
   ChangeLocationPayload,
   InitializePayload,
   AddPlayerPayload,
