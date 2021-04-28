@@ -52,6 +52,11 @@ const initialState: PlayersState = {
         xOffSet: 0,
         spriteAmount: 1,
       },
+      dead: {
+        yOffSet: 48,
+        xOffSet: 0,
+        spriteAmount: 1,
+      }
     },
     pigMan: {
       spriteHeight: 51,
@@ -97,6 +102,11 @@ const initialState: PlayersState = {
         xOffSet: 0,
         spriteAmount: 1,
       },
+      dead: {
+        yOffSet: 204,
+        xOffSet: 0,
+        spriteAmount: 1,
+      }
     },
   },
 };
@@ -177,6 +187,17 @@ export const playersReducer = (
       return {
         ...state,
         projectiles: _.omit(state.projectiles, action.payload.projectileId),
+      };
+    case PlayersActionTypes.UPDATE_CHARACTER_HP:
+      return {
+        ...state,
+        characters: {
+          ...state.characters,
+          [action.payload.characterId]: {
+            ...state.characters[action.payload.characterId],
+            currentHp: state.characters[action.payload.characterId].currentHp - action.payload.amount,
+          }
+        }
       };
     default:
       return state;

@@ -11,12 +11,17 @@ export enum CharacterDirection {
 }
 
 export interface Player {
-  id: string;
-  name: string;
-  location: Location;
+  currentHp: number;
   direction: CharacterDirection;
-  sprites: string;
+  id: string;
   isInMove: boolean;
+  location: Location;
+  maxHp: number,
+  name: string;
+  size: number;
+  socketId: string,
+  sprites: string;
+
 }
 
 export interface SpriteSheet {
@@ -31,6 +36,7 @@ export interface SpriteSheet {
   standingRight: SpriteSheetCoordinates;
   standingUp: SpriteSheetCoordinates;
   standingLeft: SpriteSheetCoordinates;
+  dead: SpriteSheetCoordinates;
 }
 
 interface SpriteSheetCoordinates {

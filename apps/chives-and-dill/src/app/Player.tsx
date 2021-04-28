@@ -26,6 +26,7 @@ const Player = ({ player, characterViewsSettings }) => {
       standingDown: [],
       standingRight: [],
       standingLeft: [],
+      dead: []
     };
 
     _.forOwn(newPlayerSheets, function (value, key) {
@@ -92,12 +93,19 @@ const Player = ({ player, characterViewsSettings }) => {
     setIsCharacterMoving(player.isInMove);
   }, [player.isInMove]);
 
-  const hpGreenBar = 50;
+
+  useEffect(() => {
+    if (player.currentHp <= 0) {
+      setCharacterDirection('dead');
+    }
+  }, [player.currentHp])
+
+  const hpGreenBar = player.currentHp / 2;
   const hpBar = useCallback(
     (g) => {
       g.clear();
       g.beginFill(0xff0000);
-      g.drawRect(player?.location.x - 25, player?.location.y - h / 1.5, 50, 5);
+      g.drawRect(player?.location.x - 25, player?.location.y - h / 1.5, player.maxHp / 2, 5);
       g.endFill();
       g.beginFill(0x00ff00);
       g.drawRect(
@@ -113,18 +121,22 @@ const Player = ({ player, characterViewsSettings }) => {
 
   return (
     <>
-      <Text
-        text={player.name}
-        anchor={[0.5, 3.25]}
-        x={player?.location.x}
-        y={player?.location.y}
-        style={
-          new PIXI.TextStyle({
-            fontSize: 15,
-          })
-        }
-      />
-      <Graphics draw={hpBar} />
+      {player.currentHp <= 0 ? null :
+        <>
+          <Text
+            text={player.name}
+            anchor={[0.5, 3.25]}
+            x={player?.location.x}
+            y={player?.location.y}
+            style={
+              new PIXI.TextStyle({
+                fontSize: 15,
+              })
+            }
+          />
+          <Graphics draw={hpBar} />
+        </>
+      }
       {playerSheet['movementDown'] && (
         <Sprite
           key={0}

@@ -59,3 +59,9 @@ export interface UpdateSpellPayload {
 export interface DeleteProjectilePayload {
   projectileId: string,
 }
+
+export interface UpdateCharacterHpPayload {
+  characterId: string,
+  currentHp: number,
+  amount: number,
+}

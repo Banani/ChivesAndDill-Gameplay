@@ -8,6 +8,7 @@ import type {
   AddSpellPayload,
   UpdateSpellPayload,
   DeleteProjectilePayload,
+  UpdateCharacterHpPayload,
 } from '../../types/players';
 
 export enum PlayersActionTypes {
@@ -19,6 +20,7 @@ export enum PlayersActionTypes {
   ADD_SPELL = '[Players] ADD_SPELL',
   UPDATE_SPELL = '[Players] UPDATE_SPELL',
   DELETE_PROJECTILE = '[Players] DELETE_PROJECTILE',
+  UPDATE_CHARACTER_HP = '[Players] UPDATE_CHARACTERS_HP',
 }
 
 export type ChangePlayerPosition = FSAAuto<
@@ -54,6 +56,11 @@ export type UpdateSpell = FSAAuto<
 export type DeleteProjectile = FSAAuto<
   PlayersActionTypes.DELETE_PROJECTILE,
   DeleteProjectilePayload
+>;
+
+export type UpdateCharacterHp = FSAAuto<
+  PlayersActionTypes.UPDATE_CHARACTER_HP,
+  UpdateCharacterHpPayload
 >;
 
 export type ChangePlayerMovingStatus = FSAAuto<
@@ -107,6 +114,11 @@ export const deleteProjectile = (payload: DeleteProjectilePayload): DeleteProjec
   payload,
 });
 
+export const updateCharacterHp = (payload: UpdateCharacterHpPayload): UpdateCharacterHp => ({
+  type: PlayersActionTypes.UPDATE_CHARACTER_HP,
+  payload,
+});
+
 export type PlayerAction =
   | ChangePlayerPosition
   | Initialize
@@ -115,4 +127,5 @@ export type PlayerAction =
   | ChangePlayerMovingStatus
   | AddSpell
   | UpdateSpell
-  | DeleteProjectile;
+  | DeleteProjectile
+  | UpdateCharacterHp;

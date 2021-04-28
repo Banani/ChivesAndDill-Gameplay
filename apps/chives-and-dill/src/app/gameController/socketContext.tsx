@@ -10,7 +10,8 @@ import {
   changePlayerMovingStatus,
   addSpell,
   updateSpell,
-  deleteProjectile
+  deleteProjectile,
+  updateCharacterHp
 } from '../../stores';
 import AppContext from './context';
 
@@ -73,6 +74,10 @@ const SocketContext = ({ children }) => {
 
       context.socket.on(EngineMessages.ProjectileRemoved, ({ projectileId }) => {
         dispatch(deleteProjectile({ projectileId }));
+      });
+
+      context.socket.on(EngineMessages.CharacterLostHp, ({characterId, currentHp, amount}) => {
+        dispatch(updateCharacterHp({ characterId, currentHp, amount }));
       });
     }
   }, [context]);
