@@ -81,6 +81,11 @@ export function isSegmentIntersectingWithACircle(segment, circle) {
   perpenticularLine.b = circle[1] - circle[0] * perpenticularLine.a;
 
   const linesIntersectionPoint = crossPoint(line, perpenticularLine);
+
+  if (!isThePointOnTheSegment(linesIntersectionPoint, segment)) {
+    return false;
+  }
+
   const distance = distanceBetweenTwoPoints(
     { x: circle[0], y: circle[1] },
     linesIntersectionPoint

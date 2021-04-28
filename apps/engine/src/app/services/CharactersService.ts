@@ -1,6 +1,7 @@
 import { EventParser } from '../EventParser';
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
+import _ from 'lodash';
 
 export class CharactersService extends EventParser {
   characters: any = {
@@ -14,6 +15,7 @@ export class CharactersService extends EventParser {
       currentHp: 100,
       maxHp: 100,
       size: 50,
+      isDead: false,
     },
     monster_2: {
       id: 'monster_2',
@@ -25,6 +27,7 @@ export class CharactersService extends EventParser {
       currentHp: 100,
       maxHp: 100,
       size: 50,
+      isDead: false,
     },
     monster_3: {
       id: 'monster_3',
@@ -36,6 +39,7 @@ export class CharactersService extends EventParser {
       currentHp: 100,
       maxHp: 100,
       size: 50,
+      isDead: false,
     },
   };
   increment: number = 0;
@@ -86,7 +90,8 @@ export class CharactersService extends EventParser {
 
   handleCharacterHit = ({ event }) => {
     this.characters[event.target.id].currentHp = Math.max(
-      this.characters[event.target.id].currentHp - event.spell.damage
+      this.characters[event.target.id].currentHp - event.spell.damage,
+      0
     );
 
     this.engineEventCrator.createEvent({
@@ -97,6 +102,7 @@ export class CharactersService extends EventParser {
     });
 
     if (this.characters[event.target.id].currentHp === 0) {
+      this.characters[event.target.id].isDead = true;
       this.engineEventCrator.createEvent({
         type: EngineEvents.CharacterDied,
         characterId: event.target.id,
@@ -117,6 +123,7 @@ export class CharactersService extends EventParser {
       currentHp: 100,
       maxHp: 100,
       size: 48,
+      isDead: false,
     };
   };
 

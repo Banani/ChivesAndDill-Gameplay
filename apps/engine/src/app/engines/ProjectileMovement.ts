@@ -30,23 +30,9 @@ export class ProjectileMovement {
   }
 
   calculateAngles(projectile) {
-    const distance = Math.sqrt(
-      Math.pow(projectile.startLocation.x - projectile.directionLocation.x, 2) +
-        Math.pow(projectile.startLocation.y - projectile.directionLocation.y, 2)
-    );
-    const proportion = projectile.spell.range / distance;
-    const targetLocation = {
-      x:
-        (projectile.directionLocation.x - projectile.startLocation.x) *
-        proportion,
-      y:
-        (projectile.directionLocation.y - projectile.startLocation.y) *
-        proportion,
-    };
-
     const angle = Math.atan2(
-      targetLocation.y - projectile.startLocation.y,
-      targetLocation.x - projectile.startLocation.x
+      projectile.directionLocation.y - projectile.startLocation.y,
+      projectile.directionLocation.x - projectile.startLocation.x
     );
 
     return {

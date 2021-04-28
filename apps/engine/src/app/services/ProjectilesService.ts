@@ -33,6 +33,7 @@ export class ProjectilesService extends EventParser {
       startLocation: character.location,
       currentLocation: character.location,
     };
+
     this.projectiles[this.increment] = {
       ...projectile,
       ...this.projectileEngine.calculateAngles(projectile),
