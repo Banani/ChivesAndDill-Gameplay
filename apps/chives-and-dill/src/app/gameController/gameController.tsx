@@ -1,14 +1,20 @@
 import { ClientMessages } from '@bananos/types';
 import React, { useContext, useState } from 'react';
 import AppContext from '../gameController/context';
+import { useSelector } from 'react-redux';
+import {
+  selectCharacters,
+  selectActivePlayer,
+} from '../../stores';
 
 const GameController = ({ children }) => {
 
-
   const context = useContext(AppContext);
   const { socket } = context;
-
   const [keyState, setKeyState] = useState<Record<string, boolean>>({});
+
+  const activePlayerId = useSelector(selectActivePlayer);
+  const players = useSelector(selectCharacters);
 
   const keyPressHandler = (event) => {
     switch (event.key) {
@@ -73,10 +79,20 @@ const GameController = ({ children }) => {
   };
 
   const clickHandler = (event) => {
+    let gameWidth = window.innerWidth;
+    let gameHeight = window.innerHeight;
+    const ratio = 16 / 9;
+
+    if (gameHeight < gameWidth / ratio) {
+      gameWidth = gameHeight * ratio;
+    } else {
+      gameHeight = gameWidth / ratio;
+    }
     socket?.emit(ClientMessages.PerformBasicAttack, {
+
       directionLocation: {
-        x: event.pageX,
-        y: event.pageY,
+        x: players[activePlayerId]?.location.x + event.pageX - gameWidth / 2,
+        y: players[activePlayerId]?.location.y + event.pageY - gameHeight / 2,
       },
       spellName: 'Potato-Inator',
     });

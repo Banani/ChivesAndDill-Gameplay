@@ -1,5 +1,5 @@
 import { EngineEvents } from '../EngineEvents';
-import { EngineEventCrator } from '../EngineEventsCreator';
+import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
 
 export class ProjectilesService extends EventParser {
@@ -38,6 +38,7 @@ export class ProjectilesService extends EventParser {
       ...projectile,
       ...this.projectileEngine.calculateAngles(projectile),
     };
+    console.log(this.projectiles[this.increment]);
 
     this.engineEventCrator.createEvent({
       type: EngineEvents.ProjectileCreated,
