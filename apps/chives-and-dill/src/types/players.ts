@@ -55,3 +55,7 @@ export interface UpdateSpellPayload {
   newLocation: Location,
   name: string,
 }
+
+export interface DeleteProjectilePayload {
+  projectileId: string,
+}

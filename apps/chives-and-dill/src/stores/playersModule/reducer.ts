@@ -161,7 +161,6 @@ export const playersReducer = (
         },
       };
     }
-
     case PlayersActionTypes.UPDATE_SPELL:
       return {
         ...state,
@@ -173,9 +172,12 @@ export const playersReducer = (
             newLocation: action.payload.newLocation,
           }
         },
-
       }
-
+    case PlayersActionTypes.DELETE_PROJECTILE:
+      return {
+        ...state,
+        projectiles: _.omit(state.projectiles, action.payload.projectileId),
+      };
     default:
       return state;
   }

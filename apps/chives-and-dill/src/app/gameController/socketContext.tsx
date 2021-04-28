@@ -9,7 +9,8 @@ import {
   deletePlayer,
   changePlayerMovingStatus,
   addSpell,
-  updateSpell
+  updateSpell,
+  deleteProjectile
 } from '../../stores';
 import AppContext from './context';
 
@@ -68,6 +69,10 @@ const SocketContext = ({ children }) => {
 
       context.socket.on(EngineMessages.ProjectileMoved, ({ angle, newLocation, projectileId }) => {
         dispatch(updateSpell({ projectileId, angle, newLocation }));
+      });
+
+      context.socket.on(EngineMessages.ProjectileRemoved, ({ projectileId }) => {
+        dispatch(deleteProjectile({ projectileId }));
       });
     }
   }, [context]);
