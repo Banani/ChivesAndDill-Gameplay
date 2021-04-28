@@ -26,7 +26,7 @@ const Player = ({ player, characterViewsSettings }) => {
       standingDown: [],
       standingRight: [],
       standingLeft: [],
-      dead: []
+      dead: [],
     };
 
     _.forOwn(newPlayerSheets, function (value, key) {
@@ -93,19 +93,23 @@ const Player = ({ player, characterViewsSettings }) => {
     setIsCharacterMoving(player.isInMove);
   }, [player.isInMove]);
 
-
   useEffect(() => {
     if (player.currentHp <= 0) {
       setCharacterDirection('dead');
     }
-  }, [player.currentHp])
+  }, [player.currentHp]);
 
   const hpGreenBar = player.currentHp / 2;
   const hpBar = useCallback(
     (g) => {
       g.clear();
       g.beginFill(0xff0000);
-      g.drawRect(player?.location.x - 25, player?.location.y - h / 1.5, player.maxHp / 2, 5);
+      g.drawRect(
+        player?.location.x - 25,
+        player?.location.y - h / 1.5,
+        player.maxHp / 2,
+        5
+      );
       g.endFill();
       g.beginFill(0x00ff00);
       g.drawRect(
@@ -121,7 +125,7 @@ const Player = ({ player, characterViewsSettings }) => {
 
   return (
     <>
-      {player.currentHp <= 0 ? null :
+      {player.currentHp <= 0 ? null : (
         <>
           <Text
             text={player.name}
@@ -136,7 +140,7 @@ const Player = ({ player, characterViewsSettings }) => {
           />
           <Graphics draw={hpBar} />
         </>
-      }
+      )}
       {playerSheet['movementDown'] && (
         <Sprite
           key={0}

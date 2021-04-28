@@ -38,7 +38,6 @@ export class ProjectilesService extends EventParser {
       ...projectile,
       ...this.projectileEngine.calculateAngles(projectile),
     };
-    console.log(this.projectiles[this.increment]);
 
     this.engineEventCrator.createEvent({
       type: EngineEvents.ProjectileCreated,

@@ -28,7 +28,7 @@ export class PlayersMovement {
 
     this.movements.set(
       player,
-      movementList.filter((movement) => movement.source !== source)
+      movementList?.filter((movement) => movement.source !== source) ?? []
     );
 
     if (!this.isPlayerInMove(playerId)) {
