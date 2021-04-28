@@ -7,7 +7,11 @@ import {
   ProjectilesService,
 } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
-import { PlayerMovementNotifier, ProjectileNotifier } from './app/notifiers';
+import {
+  CharacterEffectNotifier,
+  PlayerMovementNotifier,
+  ProjectileNotifier,
+} from './app/notifiers';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -38,6 +42,7 @@ const services = {
   projectilesService: new ProjectilesService(projectileMovement),
   playerMovementNotifier: new PlayerMovementNotifier(),
   projectileNotifier: new ProjectileNotifier(),
+  characterEffectNotifier: new CharacterEffectNotifier(),
   socketConnectionService: new SocketConnectionService(io),
 };
 
@@ -45,4 +50,4 @@ const engineEventCreator = new EngineEventCrator(services);
 
 setInterval(() => {
   engines.forEach((engine) => engine.doAction());
-}, 1);
+}, 1000 / 60);

@@ -58,6 +58,7 @@ export class ProjectileNotifier extends EventParser {
               name: spellName,
               range: 400,
               speed: 4,
+              damage: 25,
             },
             directionLocation,
           },

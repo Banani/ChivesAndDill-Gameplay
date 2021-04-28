@@ -11,22 +11,31 @@ export class CharactersService extends EventParser {
       direction: CharacterDirection.DOWN,
       sprites: 'pigMan',
       isInMove: false,
+      currentHp: 100,
+      maxHp: 100,
+      size: 50,
     },
     monster_2: {
-      id: 'monster_1',
+      id: 'monster_2',
       name: `#monster_2`,
       location: { x: 420, y: 640 },
       direction: CharacterDirection.DOWN,
       sprites: 'pigMan',
       isInMove: false,
+      currentHp: 100,
+      maxHp: 100,
+      size: 50,
     },
     monster_3: {
-      id: 'monster_1',
+      id: 'monster_3',
       name: `#monster_3`,
       location: { x: 1020, y: 940 },
       direction: CharacterDirection.DOWN,
       sprites: 'pigMan',
       isInMove: false,
+      currentHp: 100,
+      maxHp: 100,
+      size: 50,
     },
   };
   increment: number = 0;
@@ -40,6 +49,7 @@ export class CharactersService extends EventParser {
       [EngineEvents.PlayerStopedAllMovementVectors]: this
         .handlePlayerStopedAllMovementVectors,
       [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+      [EngineEvents.CharacterHit]: this.handleCharacterHit,
     };
   }
 
@@ -74,6 +84,26 @@ export class CharactersService extends EventParser {
     this.characters[event.characterId].direction = event.newCharacterDirection;
   };
 
+  handleCharacterHit = ({ event }) => {
+    this.characters[event.target.id].currentHp = Math.max(
+      this.characters[event.target.id].currentHp - event.spell.damage
+    );
+
+    this.engineEventCrator.createEvent({
+      type: EngineEvents.CharacterLostHp,
+      characterId: event.target.id,
+      amount: event.spell.damage,
+      currentHp: this.characters[event.target.id].currentHp,
+    });
+
+    if (this.characters[event.target.id].currentHp === 0) {
+      this.engineEventCrator.createEvent({
+        type: EngineEvents.CharacterDied,
+        characterId: event.target.id,
+      });
+    }
+  };
+
   generatePlayer = ({ socketId }) => {
     this.increment++;
     return {
@@ -84,6 +114,9 @@ export class CharactersService extends EventParser {
       sprites: 'nakedFemale',
       isInMove: false,
       socketId,
+      currentHp: 100,
+      maxHp: 100,
+      size: 48,
     };
   };
 
