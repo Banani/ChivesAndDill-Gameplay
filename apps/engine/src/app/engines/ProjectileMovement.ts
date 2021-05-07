@@ -51,7 +51,10 @@ export class ProjectileMovement {
 
   getCrossingCharacter(movementSegment) {
     return _.pickBy(
-      this.services.characterService.getAllCharacters(),
+      _.pickBy(
+        this.services.characterService.getAllCharacters(),
+        (char) => !char.isDead
+      ),
       (character) => {
         return isSegmentIntersectingWithACircle(movementSegment, [
           character.location.x,
