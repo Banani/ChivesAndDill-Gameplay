@@ -53,7 +53,7 @@ const initialState: PlayersState = {
         spriteAmount: 1,
       },
       dead: {
-        yOffSet: 48,
+        yOffSet: 192,
         xOffSet: 0,
         spriteAmount: 1,
       }
