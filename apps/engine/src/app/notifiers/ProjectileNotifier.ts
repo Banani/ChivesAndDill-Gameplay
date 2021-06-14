@@ -1,6 +1,7 @@
 import { EngineMessages, ClientMessages } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
 import { EventParser } from '../EventParser';
+import { SpellType } from '../SpellType';
 
 export class ProjectileNotifier extends EventParser {
   constructor() {
@@ -55,6 +56,7 @@ export class ProjectileNotifier extends EventParser {
           spellData: {
             characterId: currentCharacter.id,
             spell: {
+              type: SpellType.DIRECT_HIT,
               name: spellName,
               range: 400,
               speed: 4,

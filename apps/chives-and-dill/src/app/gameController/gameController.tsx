@@ -95,7 +95,7 @@ const GameController = ({ children }) => {
           event.nativeEvent.offsetY -
           gameHeight / 2,
       },
-      spellName: 'Potato-Inator',
+      spellName: 'DirectHit',
     });
   };
 
