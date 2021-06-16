@@ -12,7 +12,7 @@ export class ProjectilesService extends EventParser {
     super();
     this.projectileEngine = projectileEngine;
     this.eventsToHandlersMap = {
-      [EngineEvents.PlayerCastedSpell]: this.handlePlayerCastedSpell,
+      [EngineEvents.PlayerTriesToCastASpell]: this.handlePlayerCastedSpell,
       [EngineEvents.ProjectileMoved]: this.handleProjectileMoved,
       [EngineEvents.RemoveProjectile]: this.handleRemoveProjectile,
     };
@@ -47,7 +47,7 @@ export class ProjectilesService extends EventParser {
         currentLocation: character.location,
         spell: event.spellData.spell.name,
       });
-   }
+    }
   };
 
   handleProjectileMoved = ({ event, services }) => {
