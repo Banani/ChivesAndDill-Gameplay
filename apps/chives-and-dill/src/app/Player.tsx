@@ -10,89 +10,79 @@ const Player = ({ player, characterViewsSettings }) => {
   const [isCharacterMoving, setIsCharacterMoving] = useState(false);
   const [yPositionLostHp, setYPositionLostHp] = useState(2.5);
 
-  const playerSprite = characterViewsSettings[player.sprites];
-  const sheet = PIXI.BaseTexture.from(
-    `../assets${characterViewsSettings[player.sprites].image}`
-  );
-  const w = playerSprite.spriteWidth;
-  const h = playerSprite.spriteHeight;
+   const playerSprite = characterViewsSettings[player.sprites];
+   const sheet = PIXI.BaseTexture.from(`../assets${characterViewsSettings[player.sprites].image}`);
+   const w = playerSprite.spriteWidth;
+   const h = playerSprite.spriteHeight;
 
-  const getPlayerSheets = () => {
-    const newPlayerSheets = {
-      movementDown: [],
-      movementUp: [],
-      movementRight: [],
-      movementLeft: [],
-      standingUp: [],
-      standingDown: [],
-      standingRight: [],
-      standingLeft: [],
-      dead: [],
-    };
+   const getPlayerSheets = () => {
+      const newPlayerSheets = {
+         movementDown: [],
+         movementUp: [],
+         movementRight: [],
+         movementLeft: [],
+         standingUp: [],
+         standingDown: [],
+         standingRight: [],
+         standingLeft: [],
+         dead: [],
+      };
 
-    _.forOwn(newPlayerSheets, function (value, key) {
-      for (let i = 0; i < playerSprite[key].spriteAmount; i++) {
-        newPlayerSheets[key][i] = new PIXI.Texture(
-          sheet,
-          new PIXI.Rectangle(
-            i * w + playerSprite[key].xOffSet,
-            playerSprite[key].yOffSet,
-            w,
-            h
-          )
-        );
-      }
-    });
-    setPlayerSheet(newPlayerSheets);
-  };
+      _.forOwn(newPlayerSheets, function (value, key) {
+         for (let i = 0; i < playerSprite[key].spriteAmount; i++) {
+            newPlayerSheets[key][i] = new PIXI.Texture(sheet, new PIXI.Rectangle(i * w + playerSprite[key].xOffSet, playerSprite[key].yOffSet, w, h));
+         }
+      });
+      setPlayerSheet(newPlayerSheets);
+   };
 
-  const getDirection = (direction) => {
-    if (!isCharacterMoving) {
-      if (direction === 0) {
-        setCharacterDirection('standingUp');
+   const getDirection = (direction) => {
+      if (!isCharacterMoving) {
+         if (direction === 0) {
+            setCharacterDirection('standingUp');
+         }
+         if (direction === 1) {
+            setCharacterDirection('standingDown');
+         }
+         if (direction === 2) {
+            setCharacterDirection('standingLeft');
+         }
+         if (direction === 3) {
+            setCharacterDirection('standingRight');
+         }
+      } else {
+         if (direction === 0) {
+            setCharacterDirection('movementUp');
+         }
+         if (direction === 1) {
+            setCharacterDirection('movementDown');
+         }
+         if (direction === 2) {
+            setCharacterDirection('movementLeft');
+         }
+         if (direction === 3) {
+            setCharacterDirection('movementRight');
+         }
       }
-      if (direction === 1) {
-        setCharacterDirection('standingDown');
-      }
-      if (direction === 2) {
-        setCharacterDirection('standingLeft');
-      }
-      if (direction === 3) {
-        setCharacterDirection('standingRight');
-      }
-    } else {
-      if (direction === 0) {
-        setCharacterDirection('movementUp');
-      }
-      if (direction === 1) {
-        setCharacterDirection('movementDown');
-      }
-      if (direction === 2) {
-        setCharacterDirection('movementLeft');
-      }
-      if (direction === 3) {
-        setCharacterDirection('movementRight');
-      }
-    }
-  };
+   };
 
-  useEffect(() => {
-    setInterval(() => {
-      setTimer((zxc) => zxc + 1);
-    }, 20);
-  }, []);
+   useEffect(() => {
+      setInterval(() => {
+         setTimer((zxc) => zxc + 1);
+      }, 20);
+   }, []);
 
-  useEffect(() => {
-    getPlayerSheets();
-  }, []);
+   useEffect(() => {
+      getPlayerSheets();
+   }, []);
 
-  useEffect(() => {
-    getDirection(player.direction);
-  }, [player.direction, isCharacterMoving]);
+   useEffect(() => {
+      getDirection(player.direction);
+   }, [player.direction, isCharacterMoving]);
 
-  useEffect(() => {
-    setIsCharacterMoving(player.isInMove);
-  }, [player.isInMove]);
+   useEffect(() => {
+      setIsCharacterMoving(player.isInMove);
+   }, [player.isInMove]);
 
   useEffect(() => {
     let position = 2.5;
@@ -109,29 +99,19 @@ const Player = ({ player, characterViewsSettings }) => {
     }
   }, [player.currentHp]);
 
-  const hpGreenBar = player.currentHp / 2;
-  const hpBar = useCallback(
-    (g) => {
-      g.clear();
-      g.beginFill(0xff0000);
-      g.drawRect(
-        player?.location.x - 25,
-        player?.location.y - h / 1.5,
-        player.maxHp / 2,
-        5
-      );
-      g.endFill();
-      g.beginFill(0x00ff00);
-      g.drawRect(
-        player?.location.x - 25,
-        player?.location.y - h / 1.5,
-        hpGreenBar,
-        5
-      );
-      g.endFill();
-    },
-    [player, h]
-  );
+   const hpGreenBar = player.currentHp / 2;
+   const hpBar = useCallback(
+      (g) => {
+         g.clear();
+         g.beginFill(0xff0000);
+         g.drawRect(player?.location.x - 25, player?.location.y - h / 1.5, player.maxHp / 2, 5);
+         g.endFill();
+         g.beginFill(0x00ff00);
+         g.drawRect(player?.location.x - 25, player?.location.y - h / 1.5, hpGreenBar, 5);
+         g.endFill();
+      },
+      [player, h]
+   );
 
   return (
     <>

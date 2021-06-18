@@ -6,6 +6,7 @@ import {
   SocketConnectionService,
   ProjectilesService,
   DirectHitService,
+  CooldownService,
 } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
 import {
@@ -45,6 +46,7 @@ const services = {
   playerMovementNotifier: new PlayerMovementNotifier(),
   projectileNotifier: new ProjectileNotifier(),
   characterEffectNotifier: new CharacterEffectNotifier(),
+  cooldownService: new CooldownService(),
   socketConnectionService: new SocketConnectionService(io),
 };
 

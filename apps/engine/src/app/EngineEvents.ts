@@ -6,6 +6,7 @@ export enum EngineEvents {
   PlayerStopedMovementVector = 'PlayerStopedMovementVector',
   PlayerStopedAllMovementVectors = 'PlayerStopedAllMovementVectors',
   PlayerMoved = 'PlayerMoved',
+  PlayerTriesToCastASpell = 'PlayerTriesToCastASpell',
   PlayerCastedSpell = 'PlayerCastedSpell',
   ProjectileCreated = 'ProjectileCreated',
   ProjectileMoved = 'ProjectileMoved',

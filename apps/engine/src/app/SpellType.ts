@@ -1,4 +1,4 @@
 export enum SpellType {
-    DIRECT_HIT = 'DirectHit',
-    PROJECTILE = 'Projectile',
+   DIRECT_HIT = 'DirectHit',
+   PROJECTILE = 'Projectile',
 }
