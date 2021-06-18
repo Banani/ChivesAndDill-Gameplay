@@ -1,6 +1,7 @@
 import { EngineEvents } from '../EngineEvents';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
+import { SpellType } from '../SpellType';
 
 export class ProjectilesService extends EventParser {
   projectileEngine: any;
@@ -23,29 +24,30 @@ export class ProjectilesService extends EventParser {
   }
 
   handlePlayerCastedSpell = ({ event, services }) => {
-    const character = services.characterService.getCharacterById(
-      event.spellData.characterId
-    );
+    if (event.spellData.type === SpellType.PROJECTILE) {
+      const character = services.characterService.getCharacterById(
+        event.spellData.characterId
+      );
 
-    this.increment++;
-    const projectile = {
-      ...event.spellData,
-      startLocation: character.location,
-      currentLocation: character.location,
-    };
+      this.increment++;
+      const projectile = {
+        ...event.spellData,
+        startLocation: character.location,
+        currentLocation: character.location,
+      };
 
-    this.projectiles[this.increment] = {
-      ...projectile,
-      ...this.projectileEngine.calculateAngles(projectile),
-    };
-    console.log(this.projectiles[this.increment]);
+      this.projectiles[this.increment] = {
+        ...projectile,
+        ...this.projectileEngine.calculateAngles(projectile),
+      };
 
-    this.engineEventCrator.createEvent({
-      type: EngineEvents.ProjectileCreated,
-      projectileId: this.increment,
-      currentLocation: character.location,
-      spell: event.spellData.spell.name,
-    });
+      this.engineEventCrator.createEvent({
+        type: EngineEvents.ProjectileCreated,
+        projectileId: this.increment,
+        currentLocation: character.location,
+        spell: event.spellData.spell.name,
+      });
+   }
   };
 
   handleProjectileMoved = ({ event, services }) => {

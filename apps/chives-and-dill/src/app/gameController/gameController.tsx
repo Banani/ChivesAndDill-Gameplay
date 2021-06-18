@@ -2,13 +2,9 @@ import { ClientMessages } from '@bananos/types';
 import React, { useContext, useState } from 'react';
 import AppContext from '../gameController/context';
 import { useSelector } from 'react-redux';
-import {
-  selectCharacters,
-  selectActivePlayer,
-} from '../../stores';
+import { selectCharacters, selectActivePlayer } from '../../stores';
 
 const GameController = ({ children }) => {
-
   const context = useContext(AppContext);
   const { socket } = context;
   const [keyState, setKeyState] = useState<Record<string, boolean>>({});
@@ -89,12 +85,17 @@ const GameController = ({ children }) => {
       gameHeight = gameWidth / ratio;
     }
     socket?.emit(ClientMessages.PerformBasicAttack, {
-
       directionLocation: {
-        x: players[activePlayerId]?.location.x + event.pageX - gameWidth / 2,
-        y: players[activePlayerId]?.location.y + event.pageY - gameHeight / 2,
+        x:
+          players[activePlayerId]?.location.x +
+          event.nativeEvent.offsetX -
+          gameWidth / 2,
+        y:
+          players[activePlayerId]?.location.y +
+          event.nativeEvent.offsetY -
+          gameHeight / 2,
       },
-      spellName: 'Potato-Inator',
+      spellName: 'DirectHit',
     });
   };
 

@@ -5,6 +5,7 @@ import {
   PlayerMovementService,
   SocketConnectionService,
   ProjectilesService,
+  DirectHitService,
 } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
 import {
@@ -40,6 +41,7 @@ const services = {
   characterService: new CharactersService(),
   playerMovementService: new PlayerMovementService(playerMovementEngine),
   projectilesService: new ProjectilesService(projectileMovement),
+  directHitService: new DirectHitService(),
   playerMovementNotifier: new PlayerMovementNotifier(),
   projectileNotifier: new ProjectileNotifier(),
   characterEffectNotifier: new CharacterEffectNotifier(),
