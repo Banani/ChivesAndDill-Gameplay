@@ -2,7 +2,7 @@ import { EngineEvents } from '../EngineEvents';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
 import _ from 'lodash';
-import { NewCharacterCreatedEvent, PlayerCastedSpellEvent, PlayerDisconnectedEvent } from '../types';
+import { NewCharacterCreatedEvent, PlayerDisconnectedEvent } from '../types';
 import { ALL_SPELLS } from '../spells';
 
 export class CooldownService extends EventParser {
