@@ -196,6 +196,7 @@ export const playersReducer = (
           [action.payload.characterId]: {
             ...state.characters[action.payload.characterId],
             currentHp: state.characters[action.payload.characterId].currentHp - action.payload.amount,
+            hpLost: action.payload.amount,
           }
         }
       };

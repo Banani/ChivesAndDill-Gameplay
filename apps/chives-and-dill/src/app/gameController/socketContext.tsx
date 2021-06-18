@@ -76,7 +76,7 @@ const SocketContext = ({ children }) => {
         dispatch(deleteProjectile({ projectileId }));
       });
 
-      context.socket.on(EngineMessages.CharacterLostHp, ({characterId, currentHp, amount}) => {
+      context.socket.on(EngineMessages.CharacterLostHp, ({ characterId, currentHp, amount }) => {
         dispatch(updateCharacterHp({ characterId, currentHp, amount }));
       });
     }

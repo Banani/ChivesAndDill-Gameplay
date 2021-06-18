@@ -72,6 +72,7 @@ const Map = () => {
   });
 
   const scale = gameWidth / 1000;
+
   return (
     <Stage
       width={gameWidth}

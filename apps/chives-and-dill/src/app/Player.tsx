@@ -8,6 +8,7 @@ const Player = ({ player, characterViewsSettings }) => {
   const [playerSheet, setPlayerSheet] = useState({});
   const [characterDirection, setCharacterDirection] = useState('standingDown');
   const [isCharacterMoving, setIsCharacterMoving] = useState(false);
+  const [yPositionLostHp, setYPositionLostHp] = useState(2.5);
 
   const playerSprite = characterViewsSettings[player.sprites];
   const sheet = PIXI.BaseTexture.from(
@@ -93,8 +94,16 @@ const Player = ({ player, characterViewsSettings }) => {
     setIsCharacterMoving(player.isInMove);
   }, [player.isInMove]);
 
-
   useEffect(() => {
+    let position = 2.5;
+    const positionTimer = setInterval(() => {
+      position += 0.1;
+      setYPositionLostHp(position);
+      if (position >= 4.5) {
+        clearInterval(positionTimer);
+      }
+    }, 10)
+
     if (player.currentHp <= 0) {
       setCharacterDirection('dead');
     }
@@ -147,6 +156,20 @@ const Player = ({ player, characterViewsSettings }) => {
           y={player?.location.y - h / 2}
         />
       )}
+      {
+        yPositionLostHp <= 4.5 ? <Text
+          text={player.hpLost ? player.hpLost : null}
+          anchor={[0.5, yPositionLostHp]}
+          x={player?.location.x}
+          y={player?.location.y}
+          style={
+            new PIXI.TextStyle({
+              fontSize: 15,
+              fill: 'red',
+            })
+          }
+        /> : null
+      }
     </>
   );
 };
