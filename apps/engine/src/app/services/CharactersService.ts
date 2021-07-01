@@ -43,6 +43,7 @@ export class CharactersService extends EventParser {
          isDead: false,
       },
    };
+
    increment: number = 0;
 
    constructor() {
@@ -55,6 +56,21 @@ export class CharactersService extends EventParser {
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.CharacterHit]: this.handleCharacterHit,
       };
+
+      for (let i = 1; i <= 100; i++) {
+         this.characters[`monster_${i}`] = {
+            id: `monster_${i}`,
+            name: `#monster_${i}`,
+            location: { x: 100 * (i / 10) + 100, y: 100 * (i % 10) + 100 },
+            direction: CharacterDirection.DOWN,
+            sprites: 'pigMan',
+            isInMove: false,
+            currentHp: 100,
+            maxHp: 100,
+            size: 50,
+            isDead: false,
+         };
+      }
    }
 
    handleCreateNewPlayer = ({ event }) => {
@@ -127,4 +143,8 @@ export class CharactersService extends EventParser {
    getAllCharacters = () => this.characters;
 
    getCharacterById = (id) => this.characters[id];
+
+   canMove = (id) => !this.characters[id].isDead;
+
+   canCastASpell = (id) => !this.characters[id].isDead;
 }

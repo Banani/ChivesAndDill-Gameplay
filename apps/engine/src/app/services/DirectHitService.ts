@@ -20,6 +20,11 @@ export class DirectHitService extends EventParser {
    handlePlayerCastedSpell = ({ event, services }) => {
       if (event.spellData.spell.type === SpellType.DIRECT_HIT) {
          const character = services.characterService.getCharacterById(event.spellData.characterId);
+
+         if (!services.characterService.canCastASpell(character.id)) {
+            return;
+         }
+
          if (distanceBetweenTwoPoints(character.location, event.spellData.directionLocation) > event.spellData.spell.range) {
             return;
          }

@@ -27,6 +27,10 @@ export class ProjectilesService extends EventParser {
       if (event.spellData.spell.type === SpellType.PROJECTILE) {
          const character = services.characterService.getCharacterById(event.spellData.characterId);
 
+         if (!services.characterService.canCastASpell(character.id)) {
+            return;
+         }
+
          if (!services.cooldownService.isSpellAvailable(character.id, event.spellData.spell.name)) {
             return;
          }

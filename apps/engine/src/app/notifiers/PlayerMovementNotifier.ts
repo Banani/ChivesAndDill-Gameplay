@@ -10,20 +10,23 @@ export class PlayerMovementNotifier extends EventParser {
          [EngineEvents.NewCharacterCreated]: this.NewCharacterCreated,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
+         [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
       };
    }
+
+   handlePlayerStartedMovement = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(EngineMessages.PlayerStartedMovement, {
+         userId: event.characterId,
+      });
+   };
 
    NewCharacterCreated = ({ event, services }: { event: NewCharacterCreatedEvent; services: any }) => {
       const { newCharacter: currentCharacter } = event.payload;
       const currentSocket = services.socketConnectionService.getSocketById(currentCharacter.socketId);
 
       currentSocket.on(ClientMessages.PlayerStartMove, (movement) => {
-         services.socketConnectionService.getIO().sockets.emit(EngineMessages.PlayerStartedMovement, {
-            userId: currentCharacter.id,
-         });
-
          this.engineEventCrator.createEvent({
-            type: EngineEvents.PlayerStartedMovement,
+            type: EngineEvents.PlayerTriesToStartedMovement,
             characterId: currentCharacter.id,
             movement,
          });
