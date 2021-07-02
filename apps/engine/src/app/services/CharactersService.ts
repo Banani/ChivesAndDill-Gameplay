@@ -91,7 +91,7 @@ export class CharactersService extends EventParser {
       delete this.characters[event.payload.playerId];
    };
 
-   handlePlayerStartedMovement = ({ event }) => {
+   handlePlayerStartedMovement = ({ event, services }) => {
       this.characters[event.characterId].isInMove = true;
    };
 
