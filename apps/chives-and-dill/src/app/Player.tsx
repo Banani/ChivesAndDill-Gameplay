@@ -125,6 +125,8 @@ const Player = ({ player, characterViewsSettings }) => {
             style={
               new PIXI.TextStyle({
                 fontSize: 15,
+                fill: "green",
+                fontWeight: "bold"
               })
             }
           />
