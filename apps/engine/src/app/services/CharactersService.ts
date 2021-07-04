@@ -2,7 +2,7 @@ import { EventParser } from '../EventParser';
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
 import _ from 'lodash';
-import { Character, NewCharacterCreatedEvent, PlayerDisconnectedEvent } from '../types';
+import type { Character, NewCharacterCreatedEvent, PlayerDisconnectedEvent } from '../types';
 
 export class CharactersService extends EventParser {
    characters: Record<string, Character> = {
@@ -44,7 +44,7 @@ export class CharactersService extends EventParser {
       },
    };
 
-   increment: number = 0;
+   increment = 0;
 
    constructor() {
       super();
@@ -57,7 +57,7 @@ export class CharactersService extends EventParser {
          [EngineEvents.CharacterHit]: this.handleCharacterHit,
       };
 
-      for (let i = 1; i <= 100; i++) {
+      for (let i = 1; i <= 3; i++) {
          this.characters[`monster_${i}`] = {
             id: `monster_${i}`,
             name: `#monster_${i}`,

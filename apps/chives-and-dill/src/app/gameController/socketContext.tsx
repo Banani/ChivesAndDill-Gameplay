@@ -11,7 +11,8 @@ import {
   addSpell,
   updateSpell,
   deleteProjectile,
-  updateCharacterHp
+  updateCharacterHp,
+  characterDied
 } from '../../stores';
 import AppContext from './context';
 
@@ -78,6 +79,10 @@ const SocketContext = ({ children }) => {
 
       context.socket.on(EngineMessages.CharacterLostHp, ({characterId, currentHp, amount}) => {
         dispatch(updateCharacterHp({ characterId, currentHp, amount }));
+      });
+
+      context.socket.on(EngineMessages.CharacterDied, ({characterId}) => {
+        dispatch(characterDied({ characterId }));
       });
     }
   }, [context]);

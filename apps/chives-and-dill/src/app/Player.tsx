@@ -84,10 +84,10 @@ const Player = ({ player, characterViewsSettings }) => {
    }, [player.isInMove]);
 
    useEffect(() => {
-      if (player.currentHp <= 0) {
+      if (player.isDead) {
          setCharacterDirection('dead');
       }
-   }, [player.currentHp]);
+   }, [player.isDead]);
 
    const hpGreenBar = player.currentHp / 2;
    const hpBar = useCallback(

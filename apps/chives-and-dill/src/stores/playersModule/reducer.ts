@@ -199,6 +199,17 @@ export const playersReducer = (
           }
         }
       };
+    case PlayersActionTypes.CHARACTER_DIED:
+      return {
+        ...state,
+        characters: {
+          ...state.characters,
+          [action.payload.characterId]: {
+            ...state.characters[action.payload.characterId],
+            isDead: true
+          }
+        }
+      }
     default:
       return state;
   }

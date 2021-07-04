@@ -1,3 +1,4 @@
+import { CharacterDied } from './actions';
 import type { FSAAuto } from 'flux-standard-action';
 import type {
   ChangeLocationPayload,
@@ -9,6 +10,7 @@ import type {
   UpdateSpellPayload,
   DeleteProjectilePayload,
   UpdateCharacterHpPayload,
+  CharacterDiedPayload,
 } from '../../types/players';
 
 export enum PlayersActionTypes {
@@ -21,6 +23,7 @@ export enum PlayersActionTypes {
   UPDATE_SPELL = '[Players] UPDATE_SPELL',
   DELETE_PROJECTILE = '[Players] DELETE_PROJECTILE',
   UPDATE_CHARACTER_HP = '[Players] UPDATE_CHARACTERS_HP',
+  CHARACTER_DIED = '[Players] CHARACTER_DIED',
 }
 
 export type ChangePlayerPosition = FSAAuto<
@@ -61,6 +64,11 @@ export type DeleteProjectile = FSAAuto<
 export type UpdateCharacterHp = FSAAuto<
   PlayersActionTypes.UPDATE_CHARACTER_HP,
   UpdateCharacterHpPayload
+>;
+
+export type CharacterDied = FSAAuto<
+  PlayersActionTypes.CHARACTER_DIED,
+  CharacterDiedPayload
 >;
 
 export type ChangePlayerMovingStatus = FSAAuto<
@@ -119,6 +127,11 @@ export const updateCharacterHp = (payload: UpdateCharacterHpPayload): UpdateChar
   payload,
 });
 
+export const characterDied = (payload: CharacterDiedPayload): CharacterDied => ({
+  type: PlayersActionTypes.CHARACTER_DIED,
+  payload,
+});
+
 export type PlayerAction =
   | ChangePlayerPosition
   | Initialize
@@ -128,4 +141,5 @@ export type PlayerAction =
   | AddSpell
   | UpdateSpell
   | DeleteProjectile
-  | UpdateCharacterHp;
+  | UpdateCharacterHp
+  | CharacterDied;

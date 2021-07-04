@@ -14,6 +14,7 @@ export interface Player {
    currentHp: number;
    direction: CharacterDirection;
    id: string;
+   isDead: boolean;
    isInMove: boolean;
    location: Location;
    maxHp: number;
