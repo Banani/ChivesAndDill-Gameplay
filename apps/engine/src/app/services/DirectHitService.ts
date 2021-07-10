@@ -1,7 +1,7 @@
 import { EngineEvents } from '../EngineEvents';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
-import { distanceBetweenTwoPoints } from '../math/lines';
+import { distanceBetweenTwoPoints } from '../math';
 import { SpellType } from '../SpellType';
 import _ from 'lodash';
 

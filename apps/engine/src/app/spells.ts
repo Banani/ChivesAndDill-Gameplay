@@ -18,4 +18,12 @@ export const ALL_SPELLS: Record<string, Spell> = {
       damage: 69,
       cooldown: 500,
    },
+   InstantProjectile: {
+      type: SpellType.PROJECTILE,
+      name: 'InstantProjectile',
+      range: 1000,
+      speed: 1000,
+      damage: 69,
+      cooldown: 500,
+   },
 };

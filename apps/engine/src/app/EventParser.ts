@@ -1,11 +1,10 @@
-import { EngineEvents } from './EngineEvents';
 import { EngineEventCrator } from './EngineEventsCreator';
-import { EngineEvent } from './types';
+import { EngineEvent, EngineEventsMap } from './types';
 import { Services } from './types/Services';
 
 export abstract class EventParser {
    engineEventCrator: EngineEventCrator;
-   eventsToHandlersMap: Partial<Record<EngineEvents, ({ event, services }: { event: EngineEvent; services: Services }) => void>> = {};
+   eventsToHandlersMap: Partial<EngineEventsMap> = {};
 
    init(engineEventCrator: EngineEventCrator, services?: Services) {
       this.engineEventCrator = engineEventCrator;
