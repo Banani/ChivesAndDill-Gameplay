@@ -1,9 +1,10 @@
 import { CharacterDirection, Player } from '@bananos/types';
 import _ from 'lodash';
-import { areLinesIntersecting } from '../math/lines';
+import { areSegmentsIntersecting } from '../math/lines';
 import { AREAS, BORDER } from '../../map';
 import { EngineEvents } from '../EngineEvents';
 import { Engine } from './Engine';
+import { PlayerMovedEvent } from '../types';
 
 export class PlayersMovement extends Engine {
    movements = new WeakMap();
@@ -50,7 +51,7 @@ export class PlayersMovement extends Engine {
    canMove(movementSegment) {
       return ![...BORDER, ...AREAS].find((polygon) => {
          for (let i = 0; i < polygon.length; i++) {
-            if (areLinesIntersecting(movementSegment, [polygon[i], polygon[(i + 1) % polygon.length]])) {
+            if (areSegmentsIntersecting(movementSegment, [polygon[i], polygon[(i + 1) % polygon.length]])) {
                return true;
             }
          }
@@ -81,14 +82,14 @@ export class PlayersMovement extends Engine {
             const lastMovement = movement[movement.length - 1];
 
             if (this.canMove(movementSegment)) {
-               this.eventCrator.createEvent({
+               this.eventCrator.createEvent<PlayerMovedEvent>({
                   type: EngineEvents.PlayerMoved,
                   characterId: player.id,
                   newCharacterDirection: this.getNewDirection(lastMovement),
                   newLocation,
                });
             } else {
-               this.eventCrator.createEvent({
+               this.eventCrator.createEvent<PlayerMovedEvent>({
                   type: EngineEvents.PlayerMoved,
                   characterId: player.id,
                   newCharacterDirection: this.getNewDirection(lastMovement),

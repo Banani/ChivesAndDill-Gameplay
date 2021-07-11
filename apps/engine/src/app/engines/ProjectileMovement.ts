@@ -1,18 +1,22 @@
 import _ from 'lodash';
-import { distanceBetweenTwoPoints, areLinesIntersecting, isSegmentIntersectingWithACircle, getTheClosestObject } from '../math';
+import { distanceBetweenTwoPoints, areSegmentsIntersecting, isSegmentIntersectingWithACircle, getTheClosestObject, getSegmentsCrossingPoint } from '../math';
 import { EngineEvents } from '../EngineEvents';
 import { AREAS, BORDER } from '../../map';
 import { Engine } from './Engine';
+import { ProjectileIntersection } from './types';
 
 export class ProjectileMovement extends Engine {
-   isMovementCrossingWall(movementSegment) {
-      return [...BORDER, ...AREAS].find((polygon) => {
+   getCrossingPointsWithWalls(movementSegment) {
+      return [...BORDER, ...AREAS].reduce((prev, polygon) => {
+         const intersections = [];
          for (let i = 0; i < polygon.length; i++) {
-            if (areLinesIntersecting(movementSegment, [polygon[i], polygon[(i + 1) % polygon.length]])) {
-               return true;
+            const crossPoint = getSegmentsCrossingPoint(movementSegment, [polygon[i], polygon[(i + 1) % polygon.length]]);
+            if (crossPoint !== null) {
+               intersections.push(crossPoint);
             }
          }
-      });
+         return prev.concat(intersections);
+      }, []);
    }
 
    calculateAngles(projectile) {
@@ -51,10 +55,23 @@ export class ProjectileMovement extends Engine {
          ];
 
          const hitCharacters = _.filter(this.getCrossingCharacter(movementSegment), (character) => character.id !== projectile.characterId);
+         const wallsInteractionPoints = this.getCrossingPointsWithWalls(movementSegment);
 
-         if (hitCharacters.length > 0) {
-            const theClossestHitCharacter = getTheClosestObject(projectile.currentLocation, hitCharacters);
+         const allProjectileIntersections = [
+            ...hitCharacters.map((character) => ({
+               type: ProjectileIntersection.CHARACTER,
+               location: character.location,
+               character,
+            })),
+            ...wallsInteractionPoints.map((crossPoint) => ({
+               type: ProjectileIntersection.WALL,
+               location: crossPoint,
+            })),
+         ];
 
+         const theClossestIntersection = getTheClosestObject(projectile.currentLocation, allProjectileIntersections);
+
+         if (theClossestIntersection?.type === ProjectileIntersection.CHARACTER) {
             this.eventCrator.createEvent({
                type: EngineEvents.RemoveProjectile,
                projectileId,
@@ -62,9 +79,9 @@ export class ProjectileMovement extends Engine {
             this.eventCrator.createEvent({
                type: EngineEvents.CharacterHit,
                spell: projectile.spell,
-               target: theClossestHitCharacter,
+               target: theClossestIntersection.character,
             });
-         } else if (this.isItOutOfRange(projectile, newLocation) || this.isMovementCrossingWall(movementSegment)) {
+         } else if (this.isItOutOfRange(projectile, newLocation) || theClossestIntersection?.type === ProjectileIntersection.WALL) {
             this.eventCrator.createEvent({
                type: EngineEvents.RemoveProjectile,
                projectileId,

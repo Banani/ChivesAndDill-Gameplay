@@ -18,7 +18,7 @@ function getLine([firstPointsSet, secondPointsSet]) {
    return { a, b };
 }
 
-function crossPoint(line1, line2) {
+export function linesCrossPoint(line1, line2) {
    if (line1.x !== undefined && line2.y !== undefined) {
       return { x: line1.x, y: line2.y };
    }
@@ -60,17 +60,25 @@ function isThePointOnTheSegment({ x, y }, segment) {
    return true;
 }
 
-export function areLinesIntersecting(segment1, segment2) {
+export function getSegmentsCrossingPoint(segment1, segment2) {
    const line1 = getLine(segment1);
    const line2 = getLine(segment2);
 
    if (line1.a === line2.a) {
-      return false;
+      return null;
    }
 
-   const { x, y } = crossPoint(line1, line2);
+   const { x, y } = linesCrossPoint(line1, line2);
 
-   return isThePointOnTheSegment({ x, y }, segment1) && isThePointOnTheSegment({ x, y }, segment2);
+   if (isThePointOnTheSegment({ x, y }, segment1) && isThePointOnTheSegment({ x, y }, segment2)) {
+      return { x, y };
+   }
+
+   return null;
+}
+
+export function areSegmentsIntersecting(segment1, segment2) {
+   return getSegmentsCrossingPoint(segment1, segment2) !== null;
 }
 
 export function isSegmentIntersectingWithACircle(segment, circle) {
@@ -79,7 +87,7 @@ export function isSegmentIntersectingWithACircle(segment, circle) {
    const perpenticularLine = Object.assign({}, { ...line, a: -1 / line.a });
    perpenticularLine.b = circle[1] - circle[0] * perpenticularLine.a;
 
-   const linesIntersectionPoint = crossPoint(line, perpenticularLine);
+   const linesIntersectionPoint = linesCrossPoint(line, perpenticularLine);
 
    if (!isThePointOnTheSegment(linesIntersectionPoint, segment)) {
       return false;
