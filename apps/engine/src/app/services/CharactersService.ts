@@ -2,48 +2,22 @@ import { EventParser } from '../EventParser';
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
 import _ from 'lodash';
-import { Character, NewCharacterCreatedEvent, PlayerDisconnectedEvent } from '../types';
+import {
+   Character,
+   CharacterDiedEvent,
+   CharacterHitEvent,
+   CharacterLostHpEvent,
+   CreateNewPlayerEvent,
+   EngineEventHandler,
+   NewCharacterCreatedEvent,
+   PlayerDisconnectedEvent,
+   PlayerMovedEvent,
+   PlayerStartedMovementEvent,
+   PlayerStopedAllMovementVectorsEvent,
+} from '../types';
 
 export class CharactersService extends EventParser {
-   characters: Record<string, Character> = {
-      monster_1: {
-         id: 'monster_1',
-         name: `#monster_1`,
-         location: { x: 320, y: 640 },
-         direction: CharacterDirection.DOWN,
-         sprites: 'pigMan',
-         isInMove: false,
-         currentHp: 100,
-         maxHp: 100,
-         size: 50,
-         isDead: false,
-      },
-      monster_2: {
-         id: 'monster_2',
-         name: `#monster_2`,
-         location: { x: 420, y: 640 },
-         direction: CharacterDirection.DOWN,
-         sprites: 'pigMan',
-         isInMove: false,
-         currentHp: 100,
-         maxHp: 100,
-         size: 50,
-         isDead: false,
-      },
-      monster_3: {
-         id: 'monster_3',
-         name: `#monster_3`,
-         location: { x: 1020, y: 940 },
-         direction: CharacterDirection.DOWN,
-         sprites: 'pigMan',
-         isInMove: false,
-         currentHp: 100,
-         maxHp: 100,
-         size: 50,
-         isDead: false,
-      },
-   };
-
+   characters: Record<string, Character> = {};
    increment: number = 0;
 
    constructor() {
@@ -73,7 +47,7 @@ export class CharactersService extends EventParser {
       }
    }
 
-   handleCreateNewPlayer = ({ event }) => {
+   handleCreateNewPlayer: EngineEventHandler<CreateNewPlayerEvent> = ({ event }) => {
       const newCharacter = this.generatePlayer({
          socketId: event.payload.socketId,
       });
@@ -87,27 +61,27 @@ export class CharactersService extends EventParser {
       });
    };
 
-   handlePlayerDisconnected = ({ event, services }: { event: PlayerDisconnectedEvent; services: any }) => {
+   handlePlayerDisconnected: EngineEventHandler<PlayerDisconnectedEvent> = ({ event }) => {
       delete this.characters[event.payload.playerId];
    };
 
-   handlePlayerStartedMovement = ({ event, services }) => {
+   handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event }) => {
       this.characters[event.characterId].isInMove = true;
    };
 
-   handlePlayerStopedAllMovementVectors = ({ event }) => {
+   handlePlayerStopedAllMovementVectors: EngineEventHandler<PlayerStopedAllMovementVectorsEvent> = ({ event }) => {
       this.characters[event.characterId].isInMove = false;
    };
 
-   handlePlayerMoved = ({ event }) => {
+   handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
       this.characters[event.characterId].location = event.newLocation;
       this.characters[event.characterId].direction = event.newCharacterDirection;
    };
 
-   handleCharacterHit = ({ event }) => {
+   handleCharacterHit: EngineEventHandler<CharacterHitEvent> = ({ event }) => {
       this.characters[event.target.id].currentHp = Math.max(this.characters[event.target.id].currentHp - event.spell.damage, 0);
 
-      this.engineEventCrator.createEvent({
+      this.engineEventCrator.createEvent<CharacterLostHpEvent>({
          type: EngineEvents.CharacterLostHp,
          characterId: event.target.id,
          amount: event.spell.damage,
@@ -116,7 +90,7 @@ export class CharactersService extends EventParser {
 
       if (this.characters[event.target.id].currentHp === 0) {
          this.characters[event.target.id].isDead = true;
-         this.engineEventCrator.createEvent({
+         this.engineEventCrator.createEvent<CharacterDiedEvent>({
             type: EngineEvents.CharacterDied,
             characterId: event.target.id,
          });

@@ -2,14 +2,9 @@ import _ from 'lodash';
 import { distanceBetweenTwoPoints, areLinesIntersecting, isSegmentIntersectingWithACircle, getTheClosestObject } from '../math';
 import { EngineEvents } from '../EngineEvents';
 import { AREAS, BORDER } from '../../map';
+import { Engine } from './Engine';
 
-export class ProjectileMovement {
-   services: any;
-
-   init(services) {
-      this.services = services;
-   }
-
+export class ProjectileMovement extends Engine {
    isMovementCrossingWall(movementSegment) {
       return [...BORDER, ...AREAS].find((polygon) => {
          for (let i = 0; i < polygon.length; i++) {
@@ -60,22 +55,22 @@ export class ProjectileMovement {
          if (hitCharacters.length > 0) {
             const theClossestHitCharacter = getTheClosestObject(projectile.currentLocation, hitCharacters);
 
-            this.services.eventCreatorService.createEvent({
+            this.eventCrator.createEvent({
                type: EngineEvents.RemoveProjectile,
                projectileId,
             });
-            this.services.eventCreatorService.createEvent({
+            this.eventCrator.createEvent({
                type: EngineEvents.CharacterHit,
                spell: projectile.spell,
                target: theClossestHitCharacter,
             });
          } else if (this.isItOutOfRange(projectile, newLocation) || this.isMovementCrossingWall(movementSegment)) {
-            this.services.eventCreatorService.createEvent({
+            this.eventCrator.createEvent({
                type: EngineEvents.RemoveProjectile,
                projectileId,
             });
          } else {
-            this.services.eventCreatorService.createEvent({
+            this.eventCrator.createEvent({
                ...projectile,
                type: EngineEvents.ProjectileMoved,
                projectileId,

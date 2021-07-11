@@ -2,7 +2,7 @@ import { EngineEvents } from '../EngineEvents';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
 import _ from 'lodash';
-import { NewCharacterCreatedEvent, PlayerDisconnectedEvent } from '../types';
+import { EngineEventHandler, NewCharacterCreatedEvent, PlayerCastedSpellEvent, PlayerDisconnectedEvent } from '../types';
 import { ALL_SPELLS } from '../spells';
 
 export class CooldownService extends EventParser {
@@ -17,19 +17,19 @@ export class CooldownService extends EventParser {
       };
    }
 
-   init(engineEventCrator: EngineEventCrator, services) {
+   init(engineEventCrator: EngineEventCrator) {
       super.init(engineEventCrator);
    }
 
-   handlePlayerCastedSpell = ({ event, services }: { event; services: any }) => {
+   handlePlayerCastedSpell: EngineEventHandler<PlayerCastedSpellEvent> = ({ event }) => {
       this.cooldownHistoryPerUserSpells[event.casterId][event.spell.name] = Date.now();
    };
 
-   handleNewCharacterCreated = ({ event, services }: { event: NewCharacterCreatedEvent; services: any }) => {
+   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
       this.cooldownHistoryPerUserSpells[event.payload.newCharacter.id] = {};
    };
 
-   handlePlayerDisconnected = ({ event, services }: { event: PlayerDisconnectedEvent; services: any }) => {
+   handlePlayerDisconnected: EngineEventHandler<PlayerDisconnectedEvent> = ({ event }) => {
       delete this.cooldownHistoryPerUserSpells[event.payload.playerId];
    };
 

@@ -9,7 +9,7 @@ export class EngineEventCrator {
    constructor(services: Services) {
       this.services = services;
 
-      _.each(this.services, (service) => service.init(this, { eventCreatorService: this, ...this.services }));
+      _.each(this.services, (service) => service.init(this, { ...this.services }));
    }
 
    createEvent<T extends EngineEvent>(event: T) {

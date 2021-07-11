@@ -12,7 +12,7 @@ export abstract class EventParser {
 
    handleEvent<EventType extends EngineEvent>({ event, services }: { event: EventType; services: Services }) {
       if (this.eventsToHandlersMap[event.type]) {
-         this.eventsToHandlersMap[event.type]({ event, services });
+         this.eventsToHandlersMap[event.type]({ event: event as any, services });
       }
    }
 }

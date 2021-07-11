@@ -1,7 +1,15 @@
 import { EngineMessages, ClientMessages } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
 import { EventParser } from '../EventParser';
-import { NewCharacterCreatedEvent } from '../types';
+import {
+   EngineEventHandler,
+   NewCharacterCreatedEvent,
+   PlayerMovedEvent,
+   PlayerStartedMovementEvent,
+   PlayerStopedAllMovementVectorsEvent,
+   PlayerStopedMovementVectorEvent,
+   PlayerTriesToStartedMovementEvent,
+} from '../types';
 
 export class PlayerMovementNotifier extends EventParser {
    constructor() {
@@ -14,18 +22,18 @@ export class PlayerMovementNotifier extends EventParser {
       };
    }
 
-   handlePlayerStartedMovement = ({ event, services }) => {
+   handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event, services }) => {
       services.socketConnectionService.getIO().sockets.emit(EngineMessages.PlayerStartedMovement, {
          userId: event.characterId,
       });
    };
 
-   NewCharacterCreated = ({ event, services }: { event: NewCharacterCreatedEvent; services: any }) => {
+   NewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event, services }) => {
       const { newCharacter: currentCharacter } = event.payload;
       const currentSocket = services.socketConnectionService.getSocketById(currentCharacter.socketId);
 
       currentSocket.on(ClientMessages.PlayerStartMove, (movement) => {
-         this.engineEventCrator.createEvent({
+         this.engineEventCrator.createEvent<PlayerTriesToStartedMovementEvent>({
             type: EngineEvents.PlayerTriesToStartedMovement,
             characterId: currentCharacter.id,
             movement,
@@ -33,7 +41,7 @@ export class PlayerMovementNotifier extends EventParser {
       });
 
       currentSocket.on(ClientMessages.PlayerStopMove, (movement) => {
-         this.engineEventCrator.createEvent({
+         this.engineEventCrator.createEvent<PlayerStopedMovementVectorEvent>({
             type: EngineEvents.PlayerStopedMovementVector,
             characterId: currentCharacter.id,
             movement,
@@ -41,7 +49,7 @@ export class PlayerMovementNotifier extends EventParser {
       });
    };
 
-   handlePlayerMoved = ({ event, services }) => {
+   handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event, services }) => {
       services.socketConnectionService.getIO().sockets.emit(EngineMessages.PlayerMoved, {
          playerId: event.characterId,
          newLocation: event.newLocation,
@@ -49,7 +57,7 @@ export class PlayerMovementNotifier extends EventParser {
       });
    };
 
-   handlePlayerStopedAllMovementVectors = ({ event, services }) => {
+   handlePlayerStopedAllMovementVectors: EngineEventHandler<PlayerStopedAllMovementVectorsEvent> = ({ event, services }) => {
       services.socketConnectionService.getIO().sockets.emit(EngineMessages.PlayerStoppedMovement, {
          userId: event.characterId,
       });
