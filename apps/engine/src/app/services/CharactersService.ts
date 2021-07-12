@@ -57,7 +57,7 @@ export class CharactersService extends EventParser {
          [EngineEvents.CharacterHit]: this.handleCharacterHit,
       };
 
-      for (let i = 1; i <= 3; i++) {
+      for (let i = 1; i <= 100; i++) {
          this.characters[`monster_${i}`] = {
             id: `monster_${i}`,
             name: `#monster_${i}`,
