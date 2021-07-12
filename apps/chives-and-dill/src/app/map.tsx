@@ -53,22 +53,32 @@ const Map = () => {
       resizeGame();
    });
 
-   const scale = 1;
-   return (
-      <Stage width={gameWidth} height={gameHeight} options={{ backgroundColor: 0xa1a1a1, autoDensity: true }}>
-         <Sprite
-            image="http://localhost:4200/assets/maps/map1.png"
-            scale={scale}
-            x={-players[activePlayerId]?.location.x * scale + gameWidth / 2 ?? 0}
-            y={-players[activePlayerId]?.location.y * scale + gameHeight / 2 ?? 0}
-         >
-            {renderSpells}
-            {renderPlayers}
-            {players[activePlayerId] ? <Player player={players[activePlayerId]} characterViewsSettings={characterViewsSettings} /> : null}
-            {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
-         </Sprite>
-      </Stage>
-   );
+  const scale = gameWidth / 1000;
+
+  return (
+    <Stage
+      width={gameWidth}
+      height={gameHeight}
+      options={{ backgroundColor: 0xa1a1a1, autoDensity: true }}
+    >
+      <Sprite
+        image="http://localhost:4200/assets/maps/map1.png"
+        scale={scale}
+        x={-players[activePlayerId]?.location.x * scale + gameWidth / 2 ?? 0}
+        y={-players[activePlayerId]?.location.y * scale + gameHeight / 2 ?? 0}
+      >
+        {renderSpells}
+        {renderPlayers}
+        {players[activePlayerId] ? (
+          <Player
+            player={players[activePlayerId]}
+            characterViewsSettings={characterViewsSettings}
+          />
+        ) : null}
+        {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
+      </Sprite>
+    </Stage>
+  );
 };
 
 export default Map;
