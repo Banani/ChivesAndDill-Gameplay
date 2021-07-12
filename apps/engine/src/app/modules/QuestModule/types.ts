@@ -1,0 +1,55 @@
+import { Location } from '../../types';
+
+export enum QuestType {
+   MOVEMENT,
+   KILLING,
+}
+
+export interface Quest {
+   id: string;
+   name: string;
+   stageOrder?: string[];
+   description: string;
+   stages?: Record<string, QuestStage>;
+}
+
+export interface QuestStage {
+   id: string;
+   description: string;
+   stageParts: Record<string, MovementQuestStagePart | KillingQuestStagePart>;
+}
+
+export interface QuestStagePart {
+   id: string;
+   questId: string;
+   stageId: string;
+   type: QuestType;
+}
+
+export interface MovementQuestStagePart extends QuestStagePart {
+   targetLocation: Location;
+   acceptableRange: number;
+}
+
+export interface KillingQuestStagePart extends QuestStagePart {
+   rule: {
+      fieldName: string;
+      comparison: KillingQuestStagePartComparison;
+      value: string;
+   }[];
+   amount: number;
+}
+
+export interface KillingQuestStagePartStatus extends KillingQuestStagePart {
+   currentAmount: number;
+}
+
+export enum KillingQuestStagePartComparison {
+   equality,
+}
+
+export interface QuestProgress {
+   completed: boolean;
+   stageId: string;
+   stagesParts: Record<string, boolean>;
+}

@@ -89,7 +89,7 @@ const GameController = ({ children }) => {
             x: players[activePlayerId]?.location.x + event.nativeEvent.offsetX - gameWidth / 2,
             y: players[activePlayerId]?.location.y + event.nativeEvent.offsetY - gameHeight / 2,
          },
-         spellName: 'DirectHit',
+         spellName: 'InstantProjectile',
       });
    };
 
