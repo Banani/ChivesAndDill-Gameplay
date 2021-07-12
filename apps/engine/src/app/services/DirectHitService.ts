@@ -3,7 +3,7 @@ import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
 import { distanceBetweenTwoPoints } from '../math';
 import { SpellType } from '../SpellType';
-import _ from 'lodash';
+import { omit } from 'lodash';
 import { CharacterHitEvent, EngineEventHandler, PlayerCastedSpellEvent, PlayerTriesToCastASpellEvent } from '../types';
 
 export class DirectHitService extends EventParser {
@@ -35,7 +35,7 @@ export class DirectHitService extends EventParser {
          }
 
          const allCharacters = services.characterService.getAllCharacters();
-         for (const i in _.omit(allCharacters, [character.id])) {
+         for (const i in omit(allCharacters, [character.id])) {
             if (distanceBetweenTwoPoints(event.spellData.directionLocation, allCharacters[i].location) < allCharacters[i].size / 2) {
                this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
                   type: EngineEvents.PlayerCastedSpell,
@@ -47,6 +47,7 @@ export class DirectHitService extends EventParser {
                   type: EngineEvents.CharacterHit,
                   spell: event.spellData.spell,
                   target: allCharacters[i],
+                  attackerId: event.spellData.characterId,
                });
                break;
             }

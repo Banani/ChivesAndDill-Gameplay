@@ -1,7 +1,6 @@
 import { EngineEvents } from '../EngineEvents';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
-import _ from 'lodash';
 import { EngineEventHandler, NewCharacterCreatedEvent, PlayerCastedSpellEvent, PlayerDisconnectedEvent } from '../types';
 import { ALL_SPELLS } from '../spells';
 

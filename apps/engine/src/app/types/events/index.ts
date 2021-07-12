@@ -1,13 +1,13 @@
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../EngineEvents';
-import { SpellType } from '../../SpellType';
+import { QuestEngineEvents } from '../../modules/QuestModule/Events';
 import { Character } from '../Character';
 import { Location } from '../Location';
 import { Services } from '../Services';
 import { Spell } from '../Spell';
 
 export interface EngineEvent {
-   type: EngineEvents;
+   type: EngineEvents | QuestEngineEvents;
 }
 
 export interface PlayerCastedSpellEvent extends EngineEvent {
@@ -34,7 +34,8 @@ export interface PlayerDisconnectedEvent extends EngineEvent {
 }
 
 export interface CharacterDiedEvent extends EngineEvent {
-   characterId: string;
+   character: Character;
+   killer: Character;
 }
 
 export interface CharacterLostHpEvent extends EngineEvent {
@@ -71,6 +72,7 @@ export interface PlayerMovedEvent extends EngineEvent {
 export interface CharacterHitEvent extends EngineEvent {
    spell: Spell;
    target: Character;
+   attackerId: string;
 }
 
 export interface PlayerTriesToCastASpellEvent extends EngineEvent {
@@ -105,11 +107,22 @@ export interface ProjectileMovedEvent extends EngineEvent {
    directionLocation: Location;
    startLocation: Location;
    currentLocation: Location;
-   newLocation: Location;
    xMultiplayer: number;
    yMultiplayer: number;
    angle: number;
+   newLocation: Location;
    projectileId: string;
+}
+
+export interface Projectile {
+   characterId: string;
+   spell: Spell;
+   directionLocation: Location;
+   startLocation: Location;
+   currentLocation: Location;
+   xMultiplayer: number;
+   yMultiplayer: number;
+   angle: number;
 }
 
 export interface ProjectileRemovedEvent extends EngineEvent {

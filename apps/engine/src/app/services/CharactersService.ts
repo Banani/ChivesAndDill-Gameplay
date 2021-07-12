@@ -1,7 +1,6 @@
 import { EventParser } from '../EventParser';
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
-import _ from 'lodash';
 import {
    Character,
    CharacterDiedEvent,
@@ -37,6 +36,7 @@ export class CharactersService extends EventParser {
             name: `#monster_${i}`,
             location: { x: 100 * (i / 10) + 100, y: 100 * (i % 10) + 100 },
             direction: CharacterDirection.DOWN,
+            division: i % 3 === 0 ? 'PigFuckers' : 'PigSlut',
             sprites: 'pigMan',
             isInMove: false,
             currentHp: 100,
@@ -92,7 +92,8 @@ export class CharactersService extends EventParser {
          this.characters[event.target.id].isDead = true;
          this.engineEventCrator.createEvent<CharacterDiedEvent>({
             type: EngineEvents.CharacterDied,
-            characterId: event.target.id,
+            character: event.target,
+            killer: this.characters[event.attackerId],
          });
       }
    };

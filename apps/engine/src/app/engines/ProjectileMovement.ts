@@ -1,9 +1,10 @@
-import _ from 'lodash';
+import { pickBy, each, filter } from 'lodash';
 import { distanceBetweenTwoPoints, areSegmentsIntersecting, isSegmentIntersectingWithACircle, getTheClosestObject, getSegmentsCrossingPoint } from '../math';
 import { EngineEvents } from '../EngineEvents';
 import { AREAS, BORDER } from '../../map';
 import { Engine } from './Engine';
 import { ProjectileIntersection } from './types';
+import { CharacterHitEvent, ProjectileMovedEvent, RemoveProjectileEvent } from '../types';
 
 export class ProjectileMovement extends Engine {
    getCrossingPointsWithWalls(movementSegment) {
@@ -34,8 +35,8 @@ export class ProjectileMovement extends Engine {
    }
 
    getCrossingCharacter(movementSegment) {
-      return _.pickBy(
-         _.pickBy(this.services.characterService.getAllCharacters(), (char) => !char.isDead),
+      return pickBy(
+         pickBy(this.services.characterService.getAllCharacters(), (char) => !char.isDead),
          (character) => {
             return isSegmentIntersectingWithACircle(movementSegment, [character.location.x, character.location.y, character.size / 2]);
          }
@@ -43,7 +44,7 @@ export class ProjectileMovement extends Engine {
    }
 
    doAction() {
-      _.each(this.services.projectilesService.getAllProjectiles(), (projectile, projectileId) => {
+      each(this.services.projectilesService.getAllProjectiles(), (projectile, projectileId) => {
          const newLocation = {
             x: projectile.currentLocation.x + projectile.xMultiplayer * projectile.spell.speed,
             y: projectile.currentLocation.y + projectile.yMultiplayer * projectile.spell.speed,
@@ -54,7 +55,7 @@ export class ProjectileMovement extends Engine {
             [newLocation.x, newLocation.y],
          ];
 
-         const hitCharacters = _.filter(this.getCrossingCharacter(movementSegment), (character) => character.id !== projectile.characterId);
+         const hitCharacters = filter(this.getCrossingCharacter(movementSegment), (character) => character.id !== projectile.characterId);
          const wallsInteractionPoints = this.getCrossingPointsWithWalls(movementSegment);
 
          const allProjectileIntersections = [
@@ -72,22 +73,23 @@ export class ProjectileMovement extends Engine {
          const theClossestIntersection = getTheClosestObject(projectile.currentLocation, allProjectileIntersections);
 
          if (theClossestIntersection?.type === ProjectileIntersection.CHARACTER) {
-            this.eventCrator.createEvent({
+            this.eventCrator.createEvent<RemoveProjectileEvent>({
                type: EngineEvents.RemoveProjectile,
                projectileId,
             });
-            this.eventCrator.createEvent({
+            this.eventCrator.createEvent<CharacterHitEvent>({
                type: EngineEvents.CharacterHit,
                spell: projectile.spell,
                target: theClossestIntersection.character,
+               attackerId: projectile.characterId,
             });
          } else if (this.isItOutOfRange(projectile, newLocation) || theClossestIntersection?.type === ProjectileIntersection.WALL) {
-            this.eventCrator.createEvent({
+            this.eventCrator.createEvent<RemoveProjectileEvent>({
                type: EngineEvents.RemoveProjectile,
                projectileId,
             });
          } else {
-            this.eventCrator.createEvent({
+            this.eventCrator.createEvent<ProjectileMovedEvent>({
                ...projectile,
                type: EngineEvents.ProjectileMoved,
                projectileId,

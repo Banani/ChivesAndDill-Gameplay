@@ -1,7 +1,7 @@
 import { EngineMessages } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
 import { EventParser } from '../EventParser';
-import { CharacterLostHpEvent, EngineEventHandler } from '../types';
+import { CharacterDiedEvent, CharacterLostHpEvent, EngineEventHandler } from '../types';
 
 export class CharacterEffectNotifier extends EventParser {
    constructor() {
@@ -20,9 +20,9 @@ export class CharacterEffectNotifier extends EventParser {
       });
    };
 
-   handleCharacterDied: EngineEventHandler<CharacterLostHpEvent> = ({ event, services }) => {
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
       services.socketConnectionService.getIO().sockets.emit(EngineMessages.CharacterDied, {
-         characterId: event.characterId,
+         characterId: event.character.id,
       });
    };
 }

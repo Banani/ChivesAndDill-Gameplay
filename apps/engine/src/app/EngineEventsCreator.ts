@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { each } from 'lodash';
 import { EventParser } from './EventParser';
 import { EngineEvent } from './types';
 import { Services } from './types/Services';
@@ -9,11 +9,11 @@ export class EngineEventCrator {
    constructor(services: Services) {
       this.services = services;
 
-      _.each(this.services, (service) => service.init(this, { ...this.services }));
+      each(this.services, (service) => service.init(this, { ...this.services }));
    }
 
    createEvent<T extends EngineEvent>(event: T) {
-      _.each(this.services, (service: EventParser) => {
+      each(this.services, (service: EventParser) => {
          service.handleEvent<T>({
             event,
             services: this.services,

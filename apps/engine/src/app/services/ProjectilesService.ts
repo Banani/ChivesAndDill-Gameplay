@@ -6,6 +6,7 @@ import {
    EngineEventHandler,
    PlayerCastedSpellEvent,
    PlayerTriesToCastASpellEvent,
+   Projectile,
    ProjectileCreatedEvent,
    ProjectileMovedEvent,
    ProjectileRemovedEvent,
@@ -14,7 +15,7 @@ import {
 
 export class ProjectilesService extends EventParser {
    projectileEngine: ProjectileMovement;
-   projectiles = {};
+   projectiles: Record<string, Projectile> = {};
    increment = 0;
 
    constructor(projectileEngine) {

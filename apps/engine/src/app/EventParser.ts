@@ -1,10 +1,11 @@
 import { EngineEventCrator } from './EngineEventsCreator';
+import { QuestEngineEventsMap } from './modules/QuestModule/Events';
 import { EngineEvent, EngineEventsMap } from './types';
 import { Services } from './types/Services';
 
 export abstract class EventParser {
    engineEventCrator: EngineEventCrator;
-   eventsToHandlersMap: Partial<EngineEventsMap> = {};
+   eventsToHandlersMap: Partial<EngineEventsMap & QuestEngineEventsMap> = {};
 
    init(engineEventCrator: EngineEventCrator, services?: Services) {
       this.engineEventCrator = engineEventCrator;

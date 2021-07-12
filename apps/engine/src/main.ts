@@ -1,9 +1,9 @@
 import { PlayersMovement, ProjectileMovement } from './app/engines';
-import _ from 'lodash';
 import { CharactersService, PlayerMovementService, SocketConnectionService, ProjectilesService, DirectHitService, CooldownService } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
 import { CharacterEffectNotifier, PlayerMovementNotifier, ProjectileNotifier } from './app/notifiers';
 import { Services } from './app/types/Services';
+import { KillingQuestService, MovementQuestService, QuestNotifier, QuestProgressService } from './app/modules';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -38,6 +38,10 @@ const services: Services = {
    characterEffectNotifier: new CharacterEffectNotifier(),
    cooldownService: new CooldownService(),
    socketConnectionService: new SocketConnectionService(io),
+   questProgressService: new QuestProgressService(),
+   movementQuestService: new MovementQuestService(),
+   killingQuestService: new KillingQuestService(),
+   questNotifier: new QuestNotifier(),
 };
 
 const engineEventCreator = new EngineEventCrator(services);

@@ -1,5 +1,5 @@
 import { CharacterDirection, Player } from '@bananos/types';
-import _ from 'lodash';
+import { each } from 'lodash';
 import { areSegmentsIntersecting } from '../math/lines';
 import { AREAS, BORDER } from '../../map';
 import { EngineEvents } from '../EngineEvents';
@@ -59,7 +59,7 @@ export class PlayersMovement extends Engine {
    }
 
    doAction() {
-      _.each(this.services.characterService.getAllCharacters(), (player: Player) => {
+      each(this.services.characterService.getAllCharacters(), (player) => {
          const movement = this.movements.get(player);
          if (movement && movement.length) {
             const vector = movement.reduce(
