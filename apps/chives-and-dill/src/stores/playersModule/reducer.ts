@@ -53,7 +53,7 @@ const initialState: PlayersState = {
         spriteAmount: 1,
       },
       dead: {
-        yOffSet: 48,
+        yOffSet: 192,
         xOffSet: 0,
         spriteAmount: 1,
       }
@@ -196,6 +196,7 @@ export const playersReducer = (
           [action.payload.characterId]: {
             ...state.characters[action.payload.characterId],
             currentHp: state.characters[action.payload.characterId].currentHp - action.payload.amount,
+            hpLost: action.payload.amount,
           }
         }
       };

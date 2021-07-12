@@ -3,7 +3,7 @@ import { AREAS } from '../../map';
 import { EngineEvents } from '../EngineEvents';
 import { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
-import { NewCharacterCreatedEvent, PlayerDisconnectedEvent } from '../types';
+import { CreateNewPlayerEvent, EngineEventHandler, NewCharacterCreatedEvent, PlayerDisconnectedEvent } from '../types';
 
 export class SocketConnectionService extends EventParser {
    io;
@@ -27,7 +27,7 @@ export class SocketConnectionService extends EventParser {
 
       this.io.on('connection', (socket) => {
          this.sockets[socket.id] = socket;
-         this.engineEventCrator.createEvent({
+         this.engineEventCrator.createEvent<CreateNewPlayerEvent>({
             type: EngineEvents.CreateNewPlayer,
             payload: {
                socketId: socket.id,
@@ -36,7 +36,7 @@ export class SocketConnectionService extends EventParser {
       });
    }
 
-   handleNewCharacterCreated = ({ event, services }: { event: NewCharacterCreatedEvent; services: any }) => {
+   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event, services }) => {
       const { newCharacter: currentCharacter } = event.payload;
       const currentSocket = this.sockets[currentCharacter.socketId];
 

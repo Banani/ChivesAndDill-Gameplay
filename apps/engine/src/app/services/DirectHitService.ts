@@ -1,23 +1,24 @@
 import { EngineEvents } from '../EngineEvents';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
-import { distanceBetweenTwoPoints } from '../math/lines';
+import { distanceBetweenTwoPoints } from '../math';
 import { SpellType } from '../SpellType';
-import _ from 'lodash';
+import { omit } from 'lodash';
+import { CharacterHitEvent, EngineEventHandler, PlayerCastedSpellEvent, PlayerTriesToCastASpellEvent } from '../types';
 
 export class DirectHitService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [EngineEvents.PlayerTriesToCastASpell]: this.handlePlayerCastedSpell,
+         [EngineEvents.PlayerTriesToCastASpell]: this.handlePlayerTriesToCastASpell,
       };
    }
 
-   init(engineEventCrator: EngineEventCrator, services) {
+   init(engineEventCrator: EngineEventCrator) {
       super.init(engineEventCrator);
    }
 
-   handlePlayerCastedSpell = ({ event, services }) => {
+   handlePlayerTriesToCastASpell: EngineEventHandler<PlayerTriesToCastASpellEvent> = ({ event, services }) => {
       if (event.spellData.spell.type === SpellType.DIRECT_HIT) {
          const character = services.characterService.getCharacterById(event.spellData.characterId);
 
@@ -34,18 +35,19 @@ export class DirectHitService extends EventParser {
          }
 
          const allCharacters = services.characterService.getAllCharacters();
-         for (const i in _.omit(allCharacters, [character.id])) {
+         for (const i in omit(allCharacters, [character.id])) {
             if (distanceBetweenTwoPoints(event.spellData.directionLocation, allCharacters[i].location) < allCharacters[i].size / 2) {
-               this.engineEventCrator.createEvent({
+               this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
                   type: EngineEvents.PlayerCastedSpell,
                   casterId: character.id,
                   spell: event.spellData.spell,
                });
 
-               this.engineEventCrator.createEvent({
+               this.engineEventCrator.createEvent<CharacterHitEvent>({
                   type: EngineEvents.CharacterHit,
                   spell: event.spellData.spell,
                   target: allCharacters[i],
+                  attackerId: event.spellData.characterId,
                });
                break;
             }

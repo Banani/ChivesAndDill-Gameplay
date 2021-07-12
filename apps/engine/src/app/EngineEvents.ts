@@ -1,3 +1,5 @@
+import { QuestEngineEvents } from './modules/QuestModule/Events';
+
 export enum EngineEvents {
    CreateNewPlayer = 'CreateNewPlayer',
    NewCharacterCreated = 'NewCharacterCreated',

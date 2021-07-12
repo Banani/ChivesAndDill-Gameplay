@@ -1,120 +1,101 @@
-import _ from 'lodash';
-import {
-  distanceBetweenTwoPoints,
-  areLinesIntersecting,
-  isSegmentIntersectingWithACircle,
-} from '../math/lines';
+import { pickBy, each, filter } from 'lodash';
+import { distanceBetweenTwoPoints, areSegmentsIntersecting, isSegmentIntersectingWithACircle, getTheClosestObject, getSegmentsCrossingPoint } from '../math';
 import { EngineEvents } from '../EngineEvents';
 import { AREAS, BORDER } from '../../map';
+import { Engine } from './Engine';
+import { ProjectileIntersection } from './types';
+import { CharacterHitEvent, ProjectileMovedEvent, RemoveProjectileEvent } from '../types';
 
-export class ProjectileMovement {
-  services: any;
+export class ProjectileMovement extends Engine {
+   getCrossingPointsWithWalls(movementSegment) {
+      return [...BORDER, ...AREAS].reduce((prev, polygon) => {
+         const intersections = [];
+         for (let i = 0; i < polygon.length; i++) {
+            const crossPoint = getSegmentsCrossingPoint(movementSegment, [polygon[i], polygon[(i + 1) % polygon.length]]);
+            if (crossPoint !== null) {
+               intersections.push(crossPoint);
+            }
+         }
+         return prev.concat(intersections);
+      }, []);
+   }
 
-  init(services) {
-    this.services = services;
-  }
+   calculateAngles(projectile) {
+      const angle = Math.atan2(projectile.directionLocation.y - projectile.startLocation.y, projectile.directionLocation.x - projectile.startLocation.x);
 
-  isMovementCrossingWall(movementSegment) {
-    return [...BORDER, ...AREAS].find((polygon) => {
-      for (let i = 0; i < polygon.length; i++) {
-        if (
-          areLinesIntersecting(movementSegment, [
-            polygon[i],
-            polygon[(i + 1) % polygon.length],
-          ])
-        ) {
-          return true;
-        }
-      }
-    });
-  }
+      return {
+         xMultiplayer: Math.cos(angle),
+         yMultiplayer: Math.sin(angle),
+         angle,
+      };
+   }
 
-  calculateAngles(projectile) {
-    const angle = Math.atan2(
-      projectile.directionLocation.y - projectile.startLocation.y,
-      projectile.directionLocation.x - projectile.startLocation.x
-    );
+   isItOutOfRange(projectile, newLocation) {
+      return distanceBetweenTwoPoints(projectile.startLocation, newLocation) > projectile.spell.range;
+   }
 
-    return {
-      xMultiplayer: Math.cos(angle),
-      yMultiplayer: Math.sin(angle),
-      angle,
-    };
-  }
+   getCrossingCharacter(movementSegment) {
+      return pickBy(
+         pickBy(this.services.characterService.getAllCharacters(), (char) => !char.isDead),
+         (character) => {
+            return isSegmentIntersectingWithACircle(movementSegment, [character.location.x, character.location.y, character.size / 2]);
+         }
+      );
+   }
 
-  isItOutOfRange(projectile, newLocation) {
-    return (
-      distanceBetweenTwoPoints(projectile.startLocation, newLocation) >
-      projectile.spell.range
-    );
-  }
+   doAction() {
+      each(this.services.projectilesService.getAllProjectiles(), (projectile, projectileId) => {
+         const newLocation = {
+            x: projectile.currentLocation.x + projectile.xMultiplayer * projectile.spell.speed,
+            y: projectile.currentLocation.y + projectile.yMultiplayer * projectile.spell.speed,
+         };
 
-  getCrossingCharacter(movementSegment) {
-    return _.pickBy(
-      _.pickBy(
-        this.services.characterService.getAllCharacters(),
-        (char) => !char.isDead
-      ),
-      (character) => {
-        return isSegmentIntersectingWithACircle(movementSegment, [
-          character.location.x,
-          character.location.y,
-          character.size / 2,
-        ]);
-      }
-    );
-  }
+         const movementSegment = [
+            [projectile.currentLocation.x, projectile.currentLocation.y],
+            [newLocation.x, newLocation.y],
+         ];
 
-  doAction() {
-    _.each(
-      this.services.projectilesService.getAllProjectiles(),
-      (projectile, projectileId) => {
-        const newLocation = {
-          x:
-            projectile.currentLocation.x +
-            projectile.xMultiplayer * projectile.spell.speed,
-          y:
-            projectile.currentLocation.y +
-            projectile.yMultiplayer * projectile.spell.speed,
-        };
+         const hitCharacters = filter(this.getCrossingCharacter(movementSegment), (character) => character.id !== projectile.characterId);
+         const wallsInteractionPoints = this.getCrossingPointsWithWalls(movementSegment);
 
-        const movementSegment = [
-          [projectile.currentLocation.x, projectile.currentLocation.y],
-          [newLocation.x, newLocation.y],
-        ];
+         const allProjectileIntersections = [
+            ...hitCharacters.map((character) => ({
+               type: ProjectileIntersection.CHARACTER,
+               location: character.location,
+               character,
+            })),
+            ...wallsInteractionPoints.map((crossPoint) => ({
+               type: ProjectileIntersection.WALL,
+               location: crossPoint,
+            })),
+         ];
 
-        const hitCharacter = _.filter(
-          this.getCrossingCharacter(movementSegment),
-          (character) => character.id !== projectile.characterId
-        ).pop();
+         const theClossestIntersection = getTheClosestObject(projectile.currentLocation, allProjectileIntersections);
 
-        if (hitCharacter) {
-          this.services.eventCreatorService.createEvent({
-            type: EngineEvents.RemoveProjectile,
-            projectileId,
-          });
-          this.services.eventCreatorService.createEvent({
-            type: EngineEvents.CharacterHit,
-            spell: projectile.spell,
-            target: hitCharacter,
-          });
-        } else if (
-          this.isItOutOfRange(projectile, newLocation) ||
-          this.isMovementCrossingWall(movementSegment)
-        ) {
-          this.services.eventCreatorService.createEvent({
-            type: EngineEvents.RemoveProjectile,
-            projectileId,
-          });
-        } else {
-          this.services.eventCreatorService.createEvent({
-            ...projectile,
-            type: EngineEvents.ProjectileMoved,
-            projectileId,
-            newLocation,
-          });
-        }
-      }
-    );
-  }
+         if (theClossestIntersection?.type === ProjectileIntersection.CHARACTER) {
+            this.eventCrator.createEvent<RemoveProjectileEvent>({
+               type: EngineEvents.RemoveProjectile,
+               projectileId,
+            });
+            this.eventCrator.createEvent<CharacterHitEvent>({
+               type: EngineEvents.CharacterHit,
+               spell: projectile.spell,
+               target: theClossestIntersection.character,
+               attackerId: projectile.characterId,
+            });
+         } else if (this.isItOutOfRange(projectile, newLocation) || theClossestIntersection?.type === ProjectileIntersection.WALL) {
+            this.eventCrator.createEvent<RemoveProjectileEvent>({
+               type: EngineEvents.RemoveProjectile,
+               projectileId,
+            });
+         } else {
+            this.eventCrator.createEvent<ProjectileMovedEvent>({
+               ...projectile,
+               type: EngineEvents.ProjectileMoved,
+               projectileId,
+               newLocation,
+            });
+         }
+      });
+   }
 }

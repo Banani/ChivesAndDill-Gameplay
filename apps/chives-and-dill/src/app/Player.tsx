@@ -4,10 +4,11 @@ import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import _ from 'lodash';
 
 const Player = ({ player, characterViewsSettings }) => {
-   const [timer, setTimer] = useState(0);
-   const [playerSheet, setPlayerSheet] = useState({});
-   const [characterDirection, setCharacterDirection] = useState('standingDown');
-   const [isCharacterMoving, setIsCharacterMoving] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [playerSheet, setPlayerSheet] = useState({});
+  const [characterDirection, setCharacterDirection] = useState('standingDown');
+  const [isCharacterMoving, setIsCharacterMoving] = useState(false);
+  const [yPositionLostHp, setYPositionLostHp] = useState(2.5);
 
    const playerSprite = characterViewsSettings[player.sprites];
    const sheet = PIXI.BaseTexture.from(`../assets${characterViewsSettings[player.sprites].image}`);
@@ -84,10 +85,19 @@ const Player = ({ player, characterViewsSettings }) => {
    }, [player.isInMove]);
 
    useEffect(() => {
+      let position = 2.5;
+      const positionTimer = setInterval(() => {
+         position += 0.1;
+         setYPositionLostHp(position);
+         if (position >= 4.5) {
+         clearInterval(positionTimer);
+         }
+      }, 10)
+
       if (player.isDead) {
          setCharacterDirection('dead');
       }
-   }, [player.isDead]);
+   }, [player.currentHp, player.isDead]);
 
    const hpGreenBar = player.currentHp / 2;
    const hpBar = useCallback(
@@ -103,36 +113,52 @@ const Player = ({ player, characterViewsSettings }) => {
       [player, h]
    );
 
-   return (
-      <>
-         {player.currentHp <= 0 ? null : (
-            <>
-               <Text
-                  text={player.name}
-                  anchor={[0.5, 3.25]}
-                  x={player?.location.x}
-                  y={player?.location.y}
-                  style={
-                     new PIXI.TextStyle({
-                        fontSize: 15,
-                     })
-                  }
-               />
-               <Graphics draw={hpBar} />
-            </>
-         )}
-         {playerSheet['movementDown'] && (
-            <Sprite
-               key={0}
-               width={w}
-               height={h}
-               texture={playerSheet[characterDirection][timer % 8]}
-               x={player?.location.x - w / 2}
-               y={player?.location.y - h / 2}
-            />
-         )}
-      </>
-   );
+  return (
+    <>
+      {player.currentHp <= 0 ? null : (
+        <>
+          <Text
+            text={player.name}
+            anchor={[0.5, 3.25]}
+            x={player?.location.x}
+            y={player?.location.y}
+            style={
+              new PIXI.TextStyle({
+                fontSize: 15,
+                fill: "green",
+                fontWeight: "bold"
+              })
+            }
+          />
+          <Graphics draw={hpBar} />
+        </>
+      )}
+      {playerSheet['movementDown'] && (
+        <Sprite
+          key={0}
+          width={w}
+          height={h}
+          texture={playerSheet[characterDirection][timer % 8]}
+          x={player?.location.x - w / 2}
+          y={player?.location.y - h / 2}
+        />
+      )}
+      {
+        yPositionLostHp <= 4.5 ? <Text
+          text={player.hpLost ? player.hpLost : null}
+          anchor={[0.5, yPositionLostHp]}
+          x={player?.location.x}
+          y={player?.location.y}
+          style={
+            new PIXI.TextStyle({
+              fontSize: 15,
+              fill: 'red',
+            })
+          }
+        /> : null
+      }
+    </>
+  );
 };
 
 export default Player;
