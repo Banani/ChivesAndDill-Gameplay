@@ -1,9 +1,10 @@
+import * as _ from 'lodash';
 import { forEach, find } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { Character, CharacterDiedEvent, EngineEventHandler } from '../../../types';
+import { Character, CharacterDiedEvent, CharacterLostHpEvent, EngineEventHandler } from '../../../types';
 import { KillingStagePartProgress, QuestEngineEvents, StagePartCompletedEvent, StartNewQuestKillingStagePartEvent } from '../Events';
-import { KillingQuestStagePartComparison, KillingQuestStagePartStatus } from '../types';
+import { KillingQuestStagePartComparison, KillingQuestStagePartStatus, QuestResetEvent } from '../types';
 
 const comparators: Record<KillingQuestStagePartComparison, (character: Character, fieldName: string, value: string) => boolean> = {
    [KillingQuestStagePartComparison.equality]: (character: Character, fieldName: string, value: string) => character[fieldName] === value,
@@ -17,6 +18,7 @@ export class KillingQuestService extends EventParser {
       this.eventsToHandlersMap = {
          [QuestEngineEvents.START_NEW_QUEST_KILLING_STAGE_PART]: this.handleStartNewQuestKillingStagePart,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
+         [EngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
       };
    }
 
@@ -54,6 +56,27 @@ export class KillingQuestService extends EventParser {
                   });
                   delete this.activeStages[event.killer.id][stagePart.id];
                }
+            }
+         });
+      }
+   };
+
+   handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event }) => {
+      const stages = this.activeStages[event.characterId];
+      if (stages) {
+         forEach(stages, (stagePart) => {
+            if (stagePart.resetConditions?.some((condition) => condition.type === QuestResetEvent.PlayerLostHp)) {
+               stagePart.currentAmount = 0;
+
+               this.engineEventCrator.createEvent<KillingStagePartProgress>({
+                  type: QuestEngineEvents.KILLING_STAGE_PART_PROGRESS,
+                  questId: stagePart.questId,
+                  stageId: stagePart.stageId,
+                  characterId: event.characterId,
+                  stagePartId: stagePart.id,
+                  currentProgress: stagePart.currentAmount,
+                  targetAmount: stagePart.amount,
+               });
             }
          });
       }

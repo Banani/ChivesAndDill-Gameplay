@@ -1,4 +1,4 @@
-import { KillingQuestStagePartComparison, Quest, QuestType } from './types';
+import { KillingQuestStagePartComparison, Quest, QuestResetEvent, QuestType } from './types';
 
 export const Quests: Record<string, Quest> = {
    '1': {
@@ -33,6 +33,7 @@ export const Quests: Record<string, Quest> = {
                   questId: '1',
                   stageId: '2',
                   type: QuestType.KILLING,
+                  resetConditions: [{ type: QuestResetEvent.PlayerLostHp }],
                   rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'PigFuckers' }],
                   amount: 6,
                },

@@ -103,7 +103,7 @@ export class CharactersService extends EventParser {
       return {
          id: this.increment.toString(),
          name: `#player_${this.increment}`,
-         location: { x: 20 * this.increment, y: 20 },
+         location: { x: 950, y: 960 },
          direction: CharacterDirection.DOWN,
          sprites: 'nakedFemale',
          isInMove: false,
