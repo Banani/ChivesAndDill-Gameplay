@@ -15,7 +15,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       name: 'Projectile',
       range: 4000,
       speed: 40,
-      damage: 70,
+      damage: 47,
       cooldown: 0,
    },
    InstantProjectile: {

@@ -1,7 +1,7 @@
 import { CharacterDirection } from '@bananos/types';
-import { Location } from './Location';
+import { Location } from '../../types';
 
-export interface Character {
+export interface Monster {
    id: string;
    name: string;
    location: Location;
@@ -12,6 +12,5 @@ export interface Character {
    isInMove: boolean;
    currentHp: number;
    maxHp: number;
-   isDead?: boolean;
-   socketId?: string;
+   respawnId: string;
 }

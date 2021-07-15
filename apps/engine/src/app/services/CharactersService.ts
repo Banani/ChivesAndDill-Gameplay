@@ -29,22 +29,6 @@ export class CharactersService extends EventParser {
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.CharacterHit]: this.handleCharacterHit,
       };
-
-      for (let i = 1; i <= 200; i++) {
-         this.characters[`monster_${i}`] = {
-            id: `monster_${i}`,
-            name: `#monster_${i}`,
-            location: { x: 100 * (i / 10) + 100, y: 100 * (i % 10) + 100 },
-            direction: CharacterDirection.DOWN,
-            division: i % 3 === 0 ? 'PigFuckers' : 'PigSlut',
-            sprites: 'pigMan',
-            isInMove: false,
-            currentHp: 100,
-            maxHp: 100,
-            size: 50,
-            isDead: false,
-         };
-      }
    }
 
    handleCreateNewPlayer: EngineEventHandler<CreateNewPlayerEvent> = ({ event }) => {
@@ -79,22 +63,24 @@ export class CharactersService extends EventParser {
    };
 
    handleCharacterHit: EngineEventHandler<CharacterHitEvent> = ({ event }) => {
-      this.characters[event.target.id].currentHp = Math.max(this.characters[event.target.id].currentHp - event.spell.damage, 0);
+      if (this.characters[event.target.id]) {
+         this.characters[event.target.id].currentHp = Math.max(this.characters[event.target.id].currentHp - event.spell.damage, 0);
 
-      this.engineEventCrator.createEvent<CharacterLostHpEvent>({
-         type: EngineEvents.CharacterLostHp,
-         characterId: event.target.id,
-         amount: event.spell.damage,
-         currentHp: this.characters[event.target.id].currentHp,
-      });
-
-      if (this.characters[event.target.id].currentHp === 0) {
-         this.characters[event.target.id].isDead = true;
-         this.engineEventCrator.createEvent<CharacterDiedEvent>({
-            type: EngineEvents.CharacterDied,
-            character: event.target,
-            killer: this.characters[event.attackerId],
+         this.engineEventCrator.createEvent<CharacterLostHpEvent>({
+            type: EngineEvents.CharacterLostHp,
+            characterId: event.target.id,
+            amount: event.spell.damage,
+            currentHp: this.characters[event.target.id].currentHp,
          });
+
+         if (this.characters[event.target.id].currentHp === 0) {
+            this.characters[event.target.id].isDead = true;
+            this.engineEventCrator.createEvent<CharacterDiedEvent>({
+               type: EngineEvents.CharacterDied,
+               character: event.target,
+               killerId: this.characters[event.attackerId].id,
+            });
+         }
       }
    };
 

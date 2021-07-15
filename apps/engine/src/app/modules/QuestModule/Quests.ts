@@ -34,7 +34,7 @@ export const Quests: Record<string, Quest> = {
                   stageId: '2',
                   type: QuestType.KILLING,
                   resetConditions: [{ type: QuestResetEvent.PlayerLostHp }],
-                  rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'PigFuckers' }],
+                  rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'PigFucker' }],
                   amount: 6,
                },
                '3': {
