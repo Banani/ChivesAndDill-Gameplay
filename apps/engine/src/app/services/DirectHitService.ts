@@ -34,7 +34,7 @@ export class DirectHitService extends EventParser {
             return;
          }
 
-         const allCharacters = services.characterService.getAllCharacters();
+         const allCharacters = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() };
          for (const i in omit(allCharacters, [character.id])) {
             if (distanceBetweenTwoPoints(event.spellData.directionLocation, allCharacters[i].location) < allCharacters[i].size / 2) {
                this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({

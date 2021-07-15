@@ -30,8 +30,8 @@ export class KillingQuestService extends EventParser {
    };
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
-      if (this.activeStages[event.killer.id]) {
-         forEach(this.activeStages[event.killer.id], (stagePart) => {
+      if (this.activeStages[event.killerId]) {
+         forEach(this.activeStages[event.killerId], (stagePart) => {
             const matched = find(stagePart.rule, (rule) => comparators[rule.comparison](event.character, rule.fieldName, rule.value));
 
             if (matched) {
@@ -40,7 +40,7 @@ export class KillingQuestService extends EventParser {
                   type: QuestEngineEvents.KILLING_STAGE_PART_PROGRESS,
                   questId: stagePart.questId,
                   stageId: stagePart.stageId,
-                  characterId: event.killer.id,
+                  characterId: event.killerId,
                   stagePartId: stagePart.id,
                   currentProgress: stagePart.currentAmount,
                   targetAmount: stagePart.amount,
@@ -51,10 +51,10 @@ export class KillingQuestService extends EventParser {
                      type: QuestEngineEvents.STAGE_PART_COMPLETED,
                      questId: stagePart.questId,
                      stageId: stagePart.stageId,
-                     characterId: event.killer.id,
+                     characterId: event.killerId,
                      stagePartId: stagePart.id,
                   });
-                  delete this.activeStages[event.killer.id][stagePart.id];
+                  delete this.activeStages[event.killerId][stagePart.id];
                }
             }
          });
