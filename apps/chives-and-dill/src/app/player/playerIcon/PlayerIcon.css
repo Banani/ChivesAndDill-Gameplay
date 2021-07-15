@@ -1,0 +1,67 @@
+.PlayerIconContainer {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 20px;
+  left: 125px;
+}
+
+.playerAvatar {
+  border-radius: 50%;
+  width: 85px;
+  height: 85px;
+  border: 5px solid gray;
+  margin-right: 10px;
+  background-image: url("../../../assets/spritesheets/avatars/dogAvatar.PNG");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.barsContainer {
+  border-radius: 10px;
+  border-width: 0 5px 0 5px;
+  border-color: gray;
+  border-style: solid;
+  padding: 10px 0;
+}
+
+.bar {
+  width: 200px;
+  height: 20px;
+  background-color: white;
+  border-width: 3px 0 3px 0;
+  border-radius: 3px;
+  border-style: solid;
+  border-color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bar:hover > div{
+  visibility: visible;
+}
+
+.bar-text {
+  visibility: hidden;
+}
+
+.name-bar {
+  color: gold;
+  padding: 5px 0;
+  border-width: 3px 0 3px 0;
+  border-radius: 3px;
+  border-style: solid;
+  border-color: gray;
+  display: flex;
+  justify-content: center;
+}
+
+.hp-bar {
+  background-color: #2fed00;
+}
+
+.mana-bar {
+  background-color: #001ee3;
+}

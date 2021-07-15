@@ -66,11 +66,11 @@ const Player = ({ player, characterViewsSettings }) => {
       }
    };
 
-   // useEffect(() => {
-   //    setInterval(() => {
-   //       setTimer((zxc) => zxc + 1);
-   //    }, 20);
-   // }, []);
+   useEffect(() => {
+      setInterval(() => {
+         setTimer((zxc) => zxc + 1);
+      }, 20);
+   }, []);
 
    useEffect(() => {
       getPlayerSheets();
@@ -85,14 +85,14 @@ const Player = ({ player, characterViewsSettings }) => {
    }, [player.isInMove]);
 
    useEffect(() => {
-      const position = 2.5;
-      // const positionTimer = setInterval(() => {
-      //    position += 0.1;
-      //    setYPositionLostHp(position);
-      //    if (position >= 4.5) {
-      //       clearInterval(positionTimer);
-      //    }
-      // }, 10)
+      let position = 2.5;
+      const positionTimer = setInterval(() => {
+         position += 0.1;
+         setYPositionLostHp(position);
+         if (position >= 4.5) {
+            clearInterval(positionTimer);
+         }
+      }, 10)
 
       if (player.currentHp <= 0) {
          setCharacterDirection('dead');
@@ -117,11 +117,11 @@ const Player = ({ player, characterViewsSettings }) => {
       <>
          {player.currentHp <= 0 ? null : (
             <>
-               {/* <Text
+               <Text
                   text={player.name}
                   anchor={[0.5, 3.25]}
-                  x={player?.location.x}
-                  y={player?.location.y}
+                  x={player.location.x}
+                  y={player.location.y}
                   style={
                      new PIXI.TextStyle({
                         fontSize: 15,
@@ -130,7 +130,7 @@ const Player = ({ player, characterViewsSettings }) => {
                      })
                   }
                />
-               <Graphics draw={hpBar} /> */}
+               <Graphics draw={hpBar} />
             </>
          )}
          {playerSheet['movementDown'] && (
@@ -144,18 +144,18 @@ const Player = ({ player, characterViewsSettings }) => {
             />
          )}
          {
-            // yPositionLostHp <= 4.5 ? <Text
-            //    text={player.hpLost ? player.hpLost : null}
-            //    anchor={[0.5, yPositionLostHp]}
-            //    x={player?.location.x}
-            //    y={player?.location.y}
-            //    style={
-            //       new PIXI.TextStyle({
-            //          fontSize: 15,
-            //          fill: 'red',
-            //       })
-            //    }
-            // /> : null
+            yPositionLostHp <= 4.5 ? <Text
+               text={player.hpLost ? player.hpLost : null}
+               anchor={[0.5, yPositionLostHp]}
+               x={player?.location.x}
+               y={player?.location.y}
+               style={
+                  new PIXI.TextStyle({
+                     fontSize: 15,
+                     fill: 'red',
+                  })
+               }
+            /> : null
          }
       </>
    );

@@ -3,7 +3,8 @@ import { Stage, Sprite, Graphics, Container } from '@inlet/react-pixi';
 import { useSelector } from 'react-redux';
 import { selectCharacters, selectCharacterViewsSettings, selectAreas, selectActivePlayer, selectSpells } from '../stores';
 import _ from 'lodash';
-import Player from './Player';
+import Player from './player/Player';
+import { PlayerIcon } from "./player/playerIcon/PlayerIcon";
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -13,7 +14,7 @@ const Map = () => {
    const areas = useSelector(selectAreas);
 
    const renderPlayers = React.useCallback(_.map(_.omit(players, [activePlayerId ?? 0]), (player, i) =>
-   // console.log('render'); 
+
    (
       <Player key={i} player={player} characterViewsSettings={characterViewsSettings} />
    )
@@ -68,30 +69,34 @@ const Map = () => {
    });
 
    const scale = 1;
-   console.log('render');
+
    return (
-      <Stage
-         width={gameWidth}
-         height={gameHeight}
-         options={{ backgroundColor: 0x000000, autoDensity: true }}
-      >
-         {activePlayerId && <Container
-            position={[
-               -players[activePlayerId]?.location.x * scale + gameWidth / 2 ?? 0,
-               -players[activePlayerId]?.location.y * scale + gameHeight / 2 ?? 0]}
+      <>
+         {activePlayerId ? <PlayerIcon player={players[activePlayerId]}></PlayerIcon> : null}
+         <Stage
+            width={gameWidth}
+            height={gameHeight}
+            options={{ backgroundColor: 0x000000, autoDensity: true }}
          >
-            {renderSpells}
-            {renderPlayers}
-            {players[activePlayerId] ? (
-               <Player
-                  player={players[activePlayerId]}
-                  characterViewsSettings={characterViewsSettings}
-               />
-            ) : null}
-            {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
-            <Graphics draw={drawBorders} />
-         </Container>}
-      </Stage>
+            {activePlayerId && <Container
+               position={[
+                  -players[activePlayerId]?.location.x * scale + gameWidth / 2 ?? 0,
+                  -players[activePlayerId]?.location.y * scale + gameHeight / 2 ?? 0]}
+            >
+               {renderSpells}
+               {renderPlayers}
+               {players[activePlayerId] ? (
+                  <Player
+                     player={players[activePlayerId]}
+                     characterViewsSettings={characterViewsSettings}
+                  />
+               ) : null}
+
+               {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
+               <Graphics draw={drawBorders} />
+            </Container>}
+         </Stage>
+      </>
    );
 };
 
