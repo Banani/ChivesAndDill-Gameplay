@@ -11,11 +11,13 @@ export const PlayerIcon = ({ player }) => {
       <div className="playerLvl">69</div>
       <div className="barsContainer">
         <div className="name-bar">{name}</div>
-        <div className="bar hp-bar" style={{ width: (currentHp / maxHp) * 100 + "%" }}>
+        <div className="bar">
           <div className="bar-text">{currentHp + "/" + maxHp}</div>
+          <div className="hp-color" style={{ width: (currentHp / maxHp) * 100 + "%" }}></div>
         </div>
-        <div className="bar mana-bar">
+        <div className="bar">
           <div className="bar-text">{100 + "/" + 100}</div>
+          <div className="mana-color"></div>
         </div>
       </div>
     </div>

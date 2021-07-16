@@ -68,7 +68,11 @@
 .bar-text {
   visibility: hidden;
   position: absolute;
+  height: 100%;
+  width: 100%;
   color: gold;
+  z-index: 9;
+  text-align: center;
 }
 
 .name-bar {
@@ -82,10 +86,17 @@
   justify-content: center;
 }
 
-.hp-bar {
+.hp-color {
   background-color: #2fed00;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
 }
 
-.mana-bar {
+.mana-color {
   background-color: #001ee3;
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
