@@ -5,6 +5,7 @@ import { selectCharacters, selectCharacterViewsSettings, selectAreas, selectActi
 import _ from 'lodash';
 import Player from './player/Player';
 import { PlayerIcon } from "./player/playerIcon/PlayerIcon";
+import { SpellsBar } from "./player/spellsBar/SpellsBar";
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -72,6 +73,7 @@ const Map = () => {
 
    return (
       <>
+         {activePlayerId ? <SpellsBar player={players[activePlayerId]}></SpellsBar> : null}
          {activePlayerId ? <PlayerIcon player={players[activePlayerId]}></PlayerIcon> : null}
          <Stage
             width={gameWidth}
