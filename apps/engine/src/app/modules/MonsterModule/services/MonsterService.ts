@@ -2,7 +2,14 @@ import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterHitEvent, CharacterLostHpEvent, EngineEventHandler } from '../../../types';
-import { MonsterEngineEvents, CreateNewMonsterEvent, NewMonsterCreatedEvent } from '../Events';
+import {
+   MonsterEngineEvents,
+   CreateNewMonsterEvent,
+   NewMonsterCreatedEvent,
+   MonsterTargetChangedEvent,
+   MonsterLostTargetEvent,
+   MonsterDiedEvent,
+} from '../Events';
 import { Monster } from '../types';
 
 export class MonsterService extends EventParser {
@@ -14,8 +21,18 @@ export class MonsterService extends EventParser {
       this.eventsToHandlersMap = {
          [EngineEvents.CharacterHit]: this.handleCharacterHit,
          [MonsterEngineEvents.CreateNewMonster]: this.handleCreateNewMonster,
+         [MonsterEngineEvents.MonsterTargetChanged]: this.test,
+         [MonsterEngineEvents.MonsterLostTarget]: this.test2,
+         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
       };
    }
+
+   test: EngineEventHandler<MonsterTargetChangedEvent> = ({ event }) => {
+      console.log('targetChanged:', event.newTargetId);
+   };
+   test2: EngineEventHandler<MonsterLostTargetEvent> = ({ event }) => {
+      console.log('targetLost:', event.targetId);
+   };
 
    handleCreateNewMonster: EngineEventHandler<CreateNewMonsterEvent> = ({ event }) => {
       const id = `monster_${(this.increment++).toString()}`;
@@ -31,6 +48,10 @@ export class MonsterService extends EventParser {
          currentHp: event.monsterRespawn.monsterTemplate.healthPoints,
          maxHp: event.monsterRespawn.monsterTemplate.healthPoints,
          respawnId: event.monsterRespawn.id,
+         sightRange: event.monsterRespawn.monsterTemplate.sightRange,
+         escapeRange: event.monsterRespawn.monsterTemplate.escapeRange,
+         spells: event.monsterRespawn.monsterTemplate.spells,
+         attackFrequency: event.monsterRespawn.monsterTemplate.attackFrequency,
       };
       this.engineEventCrator.createEvent<NewMonsterCreatedEvent>({
          type: MonsterEngineEvents.NewMonsterCreated,
@@ -50,14 +71,17 @@ export class MonsterService extends EventParser {
          });
 
          if (this.monsters[event.target.id].currentHp === 0) {
-            this.engineEventCrator.createEvent<CharacterDiedEvent>({
-               type: EngineEvents.CharacterDied,
-               character: this.monsters[event.target.id],
+            this.engineEventCrator.createEvent<MonsterDiedEvent>({
+               type: MonsterEngineEvents.MonsterDied,
+               monster: this.monsters[event.target.id],
                killerId: event.attackerId,
             });
-            delete this.monsters[event.target.id];
          }
       }
+   };
+
+   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
+      delete this.monsters[event.monster.id];
    };
 
    getAllCharacters = () => this.monsters;

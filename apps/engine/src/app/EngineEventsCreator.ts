@@ -13,11 +13,13 @@ export class EngineEventCrator {
    }
 
    createEvent<T extends EngineEvent>(event: T) {
-      each(this.services, (service: EventParser) => {
-         service.handleEvent<T>({
-            event,
-            services: this.services,
+      setTimeout(() => {
+         each(this.services, (service: EventParser) => {
+            service.handleEvent<T>({
+               event,
+               services: this.services,
+            });
          });
-      });
+      }, 0);
    }
 }

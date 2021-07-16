@@ -64,7 +64,7 @@ export const Quests: Record<string, Quest> = {
                   questId: '2',
                   stageId: '3',
                   type: QuestType.KILLING,
-                  rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'PigFuckers' }],
+                  rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'PigFucker' }],
                   amount: 6,
                },
             },

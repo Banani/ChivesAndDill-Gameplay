@@ -78,7 +78,7 @@ export class CharactersService extends EventParser {
             this.engineEventCrator.createEvent<CharacterDiedEvent>({
                type: EngineEvents.CharacterDied,
                character: event.target,
-               killerId: this.characters[event.attackerId].id,
+               killerId: event.attackerId,
             });
          }
       }

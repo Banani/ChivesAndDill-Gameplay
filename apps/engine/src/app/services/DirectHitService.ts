@@ -4,7 +4,7 @@ import { EventParser } from '../EventParser';
 import { distanceBetweenTwoPoints } from '../math';
 import { SpellType } from '../SpellType';
 import { omit } from 'lodash';
-import { CharacterHitEvent, EngineEventHandler, PlayerCastedSpellEvent, PlayerTriesToCastASpellEvent } from '../types';
+import { Character, CharacterHitEvent, EngineEventHandler, PlayerCastedSpellEvent, PlayerTriesToCastASpellEvent } from '../types';
 
 export class DirectHitService extends EventParser {
    constructor() {
@@ -20,9 +20,9 @@ export class DirectHitService extends EventParser {
 
    handlePlayerTriesToCastASpell: EngineEventHandler<PlayerTriesToCastASpellEvent> = ({ event, services }) => {
       if (event.spellData.spell.type === SpellType.DIRECT_HIT) {
-         const character = services.characterService.getCharacterById(event.spellData.characterId);
+         const character = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() }[event.spellData.characterId];
 
-         if (!services.characterService.canCastASpell(character.id)) {
+         if ((character as Character).isDead) {
             return;
          }
 

@@ -13,13 +13,13 @@ export const MonsterRespawns = {
       id: '1',
       location: { x: 1300, y: 960 },
       monsterTemplate: MonsterTemplates['PigSlut'],
-      time: 1000 * 10,
+      time: 0,
    },
    '2': {
       id: '2',
       location: { x: 1350, y: 960 },
       monsterTemplate: MonsterTemplates['PigSlut'],
-      time: 1000 * 10,
+      time: 0,
    },
    '3': {
       id: '3',
@@ -37,7 +37,7 @@ export const MonsterRespawns = {
       id: '5',
       location: { x: 150, y: 100 },
       monsterTemplate: MonsterTemplates['PigSlut'],
-      time: 1000 * 10,
+      time: 1000 * 4,
    },
    '6': {
       id: '6',
@@ -60,13 +60,19 @@ export const MonsterRespawns = {
    '9': {
       id: '9',
       location: { x: 200, y: 100 },
-      monsterTemplate: MonsterTemplates['PigSlut'],
-      time: 1000 * 10,
+      monsterTemplate: MonsterTemplates['PigFucker'],
+      time: 1000 * 4,
    },
-   '10': {
-      id: '10',
-      location: { x: 150, y: 150 },
-      monsterTemplate: MonsterTemplates['PigSlut'],
-      time: 1000 * 10,
-   },
+   //    '9': {
+   //       id: '9',
+   //       location: { x: 200, y: 100 },
+   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       time: 1000 * 10,
+   //    },
+   //    '10': {
+   //       id: '10',
+   //       location: { x: 150, y: 150 },
+   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       time: 1000 * 10,
+   //    },
 };

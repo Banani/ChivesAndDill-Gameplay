@@ -4,8 +4,15 @@ import { EngineEventCrator } from './app/EngineEventsCreator';
 import { CharacterEffectNotifier, PlayerMovementNotifier, ProjectileNotifier } from './app/notifiers';
 import { Services } from './app/types/Services';
 import { KillingQuestService, MovementQuestService, QuestNotifier, QuestProgressService } from './app/modules';
-import { MonsterService, RespawnMonsterEngine, RespawnService } from './app/modules/MonsterModule';
-import { MonsterNotifier } from './app/modules/MonsterModule/notifiers/MonsterNotifier';
+import {
+   AggroService,
+   MonsterAttackEngine,
+   MonsterAttackService,
+   MonsterNotifier,
+   MonsterService,
+   RespawnMonsterEngine,
+   RespawnService,
+} from './app/modules/MonsterModule';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -28,8 +35,9 @@ httpServer.listen(port, hostname, () => {
 const playerMovementEngine = new PlayersMovement();
 const projectileMovement = new ProjectileMovement();
 const respawnMonsterEngine = new RespawnMonsterEngine();
+const monsterAttackEngine = new MonsterAttackEngine();
 
-const fastEngines = [playerMovementEngine, projectileMovement];
+const fastEngines = [playerMovementEngine, playerMovementEngine, projectileMovement, monsterAttackEngine];
 const slowEngines = [respawnMonsterEngine];
 
 const services: Services = {
@@ -50,6 +58,8 @@ const services: Services = {
 
    monsterService: new MonsterService(),
    respawnService: new RespawnService(respawnMonsterEngine),
+   aggroService: new AggroService(),
+   monsterAttackService: new MonsterAttackService(monsterAttackEngine),
    monsterNotifier: new MonsterNotifier(),
 };
 
