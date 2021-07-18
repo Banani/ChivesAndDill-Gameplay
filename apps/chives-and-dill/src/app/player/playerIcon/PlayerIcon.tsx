@@ -12,8 +12,8 @@ export const PlayerIcon = ({ player }) => {
       <div className="barsContainer">
         <div className="name-bar">{name}</div>
         <div className="bar">
-          <div className="bar-text">{currentHp + "/" + maxHp}</div>
-          <div className="hp-color" style={{ width: (currentHp / maxHp) * 100 + "%" }}></div>
+          <div className="bar-text">{currentHp >= 0 ? currentHp + "/" + maxHp : 0}</div>
+          <div className="hp-color" style={{ width: currentHp >= 0 ? (currentHp / maxHp) * 100 + "%" : "0" }}></div>
         </div>
         <div className="bar">
           <div className="bar-text">{100 + "/" + 100}</div>

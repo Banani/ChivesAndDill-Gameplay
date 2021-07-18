@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from "./SpellsBar.module.scss";
-import xd from "../../../assets/spritesheets/spells/potato.png";
 
 export const SpellsBar = ({ player }) => {
 
