@@ -3,6 +3,7 @@ import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
 import { EngineEventHandler, NewCharacterCreatedEvent, PlayerCastedSpellEvent, PlayerDisconnectedEvent } from '../types';
 import { ALL_SPELLS } from '../spells';
+import { MonsterEngineEvents, NewMonsterCreatedEvent } from '../modules/MonsterModule/Events';
 
 export class CooldownService extends EventParser {
    cooldownHistoryPerUserSpells: Record<string, Record<string, number>> = {};
@@ -12,6 +13,7 @@ export class CooldownService extends EventParser {
       this.eventsToHandlersMap = {
          [EngineEvents.PlayerCastedSpell]: this.handlePlayerCastedSpell,
          [EngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
+         [MonsterEngineEvents.NewMonsterCreated]: this.handleNewMonsterCreatedEvent,
          [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
       };
    }
@@ -26,6 +28,10 @@ export class CooldownService extends EventParser {
 
    handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
       this.cooldownHistoryPerUserSpells[event.payload.newCharacter.id] = {};
+   };
+
+   handleNewMonsterCreatedEvent: EngineEventHandler<NewMonsterCreatedEvent> = ({ event }) => {
+      this.cooldownHistoryPerUserSpells[event.monster.id] = {};
    };
 
    handlePlayerDisconnected: EngineEventHandler<PlayerDisconnectedEvent> = ({ event }) => {

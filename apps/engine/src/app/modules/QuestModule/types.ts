@@ -13,6 +13,14 @@ export interface Quest {
    stages?: Record<string, QuestStage>;
 }
 
+export interface QuestResetCondition {
+   type: QuestResetEvent;
+}
+
+export enum QuestResetEvent {
+   PlayerLostHp = 'PlayerLostHp',
+}
+
 export interface QuestStage {
    id: string;
    description: string;
@@ -21,6 +29,7 @@ export interface QuestStage {
 
 export interface QuestStagePart {
    id: string;
+   resetConditions?: QuestResetCondition[];
    questId: string;
    stageId: string;
    type: QuestType;
@@ -45,7 +54,7 @@ export interface KillingQuestStagePartStatus extends KillingQuestStagePart {
 }
 
 export enum KillingQuestStagePartComparison {
-   equality,
+   equality = 'equality',
 }
 
 export interface QuestProgress {

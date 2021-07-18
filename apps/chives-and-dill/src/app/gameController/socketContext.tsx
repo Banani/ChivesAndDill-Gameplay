@@ -49,7 +49,7 @@ const SocketContext = ({ children }) => {
 
          context.socket.on(QuestEngineMessages.KillingStagePartProgress, (data) => {
             console.log(data);
-            // dispatch(changePlayerMovingStatus({ userId, isInMove: true }));
+            dispatch(changePlayerMovingStatus({ userId, isInMove: true }));
          });
 
          context.socket.on(EngineMessages.PlayerStoppedMovement, ({ userId }) => {

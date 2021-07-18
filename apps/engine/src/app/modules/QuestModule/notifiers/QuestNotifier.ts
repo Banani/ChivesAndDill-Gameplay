@@ -16,25 +16,25 @@ export class QuestNotifier extends EventParser {
    }
 
    handleQuestStarted: EngineEventHandler<QuestStartedEvent> = ({ event, services }) => {
-      console.log('Quest started: ', event);
+      console.log('Quest started: ', event.questTemplate.name);
       const character = services.characterService.getCharacterById(event.characterId);
       services.socketConnectionService.getSocketById(character.socketId).emit(QuestEngineMessages.QuestStarted, omit(event, 'type'));
    };
 
    handleQuestCompleted: EngineEventHandler<QuestCompletedEvent> = ({ event, services }) => {
-      console.log('Quest completed: ', event);
+      console.log('Quest completed: ', event.questId);
       const character = services.characterService.getCharacterById(event.characterId);
       services.socketConnectionService.getSocketById(character.socketId).emit(QuestEngineMessages.QuestCompleted, omit(event, 'type'));
    };
 
    handleKillingStagePartProgress: EngineEventHandler<KillingStagePartProgress> = ({ event, services }) => {
-      console.log('Killing stage progress: ', event);
+      console.log(`Killing stage progress: ${event.currentProgress} / ${event.targetAmount}`);
       const character = services.characterService.getCharacterById(event.characterId);
       services.socketConnectionService.getSocketById(character.socketId).emit(QuestEngineMessages.KillingStagePartProgress, omit(event, 'type'));
    };
 
    handleNewQuestStageStarted: EngineEventHandler<NewQuestStageStartedEvent> = ({ event, services }) => {
-      console.log('Quest stage started: ', event);
+      console.log('Quest stage started: ', event.questStage.description);
       const character = services.characterService.getCharacterById(event.characterId);
       services.socketConnectionService.getSocketById(character.socketId).emit(QuestEngineMessages.NewQuestStageStarted, omit(event, 'type'));
    };

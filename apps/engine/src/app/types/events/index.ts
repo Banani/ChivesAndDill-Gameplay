@@ -1,5 +1,6 @@
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../EngineEvents';
+import { MonsterEngineEvents } from '../../modules/MonsterModule/Events';
 import { QuestEngineEvents } from '../../modules/QuestModule/Events';
 import { Character } from '../Character';
 import { Location } from '../Location';
@@ -7,7 +8,7 @@ import { Services } from '../Services';
 import { Spell } from '../Spell';
 
 export interface EngineEvent {
-   type: EngineEvents | QuestEngineEvents;
+   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents;
 }
 
 export interface PlayerCastedSpellEvent extends EngineEvent {
@@ -35,7 +36,7 @@ export interface PlayerDisconnectedEvent extends EngineEvent {
 
 export interface CharacterDiedEvent extends EngineEvent {
    character: Character;
-   killer: Character;
+   killerId: string;
 }
 
 export interface CharacterLostHpEvent extends EngineEvent {

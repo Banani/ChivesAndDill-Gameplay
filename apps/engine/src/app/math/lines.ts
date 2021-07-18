@@ -1,3 +1,4 @@
+import { AREAS, BORDER } from '../../map';
 import { distanceBetweenTwoPoints } from './points';
 
 function getLine([firstPointsSet, secondPointsSet]) {
@@ -95,4 +96,32 @@ export function isSegmentIntersectingWithACircle(segment, circle) {
 
    const distance = distanceBetweenTwoPoints({ x: circle[0], y: circle[1] }, linesIntersectionPoint);
    return distance < circle[2];
+}
+
+export function getCrossingPointsWithWalls(movementSegment) {
+   return [...BORDER, ...AREAS].reduce((prev, polygon) => {
+      const intersections = [];
+      for (let i = 0; i < polygon.length; i++) {
+         const crossPoint = getSegmentsCrossingPoint(movementSegment, [polygon[i], polygon[(i + 1) % polygon.length]]);
+         if (crossPoint !== null) {
+            intersections.push(crossPoint);
+         }
+      }
+      return prev.concat(intersections);
+   }, []);
+}
+
+export function isSegementCrossingWithAnyWall(movementSegment) {
+   const polygons = [...BORDER, ...AREAS];
+
+   for (let polygon of polygons) {
+      for (let i = 0; i < polygon.length; i++) {
+         const crossPoint = getSegmentsCrossingPoint(movementSegment, [polygon[i], polygon[(i + 1) % polygon.length]]);
+         if (crossPoint !== null) {
+            return true;
+         }
+      }
+   }
+
+   return false;
 }

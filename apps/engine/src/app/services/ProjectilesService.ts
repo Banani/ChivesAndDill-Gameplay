@@ -3,6 +3,7 @@ import { ProjectileMovement } from '../engines';
 import { EventParser } from '../EventParser';
 import { SpellType } from '../SpellType';
 import {
+   Character,
    EngineEventHandler,
    PlayerCastedSpellEvent,
    PlayerTriesToCastASpellEvent,
@@ -35,9 +36,9 @@ export class ProjectilesService extends EventParser {
 
    handlePlayerTriesToCastASpell: EngineEventHandler<PlayerTriesToCastASpellEvent> = ({ event, services }) => {
       if (event.spellData.spell.type === SpellType.PROJECTILE) {
-         const character = services.characterService.getCharacterById(event.spellData.characterId);
+         const character = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() }[event.spellData.characterId];
 
-         if (!services.characterService.canCastASpell(character.id)) {
+         if ((character as Character).isDead) {
             return;
          }
 

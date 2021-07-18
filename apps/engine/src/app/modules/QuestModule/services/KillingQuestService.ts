@@ -1,9 +1,11 @@
+import * as _ from 'lodash';
 import { forEach, find } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { Character, CharacterDiedEvent, EngineEventHandler } from '../../../types';
+import { Character, CharacterDiedEvent, CharacterLostHpEvent, EngineEventHandler } from '../../../types';
+import { MonsterDiedEvent, MonsterEngineEvents } from '../../MonsterModule/Events';
 import { KillingStagePartProgress, QuestEngineEvents, StagePartCompletedEvent, StartNewQuestKillingStagePartEvent } from '../Events';
-import { KillingQuestStagePartComparison, KillingQuestStagePartStatus } from '../types';
+import { KillingQuestStagePartComparison, KillingQuestStagePartStatus, QuestResetEvent } from '../types';
 
 const comparators: Record<KillingQuestStagePartComparison, (character: Character, fieldName: string, value: string) => boolean> = {
    [KillingQuestStagePartComparison.equality]: (character: Character, fieldName: string, value: string) => character[fieldName] === value,
@@ -16,7 +18,8 @@ export class KillingQuestService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [QuestEngineEvents.START_NEW_QUEST_KILLING_STAGE_PART]: this.handleStartNewQuestKillingStagePart,
-         [EngineEvents.CharacterDied]: this.handleCharacterDied,
+         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
+         [EngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
       };
    }
 
@@ -27,10 +30,10 @@ export class KillingQuestService extends EventParser {
       this.activeStages[event.characterId][event.stagePart.id] = { currentAmount: 0, ...event.stagePart };
    };
 
-   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
-      if (this.activeStages[event.killer.id]) {
-         forEach(this.activeStages[event.killer.id], (stagePart) => {
-            const matched = find(stagePart.rule, (rule) => comparators[rule.comparison](event.character, rule.fieldName, rule.value));
+   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
+      if (this.activeStages[event.killerId]) {
+         forEach(this.activeStages[event.killerId], (stagePart) => {
+            const matched = find(stagePart.rule, (rule) => comparators[rule.comparison](event.monster, rule.fieldName, rule.value));
 
             if (matched) {
                stagePart.currentAmount++;
@@ -38,7 +41,7 @@ export class KillingQuestService extends EventParser {
                   type: QuestEngineEvents.KILLING_STAGE_PART_PROGRESS,
                   questId: stagePart.questId,
                   stageId: stagePart.stageId,
-                  characterId: event.killer.id,
+                  characterId: event.killerId,
                   stagePartId: stagePart.id,
                   currentProgress: stagePart.currentAmount,
                   targetAmount: stagePart.amount,
@@ -49,11 +52,32 @@ export class KillingQuestService extends EventParser {
                      type: QuestEngineEvents.STAGE_PART_COMPLETED,
                      questId: stagePart.questId,
                      stageId: stagePart.stageId,
-                     characterId: event.killer.id,
+                     characterId: event.killerId,
                      stagePartId: stagePart.id,
                   });
-                  delete this.activeStages[event.killer.id][stagePart.id];
+                  delete this.activeStages[event.killerId][stagePart.id];
                }
+            }
+         });
+      }
+   };
+
+   handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event }) => {
+      const stages = this.activeStages[event.characterId];
+      if (stages) {
+         forEach(stages, (stagePart) => {
+            if (stagePart.resetConditions?.some((condition) => condition.type === QuestResetEvent.PlayerLostHp)) {
+               stagePart.currentAmount = 0;
+
+               this.engineEventCrator.createEvent<KillingStagePartProgress>({
+                  type: QuestEngineEvents.KILLING_STAGE_PART_PROGRESS,
+                  questId: stagePart.questId,
+                  stageId: stagePart.stageId,
+                  characterId: event.characterId,
+                  stagePartId: stagePart.id,
+                  currentProgress: stagePart.currentAmount,
+                  targetAmount: stagePart.amount,
+               });
             }
          });
       }

@@ -1,5 +1,5 @@
 import { pickBy, each, filter } from 'lodash';
-import { distanceBetweenTwoPoints, areSegmentsIntersecting, isSegmentIntersectingWithACircle, getTheClosestObject, getSegmentsCrossingPoint } from '../math';
+import { distanceBetweenTwoPoints, isSegmentIntersectingWithACircle, getTheClosestObject, getSegmentsCrossingPoint, getCrossingPointsWithWalls } from '../math';
 import { EngineEvents } from '../EngineEvents';
 import { AREAS, BORDER } from '../../map';
 import { Engine } from './Engine';
@@ -7,19 +7,6 @@ import { ProjectileIntersection } from './types';
 import { CharacterHitEvent, ProjectileMovedEvent, RemoveProjectileEvent } from '../types';
 
 export class ProjectileMovement extends Engine {
-   getCrossingPointsWithWalls(movementSegment) {
-      return [...BORDER, ...AREAS].reduce((prev, polygon) => {
-         const intersections = [];
-         for (let i = 0; i < polygon.length; i++) {
-            const crossPoint = getSegmentsCrossingPoint(movementSegment, [polygon[i], polygon[(i + 1) % polygon.length]]);
-            if (crossPoint !== null) {
-               intersections.push(crossPoint);
-            }
-         }
-         return prev.concat(intersections);
-      }, []);
-   }
-
    calculateAngles(projectile) {
       const angle = Math.atan2(projectile.directionLocation.y - projectile.startLocation.y, projectile.directionLocation.x - projectile.startLocation.x);
 
@@ -36,7 +23,7 @@ export class ProjectileMovement extends Engine {
 
    getCrossingCharacter(movementSegment) {
       return pickBy(
-         pickBy(this.services.characterService.getAllCharacters(), (char) => !char.isDead),
+         pickBy({ ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }, (char) => !char.isDead),
          (character) => {
             return isSegmentIntersectingWithACircle(movementSegment, [character.location.x, character.location.y, character.size / 2]);
          }
@@ -56,7 +43,7 @@ export class ProjectileMovement extends Engine {
          ];
 
          const hitCharacters = filter(this.getCrossingCharacter(movementSegment), (character) => character.id !== projectile.characterId);
-         const wallsInteractionPoints = this.getCrossingPointsWithWalls(movementSegment);
+         const wallsInteractionPoints = getCrossingPointsWithWalls(movementSegment);
 
          const allProjectileIntersections = [
             ...hitCharacters.map((character) => ({
