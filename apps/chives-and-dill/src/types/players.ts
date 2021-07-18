@@ -65,3 +65,7 @@ export interface UpdateCharacterHpPayload {
   currentHp: number,
   amount: number,
 }
+
+export interface CharacterDiedPayload {
+  characterId: string
+}
