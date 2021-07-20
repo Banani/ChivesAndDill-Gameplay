@@ -3,16 +3,16 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 import {
-  initialize,
-  addPlayer,
-  changePlayerPosition,
-  deletePlayer,
-  changePlayerMovingStatus,
-  addSpell,
-  updateSpell,
-  deleteProjectile,
-  updateCharacterHp,
-  characterDied
+   initialize,
+   addPlayer,
+   changePlayerPosition,
+   deletePlayer,
+   changePlayerMovingStatus,
+   addSpell,
+   updateSpell,
+   deleteProjectile,
+   updateCharacterHp,
+   characterDied
 } from '../../stores';
 import AppContext from './context';
 
@@ -72,19 +72,19 @@ const SocketContext = ({ children }) => {
             dispatch(updateSpell({ projectileId, angle, newLocation }));
          });
 
-         context.socket.on(EngineMessages.CharacterLostHp, ({characterId, currentHp, amount}) => {
-         dispatch(updateCharacterHp({ characterId, currentHp, amount }));
+         context.socket.on(EngineMessages.CharacterLostHp, ({ characterId, currentHp, amount }) => {
+            dispatch(updateCharacterHp({ characterId, currentHp, amount }));
          });
 
-         context.socket.on(EngineMessages.CharacterDied, ({characterId}) => {
-         dispatch(characterDied({ characterId }));
+         context.socket.on(EngineMessages.CharacterDied, ({ characterId }) => {
+            dispatch(characterDied({ characterId }));
          });
 
          context.socket.on(EngineMessages.ProjectileRemoved, ({ projectileId }) => {
             dispatch(deleteProjectile({ projectileId }));
          });
-    }
-  }, [context]);
+      }
+   }, [context]);
 
    return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
 };
