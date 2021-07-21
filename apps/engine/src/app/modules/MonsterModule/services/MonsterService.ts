@@ -1,7 +1,7 @@
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { CharacterDiedEvent, CharacterHitEvent, CharacterLostHpEvent, EngineEventHandler } from '../../../types';
+import { CharacterLostHpEvent, EngineEventHandler, TakeCharacterHealthPointsEvent } from '../../../types';
 import {
    MonsterEngineEvents,
    CreateNewMonsterEvent,
@@ -19,11 +19,11 @@ export class MonsterService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [EngineEvents.CharacterHit]: this.handleCharacterHit,
          [MonsterEngineEvents.CreateNewMonster]: this.handleCreateNewMonster,
          [MonsterEngineEvents.MonsterTargetChanged]: this.test,
          [MonsterEngineEvents.MonsterLostTarget]: this.test2,
          [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
+         [EngineEvents.TakeCharacterHealthPoints]: this.handleTakeCharacterHealthPoints,
       };
    }
 
@@ -59,21 +59,21 @@ export class MonsterService extends EventParser {
       });
    };
 
-   handleCharacterHit: EngineEventHandler<CharacterHitEvent> = ({ event }) => {
-      if (this.monsters[event.target.id]) {
-         this.monsters[event.target.id].currentHp = Math.max(this.monsters[event.target.id].currentHp - event.spell.damage, 0);
+   handleTakeCharacterHealthPoints: EngineEventHandler<TakeCharacterHealthPointsEvent> = ({ event }) => {
+      if (this.monsters[event.characterId]) {
+         this.monsters[event.characterId].currentHp = Math.max(this.monsters[event.characterId].currentHp - event.amount, 0);
 
          this.engineEventCrator.createEvent<CharacterLostHpEvent>({
             type: EngineEvents.CharacterLostHp,
-            characterId: event.target.id,
-            amount: event.spell.damage,
-            currentHp: this.monsters[event.target.id].currentHp,
+            characterId: event.characterId,
+            amount: event.amount,
+            currentHp: this.monsters[event.characterId].currentHp,
          });
 
-         if (this.monsters[event.target.id].currentHp === 0) {
+         if (this.monsters[event.characterId].currentHp === 0) {
             this.engineEventCrator.createEvent<MonsterDiedEvent>({
                type: MonsterEngineEvents.MonsterDied,
-               monster: this.monsters[event.target.id],
+               monster: this.monsters[event.characterId],
                killerId: event.attackerId,
             });
          }

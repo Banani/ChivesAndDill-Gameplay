@@ -1,9 +1,16 @@
-import { PlayersMovement, ProjectileMovement } from './app/engines';
-import { CharactersService, PlayerMovementService, SocketConnectionService, ProjectilesService, DirectHitService, CooldownService } from './app/services';
+import { PlayersMovement } from './app/engines';
+import { CharactersService, PlayerMovementService, SocketConnectionService, CooldownService } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
 import { CharacterEffectNotifier, PlayerMovementNotifier, ProjectileNotifier } from './app/notifiers';
 import { Services } from './app/types/Services';
-import { KillingQuestService, MovementQuestService, QuestNotifier, QuestProgressService } from './app/modules';
+import {
+   DirectInstantSpellService,
+   KillingQuestService,
+   MovementQuestService,
+   QuestNotifier,
+   QuestProgressService,
+   SpellAvailabilityService,
+} from './app/modules';
 import {
    AggroService,
    MonsterAttackEngine,
@@ -13,6 +20,10 @@ import {
    RespawnMonsterEngine,
    RespawnService,
 } from './app/modules/MonsterModule';
+import { DamageEffectService } from './app/modules/FightingModule/services/DamageEffectService';
+import { HealEffectService } from './app/modules/FightingModule/services/HealEffectService';
+import { ProjectileMovement } from './app/modules/FightingModule/engines';
+import { ProjectilesService } from './app/modules/FightingModule/services/ProjectilesService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -44,7 +55,6 @@ const services: Services = {
    characterService: new CharactersService(),
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
-   directHitService: new DirectHitService(),
    playerMovementNotifier: new PlayerMovementNotifier(),
    projectileNotifier: new ProjectileNotifier(),
    characterEffectNotifier: new CharacterEffectNotifier(),
@@ -61,6 +71,11 @@ const services: Services = {
    aggroService: new AggroService(),
    monsterAttackService: new MonsterAttackService(monsterAttackEngine),
    monsterNotifier: new MonsterNotifier(),
+
+   spellAvailabilityService: new SpellAvailabilityService(),
+   directInstantSpellService: new DirectInstantSpellService(),
+   damageEffectService: new DamageEffectService(),
+   healEffectService: new HealEffectService(),
 };
 
 const engineEventCreator = new EngineEventCrator(services);

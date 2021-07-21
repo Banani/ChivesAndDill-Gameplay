@@ -2,9 +2,10 @@ import { EventParser } from '../EventParser';
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
 import type {
+   AddCharacterHealthPointsEvent,
    Character,
    CharacterDiedEvent,
-   CharacterHitEvent,
+   CharacterGotHpEvent,
    CharacterLostHpEvent,
    CreateNewPlayerEvent,
    EngineEventHandler,
@@ -13,6 +14,7 @@ import type {
    PlayerMovedEvent,
    PlayerStartedMovementEvent,
    PlayerStopedAllMovementVectorsEvent,
+   TakeCharacterHealthPointsEvent,
 } from '../types';
 
 export class CharactersService extends EventParser {
@@ -27,7 +29,9 @@ export class CharactersService extends EventParser {
          [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
          [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
-         [EngineEvents.CharacterHit]: this.handleCharacterHit,
+
+         [EngineEvents.TakeCharacterHealthPoints]: this.handleTakeCharacterHealthPoints,
+         [EngineEvents.AddCharacterHealthPoints]: this.handleAddCharacterHealthPoints,
       };
    }
 
@@ -62,25 +66,41 @@ export class CharactersService extends EventParser {
       this.characters[event.characterId].direction = event.newCharacterDirection;
    };
 
-   handleCharacterHit: EngineEventHandler<CharacterHitEvent> = ({ event }) => {
-      if (this.characters[event.target.id]) {
-         this.characters[event.target.id].currentHp = Math.max(this.characters[event.target.id].currentHp - event.spell.damage, 0);
+   handleTakeCharacterHealthPoints: EngineEventHandler<TakeCharacterHealthPointsEvent> = ({ event }) => {
+      if (this.characters[event.characterId]) {
+         this.characters[event.characterId].currentHp = Math.max(this.characters[event.characterId].currentHp - event.amount, 0);
 
          this.engineEventCrator.createEvent<CharacterLostHpEvent>({
             type: EngineEvents.CharacterLostHp,
-            characterId: event.target.id,
-            amount: event.spell.damage,
-            currentHp: this.characters[event.target.id].currentHp,
+            characterId: event.characterId,
+            amount: event.amount,
+            currentHp: this.characters[event.characterId].currentHp,
          });
 
-         if (this.characters[event.target.id].currentHp === 0) {
-            this.characters[event.target.id].isDead = true;
+         if (this.characters[event.characterId].currentHp === 0) {
+            this.characters[event.characterId].isDead = true;
             this.engineEventCrator.createEvent<CharacterDiedEvent>({
                type: EngineEvents.CharacterDied,
-               character: event.target,
+               character: this.characters[event.characterId],
                killerId: event.attackerId,
             });
          }
+      }
+   };
+
+   handleAddCharacterHealthPoints: EngineEventHandler<AddCharacterHealthPointsEvent> = ({ event }) => {
+      if (this.characters[event.characterId]) {
+         this.characters[event.characterId].currentHp = Math.min(
+            this.characters[event.characterId].currentHp + event.amount,
+            this.characters[event.characterId].maxHp
+         );
+
+         this.engineEventCrator.createEvent<CharacterGotHpEvent>({
+            type: EngineEvents.CharacterGotHp,
+            characterId: event.characterId,
+            amount: event.amount,
+            currentHp: this.characters[event.characterId].currentHp,
+         });
       }
    };
 

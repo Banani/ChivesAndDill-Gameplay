@@ -9,6 +9,7 @@ export enum EngineMessages {
    ProjectileMoved = 'ProjectileMoved',
    ProjectileRemoved = 'ProjectileRemoved',
    CharacterLostHp = 'CharacterLostHp',
+   CharacterGotHp = 'CharacterGotHp',
    CharacterDied = 'CharacterDied',
 }
 

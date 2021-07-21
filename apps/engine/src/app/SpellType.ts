@@ -1,4 +1,9 @@
 export enum SpellType {
-   DIRECT_HIT = 'DirectHit',
-   PROJECTILE = 'Projectile',
+   Projectile = 'Projectile',
+   DirectInstant = 'DirectInstant',
+}
+
+export enum SpellEffectType {
+   Damage = 'Damage',
+   Heal = 'Heal',
 }

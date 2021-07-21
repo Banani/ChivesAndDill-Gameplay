@@ -1,12 +1,13 @@
 import { EngineMessages } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
 import { EventParser } from '../EventParser';
-import { CharacterDiedEvent, CharacterLostHpEvent, EngineEventHandler } from '../types';
+import { CharacterDiedEvent, CharacterGotHpEvent, CharacterLostHpEvent, EngineEventHandler } from '../types';
 
 export class CharacterEffectNotifier extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
+         [EngineEvents.CharacterGotHp]: this.handleCharacterGotHp,
          [EngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
       };
@@ -14,6 +15,14 @@ export class CharacterEffectNotifier extends EventParser {
 
    handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event, services }) => {
       services.socketConnectionService.getIO().sockets.emit(EngineMessages.CharacterLostHp, {
+         characterId: event.characterId,
+         amount: event.amount,
+         currentHp: event.currentHp,
+      });
+   };
+
+   handleCharacterGotHp: EngineEventHandler<CharacterGotHpEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(EngineMessages.CharacterGotHp, {
          characterId: event.characterId,
          amount: event.amount,
          currentHp: event.currentHp,
