@@ -14,9 +14,13 @@ export enum EngineEvents {
 
    CharacterLostHp = 'CharacterLostHp',
    CharacterGotHp = 'CharacterGotHp',
+   CharacterLostSpellPower = 'CharacterLostSpellPower',
+   CharacterGotSpellPower = 'CharacterGotSpellPower',
    CharacterDied = 'CharacterDied',
    TakeCharacterHealthPoints = 'TakeCharacterHealthPoints',
    AddCharacterHealthPoints = 'AddCharacterHealthPoints',
+   TakeCharacterSpellPower = 'TakeCharacterSpellPower',
+   AddCharacterSpellPower = 'AddCharacterSpellPower',
 
    PlayerTriesToCastASpell = 'PlayerTriesToCastASpell',
    PlayerCastSpell = 'PlayerCastSpell',

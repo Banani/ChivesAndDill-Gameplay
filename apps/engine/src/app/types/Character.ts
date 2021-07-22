@@ -12,6 +12,8 @@ export interface Character {
    isInMove: boolean;
    currentHp: number;
    maxHp: number;
+   currentSpellPower: number;
+   maxSpellPower: number;
    isDead?: boolean;
    socketId?: string;
 }

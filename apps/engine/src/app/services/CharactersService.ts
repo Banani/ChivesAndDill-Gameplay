@@ -3,10 +3,13 @@ import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
 import type {
    AddCharacterHealthPointsEvent,
+   AddCharacterSpellPowerEvent,
    Character,
    CharacterDiedEvent,
    CharacterGotHpEvent,
+   CharacterGotSpellPowerEvent,
    CharacterLostHpEvent,
+   CharacterLostSpellPowerEvent,
    CreateNewPlayerEvent,
    EngineEventHandler,
    NewCharacterCreatedEvent,
@@ -15,6 +18,7 @@ import type {
    PlayerStartedMovementEvent,
    PlayerStopedAllMovementVectorsEvent,
    TakeCharacterHealthPointsEvent,
+   TakeCharacterSpellPowerEvent,
 } from '../types';
 
 export class CharactersService extends EventParser {
@@ -32,6 +36,8 @@ export class CharactersService extends EventParser {
 
          [EngineEvents.TakeCharacterHealthPoints]: this.handleTakeCharacterHealthPoints,
          [EngineEvents.AddCharacterHealthPoints]: this.handleAddCharacterHealthPoints,
+         [EngineEvents.TakeCharacterSpellPower]: this.handleTakeCharacterSpellPower,
+         [EngineEvents.AddCharacterSpellPower]: this.handleAddCharacterSpellPower,
       };
    }
 
@@ -104,6 +110,35 @@ export class CharactersService extends EventParser {
       }
    };
 
+   handleTakeCharacterSpellPower: EngineEventHandler<TakeCharacterSpellPowerEvent> = ({ event }) => {
+      if (this.characters[event.characterId]) {
+         this.characters[event.characterId].currentSpellPower -= event.amount;
+
+         this.engineEventCrator.createEvent<CharacterLostSpellPowerEvent>({
+            type: EngineEvents.CharacterLostSpellPower,
+            characterId: event.characterId,
+            amount: event.amount,
+            currentSpellPower: this.characters[event.characterId].currentSpellPower,
+         });
+      }
+   };
+
+   handleAddCharacterSpellPower: EngineEventHandler<AddCharacterSpellPowerEvent> = ({ event }) => {
+      if (this.characters[event.characterId]) {
+         this.characters[event.characterId].currentSpellPower = Math.min(
+            this.characters[event.characterId].currentSpellPower + event.amount,
+            this.characters[event.characterId].maxSpellPower
+         );
+
+         this.engineEventCrator.createEvent<CharacterGotSpellPowerEvent>({
+            type: EngineEvents.CharacterGotSpellPower,
+            characterId: event.characterId,
+            amount: event.amount,
+            currentSpellPower: this.characters[event.characterId].currentSpellPower,
+         });
+      }
+   };
+
    generatePlayer: ({ socketId: string }) => Character = ({ socketId }) => {
       this.increment++;
       return {
@@ -116,6 +151,8 @@ export class CharactersService extends EventParser {
          socketId,
          currentHp: 1000,
          maxHp: 1000,
+         currentSpellPower: 100,
+         maxSpellPower: 100,
          size: 48,
          isDead: false,
       };

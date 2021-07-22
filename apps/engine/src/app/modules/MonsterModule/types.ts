@@ -13,6 +13,8 @@ export interface Monster {
    isInMove: boolean;
    currentHp: number;
    maxHp: number;
+   currentSpellPower: number;
+   maxSpellPower: number;
    respawnId: string;
    sightRange: number;
    escapeRange: number;

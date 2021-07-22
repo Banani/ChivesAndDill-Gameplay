@@ -1,7 +1,14 @@
 import { EngineMessages } from '@bananos/types';
 import { EngineEvents } from '../EngineEvents';
 import { EventParser } from '../EventParser';
-import { CharacterDiedEvent, CharacterGotHpEvent, CharacterLostHpEvent, EngineEventHandler } from '../types';
+import {
+   CharacterDiedEvent,
+   CharacterGotHpEvent,
+   CharacterGotSpellPowerEvent,
+   CharacterLostHpEvent,
+   CharacterLostSpellPowerEvent,
+   EngineEventHandler,
+} from '../types';
 
 export class CharacterEffectNotifier extends EventParser {
    constructor() {
@@ -9,6 +16,8 @@ export class CharacterEffectNotifier extends EventParser {
       this.eventsToHandlersMap = {
          [EngineEvents.CharacterGotHp]: this.handleCharacterGotHp,
          [EngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
+         [EngineEvents.CharacterGotSpellPower]: this.handleCharacterGotSpellPower,
+         [EngineEvents.CharacterLostSpellPower]: this.handleCharacterLostSpellPower,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
       };
    }
@@ -26,6 +35,22 @@ export class CharacterEffectNotifier extends EventParser {
          characterId: event.characterId,
          amount: event.amount,
          currentHp: event.currentHp,
+      });
+   };
+
+   handleCharacterGotSpellPower: EngineEventHandler<CharacterGotSpellPowerEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(EngineMessages.CharacterGotSpellPower, {
+         characterId: event.characterId,
+         amount: event.amount,
+         currentSpellPower: event.currentSpellPower,
+      });
+   };
+
+   handleCharacterLostSpellPower: EngineEventHandler<CharacterLostSpellPowerEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(EngineMessages.CharacterLostSpellPower, {
+         characterId: event.characterId,
+         amount: event.amount,
+         currentSpellPower: event.currentSpellPower,
       });
    };
 

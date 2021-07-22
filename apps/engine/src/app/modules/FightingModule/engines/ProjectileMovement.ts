@@ -72,6 +72,15 @@ export class ProjectileMovement extends Engine {
                   effect: spellEffect,
                });
             });
+
+            forEach(projectile.spell.spellEffectsOnCaster, (spellEffect) => {
+               this.eventCrator.createEvent<ApplyTargetSpellEffectEvent>({
+                  type: EngineEvents.ApplyTargetSpellEffect,
+                  caster: { ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }[projectile.characterId],
+                  target: { ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }[projectile.characterId],
+                  effect: spellEffect,
+               });
+            });
          } else if (this.isItOutOfRange(projectile, newLocation) || theClossestIntersection?.type === ProjectileIntersection.WALL) {
             this.eventCrator.createEvent<RemoveProjectileEvent>({
                type: EngineEvents.RemoveProjectile,

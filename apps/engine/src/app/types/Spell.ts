@@ -7,6 +7,8 @@ export interface Spell {
    cooldown: number;
    spellEffectsOnTarget: AllEffects[];
    spellEffectsOnDirectionLocation: AllEffects[];
+   spellEffectsOnCaster: AllEffects[];
+   spellPowerCost: number;
 
    angle?: number;
 
@@ -36,4 +38,8 @@ export interface AreaEffect extends SpellEffect {
    spellEffects: AllEffects[];
 }
 
-type AllEffects = DamageEffect | HealEffect | AreaEffect;
+export interface GenerateSpellPowerEffect extends SpellEffect {
+   amount: number;
+}
+
+type AllEffects = DamageEffect | HealEffect | AreaEffect | GenerateSpellPowerEffect;

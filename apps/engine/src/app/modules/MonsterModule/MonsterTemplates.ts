@@ -1,5 +1,4 @@
 import { ALL_SPELLS } from '../../spells';
-import { SpellType } from '../../SpellType';
 import { Spell } from '../../types/Spell';
 
 export interface MonsterTemplate {
@@ -8,6 +7,7 @@ export interface MonsterTemplate {
    sprites: string;
    size: number;
    healthPoints: number;
+   spellPower: number;
    division: string;
    sightRange: number;
    escapeRange: number;
@@ -22,6 +22,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       sprites: 'pigMan',
       size: 50,
       healthPoints: 60,
+      spellPower: 100,
       division: 'PigSlut',
       sightRange: 200,
       escapeRange: 2000,
@@ -38,6 +39,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       sprites: 'pigMan',
       size: 50,
       healthPoints: 200,
+      spellPower: 100,
       division: 'PigFucker',
       sightRange: 200,
       escapeRange: 2000,

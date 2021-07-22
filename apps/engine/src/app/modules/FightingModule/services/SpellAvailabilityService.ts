@@ -17,6 +17,10 @@ export class SpellAvailabilityService extends EventParser {
          return;
       }
 
+      if (character.currentSpellPower < event.spellData.spell.spellPowerCost) {
+         return;
+      }
+
       if (services.cooldownService.isSpellAvailable(character.id, event.spellData.spell.name)) {
          this.engineEventCrator.createEvent<PlayerCastSpellEvent>({
             type: EngineEvents.PlayerCastSpell,

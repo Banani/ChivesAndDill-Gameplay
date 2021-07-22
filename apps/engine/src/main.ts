@@ -8,6 +8,7 @@ import {
    DirectInstantSpellService,
    HealEffectService,
    KillingQuestService,
+   ManaService,
    MovementQuestService,
    QuestNotifier,
    QuestProgressService,
@@ -27,6 +28,7 @@ import { ProjectilesService } from './app/modules/FightingModule/services/Projec
 import { AngleBlastSpellService } from './app/modules/FightingModule/services/AngleBlastSpellService';
 import { AreaSpellService } from './app/modules/FightingModule/services/AreaSpellService';
 import { AreaEffectService } from './app/modules/FightingModule/services/EffectHandlers/AreaEffectService';
+import { GenerateSpellPowerEffectService } from './app/modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -76,12 +78,14 @@ const services: Services = {
    monsterAttackService: new MonsterAttackService(monsterAttackEngine),
    monsterNotifier: new MonsterNotifier(),
 
+   manaService: new ManaService(),
    spellAvailabilityService: new SpellAvailabilityService(),
    directInstantSpellService: new DirectInstantSpellService(),
    angleBlastSpellService: new AngleBlastSpellService(),
    areaSpellService: new AreaSpellService(),
    damageEffectService: new DamageEffectService(),
    healEffectService: new HealEffectService(),
+   generateSpellPowerEffectService: new GenerateSpellPowerEffectService(),
    areaEffectService: new AreaEffectService(areaEffectsEngine),
 };
 

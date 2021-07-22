@@ -3,13 +3,35 @@ import { Spell } from './types/Spell';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    test: {
-      type: SpellType.Area,
+      type: SpellType.Projectile,
       name: 'test',
       range: 4000,
       areaType: AreaType.Circle,
       cooldown: 500,
       radius: 200,
+      speed: 15,
+      spellPowerCost: 10,
       angle: Math.PI / 3,
+      spellEffectsOnTarget: [
+         {
+            type: SpellEffectType.Damage,
+            amount: 10,
+         },
+      ],
+      spellEffectsOnDirectionLocation: [],
+      spellEffectsOnCaster: [
+         {
+            type: SpellEffectType.GenerateSpellPower,
+            amount: 5,
+         },
+      ],
+   },
+   DirectHit: {
+      type: SpellType.DirectInstant,
+      name: 'DirectHit',
+      range: 400,
+      spellPowerCost: 10,
+      cooldown: 1000,
       spellEffectsOnTarget: [
          {
             type: SpellEffectType.Damage,
@@ -31,19 +53,13 @@ export const ALL_SPELLS: Record<string, Spell> = {
             ],
          },
       ],
-   },
-   DirectHit: {
-      type: SpellType.DirectInstant,
-      name: 'DirectHit',
-      range: 400,
-      cooldown: 1000,
-      spellEffectsOnTarget: [],
-      spellEffectsOnDirectionLocation: [],
+      spellEffectsOnCaster: [],
    },
    Projectile: {
       type: SpellType.Projectile,
       name: 'Projectile',
       range: 4000,
+      spellPowerCost: 10,
       speed: 4,
       cooldown: 0,
       spellEffectsOnTarget: [
@@ -53,11 +69,13 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
       spellEffectsOnDirectionLocation: [],
+      spellEffectsOnCaster: [],
    },
    MonsterProjectile: {
       type: SpellType.Projectile,
       name: 'MonsterProjectile',
       range: 1000,
+      spellPowerCost: 10,
       speed: 40,
       cooldown: 2000,
       spellEffectsOnTarget: [
@@ -67,11 +85,13 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
       spellEffectsOnDirectionLocation: [],
+      spellEffectsOnCaster: [],
    },
    MonsterInstant1: {
       type: SpellType.DirectInstant,
       name: 'MonsterInstant1',
       range: 500,
+      spellPowerCost: 10,
       cooldown: 1000,
       spellEffectsOnTarget: [
          {
@@ -80,11 +100,13 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
       spellEffectsOnDirectionLocation: [],
+      spellEffectsOnCaster: [],
    },
    MonsterInstant2: {
       type: SpellType.DirectInstant,
       name: 'MonsterInstant2',
       range: 1500,
+      spellPowerCost: 10,
       cooldown: 1000,
       spellEffectsOnTarget: [
          {
@@ -93,14 +115,17 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
       spellEffectsOnDirectionLocation: [],
+      spellEffectsOnCaster: [],
    },
    InstantProjectile: {
       type: SpellType.Projectile,
       name: 'InstantProjectile',
       range: 1000,
+      spellPowerCost: 10,
       speed: 1000,
       cooldown: 0,
       spellEffectsOnTarget: [],
       spellEffectsOnDirectionLocation: [],
+      spellEffectsOnCaster: [],
    },
 };

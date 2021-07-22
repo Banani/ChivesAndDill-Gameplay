@@ -52,6 +52,18 @@ export interface CharacterGotHpEvent extends EngineEvent {
    currentHp: number;
 }
 
+export interface CharacterLostSpellPowerEvent extends EngineEvent {
+   characterId: string;
+   amount: number;
+   currentSpellPower: number;
+}
+
+export interface CharacterGotSpellPowerEvent extends EngineEvent {
+   characterId: string;
+   amount: number;
+   currentSpellPower: number;
+}
+
 export interface PlayerStartedMovementEvent extends EngineEvent {
    characterId: string;
 }
@@ -169,6 +181,16 @@ export interface RemoveAreaSpellEffectEvent extends EngineEvent {
    areaId: string;
 }
 
+export interface TakeCharacterSpellPowerEvent extends EngineEvent {
+   characterId: string;
+   amount: number;
+}
+
+export interface AddCharacterSpellPowerEvent extends EngineEvent {
+   characterId: string;
+   amount: number;
+}
+
 export type EngineEventHandler<T> = ({ event, services }: { event: T; services: Services }) => void;
 
 export interface EngineEventsMap {
@@ -196,4 +218,8 @@ export interface EngineEventsMap {
    [EngineEvents.AddCharacterHealthPoints]: EngineEventHandler<AddCharacterHealthPointsEvent>;
    [EngineEvents.CharacterGotHp]: EngineEventHandler<CharacterGotHpEvent>;
    [EngineEvents.RemoveAreaSpellEffect]: EngineEventHandler<RemoveAreaSpellEffectEvent>;
+   [EngineEvents.TakeCharacterSpellPower]: EngineEventHandler<TakeCharacterSpellPowerEvent>;
+   [EngineEvents.AddCharacterSpellPower]: EngineEventHandler<AddCharacterSpellPowerEvent>;
+   [EngineEvents.CharacterLostSpellPower]: EngineEventHandler<CharacterLostSpellPowerEvent>;
+   [EngineEvents.CharacterGotSpellPower]: EngineEventHandler<CharacterGotSpellPowerEvent>;
 }

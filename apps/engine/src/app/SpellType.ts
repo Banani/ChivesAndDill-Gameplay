@@ -13,4 +13,5 @@ export enum SpellEffectType {
    Damage = 'Damage',
    Heal = 'Heal',
    Area = 'Area',
+   GenerateSpellPower = 'GenerateSpellPower',
 }
