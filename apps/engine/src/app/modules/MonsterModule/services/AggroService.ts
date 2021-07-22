@@ -3,7 +3,7 @@ import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
 import { SpellEffectType } from '../../../SpellType';
-import { ApplySpellEffectEvent, CharacterDiedEvent, EngineEventHandler, PlayerDisconnectedEvent, PlayerMovedEvent } from '../../../types';
+import { ApplyTargetSpellEffectEvent, CharacterDiedEvent, EngineEventHandler, PlayerDisconnectedEvent, PlayerMovedEvent } from '../../../types';
 import { Services } from '../../../types/Services';
 import { DamageEffect } from '../../../types/Spell';
 import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostTargetEvent, MonsterTargetChangedEvent } from '../Events';
@@ -31,7 +31,7 @@ export class AggroService extends EventParser {
          [MonsterEngineEvents.MonsterTargetChanged]: this.handleMonsterTargetChanged,
          [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
 
-         [EngineEvents.ApplySpellEffect]: this.handleApplySpellEffect,
+         [EngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
       };
    }
 
@@ -81,13 +81,13 @@ export class AggroService extends EventParser {
       });
    };
 
-   wasItDmgFromTheMonster = ({ event, services }: { event: ApplySpellEffectEvent; services: Services }) =>
+   wasItDmgFromTheMonster = ({ event, services }: { event: ApplyTargetSpellEffectEvent; services: Services }) =>
       services.monsterService.getAllCharacters()[event.caster.id];
 
-   wasItDmgToThePlayer = ({ event, services }: { event: ApplySpellEffectEvent; services: Services }) =>
+   wasItDmgToThePlayer = ({ event, services }: { event: ApplyTargetSpellEffectEvent; services: Services }) =>
       services.characterService.getAllCharacters()[event.target.id];
 
-   handleApplySpellEffect: EngineEventHandler<ApplySpellEffectEvent> = ({ event, services }) => {
+   handleApplySpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event, services }) => {
       if (event.effect.type !== SpellEffectType.Damage) {
          return;
       }

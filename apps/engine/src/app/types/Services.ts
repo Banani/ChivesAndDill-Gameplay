@@ -1,13 +1,16 @@
 import {
+   DamageEffectService,
    DirectInstantSpellService,
+   HealEffectService,
    KillingQuestService,
    MovementQuestService,
    QuestNotifier,
    QuestProgressService,
    SpellAvailabilityService,
 } from '../modules';
-import { DamageEffectService } from '../modules/FightingModule/services/DamageEffectService';
-import { HealEffectService } from '../modules/FightingModule/services/HealEffectService';
+import { AngleBlastSpellService } from '../modules/FightingModule/services/AngleBlastSpellService';
+import { AreaSpellService } from '../modules/FightingModule/services/AreaSpellService';
+import { AreaEffectService } from '../modules/FightingModule/services/EffectHandlers/AreaEffectService';
 import { ProjectilesService } from '../modules/FightingModule/services/ProjectilesService';
 import { MonsterAttackService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
@@ -35,6 +38,9 @@ export interface Services {
    monsterNotifier: MonsterNotifier;
    spellAvailabilityService: SpellAvailabilityService;
    directInstantSpellService: DirectInstantSpellService;
+   angleBlastSpellService: AngleBlastSpellService;
+   areaSpellService: AreaSpellService;
    damageEffectService: DamageEffectService;
    healEffectService: HealEffectService;
+   areaEffectService: AreaEffectService;
 }

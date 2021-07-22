@@ -1,18 +1,18 @@
-import { EngineEvents } from '../../../EngineEvents';
-import { EventParser } from '../../../EventParser';
-import { SpellEffectType } from '../../../SpellType';
-import { ApplySpellEffectEvent, EngineEventHandler, TakeCharacterHealthPointsEvent } from '../../../types';
-import { HealEffect } from '../../../types/Spell';
+import { EngineEvents } from '../../../../EngineEvents';
+import { EventParser } from '../../../../EventParser';
+import { SpellEffectType } from '../../../../SpellType';
+import { ApplyTargetSpellEffectEvent, EngineEventHandler, TakeCharacterHealthPointsEvent } from '../../../../types';
+import { HealEffect } from '../../../../types/Spell';
 
 export class HealEffectService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [EngineEvents.ApplySpellEffect]: this.handleApplySpellEffect,
+         [EngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
       };
    }
 
-   handleApplySpellEffect: EngineEventHandler<ApplySpellEffectEvent> = ({ event }) => {
+   handleApplySpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event }) => {
       if (event.effect.type === SpellEffectType.Heal) {
          const effect = event.effect as HealEffect;
 

@@ -4,7 +4,9 @@ import { EngineEventCrator } from './app/EngineEventsCreator';
 import { CharacterEffectNotifier, PlayerMovementNotifier, ProjectileNotifier } from './app/notifiers';
 import { Services } from './app/types/Services';
 import {
+   DamageEffectService,
    DirectInstantSpellService,
+   HealEffectService,
    KillingQuestService,
    MovementQuestService,
    QuestNotifier,
@@ -20,10 +22,11 @@ import {
    RespawnMonsterEngine,
    RespawnService,
 } from './app/modules/MonsterModule';
-import { DamageEffectService } from './app/modules/FightingModule/services/DamageEffectService';
-import { HealEffectService } from './app/modules/FightingModule/services/HealEffectService';
-import { ProjectileMovement } from './app/modules/FightingModule/engines';
+import { ProjectileMovement, AreaEffectsEngine } from './app/modules/FightingModule/engines';
 import { ProjectilesService } from './app/modules/FightingModule/services/ProjectilesService';
+import { AngleBlastSpellService } from './app/modules/FightingModule/services/AngleBlastSpellService';
+import { AreaSpellService } from './app/modules/FightingModule/services/AreaSpellService';
+import { AreaEffectService } from './app/modules/FightingModule/services/EffectHandlers/AreaEffectService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -47,8 +50,9 @@ const playerMovementEngine = new PlayersMovement();
 const projectileMovement = new ProjectileMovement();
 const respawnMonsterEngine = new RespawnMonsterEngine();
 const monsterAttackEngine = new MonsterAttackEngine();
+const areaEffectsEngine = new AreaEffectsEngine();
 
-const fastEngines = [playerMovementEngine, playerMovementEngine, projectileMovement, monsterAttackEngine];
+const fastEngines = [playerMovementEngine, playerMovementEngine, projectileMovement, monsterAttackEngine, areaEffectsEngine];
 const slowEngines = [respawnMonsterEngine];
 
 const services: Services = {
@@ -74,8 +78,11 @@ const services: Services = {
 
    spellAvailabilityService: new SpellAvailabilityService(),
    directInstantSpellService: new DirectInstantSpellService(),
+   angleBlastSpellService: new AngleBlastSpellService(),
+   areaSpellService: new AreaSpellService(),
    damageEffectService: new DamageEffectService(),
    healEffectService: new HealEffectService(),
+   areaEffectService: new AreaEffectService(areaEffectsEngine),
 };
 
 const engineEventCreator = new EngineEventCrator(services);

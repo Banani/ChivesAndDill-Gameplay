@@ -3,9 +3,9 @@ import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
 import { SpellType } from '../../../SpellType';
-import { ApplyTargetSpellEffectEvent, EngineEventHandler, PlayerCastedSpellEvent, PlayerCastSpellEvent } from '../../../types';
+import { ApplyLocationSpellEffectEvent, ApplyTargetSpellEffectEvent, EngineEventHandler, PlayerCastedSpellEvent, PlayerCastSpellEvent } from '../../../types';
 
-export class DirectInstantSpellService extends EventParser {
+export class AreaSpellService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
@@ -14,7 +14,7 @@ export class DirectInstantSpellService extends EventParser {
    }
 
    handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
-      if (event.spell.type === SpellType.DirectInstant) {
+      if (event.spell.type === SpellType.Area) {
          const allCharacters = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() };
          const character = allCharacters[event.casterId];
 
@@ -22,14 +22,23 @@ export class DirectInstantSpellService extends EventParser {
             return;
          }
 
-         for (const i in omit(allCharacters, [character.id])) {
-            if (distanceBetweenTwoPoints(event.directionLocation, allCharacters[i].location) < allCharacters[i].size / 2) {
-               this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
-                  type: EngineEvents.PlayerCastedSpell,
-                  casterId: character.id,
-                  spell: event.spell,
-               });
+         this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
+            type: EngineEvents.PlayerCastedSpell,
+            casterId: character.id,
+            spell: event.spell,
+         });
 
+         forEach(event.spell.spellEffectsOnDirectionLocation, (spellEffect) => {
+            this.engineEventCrator.createEvent<ApplyLocationSpellEffectEvent>({
+               type: EngineEvents.ApplyLocationSpellEffect,
+               caster: character,
+               effect: spellEffect,
+               location: event.directionLocation,
+            });
+         });
+
+         for (const i in omit(allCharacters, [character.id])) {
+            if (distanceBetweenTwoPoints(event.directionLocation, allCharacters[i].location) < event.spell.radius) {
                forEach(event.spell.spellEffectsOnTarget, (spellEffect) => {
                   this.engineEventCrator.createEvent<ApplyTargetSpellEffectEvent>({
                      type: EngineEvents.ApplyTargetSpellEffect,
@@ -38,7 +47,6 @@ export class DirectInstantSpellService extends EventParser {
                      effect: spellEffect,
                   });
                });
-               break;
             }
          }
       }

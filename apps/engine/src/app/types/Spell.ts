@@ -1,12 +1,19 @@
-import { SpellEffectType, SpellType } from '../SpellType';
+import { AreaType, SpellEffectType, SpellType } from '../SpellType';
 
 export interface Spell {
    type: SpellType;
    name: string;
    range: number;
    cooldown: number;
-   spellEffects: AllEffects[];
+   spellEffectsOnTarget: AllEffects[];
+   spellEffectsOnDirectionLocation: AllEffects[];
+
+   angle?: number;
+
    speed?: number;
+
+   areaType?: AreaType;
+   radius?: number;
 }
 
 export interface SpellEffect {
@@ -21,4 +28,12 @@ export interface HealEffect extends SpellEffect {
    amount: number;
 }
 
-type AllEffects = DamageEffect | HealEffect;
+export interface AreaEffect extends SpellEffect {
+   areaType: AreaType;
+   period: number;
+   radius: number;
+   attackFrequency: number;
+   spellEffects: AllEffects[];
+}
+
+type AllEffects = DamageEffect | HealEffect | AreaEffect;

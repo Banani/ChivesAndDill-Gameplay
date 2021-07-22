@@ -21,5 +21,7 @@ export enum EngineEvents {
    PlayerTriesToCastASpell = 'PlayerTriesToCastASpell',
    PlayerCastSpell = 'PlayerCastSpell',
    PlayerCastedSpell = 'PlayerCastedSpell',
-   ApplySpellEffect = 'ApplySpellEffect',
+   ApplyTargetSpellEffect = 'ApplyTargetSpellEffect',
+   ApplyLocationSpellEffect = 'ApplyLocationSpellEffect',
+   RemoveAreaSpellEffect = 'RemoveAreaSpellEffect',
 }

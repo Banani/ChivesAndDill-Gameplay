@@ -141,10 +141,16 @@ export interface PlayerCastSpellEvent extends EngineEvent {
    directionLocation: Vector;
 }
 
-export interface ApplySpellEffectEvent extends EngineEvent {
+export interface ApplyTargetSpellEffectEvent extends EngineEvent {
    caster: Monster | Character;
    target: Monster | Character;
    effect: SpellEffect;
+}
+
+export interface ApplyLocationSpellEffectEvent extends EngineEvent {
+   caster: Monster | Character;
+   effect: SpellEffect;
+   location: Location;
 }
 
 export interface TakeCharacterHealthPointsEvent extends EngineEvent {
@@ -157,6 +163,10 @@ export interface AddCharacterHealthPointsEvent extends EngineEvent {
    casterId: string;
    characterId: string;
    amount: number;
+}
+
+export interface RemoveAreaSpellEffectEvent extends EngineEvent {
+   areaId: string;
 }
 
 export type EngineEventHandler<T> = ({ event, services }: { event: T; services: Services }) => void;
@@ -180,8 +190,10 @@ export interface EngineEventsMap {
    [EngineEvents.ProjectileRemoved]: EngineEventHandler<ProjectileRemovedEvent>;
 
    [EngineEvents.PlayerCastSpell]: EngineEventHandler<PlayerCastSpellEvent>;
-   [EngineEvents.ApplySpellEffect]: EngineEventHandler<ApplySpellEffectEvent>;
+   [EngineEvents.ApplyTargetSpellEffect]: EngineEventHandler<ApplyTargetSpellEffectEvent>;
+   [EngineEvents.ApplyLocationSpellEffect]: EngineEventHandler<ApplyLocationSpellEffectEvent>;
    [EngineEvents.TakeCharacterHealthPoints]: EngineEventHandler<TakeCharacterHealthPointsEvent>;
    [EngineEvents.AddCharacterHealthPoints]: EngineEventHandler<AddCharacterHealthPointsEvent>;
    [EngineEvents.CharacterGotHp]: EngineEventHandler<CharacterGotHpEvent>;
+   [EngineEvents.RemoveAreaSpellEffect]: EngineEventHandler<RemoveAreaSpellEffectEvent>;
 }

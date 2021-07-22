@@ -3,7 +3,7 @@ import { EngineEvents } from '../../../EngineEvents';
 import { Engine } from '../../../engines/Engine';
 import { ProjectileIntersection } from '../../../engines/types';
 import { distanceBetweenTwoPoints, isSegmentIntersectingWithACircle, getCrossingPointsWithWalls, getTheClosestObject } from '../../../math';
-import { RemoveProjectileEvent, ProjectileMovedEvent, ApplySpellEffectEvent } from '../../../types';
+import { RemoveProjectileEvent, ProjectileMovedEvent, ApplyTargetSpellEffectEvent } from '../../../types';
 
 export class ProjectileMovement extends Engine {
    calculateAngles(projectile) {
@@ -64,9 +64,9 @@ export class ProjectileMovement extends Engine {
                projectileId,
             });
 
-            forEach(projectile.spell.spellEffects, (spellEffect) => {
-               this.eventCrator.createEvent<ApplySpellEffectEvent>({
-                  type: EngineEvents.ApplySpellEffect,
+            forEach(projectile.spell.spellEffectsOnTarget, (spellEffect) => {
+               this.eventCrator.createEvent<ApplyTargetSpellEffectEvent>({
+                  type: EngineEvents.ApplyTargetSpellEffect,
                   caster: { ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }[projectile.characterId],
                   target: theClossestIntersection.character,
                   effect: spellEffect,

@@ -114,8 +114,8 @@ export class CharactersService extends EventParser {
          sprites: 'nakedFemale',
          isInMove: false,
          socketId,
-         currentHp: 300,
-         maxHp: 300,
+         currentHp: 1000,
+         maxHp: 1000,
          size: 48,
          isDead: false,
       };
