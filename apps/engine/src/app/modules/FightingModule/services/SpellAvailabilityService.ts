@@ -13,7 +13,8 @@ export class SpellAvailabilityService extends EventParser {
    handlePlayerTriesToCastASpell: EngineEventHandler<PlayerTriesToCastASpellEvent> = ({ event, services }) => {
       const character = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() }[event.spellData.characterId];
 
-      if ((character as Character).isDead) {
+      // BUG
+      if (!character || (character as Character).isDead) {
          return;
       }
 

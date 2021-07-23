@@ -3,7 +3,7 @@ import { Spell } from './types/Spell';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    test: {
-      type: SpellType.Projectile,
+      type: SpellType.AngleBlast,
       name: 'test',
       range: 4000,
       areaType: AreaType.Circle,
@@ -15,14 +15,28 @@ export const ALL_SPELLS: Record<string, Spell> = {
       spellEffectsOnTarget: [
          {
             type: SpellEffectType.Damage,
-            amount: 10,
+            amount: 50,
          },
       ],
-      spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCaster: [
+      spellEffectsOnDirectionLocation: [
          {
-            type: SpellEffectType.GenerateSpellPower,
-            amount: 5,
+            type: SpellEffectType.Area,
+            areaType: AreaType.Circle,
+            radius: 2000,
+            period: 10000 * 10,
+            attackFrequency: 1000,
+            spellEffects: [
+               {
+                  type: SpellEffectType.Damage,
+                  amount: 1,
+               },
+            ],
+         },
+      ],
+      spellEffectsOnCasterOnSpellHit: [
+         {
+            type: SpellEffectType.Damage,
+            amount: 50,
          },
       ],
    },
@@ -53,7 +67,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
             ],
          },
       ],
-      spellEffectsOnCaster: [],
+      spellEffectsOnCasterOnSpellHit: [],
    },
    Projectile: {
       type: SpellType.Projectile,
@@ -69,7 +83,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
       spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCaster: [],
+      spellEffectsOnCasterOnSpellHit: [],
    },
    MonsterProjectile: {
       type: SpellType.Projectile,
@@ -85,7 +99,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
       spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCaster: [],
+      spellEffectsOnCasterOnSpellHit: [],
    },
    MonsterInstant1: {
       type: SpellType.DirectInstant,
@@ -100,7 +114,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
       spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCaster: [],
+      spellEffectsOnCasterOnSpellHit: [],
    },
    MonsterInstant2: {
       type: SpellType.DirectInstant,
@@ -115,7 +129,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
       spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCaster: [],
+      spellEffectsOnCasterOnSpellHit: [],
    },
    InstantProjectile: {
       type: SpellType.Projectile,
@@ -126,6 +140,6 @@ export const ALL_SPELLS: Record<string, Spell> = {
       cooldown: 0,
       spellEffectsOnTarget: [],
       spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCaster: [],
+      spellEffectsOnCasterOnSpellHit: [],
    },
 };

@@ -1,9 +1,10 @@
+import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
+import { EventParser } from 'apps/engine/src/app/EventParser';
+import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
+import { SpellType } from 'apps/engine/src/app/SpellType';
+import { EngineEventHandler, PlayerCastSpellEvent, PlayerCastedSpellEvent, ApplyTargetSpellEffectEvent } from 'apps/engine/src/app/types';
 import { omit, forEach } from 'lodash';
-import { EngineEvents } from '../../../EngineEvents';
-import { EventParser } from '../../../EventParser';
-import { distanceBetweenTwoPoints } from '../../../math';
-import { SpellType } from '../../../SpellType';
-import { ApplyTargetSpellEffectEvent, EngineEventHandler, PlayerCastedSpellEvent, PlayerCastSpellEvent } from '../../../types';
+import { SpellLandedEvent, FightingEngineEvents, SpellReachedTargetEvent } from '../../Events';
 
 export class DirectInstantSpellService extends EventParser {
    constructor() {
@@ -18,6 +19,11 @@ export class DirectInstantSpellService extends EventParser {
          const allCharacters = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() };
          const character = allCharacters[event.casterId];
 
+         // BUG
+         if (!character) {
+            return;
+         }
+
          if (distanceBetweenTwoPoints(character.location, event.directionLocation) > event.spell.range) {
             return;
          }
@@ -30,13 +36,18 @@ export class DirectInstantSpellService extends EventParser {
                   spell: event.spell,
                });
 
-               forEach(event.spell.spellEffectsOnTarget, (spellEffect) => {
-                  this.engineEventCrator.createEvent<ApplyTargetSpellEffectEvent>({
-                     type: EngineEvents.ApplyTargetSpellEffect,
-                     caster: character,
-                     target: allCharacters[i],
-                     effect: spellEffect,
-                  });
+               this.engineEventCrator.createEvent<SpellLandedEvent>({
+                  type: FightingEngineEvents.SpellLanded,
+                  spell: event.spell,
+                  caster: character,
+                  location: allCharacters[i].location,
+               });
+
+               this.engineEventCrator.createEvent<SpellReachedTargetEvent>({
+                  type: FightingEngineEvents.SpellReachedTarget,
+                  spell: event.spell,
+                  caster: character,
+                  target: allCharacters[i],
                });
                break;
             }

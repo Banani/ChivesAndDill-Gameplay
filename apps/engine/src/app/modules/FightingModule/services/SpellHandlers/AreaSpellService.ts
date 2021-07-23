@@ -1,9 +1,16 @@
+import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
+import { EventParser } from 'apps/engine/src/app/EventParser';
+import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
+import { SpellType } from 'apps/engine/src/app/SpellType';
+import {
+   EngineEventHandler,
+   PlayerCastSpellEvent,
+   PlayerCastedSpellEvent,
+   ApplyLocationSpellEffectEvent,
+   ApplyTargetSpellEffectEvent,
+} from '../../../../types';
 import { omit, forEach } from 'lodash';
-import { EngineEvents } from '../../../EngineEvents';
-import { EventParser } from '../../../EventParser';
-import { distanceBetweenTwoPoints } from '../../../math';
-import { SpellType } from '../../../SpellType';
-import { ApplyLocationSpellEffectEvent, ApplyTargetSpellEffectEvent, EngineEventHandler, PlayerCastedSpellEvent, PlayerCastSpellEvent } from '../../../types';
+import { SpellLandedEvent, FightingEngineEvents, SpellReachedTargetEvent } from '../../Events';
 
 export class AreaSpellService extends EventParser {
    constructor() {
@@ -28,24 +35,20 @@ export class AreaSpellService extends EventParser {
             spell: event.spell,
          });
 
-         forEach(event.spell.spellEffectsOnDirectionLocation, (spellEffect) => {
-            this.engineEventCrator.createEvent<ApplyLocationSpellEffectEvent>({
-               type: EngineEvents.ApplyLocationSpellEffect,
-               caster: character,
-               effect: spellEffect,
-               location: event.directionLocation,
-            });
+         this.engineEventCrator.createEvent<SpellLandedEvent>({
+            type: FightingEngineEvents.SpellLanded,
+            spell: event.spell,
+            caster: character,
+            location: event.directionLocation,
          });
 
          for (const i in omit(allCharacters, [character.id])) {
             if (distanceBetweenTwoPoints(event.directionLocation, allCharacters[i].location) < event.spell.radius) {
-               forEach(event.spell.spellEffectsOnTarget, (spellEffect) => {
-                  this.engineEventCrator.createEvent<ApplyTargetSpellEffectEvent>({
-                     type: EngineEvents.ApplyTargetSpellEffect,
-                     caster: character,
-                     target: allCharacters[i],
-                     effect: spellEffect,
-                  });
+               this.engineEventCrator.createEvent<SpellReachedTargetEvent>({
+                  type: FightingEngineEvents.SpellReachedTarget,
+                  spell: event.spell,
+                  caster: character,
+                  target: allCharacters[i],
                });
             }
          }

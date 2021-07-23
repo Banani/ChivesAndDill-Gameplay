@@ -1,4 +1,5 @@
 import { EngineEventCrator } from './EngineEventsCreator';
+import { FightingEngineEvents, FightingEngineEventsMap } from './modules/FightingModule/Events';
 import { MonsterEngineEventsMap } from './modules/MonsterModule/Events';
 import { QuestEngineEventsMap } from './modules/QuestModule/Events';
 import { EngineEvent, EngineEventsMap } from './types';
@@ -6,7 +7,7 @@ import { Services } from './types/Services';
 
 export abstract class EventParser {
    engineEventCrator: EngineEventCrator;
-   eventsToHandlersMap: Partial<EngineEventsMap & QuestEngineEventsMap & MonsterEngineEventsMap> = {};
+   eventsToHandlersMap: Partial<EngineEventsMap & QuestEngineEventsMap & MonsterEngineEventsMap & FightingEngineEventsMap> = {};
 
    init(engineEventCrator: EngineEventCrator, services?: Services) {
       this.engineEventCrator = engineEventCrator;

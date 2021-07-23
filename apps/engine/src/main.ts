@@ -4,15 +4,19 @@ import { EngineEventCrator } from './app/EngineEventsCreator';
 import { CharacterEffectNotifier, PlayerMovementNotifier, ProjectileNotifier } from './app/notifiers';
 import { Services } from './app/types/Services';
 import {
+   AngleBlastSpellService,
+   AreaSpellService,
    DamageEffectService,
    DirectInstantSpellService,
    HealEffectService,
    KillingQuestService,
    ManaService,
    MovementQuestService,
+   ProjectilesService,
    QuestNotifier,
    QuestProgressService,
    SpellAvailabilityService,
+   SpellEffectApplierService,
 } from './app/modules';
 import {
    AggroService,
@@ -24,9 +28,6 @@ import {
    RespawnService,
 } from './app/modules/MonsterModule';
 import { ProjectileMovement, AreaEffectsEngine } from './app/modules/FightingModule/engines';
-import { ProjectilesService } from './app/modules/FightingModule/services/ProjectilesService';
-import { AngleBlastSpellService } from './app/modules/FightingModule/services/AngleBlastSpellService';
-import { AreaSpellService } from './app/modules/FightingModule/services/AreaSpellService';
 import { AreaEffectService } from './app/modules/FightingModule/services/EffectHandlers/AreaEffectService';
 import { GenerateSpellPowerEffectService } from './app/modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
 
@@ -54,7 +55,14 @@ const respawnMonsterEngine = new RespawnMonsterEngine();
 const monsterAttackEngine = new MonsterAttackEngine();
 const areaEffectsEngine = new AreaEffectsEngine();
 
-const fastEngines = [playerMovementEngine, playerMovementEngine, projectileMovement, monsterAttackEngine, areaEffectsEngine];
+const fastEngines = [
+   playerMovementEngine,
+   playerMovementEngine,
+   projectileMovement,
+   //    monsterAttackEngine,
+   areaEffectsEngine,
+   //    11111111111111111111111111111111111111111111111111111111,
+];
 const slowEngines = [respawnMonsterEngine];
 
 const services: Services = {
@@ -80,6 +88,7 @@ const services: Services = {
 
    manaService: new ManaService(),
    spellAvailabilityService: new SpellAvailabilityService(),
+   spellEffectApplierService: new SpellEffectApplierService(),
    directInstantSpellService: new DirectInstantSpellService(),
    angleBlastSpellService: new AngleBlastSpellService(),
    areaSpellService: new AreaSpellService(),

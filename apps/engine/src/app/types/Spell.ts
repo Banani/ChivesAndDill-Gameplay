@@ -7,7 +7,7 @@ export interface Spell {
    cooldown: number;
    spellEffectsOnTarget: AllEffects[];
    spellEffectsOnDirectionLocation: AllEffects[];
-   spellEffectsOnCaster: AllEffects[];
+   spellEffectsOnCasterOnSpellHit: AllEffects[];
    spellPowerCost: number;
 
    angle?: number;

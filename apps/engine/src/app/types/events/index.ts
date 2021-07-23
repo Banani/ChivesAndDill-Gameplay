@@ -1,5 +1,6 @@
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../EngineEvents';
+import { FightingEngineEvents } from '../../modules/FightingModule/Events';
 import { MonsterEngineEvents } from '../../modules/MonsterModule/Events';
 import { Monster } from '../../modules/MonsterModule/types';
 import { QuestEngineEvents } from '../../modules/QuestModule/Events';
@@ -9,7 +10,7 @@ import { Services } from '../Services';
 import { Spell, SpellEffect } from '../Spell';
 
 export interface EngineEvent {
-   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents;
+   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | FightingEngineEvents;
 }
 
 export interface PlayerCastedSpellEvent extends EngineEvent {

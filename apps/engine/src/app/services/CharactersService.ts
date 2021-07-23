@@ -75,14 +75,12 @@ export class CharactersService extends EventParser {
    handleTakeCharacterHealthPoints: EngineEventHandler<TakeCharacterHealthPointsEvent> = ({ event }) => {
       if (this.characters[event.characterId]) {
          this.characters[event.characterId].currentHp = Math.max(this.characters[event.characterId].currentHp - event.amount, 0);
-
          this.engineEventCrator.createEvent<CharacterLostHpEvent>({
             type: EngineEvents.CharacterLostHp,
             characterId: event.characterId,
             amount: event.amount,
             currentHp: this.characters[event.characterId].currentHp,
          });
-
          if (this.characters[event.characterId].currentHp === 0) {
             this.characters[event.characterId].isDead = true;
             this.engineEventCrator.createEvent<CharacterDiedEvent>({

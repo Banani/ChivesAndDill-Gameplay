@@ -1,19 +1,17 @@
-import { EngineEvents } from '../../../EngineEvents';
-import { EventParser } from '../../../EventParser';
-import { SpellType } from '../../../SpellType';
+import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
+import { EventParser } from 'apps/engine/src/app/EventParser';
+import { SpellType } from 'apps/engine/src/app/SpellType';
 import {
    Projectile,
    EngineEventHandler,
-   PlayerTriesToCastASpellEvent,
-   Character,
+   PlayerCastSpellEvent,
    PlayerCastedSpellEvent,
    ProjectileCreatedEvent,
    ProjectileMovedEvent,
    RemoveProjectileEvent,
    ProjectileRemovedEvent,
-   PlayerCastSpellEvent,
-} from '../../../types';
-import { ProjectileMovement } from '../engines';
+} from 'apps/engine/src/app/types';
+import { ProjectileMovement } from '../..';
 
 export class ProjectilesService extends EventParser {
    projectileEngine: ProjectileMovement;

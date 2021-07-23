@@ -1,4 +1,5 @@
 export * from './SpellAvailabilityService';
-export * from './DirectInstantSpellService';
+export * from './SpellEffectApplierService';
+export * from './SpellHandlers';
 export * from './EffectHandlers';
 export * from './ManaService';

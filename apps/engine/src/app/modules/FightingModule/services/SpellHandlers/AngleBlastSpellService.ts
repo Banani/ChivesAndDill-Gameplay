@@ -1,9 +1,11 @@
+import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
+import { EventParser } from 'apps/engine/src/app/EventParser';
+import { isSegementCrossingWithAnyWall, distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
+import { SpellType } from 'apps/engine/src/app/SpellType';
+import { EngineEventHandler, PlayerCastSpellEvent, PlayerCastedSpellEvent, ApplyTargetSpellEffectEvent } from 'apps/engine/src/app/types';
 import { omit, forEach } from 'lodash';
-import { EngineEvents } from '../../../EngineEvents';
-import { EventParser } from '../../../EventParser';
-import { distanceBetweenTwoPoints, isSegementCrossingWithAnyWall } from '../../../math';
-import { SpellType } from '../../../SpellType';
-import { ApplyTargetSpellEffectEvent, EngineEventHandler, Location, PlayerCastedSpellEvent, PlayerCastSpellEvent } from '../../../types';
+import { Location } from '../../../../types';
+import { SpellReachedTargetEvent, FightingEngineEvents, SpellLandedEvent } from '../../Events';
 
 export class AngleBlastSpellService extends EventParser {
    constructor() {
@@ -34,6 +36,20 @@ export class AngleBlastSpellService extends EventParser {
          const rotatedAngle = castAngle > 0 ? -Math.PI - distanceToPI : Math.PI + distanceToPI;
          const angleDistance = event.spell.angle / 2;
 
+         this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
+            type: EngineEvents.PlayerCastedSpell,
+            casterId: caster.id,
+            spell: event.spell,
+         });
+
+         this.engineEventCrator.createEvent<SpellLandedEvent>({
+            type: FightingEngineEvents.SpellLanded,
+            spell: event.spell,
+            caster,
+            // BUG, do ustalenia jaka jest location
+            location: event.directionLocation,
+         });
+
          for (const i in omit(allCharacters, [caster.id])) {
             const targetAngle = Math.atan2(-(allCharacters[i].location.y - caster.location.y), allCharacters[i].location.x - caster.location.x);
             if (
@@ -41,19 +57,11 @@ export class AngleBlastSpellService extends EventParser {
                this.isInRange(caster, allCharacters[i], event.spell.range) &&
                this.isTargetInSight(caster.location, allCharacters[i].location)
             ) {
-               this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
-                  type: EngineEvents.PlayerCastedSpell,
-                  casterId: caster.id,
+               this.engineEventCrator.createEvent<SpellReachedTargetEvent>({
+                  type: FightingEngineEvents.SpellReachedTarget,
                   spell: event.spell,
-               });
-
-               forEach(event.spell.spellEffectsOnTarget, (spellEffect) => {
-                  this.engineEventCrator.createEvent<ApplyTargetSpellEffectEvent>({
-                     type: EngineEvents.ApplyTargetSpellEffect,
-                     caster: caster,
-                     target: allCharacters[i],
-                     effect: spellEffect,
-                  });
+                  caster,
+                  target: allCharacters[i],
                });
             }
          }
