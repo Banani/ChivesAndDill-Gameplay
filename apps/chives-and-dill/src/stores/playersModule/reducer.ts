@@ -7,6 +7,12 @@ const initialState: PlayersState = {
   characters: {},
   areas: [],
   projectiles: {},
+  spells: {},
+  keyBinding: {
+    "1": "DirectHit",
+    "2": "Projectile",
+    "3": "InstantProjectile",
+  },
   characterViewsSettings: {
     nakedFemale: {
       spriteHeight: 48,
@@ -134,6 +140,7 @@ export const playersReducer = (
         activePlayer: action.payload.activePlayer,
         characters: action.payload.characters,
         areas: action.payload.areas,
+        spells: action.payload.spells,
       };
     case PlayersActionTypes.ADD_PLAYER:
       return {

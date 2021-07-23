@@ -14,9 +14,9 @@ import {
    updateCharacterHp,
    characterDied
 } from '../../stores';
-import AppContext from './context';
+import { SocketContext } from './socketContext';
 
-const SocketContext = ({ children }) => {
+const SocketCommunicator = ({ children }) => {
    const [context, setContext] = useState<any>({});
    const dispatch = useDispatch();
    useEffect(() => {
@@ -29,8 +29,8 @@ const SocketContext = ({ children }) => {
 
    useEffect(() => {
       if (context.socket) {
-         context.socket.on(EngineMessages.Inicialization, ({ players, areas, activePlayer, projectiles }) => {
-            dispatch(initialize({ characters: players, areas, activePlayer, projectiles }));
+         context.socket.on(EngineMessages.Inicialization, ({ players, areas, activePlayer, projectiles, spells }) => {
+            dispatch(initialize({ characters: players, areas, activePlayer, projectiles, spells }));
          });
 
          context.socket.on(EngineMessages.PlayerMoved, ({ playerId, newLocation, newDirection }) => {
@@ -48,7 +48,6 @@ const SocketContext = ({ children }) => {
          });
 
          context.socket.on(QuestEngineMessages.KillingStagePartProgress, (data) => {
-            console.log(data);
             dispatch(changePlayerMovingStatus({ userId, isInMove: true }));
          });
 
@@ -86,7 +85,7 @@ const SocketContext = ({ children }) => {
       }
    }, [context]);
 
-   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
+   return <SocketContext.Provider value={context}>{children}</SocketContext.Provider>;
 };
 
-export default SocketContext;
+export default SocketCommunicator;

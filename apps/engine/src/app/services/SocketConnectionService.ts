@@ -1,9 +1,10 @@
 import { EngineMessages } from '@bananos/types';
 import { AREAS } from '../../map';
 import { EngineEvents } from '../EngineEvents';
-import { EngineEventCrator } from '../EngineEventsCreator';
+import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
-import { CreateNewPlayerEvent, EngineEventHandler, NewCharacterCreatedEvent, PlayerDisconnectedEvent } from '../types';
+import type { CreateNewPlayerEvent, EngineEventHandler, NewCharacterCreatedEvent, PlayerDisconnectedEvent } from '../types';
+import { ALL_SPELLS } from '../spells';
 
 export class SocketConnectionService extends EventParser {
    io;
@@ -45,6 +46,7 @@ export class SocketConnectionService extends EventParser {
          players: { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() },
          projectiles: services.projectilesService.getAllProjectiles(),
          areas: AREAS,
+         spells: ALL_SPELLS
       });
 
       currentSocket.broadcast.emit(EngineMessages.UserConnected, {

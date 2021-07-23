@@ -45,9 +45,20 @@ interface SpriteSheetCoordinates {
    spriteAmount: number;
 }
 
-export interface Spell {
+export interface Projectile {
    projectileId: string;
    name: string;
    angle: number;
    newLocation: Location;
+}
+
+export interface Spell {
+   cooldown: number;
+   damage: number;
+   name: string;
+   range: number;
+   speed: number;
+   type: string;
+   image: string;
+   description: string;
 }

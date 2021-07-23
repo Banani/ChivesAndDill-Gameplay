@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stage, Sprite, Graphics, Container } from '@inlet/react-pixi';
 import { useSelector } from 'react-redux';
-import { selectCharacters, selectCharacterViewsSettings, selectAreas, selectActivePlayer, selectSpells } from '../stores';
+import { selectCharacters, selectCharacterViewsSettings, selectAreas, selectActivePlayer, selectProjectiles } from '../stores';
 import _ from 'lodash';
 import Player from './player/Player';
 import { PlayerIcon } from "./player/playerIcon/PlayerIcon";
@@ -9,19 +9,18 @@ import { SpellsBar } from "./player/spellsBar/SpellsBar";
 
 const Map = () => {
    const players = useSelector(selectCharacters);
-   const spells = useSelector(selectSpells);
+   const projectiles = useSelector(selectProjectiles);
    const characterViewsSettings = useSelector(selectCharacterViewsSettings);
    const activePlayerId = useSelector(selectActivePlayer);
    const areas = useSelector(selectAreas);
 
    const renderPlayers = React.useCallback(_.map(_.omit(players, [activePlayerId ?? 0]), (player, i) =>
-
    (
       <Player key={i} player={player} characterViewsSettings={characterViewsSettings} />
    )
    ), [players, characterViewsSettings]);
 
-   const renderSpells = _.map(spells, (spell, i) => (
+   const renderSpells = _.map(projectiles, (spell, i) => (
       <Sprite key={i} image="../assets/spritesheets/spells/potato.png" x={spell.newLocation.x} y={spell.newLocation.y}></Sprite>
    ));
 

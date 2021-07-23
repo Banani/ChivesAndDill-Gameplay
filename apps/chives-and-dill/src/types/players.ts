@@ -1,11 +1,13 @@
-import type { Player, Location, Spell, SpriteSheet } from '@bananos/types';
+import type { Player, Location, Spell, Projectile, SpriteSheet } from '@bananos/types';
 
 export interface PlayersState {
   activePlayer: string;
   characters: Record<string, Player>;
   characterViewsSettings: Record<string, SpriteSheet>;
   areas: [][];
-  projectiles: Record<string, Spell>
+  projectiles: Record<string, Projectile>;
+  spells: Record<string, Spell>;
+  keyBinding: Record<string, string>;
 }
 
 export interface PlayersAwareState {
@@ -27,7 +29,8 @@ export interface InitializePayload {
   activePlayer: string;
   characters: Record<string, Player>;
   areas: [][];
-  projectiles: Record<string, Spell>;
+  projectiles: Record<string, Projectile>;
+  spells: Record<string, Spell>;
 }
 
 export interface ChangeImagePayload {
@@ -44,7 +47,7 @@ export interface DeletePlayerPayload {
 
 export interface AddSpellPayload {
   projectileId: string,
-  spell: Spell,
+  spell: Projectile,
   name: string,
   currentLocation: Location
 }

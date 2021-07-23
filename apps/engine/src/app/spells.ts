@@ -1,5 +1,5 @@
 import { SpellType } from './SpellType';
-import { Spell } from './types/Spell';
+import type { Spell } from './types/Spell';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    DirectHit: {
@@ -9,6 +9,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
       speed: 4,
       damage: 25,
       cooldown: 1000,
+      image: "../assets/spritesheets/spells/mage/fireball.jpg",
+      description: "Inflicts 25 Fire damage to an enemy and causes them to burn for 8 sec.",
    },
    Projectile: {
       type: SpellType.PROJECTILE,
@@ -17,6 +19,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
       speed: 40,
       damage: 40,
       cooldown: 0,
+      image: "../assets/spritesheets/spells/mage/fireball.jpg",
+      description: "Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.",
    },
    MonsterProjectile: {
       type: SpellType.PROJECTILE,
@@ -25,6 +29,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
       speed: 40,
       damage: 20,
       cooldown: 2000,
+      image: "../assets/spritesheets/spells/mage/fireball.jpg",
+      description: "Inflicts 20 Fire damage to an enemy and causes them to burn for 8 sec.",
    },
    MonsterInstant1: {
       type: SpellType.DIRECT_HIT,
@@ -33,6 +39,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
       speed: 40,
       damage: 15,
       cooldown: 1000,
+      image: "../assets/spritesheets/spells/mage/fireball.jpg",
+      description: "Inflicts 15 Fire damage to an enemy and causes them to burn for 8 sec.",
    },
    MonsterInstant2: {
       type: SpellType.DIRECT_HIT,
@@ -41,6 +49,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
       speed: 40,
       damage: 1,
       cooldown: 1000,
+      image: "../assets/spritesheets/spells/mage/fireball.jpg",
+      description: "Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.",
    },
    InstantProjectile: {
       type: SpellType.PROJECTILE,
@@ -49,5 +59,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       speed: 1000,
       damage: 69,
       cooldown: 0,
+      image: "../assets/spritesheets/spells/mage/fireball.jpg",
+      description: "Inflicts 69 Fire damage to an enemy and causes them to burn for 8 sec.",
    },
 };

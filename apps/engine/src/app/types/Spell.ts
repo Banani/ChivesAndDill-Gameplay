@@ -1,4 +1,4 @@
-import { SpellType } from '../SpellType';
+import type { SpellType } from '../SpellType';
 
 export interface Spell {
    type: SpellType;
@@ -7,4 +7,6 @@ export interface Spell {
    speed: number;
    damage: number;
    cooldown: number;
+   image: string;
+   description: string;
 }
