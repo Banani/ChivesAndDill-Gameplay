@@ -1,9 +1,23 @@
-import { PlayersMovement, ProjectileMovement } from './app/engines';
-import { CharactersService, PlayerMovementService, SocketConnectionService, ProjectilesService, DirectHitService, CooldownService } from './app/services';
+import { PlayersMovement } from './app/engines';
+import { CharactersService, PlayerMovementService, SocketConnectionService, CooldownService } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
 import { CharacterEffectNotifier, PlayerMovementNotifier, ProjectileNotifier } from './app/notifiers';
 import { Services } from './app/types/Services';
-import { KillingQuestService, MovementQuestService, QuestNotifier, QuestProgressService } from './app/modules';
+import {
+   AngleBlastSpellService,
+   AreaSpellService,
+   DamageEffectService,
+   DirectInstantSpellService,
+   HealEffectService,
+   KillingQuestService,
+   ManaService,
+   MovementQuestService,
+   ProjectilesService,
+   QuestNotifier,
+   QuestProgressService,
+   SpellAvailabilityService,
+   SpellEffectApplierService,
+} from './app/modules';
 import {
    AggroService,
    MonsterAttackEngine,
@@ -13,6 +27,9 @@ import {
    RespawnMonsterEngine,
    RespawnService,
 } from './app/modules/MonsterModule';
+import { ProjectileMovement, AreaEffectsEngine } from './app/modules/FightingModule/engines';
+import { AreaEffectService } from './app/modules/FightingModule/services/EffectHandlers/AreaEffectService';
+import { GenerateSpellPowerEffectService } from './app/modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -36,15 +53,22 @@ const playerMovementEngine = new PlayersMovement();
 const projectileMovement = new ProjectileMovement();
 const respawnMonsterEngine = new RespawnMonsterEngine();
 const monsterAttackEngine = new MonsterAttackEngine();
+const areaEffectsEngine = new AreaEffectsEngine();
 
-const fastEngines = [playerMovementEngine, playerMovementEngine, projectileMovement, monsterAttackEngine];
+const fastEngines = [
+   playerMovementEngine,
+   playerMovementEngine,
+   projectileMovement,
+   //    monsterAttackEngine,
+   areaEffectsEngine,
+   //    11111111111111111111111111111111111111111111111111111111,
+];
 const slowEngines = [respawnMonsterEngine];
 
 const services: Services = {
    characterService: new CharactersService(),
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
-   directHitService: new DirectHitService(),
    playerMovementNotifier: new PlayerMovementNotifier(),
    projectileNotifier: new ProjectileNotifier(),
    characterEffectNotifier: new CharacterEffectNotifier(),
@@ -61,6 +85,17 @@ const services: Services = {
    aggroService: new AggroService(),
    monsterAttackService: new MonsterAttackService(monsterAttackEngine),
    monsterNotifier: new MonsterNotifier(),
+
+   manaService: new ManaService(),
+   spellAvailabilityService: new SpellAvailabilityService(),
+   spellEffectApplierService: new SpellEffectApplierService(),
+   directInstantSpellService: new DirectInstantSpellService(),
+   angleBlastSpellService: new AngleBlastSpellService(),
+   areaSpellService: new AreaSpellService(),
+   damageEffectService: new DamageEffectService(),
+   healEffectService: new HealEffectService(),
+   generateSpellPowerEffectService: new GenerateSpellPowerEffectService(),
+   areaEffectService: new AreaEffectService(areaEffectsEngine),
 };
 
 const engineEventCreator = new EngineEventCrator(services);

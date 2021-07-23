@@ -1,14 +1,16 @@
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../EngineEvents';
+import { FightingEngineEvents } from '../../modules/FightingModule/Events';
 import { MonsterEngineEvents } from '../../modules/MonsterModule/Events';
+import { Monster } from '../../modules/MonsterModule/types';
 import { QuestEngineEvents } from '../../modules/QuestModule/Events';
 import { Character } from '../Character';
 import { Location } from '../Location';
 import { Services } from '../Services';
-import { Spell } from '../Spell';
+import { Spell, SpellEffect } from '../Spell';
 
 export interface EngineEvent {
-   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents;
+   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | FightingEngineEvents;
 }
 
 export interface PlayerCastedSpellEvent extends EngineEvent {
@@ -45,6 +47,24 @@ export interface CharacterLostHpEvent extends EngineEvent {
    currentHp: number;
 }
 
+export interface CharacterGotHpEvent extends EngineEvent {
+   characterId: string;
+   amount: number;
+   currentHp: number;
+}
+
+export interface CharacterLostSpellPowerEvent extends EngineEvent {
+   characterId: string;
+   amount: number;
+   currentSpellPower: number;
+}
+
+export interface CharacterGotSpellPowerEvent extends EngineEvent {
+   characterId: string;
+   amount: number;
+   currentSpellPower: number;
+}
+
 export interface PlayerStartedMovementEvent extends EngineEvent {
    characterId: string;
 }
@@ -68,12 +88,6 @@ export interface PlayerMovedEvent extends EngineEvent {
    characterId: string;
    newCharacterDirection: CharacterDirection;
    newLocation: Location;
-}
-
-export interface CharacterHitEvent extends EngineEvent {
-   spell: Spell;
-   target: Character;
-   attackerId: string;
 }
 
 export interface PlayerTriesToCastASpellEvent extends EngineEvent {
@@ -134,6 +148,50 @@ export interface RemoveProjectileEvent extends EngineEvent {
    projectileId: string;
 }
 
+export interface PlayerCastSpellEvent extends EngineEvent {
+   casterId: string;
+   spell: Spell;
+   directionLocation: Vector;
+}
+
+export interface ApplyTargetSpellEffectEvent extends EngineEvent {
+   caster: Monster | Character;
+   target: Monster | Character;
+   effect: SpellEffect;
+}
+
+export interface ApplyLocationSpellEffectEvent extends EngineEvent {
+   caster: Monster | Character;
+   effect: SpellEffect;
+   location: Location;
+}
+
+export interface TakeCharacterHealthPointsEvent extends EngineEvent {
+   attackerId: string;
+   characterId: string;
+   amount: number;
+}
+
+export interface AddCharacterHealthPointsEvent extends EngineEvent {
+   casterId: string;
+   characterId: string;
+   amount: number;
+}
+
+export interface RemoveAreaSpellEffectEvent extends EngineEvent {
+   areaId: string;
+}
+
+export interface TakeCharacterSpellPowerEvent extends EngineEvent {
+   characterId: string;
+   amount: number;
+}
+
+export interface AddCharacterSpellPowerEvent extends EngineEvent {
+   characterId: string;
+   amount: number;
+}
+
 export type EngineEventHandler<T> = ({ event, services }: { event: T; services: Services }) => void;
 
 export interface EngineEventsMap {
@@ -147,11 +205,22 @@ export interface EngineEventsMap {
    [EngineEvents.PlayerStopedAllMovementVectors]: EngineEventHandler<PlayerStopedAllMovementVectorsEvent>;
    [EngineEvents.PlayerStopedMovementVector]: EngineEventHandler<PlayerStopedMovementVectorEvent>;
    [EngineEvents.PlayerMoved]: EngineEventHandler<PlayerMovedEvent>;
-   [EngineEvents.CharacterHit]: EngineEventHandler<CharacterHitEvent>;
    [EngineEvents.PlayerTriesToCastASpell]: EngineEventHandler<PlayerTriesToCastASpellEvent>;
    [EngineEvents.PlayerCastedSpell]: EngineEventHandler<PlayerCastedSpellEvent>;
    [EngineEvents.ProjectileCreated]: EngineEventHandler<ProjectileCreatedEvent>;
    [EngineEvents.ProjectileMoved]: EngineEventHandler<ProjectileMovedEvent>;
    [EngineEvents.RemoveProjectile]: EngineEventHandler<RemoveProjectileEvent>;
    [EngineEvents.ProjectileRemoved]: EngineEventHandler<ProjectileRemovedEvent>;
+
+   [EngineEvents.PlayerCastSpell]: EngineEventHandler<PlayerCastSpellEvent>;
+   [EngineEvents.ApplyTargetSpellEffect]: EngineEventHandler<ApplyTargetSpellEffectEvent>;
+   [EngineEvents.ApplyLocationSpellEffect]: EngineEventHandler<ApplyLocationSpellEffectEvent>;
+   [EngineEvents.TakeCharacterHealthPoints]: EngineEventHandler<TakeCharacterHealthPointsEvent>;
+   [EngineEvents.AddCharacterHealthPoints]: EngineEventHandler<AddCharacterHealthPointsEvent>;
+   [EngineEvents.CharacterGotHp]: EngineEventHandler<CharacterGotHpEvent>;
+   [EngineEvents.RemoveAreaSpellEffect]: EngineEventHandler<RemoveAreaSpellEffectEvent>;
+   [EngineEvents.TakeCharacterSpellPower]: EngineEventHandler<TakeCharacterSpellPowerEvent>;
+   [EngineEvents.AddCharacterSpellPower]: EngineEventHandler<AddCharacterSpellPowerEvent>;
+   [EngineEvents.CharacterLostSpellPower]: EngineEventHandler<CharacterLostSpellPowerEvent>;
+   [EngineEvents.CharacterGotSpellPower]: EngineEventHandler<CharacterGotSpellPowerEvent>;
 }

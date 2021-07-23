@@ -1,10 +1,10 @@
-import { pickBy, each, filter } from 'lodash';
-import { distanceBetweenTwoPoints, isSegmentIntersectingWithACircle, getTheClosestObject, getSegmentsCrossingPoint, getCrossingPointsWithWalls } from '../math';
-import { EngineEvents } from '../EngineEvents';
-import { AREAS, BORDER } from '../../map';
-import { Engine } from './Engine';
-import { ProjectileIntersection } from './types';
-import { CharacterHitEvent, ProjectileMovedEvent, RemoveProjectileEvent } from '../types';
+import { pickBy, each, filter, forEach } from 'lodash';
+import { EngineEvents } from '../../../EngineEvents';
+import { Engine } from '../../../engines/Engine';
+import { ProjectileIntersection } from '../../../engines/types';
+import { distanceBetweenTwoPoints, isSegmentIntersectingWithACircle, getCrossingPointsWithWalls, getTheClosestObject } from '../../../math';
+import { RemoveProjectileEvent, ProjectileMovedEvent, ApplyTargetSpellEffectEvent } from '../../../types';
+import { FightingEngineEvents, SpellLandedEvent, SpellReachedTargetEvent } from '../Events';
 
 export class ProjectileMovement extends Engine {
    calculateAngles(projectile) {
@@ -64,11 +64,19 @@ export class ProjectileMovement extends Engine {
                type: EngineEvents.RemoveProjectile,
                projectileId,
             });
-            this.eventCrator.createEvent<CharacterHitEvent>({
-               type: EngineEvents.CharacterHit,
+
+            this.eventCrator.createEvent<SpellLandedEvent>({
+               type: FightingEngineEvents.SpellLanded,
                spell: projectile.spell,
+               caster: { ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }[projectile.characterId],
+               location: theClossestIntersection.character.location,
+            });
+
+            this.eventCrator.createEvent<SpellReachedTargetEvent>({
+               type: FightingEngineEvents.SpellReachedTarget,
+               spell: projectile.spell,
+               caster: { ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }[projectile.characterId],
                target: theClossestIntersection.character,
-               attackerId: projectile.characterId,
             });
          } else if (this.isItOutOfRange(projectile, newLocation) || theClossestIntersection?.type === ProjectileIntersection.WALL) {
             this.eventCrator.createEvent<RemoveProjectileEvent>({

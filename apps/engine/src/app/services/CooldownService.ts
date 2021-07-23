@@ -1,7 +1,7 @@
 import { EngineEvents } from '../EngineEvents';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
-import { EngineEventHandler, NewCharacterCreatedEvent, PlayerCastedSpellEvent, PlayerDisconnectedEvent } from '../types';
+import { EngineEventHandler, NewCharacterCreatedEvent, PlayerCastedSpellEvent, PlayerCastSpellEvent, PlayerDisconnectedEvent } from '../types';
 import { ALL_SPELLS } from '../spells';
 import { MonsterEngineEvents, NewMonsterCreatedEvent } from '../modules/MonsterModule/Events';
 
@@ -15,6 +15,7 @@ export class CooldownService extends EventParser {
          [EngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
          [MonsterEngineEvents.NewMonsterCreated]: this.handleNewMonsterCreatedEvent,
          [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
+         [EngineEvents.PlayerCastSpell]: this.handlePlayerCastSpell,
       };
    }
 
@@ -45,5 +46,9 @@ export class CooldownService extends EventParser {
       const spellLastCast = this.cooldownHistoryPerUserSpells[characterId][spellName];
 
       return spellLastCast ? Date.now() - spellLastCast > ALL_SPELLS[spellName].cooldown : true;
+   };
+
+   handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event }) => {
+      this.cooldownHistoryPerUserSpells[event.casterId][event.spell.name] = Date.now();
    };
 }

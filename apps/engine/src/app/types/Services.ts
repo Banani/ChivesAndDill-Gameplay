@@ -1,15 +1,30 @@
-import { KillingQuestService, MovementQuestService, QuestNotifier, QuestProgressService } from '../modules';
+import {
+   AngleBlastSpellService,
+   AreaSpellService,
+   DamageEffectService,
+   DirectInstantSpellService,
+   HealEffectService,
+   KillingQuestService,
+   ManaService,
+   MovementQuestService,
+   ProjectilesService,
+   QuestNotifier,
+   QuestProgressService,
+   SpellAvailabilityService,
+   SpellEffectApplierService,
+} from '../modules';
+import { AreaEffectService } from '../modules/FightingModule/services/EffectHandlers/AreaEffectService';
+import { GenerateSpellPowerEffectService } from '../modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
 import { MonsterAttackService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
 import { AggroService } from '../modules/MonsterModule/services/aggroService';
 import { PlayerMovementNotifier, ProjectileNotifier, CharacterEffectNotifier } from '../notifiers';
-import { CharactersService, PlayerMovementService, ProjectilesService, DirectHitService, CooldownService, SocketConnectionService } from '../services';
+import { CharactersService, PlayerMovementService, CooldownService, SocketConnectionService } from '../services';
 
 export interface Services {
    characterService: CharactersService;
    playerMovementService: PlayerMovementService;
    projectilesService: ProjectilesService;
-   directHitService: DirectHitService;
    playerMovementNotifier: PlayerMovementNotifier;
    projectileNotifier: ProjectileNotifier;
    characterEffectNotifier: CharacterEffectNotifier;
@@ -24,4 +39,14 @@ export interface Services {
    aggroService: AggroService;
    monsterAttackService: MonsterAttackService;
    monsterNotifier: MonsterNotifier;
+   manaService: ManaService;
+   spellEffectApplierService: SpellEffectApplierService;
+   spellAvailabilityService: SpellAvailabilityService;
+   directInstantSpellService: DirectInstantSpellService;
+   angleBlastSpellService: AngleBlastSpellService;
+   areaSpellService: AreaSpellService;
+   damageEffectService: DamageEffectService;
+   generateSpellPowerEffectService: GenerateSpellPowerEffectService;
+   healEffectService: HealEffectService;
+   areaEffectService: AreaEffectService;
 }

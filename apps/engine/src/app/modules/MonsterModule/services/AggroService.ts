@@ -2,8 +2,10 @@ import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { CharacterDiedEvent, CharacterHitEvent, EngineEventHandler, PlayerDisconnectedEvent, PlayerMovedEvent } from '../../../types';
+import { SpellEffectType } from '../../../SpellType';
+import { ApplyTargetSpellEffectEvent, CharacterDiedEvent, EngineEventHandler, PlayerDisconnectedEvent, PlayerMovedEvent } from '../../../types';
 import { Services } from '../../../types/Services';
+import { DamageEffect } from '../../../types/Spell';
 import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostTargetEvent, MonsterTargetChangedEvent } from '../Events';
 import { Monster } from '../types';
 
@@ -24,11 +26,12 @@ export class AggroService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
-         [EngineEvents.CharacterHit]: this.handleCharacterHit,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
          [MonsterEngineEvents.MonsterTargetChanged]: this.handleMonsterTargetChanged,
          [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
+
+         [EngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
       };
    }
 
@@ -72,19 +75,23 @@ export class AggroService extends EventParser {
 
       forEach(this.monsterAggro, (monsterAggro, monsterId) => {
          const monster = services.monsterService.getAllCharacters()[monsterId];
-         if (monsterAggro.allTargets[event.characterId] && distanceBetweenTwoPoints(monster.location, event.newLocation) > monster.escapeRange) {
+         // BUG
+         if (!monster || (monsterAggro.allTargets[event.characterId] && distanceBetweenTwoPoints(monster.location, event.newLocation) > monster.escapeRange)) {
             this.deleteAggro(monsterId, event.characterId);
          }
       });
    };
 
-   wasItDmgFromTheMonster = ({ event, services }: { event: CharacterHitEvent; services: Services }) =>
-      services.monsterService.getAllCharacters()[event.attackerId];
+   wasItDmgFromTheMonster = ({ event, services }: { event: ApplyTargetSpellEffectEvent; services: Services }) =>
+      services.monsterService.getAllCharacters()[event.caster.id];
 
-   wasItDmgToThePlayer = ({ event, services }: { event: CharacterHitEvent; services: Services }) =>
+   wasItDmgToThePlayer = ({ event, services }: { event: ApplyTargetSpellEffectEvent; services: Services }) =>
       services.characterService.getAllCharacters()[event.target.id];
 
-   handleCharacterHit: EngineEventHandler<CharacterHitEvent> = ({ event, services }) => {
+   handleApplySpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event, services }) => {
+      if (event.effect.type !== SpellEffectType.Damage) {
+         return;
+      }
       if (this.wasItDmgToThePlayer({ event, services })) {
          return;
       }
@@ -98,7 +105,7 @@ export class AggroService extends EventParser {
          this.monsterAggro[event.target.id] = {
             currentTarget: {
                level: 0,
-               characterId: event.attackerId,
+               characterId: event.caster.id,
             },
             allTargets: {},
          };
@@ -106,20 +113,21 @@ export class AggroService extends EventParser {
       }
 
       const monsterAggros = aggro.allTargets;
-      if (!monsterAggros[event.attackerId]) {
-         monsterAggros[event.attackerId] = {
+      if (!monsterAggros[event.caster.id]) {
+         monsterAggros[event.caster.id] = {
             level: 0,
-            characterId: event.attackerId,
+            characterId: event.caster.id,
          };
       }
-      monsterAggros[event.attackerId].level += event.spell.damage;
+      const damageEffect = event.effect as DamageEffect;
+      monsterAggros[event.caster.id].level += damageEffect.amount;
 
-      if (monsterAggros[event.attackerId].level > aggro.currentTarget.level * 2) {
-         aggro.currentTarget = monsterAggros[event.attackerId];
+      if (monsterAggros[event.caster.id].level > aggro.currentTarget.level * 2) {
+         aggro.currentTarget = monsterAggros[event.caster.id];
 
          this.engineEventCrator.createEvent<MonsterTargetChangedEvent>({
             type: MonsterEngineEvents.MonsterTargetChanged,
-            newTargetId: event.attackerId,
+            newTargetId: event.caster.id,
             monster: event.target as Monster,
          });
       }

@@ -1,5 +1,3 @@
-import { QuestEngineEvents } from './modules/QuestModule/Events';
-
 export enum EngineEvents {
    CreateNewPlayer = 'CreateNewPlayer',
    NewCharacterCreated = 'NewCharacterCreated',
@@ -9,13 +7,25 @@ export enum EngineEvents {
    PlayerStopedAllMovementVectors = 'PlayerStopedAllMovementVectors',
    PlayerMoved = 'PlayerMoved',
    PlayerTriesToStartedMovement = 'PlayerTriesToStartedMovement',
-   PlayerTriesToCastASpell = 'PlayerTriesToCastASpell',
-   PlayerCastedSpell = 'PlayerCastedSpell',
    ProjectileCreated = 'ProjectileCreated',
    ProjectileMoved = 'ProjectileMoved',
    RemoveProjectile = 'RemoveProjectile',
    ProjectileRemoved = 'ProjectileRemoved',
-   CharacterHit = 'CharacterHit',
+
    CharacterLostHp = 'CharacterLostHp',
+   CharacterGotHp = 'CharacterGotHp',
+   CharacterLostSpellPower = 'CharacterLostSpellPower',
+   CharacterGotSpellPower = 'CharacterGotSpellPower',
    CharacterDied = 'CharacterDied',
+   TakeCharacterHealthPoints = 'TakeCharacterHealthPoints',
+   AddCharacterHealthPoints = 'AddCharacterHealthPoints',
+   TakeCharacterSpellPower = 'TakeCharacterSpellPower',
+   AddCharacterSpellPower = 'AddCharacterSpellPower',
+
+   PlayerTriesToCastASpell = 'PlayerTriesToCastASpell',
+   PlayerCastSpell = 'PlayerCastSpell',
+   PlayerCastedSpell = 'PlayerCastedSpell',
+   ApplyTargetSpellEffect = 'ApplyTargetSpellEffect',
+   ApplyLocationSpellEffect = 'ApplyLocationSpellEffect',
+   RemoveAreaSpellEffect = 'RemoveAreaSpellEffect',
 }

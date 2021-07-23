@@ -1,18 +1,17 @@
-import { EngineEvents } from '../EngineEvents';
-import { ProjectileMovement } from '../engines';
-import { EventParser } from '../EventParser';
-import { SpellType } from '../SpellType';
+import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
+import { EventParser } from 'apps/engine/src/app/EventParser';
+import { SpellType } from 'apps/engine/src/app/SpellType';
 import {
-   Character,
-   EngineEventHandler,
-   PlayerCastedSpellEvent,
-   PlayerTriesToCastASpellEvent,
    Projectile,
+   EngineEventHandler,
+   PlayerCastSpellEvent,
+   PlayerCastedSpellEvent,
    ProjectileCreatedEvent,
    ProjectileMovedEvent,
-   ProjectileRemovedEvent,
    RemoveProjectileEvent,
-} from '../types';
+   ProjectileRemovedEvent,
+} from 'apps/engine/src/app/types';
+import { ProjectileMovement } from '../..';
 
 export class ProjectilesService extends EventParser {
    projectileEngine: ProjectileMovement;
@@ -23,7 +22,7 @@ export class ProjectilesService extends EventParser {
       super();
       this.projectileEngine = projectileEngine;
       this.eventsToHandlersMap = {
-         [EngineEvents.PlayerTriesToCastASpell]: this.handlePlayerTriesToCastASpell,
+         [EngineEvents.PlayerCastSpell]: this.handlePlayerCastSpell,
          [EngineEvents.ProjectileMoved]: this.handleProjectileMoved,
          [EngineEvents.RemoveProjectile]: this.handleRemoveProjectile,
       };
@@ -34,21 +33,15 @@ export class ProjectilesService extends EventParser {
       this.projectileEngine.init(engineEventCrator, services);
    }
 
-   handlePlayerTriesToCastASpell: EngineEventHandler<PlayerTriesToCastASpellEvent> = ({ event, services }) => {
-      if (event.spellData.spell.type === SpellType.PROJECTILE) {
-         const character = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() }[event.spellData.characterId];
-
-         if ((character as Character).isDead) {
-            return;
-         }
-
-         if (!services.cooldownService.isSpellAvailable(character.id, event.spellData.spell.name)) {
-            return;
-         }
+   handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
+      if (event.spell.type === SpellType.Projectile) {
+         const character = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() }[event.casterId];
 
          this.increment++;
          const projectile = {
-            ...event.spellData,
+            characterId: event.casterId,
+            spell: event.spell,
+            directionLocation: event.directionLocation,
             startLocation: character.location,
             currentLocation: character.location,
          };
@@ -61,14 +54,14 @@ export class ProjectilesService extends EventParser {
          this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
             type: EngineEvents.PlayerCastedSpell,
             casterId: character.id,
-            spell: event.spellData.spell,
+            spell: event.spell,
          });
 
          this.engineEventCrator.createEvent<ProjectileCreatedEvent>({
             type: EngineEvents.ProjectileCreated,
             projectileId: this.increment.toString(),
             currentLocation: character.location,
-            spell: event.spellData.spell,
+            spell: event.spell,
          });
       }
    };
