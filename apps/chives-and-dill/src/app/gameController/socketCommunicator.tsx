@@ -8,8 +8,8 @@ import {
    changePlayerPosition,
    deletePlayer,
    changePlayerMovingStatus,
-   addSpell,
-   updateSpell,
+   addProjectile,
+   updateProjectile,
    deleteProjectile,
    updateCharacterHp,
    characterDied
@@ -64,11 +64,11 @@ const SocketCommunicator = ({ children }) => {
          });
 
          context.socket.on(EngineMessages.ProjectileCreated, ({ projectileId, spell, currentLocation }) => {
-            dispatch(addSpell({ projectileId, spell, currentLocation }));
+            dispatch(addProjectile({ projectileId, spell, currentLocation }));
          });
 
          context.socket.on(EngineMessages.ProjectileMoved, ({ angle, newLocation, projectileId }) => {
-            dispatch(updateSpell({ projectileId, angle, newLocation }));
+            dispatch(updateProjectile({ projectileId, angle, newLocation }));
          });
 
          context.socket.on(EngineMessages.CharacterLostHp, ({ characterId, currentHp, amount }) => {

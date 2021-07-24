@@ -1,4 +1,3 @@
-import { CharacterDied } from './actions';
 import type { FSAAuto } from 'flux-standard-action';
 import type {
   ChangeLocationPayload,
@@ -6,8 +5,8 @@ import type {
   AddPlayerPayload,
   DeletePlayerPayload,
   ChangePlayerMovingStatusPayload,
-  AddSpellPayload,
-  UpdateSpellPayload,
+  AddProjectilePayload,
+  UpdateProjectilePayload,
   DeleteProjectilePayload,
   UpdateCharacterHpPayload,
   CharacterDiedPayload,
@@ -19,8 +18,8 @@ export enum PlayersActionTypes {
   ADD_PLAYER = '[Players] ADD_PLAYER',
   DELETE_PLAYER = '[Players] DELETE_PLAYER',
   CHANGE_PLAYER_MOVING_STATUS = '[Players] CHANGE_PLAYER_MOVING_STATUS',
-  ADD_SPELL = '[Players] ADD_SPELL',
-  UPDATE_SPELL = '[Players] UPDATE_SPELL',
+  ADD_PROJECTILE = '[Players] ADD_PROJECTILE',
+  UPDATE_PROJECTILE = '[Players] UPDATE_PROJECTILE',
   DELETE_PROJECTILE = '[Players] DELETE_PROJECTILE',
   UPDATE_CHARACTER_HP = '[Players] UPDATE_CHARACTERS_HP',
   CHARACTER_DIED = '[Players] CHARACTER_DIED',
@@ -46,14 +45,14 @@ export type DeletePlayer = FSAAuto<
   DeletePlayerPayload
 >;
 
-export type AddSpell = FSAAuto<
-  PlayersActionTypes.ADD_SPELL,
-  AddSpellPayload
+export type AddProjectile = FSAAuto<
+  PlayersActionTypes.ADD_PROJECTILE,
+  AddProjectilePayload
 >;
 
-export type UpdateSpell = FSAAuto<
-  PlayersActionTypes.UPDATE_SPELL,
-  UpdateSpellPayload
+export type UpdateProjectile = FSAAuto<
+  PlayersActionTypes.UPDATE_PROJECTILE,
+  UpdateProjectilePayload
 >;
 
 export type DeleteProjectile = FSAAuto<
@@ -107,13 +106,13 @@ export const deletePlayer = (payload: DeletePlayerPayload): DeletePlayer => ({
   payload,
 });
 
-export const addSpell = (payload: AddSpellPayload): AddSpell => ({
-  type: PlayersActionTypes.ADD_SPELL,
+export const addProjectile = (payload: AddProjectilePayload): AddProjectile => ({
+  type: PlayersActionTypes.ADD_PROJECTILE,
   payload,
 });
 
-export const updateSpell = (payload: UpdateSpellPayload): UpdateSpell => ({
-  type: PlayersActionTypes.UPDATE_SPELL,
+export const updateProjectile = (payload: UpdateProjectilePayload): UpdateProjectile => ({
+  type: PlayersActionTypes.UPDATE_PROJECTILE,
   payload,
 });
 
@@ -138,8 +137,8 @@ export type PlayerAction =
   | AddPlayer
   | DeletePlayer
   | ChangePlayerMovingStatus
-  | AddSpell
-  | UpdateSpell
+  | AddProjectile
+  | UpdateProjectile
   | DeleteProjectile
   | UpdateCharacterHp
   | CharacterDied;

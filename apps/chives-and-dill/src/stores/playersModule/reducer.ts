@@ -166,19 +166,20 @@ export const playersReducer = (
           },
         },
       };
-    case PlayersActionTypes.ADD_SPELL: {
+    case PlayersActionTypes.ADD_PROJECTILE: {
       return {
         ...state,
         projectiles: {
           ...state.projectiles,
           [action.payload.projectileId]: {
+            ...state.projectiles[action.payload.projectileId],
             spell: action.payload.spell,
             newLocation: action.payload.currentLocation,
           }
         },
       };
     }
-    case PlayersActionTypes.UPDATE_SPELL:
+    case PlayersActionTypes.UPDATE_PROJECTILE:
       return {
         ...state,
         projectiles: {

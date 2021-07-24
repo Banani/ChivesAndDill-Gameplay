@@ -45,18 +45,17 @@ export interface DeletePlayerPayload {
   userId: string;
 }
 
-export interface AddSpellPayload {
+export interface AddProjectilePayload {
+  currentLocation: Location,
   projectileId: string,
-  spell: Projectile,
-  name: string,
-  currentLocation: Location
+  spell: string,
 }
 
-export interface UpdateSpellPayload {
+export interface UpdateProjectilePayload {
   projectileId: string,
   angle: number,
   newLocation: Location,
-  name: string,
+  spell: string,
 }
 
 export interface DeleteProjectilePayload {

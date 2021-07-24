@@ -22,6 +22,7 @@ export interface Player {
    size: number;
    socketId: string;
    sprites: string;
+   hpLost: number;
 }
 
 export interface SpriteSheet {
@@ -47,7 +48,7 @@ interface SpriteSheetCoordinates {
 
 export interface Projectile {
    projectileId: string;
-   name: string;
+   spell: string;
    angle: number;
    newLocation: Location;
 }
