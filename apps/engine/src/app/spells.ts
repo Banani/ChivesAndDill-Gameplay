@@ -1,39 +1,46 @@
 import { AreaType, SpellEffectType, SpellType } from './SpellType';
-import { Spell } from './types/Spell';
+import type { Spell } from './types/Spell';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    test: {
-      type: SpellType.AngleBlast,
+      type: SpellType.Area,
       name: 'test',
       range: 4000,
       areaType: AreaType.Circle,
-      cooldown: 500,
-      radius: 200,
-      speed: 15,
       spellPowerCost: 10,
-      angle: Math.PI / 3,
+      cooldown: 500,
+
+      // Cone
+      angle: Math.PI * 2,
+
+      // Area
+      radius: 50,
+
+      // Projectile
+      speed: 15,
+
       image: "../assets/spritesheets/spells/mage/fireball.jpg",
       description: "Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.",
       spellEffectsOnTarget: [
          {
-            type: SpellEffectType.Damage,
+            type: SpellEffectType.Heal,
             amount: 50,
          },
       ],
       spellEffectsOnDirectionLocation: [
-         {
-            type: SpellEffectType.Area,
-            areaType: AreaType.Circle,
-            radius: 2000,
-            period: 10000 * 10,
-            attackFrequency: 1000,
-            spellEffects: [
-               {
-                  type: SpellEffectType.Damage,
-                  amount: 1,
-               },
-            ],
-         },
+         // {
+         //    type: SpellEffectType.Area,
+         //    areaType: AreaType.Circle,
+         //    radius: 2000,
+         //    period: 10000 * 10,
+         //    attackFrequency: 1000,
+         //    spellEffects: [
+         //       {
+         //          type: SpellEffectType.Damage,
+         //          amount: 1,
+         //       },
+         //    ],
+         // },
       ],
       spellEffectsOnCasterOnSpellHit: [
          {
