@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux-dynamic-modules-core';
 import type { IModuleStore } from 'redux-dynamic-modules-core';
@@ -14,8 +14,8 @@ const store: IModuleStore<unknown> = createStore(
   },
   PlayersModule
 );
-
 export default function App() {
+  
   return (
     <Provider store={store}>
       <SocketContext>

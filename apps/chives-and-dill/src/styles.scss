@@ -13,5 +13,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+    }
+    .qOpen{
+        position:fixed;
+        right:7.5%;
+        bottom:1.5%;
+    }
 }

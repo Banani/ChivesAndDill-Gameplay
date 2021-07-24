@@ -16,3 +16,6 @@ export const selectCharacterViewsSettings = (state: PlayersAwareState) =>
 
 export const selectSpells = (state: PlayersAwareState) =>
   getPlayerModule(state).projectiles;
+
+export const selectQuests = (state: PlayersAwareState) =>
+  getPlayerModule(state).quests;

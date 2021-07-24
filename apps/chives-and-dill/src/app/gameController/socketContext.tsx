@@ -12,7 +12,10 @@ import {
   updateSpell,
   deleteProjectile,
   updateCharacterHp,
-  characterDied
+  characterDied,
+  questStarted,
+  questCompleted,
+  killingStagePartProgress
 } from '../../stores';
 import AppContext from './context';
 
@@ -83,6 +86,20 @@ const SocketContext = ({ children }) => {
          context.socket.on(EngineMessages.ProjectileRemoved, ({ projectileId }) => {
             dispatch(deleteProjectile({ projectileId }));
          });
+
+         context.socket.on(QuestEngineMessages.QuestStarted, ({ questTemplate, characterId }) => {
+            dispatch(questStarted({ questTemplate, characterId }));
+         });
+
+         context.socket.on(QuestEngineMessages.QuestCompleted, ({ questId, characterId }) => {
+            dispatch(questCompleted({ questId, characterId }));
+         });
+
+         context.socket.on(QuestEngineMessages.KillingStagePartProgress, ({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }) => {
+            console.log(questId, stageId, characterId, stagePartId, currentProgress, targetAmount )
+            dispatch(killingStagePartProgress({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }));
+         });
+
     }
   }, [context]);
 

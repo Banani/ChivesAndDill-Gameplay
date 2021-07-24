@@ -8,7 +8,6 @@ const GameController = ({ children }) => {
    const context = useContext(AppContext);
    const { socket } = context;
    const [keyState, setKeyState] = useState<Record<string, boolean>>({});
-
    const activePlayerId = useSelector(selectActivePlayer);
    const players = useSelector(selectCharacters);
 

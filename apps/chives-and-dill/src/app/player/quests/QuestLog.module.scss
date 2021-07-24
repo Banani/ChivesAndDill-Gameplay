@@ -1,0 +1,70 @@
+
+.QuestLog {
+    position: fixed;
+    width: 59.5%;
+    height: 78%;
+    top:15%;
+    left:5%;
+    background: url("../../../assets/spritesheets/backgrounds/qlog.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: flex;
+    align-self:center;
+    align-items: flex-end;
+    justify-content: flex-end;
+      .QuestList {
+        border-radius: 2px;
+        margin: 0;
+        padding: 0;
+        width:44.4%;
+        height:76.5%;
+        margin-top: 19.5%;
+        margin-bottom: 4%;
+        margin-left: 2%;
+        margin-right: 3.6%;
+        display: flex;
+        align-self: left;
+        flex-direction: column;
+        .QuestTitle{
+          color:white;
+          font-size: 18px;
+          padding: 5px;
+        }
+      }
+      .QuestDetails {
+        margin: 0;
+        padding: 0;
+        width:44.8%;
+        height:76.5%;
+        margin-top: 19.5%;
+        margin-bottom: 4%;
+        margin-left: 1%;
+        margin-right: 4.2%;
+        border-radius: 2px;
+        display: flex;
+        align-self: right;
+        flex-direction: column;
+        .QuestDesc{
+          h1{
+            padding: 10px;
+          }
+          p{
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+        }
+      }
+      .closeWindow {
+        color: white;
+        position: fixed;
+        left:62.7%;
+        top:17.7%;
+        width:1.25%;
+        background: rgb(39, 39, 39);
+     }
+      .closeWindow:hover {
+        color: red;
+        cursor: pointer;
+      }
+  }
+

@@ -7,6 +7,7 @@ const initialState: PlayersState = {
   characters: {},
   areas: [],
   projectiles: {},
+  quests: {},
   characterViewsSettings: {
     nakedFemale: {
       spriteHeight: 48,
@@ -210,7 +211,20 @@ export const playersReducer = (
             isDead: true
           }
         }
+      };
+    case PlayersActionTypes.QUEST_STARTED:
+      return {
+        ...state,
+        quests: {
+          ...state.quests,
+          [action.payload.questTemplate.id]: action.payload.questTemplate,
+        },
       }
+      case PlayersActionTypes.QUEST_COMPLETED: 
+        return {
+          ...state,
+          quests: _.omit(state.quests, action.payload.questId),
+        };
     default:
       return state;
   }

@@ -24,6 +24,12 @@ export interface Player {
    sprites: string;
 }
 
+export interface Quest {
+   id: string;
+   name: string;
+   description: string;
+}
+
 export interface SpriteSheet {
    spriteHeight: number;
    spriteWidth: number;

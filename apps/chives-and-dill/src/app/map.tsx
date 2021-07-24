@@ -6,6 +6,7 @@ import _ from 'lodash';
 import Player from './player/Player';
 import { PlayerIcon } from "./player/playerIcon/PlayerIcon";
 import { SpellsBar } from "./player/spellsBar/SpellsBar";
+import QuestLog from "./player/quests/Quest-gui";
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -71,10 +72,13 @@ const Map = () => {
 
    const scale = 1;
 
+   const [questOpen, setQuestOpen]=React.useState(false);
+
    return (
       <>
          {activePlayerId ? <SpellsBar player={players[activePlayerId]}></SpellsBar> : null}
          {activePlayerId ? <PlayerIcon player={players[activePlayerId]}></PlayerIcon> : null}
+         
          <Stage
             width={gameWidth}
             height={gameHeight}
@@ -96,8 +100,11 @@ const Map = () => {
 
                {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
                <Graphics draw={drawBorders} />
+               
             </Container>}
          </Stage>
+         <QuestLog trigger={questOpen} setTrigger={setQuestOpen} />
+         <button className="qOpen" onClick={()=>setQuestOpen(!questOpen)}>Q</button>
       </>
    );
 };

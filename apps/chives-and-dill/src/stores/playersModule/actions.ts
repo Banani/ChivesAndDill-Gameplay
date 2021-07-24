@@ -11,6 +11,9 @@ import type {
   DeleteProjectilePayload,
   UpdateCharacterHpPayload,
   CharacterDiedPayload,
+  QuestStartedPayload,
+  QuestCompletedPayload,
+  KillingStagePartProgressPayload,
 } from '../../types/players';
 
 export enum PlayersActionTypes {
@@ -24,6 +27,9 @@ export enum PlayersActionTypes {
   DELETE_PROJECTILE = '[Players] DELETE_PROJECTILE',
   UPDATE_CHARACTER_HP = '[Players] UPDATE_CHARACTERS_HP',
   CHARACTER_DIED = '[Players] CHARACTER_DIED',
+  QUEST_STARTED = '[Players] QUEST_STARTED',
+  QUEST_COMPLETED = '[Players] QUEST_COMPLETED',
+  KILLING_STAGE_PART_PROGRESS = '[Players] KILLING_STAGE_PART_PROGRESS',
 }
 
 export type ChangePlayerPosition = FSAAuto<
@@ -71,9 +77,24 @@ export type CharacterDied = FSAAuto<
   CharacterDiedPayload
 >;
 
+export type QuestStarted = FSAAuto<
+  PlayersActionTypes.QUEST_STARTED,
+  QuestStartedPayload
+>;
+
+export type QuestCompleted = FSAAuto<
+  PlayersActionTypes.QUEST_COMPLETED,
+  QuestCompletedPayload
+>;
+
 export type ChangePlayerMovingStatus = FSAAuto<
   PlayersActionTypes.CHANGE_PLAYER_MOVING_STATUS,
   ChangePlayerMovingStatusPayload
+>;
+
+export type KillingStagePartProgress = FSAAuto<
+  PlayersActionTypes.KILLING_STAGE_PART_PROGRESS,
+  KillingStagePartProgressPayload
 >;
 
 export const changePlayerPosition = (
@@ -132,6 +153,21 @@ export const characterDied = (payload: CharacterDiedPayload): CharacterDied => (
   payload,
 });
 
+export const questStarted = (payload: QuestStartedPayload): QuestStarted => ({
+  type: PlayersActionTypes.QUEST_STARTED,
+  payload,
+});
+
+export const questCompleted = (payload: QuestCompletedPayload): QuestCompleted => ({
+  type: PlayersActionTypes.QUEST_COMPLETED,
+  payload,
+});
+
+export const killingStagePartProgress = (payload: KillingStagePartProgressPayload): KillingStagePartProgress => ({
+  type: PlayersActionTypes.KILLING_STAGE_PART_PROGRESS,
+  payload,
+});
+
 export type PlayerAction =
   | ChangePlayerPosition
   | Initialize
@@ -142,4 +178,7 @@ export type PlayerAction =
   | UpdateSpell
   | DeleteProjectile
   | UpdateCharacterHp
-  | CharacterDied;
+  | CharacterDied
+  | QuestStarted
+  | QuestCompleted
+  | KillingStagePartProgress;
