@@ -24,7 +24,6 @@ export const spellsReducer = (
         spells: action.payload.spells,
       };
     case SpellsActionTypes.ADD_PROJECTILE: {
-      console.log(state.projectiles)
       return {
         ...state,
         projectiles: {

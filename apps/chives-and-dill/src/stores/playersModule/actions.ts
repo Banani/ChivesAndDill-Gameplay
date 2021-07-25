@@ -6,6 +6,7 @@ import type {
   DeletePlayerPayload,
   ChangePlayerMovingStatusPayload,
   UpdateCharacterHpPayload,
+  UpdateCharacterSpellPowerPayload,
   CharacterDiedPayload,
 } from '../../types/players';
 
@@ -16,6 +17,7 @@ export enum PlayersActionTypes {
   DELETE_PLAYER = '[Players] DELETE_PLAYER',
   CHANGE_PLAYER_MOVING_STATUS = '[Players] CHANGE_PLAYER_MOVING_STATUS',
   UPDATE_CHARACTER_HP = '[Players] UPDATE_CHARACTERS_HP',
+  UPDATE_CHARACTER_SPELL_POWER = '[Players] UPDATE_CHARACTERS_SPELL_POWER',
   CHARACTER_DIED = '[Players] CHARACTER_DIED',
 }
 
@@ -42,6 +44,11 @@ export type DeletePlayer = FSAAuto<
 export type UpdateCharacterHp = FSAAuto<
   PlayersActionTypes.UPDATE_CHARACTER_HP,
   UpdateCharacterHpPayload
+>;
+
+export type UpdateCharacterSpellPower = FSAAuto<
+  PlayersActionTypes.UPDATE_CHARACTER_SPELL_POWER,
+  UpdateCharacterSpellPowerPayload
 >;
 
 export type CharacterDied = FSAAuto<
@@ -90,6 +97,11 @@ export const updateCharacterHp = (payload: UpdateCharacterHpPayload): UpdateChar
   payload,
 });
 
+export const updateCharacterSpellPower = (payload: UpdateCharacterSpellPowerPayload): UpdateCharacterSpellPower => ({
+  type: PlayersActionTypes.UPDATE_CHARACTER_SPELL_POWER,
+  payload,
+});
+
 export const characterDied = (payload: CharacterDiedPayload): CharacterDied => ({
   type: PlayersActionTypes.CHARACTER_DIED,
   payload,
@@ -102,4 +114,5 @@ export type PlayerAction =
   | DeletePlayer
   | ChangePlayerMovingStatus
   | UpdateCharacterHp
+  | UpdateCharacterSpellPower
   | CharacterDied;

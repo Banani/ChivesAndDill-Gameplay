@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 import { selectSpells, selectKeyBinds } from '../../../stores';
 import _ from 'lodash';
 import { GameControllerContext } from "../../gameController/gameControllerContext";
+import { DisplayCooldown } from './displayCooldown/displayCooldown';
 
 export const SpellsBar = () => {
 
   const context = useContext(GameControllerContext);
-
   const spells = useSelector(selectSpells);
   const keyBinds = useSelector(selectKeyBinds);
 
@@ -32,11 +32,11 @@ export const SpellsBar = () => {
             <div>{"Cooldown: " + activeSpell.cooldown / 1000 + " sec"}</div>
             <div className={styles.spellDesc}>{activeSpell.description}</div>
           </div>
+          <DisplayCooldown usedSpell={spells.Projectile} />
         </div>
       )
     });
   }
-
 
   return (
     <div className={styles.spellsBarContainer}>

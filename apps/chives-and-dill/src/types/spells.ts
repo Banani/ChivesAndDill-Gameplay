@@ -25,7 +25,6 @@ export interface UpdateProjectilePayload {
   projectileId: string,
   angle: number,
   newLocation: Location,
-  spell: string,
 }
 
 export interface DeleteProjectilePayload {

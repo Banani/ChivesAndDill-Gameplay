@@ -13,6 +13,7 @@ import {
    updateProjectile,
    deleteProjectile,
    updateCharacterHp,
+   updateCharacterSpellPower,
    characterDied
 } from '../../stores';
 import { SocketContext } from './socketContext';
@@ -74,7 +75,21 @@ const SocketCommunicator = ({ children }) => {
          });
 
          context.socket.on(EngineMessages.CharacterLostHp, ({ characterId, currentHp, amount }) => {
-            dispatch(updateCharacterHp({ characterId, currentHp, amount }));
+            const spellEffect = "damage";
+            dispatch(updateCharacterHp({ characterId, currentHp, amount, spellEffect }));
+         });
+
+         context.socket.on(EngineMessages.CharacterGotHp, ({ characterId, currentHp, amount }) => {
+            const spellEffect = "heal";
+            dispatch(updateCharacterHp({ characterId, currentHp, amount, spellEffect }));
+         });
+
+         context.socket.on(EngineMessages.CharacterLostSpellPower, ({ characterId, currentSpellPower, amount }) => {
+            dispatch(updateCharacterSpellPower({ characterId, currentSpellPower, amount }));
+         });
+
+         context.socket.on(EngineMessages.CharacterGotSpellPower, ({ characterId, currentSpellPower, amount }) => {
+            dispatch(updateCharacterSpellPower({ characterId, currentSpellPower, amount }));
          });
 
          context.socket.on(EngineMessages.CharacterDied, ({ characterId }) => {

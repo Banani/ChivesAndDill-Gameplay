@@ -23,6 +23,9 @@ export interface Player {
    socketId: string;
    sprites: string;
    hpLost: number;
+   spellEffect: string;
+   currentSpellPower: number;
+   maxSpellPower: number;
 }
 
 export interface SpriteSheet {

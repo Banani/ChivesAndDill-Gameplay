@@ -44,6 +44,13 @@ export interface UpdateCharacterHpPayload {
   characterId: string,
   currentHp: number,
   amount: number,
+  spellEffect: string,
+}
+
+export interface UpdateCharacterSpellPowerPayload {
+  characterId: string,
+  currentSpellPower: number,
+  amount: number,
 }
 
 export interface CharacterDiedPayload {

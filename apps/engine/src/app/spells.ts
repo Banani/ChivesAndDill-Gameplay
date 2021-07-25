@@ -3,7 +3,7 @@ import type { Spell } from './types/Spell';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    test: {
-      type: SpellType.Area,
+      type: SpellType.AngleBlast,
       name: 'test',
       range: 4000,
       areaType: AreaType.Circle,
@@ -23,8 +23,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
       description: "Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.",
       spellEffectsOnTarget: [
          {
-            type: SpellEffectType.Heal,
-            amount: 50,
+            type: SpellEffectType.Damage,
+            amount: 10,
          },
       ],
       spellEffectsOnDirectionLocation: [
@@ -44,7 +44,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       ],
       spellEffectsOnCasterOnSpellHit: [
          {
-            type: SpellEffectType.Damage,
+            type: SpellEffectType.Heal,
             amount: 50,
          },
       ],
@@ -86,13 +86,13 @@ export const ALL_SPELLS: Record<string, Spell> = {
       range: 4000,
       spellPowerCost: 10,
       speed: 4,
-      cooldown: 0,
+      cooldown: 5000,
       image: "../assets/spritesheets/spells/mage/fireball.jpg",
       description: "Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.",
       spellEffectsOnTarget: [
          {
             type: SpellEffectType.Heal,
-            amount: 100,
+            amount: 35,
          },
       ],
       spellEffectsOnDirectionLocation: [],
@@ -159,7 +159,12 @@ export const ALL_SPELLS: Record<string, Spell> = {
       cooldown: 0,
       image: "../assets/spritesheets/spells/mage/fireball.jpg",
       description: "Inflicts 69 Fire damage to an enemy and causes them to burn for 8 sec.",
-      spellEffectsOnTarget: [],
+      spellEffectsOnTarget: [
+         {
+            type: SpellEffectType.Damage,
+            amount: 100,
+         },
+      ],
       spellEffectsOnDirectionLocation: [],
       spellEffectsOnCasterOnSpellHit: [],
    },

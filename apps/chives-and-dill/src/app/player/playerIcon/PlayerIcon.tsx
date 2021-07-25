@@ -4,7 +4,7 @@ import styles from "./PlayerIcon.module.scss";
 export const PlayerIcon = ({ player }) => {
 
   const { name, maxHp, currentHp, currentSpellPower, maxSpellPower } = player;
-
+  
   return (
     <div className={styles.playerIconContainer}>
       <div className={styles.playerAvatar}></div>

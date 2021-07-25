@@ -1,3 +1,4 @@
+import { SpellEffect } from './../../../../engine/src/app/types/Spell';
 import type { PlayersState } from '../../types/players';
 import type { PlayerAction } from './actions';
 import { PlayersActionTypes } from './actions';
@@ -165,11 +166,23 @@ export const playersReducer = (
           ...state.characters,
           [action.payload.characterId]: {
             ...state.characters[action.payload.characterId],
-            currentHp: state.characters[action.payload.characterId].currentHp - action.payload.amount,
+            currentHp: action.payload.currentHp,
             hpLost: action.payload.amount,
+            spellEffect: action.payload.spellEffect,
           }
         }
       };
+      case PlayersActionTypes.UPDATE_CHARACTER_SPELL_POWER:
+        return {
+          ...state,
+          characters: {
+            ...state.characters,
+            [action.payload.characterId]: {
+              ...state.characters[action.payload.characterId],
+              currentSpellPower: action.payload.currentSpellPower,
+            }
+          }
+        };  
     case PlayersActionTypes.CHARACTER_DIED:
       return {
         ...state,

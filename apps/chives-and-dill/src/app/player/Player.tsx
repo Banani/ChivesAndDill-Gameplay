@@ -6,9 +6,9 @@ import _ from 'lodash';
 const Player = ({ player, characterViewsSettings }) => {
    const [timer, setTimer] = useState(0);
    const [playerSheet, setPlayerSheet] = useState({});
-   const [characterDirection, setCharacterDirection] = useState('standingDown');
+   const [characterStatus, setCharacterStatus] = useState('standingDown');
    const [isCharacterMoving, setIsCharacterMoving] = useState(false);
-   const [yPositionLostHp, setYPositionLostHp] = useState(2.5);
+   const [yPositionOfUpdatedHp, setYPositionOfUpdatedHp] = useState(2.5);
    const sheet = PIXI.BaseTexture.from(`../assets${characterViewsSettings[player.sprites].image}`);
 
    const playerSprite = characterViewsSettings[player.sprites];
@@ -39,29 +39,29 @@ const Player = ({ player, characterViewsSettings }) => {
    const getDirection = (direction) => {
       if (!isCharacterMoving) {
          if (direction === 0) {
-            setCharacterDirection('standingUp');
+            setCharacterStatus('standingUp');
          }
          if (direction === 1) {
-            setCharacterDirection('standingDown');
+            setCharacterStatus('standingDown');
          }
          if (direction === 2) {
-            setCharacterDirection('standingLeft');
+            setCharacterStatus('standingLeft');
          }
          if (direction === 3) {
-            setCharacterDirection('standingRight');
+            setCharacterStatus('standingRight');
          }
       } else {
          if (direction === 0) {
-            setCharacterDirection('movementUp');
+            setCharacterStatus('movementUp');
          }
          if (direction === 1) {
-            setCharacterDirection('movementDown');
+            setCharacterStatus('movementDown');
          }
          if (direction === 2) {
-            setCharacterDirection('movementLeft');
+            setCharacterStatus('movementLeft');
          }
          if (direction === 3) {
-            setCharacterDirection('movementRight');
+            setCharacterStatus('movementRight');
          }
       }
    };
@@ -88,14 +88,14 @@ const Player = ({ player, characterViewsSettings }) => {
       let position = 2.5;
       const positionTimer = setInterval(() => {
          position += 0.1;
-         setYPositionLostHp(position);
+         setYPositionOfUpdatedHp(position);
          if (position >= 4.5) {
             clearInterval(positionTimer);
          }
-      }, 10)
+      }, 20)
 
       if (player.currentHp <= 0) {
-         setCharacterDirection('dead');
+         setCharacterStatus('dead');
       }
    }, [player.currentHp]);
 
@@ -111,6 +111,13 @@ const Player = ({ player, characterViewsSettings }) => {
       },
       [player, h]
    );
+
+   const returnColorOfHpNumber = () => {
+      if (player.spellEffect === "heal") {
+         return "green";
+      }
+      return "red"
+   }
 
    return (
       <>
@@ -137,21 +144,21 @@ const Player = ({ player, characterViewsSettings }) => {
                key={0}
                width={w}
                height={h}
-               texture={playerSheet[characterDirection][timer % 8]}
+               texture={playerSheet[characterStatus][timer % 8]}
                x={player?.location.x - w / 2}
                y={player?.location.y - h / 2}
             />
          )}
          {
-            yPositionLostHp <= 4.5 ? <Text
+            yPositionOfUpdatedHp <= 4.5 ? <Text
                text={player.hpLost ? player.hpLost : null}
-               anchor={[0.5, yPositionLostHp]}
+               anchor={[0.5, yPositionOfUpdatedHp]}
                x={player?.location.x}
                y={player?.location.y}
                style={
                   new PIXI.TextStyle({
                      fontSize: 15,
-                     fill: 'red',
+                     fill: returnColorOfHpNumber(),
                   })
                }
             /> : null

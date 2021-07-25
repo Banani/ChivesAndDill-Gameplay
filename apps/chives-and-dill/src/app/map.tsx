@@ -69,7 +69,7 @@ const Map = () => {
    });
 
    const scale = 1;
-   
+
    return (
       <>
          {activePlayerId ? <SpellsBar player={players[activePlayerId]}></SpellsBar> : null}
