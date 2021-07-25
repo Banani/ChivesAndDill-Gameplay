@@ -23,7 +23,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
             type: SpellEffectType.Area,
             areaType: AreaType.Circle,
             radius: 2000,
-            period: 10000 * 10,
+            period: 1000 * 5,
             attackFrequency: 1000,
             spellEffects: [
                {

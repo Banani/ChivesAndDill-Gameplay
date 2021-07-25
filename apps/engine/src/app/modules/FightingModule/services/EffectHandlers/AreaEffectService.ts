@@ -5,6 +5,7 @@ import { SpellEffectType } from '../../../../SpellType';
 import { ApplyLocationSpellEffectEvent, Character, EngineEventHandler, Location, RemoveAreaSpellEffectEvent } from '../../../../types';
 import { Monster } from '../../../MonsterModule/types';
 import { AreaEffectsEngine } from '../../engines';
+import { AreaSpellEffectCreatedEvent, AreaSpellEffectRemovedEvent, FightingEngineEvents } from '../../Events';
 
 export interface AreaSpellEffectTrack {
    id: string;
@@ -43,11 +44,23 @@ export class AreaEffectService extends EventParser {
             location: event.location,
             caster: event.caster,
          };
+
+         this.engineEventCrator.createEvent<AreaSpellEffectCreatedEvent>({
+            type: FightingEngineEvents.AreaSpellEffectCreated,
+            location: event.location,
+            areaSpellEffectId: this.increment.toString(),
+            effect: event.effect as AreaEffect,
+         });
       }
    };
 
    handleRemoveAreaSpellEffect: EngineEventHandler<RemoveAreaSpellEffectEvent> = ({ event }) => {
       delete this.activeAreaSpellEffects[event.areaId];
+
+      this.engineEventCrator.createEvent<AreaSpellEffectRemovedEvent>({
+         type: FightingEngineEvents.AreaSpellEffectRemoved,
+         areaSpellEffectId: event.areaId,
+      });
    };
 
    getAllActiveAreaSpellEffects = () => this.activeAreaSpellEffects;

@@ -17,6 +17,7 @@ import {
    QuestProgressService,
    SpellAvailabilityService,
    SpellEffectApplierService,
+   SpellNotifier,
 } from './app/modules';
 import {
    AggroService,
@@ -96,6 +97,7 @@ const services: Services = {
    healEffectService: new HealEffectService(),
    generateSpellPowerEffectService: new GenerateSpellPowerEffectService(),
    areaEffectService: new AreaEffectService(areaEffectsEngine),
+   spellNotifier: new SpellNotifier(),
 };
 
 const engineEventCreator = new EngineEventCrator(services);

@@ -22,6 +22,12 @@ export enum QuestEngineMessages {
    NewQuestStageStarted = 'NewQuestStageStarted',
 }
 
+export enum FightingEngineMessages {
+   SpellLanded = 'SpellLanded',
+   AreaSpellEffectCreated = 'AreaSpellEffectCreated',
+   AreaSpellEffectRemoved = 'AreaSpellEffectRemoved',
+}
+
 export enum ClientMessages {
    PlayerStartMove = 'PlayerMove',
    PlayerStopMove = 'PlayerStopMove',

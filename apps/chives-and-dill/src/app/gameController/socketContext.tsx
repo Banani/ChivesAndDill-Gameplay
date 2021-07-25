@@ -1,4 +1,4 @@
-import { EngineMessages, QuestEngineMessages } from '@bananos/types';
+import { EngineMessages, FightingEngineMessages, QuestEngineMessages } from '@bananos/types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
@@ -12,7 +12,7 @@ import {
    updateSpell,
    deleteProjectile,
    updateCharacterHp,
-   characterDied
+   characterDied,
 } from '../../stores';
 import AppContext from './context';
 
@@ -82,6 +82,18 @@ const SocketContext = ({ children }) => {
 
          context.socket.on(EngineMessages.ProjectileRemoved, ({ projectileId }) => {
             dispatch(deleteProjectile({ projectileId }));
+         });
+
+         context.socket.on(FightingEngineMessages.SpellLanded, (event) => {
+            console.log(event);
+         });
+
+         context.socket.on(FightingEngineMessages.AreaSpellEffectCreated, (event) => {
+            console.log(event);
+         });
+
+         context.socket.on(FightingEngineMessages.AreaSpellEffectRemoved, (event) => {
+            console.log(event);
          });
       }
    }, [context]);

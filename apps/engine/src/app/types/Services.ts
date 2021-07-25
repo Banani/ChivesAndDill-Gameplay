@@ -12,6 +12,7 @@ import {
    QuestProgressService,
    SpellAvailabilityService,
    SpellEffectApplierService,
+   SpellNotifier,
 } from '../modules';
 import { AreaEffectService } from '../modules/FightingModule/services/EffectHandlers/AreaEffectService';
 import { GenerateSpellPowerEffectService } from '../modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
@@ -49,4 +50,5 @@ export interface Services {
    generateSpellPowerEffectService: GenerateSpellPowerEffectService;
    healEffectService: HealEffectService;
    areaEffectService: AreaEffectService;
+   spellNotifier: SpellNotifier;
 }
