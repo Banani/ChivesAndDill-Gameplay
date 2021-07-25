@@ -1,3 +1,4 @@
+import { SpellEffect } from './../../../../engine/src/app/types/Spell';
 import type { PlayersState } from '../../types/players';
 import type { PlayerAction } from './actions';
 import { PlayersActionTypes } from './actions';
@@ -6,7 +7,6 @@ import _ from 'lodash';
 const initialState: PlayersState = {
   characters: {},
   areas: [],
-  projectiles: {},
   characterViewsSettings: {
     nakedFemale: {
       spriteHeight: 48,
@@ -128,7 +128,7 @@ export const playersReducer = (
           },
         },
       };
-    case PlayersActionTypes.INITIALIZE:
+    case PlayersActionTypes.INITIALIZE_PLAYERS:
       return {
         ...state,
         activePlayer: action.payload.activePlayer,
@@ -159,35 +159,6 @@ export const playersReducer = (
           },
         },
       };
-    case PlayersActionTypes.ADD_SPELL: {
-      return {
-        ...state,
-        projectiles: {
-          ...state.projectiles,
-          [action.payload.projectileId]: {
-            spell: action.payload.spell,
-            newLocation: action.payload.currentLocation,
-          }
-        },
-      };
-    }
-    case PlayersActionTypes.UPDATE_SPELL:
-      return {
-        ...state,
-        projectiles: {
-          ...state.projectiles,
-          [action.payload.projectileId]: {
-            ...state.projectiles[action.payload.projectileId],
-            angle: action.payload.angle,
-            newLocation: action.payload.newLocation,
-          }
-        },
-      }
-    case PlayersActionTypes.DELETE_PROJECTILE:
-      return {
-        ...state,
-        projectiles: _.omit(state.projectiles, action.payload.projectileId),
-      };
     case PlayersActionTypes.UPDATE_CHARACTER_HP:
       return {
         ...state,
@@ -195,11 +166,23 @@ export const playersReducer = (
           ...state.characters,
           [action.payload.characterId]: {
             ...state.characters[action.payload.characterId],
-            currentHp: state.characters[action.payload.characterId].currentHp - action.payload.amount,
+            currentHp: action.payload.currentHp,
             hpLost: action.payload.amount,
+            spellEffect: action.payload.spellEffect,
           }
         }
       };
+      case PlayersActionTypes.UPDATE_CHARACTER_SPELL_POWER:
+        return {
+          ...state,
+          characters: {
+            ...state.characters,
+            [action.payload.characterId]: {
+              ...state.characters[action.payload.characterId],
+              currentSpellPower: action.payload.currentSpellPower,
+            }
+          }
+        };  
     case PlayersActionTypes.CHARACTER_DIED:
       return {
         ...state,

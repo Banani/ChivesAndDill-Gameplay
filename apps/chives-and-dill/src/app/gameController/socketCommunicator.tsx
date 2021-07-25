@@ -3,20 +3,23 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 import {
-   initialize,
+   initializePlayers,
+   initializeSpells,
    addPlayer,
    changePlayerPosition,
    deletePlayer,
    changePlayerMovingStatus,
-   addSpell,
-   updateSpell,
+   addProjectile,
+   updateProjectile,
    deleteProjectile,
    updateCharacterHp,
    characterDied,
+   updateCharacterSpellPower,
+   characterDied,
 } from '../../stores';
-import AppContext from './context';
+import { SocketContext } from './socketContext';
 
-const SocketContext = ({ children }) => {
+const SocketCommunicator = ({ children }) => {
    const [context, setContext] = useState<any>({});
    const dispatch = useDispatch();
    useEffect(() => {
@@ -29,8 +32,9 @@ const SocketContext = ({ children }) => {
 
    useEffect(() => {
       if (context.socket) {
-         context.socket.on(EngineMessages.Inicialization, ({ players, areas, activePlayer, projectiles }) => {
-            dispatch(initialize({ characters: players, areas, activePlayer, projectiles }));
+         context.socket.on(EngineMessages.Inicialization, ({ players, areas, activePlayer, projectiles, spells }) => {
+            dispatch(initializePlayers({ characters: players, areas, activePlayer }));
+            dispatch(initializeSpells({ projectiles, spells }));
          });
 
          context.socket.on(EngineMessages.PlayerMoved, ({ playerId, newLocation, newDirection }) => {
@@ -48,7 +52,6 @@ const SocketContext = ({ children }) => {
          });
 
          context.socket.on(QuestEngineMessages.KillingStagePartProgress, (data) => {
-            console.log(data);
             dispatch(changePlayerMovingStatus({ userId, isInMove: true }));
          });
 
@@ -65,15 +68,29 @@ const SocketContext = ({ children }) => {
          });
 
          context.socket.on(EngineMessages.ProjectileCreated, ({ projectileId, spell, currentLocation }) => {
-            dispatch(addSpell({ projectileId, spell, currentLocation }));
+            dispatch(addProjectile({ projectileId, spell, currentLocation }));
          });
 
          context.socket.on(EngineMessages.ProjectileMoved, ({ angle, newLocation, projectileId }) => {
-            dispatch(updateSpell({ projectileId, angle, newLocation }));
+            dispatch(updateProjectile({ projectileId, angle, newLocation }));
          });
 
          context.socket.on(EngineMessages.CharacterLostHp, ({ characterId, currentHp, amount }) => {
-            dispatch(updateCharacterHp({ characterId, currentHp, amount }));
+            const spellEffect = 'damage';
+            dispatch(updateCharacterHp({ characterId, currentHp, amount, spellEffect }));
+         });
+
+         context.socket.on(EngineMessages.CharacterGotHp, ({ characterId, currentHp, amount }) => {
+            const spellEffect = 'heal';
+            dispatch(updateCharacterHp({ characterId, currentHp, amount, spellEffect }));
+         });
+
+         context.socket.on(EngineMessages.CharacterLostSpellPower, ({ characterId, currentSpellPower, amount }) => {
+            dispatch(updateCharacterSpellPower({ characterId, currentSpellPower, amount }));
+         });
+
+         context.socket.on(EngineMessages.CharacterGotSpellPower, ({ characterId, currentSpellPower, amount }) => {
+            dispatch(updateCharacterSpellPower({ characterId, currentSpellPower, amount }));
          });
 
          context.socket.on(EngineMessages.CharacterDied, ({ characterId }) => {
@@ -98,7 +115,7 @@ const SocketContext = ({ children }) => {
       }
    }, [context]);
 
-   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
+   return <SocketContext.Provider value={context}>{children}</SocketContext.Provider>;
 };
 
-export default SocketContext;
+export default SocketCommunicator;

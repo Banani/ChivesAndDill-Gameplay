@@ -5,6 +5,8 @@ export interface Spell {
    name: string;
    range: number;
    cooldown: number;
+   image: string;
+   description: string;
    spellEffectsOnTarget: AllEffects[];
    spellEffectsOnDirectionLocation: AllEffects[];
    spellEffectsOnCasterOnSpellHit: AllEffects[];

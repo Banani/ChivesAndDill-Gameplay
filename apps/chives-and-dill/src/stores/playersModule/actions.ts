@@ -1,28 +1,23 @@
-import { CharacterDied } from './actions';
 import type { FSAAuto } from 'flux-standard-action';
 import type {
   ChangeLocationPayload,
-  InitializePayload,
+  InitializePlayersPayload,
   AddPlayerPayload,
   DeletePlayerPayload,
   ChangePlayerMovingStatusPayload,
-  AddSpellPayload,
-  UpdateSpellPayload,
-  DeleteProjectilePayload,
   UpdateCharacterHpPayload,
+  UpdateCharacterSpellPowerPayload,
   CharacterDiedPayload,
 } from '../../types/players';
 
 export enum PlayersActionTypes {
-  INITIALIZE = '[Players] INITIALIZE',
+  INITIALIZE_PLAYERS = '[Players] INITIALIZE_PLAYERS',
   CHANGE_PLAYER_POSITION = '[Players] CHANGE_PLAYER_POSITION',
   ADD_PLAYER = '[Players] ADD_PLAYER',
   DELETE_PLAYER = '[Players] DELETE_PLAYER',
   CHANGE_PLAYER_MOVING_STATUS = '[Players] CHANGE_PLAYER_MOVING_STATUS',
-  ADD_SPELL = '[Players] ADD_SPELL',
-  UPDATE_SPELL = '[Players] UPDATE_SPELL',
-  DELETE_PROJECTILE = '[Players] DELETE_PROJECTILE',
   UPDATE_CHARACTER_HP = '[Players] UPDATE_CHARACTERS_HP',
+  UPDATE_CHARACTER_SPELL_POWER = '[Players] UPDATE_CHARACTERS_SPELL_POWER',
   CHARACTER_DIED = '[Players] CHARACTER_DIED',
 }
 
@@ -31,9 +26,9 @@ export type ChangePlayerPosition = FSAAuto<
   ChangeLocationPayload
 >;
 
-export type Initialize = FSAAuto<
-  PlayersActionTypes.INITIALIZE,
-  InitializePayload
+export type InitializePlayers = FSAAuto<
+  PlayersActionTypes.INITIALIZE_PLAYERS,
+  InitializePlayersPayload
 >;
 
 export type AddPlayer = FSAAuto<
@@ -46,24 +41,14 @@ export type DeletePlayer = FSAAuto<
   DeletePlayerPayload
 >;
 
-export type AddSpell = FSAAuto<
-  PlayersActionTypes.ADD_SPELL,
-  AddSpellPayload
->;
-
-export type UpdateSpell = FSAAuto<
-  PlayersActionTypes.UPDATE_SPELL,
-  UpdateSpellPayload
->;
-
-export type DeleteProjectile = FSAAuto<
-  PlayersActionTypes.DELETE_PROJECTILE,
-  DeleteProjectilePayload
->;
-
 export type UpdateCharacterHp = FSAAuto<
   PlayersActionTypes.UPDATE_CHARACTER_HP,
   UpdateCharacterHpPayload
+>;
+
+export type UpdateCharacterSpellPower = FSAAuto<
+  PlayersActionTypes.UPDATE_CHARACTER_SPELL_POWER,
+  UpdateCharacterSpellPowerPayload
 >;
 
 export type CharacterDied = FSAAuto<
@@ -90,10 +75,10 @@ export const changePlayerMovingStatus = (
   payload,
 });
 
-export const initialize = (
-  payload: InitializePayload
-): Initialize => ({
-  type: PlayersActionTypes.INITIALIZE,
+export const initializePlayers = (
+  payload: InitializePlayersPayload
+): InitializePlayers => ({
+  type: PlayersActionTypes.INITIALIZE_PLAYERS,
   payload,
 });
 
@@ -107,23 +92,13 @@ export const deletePlayer = (payload: DeletePlayerPayload): DeletePlayer => ({
   payload,
 });
 
-export const addSpell = (payload: AddSpellPayload): AddSpell => ({
-  type: PlayersActionTypes.ADD_SPELL,
-  payload,
-});
-
-export const updateSpell = (payload: UpdateSpellPayload): UpdateSpell => ({
-  type: PlayersActionTypes.UPDATE_SPELL,
-  payload,
-});
-
-export const deleteProjectile = (payload: DeleteProjectilePayload): DeleteProjectile => ({
-  type: PlayersActionTypes.DELETE_PROJECTILE,
-  payload,
-});
-
 export const updateCharacterHp = (payload: UpdateCharacterHpPayload): UpdateCharacterHp => ({
   type: PlayersActionTypes.UPDATE_CHARACTER_HP,
+  payload,
+});
+
+export const updateCharacterSpellPower = (payload: UpdateCharacterSpellPowerPayload): UpdateCharacterSpellPower => ({
+  type: PlayersActionTypes.UPDATE_CHARACTER_SPELL_POWER,
   payload,
 });
 
@@ -134,12 +109,10 @@ export const characterDied = (payload: CharacterDiedPayload): CharacterDied => (
 
 export type PlayerAction =
   | ChangePlayerPosition
-  | Initialize
+  | InitializePlayers
   | AddPlayer
   | DeletePlayer
   | ChangePlayerMovingStatus
-  | AddSpell
-  | UpdateSpell
-  | DeleteProjectile
   | UpdateCharacterHp
+  | UpdateCharacterSpellPower
   | CharacterDied;
