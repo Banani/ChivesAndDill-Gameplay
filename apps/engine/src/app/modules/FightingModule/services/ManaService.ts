@@ -1,6 +1,6 @@
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler, PlayerCastedSpellEvent, TakeCharacterSpellPowerEvent } from '../../../types';
+import { EngineEventHandler, PlayerCastedSpellEvent, Spell, TakeCharacterSpellPowerEvent } from '../../../types';
 
 export class ManaService extends EventParser {
    constructor() {
@@ -10,11 +10,15 @@ export class ManaService extends EventParser {
       };
    }
 
+   isIsMainSpell = (spell: Spell) => spell.name;
+
    handlePlayerCastedSpell: EngineEventHandler<PlayerCastedSpellEvent> = ({ event }) => {
-      this.engineEventCrator.createEvent<TakeCharacterSpellPowerEvent>({
-         type: EngineEvents.TakeCharacterSpellPower,
-         characterId: event.casterId,
-         amount: event.spell.spellPowerCost,
-      });
+      if (this.isIsMainSpell(event.spell)) {
+         this.engineEventCrator.createEvent<TakeCharacterSpellPowerEvent>({
+            type: EngineEvents.TakeCharacterSpellPower,
+            characterId: event.casterId,
+            amount: event.spell.spellPowerCost,
+         });
+      }
    };
 }

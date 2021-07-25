@@ -3,18 +3,40 @@ import type { Spell } from './types/Spell';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    test: {
-      type: SpellType.AngleBlast,
+      type: SpellType.Channel,
       name: 'test',
       range: 4000,
-      areaType: AreaType.Circle,
       spellPowerCost: 10,
       cooldown: 500,
+      channelSpells: [
+         {
+            type: SpellType.Projectile,
+            name: 'MonsterInstant1',
+            range: 500,
+            spellPowerCost: 10,
+            cooldown: 1000,
+            speed: 15,
+            spellEffectsOnTarget: [
+               {
+                  type: SpellEffectType.Damage,
+                  amount: 10,
+               },
+            ],
+            channelSpells: [],
+            spellEffectsOnDirectionLocation: [],
+            spellEffectsOnCasterOnSpellHit: [],
+         },
+      ],
+
+      channelFrequency: 5000,
+      channelTime: 5000,
 
       // Cone
       angle: Math.PI * 2,
 
       // Area
       radius: 50,
+      areaType: AreaType.Circle,
 
       // Projectile
       speed: 15,
@@ -79,6 +101,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
       spellEffectsOnCasterOnSpellHit: [],
+      channelSpells: [],
    },
    Projectile: {
       type: SpellType.Projectile,
@@ -97,6 +120,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       ],
       spellEffectsOnDirectionLocation: [],
       spellEffectsOnCasterOnSpellHit: [],
+      channelSpells: [],
    },
    MonsterProjectile: {
       type: SpellType.Projectile,
@@ -115,6 +139,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       ],
       spellEffectsOnDirectionLocation: [],
       spellEffectsOnCasterOnSpellHit: [],
+      channelSpells: [],
    },
    MonsterInstant1: {
       type: SpellType.DirectInstant,
@@ -132,6 +157,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       ],
       spellEffectsOnDirectionLocation: [],
       spellEffectsOnCasterOnSpellHit: [],
+      channelSpells: [],
    },
    MonsterInstant2: {
       type: SpellType.DirectInstant,
@@ -149,6 +175,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       ],
       spellEffectsOnDirectionLocation: [],
       spellEffectsOnCasterOnSpellHit: [],
+      channelSpells: [],
    },
    InstantProjectile: {
       type: SpellType.Projectile,
@@ -167,5 +194,6 @@ export const ALL_SPELLS: Record<string, Spell> = {
       ],
       spellEffectsOnDirectionLocation: [],
       spellEffectsOnCasterOnSpellHit: [],
+      channelSpells: [],
    },
 };

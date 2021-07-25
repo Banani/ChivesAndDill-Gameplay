@@ -111,6 +111,14 @@ const SocketCommunicator = ({ children }) => {
          context.socket.on(FightingEngineMessages.AreaSpellEffectRemoved, (event) => {
             console.log(event);
          });
+
+         context.socket.on(FightingEngineMessages.ChannelingFinished, (event) => {
+            console.log(event);
+         });
+
+         context.socket.on(FightingEngineMessages.ChannelingInterrupted, (event) => {
+            console.log(event);
+         });
       }
    }, [context]);
 

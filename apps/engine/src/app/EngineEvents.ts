@@ -28,4 +28,6 @@ export enum EngineEvents {
    ApplyTargetSpellEffect = 'ApplyTargetSpellEffect',
    ApplyLocationSpellEffect = 'ApplyLocationSpellEffect',
    RemoveAreaSpellEffect = 'RemoveAreaSpellEffect',
+   SpellChannelingFinished = 'SpellChannelingFinished',
+   SpellChannelingInterrupted = 'SpellChannelingInterrupted',
 }

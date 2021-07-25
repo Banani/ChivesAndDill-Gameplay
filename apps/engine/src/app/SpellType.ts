@@ -3,6 +3,7 @@ export enum SpellType {
    DirectInstant = 'DirectInstant',
    AngleBlast = 'AngleBlast',
    Area = 'Area',
+   Channel = 'Channel',
 }
 
 export enum AreaType {
