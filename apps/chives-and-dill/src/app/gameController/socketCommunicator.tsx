@@ -15,7 +15,6 @@ import {
    updateCharacterHp,
    characterDied,
    updateCharacterSpellPower,
-   characterDied,
 } from '../../stores';
 import { SocketContext } from './socketContext';
 
