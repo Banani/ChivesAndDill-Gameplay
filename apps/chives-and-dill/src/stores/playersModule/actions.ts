@@ -1,26 +1,20 @@
 import type { FSAAuto } from 'flux-standard-action';
 import type {
   ChangeLocationPayload,
-  InitializePayload,
+  InitializePlayersPayload,
   AddPlayerPayload,
   DeletePlayerPayload,
   ChangePlayerMovingStatusPayload,
-  AddProjectilePayload,
-  UpdateProjectilePayload,
-  DeleteProjectilePayload,
   UpdateCharacterHpPayload,
   CharacterDiedPayload,
 } from '../../types/players';
 
 export enum PlayersActionTypes {
-  INITIALIZE = '[Players] INITIALIZE',
+  INITIALIZE_PLAYERS = '[Players] INITIALIZE_PLAYERS',
   CHANGE_PLAYER_POSITION = '[Players] CHANGE_PLAYER_POSITION',
   ADD_PLAYER = '[Players] ADD_PLAYER',
   DELETE_PLAYER = '[Players] DELETE_PLAYER',
   CHANGE_PLAYER_MOVING_STATUS = '[Players] CHANGE_PLAYER_MOVING_STATUS',
-  ADD_PROJECTILE = '[Players] ADD_PROJECTILE',
-  UPDATE_PROJECTILE = '[Players] UPDATE_PROJECTILE',
-  DELETE_PROJECTILE = '[Players] DELETE_PROJECTILE',
   UPDATE_CHARACTER_HP = '[Players] UPDATE_CHARACTERS_HP',
   CHARACTER_DIED = '[Players] CHARACTER_DIED',
 }
@@ -30,9 +24,9 @@ export type ChangePlayerPosition = FSAAuto<
   ChangeLocationPayload
 >;
 
-export type Initialize = FSAAuto<
-  PlayersActionTypes.INITIALIZE,
-  InitializePayload
+export type InitializePlayers = FSAAuto<
+  PlayersActionTypes.INITIALIZE_PLAYERS,
+  InitializePlayersPayload
 >;
 
 export type AddPlayer = FSAAuto<
@@ -43,21 +37,6 @@ export type AddPlayer = FSAAuto<
 export type DeletePlayer = FSAAuto<
   PlayersActionTypes.DELETE_PLAYER,
   DeletePlayerPayload
->;
-
-export type AddProjectile = FSAAuto<
-  PlayersActionTypes.ADD_PROJECTILE,
-  AddProjectilePayload
->;
-
-export type UpdateProjectile = FSAAuto<
-  PlayersActionTypes.UPDATE_PROJECTILE,
-  UpdateProjectilePayload
->;
-
-export type DeleteProjectile = FSAAuto<
-  PlayersActionTypes.DELETE_PROJECTILE,
-  DeleteProjectilePayload
 >;
 
 export type UpdateCharacterHp = FSAAuto<
@@ -89,10 +68,10 @@ export const changePlayerMovingStatus = (
   payload,
 });
 
-export const initialize = (
-  payload: InitializePayload
-): Initialize => ({
-  type: PlayersActionTypes.INITIALIZE,
+export const initializePlayers = (
+  payload: InitializePlayersPayload
+): InitializePlayers => ({
+  type: PlayersActionTypes.INITIALIZE_PLAYERS,
   payload,
 });
 
@@ -103,21 +82,6 @@ export const addPlayer = (payload: AddPlayerPayload): AddPlayer => ({
 
 export const deletePlayer = (payload: DeletePlayerPayload): DeletePlayer => ({
   type: PlayersActionTypes.DELETE_PLAYER,
-  payload,
-});
-
-export const addProjectile = (payload: AddProjectilePayload): AddProjectile => ({
-  type: PlayersActionTypes.ADD_PROJECTILE,
-  payload,
-});
-
-export const updateProjectile = (payload: UpdateProjectilePayload): UpdateProjectile => ({
-  type: PlayersActionTypes.UPDATE_PROJECTILE,
-  payload,
-});
-
-export const deleteProjectile = (payload: DeleteProjectilePayload): DeleteProjectile => ({
-  type: PlayersActionTypes.DELETE_PROJECTILE,
   payload,
 });
 
@@ -133,12 +97,9 @@ export const characterDied = (payload: CharacterDiedPayload): CharacterDied => (
 
 export type PlayerAction =
   | ChangePlayerPosition
-  | Initialize
+  | InitializePlayers
   | AddPlayer
   | DeletePlayer
   | ChangePlayerMovingStatus
-  | AddProjectile
-  | UpdateProjectile
-  | DeleteProjectile
   | UpdateCharacterHp
   | CharacterDied;

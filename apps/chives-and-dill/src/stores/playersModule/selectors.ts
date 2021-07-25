@@ -13,13 +13,3 @@ export const selectActivePlayer = (state: PlayersAwareState) =>
 
 export const selectCharacterViewsSettings = (state: PlayersAwareState) =>
   getPlayerModule(state).characterViewsSettings;
-
-export const selectProjectiles = (state: PlayersAwareState) =>
-  getPlayerModule(state).projectiles;
-
-export const selectSpells = (state: PlayersAwareState) =>
-  getPlayerModule(state).spells;
-
-export const selectKeyBinds = (state: PlayersAwareState) =>
-  getPlayerModule(state).keyBinding;
-  

@@ -6,13 +6,6 @@ import _ from 'lodash';
 const initialState: PlayersState = {
   characters: {},
   areas: [],
-  projectiles: {},
-  spells: {},
-  keyBinding: {
-    "1": "DirectHit",
-    "2": "Projectile",
-    "3": "InstantProjectile",
-  },
   characterViewsSettings: {
     nakedFemale: {
       spriteHeight: 48,
@@ -134,13 +127,12 @@ export const playersReducer = (
           },
         },
       };
-    case PlayersActionTypes.INITIALIZE:
+    case PlayersActionTypes.INITIALIZE_PLAYERS:
       return {
         ...state,
         activePlayer: action.payload.activePlayer,
         characters: action.payload.characters,
         areas: action.payload.areas,
-        spells: action.payload.spells,
       };
     case PlayersActionTypes.ADD_PLAYER:
       return {
@@ -165,36 +157,6 @@ export const playersReducer = (
             isInMove: action.payload.isInMove,
           },
         },
-      };
-    case PlayersActionTypes.ADD_PROJECTILE: {
-      return {
-        ...state,
-        projectiles: {
-          ...state.projectiles,
-          [action.payload.projectileId]: {
-            ...state.projectiles[action.payload.projectileId],
-            spell: action.payload.spell,
-            newLocation: action.payload.currentLocation,
-          }
-        },
-      };
-    }
-    case PlayersActionTypes.UPDATE_PROJECTILE:
-      return {
-        ...state,
-        projectiles: {
-          ...state.projectiles,
-          [action.payload.projectileId]: {
-            ...state.projectiles[action.payload.projectileId],
-            angle: action.payload.angle,
-            newLocation: action.payload.newLocation,
-          }
-        },
-      }
-    case PlayersActionTypes.DELETE_PROJECTILE:
-      return {
-        ...state,
-        projectiles: _.omit(state.projectiles, action.payload.projectileId),
       };
     case PlayersActionTypes.UPDATE_CHARACTER_HP:
       return {

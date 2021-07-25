@@ -12,26 +12,31 @@ export const SpellsBar = () => {
   const spells = useSelector(selectSpells);
   const keyBinds = useSelector(selectKeyBinds);
 
-  const renderSpells = _.map(keyBinds, (spell, index) => {
-    const activeSpell = spells[spell];
+  let renderSpells;
 
-    return (
-      <div key={index} className={styles.spellContainer}>
-        <div className={styles.keyboardNumber}>{index}</div>
-        <img
-          src={activeSpell.image}
-          className={styles.spellImage + ' ' + `${context[index] ? styles.activeSpell : null}`}
-          alt={activeSpell.name}
-        />
-        <div className={styles.spellTooltip}>
-          <div>{activeSpell.name}</div>
-          <div>{activeSpell.range} yd range</div>
-          <div>{"Cooldown: " + activeSpell.cooldown / 1000 + " sec"}</div>
-          <div className={styles.spellDesc}>{activeSpell.description}</div>
+  if (Object.keys(spells).length) {
+    renderSpells = _.map(keyBinds, (spell, index) => {
+      const activeSpell = spells[spell];
+
+      return (
+        <div key={index} className={styles.spellContainer}>
+          <div className={styles.keyboardNumber}>{index}</div>
+          <img
+            src={activeSpell.image}
+            className={styles.spellImage + ' ' + `${context[index] ? styles.activeSpell : null}`}
+            alt={activeSpell.name}
+          />
+          <div className={styles.spellTooltip}>
+            <div>{activeSpell.name}</div>
+            <div>{activeSpell.range} yd range</div>
+            <div>{"Cooldown: " + activeSpell.cooldown / 1000 + " sec"}</div>
+            <div className={styles.spellDesc}>{activeSpell.description}</div>
+          </div>
         </div>
-      </div>
-    )
-  });
+      )
+    });
+  }
+
 
   return (
     <div className={styles.spellsBarContainer}>

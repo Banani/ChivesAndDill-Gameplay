@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 import {
-   initialize,
+   initializePlayers,
+   initializeSpells,
    addPlayer,
    changePlayerPosition,
    deletePlayer,
@@ -30,7 +31,8 @@ const SocketCommunicator = ({ children }) => {
    useEffect(() => {
       if (context.socket) {
          context.socket.on(EngineMessages.Inicialization, ({ players, areas, activePlayer, projectiles, spells }) => {
-            dispatch(initialize({ characters: players, areas, activePlayer, projectiles, spells }));
+            dispatch(initializePlayers({ characters: players, areas, activePlayer }));
+            dispatch(initializeSpells({ projectiles, spells }));
          });
 
          context.socket.on(EngineMessages.PlayerMoved, ({ playerId, newLocation, newDirection }) => {
