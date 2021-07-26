@@ -26,6 +26,8 @@ export enum FightingEngineMessages {
    SpellLanded = 'SpellLanded',
    AreaSpellEffectCreated = 'AreaSpellEffectCreated',
    AreaSpellEffectRemoved = 'AreaSpellEffectRemoved',
+   ChannelingFinished = 'ChannelingFinished',
+   ChannelingInterrupted = 'ChannelingInterrupted',
 }
 
 export enum ClientMessages {

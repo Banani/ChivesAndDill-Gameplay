@@ -2,14 +2,8 @@ import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
 import { SpellType } from 'apps/engine/src/app/SpellType';
-import {
-   EngineEventHandler,
-   PlayerCastSpellEvent,
-   PlayerCastedSpellEvent,
-   ApplyLocationSpellEffectEvent,
-   ApplyTargetSpellEffectEvent,
-} from '../../../../types';
-import { omit, forEach } from 'lodash';
+import { EngineEventHandler, PlayerCastSpellEvent, PlayerCastedSpellEvent } from '../../../../types';
+import { omit } from 'lodash';
 import { SpellLandedEvent, FightingEngineEvents, SpellReachedTargetEvent } from '../../Events';
 
 export class AreaSpellService extends EventParser {

@@ -31,6 +31,8 @@ import {
 import { ProjectileMovement, AreaEffectsEngine } from './app/modules/FightingModule/engines';
 import { AreaEffectService } from './app/modules/FightingModule/services/EffectHandlers/AreaEffectService';
 import { GenerateSpellPowerEffectService } from './app/modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
+import { ChannelService } from './app/modules/FightingModule/services/SpellHandlers/ChannelService';
+import { ChannelEngine } from './app/modules/FightingModule/engines/ChannelEngine';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -55,6 +57,7 @@ const projectileMovement = new ProjectileMovement();
 const respawnMonsterEngine = new RespawnMonsterEngine();
 const monsterAttackEngine = new MonsterAttackEngine();
 const areaEffectsEngine = new AreaEffectsEngine();
+const channelEngine = new ChannelEngine();
 
 const fastEngines = [
    playerMovementEngine,
@@ -62,6 +65,7 @@ const fastEngines = [
    projectileMovement,
    //    monsterAttackEngine,
    areaEffectsEngine,
+   channelEngine,
    //    11111111111111111111111111111111111111111111111111111111,
 ];
 const slowEngines = [respawnMonsterEngine];
@@ -97,6 +101,8 @@ const services: Services = {
    healEffectService: new HealEffectService(),
    generateSpellPowerEffectService: new GenerateSpellPowerEffectService(),
    areaEffectService: new AreaEffectService(areaEffectsEngine),
+   channelService: new ChannelService(channelEngine),
+
    spellNotifier: new SpellNotifier(),
 };
 

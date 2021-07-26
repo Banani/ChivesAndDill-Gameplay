@@ -16,6 +16,7 @@ import {
 } from '../modules';
 import { AreaEffectService } from '../modules/FightingModule/services/EffectHandlers/AreaEffectService';
 import { GenerateSpellPowerEffectService } from '../modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
+import { ChannelService } from '../modules/FightingModule/services/SpellHandlers/ChannelService';
 import { MonsterAttackService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
 import { AggroService } from '../modules/MonsterModule/services/aggroService';
@@ -50,5 +51,6 @@ export interface Services {
    generateSpellPowerEffectService: GenerateSpellPowerEffectService;
    healEffectService: HealEffectService;
    areaEffectService: AreaEffectService;
+   channelService: ChannelService;
    spellNotifier: SpellNotifier;
 }

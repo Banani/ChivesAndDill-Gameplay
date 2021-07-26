@@ -192,6 +192,14 @@ export interface AddCharacterSpellPowerEvent extends EngineEvent {
    amount: number;
 }
 
+export interface SpellChannelingFinishedEvent extends EngineEvent {
+   channelId: string;
+}
+
+export interface SpellChannelingInterruptedEvent extends EngineEvent {
+   channelId: string;
+}
+
 export type EngineEventHandler<T> = ({ event, services }: { event: T; services: Services }) => void;
 
 export interface EngineEventsMap {
@@ -223,4 +231,6 @@ export interface EngineEventsMap {
    [EngineEvents.AddCharacterSpellPower]: EngineEventHandler<AddCharacterSpellPowerEvent>;
    [EngineEvents.CharacterLostSpellPower]: EngineEventHandler<CharacterLostSpellPowerEvent>;
    [EngineEvents.CharacterGotSpellPower]: EngineEventHandler<CharacterGotSpellPowerEvent>;
+   [EngineEvents.SpellChannelingFinished]: EngineEventHandler<SpellChannelingFinishedEvent>;
+   [EngineEvents.SpellChannelingInterrupted]: EngineEventHandler<SpellChannelingInterruptedEvent>;
 }

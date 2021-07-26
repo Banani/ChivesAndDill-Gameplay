@@ -5,8 +5,8 @@ export interface Spell {
    name: string;
    range: number;
    cooldown: number;
-   image: string;
-   description: string;
+   image?: string;
+   description?: string;
    spellEffectsOnTarget: AllEffects[];
    spellEffectsOnDirectionLocation: AllEffects[];
    spellEffectsOnCasterOnSpellHit: AllEffects[];
@@ -18,6 +18,10 @@ export interface Spell {
 
    areaType?: AreaType;
    radius?: number;
+
+   channelSpells: Spell[];
+   channelFrequency?: number;
+   channelTime?: number;
 }
 
 export interface SpellEffect {
