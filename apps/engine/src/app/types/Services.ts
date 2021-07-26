@@ -16,6 +16,7 @@ import {
 } from '../modules';
 import { AreaEffectService } from '../modules/FightingModule/services/EffectHandlers/AreaEffectService';
 import { GenerateSpellPowerEffectService } from '../modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
+import { TickEffectOverTimeService } from '../modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
 import { ChannelService } from '../modules/FightingModule/services/SpellHandlers/ChannelService';
 import { MonsterAttackService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
@@ -53,4 +54,5 @@ export interface Services {
    areaEffectService: AreaEffectService;
    channelService: ChannelService;
    spellNotifier: SpellNotifier;
+   tickEffectOverTimeService: TickEffectOverTimeService;
 }
