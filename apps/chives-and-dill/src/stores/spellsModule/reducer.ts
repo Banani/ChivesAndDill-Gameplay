@@ -11,6 +11,7 @@ const initialState: SpellsState = {
     "2": "Projectile",
     "3": "InstantProjectile",
   },
+  areaSpellsEffects: {},
 };
 
 export const spellsReducer = (
@@ -53,6 +54,22 @@ export const spellsReducer = (
         ...state,
         projectiles: _.omit(state.projectiles, action.payload.projectileId),
       };
+    case SpellsActionTypes.AREA_SPELL_EFFECT_CREATED:
+      return {
+        ...state,
+        areaSpellsEffects: {
+          ...state.areaSpellsEffects,
+          [action.payload.event.areaSpellEffectId]: action.payload.event,
+        },
+      };
+    case SpellsActionTypes.AREA_SPELL_EFFECT_REMOVED: {
+      console.log(state, action.payload, _.omit(state.areaSpellsEffects, action.payload.event.areaSpellEffectId));
+      return {
+        ...state,
+        areaSpellsEffects: _.omit(state.areaSpellsEffects, action.payload.event.areaSpellEffectId),
+    };
+    }
+      
     default:
       return state;
   }

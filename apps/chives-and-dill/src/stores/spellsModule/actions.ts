@@ -4,6 +4,8 @@ import type {
   AddProjectilePayload,
   UpdateProjectilePayload,
   DeleteProjectilePayload,
+  AreaSpellEffectCreatedPayload,
+  AreaSpellEffectRemovedPayload,
 } from '../../types/spells';
 
 export enum SpellsActionTypes {
@@ -11,6 +13,8 @@ export enum SpellsActionTypes {
   ADD_PROJECTILE = '[Spells] ADD_PROJECTILE',
   UPDATE_PROJECTILE = '[Spells] UPDATE_PROJECTILE',
   DELETE_PROJECTILE = '[Spells] DELETE_PROJECTILE',
+  AREA_SPELL_EFFECT_CREATED = '[Spells] AREA_SPELL_EFFECT_CREATED',
+  AREA_SPELL_EFFECT_REMOVED = '[Spells] AREA_SPELL_EFFECT_REMOVED',
 }
 
 export type InitializeSpells = FSAAuto<
@@ -31,6 +35,16 @@ export type UpdateProjectile = FSAAuto<
 export type DeleteProjectile = FSAAuto<
   SpellsActionTypes.DELETE_PROJECTILE,
   DeleteProjectilePayload
+>;
+
+export type AreaSpellEffectCreated = FSAAuto<
+  SpellsActionTypes.AREA_SPELL_EFFECT_CREATED,
+  AreaSpellEffectCreatedPayload
+>;
+
+export type AreaSpellEffectRemoved = FSAAuto<
+  SpellsActionTypes.AREA_SPELL_EFFECT_REMOVED,
+  AreaSpellEffectRemovedPayload
 >;
 
 export const initializeSpells = (
@@ -55,8 +69,20 @@ export const deleteProjectile = (payload: DeleteProjectilePayload): DeleteProjec
   payload,
 });
 
+export const areaSpellEffectCreated = (payload: AreaSpellEffectCreatedPayload): AreaSpellEffectCreated => ({
+  type: SpellsActionTypes.AREA_SPELL_EFFECT_CREATED,
+  payload,
+});
+
+export const areaSpellEffectRemoved = (payload: AreaSpellEffectRemovedPayload): AreaSpellEffectRemoved => ({
+  type: SpellsActionTypes.AREA_SPELL_EFFECT_REMOVED,
+  payload,
+});
+
 export type SpellsAction =
   | InitializeSpells
   | AddProjectile
   | UpdateProjectile
-  | DeleteProjectile;
+  | DeleteProjectile
+  | AreaSpellEffectCreated
+  | AreaSpellEffectRemoved;

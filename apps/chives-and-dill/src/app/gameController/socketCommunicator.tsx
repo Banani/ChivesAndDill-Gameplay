@@ -15,6 +15,8 @@ import {
    updateCharacterHp,
    characterDied,
    updateCharacterSpellPower,
+   areaSpellEffectCreated,
+   areaSpellEffectRemoved,
 } from '../../stores';
 import { SocketContext } from './socketContext';
 
@@ -101,15 +103,14 @@ const SocketCommunicator = ({ children }) => {
          });
 
          context.socket.on(FightingEngineMessages.SpellLanded, (event) => {
-            console.log(event);
          });
 
          context.socket.on(FightingEngineMessages.AreaSpellEffectCreated, (event) => {
-            console.log(event);
+            dispatch(areaSpellEffectCreated({ event }));
          });
 
          context.socket.on(FightingEngineMessages.AreaSpellEffectRemoved, (event) => {
-            console.log(event);
+            dispatch(areaSpellEffectRemoved({ event }));
          });
       }
    }, [context]);

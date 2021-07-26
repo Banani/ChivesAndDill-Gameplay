@@ -10,4 +10,7 @@ export const selectSpells = (state: SpellsAwareState) =>
 
 export const selectKeyBinds = (state: SpellsAwareState) =>
   getSpellsModule(state).keyBinding;
+
+export const selectAreaSpellsEffects = (state: SpellsAwareState) =>
+  getSpellsModule(state).areaSpellsEffects;  
   

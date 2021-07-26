@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Stage, Sprite, Graphics, Container } from '@inlet/react-pixi';
 import { useSelector } from 'react-redux';
-import { selectCharacters, selectCharacterViewsSettings, selectAreas, selectActivePlayer, selectProjectiles } from '../stores';
+import { selectCharacters, selectCharacterViewsSettings, selectAreas, selectActivePlayer, selectProjectiles, selectAreaSpellsEffects } from '../stores';
 import _ from 'lodash';
 import Player from './player/Player';
 import { PlayerIcon } from "./player/playerIcon/PlayerIcon";
@@ -10,6 +10,7 @@ import { SpellsBar } from "./player/spellsBar/SpellsBar";
 const Map = () => {
    const players = useSelector(selectCharacters);
    const projectiles = useSelector(selectProjectiles);
+   const areaSpellsEffects = useSelector(selectAreaSpellsEffects);
    const characterViewsSettings = useSelector(selectCharacterViewsSettings);
    const activePlayerId = useSelector(selectActivePlayer);
    const areas = useSelector(selectAreas);
@@ -23,6 +24,16 @@ const Map = () => {
    const renderSpells = _.map(projectiles, (spell, i) => (
       <Sprite key={i} image="../assets/spritesheets/spells/potato.png" x={spell.newLocation.x} y={spell.newLocation.y}></Sprite>
    ));
+
+   const drawAreasSpellsEffects = useCallback((g) => {
+      g.clear();
+      _.map(areaSpellsEffects, (areaSpellEffect, index) => {
+         console.log(areaSpellEffect);
+         g.beginFill(0x333333);
+         g.drawCircle(areaSpellEffect.location.x, areaSpellEffect.location.y, areaSpellEffect.effect.radius);
+         g.endFill();
+      });
+   }, [areaSpellsEffects]);
 
    const drawAreas = useCallback(
       (g) => {
@@ -69,7 +80,6 @@ const Map = () => {
    });
 
    const scale = 1;
-
    return (
       <>
          {activePlayerId ? <SpellsBar player={players[activePlayerId]}></SpellsBar> : null}
@@ -84,6 +94,7 @@ const Map = () => {
                   -players[activePlayerId]?.location.x * scale + gameWidth / 2 ?? 0,
                   -players[activePlayerId]?.location.y * scale + gameHeight / 2 ?? 0]}
             >
+               <Graphics draw={drawAreasSpellsEffects} />
                {renderSpells}
                {renderPlayers}
                {players[activePlayerId] ? (
