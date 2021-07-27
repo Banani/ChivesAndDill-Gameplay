@@ -49,7 +49,7 @@ export class ProjectileNotifier extends EventParser {
       const currentSocket = services.socketConnectionService.getSocketById(currentCharacter.socketId);
 
       currentSocket.on(ClientMessages.PerformBasicAttack, ({ directionLocation, spellName }) => {
-         this.engineEventCrator.createEvent<PlayerTriesToCastASpellEvent>({
+         this.engineEventCrator.asyncCeateEvent<PlayerTriesToCastASpellEvent>({
             type: EngineEvents.PlayerTriesToCastASpell,
             spellData: {
                characterId: currentCharacter.id,

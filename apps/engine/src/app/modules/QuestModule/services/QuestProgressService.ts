@@ -29,7 +29,7 @@ export class QuestProgressService extends EventParser {
       this.questProgress[event.payload.newCharacter.id] = {};
 
       forEach(Quests, (quest) => {
-         this.engineEventCrator.createEvent<QuestStartedEvent>({
+         this.engineEventCrator.asyncCeateEvent<QuestStartedEvent>({
             type: QuestEngineEvents.QUEST_STARTED,
             questTemplate: {
                id: quest.id,
@@ -55,7 +55,7 @@ export class QuestProgressService extends EventParser {
          stagesParts: mapValues(keyBy(Quests[questId].stages[stageId].stageParts, 'id'), () => false),
       };
 
-      this.engineEventCrator.createEvent<NewQuestStageStartedEvent>({
+      this.engineEventCrator.asyncCeateEvent<NewQuestStageStartedEvent>({
          type: QuestEngineEvents.NEW_QUEST_STAGE_STARTED,
          questId,
          characterId,
@@ -64,7 +64,7 @@ export class QuestProgressService extends EventParser {
 
       forEach(Quests[questId].stages[stageId].stageParts, (stagePart) => {
          if (stagePart.type === QuestType.MOVEMENT) {
-            this.engineEventCrator.createEvent<StartNewQuestMovementStagePartEvent>({
+            this.engineEventCrator.asyncCeateEvent<StartNewQuestMovementStagePartEvent>({
                type: QuestEngineEvents.START_NEW_QUEST_MOVEMENT_STAGE_PART,
                characterId: characterId,
                stagePart: stagePart as MovementQuestStagePart,
@@ -72,7 +72,7 @@ export class QuestProgressService extends EventParser {
          }
 
          if (stagePart.type === QuestType.KILLING) {
-            this.engineEventCrator.createEvent<StartNewQuestKillingStagePartEvent>({
+            this.engineEventCrator.asyncCeateEvent<StartNewQuestKillingStagePartEvent>({
                type: QuestEngineEvents.START_NEW_QUEST_KILLING_STAGE_PART,
                characterId: characterId,
                stagePart: stagePart as KillingQuestStagePart,
@@ -92,7 +92,7 @@ export class QuestProgressService extends EventParser {
 
          if (completedStageIndex === stageOrder.length - 1) {
             this.questProgress[event.characterId][event.questId].completed = true;
-            this.engineEventCrator.createEvent<QuestCompletedEvent>({
+            this.engineEventCrator.asyncCeateEvent<QuestCompletedEvent>({
                type: QuestEngineEvents.QUEST_COMPLETED,
                questId: event.questId,
                characterId: event.characterId,

@@ -5,6 +5,7 @@ import { Services } from './types/Services';
 
 export class EngineEventCrator {
    services: Services;
+   eventsToBeProcessed: EngineEvent[] = [];
 
    constructor(services: Services) {
       this.services = services;
@@ -13,13 +14,23 @@ export class EngineEventCrator {
    }
 
    createEvent<T extends EngineEvent>(event: T) {
-      setTimeout(() => {
+      this.asyncCeateEvent(event);
+      this.processEvents();
+   }
+
+   processEvents = () => {
+      while (this.eventsToBeProcessed.length > 0) {
+         const eventToBeProcessed = this.eventsToBeProcessed.shift();
          each(this.services, (service: EventParser) => {
-            service.handleEvent<T>({
-               event,
+            service.handleEvent({
+               event: eventToBeProcessed,
                services: this.services,
             });
          });
-      }, 0);
+      }
+   };
+
+   asyncCeateEvent<T extends EngineEvent>(event: T) {
+      this.eventsToBeProcessed.push(event);
    }
 }

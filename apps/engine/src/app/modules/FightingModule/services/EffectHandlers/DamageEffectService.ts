@@ -16,7 +16,7 @@ export class DamageEffectService extends EventParser {
       if (event.effect.type === SpellEffectType.Damage) {
          const effect = event.effect as DamageEffect;
 
-         this.engineEventCrator.createEvent<TakeCharacterHealthPointsEvent>({
+         this.engineEventCrator.asyncCeateEvent<TakeCharacterHealthPointsEvent>({
             type: EngineEvents.TakeCharacterHealthPoints,
             attackerId: event.caster?.id ?? null,
             characterId: event.target.id,

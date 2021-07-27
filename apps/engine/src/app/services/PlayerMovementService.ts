@@ -25,7 +25,7 @@ export class PlayerMovementService extends EventParser {
       if (services.characterService.canMove(event.characterId)) {
          this.movementEngine.startNewMovement(event.characterId, event.movement);
 
-         this.engineEventCrator.createEvent<PlayerStartedMovementEvent>({
+         this.engineEventCrator.asyncCeateEvent<PlayerStartedMovementEvent>({
             type: EngineEvents.PlayerStartedMovement,
             characterId: event.characterId,
          });

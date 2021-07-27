@@ -43,13 +43,13 @@ export class AngleBlastSpellService extends EventParser {
          const rotatedAngle = castAngle > 0 ? -Math.PI - distanceToPI : Math.PI + distanceToPI;
          const angleDistance = event.spell.angle / 2;
 
-         this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
+         this.engineEventCrator.asyncCeateEvent<PlayerCastedSpellEvent>({
             type: EngineEvents.PlayerCastedSpell,
             casterId: caster.id,
             spell: event.spell,
          });
 
-         this.engineEventCrator.createEvent<SpellLandedEvent>({
+         this.engineEventCrator.asyncCeateEvent<SpellLandedEvent>({
             type: FightingEngineEvents.SpellLanded,
             spell: event.spell,
             caster,
@@ -65,7 +65,7 @@ export class AngleBlastSpellService extends EventParser {
                this.isInRange(caster, allCharacters[i], event.spell.range) &&
                this.isTargetInSight(caster.location, allCharacters[i].location)
             ) {
-               this.engineEventCrator.createEvent<SpellReachedTargetEvent>({
+               this.engineEventCrator.asyncCeateEvent<SpellReachedTargetEvent>({
                   type: FightingEngineEvents.SpellReachedTarget,
                   spell: event.spell,
                   caster,
@@ -86,13 +86,13 @@ export class AngleBlastSpellService extends EventParser {
          const rotatedAngle = castAngle > 0 ? -Math.PI - distanceToPI : Math.PI + distanceToPI;
          const angleDistance = event.spell.angle / 2;
 
-         this.engineEventCrator.createEvent<SubSpellCastedEvent>({
+         this.engineEventCrator.asyncCeateEvent<SubSpellCastedEvent>({
             type: FightingEngineEvents.SubSpellCasted,
             casterId: caster.id,
             spell: event.spell,
          });
 
-         this.engineEventCrator.createEvent<SpellLandedEvent>({
+         this.engineEventCrator.asyncCeateEvent<SpellLandedEvent>({
             type: FightingEngineEvents.SpellLanded,
             spell: event.spell,
             caster,
@@ -108,7 +108,7 @@ export class AngleBlastSpellService extends EventParser {
                this.isInRange(caster, allCharacters[i], event.spell.range) &&
                this.isTargetInSight(caster.location, allCharacters[i].location)
             ) {
-               this.engineEventCrator.createEvent<SpellReachedTargetEvent>({
+               this.engineEventCrator.asyncCeateEvent<SpellReachedTargetEvent>({
                   type: FightingEngineEvents.SpellReachedTarget,
                   spell: event.spell,
                   caster,

@@ -16,7 +16,7 @@ export class GenerateSpellPowerEffectService extends EventParser {
       if (event.effect.type === SpellEffectType.GenerateSpellPower) {
          const effect = event.effect as GenerateSpellPowerEffect;
 
-         this.engineEventCrator.createEvent<AddCharacterSpellPowerEvent>({
+         this.engineEventCrator.asyncCeateEvent<AddCharacterSpellPowerEvent>({
             type: EngineEvents.AddCharacterSpellPower,
             characterId: event.target.id,
             amount: effect.amount,

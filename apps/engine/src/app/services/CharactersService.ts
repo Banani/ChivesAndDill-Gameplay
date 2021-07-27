@@ -47,7 +47,7 @@ export class CharactersService extends EventParser {
       });
       this.characters[newCharacter.id] = newCharacter;
 
-      this.engineEventCrator.createEvent<NewCharacterCreatedEvent>({
+      this.engineEventCrator.asyncCeateEvent<NewCharacterCreatedEvent>({
          type: EngineEvents.NewCharacterCreated,
          payload: {
             newCharacter,
@@ -75,7 +75,7 @@ export class CharactersService extends EventParser {
    handleTakeCharacterHealthPoints: EngineEventHandler<TakeCharacterHealthPointsEvent> = ({ event }) => {
       if (this.characters[event.characterId]) {
          this.characters[event.characterId].currentHp = Math.max(this.characters[event.characterId].currentHp - event.amount, 0);
-         this.engineEventCrator.createEvent<CharacterLostHpEvent>({
+         this.engineEventCrator.asyncCeateEvent<CharacterLostHpEvent>({
             type: EngineEvents.CharacterLostHp,
             characterId: event.characterId,
             amount: event.amount,
@@ -83,7 +83,7 @@ export class CharactersService extends EventParser {
          });
          if (this.characters[event.characterId].currentHp === 0) {
             this.characters[event.characterId].isDead = true;
-            this.engineEventCrator.createEvent<CharacterDiedEvent>({
+            this.engineEventCrator.asyncCeateEvent<CharacterDiedEvent>({
                type: EngineEvents.CharacterDied,
                character: this.characters[event.characterId],
                killerId: event.attackerId,
@@ -99,7 +99,7 @@ export class CharactersService extends EventParser {
             this.characters[event.characterId].maxHp
          );
 
-         this.engineEventCrator.createEvent<CharacterGotHpEvent>({
+         this.engineEventCrator.asyncCeateEvent<CharacterGotHpEvent>({
             type: EngineEvents.CharacterGotHp,
             characterId: event.characterId,
             amount: event.amount,
@@ -112,7 +112,7 @@ export class CharactersService extends EventParser {
       if (this.characters[event.characterId]) {
          this.characters[event.characterId].currentSpellPower -= event.amount;
 
-         this.engineEventCrator.createEvent<CharacterLostSpellPowerEvent>({
+         this.engineEventCrator.asyncCeateEvent<CharacterLostSpellPowerEvent>({
             type: EngineEvents.CharacterLostSpellPower,
             characterId: event.characterId,
             amount: event.amount,
@@ -128,7 +128,7 @@ export class CharactersService extends EventParser {
             this.characters[event.characterId].maxSpellPower
          );
 
-         this.engineEventCrator.createEvent<CharacterGotSpellPowerEvent>({
+         this.engineEventCrator.asyncCeateEvent<CharacterGotSpellPowerEvent>({
             type: EngineEvents.CharacterGotSpellPower,
             characterId: event.characterId,
             amount: event.amount,

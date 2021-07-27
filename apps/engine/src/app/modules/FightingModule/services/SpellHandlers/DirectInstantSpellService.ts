@@ -32,20 +32,20 @@ export class DirectInstantSpellService extends EventParser {
 
          for (const i in omit(allCharacters, [event.casterId])) {
             if (distanceBetweenTwoPoints(event.directionLocation, allCharacters[i].location) < allCharacters[i].size / 2) {
-               this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
+               this.engineEventCrator.asyncCeateEvent<PlayerCastedSpellEvent>({
                   type: EngineEvents.PlayerCastedSpell,
                   casterId: event.casterId,
                   spell: event.spell,
                });
 
-               this.engineEventCrator.createEvent<SpellLandedEvent>({
+               this.engineEventCrator.asyncCeateEvent<SpellLandedEvent>({
                   type: FightingEngineEvents.SpellLanded,
                   spell: event.spell,
                   caster: character,
                   location: allCharacters[i].location,
                });
 
-               this.engineEventCrator.createEvent<SpellReachedTargetEvent>({
+               this.engineEventCrator.asyncCeateEvent<SpellReachedTargetEvent>({
                   type: FightingEngineEvents.SpellReachedTarget,
                   spell: event.spell,
                   caster: character,
@@ -64,20 +64,20 @@ export class DirectInstantSpellService extends EventParser {
 
          for (const i in omit(allCharacters, [event.casterId])) {
             if (distanceBetweenTwoPoints(event.directionLocation, allCharacters[i].location) < allCharacters[i].size / 2) {
-               this.engineEventCrator.createEvent<SubSpellCastedEvent>({
+               this.engineEventCrator.asyncCeateEvent<SubSpellCastedEvent>({
                   type: FightingEngineEvents.SubSpellCasted,
                   casterId: event.casterId,
                   spell: event.spell,
                });
 
-               this.engineEventCrator.createEvent<SpellLandedEvent>({
+               this.engineEventCrator.asyncCeateEvent<SpellLandedEvent>({
                   type: FightingEngineEvents.SpellLanded,
                   spell: event.spell,
                   caster: character,
                   location: allCharacters[i].location,
                });
 
-               this.engineEventCrator.createEvent<SpellReachedTargetEvent>({
+               this.engineEventCrator.asyncCeateEvent<SpellReachedTargetEvent>({
                   type: FightingEngineEvents.SpellReachedTarget,
                   spell: event.spell,
                   caster: character,

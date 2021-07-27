@@ -39,12 +39,12 @@ export class AggroService extends EventParser {
       const newAggro = { characterId: characterId, level: 0.1 };
       this.monsterAggro[monster.id] = { currentTarget: newAggro, allTargets: { [characterId]: newAggro } };
 
-      this.engineEventCrator.createEvent<MonsterPulledEvent>({
+      this.engineEventCrator.asyncCeateEvent<MonsterPulledEvent>({
          type: MonsterEngineEvents.MonsterPulled,
          monster,
       });
 
-      this.engineEventCrator.createEvent<MonsterTargetChangedEvent>({
+      this.engineEventCrator.asyncCeateEvent<MonsterTargetChangedEvent>({
          type: MonsterEngineEvents.MonsterTargetChanged,
          newTargetId: characterId,
          monster,
@@ -53,7 +53,7 @@ export class AggroService extends EventParser {
 
    deleteAggro = (monsterId: string, targetId: string) => {
       delete this.monsterAggro[monsterId].allTargets[targetId];
-      this.engineEventCrator.createEvent<MonsterLostTargetEvent>({
+      this.engineEventCrator.asyncCeateEvent<MonsterLostTargetEvent>({
          type: MonsterEngineEvents.MonsterLostTarget,
          targetId: targetId,
          monsterId: monsterId,
@@ -61,7 +61,7 @@ export class AggroService extends EventParser {
 
       if (Object.keys(this.monsterAggro[monsterId].allTargets).length === 0) {
          delete this.monsterAggro[monsterId];
-         this.engineEventCrator.createEvent<MonsterLostAggroEvent>({
+         this.engineEventCrator.asyncCeateEvent<MonsterLostAggroEvent>({
             type: MonsterEngineEvents.MonsterLostAggro,
             monsterId,
          });
@@ -128,7 +128,7 @@ export class AggroService extends EventParser {
             characterId: event.caster.id,
          };
 
-         this.engineEventCrator.createEvent<MonsterPulledEvent>({
+         this.engineEventCrator.asyncCeateEvent<MonsterPulledEvent>({
             type: MonsterEngineEvents.MonsterPulled,
             monster: event.target as Monster,
          });
@@ -140,7 +140,7 @@ export class AggroService extends EventParser {
       if (monsterAggros[event.caster.id].level > aggro.currentTarget.level * 2) {
          aggro.currentTarget = monsterAggros[event.caster.id];
 
-         this.engineEventCrator.createEvent<MonsterTargetChangedEvent>({
+         this.engineEventCrator.asyncCeateEvent<MonsterTargetChangedEvent>({
             type: MonsterEngineEvents.MonsterTargetChanged,
             newTargetId: event.caster.id,
             monster: event.target as Monster,

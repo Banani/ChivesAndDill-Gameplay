@@ -28,7 +28,7 @@ export class SocketConnectionService extends EventParser {
 
       this.io.on('connection', (socket) => {
          this.sockets[socket.id] = socket;
-         this.engineEventCrator.createEvent<CreateNewPlayerEvent>({
+         this.engineEventCrator.asyncCeateEvent<CreateNewPlayerEvent>({
             type: EngineEvents.CreateNewPlayer,
             payload: {
                socketId: socket.id,
@@ -46,7 +46,7 @@ export class SocketConnectionService extends EventParser {
          players: { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() },
          projectiles: services.projectilesService.getAllProjectiles(),
          areas: AREAS,
-         spells: ALL_SPELLS
+         spells: ALL_SPELLS,
       });
 
       currentSocket.broadcast.emit(EngineMessages.UserConnected, {
@@ -57,7 +57,7 @@ export class SocketConnectionService extends EventParser {
          currentSocket.broadcast.emit(EngineMessages.UserDisconnected, {
             userId: currentCharacter.id,
          });
-         this.engineEventCrator.createEvent<PlayerDisconnectedEvent>({
+         this.engineEventCrator.asyncCeateEvent<PlayerDisconnectedEvent>({
             type: EngineEvents.PlayerDisconnected,
             payload: {
                playerId: currentCharacter.id,

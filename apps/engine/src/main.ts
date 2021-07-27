@@ -66,15 +66,12 @@ const bossFightEngine = new BossFightEngine();
 
 const fastEngines = [
    playerMovementEngine,
-   playerMovementEngine,
    projectileMovement,
    monsterAttackEngine,
    areaEffectsEngine,
    channelEngine,
    tickOverTimeEffectEngine,
    bossFightEngine,
-
-   //    11111111111111111111111111111111111111111111111111111111,
 ];
 const slowEngines = [respawnMonsterEngine];
 
@@ -118,8 +115,13 @@ const services: Services = {
 
 const engineEventCreator = new EngineEventCrator(services);
 
+const startTime = Date.now();
+let i = 0;
 setInterval(() => {
+   engineEventCreator.processEvents();
    fastEngines.forEach((engine) => engine.doAction());
+   i++;
+   //    console.log(1000 / ((Date.now() - startTime) / i));
 }, 1000 / 60);
 
 setInterval(() => {

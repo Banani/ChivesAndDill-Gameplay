@@ -24,13 +24,13 @@ export class AreaSpellService extends EventParser {
             return;
          }
 
-         this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
+         this.engineEventCrator.asyncCeateEvent<PlayerCastedSpellEvent>({
             type: EngineEvents.PlayerCastedSpell,
             casterId: character.id,
             spell: event.spell,
          });
 
-         this.engineEventCrator.createEvent<SpellLandedEvent>({
+         this.engineEventCrator.asyncCeateEvent<SpellLandedEvent>({
             type: FightingEngineEvents.SpellLanded,
             spell: event.spell,
             caster: character,
@@ -39,7 +39,7 @@ export class AreaSpellService extends EventParser {
 
          for (const i in omit(allCharacters, [character.id])) {
             if (distanceBetweenTwoPoints(event.directionLocation, allCharacters[i].location) < event.spell.radius) {
-               this.engineEventCrator.createEvent<SpellReachedTargetEvent>({
+               this.engineEventCrator.asyncCeateEvent<SpellReachedTargetEvent>({
                   type: FightingEngineEvents.SpellReachedTarget,
                   spell: event.spell,
                   caster: character,

@@ -54,13 +54,13 @@ export class ProjectilesService extends EventParser {
             ...this.projectileEngine.calculateAngles(projectile),
          };
 
-         this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
+         this.engineEventCrator.asyncCeateEvent<PlayerCastedSpellEvent>({
             type: EngineEvents.PlayerCastedSpell,
             casterId: character.id,
             spell: event.spell,
          });
 
-         this.engineEventCrator.createEvent<ProjectileCreatedEvent>({
+         this.engineEventCrator.asyncCeateEvent<ProjectileCreatedEvent>({
             type: EngineEvents.ProjectileCreated,
             projectileId: this.increment.toString(),
             currentLocation: character.location,
@@ -87,13 +87,13 @@ export class ProjectilesService extends EventParser {
             ...this.projectileEngine.calculateAngles(projectile),
          };
 
-         this.engineEventCrator.createEvent<SubSpellCastedEvent>({
+         this.engineEventCrator.asyncCeateEvent<SubSpellCastedEvent>({
             type: FightingEngineEvents.SubSpellCasted,
             casterId: event.casterId,
             spell: event.spell,
          });
 
-         this.engineEventCrator.createEvent<ProjectileCreatedEvent>({
+         this.engineEventCrator.asyncCeateEvent<ProjectileCreatedEvent>({
             type: EngineEvents.ProjectileCreated,
             projectileId: this.increment.toString(),
             currentLocation: character.location,
@@ -112,7 +112,7 @@ export class ProjectilesService extends EventParser {
    handleRemoveProjectile: EngineEventHandler<RemoveProjectileEvent> = ({ event }) => {
       delete this.projectiles[event.projectileId];
 
-      this.engineEventCrator.createEvent<ProjectileRemovedEvent>({
+      this.engineEventCrator.asyncCeateEvent<ProjectileRemovedEvent>({
          type: EngineEvents.ProjectileRemoved,
          projectileId: event.projectileId,
       });

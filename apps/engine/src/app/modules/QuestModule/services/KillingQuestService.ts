@@ -37,7 +37,7 @@ export class KillingQuestService extends EventParser {
 
             if (matched) {
                stagePart.currentAmount++;
-               this.engineEventCrator.createEvent<KillingStagePartProgress>({
+               this.engineEventCrator.asyncCeateEvent<KillingStagePartProgress>({
                   type: QuestEngineEvents.KILLING_STAGE_PART_PROGRESS,
                   questId: stagePart.questId,
                   stageId: stagePart.stageId,
@@ -48,7 +48,7 @@ export class KillingQuestService extends EventParser {
                });
 
                if (stagePart.currentAmount === stagePart.amount) {
-                  this.engineEventCrator.createEvent<StagePartCompletedEvent>({
+                  this.engineEventCrator.asyncCeateEvent<StagePartCompletedEvent>({
                      type: QuestEngineEvents.STAGE_PART_COMPLETED,
                      questId: stagePart.questId,
                      stageId: stagePart.stageId,
@@ -69,7 +69,7 @@ export class KillingQuestService extends EventParser {
             if (stagePart.resetConditions?.some((condition) => condition.type === QuestResetEvent.PlayerLostHp)) {
                stagePart.currentAmount = 0;
 
-               this.engineEventCrator.createEvent<KillingStagePartProgress>({
+               this.engineEventCrator.asyncCeateEvent<KillingStagePartProgress>({
                   type: QuestEngineEvents.KILLING_STAGE_PART_PROGRESS,
                   questId: stagePart.questId,
                   stageId: stagePart.stageId,

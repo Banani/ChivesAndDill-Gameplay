@@ -16,7 +16,7 @@ export class SpellEffectApplierService extends EventParser {
    handleSpellLanded: EngineEventHandler<SpellLandedEvent> = ({ event }) => {
       if (event.spell.spellEffectsOnDirectionLocation) {
          forEach(event.spell.spellEffectsOnDirectionLocation, (spellEffect) => {
-            this.engineEventCrator.createEvent<ApplyLocationSpellEffectEvent>({
+            this.engineEventCrator.asyncCeateEvent<ApplyLocationSpellEffectEvent>({
                type: EngineEvents.ApplyLocationSpellEffect,
                caster: event.caster,
                effect: spellEffect,
@@ -27,7 +27,7 @@ export class SpellEffectApplierService extends EventParser {
 
       if (event.spell.spellEffectsOnCasterOnSpellHit) {
          forEach(event.spell.spellEffectsOnCasterOnSpellHit, (spellEffect) => {
-            this.engineEventCrator.createEvent<ApplyTargetSpellEffectEvent>({
+            this.engineEventCrator.asyncCeateEvent<ApplyTargetSpellEffectEvent>({
                type: EngineEvents.ApplyTargetSpellEffect,
                caster: event.caster,
                target: event.caster,
@@ -40,7 +40,7 @@ export class SpellEffectApplierService extends EventParser {
    handleSpellReachedTarget: EngineEventHandler<SpellReachedTargetEvent> = ({ event }) => {
       if (event.spell.spellEffectsOnTarget) {
          forEach(event.spell.spellEffectsOnTarget, (spellEffect) => {
-            this.engineEventCrator.createEvent<ApplyTargetSpellEffectEvent>({
+            this.engineEventCrator.asyncCeateEvent<ApplyTargetSpellEffectEvent>({
                type: EngineEvents.ApplyTargetSpellEffect,
                caster: event.caster,
                target: event.target,

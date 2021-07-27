@@ -16,7 +16,7 @@ export class HealEffectService extends EventParser {
       if (event.effect.type === SpellEffectType.Heal) {
          const effect = event.effect as HealEffect;
 
-         this.engineEventCrator.createEvent<TakeCharacterHealthPointsEvent>({
+         this.engineEventCrator.asyncCeateEvent<TakeCharacterHealthPointsEvent>({
             type: EngineEvents.AddCharacterHealthPoints,
             attackerId: event.caster.id,
             characterId: event.target.id,

@@ -33,7 +33,7 @@ export class PlayerMovementNotifier extends EventParser {
       const currentSocket = services.socketConnectionService.getSocketById(currentCharacter.socketId);
 
       currentSocket.on(ClientMessages.PlayerStartMove, (movement) => {
-         this.engineEventCrator.createEvent<PlayerTriesToStartedMovementEvent>({
+         this.engineEventCrator.asyncCeateEvent<PlayerTriesToStartedMovementEvent>({
             type: EngineEvents.PlayerTriesToStartedMovement,
             characterId: currentCharacter.id,
             movement,
@@ -41,7 +41,7 @@ export class PlayerMovementNotifier extends EventParser {
       });
 
       currentSocket.on(ClientMessages.PlayerStopMove, (movement) => {
-         this.engineEventCrator.createEvent<PlayerStopedMovementVectorEvent>({
+         this.engineEventCrator.asyncCeateEvent<PlayerStopedMovementVectorEvent>({
             type: EngineEvents.PlayerStopedMovementVector,
             characterId: currentCharacter.id,
             movement,

@@ -60,7 +60,7 @@ export class ChannelService extends EventParser {
             return;
          }
 
-         this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
+         this.engineEventCrator.asyncCeateEvent<PlayerCastedSpellEvent>({
             type: EngineEvents.PlayerCastedSpell,
             casterId: event.casterId,
             spell: event.spell,
@@ -94,7 +94,7 @@ export class ChannelService extends EventParser {
 
    handleSpellChannelingFinished: EngineEventHandler<SpellChannelingFinishedEvent> = ({ event, services }) => {
       const allCharacters = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() };
-      this.engineEventCrator.createEvent<SpellLandedEvent>({
+      this.engineEventCrator.asyncCeateEvent<SpellLandedEvent>({
          type: FightingEngineEvents.SpellLanded,
          spell: this.activeChannelSpells[event.channelId].spell,
          caster: this.activeChannelSpells[event.channelId].caster,
@@ -122,7 +122,7 @@ export class ChannelService extends EventParser {
          this.channelEngine.stopChanneling(characterId);
          delete this.activeChannelSpells[characterId];
 
-         this.engineEventCrator.createEvent<SpellChannelingInterruptedEvent>({
+         this.engineEventCrator.asyncCeateEvent<SpellChannelingInterruptedEvent>({
             type: EngineEvents.SpellChannelingInterrupted,
             channelId: characterId,
          });

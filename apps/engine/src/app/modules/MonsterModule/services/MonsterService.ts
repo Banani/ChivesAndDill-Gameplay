@@ -68,7 +68,7 @@ export class MonsterService extends EventParser {
          spells: event.monsterRespawn.monsterTemplate.spells,
          attackFrequency: event.monsterRespawn.monsterTemplate.attackFrequency,
       };
-      this.engineEventCrator.createEvent<NewMonsterCreatedEvent>({
+      this.engineEventCrator.asyncCeateEvent<NewMonsterCreatedEvent>({
          type: MonsterEngineEvents.NewMonsterCreated,
          monster: this.monsters[id],
       });
@@ -78,7 +78,7 @@ export class MonsterService extends EventParser {
       if (this.monsters[event.characterId]) {
          this.monsters[event.characterId].currentHp = Math.max(this.monsters[event.characterId].currentHp - event.amount, 0);
 
-         this.engineEventCrator.createEvent<CharacterLostHpEvent>({
+         this.engineEventCrator.asyncCeateEvent<CharacterLostHpEvent>({
             type: EngineEvents.CharacterLostHp,
             characterId: event.characterId,
             amount: event.amount,
@@ -86,7 +86,7 @@ export class MonsterService extends EventParser {
          });
 
          if (this.monsters[event.characterId].currentHp === 0) {
-            this.engineEventCrator.createEvent<MonsterDiedEvent>({
+            this.engineEventCrator.asyncCeateEvent<MonsterDiedEvent>({
                type: MonsterEngineEvents.MonsterDied,
                monster: this.monsters[event.characterId],
                killerId: event.attackerId,
@@ -102,7 +102,7 @@ export class MonsterService extends EventParser {
             this.monsters[event.characterId].maxHp
          );
 
-         this.engineEventCrator.createEvent<CharacterGotHpEvent>({
+         this.engineEventCrator.asyncCeateEvent<CharacterGotHpEvent>({
             type: EngineEvents.CharacterGotHp,
             characterId: event.characterId,
             amount: event.amount,
@@ -133,7 +133,7 @@ export class MonsterService extends EventParser {
       monster.currentHp = monster.maxHp;
       monster.currentSpellPower = monster.maxSpellPower;
 
-      this.engineEventCrator.createEvent<CharacterGotHpEvent>({
+      this.engineEventCrator.asyncCeateEvent<CharacterGotHpEvent>({
          type: EngineEvents.CharacterGotHp,
          characterId: monsterId,
          amount: healthPointsToMax,

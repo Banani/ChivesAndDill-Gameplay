@@ -53,7 +53,7 @@ export class AreaEffectService extends EventParser {
             caster: event.caster,
          };
 
-         this.engineEventCrator.createEvent<AreaSpellEffectCreatedEvent>({
+         this.engineEventCrator.asyncCeateEvent<AreaSpellEffectCreatedEvent>({
             type: FightingEngineEvents.AreaSpellEffectCreated,
             location: event.location,
             areaSpellEffectId: this.increment.toString(),
@@ -73,7 +73,7 @@ export class AreaEffectService extends EventParser {
             caster: event.caster,
          };
 
-         this.engineEventCrator.createEvent<AreaSpellEffectCreatedEvent>({
+         this.engineEventCrator.asyncCeateEvent<AreaSpellEffectCreatedEvent>({
             type: FightingEngineEvents.AreaSpellEffectCreated,
             location: event.target.location,
             areaSpellEffectId: this.increment.toString(),
@@ -85,7 +85,7 @@ export class AreaEffectService extends EventParser {
    handleRemoveAreaSpellEffect: EngineEventHandler<RemoveAreaSpellEffectEvent> = ({ event }) => {
       delete this.activeAreaSpellEffects[event.areaId];
 
-      this.engineEventCrator.createEvent<AreaSpellEffectRemovedEvent>({
+      this.engineEventCrator.asyncCeateEvent<AreaSpellEffectRemovedEvent>({
          type: FightingEngineEvents.AreaSpellEffectRemoved,
          areaSpellEffectId: event.areaId,
       });
