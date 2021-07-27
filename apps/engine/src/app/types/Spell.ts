@@ -2,7 +2,7 @@ import { AreaType, SpellEffectType, SpellType } from '../SpellType';
 
 export interface Spell {
    type: SpellType;
-   name: string;
+   name?: string;
    range: number;
    cooldown: number;
    image?: string;

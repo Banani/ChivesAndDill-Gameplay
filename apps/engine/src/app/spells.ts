@@ -11,7 +11,6 @@ export const ALL_SPELLS: Record<string, Spell> = {
       channelSpells: [
          {
             type: SpellType.Projectile,
-            name: 'MonsterInstant1',
             range: 500,
             spellPowerCost: 10,
             cooldown: 1000,
@@ -28,7 +27,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
 
-      channelFrequency: 5000,
+      channelFrequency: 200,
       channelTime: 5000,
 
       // Cone
@@ -44,31 +43,10 @@ export const ALL_SPELLS: Record<string, Spell> = {
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       description: 'Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.',
       spellEffectsOnTarget: [
-         {
-            type: SpellEffectType.Damage,
-            amount: 10,
-         },
       ],
       spellEffectsOnDirectionLocation: [
-         {
-            type: SpellEffectType.Area,
-            areaType: AreaType.Circle,
-            radius: 100,
-            period: 1000 * 2,
-            attackFrequency: 1000,
-            spellEffects: [
-               {
-                  type: SpellEffectType.Damage,
-                  amount: 1,
-               },
-            ],
-         },
       ],
       spellEffectsOnCasterOnSpellHit: [
-         {
-            type: SpellEffectType.Heal,
-            amount: 50,
-         },
       ],
    },
    DirectHit: {
