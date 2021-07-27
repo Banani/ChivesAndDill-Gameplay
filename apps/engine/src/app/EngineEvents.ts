@@ -30,4 +30,5 @@ export enum EngineEvents {
    RemoveAreaSpellEffect = 'RemoveAreaSpellEffect',
    SpellChannelingFinished = 'SpellChannelingFinished',
    SpellChannelingInterrupted = 'SpellChannelingInterrupted',
+   RemoveTickOverTimeEffect = 'TickOverTimeFinished',
 }

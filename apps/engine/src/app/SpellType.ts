@@ -15,4 +15,5 @@ export enum SpellEffectType {
    Heal = 'Heal',
    Area = 'Area',
    GenerateSpellPower = 'GenerateSpellPower',
+   TickEffectOverTime = 'TickEffectOverTime',
 }

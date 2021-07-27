@@ -16,7 +16,7 @@ import {
 } from '../../../../types';
 import { Monster } from '../../../MonsterModule/types';
 import { ChannelEngine } from '../../engines/ChannelEngine';
-import { AreaSpellEffectRemovedEvent, FightingEngineEvents, SpellLandedEvent } from '../../Events';
+import { FightingEngineEvents, SpellLandedEvent } from '../../Events';
 
 export interface ChannelSpellsTrack {
    id: string;

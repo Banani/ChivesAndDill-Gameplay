@@ -48,4 +48,11 @@ export interface GenerateSpellPowerEffect extends SpellEffect {
    amount: number;
 }
 
-type AllEffects = DamageEffect | HealEffect | AreaEffect | GenerateSpellPowerEffect;
+export interface TickOverTimeEffect extends SpellEffect {
+   period: number;
+   activationFrequency: number;
+   spellEffects: AllEffects[];
+   spellId: string;
+}
+
+type AllEffects = DamageEffect | HealEffect | AreaEffect | GenerateSpellPowerEffect | TickOverTimeEffect;

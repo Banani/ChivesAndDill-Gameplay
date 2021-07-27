@@ -3,29 +3,12 @@ import type { Spell } from './types/Spell';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    test: {
-      type: SpellType.Channel,
+      type: SpellType.DirectInstant,
       name: 'test',
       range: 4000,
       spellPowerCost: 10,
       cooldown: 500,
-      channelSpells: [
-         {
-            type: SpellType.Projectile,
-            range: 500,
-            spellPowerCost: 10,
-            cooldown: 1000,
-            speed: 15,
-            spellEffectsOnTarget: [
-               {
-                  type: SpellEffectType.Damage,
-                  amount: 10,
-               },
-            ],
-            channelSpells: [],
-            spellEffectsOnDirectionLocation: [],
-            spellEffectsOnCasterOnSpellHit: [],
-         },
-      ],
+      channelSpells: [],
 
       channelFrequency: 200,
       channelTime: 5000,
@@ -43,8 +26,28 @@ export const ALL_SPELLS: Record<string, Spell> = {
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       description: 'Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.',
       spellEffectsOnTarget: [
+         {
+            type: SpellEffectType.TickEffectOverTime,
+            spellId: 'spell_123',
+            period: 4000,
+            activationFrequency: 200,
+            spellEffects: [{ type: SpellEffectType.Damage, amount: 25 }],
+         },
       ],
       spellEffectsOnDirectionLocation: [
+         //  {
+         //     type: SpellEffectType.Area,
+         //     areaType: AreaType.Circle,
+         //     radius: 100,
+         //     period: 1000 * 2,
+         //     attackFrequency: 1000,
+         //     spellEffects: [
+         //        {
+         //           type: SpellEffectType.Damage,
+         //           amount: 1,
+         //        },
+         //     ],
+         //  },
       ],
       spellEffectsOnCasterOnSpellHit: [
       ],

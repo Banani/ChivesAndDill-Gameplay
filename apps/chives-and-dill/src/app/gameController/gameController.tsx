@@ -1,7 +1,7 @@
 import { ClientMessages } from '@bananos/types';
 import React, { useContext, useEffect, useState } from 'react';
 import { SocketContext } from '../gameController/socketContext';
-import { GameControllerContext } from "./gameControllerContext";
+import { GameControllerContext } from './gameControllerContext';
 import { useSelector } from 'react-redux';
 import { selectCharacters, selectActivePlayer } from '../../stores';
 
@@ -133,12 +133,12 @@ const GameController = ({ children }) => {
 
    const updateMousePosition = (e) => {
       setMousePosition({ x: e.offsetX, y: e.offsetY });
-   }
+   };
 
    useEffect(() => {
-      window.addEventListener("mousemove", updateMousePosition);
+      window.addEventListener('mousemove', updateMousePosition);
 
-      return () => window.removeEventListener("mousemove", updateMousePosition);
+      return () => window.removeEventListener('mousemove', updateMousePosition);
    }, []);
 
    const clickHandler = (event) => {
@@ -153,10 +153,7 @@ const GameController = ({ children }) => {
 
    return (
       <GameControllerContext.Provider value={gameControllerContext}>
-         <div
-            onKeyDown={(event) => keyPressHandler(event)}
-            onKeyUp={keyUpHandler} onClick={(event) => clickHandler(event)}
-            tabIndex={0}>
+         <div onKeyDown={(event) => keyPressHandler(event)} onKeyUp={keyUpHandler} onClick={(event) => clickHandler(event)} tabIndex={0}>
             {children}
          </div>
       </GameControllerContext.Provider>

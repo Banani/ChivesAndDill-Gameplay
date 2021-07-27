@@ -28,11 +28,12 @@ import {
    RespawnMonsterEngine,
    RespawnService,
 } from './app/modules/MonsterModule';
-import { ProjectileMovement, AreaEffectsEngine } from './app/modules/FightingModule/engines';
+import { ProjectileMovement, AreaEffectsEngine, TickOverTimeEffectEngine } from './app/modules/FightingModule/engines';
 import { AreaEffectService } from './app/modules/FightingModule/services/EffectHandlers/AreaEffectService';
 import { GenerateSpellPowerEffectService } from './app/modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
 import { ChannelService } from './app/modules/FightingModule/services/SpellHandlers/ChannelService';
 import { ChannelEngine } from './app/modules/FightingModule/engines/ChannelEngine';
+import { TickEffectOverTimeService } from './app/modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -58,14 +59,16 @@ const respawnMonsterEngine = new RespawnMonsterEngine();
 const monsterAttackEngine = new MonsterAttackEngine();
 const areaEffectsEngine = new AreaEffectsEngine();
 const channelEngine = new ChannelEngine();
+const tickOverTimeEffectEngine = new TickOverTimeEffectEngine();
 
 const fastEngines = [
    playerMovementEngine,
    playerMovementEngine,
    projectileMovement,
-   //    monsterAttackEngine,
+   monsterAttackEngine,
    areaEffectsEngine,
    channelEngine,
+   tickOverTimeEffectEngine,
    //    11111111111111111111111111111111111111111111111111111111,
 ];
 const slowEngines = [respawnMonsterEngine];
@@ -104,6 +107,7 @@ const services: Services = {
    channelService: new ChannelService(channelEngine),
 
    spellNotifier: new SpellNotifier(),
+   tickEffectOverTimeService: new TickEffectOverTimeService(tickOverTimeEffectEngine),
 };
 
 const engineEventCreator = new EngineEventCrator(services);
