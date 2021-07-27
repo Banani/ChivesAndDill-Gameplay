@@ -3,15 +3,32 @@ import type { Spell } from './types/Spell';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    test: {
-      type: SpellType.DirectInstant,
+      type: SpellType.Channel,
       name: 'test',
       range: 4000,
       spellPowerCost: 10,
       cooldown: 500,
-      channelSpells: [],
+      channelSpells: [
+         {
+            type: SpellType.Projectile,
+            range: 500,
+            spellPowerCost: 10,
+            cooldown: 1000,
+            speed: 15,
+            spellEffectsOnTarget: [
+               {
+                  type: SpellEffectType.Damage,
+                  amount: 10,
+               },
+            ],
+            channelSpells: [],
+            spellEffectsOnDirectionLocation: [],
+            spellEffectsOnCasterOnSpellHit: [],
+         },
+      ],
 
       channelFrequency: 200,
-      channelTime: 5000,
+      channelTime: 3000,
 
       // Cone
       angle: Math.PI * 2,
@@ -26,13 +43,13 @@ export const ALL_SPELLS: Record<string, Spell> = {
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       description: 'Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.',
       spellEffectsOnTarget: [
-         {
-            type: SpellEffectType.TickEffectOverTime,
-            spellId: 'spell_123',
-            period: 4000,
-            activationFrequency: 200,
-            spellEffects: [{ type: SpellEffectType.Damage, amount: 25 }],
-         },
+         // {
+         //    type: SpellEffectType.TickEffectOverTime,
+         //    spellId: 'spell_123',
+         //    period: 4000,
+         //    activationFrequency: 200,
+         //    spellEffects: [{ type: SpellEffectType.Damage, amount: 25 }],
+         // },
       ],
       spellEffectsOnDirectionLocation: [
          //  {
@@ -92,11 +109,11 @@ export const ALL_SPELLS: Record<string, Spell> = {
       speed: 4,
       cooldown: 5000,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
-      description: 'Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.',
+      description: 'Heal target for 250hp',
       spellEffectsOnTarget: [
          {
             type: SpellEffectType.Heal,
-            amount: 35,
+            amount: 250,
          },
       ],
       spellEffectsOnDirectionLocation: [],
@@ -166,7 +183,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       speed: 1000,
       cooldown: 0,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
-      description: 'Inflicts 69 Fire damage to an enemy and causes them to burn for 8 sec.',
+      description: 'Inflicts 100 damage to your target.',
       spellEffectsOnTarget: [
          {
             type: SpellEffectType.Damage,
