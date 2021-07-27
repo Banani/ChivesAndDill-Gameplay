@@ -65,4 +65,11 @@ export interface Spell {
    type: string;
    image: string;
    description: string;
+   channelTime: number;
+}
+
+export interface ActiveSpellCast {
+   casterid: number;
+   castTime: number;
+   spellCastTimeStamp: number;
 }

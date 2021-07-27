@@ -74,7 +74,7 @@ const GameController = ({ children }) => {
                   x: players[activePlayerId]?.location.x + mousePosition.x - gameWidth / 2,
                   y: players[activePlayerId]?.location.y + mousePosition.y - gameHeight / 2,
                },
-               spellName: 'DirectHit',
+               spellName: 'ArcaneBarrage',
             });
             setKeysState({ ...keysState, 1: true });
             break;

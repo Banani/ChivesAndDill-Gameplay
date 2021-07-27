@@ -17,6 +17,7 @@ import {
    updateCharacterSpellPower,
    areaSpellEffectCreated,
    areaSpellEffectRemoved,
+   addActiveSpellCast,
 } from '../../stores';
 import { SocketContext } from './socketContext';
 
@@ -119,6 +120,11 @@ const SocketCommunicator = ({ children }) => {
 
          context.socket.on(FightingEngineMessages.ChannelingInterrupted, (event) => {
             console.log(event);
+         });
+
+         context.socket.on(FightingEngineMessages.SpellHasBeenCast, (event) => {
+            console.log(event)
+            dispatch(addActiveSpellCast({ event }));
          });
       }
    }, [context]);

@@ -1,4 +1,4 @@
-import { AreaType, SpellEffectType, SpellType } from '../SpellType';
+import type { AreaType, SpellEffectType, SpellType } from '../SpellType';
 
 interface BaseSpell {
    range: number;
