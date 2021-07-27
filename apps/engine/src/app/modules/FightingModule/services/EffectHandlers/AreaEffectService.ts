@@ -2,7 +2,14 @@ import { AreaEffect } from 'apps/engine/src/app/types/Spell';
 import { EngineEvents } from '../../../../EngineEvents';
 import { EventParser } from '../../../../EventParser';
 import { SpellEffectType } from '../../../../SpellType';
-import { ApplyLocationSpellEffectEvent, Character, EngineEventHandler, Location, RemoveAreaSpellEffectEvent } from '../../../../types';
+import {
+   ApplyLocationSpellEffectEvent,
+   ApplyTargetSpellEffectEvent,
+   Character,
+   EngineEventHandler,
+   Location,
+   RemoveAreaSpellEffectEvent,
+} from '../../../../types';
 import { Monster } from '../../../MonsterModule/types';
 import { AreaEffectsEngine } from '../../engines';
 import { AreaSpellEffectCreatedEvent, AreaSpellEffectRemovedEvent, FightingEngineEvents } from '../../Events';
@@ -25,6 +32,7 @@ export class AreaEffectService extends EventParser {
       this.areaEffectEngine = areaEffectEngine;
       this.eventsToHandlersMap = {
          [EngineEvents.ApplyLocationSpellEffect]: this.handleApplyLocationSpellEffect,
+         [EngineEvents.ApplyTargetSpellEffect]: this.handleApplyTargetSpellEffect,
          [EngineEvents.RemoveAreaSpellEffect]: this.handleRemoveAreaSpellEffect,
       };
    }
@@ -48,6 +56,26 @@ export class AreaEffectService extends EventParser {
          this.engineEventCrator.createEvent<AreaSpellEffectCreatedEvent>({
             type: FightingEngineEvents.AreaSpellEffectCreated,
             location: event.location,
+            areaSpellEffectId: this.increment.toString(),
+            effect: event.effect as AreaEffect,
+         });
+      }
+   };
+
+   handleApplyTargetSpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event }) => {
+      if (event.effect.type === SpellEffectType.Area) {
+         this.increment++;
+         this.activeAreaSpellEffects[this.increment] = {
+            id: this.increment.toString(),
+            creationTime: Date.now(),
+            areaEffect: event.effect as AreaEffect,
+            location: event.target.location,
+            caster: event.caster,
+         };
+
+         this.engineEventCrator.createEvent<AreaSpellEffectCreatedEvent>({
+            type: FightingEngineEvents.AreaSpellEffectCreated,
+            location: event.target.location,
             areaSpellEffectId: this.increment.toString(),
             effect: event.effect as AreaEffect,
          });

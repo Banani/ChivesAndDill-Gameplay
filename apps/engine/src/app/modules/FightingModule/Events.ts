@@ -1,5 +1,4 @@
-import { EngineEvents } from '../../EngineEvents';
-import { AreaEffect, Character, EngineEvent, EngineEventHandler } from '../../types';
+import { AreaEffect, Character, EngineEvent, EngineEventHandler, SubSpell } from '../../types';
 import { Spell, Location } from '../../types';
 
 export enum FightingEngineEvents {
@@ -7,16 +6,17 @@ export enum FightingEngineEvents {
    SpellLanded = 'SpellLanded',
    AreaSpellEffectCreated = 'AreaSpellEffectCreated',
    AreaSpellEffectRemoved = 'AreaSpellEffectRemoved',
+   SubSpellCasted = 'SubSpellCasted',
 }
 
 export interface SpellReachedTargetEvent extends EngineEvent {
-   spell: Spell;
+   spell: Spell | SubSpell;
    caster: Character;
    target: Character;
 }
 
 export interface SpellLandedEvent extends EngineEvent {
-   spell: Spell;
+   spell: Spell | SubSpell;
    caster: Character;
    location: Location;
    angle?: number;
@@ -32,9 +32,16 @@ export interface AreaSpellEffectRemovedEvent extends EngineEvent {
    areaSpellEffectId: string;
 }
 
+export interface SubSpellCastedEvent extends EngineEvent {
+   type: FightingEngineEvents.SubSpellCasted;
+   casterId: string;
+   spell: SubSpell;
+}
+
 export interface FightingEngineEventsMap {
    [FightingEngineEvents.SpellReachedTarget]: EngineEventHandler<SpellReachedTargetEvent>;
    [FightingEngineEvents.SpellLanded]: EngineEventHandler<SpellLandedEvent>;
    [FightingEngineEvents.AreaSpellEffectCreated]: EngineEventHandler<AreaSpellEffectCreatedEvent>;
    [FightingEngineEvents.AreaSpellEffectRemoved]: EngineEventHandler<AreaSpellEffectRemovedEvent>;
+   [FightingEngineEvents.SubSpellCasted]: EngineEventHandler<SubSpellCastedEvent>;
 }

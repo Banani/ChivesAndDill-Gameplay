@@ -18,7 +18,7 @@ export class DamageEffectService extends EventParser {
 
          this.engineEventCrator.createEvent<TakeCharacterHealthPointsEvent>({
             type: EngineEvents.TakeCharacterHealthPoints,
-            attackerId: event.caster.id,
+            attackerId: event.caster?.id ?? null,
             characterId: event.target.id,
             amount: effect.amount,
          });

@@ -3,25 +3,15 @@ import type { Spell } from './types/Spell';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    test: {
-      type: SpellType.DirectInstant,
+      type: SpellType.Area,
       name: 'test',
       range: 4000,
-      spellPowerCost: 10,
-      cooldown: 500,
-      channelSpells: [],
-
-      channelFrequency: 200,
-      channelTime: 5000,
-
-      // Cone
-      angle: Math.PI * 2,
+      spellPowerCost: 0,
+      cooldown: 0,
 
       // Area
-      radius: 50,
+      radius: 400,
       areaType: AreaType.Circle,
-
-      // Projectile
-      speed: 15,
 
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       description: 'Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.',
@@ -31,23 +21,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
             spellId: 'spell_123',
             period: 4000,
             activationFrequency: 200,
-            spellEffects: [{ type: SpellEffectType.Damage, amount: 25 }],
+            spellEffects: [{ type: SpellEffectType.Damage, amount: 8 }],
          },
-      ],
-      spellEffectsOnDirectionLocation: [
-         //  {
-         //     type: SpellEffectType.Area,
-         //     areaType: AreaType.Circle,
-         //     radius: 100,
-         //     period: 1000 * 2,
-         //     attackFrequency: 1000,
-         //     spellEffects: [
-         //        {
-         //           type: SpellEffectType.Damage,
-         //           amount: 1,
-         //        },
-         //     ],
-         //  },
       ],
       spellEffectsOnCasterOnSpellHit: [
          {
@@ -85,27 +60,22 @@ export const ALL_SPELLS: Record<string, Spell> = {
             ],
          },
       ],
-      spellEffectsOnCasterOnSpellHit: [],
-      channelSpells: [],
    },
    Projectile: {
       type: SpellType.Projectile,
       name: 'Projectile',
       range: 4000,
-      spellPowerCost: 10,
-      speed: 4,
-      cooldown: 5000,
+      spellPowerCost: 0,
+      speed: 40,
+      cooldown: 0,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       description: 'Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.',
       spellEffectsOnTarget: [
          {
-            type: SpellEffectType.Heal,
-            amount: 35,
+            type: SpellEffectType.Damage,
+            amount: 1005,
          },
       ],
-      spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCasterOnSpellHit: [],
-      channelSpells: [],
    },
    MonsterProjectile: {
       type: SpellType.Projectile,
@@ -122,9 +92,6 @@ export const ALL_SPELLS: Record<string, Spell> = {
             amount: 10,
          },
       ],
-      spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCasterOnSpellHit: [],
-      channelSpells: [],
    },
    MonsterInstant1: {
       type: SpellType.DirectInstant,
@@ -140,9 +107,6 @@ export const ALL_SPELLS: Record<string, Spell> = {
             amount: 10,
          },
       ],
-      spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCasterOnSpellHit: [],
-      channelSpells: [],
    },
    MonsterInstant2: {
       type: SpellType.DirectInstant,
@@ -158,9 +122,6 @@ export const ALL_SPELLS: Record<string, Spell> = {
             amount: 5,
          },
       ],
-      spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCasterOnSpellHit: [],
-      channelSpells: [],
    },
    InstantProjectile: {
       type: SpellType.Projectile,
@@ -177,8 +138,106 @@ export const ALL_SPELLS: Record<string, Spell> = {
             amount: 100,
          },
       ],
-      spellEffectsOnDirectionLocation: [],
-      spellEffectsOnCasterOnSpellHit: [],
-      channelSpells: [],
+   },
+
+   DestroyerBasic: {
+      type: SpellType.DirectInstant,
+      name: 'DestroyerBasic',
+      range: 40,
+      spellPowerCost: 10,
+      cooldown: 0,
+      image: '../assets/spritesheets/spells/mage/fireball.jpg',
+      description: 'Inflicts 69 Fire damage to an enemy and causes them to burn for 8 sec.',
+      spellEffectsOnTarget: [
+         {
+            type: SpellEffectType.Damage,
+            amount: 100,
+         },
+      ],
+   },
+
+   DestroyerPotatoFlyAttack: {
+      type: SpellType.Channel,
+      name: 'DestroyerPotatoFlyAttack',
+      range: 4000,
+      spellPowerCost: 0,
+      cooldown: 0,
+      channelFrequency: 2000,
+      channelTime: 2000,
+      channelSpells: [
+         {
+            name: 'DestroyerPotatoFlyAttack_DirectInstant',
+            type: SpellType.DirectInstant,
+            spellEffectsOnTarget: [
+               {
+                  type: SpellEffectType.Damage,
+                  amount: 50,
+               },
+            ],
+            spellEffectsOnDirectionLocation: [
+               {
+                  type: SpellEffectType.Area,
+                  areaType: AreaType.Circle,
+                  radius: 200,
+                  period: 100000 * 10,
+                  attackFrequency: 1000,
+                  spellEffects: [
+                     {
+                        type: SpellEffectType.Damage,
+                        amount: 50,
+                     },
+                  ],
+               },
+            ],
+         },
+      ],
+   },
+
+   DestroyerRoarAttack: {
+      type: SpellType.Channel,
+      name: 'DestroyerRoarAttack',
+      range: 4000,
+      spellPowerCost: 0,
+      cooldown: 0,
+      channelFrequency: 2000,
+      channelTime: 2000,
+      channelSpells: [
+         {
+            name: 'DestroyerRoarAttack_AngleBlast',
+            type: SpellType.AngleBlast,
+            angle: Math.PI * 2,
+            range: 4000,
+            spellEffectsOnTarget: [
+               {
+                  type: SpellEffectType.Damage,
+                  amount: 100,
+               },
+            ],
+         },
+      ],
+   },
+
+   DestroyerBreatheAttack: {
+      type: SpellType.Channel,
+      name: 'DestroyerBreatheAttack',
+      range: 4000,
+      spellPowerCost: 0,
+      cooldown: 0,
+      channelFrequency: 200,
+      channelTime: 2000,
+      channelSpells: [
+         {
+            name: 'DestroyerBreatheAttack_AngleBlast',
+            type: SpellType.AngleBlast,
+            angle: Math.PI / 3,
+            range: 1000,
+            spellEffectsOnTarget: [
+               {
+                  type: SpellEffectType.Damage,
+                  amount: 15,
+               },
+            ],
+         },
+      ],
    },
 };

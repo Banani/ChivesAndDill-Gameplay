@@ -35,9 +35,10 @@ export class TickEffectOverTimeService extends EventParser {
    handleApplySpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event }) => {
       if (event.effect.type === SpellEffectType.TickEffectOverTime) {
          const effect = event.effect as TickOverTimeEffect;
+         const id = `${effect.spellId}_${event.target.id}`;
 
-         this.activeTickEffectOverTime[effect.spellId] = {
-            id: effect.spellId,
+         this.activeTickEffectOverTime[id] = {
+            id,
             creationTime: Date.now(),
             effect,
             target: event.target,

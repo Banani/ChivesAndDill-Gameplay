@@ -7,14 +7,14 @@ import { QuestEngineEvents } from '../../modules/QuestModule/Events';
 import { Character } from '../Character';
 import { Location } from '../Location';
 import { Services } from '../Services';
-import { Spell, SpellEffect } from '../Spell';
+import { ProjectileSpell, ProjectileSubSpell, Spell, SpellEffect, SubSpell } from '../Spell';
 
 export interface EngineEvent {
    type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | FightingEngineEvents;
 }
 
 export interface PlayerCastedSpellEvent extends EngineEvent {
-   casterId: string;
+   casterId: string | null;
    spell: Spell;
 }
 
@@ -113,12 +113,12 @@ export interface PlayerStopedMovementVectorEvent extends EngineEvent {
 export interface ProjectileCreatedEvent extends EngineEvent {
    projectileId: string;
    currentLocation: Location;
-   spell: Spell;
+   spell: ProjectileSubSpell | ProjectileSpell;
 }
 
 export interface ProjectileMovedEvent extends EngineEvent {
    characterId: string;
-   spell: Spell;
+   spell: ProjectileSpell | ProjectileSubSpell;
    directionLocation: Location;
    startLocation: Location;
    currentLocation: Location;
@@ -131,7 +131,7 @@ export interface ProjectileMovedEvent extends EngineEvent {
 
 export interface Projectile {
    characterId: string;
-   spell: Spell;
+   spell: ProjectileSubSpell | ProjectileSpell;
    directionLocation: Location;
    startLocation: Location;
    currentLocation: Location;
@@ -149,8 +149,15 @@ export interface RemoveProjectileEvent extends EngineEvent {
 }
 
 export interface PlayerCastSpellEvent extends EngineEvent {
-   casterId: string;
+   casterId: string | null;
    spell: Spell;
+   directionLocation: Vector;
+}
+
+export interface PlayerCastSubSpellEvent extends EngineEvent {
+   type: EngineEvents.PlayerCastSubSpell;
+   casterId: string | null;
+   spell: SubSpell;
    directionLocation: Vector;
 }
 
@@ -167,7 +174,7 @@ export interface ApplyLocationSpellEffectEvent extends EngineEvent {
 }
 
 export interface TakeCharacterHealthPointsEvent extends EngineEvent {
-   attackerId: string;
+   attackerId: string | null;
    characterId: string;
    amount: number;
 }
@@ -238,4 +245,5 @@ export interface EngineEventsMap {
    [EngineEvents.SpellChannelingFinished]: EngineEventHandler<SpellChannelingFinishedEvent>;
    [EngineEvents.SpellChannelingInterrupted]: EngineEventHandler<SpellChannelingInterruptedEvent>;
    [EngineEvents.RemoveTickOverTimeEffect]: EngineEventHandler<RemoveTickOverTimeEffectEvent>;
+   [EngineEvents.PlayerCastSubSpell]: EngineEventHandler<PlayerCastSubSpellEvent>;
 }

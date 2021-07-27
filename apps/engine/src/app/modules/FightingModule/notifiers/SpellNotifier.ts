@@ -1,8 +1,8 @@
 import { FightingEngineMessages } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler, SpellChannelingFinishedEvent, SpellChannelingInterruptedEvent } from '../../../types';
-import { AreaSpellEffectCreatedEvent, AreaSpellEffectRemovedEvent, FightingEngineEvents, SpellLandedEvent } from '../Events';
+import { EngineEventHandler, PlayerCastedSpellEvent, SpellChannelingFinishedEvent, SpellChannelingInterruptedEvent } from '../../../types';
+import { AreaSpellEffectCreatedEvent, AreaSpellEffectRemovedEvent, FightingEngineEvents, SpellLandedEvent, SubSpellCastedEvent } from '../Events';
 
 export class SpellNotifier extends EventParser {
    constructor() {
@@ -13,6 +13,8 @@ export class SpellNotifier extends EventParser {
          [FightingEngineEvents.AreaSpellEffectRemoved]: this.handleAreaSpellEffectRemoved,
          [EngineEvents.SpellChannelingFinished]: this.handleSpellChannelingFinished,
          [EngineEvents.SpellChannelingInterrupted]: this.handleSpellChannelingInterrupted,
+         [EngineEvents.PlayerCastedSpell]: this.handlePlayerCastedSpell,
+         [FightingEngineEvents.SubSpellCasted]: this.handleSubSpellCasted,
       };
    }
 
@@ -20,7 +22,7 @@ export class SpellNotifier extends EventParser {
       services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.SpellLanded, {
          spellName: event.spell.name,
          angle: event.angle,
-         castLocation: event.caster.location,
+         castLocation: event.caster?.location,
          directionLocation: event.location,
       });
    };
@@ -48,6 +50,20 @@ export class SpellNotifier extends EventParser {
    handleSpellChannelingInterrupted: EngineEventHandler<SpellChannelingInterruptedEvent> = ({ event, services }) => {
       services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.ChannelingInterrupted, {
          channelId: event.channelId,
+      });
+   };
+
+   handlePlayerCastedSpell: EngineEventHandler<PlayerCastedSpellEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.SpellHasBeenCast, {
+         spell: event.spell,
+         casterId: event.casterId,
+      });
+   };
+
+   handleSubSpellCasted: EngineEventHandler<SubSpellCastedEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.SpellHasBeenCast, {
+         spell: event.spell,
+         casterId: event.casterId,
       });
    };
 }

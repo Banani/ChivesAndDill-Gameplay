@@ -21,6 +21,8 @@ import {
 } from './app/modules';
 import {
    AggroService,
+   BossFightEngine,
+   BossFightService,
    MonsterAttackEngine,
    MonsterAttackService,
    MonsterNotifier,
@@ -60,6 +62,7 @@ const monsterAttackEngine = new MonsterAttackEngine();
 const areaEffectsEngine = new AreaEffectsEngine();
 const channelEngine = new ChannelEngine();
 const tickOverTimeEffectEngine = new TickOverTimeEffectEngine();
+const bossFightEngine = new BossFightEngine();
 
 const fastEngines = [
    playerMovementEngine,
@@ -69,6 +72,8 @@ const fastEngines = [
    areaEffectsEngine,
    channelEngine,
    tickOverTimeEffectEngine,
+   bossFightEngine,
+
    //    11111111111111111111111111111111111111111111111111111111,
 ];
 const slowEngines = [respawnMonsterEngine];
@@ -108,6 +113,7 @@ const services: Services = {
 
    spellNotifier: new SpellNotifier(),
    tickEffectOverTimeService: new TickEffectOverTimeService(tickOverTimeEffectEngine),
+   bossFightService: new BossFightService(bossFightEngine),
 };
 
 const engineEventCreator = new EngineEventCrator(services);

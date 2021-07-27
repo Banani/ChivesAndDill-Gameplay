@@ -23,6 +23,7 @@ export enum QuestEngineMessages {
 }
 
 export enum FightingEngineMessages {
+   SpellHasBeenCast = 'SpellHasBeenCast',
    SpellLanded = 'SpellLanded',
    AreaSpellEffectCreated = 'AreaSpellEffectCreated',
    AreaSpellEffectRemoved = 'AreaSpellEffectRemoved',

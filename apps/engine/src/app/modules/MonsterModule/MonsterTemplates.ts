@@ -8,7 +8,7 @@ export interface MonsterTemplate {
    size: number;
    healthPoints: number;
    spellPower: number;
-   division: string;
+   division?: string;
    sightRange: number;
    escapeRange: number;
    spells: Record<string, Spell>;
@@ -47,6 +47,20 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       spells: {
          MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
          MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
+      },
+   },
+   WorldDestroyer: {
+      id: 'WorldDestroyer',
+      name: 'WorldDestroyer',
+      sprites: 'pigMan',
+      size: 50,
+      healthPoints: 20000,
+      spellPower: 10000,
+      sightRange: 200,
+      escapeRange: 2000,
+      attackFrequency: 900,
+      spells: {
+         MonsterProjectile: ALL_SPELLS['DestroyerBasic'],
       },
    },
 };

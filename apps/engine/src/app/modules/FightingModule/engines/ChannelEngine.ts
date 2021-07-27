@@ -1,7 +1,7 @@
 import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { Engine } from '../../../engines/Engine';
-import { PlayerCastSpellEvent, SpellChannelingFinishedEvent } from '../../../types';
+import { PlayerCastSpellEvent, PlayerCastSubSpellEvent, Spell, SpellChannelingFinishedEvent } from '../../../types';
 import { ChannelSpellsTrack } from '../services/SpellHandlers/ChannelService';
 
 export class ChannelEngine extends Engine {
@@ -28,10 +28,10 @@ export class ChannelEngine extends Engine {
          this.tickTime[channelSpell.id] = Date.now();
 
          forEach(channelSpell.spell.channelSpells, (spell) => {
-            this.eventCrator.createEvent<PlayerCastSpellEvent>({
-               type: EngineEvents.PlayerCastSpell,
-               casterId: channelSpell.caster.id,
-               spell,
+            this.eventCrator.createEvent<PlayerCastSubSpellEvent>({
+               type: EngineEvents.PlayerCastSubSpell,
+               casterId: channelSpell.caster?.id ?? null,
+               spell: spell,
                directionLocation: allCharacters[channelSpell.castTargetId] ? allCharacters[channelSpell.castTargetId].location : channelSpell.placeLocation,
             });
          });

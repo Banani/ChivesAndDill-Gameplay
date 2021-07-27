@@ -6,7 +6,7 @@ import { SpellEffectType } from '../../../SpellType';
 import { ApplyTargetSpellEffectEvent, CharacterDiedEvent, EngineEventHandler, PlayerDisconnectedEvent, PlayerMovedEvent } from '../../../types';
 import { Services } from '../../../types/Services';
 import { DamageEffect } from '../../../types/Spell';
-import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostTargetEvent, MonsterTargetChangedEvent } from '../Events';
+import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostAggroEvent, MonsterLostTargetEvent, MonsterPulledEvent, MonsterTargetChangedEvent } from '../Events';
 import { Monster } from '../types';
 
 interface Aggro {
@@ -39,6 +39,11 @@ export class AggroService extends EventParser {
       const newAggro = { characterId: characterId, level: 0.1 };
       this.monsterAggro[monster.id] = { currentTarget: newAggro, allTargets: { [characterId]: newAggro } };
 
+      this.engineEventCrator.createEvent<MonsterPulledEvent>({
+         type: MonsterEngineEvents.MonsterPulled,
+         monster,
+      });
+
       this.engineEventCrator.createEvent<MonsterTargetChangedEvent>({
          type: MonsterEngineEvents.MonsterTargetChanged,
          newTargetId: characterId,
@@ -48,8 +53,18 @@ export class AggroService extends EventParser {
 
    deleteAggro = (monsterId: string, targetId: string) => {
       delete this.monsterAggro[monsterId].allTargets[targetId];
+      this.engineEventCrator.createEvent<MonsterLostTargetEvent>({
+         type: MonsterEngineEvents.MonsterLostTarget,
+         targetId: targetId,
+         monsterId: monsterId,
+      });
+
       if (Object.keys(this.monsterAggro[monsterId].allTargets).length === 0) {
          delete this.monsterAggro[monsterId];
+         this.engineEventCrator.createEvent<MonsterLostAggroEvent>({
+            type: MonsterEngineEvents.MonsterLostAggro,
+            monsterId,
+         });
       } else {
          this.monsterAggro[monsterId].currentTarget = { level: 0, characterId: '0' };
          forEach(this.monsterAggro[monsterId].allTargets, (target) => {
@@ -58,12 +73,6 @@ export class AggroService extends EventParser {
             }
          });
       }
-
-      this.engineEventCrator.createEvent<MonsterLostTargetEvent>({
-         type: MonsterEngineEvents.MonsterLostTarget,
-         targetId: targetId,
-         monsterId: monsterId,
-      });
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event, services }) => {
@@ -92,7 +101,7 @@ export class AggroService extends EventParser {
       if (event.effect.type !== SpellEffectType.Damage) {
          return;
       }
-      if (this.wasItDmgToThePlayer({ event, services })) {
+      if (!event.caster || this.wasItDmgToThePlayer({ event, services })) {
          return;
       }
 
@@ -118,7 +127,13 @@ export class AggroService extends EventParser {
             level: 0,
             characterId: event.caster.id,
          };
+
+         this.engineEventCrator.createEvent<MonsterPulledEvent>({
+            type: MonsterEngineEvents.MonsterPulled,
+            monster: event.target as Monster,
+         });
       }
+
       const damageEffect = event.effect as DamageEffect;
       monsterAggros[event.caster.id].level += damageEffect.amount;
 

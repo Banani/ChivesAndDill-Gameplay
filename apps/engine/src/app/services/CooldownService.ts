@@ -24,7 +24,9 @@ export class CooldownService extends EventParser {
    }
 
    handlePlayerCastedSpell: EngineEventHandler<PlayerCastedSpellEvent> = ({ event }) => {
-      this.cooldownHistoryPerUserSpells[event.casterId][event.spell.name] = Date.now();
+      if (event.casterId) {
+         this.cooldownHistoryPerUserSpells[event.casterId][event.spell.name] = Date.now();
+      }
    };
 
    handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
@@ -49,6 +51,8 @@ export class CooldownService extends EventParser {
    };
 
    handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event }) => {
-      this.cooldownHistoryPerUserSpells[event.casterId][event.spell.name] = Date.now();
+      if (event.casterId) {
+         this.cooldownHistoryPerUserSpells[event.casterId][event.spell.name] = Date.now();
+      }
    };
 }

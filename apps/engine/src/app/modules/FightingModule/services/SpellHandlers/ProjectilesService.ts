@@ -10,8 +10,10 @@ import {
    ProjectileMovedEvent,
    RemoveProjectileEvent,
    ProjectileRemovedEvent,
+   PlayerCastSubSpellEvent,
 } from 'apps/engine/src/app/types';
 import { ProjectileMovement } from '../..';
+import { SubSpellCastedEvent, FightingEngineEvents } from '../../Events';
 
 export class ProjectilesService extends EventParser {
    projectileEngine: ProjectileMovement;
@@ -25,6 +27,7 @@ export class ProjectilesService extends EventParser {
          [EngineEvents.PlayerCastSpell]: this.handlePlayerCastSpell,
          [EngineEvents.ProjectileMoved]: this.handleProjectileMoved,
          [EngineEvents.RemoveProjectile]: this.handleRemoveProjectile,
+         [EngineEvents.PlayerCastSubSpell]: this.handlePlayerCastSubSpell,
       };
    }
 
@@ -54,6 +57,39 @@ export class ProjectilesService extends EventParser {
          this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
             type: EngineEvents.PlayerCastedSpell,
             casterId: character.id,
+            spell: event.spell,
+         });
+
+         this.engineEventCrator.createEvent<ProjectileCreatedEvent>({
+            type: EngineEvents.ProjectileCreated,
+            projectileId: this.increment.toString(),
+            currentLocation: character.location,
+            spell: event.spell,
+         });
+      }
+   };
+
+   handlePlayerCastSubSpell: EngineEventHandler<PlayerCastSubSpellEvent> = ({ event, services }) => {
+      if (event.spell.type === SpellType.Projectile) {
+         const character = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() }[event.casterId];
+
+         this.increment++;
+         const projectile = {
+            characterId: event.casterId,
+            spell: event.spell,
+            directionLocation: event.directionLocation,
+            startLocation: character.location,
+            currentLocation: character.location,
+         };
+
+         this.projectiles[this.increment] = {
+            ...projectile,
+            ...this.projectileEngine.calculateAngles(projectile),
+         };
+
+         this.engineEventCrator.createEvent<SubSpellCastedEvent>({
+            type: FightingEngineEvents.SubSpellCasted,
+            casterId: event.casterId,
             spell: event.spell,
          });
 

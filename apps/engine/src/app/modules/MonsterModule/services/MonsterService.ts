@@ -17,6 +17,7 @@ import {
    MonsterTargetChangedEvent,
    MonsterLostTargetEvent,
    MonsterDiedEvent,
+   MonsterLostAggroEvent,
 } from '../Events';
 import { Monster } from '../types';
 
@@ -31,6 +32,7 @@ export class MonsterService extends EventParser {
          [MonsterEngineEvents.MonsterTargetChanged]: this.test,
          [MonsterEngineEvents.MonsterLostTarget]: this.test2,
          [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
+         [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
          [EngineEvents.TakeCharacterHealthPoints]: this.handleTakeCharacterHealthPoints,
          [EngineEvents.AddCharacterHealthPoints]: this.handleAddCharacterHealthPoints,
          [EngineEvents.TakeCharacterSpellPower]: this.handleTakeCharacterSpellPower,
@@ -123,6 +125,26 @@ export class MonsterService extends EventParser {
          );
       }
    };
+
+   resetMonster = (monsterId: string) => {
+      const monster = this.monsters[monsterId];
+      const healthPointsToMax = monster.maxHp - monster.currentHp;
+
+      monster.currentHp = monster.maxHp;
+      monster.currentSpellPower = monster.maxSpellPower;
+
+      this.engineEventCrator.createEvent<CharacterGotHpEvent>({
+         type: EngineEvents.CharacterGotHp,
+         characterId: monsterId,
+         amount: healthPointsToMax,
+         currentHp: monster.currentHp,
+      });
+   };
+
+   handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
+      this.resetMonster(event.monsterId);
+   };
+
    handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
       delete this.monsters[event.monster.id];
    };

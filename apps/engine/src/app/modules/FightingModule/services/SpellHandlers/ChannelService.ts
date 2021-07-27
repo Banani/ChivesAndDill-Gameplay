@@ -7,13 +7,15 @@ import {
    EngineEventHandler,
    PlayerCastSpellEvent,
    PlayerCastedSpellEvent,
-   Spell,
    Character,
    Location,
    SpellChannelingFinishedEvent,
    PlayerMovedEvent,
    SpellChannelingInterruptedEvent,
+   ChannelSpell,
+   CharacterDiedEvent,
 } from '../../../../types';
+import { MonsterDiedEvent, MonsterEngineEvents } from '../../../MonsterModule/Events';
 import { Monster } from '../../../MonsterModule/types';
 import { ChannelEngine } from '../../engines/ChannelEngine';
 import { FightingEngineEvents, SpellLandedEvent } from '../../Events';
@@ -21,13 +23,14 @@ import { FightingEngineEvents, SpellLandedEvent } from '../../Events';
 export interface ChannelSpellsTrack {
    id: string;
    creationTime: number;
-   spell: Spell;
+   spell: ChannelSpell;
    placeLocation: Location;
    castTargetId?: string;
    caster: Character | Monster;
 }
 
 export class ChannelService extends EventParser {
+   increment: number = 0;
    channelEngine: ChannelEngine;
    activeChannelSpells: Record<string, ChannelSpellsTrack> = {};
 
@@ -38,6 +41,8 @@ export class ChannelService extends EventParser {
          [EngineEvents.PlayerCastSpell]: this.handlePlayerCastSpell,
          [EngineEvents.SpellChannelingFinished]: this.handleSpellChannelingFinished,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+         [EngineEvents.CharacterDied]: this.handleCharacterDied,
+         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
       };
    }
 
@@ -49,32 +54,37 @@ export class ChannelService extends EventParser {
    handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
       if (event.spell.type === SpellType.Channel) {
          const allCharacters = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() };
-         const character = allCharacters[event.casterId];
+         const caster = allCharacters[event.casterId];
 
-         if (distanceBetweenTwoPoints(character.location, event.directionLocation) > event.spell.range) {
+         if (caster && distanceBetweenTwoPoints(caster.location, event.directionLocation) > event.spell.range) {
             return;
          }
 
          this.engineEventCrator.createEvent<PlayerCastedSpellEvent>({
             type: EngineEvents.PlayerCastedSpell,
-            casterId: character.id,
+            casterId: event.casterId,
             spell: event.spell,
          });
 
          let castTargetId;
 
-         for (const i in omit(allCharacters, [character.id])) {
+         for (const i in omit(allCharacters, [event.casterId])) {
             if (distanceBetweenTwoPoints(event.directionLocation, allCharacters[i].location) < allCharacters[i].size / 2) {
                castTargetId = allCharacters[i].id;
             }
          }
 
-         this.activeChannelSpells[event.casterId] = {
-            id: event.casterId,
+         let id = (this.increment++).toString();
+         if (event.casterId) {
+            id = event.casterId;
+         }
+
+         this.activeChannelSpells[id] = {
+            id,
             creationTime: Date.now(),
             spell: event.spell,
             placeLocation: event.directionLocation,
-            caster: character,
+            caster: caster,
             castTargetId,
          };
       }
@@ -96,13 +106,25 @@ export class ChannelService extends EventParser {
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
-      if (this.activeChannelSpells[event.characterId]) {
-         this.channelEngine.stopChanneling(event.characterId);
-         delete this.activeChannelSpells[event.characterId];
+      this.interruptChanneling(event.characterId);
+   };
+
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
+      this.interruptChanneling(event.character.id);
+   };
+
+   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
+      this.interruptChanneling(event.monster.id);
+   };
+
+   interruptChanneling = (characterId: string) => {
+      if (this.activeChannelSpells[characterId]) {
+         this.channelEngine.stopChanneling(characterId);
+         delete this.activeChannelSpells[characterId];
 
          this.engineEventCrator.createEvent<SpellChannelingInterruptedEvent>({
             type: EngineEvents.SpellChannelingInterrupted,
-            channelId: event.characterId,
+            channelId: characterId,
          });
       }
    };

@@ -1,9 +1,9 @@
-import { pickBy, each, filter, forEach } from 'lodash';
+import { pickBy, each, filter } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { Engine } from '../../../engines/Engine';
 import { ProjectileIntersection } from '../../../engines/types';
 import { distanceBetweenTwoPoints, isSegmentIntersectingWithACircle, getCrossingPointsWithWalls, getTheClosestObject } from '../../../math';
-import { RemoveProjectileEvent, ProjectileMovedEvent, ApplyTargetSpellEffectEvent } from '../../../types';
+import { RemoveProjectileEvent, ProjectileMovedEvent, Projectile, Location } from '../../../types';
 import { FightingEngineEvents, SpellLandedEvent, SpellReachedTargetEvent } from '../Events';
 
 export class ProjectileMovement extends Engine {
@@ -17,7 +17,7 @@ export class ProjectileMovement extends Engine {
       };
    }
 
-   isItOutOfRange(projectile, newLocation) {
+   isItOutOfRange(projectile: Projectile, newLocation: Location) {
       return distanceBetweenTwoPoints(projectile.startLocation, newLocation) > projectile.spell.range;
    }
 
