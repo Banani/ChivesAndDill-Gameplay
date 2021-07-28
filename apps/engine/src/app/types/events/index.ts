@@ -7,7 +7,7 @@ import { QuestEngineEvents } from '../../modules/QuestModule/Events';
 import { Character } from '../Character';
 import { Location } from '../Location';
 import { Services } from '../Services';
-import { ProjectileSpell, ProjectileSubSpell, Spell, SpellEffect, SubSpell } from '../Spell';
+import { GuidedProjectileSpell, GuidedProjectileSubSpell, ProjectileSpell, ProjectileSubSpell, Spell, SpellEffect, SubSpell } from '../Spell';
 
 export interface EngineEvent {
    type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | FightingEngineEvents;
@@ -113,17 +113,10 @@ export interface PlayerStopedMovementVectorEvent extends EngineEvent {
 export interface ProjectileCreatedEvent extends EngineEvent {
    projectileId: string;
    currentLocation: Location;
-   spell: ProjectileSubSpell | ProjectileSpell;
+   spell: ProjectileSubSpell | ProjectileSpell | GuidedProjectileSpell | GuidedProjectileSubSpell;
 }
 
 export interface ProjectileMovedEvent extends EngineEvent {
-   characterId: string;
-   spell: ProjectileSpell | ProjectileSubSpell;
-   directionLocation: Location;
-   startLocation: Location;
-   currentLocation: Location;
-   xMultiplayer: number;
-   yMultiplayer: number;
    angle: number;
    newLocation: Location;
    projectileId: string;
@@ -159,6 +152,7 @@ export interface PlayerCastSubSpellEvent extends EngineEvent {
    casterId: string | null;
    spell: SubSpell;
    directionLocation: Vector;
+   targetId: string | null;
 }
 
 export interface ApplyTargetSpellEffectEvent extends EngineEvent {

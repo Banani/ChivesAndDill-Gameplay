@@ -24,6 +24,11 @@ export interface ProjectileSubSpell extends EffectHolders, BaseSubSpell {
    range: number;
 }
 
+export interface GuidedProjectileSubSpell extends EffectHolders, BaseSubSpell {
+   type: SpellType.GuidedProjectile;
+   speed: number;
+}
+
 export interface DirectInstantSubSpell extends EffectHolders, BaseSubSpell {
    type: SpellType.DirectInstant;
 }
@@ -47,9 +52,10 @@ export interface ChannelSubSpell extends EffectHolders, BaseSubSpell {
    channelTime: number;
 }
 
-export type SubSpell = ProjectileSubSpell | DirectInstantSubSpell | AngleBlastSpellSubSpell | AreaSubSpell;
+export type SubSpell = ProjectileSubSpell | GuidedProjectileSubSpell | DirectInstantSubSpell | AngleBlastSpellSubSpell | AreaSubSpell;
 
 export type ProjectileSpell = ProjectileSubSpell & BaseSpell;
+export type GuidedProjectileSpell = GuidedProjectileSubSpell & BaseSpell;
 export type DirectInstantSpell = DirectInstantSubSpell & BaseSpell;
 export type AngleBlastSpell = AngleBlastSpellSubSpell & BaseSpell;
 export type AreaSpell = AreaSubSpell & BaseSpell;
@@ -62,7 +68,7 @@ export type ChannelSpell = BaseSpell &
       channelTime: number;
    };
 
-export type Spell = ProjectileSpell | DirectInstantSpell | AngleBlastSpell | AreaSpell | ChannelSpell;
+export type Spell = ProjectileSpell | GuidedProjectileSpell | DirectInstantSpell | AngleBlastSpell | AreaSpell | ChannelSpell;
 
 export interface SpellEffect {
    type: SpellEffectType;

@@ -33,6 +33,7 @@ export class ChannelEngine extends Engine {
                casterId: channelSpell.caster?.id ?? null,
                spell: spell,
                directionLocation: allCharacters[channelSpell.castTargetId] ? allCharacters[channelSpell.castTargetId].location : channelSpell.placeLocation,
+               targetId: allCharacters[channelSpell.castTargetId] ? channelSpell.castTargetId : null,
             });
          });
 

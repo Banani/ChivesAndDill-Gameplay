@@ -1,5 +1,6 @@
 export enum SpellType {
    Projectile = 'Projectile',
+   GuidedProjectile = 'GuidedProjectile',
    DirectInstant = 'DirectInstant',
    AngleBlast = 'AngleBlast',
    Area = 'Area',

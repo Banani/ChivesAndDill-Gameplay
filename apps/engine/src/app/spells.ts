@@ -2,26 +2,29 @@ import { AreaType, SpellEffectType, SpellType } from './SpellType';
 import type { Spell } from './types/Spell';
 
 export const ALL_SPELLS: Record<string, Spell> = {
-   test: {
-      type: SpellType.Area,
-      name: 'test',
+   ArcaneBarrage: {
+      type: SpellType.Channel,
+      name: 'ArcaneBarrage',
       range: 4000,
       spellPowerCost: 0,
-      cooldown: 0,
-      radius: 400,
-      areaType: AreaType.Circle,
+      cooldown: 100,
+      channelFrequency: 200,
+      channelTime: 6000,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       description: 'Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.',
-      spellEffectsOnTarget: [
+      channelSpells: [
          {
-            type: SpellEffectType.TickEffectOverTime,
-            spellId: 'spell_123',
-            period: 4000,
-            activationFrequency: 200,
-            spellEffects: [{ type: SpellEffectType.Damage, amount: 8 }],
+            type: SpellType.GuidedProjectile,
+            name: 'ArcaneBarrage_GuidedProjectile',
+            speed: 30,
+            spellEffectsOnTarget: [
+               {
+                  type: SpellEffectType.Damage,
+                  amount: 10,
+               },
+            ],
          },
       ],
-      spellEffectsOnCasterOnSpellHit: [],
    },
    DirectHit: {
       type: SpellType.DirectInstant,

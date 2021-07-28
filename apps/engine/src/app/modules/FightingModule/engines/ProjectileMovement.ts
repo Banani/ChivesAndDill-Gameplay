@@ -32,6 +32,7 @@ export class ProjectileMovement extends Engine {
 
    doAction() {
       each(this.services.projectilesService.getAllProjectiles(), (projectile, projectileId) => {
+         console.log('?');
          const newLocation = {
             x: projectile.currentLocation.x + projectile.xMultiplayer * projectile.spell.speed,
             y: projectile.currentLocation.y + projectile.yMultiplayer * projectile.spell.speed,

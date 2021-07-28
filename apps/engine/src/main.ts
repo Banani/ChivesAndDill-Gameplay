@@ -36,6 +36,8 @@ import { GenerateSpellPowerEffectService } from './app/modules/FightingModule/se
 import { ChannelService } from './app/modules/FightingModule/services/SpellHandlers/ChannelService';
 import { ChannelEngine } from './app/modules/FightingModule/engines/ChannelEngine';
 import { TickEffectOverTimeService } from './app/modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
+import { GuidedProjectileEngine } from './app/modules/FightingModule/engines/GuidedProjectileEngine';
+import { GuidedProjectilesService } from './app/modules/FightingModule/services/SpellHandlers/GuidedProjectilesService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -57,6 +59,7 @@ httpServer.listen(port, hostname, () => {
 
 const playerMovementEngine = new PlayersMovement();
 const projectileMovement = new ProjectileMovement();
+const guidedProjectileEngine = new GuidedProjectileEngine();
 const respawnMonsterEngine = new RespawnMonsterEngine();
 const monsterAttackEngine = new MonsterAttackEngine();
 const areaEffectsEngine = new AreaEffectsEngine();
@@ -67,6 +70,7 @@ const bossFightEngine = new BossFightEngine();
 const fastEngines = [
    playerMovementEngine,
    projectileMovement,
+   guidedProjectileEngine,
    monsterAttackEngine,
    areaEffectsEngine,
    channelEngine,
@@ -111,6 +115,7 @@ const services: Services = {
    spellNotifier: new SpellNotifier(),
    tickEffectOverTimeService: new TickEffectOverTimeService(tickOverTimeEffectEngine),
    bossFightService: new BossFightService(bossFightEngine),
+   guidedProjectilesService: new GuidedProjectilesService(guidedProjectileEngine),
 };
 
 const engineEventCreator = new EngineEventCrator(services);
