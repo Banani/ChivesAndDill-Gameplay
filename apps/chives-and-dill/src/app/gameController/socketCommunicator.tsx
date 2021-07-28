@@ -123,7 +123,6 @@ const SocketCommunicator = ({ children }) => {
          });
 
          context.socket.on(FightingEngineMessages.SpellHasBeenCast, (event) => {
-            console.log(event)
             dispatch(addActiveSpellCast({ event }));
          });
       }

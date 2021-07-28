@@ -72,17 +72,18 @@ export const spellsReducer = (
       };
     }
     case SpellsActionTypes.ADD_ACTIVE_SPELL_CAST: {
-      console.log(state.activeSpellsCasts)
-      return {
-        ...state,
-        activeSpellsCasts: {
-          ...state.activeSpellsCasts,
-          [action.payload.event.casterId]: {
-            castTime: action.payload.event.spell.channelTime,
-            spellCastTimeStamp: Date.now(),
-          }
-        },
-      };
+      if(action.payload.event.spell.channelTime) {
+        return {
+          ...state,
+          activeSpellsCasts: {
+            ...state.activeSpellsCasts,
+            [action.payload.event.casterId]: {
+              castTime: action.payload.event.spell.channelTime,
+              spellCastTimeStamp: Date.now(),
+            }
+          },
+        };
+      }
     }  
     default:
       return state;
