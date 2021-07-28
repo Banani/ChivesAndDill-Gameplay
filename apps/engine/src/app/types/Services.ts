@@ -16,6 +16,7 @@ import {
 } from '../modules';
 import { AreaEffectService } from '../modules/FightingModule/services/EffectHandlers/AreaEffectService';
 import { GenerateSpellPowerEffectService } from '../modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
+import { PowerStackEffectService } from '../modules/FightingModule/services/EffectHandlers/PowerStackEffectService';
 import { TickEffectOverTimeService } from '../modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
 import { ChannelService } from '../modules/FightingModule/services/SpellHandlers/ChannelService';
 import { GuidedProjectilesService } from '../modules/FightingModule/services/SpellHandlers/GuidedProjectilesService';
@@ -58,4 +59,5 @@ export interface Services {
    tickEffectOverTimeService: TickEffectOverTimeService;
    bossFightService: BossFightService;
    guidedProjectilesService: GuidedProjectilesService;
+   powerStackEffectService: PowerStackEffectService;
 }

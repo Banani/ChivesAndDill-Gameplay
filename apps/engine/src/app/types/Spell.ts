@@ -1,4 +1,4 @@
-import { AreaType, SpellEffectType, SpellType } from '../SpellType';
+import { AreaType, PowerStackType, SpellEffectType, SpellType } from '../SpellType';
 
 interface BaseSpell {
    range: number;
@@ -6,6 +6,12 @@ interface BaseSpell {
    image?: string;
    description?: string;
    spellPowerCost: number;
+   requiredPowerStacks?: PowerStackRequirement[];
+}
+
+interface PowerStackRequirement {
+   type: PowerStackType;
+   amount: number;
 }
 
 interface BaseSubSpell {
@@ -106,4 +112,16 @@ export interface TickOverTimeEffect extends SpellEffect {
    spellId: string;
 }
 
-type AllEffects = DamageEffect | HealEffect | AreaEffect | GenerateSpellPowerEffect | TickOverTimeEffect;
+export interface GainPowerStackEffect extends SpellEffect {
+   type: SpellEffectType.GainPowerStack;
+   powerStackType: PowerStackType;
+   amount: number;
+}
+
+export interface LosePowerStackEffect extends SpellEffect {
+   type: SpellEffectType.LosePowerStack;
+   powerStackType: PowerStackType;
+   amount: number;
+}
+
+type AllEffects = DamageEffect | HealEffect | AreaEffect | GenerateSpellPowerEffect | TickOverTimeEffect | GainPowerStackEffect | LosePowerStackEffect;

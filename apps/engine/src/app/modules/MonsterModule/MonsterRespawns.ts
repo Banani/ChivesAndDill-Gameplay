@@ -39,42 +39,42 @@ export const MonsterRespawns = {
    //       monsterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
-   //    '5': {
-   //       id: '5',
-   //       location: { x: 1500, y: 800 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
-   //       time: 2000,
-   //    },
-   //    '6': {
-   //       id: '6',
-   //       location: { x: 1300, y: 850 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
-   //       time: 2000,
-   //    },
-   //    '7': {
-   //       id: '7',
-   //       location: { x: 1350, y: 850 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
-   //       time: 2000,
-   //    },
-   //    '8': {
-   //       id: '8',
-   //       location: { x: 1400, y: 850 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
-   //       time: 2000,
-   //    },
-   //    '9': {
-   //       id: '9',
-   //       location: { x: 1450, y: 850 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
-   //       time: 2000,
-   //    },
-   //    '10': {
-   //       id: '10',
-   //       location: { x: 1500, y: 850 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
-   //       time: 2000,
-   //    },
+   '5': {
+      id: '5',
+      location: { x: 1500, y: 800 },
+      monsterTemplate: MonsterTemplates['PigSlut'],
+      time: 2000,
+   },
+   '6': {
+      id: '6',
+      location: { x: 1300, y: 850 },
+      monsterTemplate: MonsterTemplates['PigSlut'],
+      time: 2000,
+   },
+   '7': {
+      id: '7',
+      location: { x: 1350, y: 850 },
+      monsterTemplate: MonsterTemplates['PigSlut'],
+      time: 2000,
+   },
+   '8': {
+      id: '8',
+      location: { x: 1400, y: 850 },
+      monsterTemplate: MonsterTemplates['PigSlut'],
+      time: 2000,
+   },
+   '9': {
+      id: '9',
+      location: { x: 1450, y: 850 },
+      monsterTemplate: MonsterTemplates['PigSlut'],
+      time: 2000,
+   },
+   '10': {
+      id: '10',
+      location: { x: 1500, y: 850 },
+      monsterTemplate: MonsterTemplates['PigSlut'],
+      time: 2000,
+   },
 
    //    '11': {
    //       id: '11',

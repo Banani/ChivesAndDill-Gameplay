@@ -38,6 +38,7 @@ import { ChannelEngine } from './app/modules/FightingModule/engines/ChannelEngin
 import { TickEffectOverTimeService } from './app/modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
 import { GuidedProjectileEngine } from './app/modules/FightingModule/engines/GuidedProjectileEngine';
 import { GuidedProjectilesService } from './app/modules/FightingModule/services/SpellHandlers/GuidedProjectilesService';
+import { PowerStackEffectService } from './app/modules/FightingModule/services/EffectHandlers/PowerStackEffectService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -116,6 +117,7 @@ const services: Services = {
    tickEffectOverTimeService: new TickEffectOverTimeService(tickOverTimeEffectEngine),
    bossFightService: new BossFightService(bossFightEngine),
    guidedProjectilesService: new GuidedProjectilesService(guidedProjectileEngine),
+   powerStackEffectService: new PowerStackEffectService(),
 };
 
 const engineEventCreator = new EngineEventCrator(services);

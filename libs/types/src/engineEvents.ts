@@ -29,6 +29,8 @@ export enum FightingEngineMessages {
    AreaSpellEffectRemoved = 'AreaSpellEffectRemoved',
    ChannelingFinished = 'ChannelingFinished',
    ChannelingInterrupted = 'ChannelingInterrupted',
+   CharacterGainPowerStack = 'CharacterGainPowerStack',
+   CharacterLosePowerStack = 'CharacterLosePowerStack',
 }
 
 export enum ClientMessages {

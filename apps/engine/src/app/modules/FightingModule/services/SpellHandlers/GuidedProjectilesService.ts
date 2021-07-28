@@ -130,7 +130,6 @@ export class GuidedProjectilesService extends EventParser {
 
    handleRemoveProjectile: EngineEventHandler<RemoveProjectileEvent> = ({ event }) => {
       if (this.guidedProjectilesTracks[event.projectileId]) {
-         console.log('remove guided_projectile_' + this.increment);
          delete this.guidedProjectilesTracks[event.projectileId];
 
          this.engineEventCrator.asyncCeateEvent<ProjectileRemovedEvent>({

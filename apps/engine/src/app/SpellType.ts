@@ -17,4 +17,14 @@ export enum SpellEffectType {
    Area = 'Area',
    GenerateSpellPower = 'GenerateSpellPower',
    TickEffectOverTime = 'TickEffectOverTime',
+   GainPowerStack = 'GetPowerStack',
+   LosePowerStack = 'LosePowerStack',
 }
+
+export enum PowerStackType {
+   HolyPower = 'HolyPower',
+}
+
+export const PowerStackLimit: Record<PowerStackType, number> = {
+   [PowerStackType.HolyPower]: 3,
+};

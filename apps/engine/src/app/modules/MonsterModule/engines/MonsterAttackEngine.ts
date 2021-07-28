@@ -40,11 +40,6 @@ export class MonsterAttackEngine extends Engine {
          const character = this.services.characterService.getCharacterById(aggro.currentTarget.characterId);
          const monster = this.services.monsterService.getAllCharacters()[monsterId];
 
-         // BUG
-         if (!monster) {
-            return;
-         }
-
          if (!this.isTargetInSight(monster, character)) {
             return;
          }
