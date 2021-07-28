@@ -19,6 +19,7 @@ export enum SpellEffectType {
    TickEffectOverTime = 'TickEffectOverTime',
    GainPowerStack = 'GetPowerStack',
    LosePowerStack = 'LosePowerStack',
+   AbsorbShield = 'AbsorbShield',
 }
 
 export enum PowerStackType {

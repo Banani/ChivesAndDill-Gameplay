@@ -3,10 +3,12 @@ import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler, PlayerCastedSpellEvent, SpellChannelingFinishedEvent, SpellChannelingInterruptedEvent } from '../../../types';
 import {
+   AbsorbShieldValueChangedEvent,
    AreaSpellEffectCreatedEvent,
    AreaSpellEffectRemovedEvent,
    CharacterGainPowerStackEvent,
    CharacterLosePowerStackEvent,
+   DamageAbsorbedEvent,
    FightingEngineEvents,
    SpellLandedEvent,
    SubSpellCastedEvent,
@@ -25,6 +27,8 @@ export class SpellNotifier extends EventParser {
          [FightingEngineEvents.SubSpellCasted]: this.handleSubSpellCasted,
          [FightingEngineEvents.CharacterGainPowerStack]: this.handleCharacterGainPowerStack,
          [FightingEngineEvents.CharacterLosePowerStack]: this.handleCharacterLosePowerStack,
+         [FightingEngineEvents.DamageAbsorbed]: this.handleDamageAbsorbed,
+         [FightingEngineEvents.AbsorbShieldValueChanged]: this.handleAbsorbShieldValueChanged,
       };
    }
 
@@ -92,6 +96,19 @@ export class SpellNotifier extends EventParser {
          powerStackType: event.powerStackType,
          currentAmount: event.currentAmount,
          amount: event.amount,
+      });
+   };
+
+   handleDamageAbsorbed: EngineEventHandler<DamageAbsorbedEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.DamageAbsorbed, {
+         targetId: event.targetId,
+      });
+   };
+
+   handleAbsorbShieldValueChanged: EngineEventHandler<AbsorbShieldValueChangedEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.AbsorbShieldChanged, {
+         targetId: event.ownerId,
+         newValue: event.newValue,
       });
    };
 }

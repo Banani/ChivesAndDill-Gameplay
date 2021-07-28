@@ -10,6 +10,9 @@ export enum FightingEngineEvents {
    SubSpellCasted = 'SubSpellCasted',
    CharacterGainPowerStack = 'CharacterGainPowerStack',
    CharacterLosePowerStack = 'CharacterLosePowerStack',
+   TakeAbsorbShieldValue = 'TakeAbsorbShieldValue',
+   AbsorbShieldValueChanged = 'AbsorbShieldValueChanged',
+   DamageAbsorbed = 'DamageAbsorbed',
 }
 
 export interface SpellReachedTargetEvent extends EngineEvent {
@@ -57,6 +60,24 @@ export interface CharacterLosePowerStackEvent extends EngineEvent {
    amount: number;
 }
 
+export interface TakeAbsorbShieldValueEvent extends EngineEvent {
+   type: FightingEngineEvents.TakeAbsorbShieldValue;
+   targetId: string;
+   amount: number;
+}
+
+export interface DamageAbsorbedEvent extends EngineEvent {
+   type: FightingEngineEvents.DamageAbsorbed;
+   attackerId: string;
+   targetId: string;
+}
+
+export interface AbsorbShieldValueChangedEvent extends EngineEvent {
+   type: FightingEngineEvents.AbsorbShieldValueChanged;
+   ownerId: string;
+   newValue: number;
+}
+
 export interface FightingEngineEventsMap {
    [FightingEngineEvents.SpellReachedTarget]: EngineEventHandler<SpellReachedTargetEvent>;
    [FightingEngineEvents.SpellLanded]: EngineEventHandler<SpellLandedEvent>;
@@ -65,4 +86,7 @@ export interface FightingEngineEventsMap {
    [FightingEngineEvents.SubSpellCasted]: EngineEventHandler<SubSpellCastedEvent>;
    [FightingEngineEvents.CharacterGainPowerStack]: EngineEventHandler<CharacterGainPowerStackEvent>;
    [FightingEngineEvents.CharacterLosePowerStack]: EngineEventHandler<CharacterLosePowerStackEvent>;
+   [FightingEngineEvents.TakeAbsorbShieldValue]: EngineEventHandler<TakeAbsorbShieldValueEvent>;
+   [FightingEngineEvents.DamageAbsorbed]: EngineEventHandler<DamageAbsorbedEvent>;
+   [FightingEngineEvents.AbsorbShieldValueChanged]: EngineEventHandler<AbsorbShieldValueChangedEvent>;
 }

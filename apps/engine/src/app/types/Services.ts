@@ -14,6 +14,7 @@ import {
    SpellEffectApplierService,
    SpellNotifier,
 } from '../modules';
+import { AbsorbShieldEffectService } from '../modules/FightingModule/services/EffectHandlers/AbsorbShieldEffectService';
 import { AreaEffectService } from '../modules/FightingModule/services/EffectHandlers/AreaEffectService';
 import { GenerateSpellPowerEffectService } from '../modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
 import { PowerStackEffectService } from '../modules/FightingModule/services/EffectHandlers/PowerStackEffectService';
@@ -60,4 +61,5 @@ export interface Services {
    bossFightService: BossFightService;
    guidedProjectilesService: GuidedProjectilesService;
    powerStackEffectService: PowerStackEffectService;
+   absorbShieldEffectService: AbsorbShieldEffectService;
 }

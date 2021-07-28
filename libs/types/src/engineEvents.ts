@@ -31,6 +31,8 @@ export enum FightingEngineMessages {
    ChannelingInterrupted = 'ChannelingInterrupted',
    CharacterGainPowerStack = 'CharacterGainPowerStack',
    CharacterLosePowerStack = 'CharacterLosePowerStack',
+   DamageAbsorbed = 'DamageAbsorbed',
+   AbsorbShieldChanged = 'AbsorbShieldChanged',
 }
 
 export enum ClientMessages {

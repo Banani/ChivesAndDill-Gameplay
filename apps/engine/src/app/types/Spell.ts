@@ -124,4 +124,20 @@ export interface LosePowerStackEffect extends SpellEffect {
    amount: number;
 }
 
-type AllEffects = DamageEffect | HealEffect | AreaEffect | GenerateSpellPowerEffect | TickOverTimeEffect | GainPowerStackEffect | LosePowerStackEffect;
+export interface AbsorbShieldEffect extends SpellEffect {
+   type: SpellEffectType.AbsorbShield;
+   id: string;
+   shieldValue: number;
+   period: number;
+   stack?: number;
+}
+
+type AllEffects =
+   | DamageEffect
+   | HealEffect
+   | AreaEffect
+   | GenerateSpellPowerEffect
+   | TickOverTimeEffect
+   | GainPowerStackEffect
+   | LosePowerStackEffect
+   | AbsorbShieldEffect;
