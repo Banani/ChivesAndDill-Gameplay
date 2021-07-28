@@ -26,6 +26,31 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
    },
+   ArcaneBarrage: {
+      type: SpellType.Channel,
+      name: 'ArcaneBarrage',
+      range: 4000,
+      spellPowerCost: 0,
+      cooldown: 100,
+      channelFrequency: 500,
+      channelTime: 2500,
+      image: '../assets/spritesheets/spells/mage/fireball.jpg',
+      description: 'Launches five waves of Arcane Missiles at the enemy over 2.5 sec, causing a total of 500 Arcane damage.',
+      channelSpells: [
+         {
+            type: SpellType.Projectile,
+            name: "ArcaneBarrage_projectile",
+            range: 400,
+            speed: 60,
+            spellEffectsOnTarget: [
+               {
+                  type: SpellEffectType.Damage,
+                  amount: 100,
+               },
+            ],
+         },
+      ],
+   },
    DirectHit: {
       type: SpellType.DirectInstant,
       name: 'DirectHit',
@@ -67,8 +92,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
       description: 'Heal target for 250hp',
       spellEffectsOnTarget: [
          {
-            type: SpellEffectType.Damage,
-            amount: 1005,
+            type: SpellEffectType.Heal,
+            amount: 250,
          },
       ],
    },
