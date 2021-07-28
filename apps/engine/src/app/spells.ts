@@ -8,30 +8,6 @@ export const ALL_SPELLS: Record<string, Spell> = {
       range: 4000,
       spellPowerCost: 0,
       cooldown: 100,
-      channelFrequency: 200,
-      channelTime: 6000,
-      image: '../assets/spritesheets/spells/mage/fireball.jpg',
-      description: 'Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.',
-      channelSpells: [
-         {
-            type: SpellType.GuidedProjectile,
-            name: 'ArcaneBarrage_GuidedProjectile',
-            speed: 30,
-            spellEffectsOnTarget: [
-               {
-                  type: SpellEffectType.Damage,
-                  amount: 10,
-               },
-            ],
-         },
-      ],
-   },
-   ArcaneBarrage: {
-      type: SpellType.Channel,
-      name: 'ArcaneBarrage',
-      range: 4000,
-      spellPowerCost: 0,
-      cooldown: 100,
       channelFrequency: 500,
       channelTime: 2500,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
