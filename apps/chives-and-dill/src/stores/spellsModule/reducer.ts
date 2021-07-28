@@ -7,7 +7,7 @@ const initialState: SpellsState = {
   projectiles: {},
   spells: {},
   keyBinding: {
-    "1": "DirectHit",
+    "1": "ArcaneBarrage",
     "2": "Projectile",
     "3": "InstantProjectile",
   },
