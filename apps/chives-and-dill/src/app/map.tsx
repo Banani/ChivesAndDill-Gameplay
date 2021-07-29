@@ -13,6 +13,7 @@ import _ from 'lodash';
 import Player from './player/Player';
 import { PlayerIcon } from "./player/playerIcon/PlayerIcon";
 import { SpellsBar } from "./player/spellsBar/SpellsBar";
+import { CastBar } from "./mapContent/CastBar";
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -65,26 +66,6 @@ const Map = () => {
       g.endFill()
    }, []);
 
-   let channelSpellProgress;
-   
-   if (activeSpellsCasts[activePlayerId]) {
-      const { spellCastTimeStamp, castTime } = activeSpellsCasts[players[activePlayerId].id];
-      channelSpellProgress = (Date.now() - spellCastTimeStamp) / castTime;
-   }
-
-   const castBar = useCallback(
-      (g) => {
-         g.clear();
-         g.beginFill(0xcfcfcf);
-         g.drawRect(players[activePlayerId]?.location.x - 25, players[activePlayerId]?.location.y + 30, 50, 5);
-         g.endFill();
-         g.beginFill(0x2372fa);
-         g.drawRect(players[activePlayerId]?.location.x - 25, players[activePlayerId]?.location.y + 30, (channelSpellProgress * 100) / 2, 5);
-         g.endFill();
-      },
-      [players, activePlayerId, channelSpellProgress]
-   );
-
    let gameWidth;
    let gameHeight;
 
@@ -124,7 +105,7 @@ const Map = () => {
                <Graphics draw={drawAreasSpellsEffects} />
                {renderSpells}
                {renderPlayers}
-               {channelSpellProgress ? <Graphics draw={castBar} /> : null}
+               <CastBar activeSpellsCasts={activeSpellsCasts} activePlayerId={activePlayerId} players={players}/>
                {players[activePlayerId] ? (
                   <Player
                      player={players[activePlayerId]}

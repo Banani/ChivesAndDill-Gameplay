@@ -8,8 +8,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
       range: 4000,
       spellPowerCost: 0,
       cooldown: 100,
-      channelFrequency: 500,
-      channelTime: 2500,
+      channelFrequency: 1000,
+      channelTime: 3000,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       description: 'Launches five waves of Arcane Missiles at the enemy over 2.5 sec, causing a total of 500 Arcane damage.',
       channelSpells: [
