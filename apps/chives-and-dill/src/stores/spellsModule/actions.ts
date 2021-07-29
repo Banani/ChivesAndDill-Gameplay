@@ -6,7 +6,8 @@ import type {
   DeleteProjectilePayload,
   AreaSpellEffectCreatedPayload,
   AreaSpellEffectRemovedPayload,
-  ActiveSpellCastPayload
+  ActiveSpellCastPayload,
+  DeleteSpellCastPayload,
 } from '../../types/spells';
 
 export enum SpellsActionTypes {
@@ -17,6 +18,7 @@ export enum SpellsActionTypes {
   AREA_SPELL_EFFECT_CREATED = '[Spells] AREA_SPELL_EFFECT_CREATED',
   AREA_SPELL_EFFECT_REMOVED = '[Spells] AREA_SPELL_EFFECT_REMOVED',
   ADD_ACTIVE_SPELL_CAST = '[Spells] ADD_ACTIVE_SPELL_CAST',
+  DELETE_ACTIVE_SPELL_CAST = '[Spells] DELETE_ACTIVE_SPELL_CAST',
 }
 
 export type InitializeSpells = FSAAuto<
@@ -52,6 +54,11 @@ export type AreaSpellEffectRemoved = FSAAuto<
 export type AddActiveSpellCast = FSAAuto<
   SpellsActionTypes.ADD_ACTIVE_SPELL_CAST,
   ActiveSpellCastPayload
+>;
+
+export type DeleteActiveSpellCast = FSAAuto<
+  SpellsActionTypes.DELETE_ACTIVE_SPELL_CAST,
+  DeleteSpellCastPayload
 >;
 
 export const initializeSpells = (
@@ -91,6 +98,11 @@ export const addActiveSpellCast = (payload: ActiveSpellCastPayload): AddActiveSp
   payload,
 });
 
+export const deleteActiveSpellCast = (payload: DeleteSpellCastPayload): DeleteActiveSpellCast => ({
+  type: SpellsActionTypes.DELETE_ACTIVE_SPELL_CAST,
+  payload,
+});
+
 export type SpellsAction =
   | InitializeSpells
   | AddProjectile
@@ -98,4 +110,5 @@ export type SpellsAction =
   | DeleteProjectile
   | AreaSpellEffectCreated
   | AreaSpellEffectRemoved
-  | AddActiveSpellCast;
+  | AddActiveSpellCast
+  | DeleteActiveSpellCast;

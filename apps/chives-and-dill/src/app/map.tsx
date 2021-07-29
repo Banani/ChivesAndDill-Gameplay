@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Stage, Sprite, Graphics, Container } from '@inlet/react-pixi';
 import { useSelector } from 'react-redux';
-import { 
+import {
    selectCharacters,
    selectCharacterViewsSettings,
    selectAreas, selectActivePlayer,
@@ -66,11 +66,12 @@ const Map = () => {
       g.endFill()
    }, []);
 
-   let channelSpell;
-   if(Object.keys(activeSpellsCasts).length && (Date.now() - activeSpellsCasts[players[activePlayerId].id].spellCastTimeStamp) / activeSpellsCasts[players[activePlayerId].id].castTime < 1) {
-      channelSpell = (Date.now() - activeSpellsCasts[players[activePlayerId].id].spellCastTimeStamp) / activeSpellsCasts[players[activePlayerId].id].castTime;
+   let channelSpellProgress;
+
+   if (Object.keys(activeSpellsCasts).length) {
+      channelSpellProgress = (Date.now() - activeSpellsCasts[players[activePlayerId].id].spellCastTimeStamp) / activeSpellsCasts[players[activePlayerId].id].castTime;
    }
-   
+
    const castBar = useCallback(
       (g) => {
          g.clear();
@@ -78,10 +79,10 @@ const Map = () => {
          g.drawRect(players[activePlayerId]?.location.x - 25, players[activePlayerId]?.location.y + 30, 50, 5);
          g.endFill();
          g.beginFill(0x2372fa);
-         g.drawRect(players[activePlayerId]?.location.x - 25, players[activePlayerId]?.location.y + 30, ( channelSpell * 100 ) / 2 , 5);
+         g.drawRect(players[activePlayerId]?.location.x - 25, players[activePlayerId]?.location.y + 30, (channelSpellProgress * 100) / 2, 5);
          g.endFill();
       },
-      [players[activePlayerId], channelSpell]
+      [players, activePlayerId, channelSpellProgress]
    );
 
    let gameWidth;
@@ -123,7 +124,7 @@ const Map = () => {
                <Graphics draw={drawAreasSpellsEffects} />
                {renderSpells}
                {renderPlayers}
-               <Graphics draw={castBar} />
+               {channelSpellProgress ? <Graphics draw={castBar} /> : null}
                {players[activePlayerId] ? (
                   <Player
                      player={players[activePlayerId]}

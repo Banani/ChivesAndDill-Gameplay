@@ -65,3 +65,9 @@ export interface ActiveSpellCastPayload {
     spell: Spell;
   }
 }
+
+export interface DeleteSpellCastPayload {
+  event: {
+    channelId: number;
+  }
+}

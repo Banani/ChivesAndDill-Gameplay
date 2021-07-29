@@ -71,7 +71,14 @@ export const spellsReducer = (
         areaSpellsEffects: _.omit(state.areaSpellsEffects, action.payload.event.areaSpellEffectId),
       };
     }
-    case SpellsActionTypes.ADD_ACTIVE_SPELL_CAST: {
+    case SpellsActionTypes.DELETE_ACTIVE_SPELL_CAST: {
+      return {
+        ...state,
+        activeSpellsCasts: _.omit(state.activeSpellsCasts, action.payload.event.channelId),
+      };
+    }
+
+    case SpellsActionTypes.ADD_ACTIVE_SPELL_CAST:
       if(action.payload.event.spell.channelTime) {
         return {
           ...state,
@@ -84,7 +91,6 @@ export const spellsReducer = (
           },
         };
       }
-    }  
     default:
       return state;
   }
