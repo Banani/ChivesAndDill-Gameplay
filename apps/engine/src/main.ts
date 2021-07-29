@@ -1,7 +1,5 @@
-import { PlayersMovement } from './app/engines';
-import { CharactersService, PlayerMovementService, SocketConnectionService, CooldownService } from './app/services';
+import { SocketConnectionService } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
-import { CharacterEffectNotifier, PlayerMovementNotifier, ProjectileNotifier } from './app/notifiers';
 import { Services } from './app/types/Services';
 import {
    AngleBlastSpellService,
@@ -30,16 +28,20 @@ import {
    RespawnMonsterEngine,
    RespawnService,
 } from './app/modules/MonsterModule';
-import { ProjectileMovement, AreaEffectsEngine, TickOverTimeEffectEngine } from './app/modules/FightingModule/engines';
-import { AreaEffectService } from './app/modules/FightingModule/services/EffectHandlers/AreaEffectService';
-import { GenerateSpellPowerEffectService } from './app/modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
-import { ChannelService } from './app/modules/FightingModule/services/SpellHandlers/ChannelService';
-import { ChannelEngine } from './app/modules/FightingModule/engines/ChannelEngine';
-import { TickEffectOverTimeService } from './app/modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
-import { GuidedProjectileEngine } from './app/modules/FightingModule/engines/GuidedProjectileEngine';
-import { GuidedProjectilesService } from './app/modules/FightingModule/services/SpellHandlers/GuidedProjectilesService';
-import { PowerStackEffectService } from './app/modules/FightingModule/services/EffectHandlers/PowerStackEffectService';
-import { AbsorbShieldEffectService } from './app/modules/FightingModule/services/EffectHandlers/AbsorbShieldEffectService';
+import { ProjectileMovement, AreaEffectsEngine, TickOverTimeEffectEngine, ProjectileNotifier } from './app/modules/SpellModule';
+import { ChannelEngine } from './app/modules/SpellModule/engines/ChannelEngine';
+import { GuidedProjectileEngine } from './app/modules/SpellModule/engines/GuidedProjectileEngine';
+import { CooldownService } from './app/modules/SpellModule/services/CooldownService';
+import { AbsorbShieldEffectService } from './app/modules/SpellModule/services/EffectHandlers/AbsorbShieldEffectService';
+import { AreaEffectService } from './app/modules/SpellModule/services/EffectHandlers/AreaEffectService';
+import { GenerateSpellPowerEffectService } from './app/modules/SpellModule/services/EffectHandlers/GenerateSpellPowerEffectService';
+import { PowerStackEffectService } from './app/modules/SpellModule/services/EffectHandlers/PowerStackEffectService';
+import { TickEffectOverTimeService } from './app/modules/SpellModule/services/EffectHandlers/TickEffectOverTimeService';
+import { ChannelService } from './app/modules/SpellModule/services/SpellHandlers/ChannelService';
+import { GuidedProjectilesService } from './app/modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
+import { PlayerMovementService, PlayersMovement } from './app/modules/PlayerModule';
+import { CharactersService } from './app/modules/PlayerModule/services/CharactersService';
+import { CharacterEffectNotifier, PlayerMovementNotifier } from './app/modules/PlayerModule/notifiers';
 
 const hostname = '127.0.0.1';
 const port = 3000;

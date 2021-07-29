@@ -104,8 +104,7 @@ const SocketCommunicator = ({ children }) => {
             dispatch(deleteProjectile({ projectileId }));
          });
 
-         context.socket.on(FightingEngineMessages.SpellLanded, (event) => {
-         });
+         context.socket.on(FightingEngineMessages.SpellLanded, (event) => {});
 
          context.socket.on(FightingEngineMessages.AreaSpellEffectCreated, (event) => {
             dispatch(areaSpellEffectCreated({ event }));

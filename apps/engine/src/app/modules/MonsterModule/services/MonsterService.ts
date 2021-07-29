@@ -6,6 +6,7 @@ import {
    AddCharacterSpellPowerEvent,
    CharacterGotHpEvent,
    CharacterLostHpEvent,
+   CharacterType,
    EngineEventHandler,
    TakeCharacterHealthPointsEvent,
    TakeCharacterSpellPowerEvent,
@@ -50,6 +51,7 @@ export class MonsterService extends EventParser {
    handleCreateNewMonster: EngineEventHandler<CreateNewMonsterEvent> = ({ event }) => {
       const id = `monster_${(this.increment++).toString()}`;
       this.monsters[id] = {
+         type: CharacterType.Monster,
          id,
          name: event.monsterRespawn.monsterTemplate.name,
          location: event.monsterRespawn.location,
@@ -142,7 +144,9 @@ export class MonsterService extends EventParser {
    };
 
    handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
-      this.resetMonster(event.monsterId);
+      if (this.monsters[event.monsterId]) {
+         this.resetMonster(event.monsterId);
+      }
    };
 
    handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {

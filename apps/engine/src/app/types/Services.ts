@@ -7,6 +7,7 @@ import {
    KillingQuestService,
    ManaService,
    MovementQuestService,
+   ProjectileNotifier,
    ProjectilesService,
    QuestNotifier,
    QuestProgressService,
@@ -14,18 +15,21 @@ import {
    SpellEffectApplierService,
    SpellNotifier,
 } from '../modules';
-import { AbsorbShieldEffectService } from '../modules/FightingModule/services/EffectHandlers/AbsorbShieldEffectService';
-import { AreaEffectService } from '../modules/FightingModule/services/EffectHandlers/AreaEffectService';
-import { GenerateSpellPowerEffectService } from '../modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
-import { PowerStackEffectService } from '../modules/FightingModule/services/EffectHandlers/PowerStackEffectService';
-import { TickEffectOverTimeService } from '../modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
-import { ChannelService } from '../modules/FightingModule/services/SpellHandlers/ChannelService';
-import { GuidedProjectilesService } from '../modules/FightingModule/services/SpellHandlers/GuidedProjectilesService';
 import { BossFightService, MonsterAttackService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
 import { AggroService } from '../modules/MonsterModule/services/aggroService';
-import { PlayerMovementNotifier, ProjectileNotifier, CharacterEffectNotifier } from '../notifiers';
-import { CharactersService, PlayerMovementService, CooldownService, SocketConnectionService } from '../services';
+import { PlayerMovementService } from '../modules/PlayerModule';
+import { PlayerMovementNotifier, CharacterEffectNotifier } from '../modules/PlayerModule/notifiers';
+import { CharactersService } from '../modules/PlayerModule/services/CharactersService';
+import { CooldownService } from '../modules/SpellModule/services/CooldownService';
+import { AbsorbShieldEffectService } from '../modules/SpellModule/services/EffectHandlers/AbsorbShieldEffectService';
+import { AreaEffectService } from '../modules/SpellModule/services/EffectHandlers/AreaEffectService';
+import { GenerateSpellPowerEffectService } from '../modules/SpellModule/services/EffectHandlers/GenerateSpellPowerEffectService';
+import { PowerStackEffectService } from '../modules/SpellModule/services/EffectHandlers/PowerStackEffectService';
+import { TickEffectOverTimeService } from '../modules/SpellModule/services/EffectHandlers/TickEffectOverTimeService';
+import { ChannelService } from '../modules/SpellModule/services/SpellHandlers/ChannelService';
+import { GuidedProjectilesService } from '../modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
+import { SocketConnectionService } from '../services';
 
 export interface Services {
    characterService: CharactersService;

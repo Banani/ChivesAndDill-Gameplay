@@ -1,5 +1,5 @@
-import { ALL_SPELLS } from '../../spells';
-import { Spell } from '../../types/Spell';
+import { ALL_SPELLS } from '../SpellModule/spells';
+import { Spell } from '../SpellModule/types/spellTypes';
 
 export interface MonsterTemplate {
    id: string;

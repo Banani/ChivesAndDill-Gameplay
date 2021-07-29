@@ -3,11 +3,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SocketContext } from '../gameController/socketContext';
 import { GameControllerContext } from './gameControllerContext';
 import { useSelector } from 'react-redux';
-import { selectCharacters, selectActivePlayer } from '../../stores';
+import { selectCharacters, selectActivePlayer, selectKeyBinds } from '../../stores';
 
 const GameController = ({ children }) => {
    const context = useContext(SocketContext);
    const [gameControllerContext, setGameControllerContext] = useState<any>({});
+   const keyBinds = useSelector(selectKeyBinds);
    const { socket } = context;
    const [keysState, setKeysState] = useState<Record<string, boolean>>({});
    const [mousePosition, setMousePosition] = useState({ x: null, y: null });
@@ -67,37 +68,18 @@ const GameController = ({ children }) => {
                setKeysState({ ...keysState, s: true });
             }
             break;
+      }
 
-         case '1':
-            socket?.emit(ClientMessages.PerformBasicAttack, {
-               directionLocation: {
-                  x: players[activePlayerId]?.location.x + mousePosition.x - gameWidth / 2,
-                  y: players[activePlayerId]?.location.y + mousePosition.y - gameHeight / 2,
-               },
-               spellName: 'ArcaneBarrage',
-            });
-            setKeysState({ ...keysState, 1: true });
-            break;
-         case '2':
-            socket?.emit(ClientMessages.PerformBasicAttack, {
-               directionLocation: {
-                  x: players[activePlayerId]?.location.x + mousePosition.x - gameWidth / 2,
-                  y: players[activePlayerId]?.location.y + mousePosition.y - gameHeight / 2,
-               },
-               spellName: 'Projectile',
-            });
-            setKeysState({ ...keysState, 2: true });
-            break;
-         case '3':
-            socket?.emit(ClientMessages.PerformBasicAttack, {
-               directionLocation: {
-                  x: players[activePlayerId]?.location.x + mousePosition.x - gameWidth / 2,
-                  y: players[activePlayerId]?.location.y + mousePosition.y - gameHeight / 2,
-               },
-               spellName: 'InstantProjectile',
-            });
-            setKeysState({ ...keysState, 3: true });
-            break;
+      const key = event.key.toLowerCase();
+      if (keyBinds[key]) {
+         socket?.emit(ClientMessages.PerformBasicAttack, {
+            directionLocation: {
+               x: players[activePlayerId]?.location.x + mousePosition.x - gameWidth / 2,
+               y: players[activePlayerId]?.location.y + mousePosition.y - gameHeight / 2,
+            },
+            spellName: keyBinds[key],
+         });
+         setKeysState({ ...keysState, [key]: true });
       }
    };
 
@@ -147,7 +129,7 @@ const GameController = ({ children }) => {
             x: players[activePlayerId]?.location.x + event.nativeEvent.offsetX - gameWidth / 2,
             y: players[activePlayerId]?.location.y + event.nativeEvent.offsetY - gameHeight / 2,
          },
-         spellName: 'InstantProjectile',
+         spellName: 'test',
       });
    };
 

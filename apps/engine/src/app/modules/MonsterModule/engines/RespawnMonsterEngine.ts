@@ -1,5 +1,5 @@
 import { forEach } from 'lodash';
-import { Engine } from '../../../engines/Engine';
+import { Engine } from '../../../Engine';
 import { MonsterEngineEvents, RespawnMonsterEvent } from '../Events';
 import { MonsterRespawns } from '../MonsterRespawns';
 

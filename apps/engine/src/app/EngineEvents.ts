@@ -1,16 +1,12 @@
 export enum EngineEvents {
    CreateNewPlayer = 'CreateNewPlayer',
-   NewCharacterCreated = 'NewCharacterCreated',
+   NewPlayerCreated = 'NewPlayerCreated',
    PlayerDisconnected = 'PlayerDisconnected',
    PlayerStartedMovement = 'PlayerStartedMovement',
    PlayerStopedMovementVector = 'PlayerStopedMovementVector',
    PlayerStopedAllMovementVectors = 'PlayerStopedAllMovementVectors',
    PlayerMoved = 'PlayerMoved',
    PlayerTriesToStartedMovement = 'PlayerTriesToStartedMovement',
-   ProjectileCreated = 'ProjectileCreated',
-   ProjectileMoved = 'ProjectileMoved',
-   RemoveProjectile = 'RemoveProjectile',
-   ProjectileRemoved = 'ProjectileRemoved',
 
    CharacterLostHp = 'CharacterLostHp',
    CharacterGotHp = 'CharacterGotHp',
@@ -21,15 +17,4 @@ export enum EngineEvents {
    AddCharacterHealthPoints = 'AddCharacterHealthPoints',
    TakeCharacterSpellPower = 'TakeCharacterSpellPower',
    AddCharacterSpellPower = 'AddCharacterSpellPower',
-
-   PlayerTriesToCastASpell = 'PlayerTriesToCastASpell',
-   PlayerCastSpell = 'PlayerCastSpell',
-   PlayerCastSubSpell = 'PlayerCastSubSpell',
-   PlayerCastedSpell = 'PlayerCastedSpell',
-   ApplyTargetSpellEffect = 'ApplyTargetSpellEffect',
-   ApplyLocationSpellEffect = 'ApplyLocationSpellEffect',
-   RemoveAreaSpellEffect = 'RemoveAreaSpellEffect',
-   SpellChannelingFinished = 'SpellChannelingFinished',
-   SpellChannelingInterrupted = 'SpellChannelingInterrupted',
-   RemoveTickOverTimeEffect = 'TickOverTimeFinished',
 }
