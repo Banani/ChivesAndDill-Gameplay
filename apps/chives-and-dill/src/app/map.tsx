@@ -36,7 +36,6 @@ const Map = () => {
    const drawAreasSpellsEffects = useCallback((g) => {
       g.clear();
       _.map(areaSpellsEffects, (areaSpellEffect, index) => {
-         console.log(areaSpellEffect);
          g.beginFill(0x333333);
          g.drawCircle(areaSpellEffect.location.x, areaSpellEffect.location.y, areaSpellEffect.effect.radius);
          g.endFill();
@@ -67,9 +66,10 @@ const Map = () => {
    }, []);
 
    let channelSpellProgress;
-
-   if (Object.keys(activeSpellsCasts).length) {
-      channelSpellProgress = (Date.now() - activeSpellsCasts[players[activePlayerId].id].spellCastTimeStamp) / activeSpellsCasts[players[activePlayerId].id].castTime;
+   
+   if (activeSpellsCasts[activePlayerId]) {
+      const { spellCastTimeStamp, castTime } = activeSpellsCasts[players[activePlayerId].id];
+      channelSpellProgress = (Date.now() - spellCastTimeStamp) / castTime;
    }
 
    const castBar = useCallback(
