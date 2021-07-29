@@ -60,7 +60,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       escapeRange: 2000,
       attackFrequency: 900,
       spells: {
-         MonsterProjectile: ALL_SPELLS['DestroyerBasic'],
+         DestroyerBasic: ALL_SPELLS['DestroyerBasic'],
       },
    },
 };

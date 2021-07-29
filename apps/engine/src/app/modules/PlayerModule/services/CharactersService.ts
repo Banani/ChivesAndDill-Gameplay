@@ -140,9 +140,36 @@ export class CharactersService extends EventParser {
       }
    };
 
+   classesBaseStats: Record<Classes, Partial<Player>> = {
+      [Classes.Tank]: {
+         currentHp: 400,
+         maxHp: 400,
+         currentSpellPower: 0,
+         maxSpellPower: 100,
+      },
+      [Classes.Healer]: {
+         currentHp: 250,
+         maxHp: 250,
+         currentSpellPower: 2000,
+         maxSpellPower: 2000,
+      },
+      [Classes.Hunter]: {
+         currentHp: 180,
+         maxHp: 180,
+         currentSpellPower: 100,
+         maxSpellPower: 100,
+      },
+      [Classes.Mage]: {
+         currentHp: 180,
+         maxHp: 180,
+         currentSpellPower: 2000,
+         maxSpellPower: 2000,
+      },
+   };
+
    generatePlayer: ({ socketId: string }) => Player = ({ socketId }) => {
       this.increment++;
-      const characterClass = Classes.Tank;
+      const characterClass = Classes.Healer;
       return {
          type: CharacterType.Player,
          id: this.increment.toString(),
@@ -160,6 +187,7 @@ export class CharactersService extends EventParser {
          isDead: false,
          class: characterClass,
          spells: SpellsPerClass[characterClass],
+         ...this.classesBaseStats[characterClass],
       };
    };
 

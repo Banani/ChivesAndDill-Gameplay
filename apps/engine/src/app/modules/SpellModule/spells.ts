@@ -28,7 +28,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
 
    PowerShield: {
       type: SpellType.Channel,
-      name: 'Power Shield',
+      name: 'PowerShield',
       range: 600,
       spellPowerCost: 60,
       cooldown: 8000,
@@ -54,7 +54,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
    },
    ArrowShot: {
       type: SpellType.Projectile,
-      name: 'Arrow Shot',
+      name: 'ArrowShot',
       speed: 40,
       range: 600,
       cooldown: 800,
@@ -70,7 +70,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
    },
    GuidedShot: {
       type: SpellType.Channel,
-      name: 'Guided Shot',
+      name: 'GuidedShot',
       range: 600,
       spellPowerCost: 0,
       cooldown: 0,
@@ -97,9 +97,9 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
    },
-   toxicShot: {
+   ToxicShot: {
       type: SpellType.GuidedProjectile,
-      name: 'Toxic Shot',
+      name: 'ToxicShot',
       range: 600,
       speed: 40,
       spellPowerCost: 20,
@@ -122,8 +122,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
       range: 450,
       spellPowerCost: 40,
       cooldown: 0,
-      channelFrequency: 1500,
-      channelTime: 1500,
+      channelFrequency: 1200,
+      channelTime: 1200,
       image: '../assets/spritesheets/spells/paladin/healingLight.jpg',
       description: 'It heals your target',
       channelSpells: [
@@ -269,7 +269,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
    DestroyerBasic: {
       type: SpellType.DirectInstant,
       name: 'DestroyerBasic',
-      range: 40,
+      range: 100,
       spellPowerCost: 10,
       cooldown: 0,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
@@ -304,7 +304,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
                {
                   type: SpellEffectType.Area,
                   areaType: AreaType.Circle,
-                  radius: 200,
+                  radius: 120,
                   period: 100000 * 10,
                   attackFrequency: 1000,
                   spellEffects: [
@@ -336,7 +336,20 @@ export const ALL_SPELLS: Record<string, Spell> = {
             spellEffectsOnTarget: [
                {
                   type: SpellEffectType.Damage,
-                  amount: 100,
+                  amount: 150,
+               },
+               {
+                  type: SpellEffectType.Area,
+                  areaType: AreaType.Circle,
+                  radius: 120,
+                  period: 100000 * 10,
+                  attackFrequency: 1000,
+                  spellEffects: [
+                     {
+                        type: SpellEffectType.Damage,
+                        amount: 50,
+                     },
+                  ],
                },
             ],
          },
@@ -360,7 +373,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
             spellEffectsOnTarget: [
                {
                   type: SpellEffectType.Damage,
-                  amount: 15,
+                  amount: 35,
                },
             ],
          },
