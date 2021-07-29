@@ -1,10 +1,11 @@
-import type { Spell, Projectile, Location } from '@bananos/types';
+import type { Spell, Projectile, Location, ActiveSpellCast } from '@bananos/types';
 
 export interface SpellsState {
   projectiles: Record<string, Projectile>;
   spells: Record<string, Spell>;
   keyBinding: Record<string, string>;
-  areaSpellsEffects: Record<string, AreaSpellEffectCreatedPayload>
+  areaSpellsEffects: Record<string, AreaSpellEffectCreatedPayload>;
+  activeSpellsCasts: Record<string, ActiveSpellCast>;
 }
 
 export interface SpellsAwareState {
@@ -41,7 +42,7 @@ export interface AreaSpellEffectCreatedPayload {
       areaType: string,
       radius: number,
       period: number,
-      spellEffects: Record<string, SpellEffects>[]
+      spellEffects: Record<string, SpellEffects>[],
     },
     location: Location,
   }
@@ -55,5 +56,18 @@ export interface SpellEffects {
 export interface AreaSpellEffectRemovedPayload {
   event: {
     areaSpellEffectId: string,
+  }
+}
+
+export interface ActiveSpellCastPayload {
+  event: {
+    casterId: number;
+    spell: Spell;
+  }
+}
+
+export interface DeleteSpellCastPayload {
+  event: {
+    channelId: number;
   }
 }

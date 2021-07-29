@@ -12,6 +12,7 @@ const initialState: SpellsState = {
     "3": "InstantProjectile",
   },
   areaSpellsEffects: {},
+  activeSpellsCasts: {},
 };
 
 export const spellsReducer = (
@@ -49,12 +50,13 @@ export const spellsReducer = (
           }
         },
       }
-    case SpellsActionTypes.DELETE_PROJECTILE:
+    case SpellsActionTypes.DELETE_PROJECTILE: {
       return {
         ...state,
         projectiles: _.omit(state.projectiles, action.payload.projectileId),
       };
-    case SpellsActionTypes.AREA_SPELL_EFFECT_CREATED:
+    }
+    case SpellsActionTypes.AREA_SPELL_EFFECT_CREATED: {
       return {
         ...state,
         areaSpellsEffects: {
@@ -62,14 +64,33 @@ export const spellsReducer = (
           [action.payload.event.areaSpellEffectId]: action.payload.event,
         },
       };
+    }
     case SpellsActionTypes.AREA_SPELL_EFFECT_REMOVED: {
-      console.log(state, action.payload, _.omit(state.areaSpellsEffects, action.payload.event.areaSpellEffectId));
       return {
         ...state,
         areaSpellsEffects: _.omit(state.areaSpellsEffects, action.payload.event.areaSpellEffectId),
-    };
+      };
     }
-      
+    case SpellsActionTypes.DELETE_ACTIVE_SPELL_CAST: {
+      return {
+        ...state,
+        activeSpellsCasts: _.omit(state.activeSpellsCasts, action.payload.event.channelId),
+      };
+    }
+
+    case SpellsActionTypes.ADD_ACTIVE_SPELL_CAST:
+      if(action.payload.event.spell.channelTime) {
+        return {
+          ...state,
+          activeSpellsCasts: {
+            ...state.activeSpellsCasts,
+            [action.payload.event.casterId]: {
+              castTime: action.payload.event.spell.channelTime,
+              spellCastTimeStamp: Date.now(),
+            }
+          },
+        };
+      }
     default:
       return state;
   }

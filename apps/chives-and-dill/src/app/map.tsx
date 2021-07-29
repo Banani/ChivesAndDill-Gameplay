@@ -1,7 +1,14 @@
 import React, { useCallback } from 'react';
 import { Stage, Sprite, Graphics, Container } from '@inlet/react-pixi';
 import { useSelector } from 'react-redux';
-import { selectCharacters, selectCharacterViewsSettings, selectAreas, selectActivePlayer, selectProjectiles, selectAreaSpellsEffects } from '../stores';
+import {
+   selectCharacters,
+   selectCharacterViewsSettings,
+   selectAreas, selectActivePlayer,
+   selectProjectiles,
+   selectAreaSpellsEffects,
+   selectActiveSpellsCasts,
+} from '../stores';
 import _ from 'lodash';
 import Player from './player/Player';
 import { PlayerIcon } from "./player/playerIcon/PlayerIcon";
@@ -14,6 +21,7 @@ const Map = () => {
    const characterViewsSettings = useSelector(selectCharacterViewsSettings);
    const activePlayerId = useSelector(selectActivePlayer);
    const areas = useSelector(selectAreas);
+   const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
 
    const renderPlayers = useCallback(_.map(_.omit(players, [activePlayerId ?? 0]), (player, i) =>
    (
@@ -28,7 +36,6 @@ const Map = () => {
    const drawAreasSpellsEffects = useCallback((g) => {
       g.clear();
       _.map(areaSpellsEffects, (areaSpellEffect, index) => {
-         console.log(areaSpellEffect);
          g.beginFill(0x333333);
          g.drawCircle(areaSpellEffect.location.x, areaSpellEffect.location.y, areaSpellEffect.effect.radius);
          g.endFill();
@@ -57,6 +64,26 @@ const Map = () => {
       g.lineTo(0, 0);
       g.endFill()
    }, []);
+
+   let channelSpellProgress;
+   
+   if (activeSpellsCasts[activePlayerId]) {
+      const { spellCastTimeStamp, castTime } = activeSpellsCasts[players[activePlayerId].id];
+      channelSpellProgress = (Date.now() - spellCastTimeStamp) / castTime;
+   }
+
+   const castBar = useCallback(
+      (g) => {
+         g.clear();
+         g.beginFill(0xcfcfcf);
+         g.drawRect(players[activePlayerId]?.location.x - 25, players[activePlayerId]?.location.y + 30, 50, 5);
+         g.endFill();
+         g.beginFill(0x2372fa);
+         g.drawRect(players[activePlayerId]?.location.x - 25, players[activePlayerId]?.location.y + 30, (channelSpellProgress * 100) / 2, 5);
+         g.endFill();
+      },
+      [players, activePlayerId, channelSpellProgress]
+   );
 
    let gameWidth;
    let gameHeight;
@@ -97,6 +124,7 @@ const Map = () => {
                <Graphics draw={drawAreasSpellsEffects} />
                {renderSpells}
                {renderPlayers}
+               {channelSpellProgress ? <Graphics draw={castBar} /> : null}
                {players[activePlayerId] ? (
                   <Player
                      player={players[activePlayerId]}
