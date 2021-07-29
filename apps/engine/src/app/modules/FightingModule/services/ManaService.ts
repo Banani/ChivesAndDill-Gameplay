@@ -10,15 +10,11 @@ export class ManaService extends EventParser {
       };
    }
 
-   isIsMainSpell = (spell: Spell) => spell.name;
-
    handlePlayerCastedSpell: EngineEventHandler<PlayerCastedSpellEvent> = ({ event }) => {
-      if (this.isIsMainSpell(event.spell)) {
-         this.engineEventCrator.asyncCeateEvent<TakeCharacterSpellPowerEvent>({
-            type: EngineEvents.TakeCharacterSpellPower,
-            characterId: event.casterId,
-            amount: event.spell.spellPowerCost,
-         });
-      }
+      this.engineEventCrator.asyncCeateEvent<TakeCharacterSpellPowerEvent>({
+         type: EngineEvents.TakeCharacterSpellPower,
+         characterId: event.casterId,
+         amount: event.spell.spellPowerCost,
+      });
    };
 }

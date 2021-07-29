@@ -14,10 +14,13 @@ import {
    SpellEffectApplierService,
    SpellNotifier,
 } from '../modules';
+import { AbsorbShieldEffectService } from '../modules/FightingModule/services/EffectHandlers/AbsorbShieldEffectService';
 import { AreaEffectService } from '../modules/FightingModule/services/EffectHandlers/AreaEffectService';
 import { GenerateSpellPowerEffectService } from '../modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
+import { PowerStackEffectService } from '../modules/FightingModule/services/EffectHandlers/PowerStackEffectService';
 import { TickEffectOverTimeService } from '../modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
 import { ChannelService } from '../modules/FightingModule/services/SpellHandlers/ChannelService';
+import { GuidedProjectilesService } from '../modules/FightingModule/services/SpellHandlers/GuidedProjectilesService';
 import { BossFightService, MonsterAttackService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
 import { AggroService } from '../modules/MonsterModule/services/aggroService';
@@ -56,4 +59,7 @@ export interface Services {
    spellNotifier: SpellNotifier;
    tickEffectOverTimeService: TickEffectOverTimeService;
    bossFightService: BossFightService;
+   guidedProjectilesService: GuidedProjectilesService;
+   powerStackEffectService: PowerStackEffectService;
+   absorbShieldEffectService: AbsorbShieldEffectService;
 }

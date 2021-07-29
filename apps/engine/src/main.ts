@@ -36,6 +36,10 @@ import { GenerateSpellPowerEffectService } from './app/modules/FightingModule/se
 import { ChannelService } from './app/modules/FightingModule/services/SpellHandlers/ChannelService';
 import { ChannelEngine } from './app/modules/FightingModule/engines/ChannelEngine';
 import { TickEffectOverTimeService } from './app/modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
+import { GuidedProjectileEngine } from './app/modules/FightingModule/engines/GuidedProjectileEngine';
+import { GuidedProjectilesService } from './app/modules/FightingModule/services/SpellHandlers/GuidedProjectilesService';
+import { PowerStackEffectService } from './app/modules/FightingModule/services/EffectHandlers/PowerStackEffectService';
+import { AbsorbShieldEffectService } from './app/modules/FightingModule/services/EffectHandlers/AbsorbShieldEffectService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -57,6 +61,7 @@ httpServer.listen(port, hostname, () => {
 
 const playerMovementEngine = new PlayersMovement();
 const projectileMovement = new ProjectileMovement();
+const guidedProjectileEngine = new GuidedProjectileEngine();
 const respawnMonsterEngine = new RespawnMonsterEngine();
 const monsterAttackEngine = new MonsterAttackEngine();
 const areaEffectsEngine = new AreaEffectsEngine();
@@ -67,6 +72,7 @@ const bossFightEngine = new BossFightEngine();
 const fastEngines = [
    playerMovementEngine,
    projectileMovement,
+   guidedProjectileEngine,
    monsterAttackEngine,
    areaEffectsEngine,
    channelEngine,
@@ -111,6 +117,9 @@ const services: Services = {
    spellNotifier: new SpellNotifier(),
    tickEffectOverTimeService: new TickEffectOverTimeService(tickOverTimeEffectEngine),
    bossFightService: new BossFightService(bossFightEngine),
+   guidedProjectilesService: new GuidedProjectilesService(guidedProjectileEngine),
+   powerStackEffectService: new PowerStackEffectService(),
+   absorbShieldEffectService: new AbsorbShieldEffectService(),
 };
 
 const engineEventCreator = new EngineEventCrator(services);

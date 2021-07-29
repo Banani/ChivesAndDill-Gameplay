@@ -8,10 +8,10 @@ export const ALL_SPELLS: Record<string, Spell> = {
       range: 4000,
       spellPowerCost: 0,
       cooldown: 100,
-      channelFrequency: 200,
-      channelTime: 2000,
+      channelFrequency: 500,
+      channelTime: 2500,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
-      description: 'Inflicts 40 Fire damage to an enemy and causes them to burn for 8 sec.',
+      description: 'Launches five waves of Arcane Missiles at the enemy over 2.5 sec, causing a total of 500 Arcane damage.',
       channelSpells: [
          {
             type: SpellType.Projectile,
@@ -21,7 +21,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
             spellEffectsOnTarget: [
                {
                   type: SpellEffectType.Damage,
-                  amount: 10,
+                  amount: 100,
                },
             ],
          },

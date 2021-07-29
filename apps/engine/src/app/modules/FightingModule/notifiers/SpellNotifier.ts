@@ -2,7 +2,17 @@ import { FightingEngineMessages } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler, PlayerCastedSpellEvent, SpellChannelingFinishedEvent, SpellChannelingInterruptedEvent } from '../../../types';
-import { AreaSpellEffectCreatedEvent, AreaSpellEffectRemovedEvent, FightingEngineEvents, SpellLandedEvent, SubSpellCastedEvent } from '../Events';
+import {
+   AbsorbShieldValueChangedEvent,
+   AreaSpellEffectCreatedEvent,
+   AreaSpellEffectRemovedEvent,
+   CharacterGainPowerStackEvent,
+   CharacterLosePowerStackEvent,
+   DamageAbsorbedEvent,
+   FightingEngineEvents,
+   SpellLandedEvent,
+   SubSpellCastedEvent,
+} from '../Events';
 
 export class SpellNotifier extends EventParser {
    constructor() {
@@ -15,6 +25,10 @@ export class SpellNotifier extends EventParser {
          [EngineEvents.SpellChannelingInterrupted]: this.handleSpellChannelingInterrupted,
          [EngineEvents.PlayerCastedSpell]: this.handlePlayerCastedSpell,
          [FightingEngineEvents.SubSpellCasted]: this.handleSubSpellCasted,
+         [FightingEngineEvents.CharacterGainPowerStack]: this.handleCharacterGainPowerStack,
+         [FightingEngineEvents.CharacterLosePowerStack]: this.handleCharacterLosePowerStack,
+         [FightingEngineEvents.DamageAbsorbed]: this.handleDamageAbsorbed,
+         [FightingEngineEvents.AbsorbShieldValueChanged]: this.handleAbsorbShieldValueChanged,
       };
    }
 
@@ -64,6 +78,37 @@ export class SpellNotifier extends EventParser {
       services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.SpellHasBeenCast, {
          spell: event.spell,
          casterId: event.casterId,
+      });
+   };
+
+   handleCharacterGainPowerStack: EngineEventHandler<CharacterGainPowerStackEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.CharacterGainPowerStack, {
+         characterId: event.characterId,
+         powerStackType: event.powerStackType,
+         currentAmount: event.currentAmount,
+         amount: event.amount,
+      });
+   };
+
+   handleCharacterLosePowerStack: EngineEventHandler<CharacterLosePowerStackEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.CharacterLosePowerStack, {
+         characterId: event.characterId,
+         powerStackType: event.powerStackType,
+         currentAmount: event.currentAmount,
+         amount: event.amount,
+      });
+   };
+
+   handleDamageAbsorbed: EngineEventHandler<DamageAbsorbedEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.DamageAbsorbed, {
+         targetId: event.targetId,
+      });
+   };
+
+   handleAbsorbShieldValueChanged: EngineEventHandler<AbsorbShieldValueChangedEvent> = ({ event, services }) => {
+      services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.AbsorbShieldChanged, {
+         targetId: event.ownerId,
+         newValue: event.newValue,
       });
    };
 }

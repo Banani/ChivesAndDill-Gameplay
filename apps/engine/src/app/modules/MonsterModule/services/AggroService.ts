@@ -84,8 +84,8 @@ export class AggroService extends EventParser {
 
       forEach(this.monsterAggro, (monsterAggro, monsterId) => {
          const monster = services.monsterService.getAllCharacters()[monsterId];
-         // BUG
-         if (!monster || (monsterAggro.allTargets[event.characterId] && distanceBetweenTwoPoints(monster.location, event.newLocation) > monster.escapeRange)) {
+
+         if (monsterAggro.allTargets[event.characterId] && distanceBetweenTwoPoints(monster.location, event.newLocation) > monster.escapeRange) {
             this.deleteAggro(monsterId, event.characterId);
          }
       });
