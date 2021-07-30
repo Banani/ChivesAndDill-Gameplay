@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from "./SpellsBar.module.scss";
 import { useSelector } from 'react-redux';
 import { selectSpells, selectKeyBinds } from '../../../stores';
 import _ from 'lodash';
 import { GameControllerContext } from "../../gameController/gameControllerContext";
-import { DisplayCooldown } from './displayCooldown/displayCooldown';
 
 export const SpellsBar = () => {
 
@@ -12,7 +11,19 @@ export const SpellsBar = () => {
   const spells = useSelector(selectSpells);
   const keyBinds = useSelector(selectKeyBinds);
 
+  const [activeStyles, setActiveStyles] = useState({ width: "40px" });
+
   let renderSpells;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+
+    }, 1000 / 60);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   if (Object.keys(spells).length) {
     renderSpells = _.map(keyBinds, (spell, index) => {
@@ -32,7 +43,7 @@ export const SpellsBar = () => {
             <div>{"Cooldown: " + activeSpell.cooldown / 1000 + " sec"}</div>
             <div className={styles.spellDesc}>{activeSpell.description}</div>
           </div>
-          <DisplayCooldown usedSpell={spells.Projectile} />
+          <div className={styles.cooldown} style={activeStyles}></div>
         </div>
       )
     });
