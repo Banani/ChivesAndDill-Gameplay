@@ -63,7 +63,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       range: 4000,
       spellPowerCost: 0,
       speed: 40,
-      cooldown: 0,
+      cooldown: 3000,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       description: 'Heal target for 250hp',
       spellEffectsOnTarget: [

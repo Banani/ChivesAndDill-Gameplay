@@ -12,18 +12,22 @@ export const SpellsBar = () => {
   const keyBinds = useSelector(selectKeyBinds);
 
   const [activeStyles, setActiveStyles] = useState({ width: "40px" });
+  const [cooldownProgress, setCooldownProgress] = useState(3000);
 
   let renderSpells;
 
   useEffect(() => {
     const interval = setInterval(() => {
-
+      if(cooldownProgress > 0) {
+        setCooldownProgress(cooldownProgress - (1000 / 16));
+        setActiveStyles({ width: `${(cooldownProgress / spells.Projectile.cooldown * 100) / 2}px`})
+      }
     }, 1000 / 60);
 
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [spells, cooldownProgress]);
 
   if (Object.keys(spells).length) {
     renderSpells = _.map(keyBinds, (spell, index) => {
