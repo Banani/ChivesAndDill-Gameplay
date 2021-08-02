@@ -7,7 +7,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       name: 'ArcaneBarrage',
       range: 4000,
       spellPowerCost: 0,
-      cooldown: 100,
+      cooldown: 1000,
       channelFrequency: 1000,
       channelTime: 3000,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',

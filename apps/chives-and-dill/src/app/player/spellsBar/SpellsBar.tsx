@@ -11,23 +11,37 @@ export const SpellsBar = () => {
   const spells = useSelector(selectSpells);
   const keyBinds = useSelector(selectKeyBinds);
 
-  const [activeStyles, setActiveStyles] = useState({ width: "40px" });
-  const [cooldownProgress, setCooldownProgress] = useState(3000);
+  const [spellsOnCooldown, setSpellOnCooldown] = useState([]);
+  const [clickedSpell, setClickedSpell] = useState("");
 
   let renderSpells;
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if(cooldownProgress > 0) {
-        setCooldownProgress(cooldownProgress - (1000 / 16));
-        setActiveStyles({ width: `${(cooldownProgress / spells.Projectile.cooldown * 100) / 2}px`})
+    _.forIn(context, function (value, key) {
+      if (keyBinds[key] && value) {
+        const spell = [keyBinds[key]];
+        setSpellOnCooldown([...spellsOnCooldown, ...spell.filter(c => !spellsOnCooldown.includes(c))]);
+        setClickedSpell(...spell);
       }
-    }, 1000 / 60);
+    });
+  }, [context])
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [spells, cooldownProgress]);
+  useEffect(() => {
+    if (spellsOnCooldown.includes(clickedSpell) && clickedSpell !== "") {
+      setTimeout(() => {
+        setSpellOnCooldown(spellsOnCooldown.filter(item => item !== clickedSpell));
+        setClickedSpell("")
+      }, spells[clickedSpell].cooldown);
+    }
+  }, [spellsOnCooldown])
+
+  const colorOfSpellBorder = (spell) => {
+    if (spellsOnCooldown.includes(spell.name)) {
+      return "silver"
+    } else {
+      return "black";
+    }
+  }
 
   if (Object.keys(spells).length) {
     renderSpells = _.map(keyBinds, (spell, index) => {
@@ -38,6 +52,7 @@ export const SpellsBar = () => {
           <div className={styles.keyboardNumber}>{index}</div>
           <img
             src={activeSpell.image}
+            style={{ borderColor: `${colorOfSpellBorder(activeSpell)}` }}
             className={styles.spellImage + ' ' + `${context[index] ? styles.activeSpell : null}`}
             alt={activeSpell.name}
           />
@@ -47,7 +62,9 @@ export const SpellsBar = () => {
             <div>{"Cooldown: " + activeSpell.cooldown / 1000 + " sec"}</div>
             <div className={styles.spellDesc}>{activeSpell.description}</div>
           </div>
-          <div className={styles.cooldown} style={activeStyles}></div>
+          {spellsOnCooldown.includes(activeSpell.name) ?
+            <div className={styles.cooldown} style={{ animationDuration: `${activeSpell.cooldown / 1000}s` }} ></div>
+            : null}
         </div>
       )
     });
