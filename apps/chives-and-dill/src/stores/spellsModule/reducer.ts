@@ -1,7 +1,7 @@
 import type { SpellsState } from '../../types/spells';
 import type { SpellsAction } from './actions';
 import { SpellsActionTypes } from './actions';
-import _, { forEach } from 'lodash';
+import _ from 'lodash';
 
 const initialState: SpellsState = {
    projectiles: {},
@@ -9,6 +9,8 @@ const initialState: SpellsState = {
    keyBinding: {},
    areaSpellsEffects: {},
    activeSpellsCasts: {},
+   spellShapesToDisplay: [],
+   lastSpellLandTimestamp: 0,
 };
 
 export const spellsReducer = (state: SpellsState = initialState, action: SpellsAction): SpellsState => {
@@ -35,6 +37,7 @@ export const spellsReducer = (state: SpellsState = initialState, action: SpellsA
             projectiles: {
                ...state.projectiles,
                [action.payload.projectileId]: {
+                  angle: action.payload.angle,
                   projectileId: action.payload.projectileId,
                   spell: action.payload.spell,
                   newLocation: action.payload.currentLocation,
@@ -81,20 +84,40 @@ export const spellsReducer = (state: SpellsState = initialState, action: SpellsA
             activeSpellsCasts: _.omit(state.activeSpellsCasts, action.payload.event.channelId),
          };
       }
+      case SpellsActionTypes.ADD_SPELL_LANDED: {
+         return {
+            ...state,
+            spellShapesToDisplay: [...state.spellShapesToDisplay, action.payload.event],
+            lastSpellLandTimestamp: Date.now(),
+         };
+      }
 
-      case SpellsActionTypes.ADD_ACTIVE_SPELL_CAST:
+      case SpellsActionTypes.CLEAR_FIRST_LANDED_SPELL: {
+         return {
+            ...state,
+            spellShapesToDisplay: state.spellShapesToDisplay.slice(1),
+         };
+      }
+
+      case SpellsActionTypes.ADD_ACTIVE_SPELL_CAST: {
+         let activeSpellsCasts = state.activeSpellsCasts;
+
          if (action.payload.event.spell.channelTime) {
-            return {
-               ...state,
-               activeSpellsCasts: {
-                  ...state.activeSpellsCasts,
-                  [action.payload.event.casterId]: {
-                     castTime: action.payload.event.spell.channelTime,
-                     spellCastTimeStamp: Date.now(),
-                  },
+            activeSpellsCasts = {
+               ...activeSpellsCasts,
+               [action.payload.event.casterId]: {
+                  castTime: action.payload.event.spell.channelTime,
+                  spellCastTimeStamp: Date.now(),
                },
             };
          }
+
+         return {
+            ...state,
+            activeSpellsCasts,
+         };
+      }
+
       default:
          return state;
    }

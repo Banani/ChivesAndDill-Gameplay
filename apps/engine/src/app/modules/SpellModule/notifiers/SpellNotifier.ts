@@ -36,7 +36,7 @@ export class SpellNotifier extends EventParser {
 
    handleSpellLanded: EngineEventHandler<SpellLandedEvent> = ({ event, services }) => {
       services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.SpellLanded, {
-         spellName: event.spell.name,
+         spell: event.spell,
          angle: event.angle,
          castLocation: event.caster?.location,
          directionLocation: event.location,

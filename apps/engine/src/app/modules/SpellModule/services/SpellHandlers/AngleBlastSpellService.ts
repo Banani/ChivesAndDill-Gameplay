@@ -56,7 +56,7 @@ export class AngleBlastSpellService extends EventParser {
             caster,
             // BUG, do ustalenia jaka jest location
             location: event.directionLocation,
-            angle: event.spell.angle,
+            angle: castAngle,
          });
 
          for (const i in omit(allCharacters, [caster.id])) {

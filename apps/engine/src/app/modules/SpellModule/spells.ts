@@ -2,7 +2,7 @@ import { Classes } from '../../types/Classes';
 import { AreaType, PowerStackType, Spell, SpellEffectType, SpellType } from './types/spellTypes';
 
 export const ALL_SPELLS: Record<string, Spell> = {
-   FireBall: {
+   Fireball: {
       type: SpellType.Channel,
       name: 'Fireball',
       range: 600,
@@ -52,6 +52,16 @@ export const ALL_SPELLS: Record<string, Spell> = {
          },
       ],
    },
+
+   Teleportation: {
+      type: SpellType.Teleportation,
+      name: 'Teleportation',
+      range: 1000,
+      spellPowerCost: 10,
+      cooldown: 10000,
+      image: '../assets/spritesheets/spells/hunter/arcaneShot.jpg',
+   },
+
    ArrowShot: {
       type: SpellType.Projectile,
       name: 'ArrowShot',
@@ -167,7 +177,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       angle: Math.PI / 3,
       range: 250,
       spellPowerCost: 20,
-      cooldown: 800,
+      cooldown: 0,
       image: '../assets/spritesheets/spells/paladin/lightOfDawn.jpg',
       description: 'Spend your holy powers on area healing spell',
       spellEffectsOnTarget: [
@@ -176,7 +186,24 @@ export const ALL_SPELLS: Record<string, Spell> = {
             amount: 80,
          },
       ],
-      requiredPowerStacks: [{ type: PowerStackType.HolyPower, amount: 3 }],
+      //   requiredPowerStacks: [{ type: PowerStackType.HolyPower, amount: 3 }],
+   },
+   HolyCone2: {
+      type: SpellType.AngleBlast,
+      name: 'HolyCone2',
+      angle: Math.PI / 9,
+      range: 350,
+      spellPowerCost: 20,
+      cooldown: 0,
+      image: '../assets/spritesheets/spells/paladin/lightOfDawn.jpg',
+      description: 'Spend your holy powers on area healing spell',
+      spellEffectsOnTarget: [
+         {
+            type: SpellEffectType.Damage,
+            amount: 90,
+         },
+      ],
+      //   requiredPowerStacks: [{ type: PowerStackType.HolyPower, amount: 3 }],
    },
    TauntingStrike: {
       type: SpellType.DirectInstant,
@@ -384,9 +411,14 @@ export const ALL_SPELLS: Record<string, Spell> = {
 export const SpellsPerClass: Record<Classes, Record<string, Spell>> = {
    [Classes.Tank]: { BleedingStrike: ALL_SPELLS['BleedingStrike'], TauntingStrike: ALL_SPELLS['TauntingStrike'], HealingStrike: ALL_SPELLS['HealingStrike'] },
 
-   [Classes.Healer]: { HealingLight: ALL_SPELLS['HealingLight'], HolyCone: ALL_SPELLS['HolyCone'], CrusaderStrike: ALL_SPELLS['CrusaderStrike'] },
+   [Classes.Healer]: {
+      HealingLight: ALL_SPELLS['HealingLight'],
+      HolyCone: ALL_SPELLS['HolyCone'],
+      HolyCone2: ALL_SPELLS['HolyCone2'],
+      CrusaderStrike: ALL_SPELLS['CrusaderStrike'],
+   },
 
    [Classes.Hunter]: { ArrowShot: ALL_SPELLS['ArrowShot'], toxicShot: ALL_SPELLS['toxicShot'], GuidedShot: ALL_SPELLS['GuidedShot'] },
 
-   [Classes.Mage]: { FireBall: ALL_SPELLS['FireBall'], PowerShield: ALL_SPELLS['PowerShield'] },
+   [Classes.Mage]: { Fireball: ALL_SPELLS['Fireball'], PowerShield: ALL_SPELLS['PowerShield'], Teleportation: ALL_SPELLS['Teleportation'] },
 };

@@ -28,6 +28,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       escapeRange: 2000,
       attackFrequency: 1500,
       spells: {
+         Teleportation: ALL_SPELLS['Teleportation'],
          MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
          MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
          MonsterInstant2: ALL_SPELLS['MonsterInstant2'],

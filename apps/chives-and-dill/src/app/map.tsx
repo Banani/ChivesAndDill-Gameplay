@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { Stage, Sprite, Graphics, Container } from '@inlet/react-pixi';
-import { useSelector } from 'react-redux';
+import { Stage, Sprite, Graphics, Container, AppContext } from '@inlet/react-pixi';
+import { Provider, ReactReduxContext, useSelector } from 'react-redux';
 import {
    selectCharacters,
    selectCharacterViewsSettings,
@@ -15,6 +15,7 @@ import Player from './player/Player';
 import { PlayerIcon } from './player/playerIcon/PlayerIcon';
 import { SpellsBar } from './player/spellsBar/SpellsBar';
 import { CastBar } from './mapContent/CastBar';
+import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -95,25 +96,37 @@ const Map = () => {
       <>
          {activePlayerId ? <SpellsBar player={players[activePlayerId]}></SpellsBar> : null}
          {activePlayerId ? <PlayerIcon player={players[activePlayerId]}></PlayerIcon> : null}
-         <Stage width={gameWidth} height={gameHeight} options={{ backgroundColor: 0x000000, autoDensity: true }}>
-            {activePlayerId && (
-               <Container
-                  position={[
-                     -players[activePlayerId]?.location.x * scale + gameWidth / 2 ?? 0,
-                     -players[activePlayerId]?.location.y * scale + gameHeight / 2 ?? 0,
-                  ]}
-               >
-                  <Graphics draw={drawAreasSpellsEffects} />
-                  {renderSpells}
-                  {renderPlayers}
-                  <CastBar activeSpellsCasts={activeSpellsCasts} activePlayerId={activePlayerId} players={players} />
-                  {players[activePlayerId] ? <Player player={players[activePlayerId]} characterViewsSettings={characterViewsSettings} /> : null}
+         <ReactReduxContext.Consumer>
+            {({ store }) => (
+               <Stage width={gameWidth} height={gameHeight} options={{ backgroundColor: 0x000000, autoDensity: true }}>
+                  <AppContext.Consumer>
+                     {(app) => (
+                        <Provider store={store}>
+                           {activePlayerId && (
+                              <Container
+                                 position={[
+                                    -players[activePlayerId]?.location.x * scale + gameWidth / 2 ?? 0,
+                                    -players[activePlayerId]?.location.y * scale + gameHeight / 2 ?? 0,
+                                 ]}
+                              >
+                                 <Graphics draw={drawAreasSpellsEffects} />
+                                 {renderSpells}
+                                 {renderPlayers}
+                                 <CastBar activeSpellsCasts={activeSpellsCasts} activePlayerId={activePlayerId} players={players} />
+                                 {players[activePlayerId] ? <Player player={players[activePlayerId]} characterViewsSettings={characterViewsSettings} /> : null}
 
-                  {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
-                  <Graphics draw={drawBorders} />
-               </Container>
+                                 {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
+                                 <Graphics draw={drawBorders} />
+
+                                 <BlinkSpellEffect />
+                              </Container>
+                           )}
+                        </Provider>
+                     )}
+                  </AppContext.Consumer>
+               </Stage>
             )}
-         </Stage>
+         </ReactReduxContext.Consumer>
       </>
    );
 };

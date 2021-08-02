@@ -8,6 +8,7 @@ import {
    CharacterLostHpEvent,
    CharacterType,
    EngineEventHandler,
+   PlayerMovedEvent,
    TakeCharacterHealthPointsEvent,
    TakeCharacterSpellPowerEvent,
 } from '../../../types';
@@ -38,6 +39,7 @@ export class MonsterService extends EventParser {
          [EngineEvents.AddCharacterHealthPoints]: this.handleAddCharacterHealthPoints,
          [EngineEvents.TakeCharacterSpellPower]: this.handleTakeCharacterSpellPower,
          [EngineEvents.AddCharacterSpellPower]: this.handleAddCharacterSpellPower,
+         [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
       };
    }
 
@@ -46,6 +48,13 @@ export class MonsterService extends EventParser {
    };
    test2: EngineEventHandler<MonsterLostTargetEvent> = ({ event }) => {
       console.log('targetLost:', event.targetId);
+   };
+
+   handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
+      if (this.monsters[event.characterId]) {
+         this.monsters[event.characterId].location = event.newLocation;
+         this.monsters[event.characterId].direction = event.newCharacterDirection;
+      }
    };
 
    handleCreateNewMonster: EngineEventHandler<CreateNewMonsterEvent> = ({ event }) => {

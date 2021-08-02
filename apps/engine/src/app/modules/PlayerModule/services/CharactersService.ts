@@ -71,8 +71,10 @@ export class CharactersService extends EventParser {
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
-      this.characters[event.characterId].location = event.newLocation;
-      this.characters[event.characterId].direction = event.newCharacterDirection;
+      if (this.characters[event.characterId]) {
+         this.characters[event.characterId].location = event.newLocation;
+         this.characters[event.characterId].direction = event.newCharacterDirection;
+      }
    };
 
    handleTakeCharacterHealthPoints: EngineEventHandler<TakeCharacterHealthPointsEvent> = ({ event }) => {

@@ -14,6 +14,7 @@ import {
    SpellAvailabilityService,
    SpellEffectApplierService,
    SpellNotifier,
+   TeleportationSpellService,
 } from '../modules';
 import { BossFightService, MonsterAttackService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
@@ -66,4 +67,5 @@ export interface Services {
    guidedProjectilesService: GuidedProjectilesService;
    powerStackEffectService: PowerStackEffectService;
    absorbShieldEffectService: AbsorbShieldEffectService;
+   teleportationSpellService: TeleportationSpellService;
 }

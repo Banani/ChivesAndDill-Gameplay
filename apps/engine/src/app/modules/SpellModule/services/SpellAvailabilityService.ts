@@ -32,6 +32,7 @@ export class SpellAvailabilityService extends EventParser {
       ] as Character;
 
       const spell = ALL_SPELLS[event.spellData.spellName];
+      console.log(character.spells);
       if (!character.spells[spell?.name]) {
          return;
       }

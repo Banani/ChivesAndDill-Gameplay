@@ -28,7 +28,7 @@ import {
    RespawnMonsterEngine,
    RespawnService,
 } from './app/modules/MonsterModule';
-import { ProjectileMovement, AreaEffectsEngine, TickOverTimeEffectEngine, ProjectileNotifier } from './app/modules/SpellModule';
+import { ProjectileMovement, AreaEffectsEngine, TickOverTimeEffectEngine, ProjectileNotifier, TeleportationSpellService } from './app/modules/SpellModule';
 import { ChannelEngine } from './app/modules/SpellModule/engines/ChannelEngine';
 import { GuidedProjectileEngine } from './app/modules/SpellModule/engines/GuidedProjectileEngine';
 import { CooldownService } from './app/modules/SpellModule/services/CooldownService';
@@ -122,6 +122,7 @@ const services: Services = {
    guidedProjectilesService: new GuidedProjectilesService(guidedProjectileEngine),
    powerStackEffectService: new PowerStackEffectService(),
    absorbShieldEffectService: new AbsorbShieldEffectService(),
+   teleportationSpellService: new TeleportationSpellService(),
 };
 
 const engineEventCreator = new EngineEventCrator(services);

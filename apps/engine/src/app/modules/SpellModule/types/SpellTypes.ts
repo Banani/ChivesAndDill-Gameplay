@@ -5,6 +5,7 @@ export enum SpellType {
    AngleBlast = 'AngleBlast',
    Area = 'Area',
    Channel = 'Channel',
+   Teleportation = 'Teleportation',
 }
 
 export enum AreaType {
@@ -103,8 +104,9 @@ export type ChannelSpell = BaseSpell &
       channelFrequency: number;
       channelTime: number;
    };
+export type TeleportationSpell = BaseSpell & BaseSubSpell & EffectHolders & { type: SpellType.Teleportation; range: number };
 
-export type Spell = ProjectileSpell | GuidedProjectileSpell | DirectInstantSpell | AngleBlastSpell | AreaSpell | ChannelSpell;
+export type Spell = ProjectileSpell | GuidedProjectileSpell | DirectInstantSpell | AngleBlastSpell | AreaSpell | ChannelSpell | TeleportationSpell;
 
 export interface SpellEffect {
    type: SpellEffectType;
