@@ -150,8 +150,8 @@ export class CharactersService extends EventParser {
          maxSpellPower: 100,
       },
       [Classes.Healer]: {
-         currentHp: 250,
-         maxHp: 250,
+         currentHp: 25000,
+         maxHp: 25000,
          currentSpellPower: 2000,
          maxSpellPower: 2000,
       },

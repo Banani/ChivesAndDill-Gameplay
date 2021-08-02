@@ -49,6 +49,7 @@ export class ChannelService extends EventParser {
 
    handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
       if (event.spell.type === SpellType.Channel) {
+         this.interruptChanneling(event.casterId);
          const allCharacters = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() };
          const caster = allCharacters[event.casterId];
 

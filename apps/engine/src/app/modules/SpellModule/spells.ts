@@ -349,7 +349,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
    DestroyerRoarAttack: {
       type: SpellType.Channel,
       name: 'DestroyerRoarAttack',
-      range: 4000,
+      range: 800,
       spellPowerCost: 0,
       cooldown: 0,
       channelFrequency: 2000,
@@ -359,7 +359,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
             name: 'DestroyerRoarAttack_AngleBlast',
             type: SpellType.AngleBlast,
             angle: Math.PI * 2,
-            range: 4000,
+            range: 800,
             spellEffectsOnTarget: [
                {
                   type: SpellEffectType.Damage,
@@ -386,7 +386,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
    DestroyerBreatheAttack: {
       type: SpellType.Channel,
       name: 'DestroyerBreatheAttack',
-      range: 4000,
+      range: 600,
       spellPowerCost: 0,
       cooldown: 0,
       channelFrequency: 200,
@@ -395,8 +395,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
          {
             name: 'DestroyerBreatheAttack_AngleBlast',
             type: SpellType.AngleBlast,
-            angle: Math.PI / 3,
-            range: 1000,
+            angle: Math.PI / 4,
+            range: 600,
             spellEffectsOnTarget: [
                {
                   type: SpellEffectType.Damage,

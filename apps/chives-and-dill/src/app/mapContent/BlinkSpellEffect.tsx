@@ -9,7 +9,6 @@ export const BlinkSpellEffect = () => {
    const activeSpellsCasts = useSelector(selectSpellShapesToDisplay);
    const lastSpellLandTimestamp = useSelector(selectLastSpellLandTimestamp);
    const dispatch = useDispatch();
-   console.log(activeSpellsCasts);
 
    const angleBlastDrawer = (g, spellLandedEvent) => {
       const spellDefintion = BlinkSpellDefinitions[spellLandedEvent.spell.name];

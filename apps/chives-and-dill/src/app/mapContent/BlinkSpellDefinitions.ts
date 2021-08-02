@@ -16,4 +16,14 @@ export const BlinkSpellDefinitions: Record<string, BlinkSpellDefinition> = {
       color: 0x900603,
       alpha: 0.5,
    },
+   DestroyerBreatheAttack_AngleBlast: {
+      type: 'AngleBlast',
+      color: 0x41424c,
+      alpha: 0.5,
+   },
+   DestroyerRoarAttack_AngleBlast: {
+      type: 'AngleBlast',
+      color: 0x900603,
+      alpha: 0.5,
+   },
 };
