@@ -63,7 +63,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       size: 50,
       healthPoints: 20000,
       spellPower: 10000,
-      speed: 12,
+      speed: 6,
       sightRange: 200,
       desiredRange: 50,
       escapeRange: 2000,

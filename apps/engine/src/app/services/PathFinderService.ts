@@ -3,7 +3,8 @@ import { EngineEventCrator } from '../EngineEventsCreator';
 import { PathFinderEngine } from '../engines';
 import { EventParser } from '../EventParser';
 import { Location } from '../types/Location';
-import { CreatePathEvent, EngineEventHandler, UpdatePathEvent } from '../types';
+import { CharacterDiedEvent, CreatePathEvent, EngineEventHandler, UpdatePathEvent } from '../types';
+import { MonsterDiedEvent, MonsterEngineEvents } from '../modules/MonsterModule/Events';
 
 interface Path {
    pathSeekerId: string;
@@ -21,6 +22,8 @@ export class PathFinderService extends EventParser {
       this.eventsToHandlersMap = {
          [EngineEvents.CreatePath]: this.handleCreatePath,
          [EngineEvents.UpdatePath]: this.handleUpdatePath,
+         [EngineEvents.CharacterDied]: this.handleCharacterDied,
+         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
       };
    }
 
@@ -42,6 +45,14 @@ export class PathFinderService extends EventParser {
          ...this.activePaths[event.pathSeekerId],
          points: event.points,
       };
+   };
+
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
+      delete this.activePaths[event.character.id];
+   };
+
+   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
+      delete this.activePaths[event.monster.id];
    };
 
    getActivePaths = () => this.activePaths;
