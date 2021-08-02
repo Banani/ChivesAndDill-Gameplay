@@ -28,6 +28,20 @@ export interface Quest {
    id: string;
    name: string;
    description: string;
+   questStage: {
+      description: string,
+      id: string
+      stageParts: Record<string, StagePart>
+   }
+}
+
+interface StagePart {
+   amount: number,
+   id: string,
+   questId: string,
+   stageId: string,
+   type: number,
+   rule: any
 }
 
 export interface SpriteSheet {

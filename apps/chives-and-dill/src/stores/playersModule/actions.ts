@@ -14,6 +14,7 @@ import type {
   QuestStartedPayload,
   QuestCompletedPayload,
   KillingStagePartProgressPayload,
+  NewQuestStageStartedPayload,
 } from '../../types/players';
 
 export enum PlayersActionTypes {
@@ -30,6 +31,7 @@ export enum PlayersActionTypes {
   QUEST_STARTED = '[Players] QUEST_STARTED',
   QUEST_COMPLETED = '[Players] QUEST_COMPLETED',
   KILLING_STAGE_PART_PROGRESS = '[Players] KILLING_STAGE_PART_PROGRESS',
+  NEW_QUEST_STAGE_STARTED = '[QUESTS] NEW_QUEST_STAGE_STARTED',
 }
 
 export type ChangePlayerPosition = FSAAuto<
@@ -95,6 +97,11 @@ export type ChangePlayerMovingStatus = FSAAuto<
 export type KillingStagePartProgress = FSAAuto<
   PlayersActionTypes.KILLING_STAGE_PART_PROGRESS,
   KillingStagePartProgressPayload
+>;
+
+export type NewQuestStageStarted = FSAAuto<
+  PlayersActionTypes.NEW_QUEST_STAGE_STARTED,
+  NewQuestStageStartedPayload
 >;
 
 export const changePlayerPosition = (
@@ -168,6 +175,11 @@ export const killingStagePartProgress = (payload: KillingStagePartProgressPayloa
   payload,
 });
 
+export const newQuestStageStarted = (payload: NewQuestStageStartedPayload): NewQuestStageStarted => ({
+  type: PlayersActionTypes.NEW_QUEST_STAGE_STARTED,
+  payload,
+});
+
 export type PlayerAction =
   | ChangePlayerPosition
   | Initialize
@@ -181,4 +193,5 @@ export type PlayerAction =
   | CharacterDied
   | QuestStarted
   | QuestCompleted
-  | KillingStagePartProgress;
+  | KillingStagePartProgress
+  | NewQuestStageStarted;

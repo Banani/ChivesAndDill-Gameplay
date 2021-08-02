@@ -51,13 +51,13 @@ export const Quests: Record<string, Quest> = {
    },
    '2': {
       id: '2',
-      name: 'A hero rises',
-      description: 'A hero needs to rise.',
+      name: 'Carrots for Adrian',
+      description: 'Adrian needs carrots. Go hero and collect them, but remember if you failed all worlds will burn',
       stageOrder: ['3'],
       stages: {
          '3': {
             id: '3',
-            description: 'Hero should start from going to 200x200',
+            description: 'Kill rabbits who stole carrots from farmer Adrian',
             stageParts: {
                '4': {
                   id: '4',

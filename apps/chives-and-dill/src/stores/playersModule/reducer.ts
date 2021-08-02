@@ -225,6 +225,33 @@ export const playersReducer = (
           ...state,
           quests: _.omit(state.quests, action.payload.questId),
         };
+      case PlayersActionTypes.NEW_QUEST_STAGE_STARTED:
+        return {
+          ...state,
+          quests: {
+            ...state.quests,
+            [action.payload.questId]: {
+              ...state.quests[action.payload.questId],
+              questStage: action.payload.questStage
+            }
+          },
+      };
+      case PlayersActionTypes.KILLING_STAGE_PART_PROGRESS:
+        return {
+          ...state,
+          quests: {
+            ...state.quests,
+            [action.payload.questId]: {
+              ...state.quests[action.payload.questId],
+              questStage: {
+                stageParts: {
+                  currentProgress: action.payload.questStage.stageParts.currentProgress,
+                  targetAmount: action.payload.questStage.stageParts.targetAmount
+                }
+              }
+            }
+          },
+      };
     default:
       return state;
   }

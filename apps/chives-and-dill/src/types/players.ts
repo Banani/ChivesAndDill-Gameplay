@@ -93,3 +93,7 @@ export interface KillingStagePartProgressPayload {
   currentProgress: number,
   targetAmount: number
 }
+
+export interface NewQuestStageStartedPayload {
+  questId: string,
+}

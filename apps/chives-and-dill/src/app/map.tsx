@@ -7,6 +7,7 @@ import Player from './player/Player';
 import { PlayerIcon } from "./player/playerIcon/PlayerIcon";
 import { SpellsBar } from "./player/spellsBar/SpellsBar";
 import QuestLog from "./player/quests/Quest-gui";
+import { QuestsSideView } from './player/quests/questSideView/QuestsSideView';
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -78,7 +79,7 @@ const Map = () => {
       <>
          {activePlayerId ? <SpellsBar player={players[activePlayerId]}></SpellsBar> : null}
          {activePlayerId ? <PlayerIcon player={players[activePlayerId]}></PlayerIcon> : null}
-         
+         {<QuestsSideView />}
          <Stage
             width={gameWidth}
             height={gameHeight}

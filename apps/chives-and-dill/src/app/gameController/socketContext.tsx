@@ -15,7 +15,8 @@ import {
   characterDied,
   questStarted,
   questCompleted,
-  killingStagePartProgress
+  killingStagePartProgress,
+  newQuestStageStarted
 } from '../../stores';
 import AppContext from './context';
 
@@ -47,11 +48,6 @@ const SocketContext = ({ children }) => {
          });
 
          context.socket.on(EngineMessages.PlayerStartedMovement, ({ userId }) => {
-            dispatch(changePlayerMovingStatus({ userId, isInMove: true }));
-         });
-
-         context.socket.on(QuestEngineMessages.KillingStagePartProgress, (data) => {
-            console.log(data);
             dispatch(changePlayerMovingStatus({ userId, isInMove: true }));
          });
 
@@ -95,8 +91,11 @@ const SocketContext = ({ children }) => {
             dispatch(questCompleted({ questId, characterId }));
          });
 
+         context.socket.on(QuestEngineMessages.NewQuestStageStarted, ({ questId, characterId, questStage }) => {
+            dispatch(newQuestStageStarted({ questId, characterId, questStage }));
+         });
+         
          context.socket.on(QuestEngineMessages.KillingStagePartProgress, ({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }) => {
-            console.log(questId, stageId, characterId, stagePartId, currentProgress, targetAmount )
             dispatch(killingStagePartProgress({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }));
          });
 
