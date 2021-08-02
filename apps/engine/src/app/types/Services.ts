@@ -1,3 +1,4 @@
+import { PathFinderEngine } from '../engines';
 import {
    AngleBlastSpellService,
    AreaSpellService,
@@ -16,7 +17,7 @@ import {
    SpellNotifier,
    TeleportationSpellService,
 } from '../modules';
-import { BossFightService, MonsterAttackService, MonsterService, RespawnService } from '../modules/MonsterModule';
+import { BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
 import { AggroService } from '../modules/MonsterModule/services/aggroService';
 import { PlayerMovementService } from '../modules/PlayerModule';
@@ -30,9 +31,10 @@ import { PowerStackEffectService } from '../modules/SpellModule/services/EffectH
 import { TickEffectOverTimeService } from '../modules/SpellModule/services/EffectHandlers/TickEffectOverTimeService';
 import { ChannelService } from '../modules/SpellModule/services/SpellHandlers/ChannelService';
 import { GuidedProjectilesService } from '../modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
-import { SocketConnectionService } from '../services';
+import { PathFinderService, SocketConnectionService } from '../services';
 
 export interface Services {
+   pathFinderService: PathFinderService;
    characterService: CharactersService;
    playerMovementService: PlayerMovementService;
    projectilesService: ProjectilesService;
@@ -60,6 +62,7 @@ export interface Services {
    generateSpellPowerEffectService: GenerateSpellPowerEffectService;
    healEffectService: HealEffectService;
    areaEffectService: AreaEffectService;
+   monsterMovementService: MonsterMovementService;
    channelService: ChannelService;
    spellNotifier: SpellNotifier;
    tickEffectOverTimeService: TickEffectOverTimeService;

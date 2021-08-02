@@ -63,11 +63,15 @@ export class CharactersService extends EventParser {
    };
 
    handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event }) => {
-      this.characters[event.characterId].isInMove = true;
+      if (this.characters[event.characterId]) {
+         this.characters[event.characterId].isInMove = true;
+      }
    };
 
    handlePlayerStopedAllMovementVectors: EngineEventHandler<PlayerStopedAllMovementVectorsEvent> = ({ event }) => {
-      this.characters[event.characterId].isInMove = false;
+      if (this.characters[event.characterId]) {
+         this.characters[event.characterId].isInMove = false;
+      }
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
@@ -181,6 +185,7 @@ export class CharactersService extends EventParser {
          sprites: 'nakedFemale',
          isInMove: false,
          socketId,
+         speed: 10,
          currentHp: 400,
          maxHp: 400,
          currentSpellPower: 100,

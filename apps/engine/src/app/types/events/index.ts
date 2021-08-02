@@ -123,6 +123,16 @@ export interface AddCharacterSpellPowerEvent extends EngineEvent {
    amount: number;
 }
 
+export interface CreatePathEvent extends EngineEvent {
+   pathSeekerId: string;
+   targetId: string;
+}
+
+export interface UpdatePathEvent extends EngineEvent {
+   pathSeekerId: string;
+   points: Location[];
+}
+
 export type EngineEventHandler<T> = ({ event, services }: { event: T; services: Services }) => void;
 
 export interface EngineEventsMap {
@@ -143,4 +153,7 @@ export interface EngineEventsMap {
    [EngineEvents.AddCharacterSpellPower]: EngineEventHandler<AddCharacterSpellPowerEvent>;
    [EngineEvents.CharacterLostSpellPower]: EngineEventHandler<CharacterLostSpellPowerEvent>;
    [EngineEvents.CharacterGotSpellPower]: EngineEventHandler<CharacterGotSpellPowerEvent>;
+
+   [EngineEvents.CreatePath]: EngineEventHandler<CreatePathEvent>;
+   [EngineEvents.UpdatePath]: EngineEventHandler<UpdatePathEvent>;
 }

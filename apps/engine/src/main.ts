@@ -1,4 +1,4 @@
-import { SocketConnectionService } from './app/services';
+import { PathFinderService, SocketConnectionService } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
 import { Services } from './app/types/Services';
 import {
@@ -23,6 +23,7 @@ import {
    BossFightService,
    MonsterAttackEngine,
    MonsterAttackService,
+   MonsterMovementService,
    MonsterNotifier,
    MonsterService,
    RespawnMonsterEngine,
@@ -42,6 +43,8 @@ import { GuidedProjectilesService } from './app/modules/SpellModule/services/Spe
 import { PlayerMovementService, PlayersMovement } from './app/modules/PlayerModule';
 import { CharactersService } from './app/modules/PlayerModule/services/CharactersService';
 import { CharacterEffectNotifier, PlayerMovementNotifier } from './app/modules/PlayerModule/notifiers';
+import { PathFinderEngine } from './app/engines';
+import { MonsterMovementEngine } from './app/modules/MonsterModule/engines/MonsterMovementEngine';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -61,6 +64,7 @@ httpServer.listen(port, hostname, () => {
    console.log(`Server running at http://${hostname}:${port}/`);
 });
 
+const pathFinderEngine = new PathFinderEngine();
 const playerMovementEngine = new PlayersMovement();
 const projectileMovement = new ProjectileMovement();
 const guidedProjectileEngine = new GuidedProjectileEngine();
@@ -69,9 +73,11 @@ const monsterAttackEngine = new MonsterAttackEngine();
 const areaEffectsEngine = new AreaEffectsEngine();
 const channelEngine = new ChannelEngine();
 const tickOverTimeEffectEngine = new TickOverTimeEffectEngine();
+const monsterMovementEngine = new MonsterMovementEngine();
 const bossFightEngine = new BossFightEngine();
 
 const fastEngines = [
+   pathFinderEngine,
    playerMovementEngine,
    projectileMovement,
    guidedProjectileEngine,
@@ -79,11 +85,13 @@ const fastEngines = [
    areaEffectsEngine,
    channelEngine,
    tickOverTimeEffectEngine,
+   monsterMovementEngine,
    bossFightEngine,
 ];
 const slowEngines = [respawnMonsterEngine];
 
 const services: Services = {
+   pathFinderService: new PathFinderService(pathFinderEngine),
    characterService: new CharactersService(),
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
@@ -102,6 +110,7 @@ const services: Services = {
    respawnService: new RespawnService(respawnMonsterEngine),
    aggroService: new AggroService(),
    monsterAttackService: new MonsterAttackService(monsterAttackEngine),
+   monsterMovementService: new MonsterMovementService(monsterMovementEngine),
    monsterNotifier: new MonsterNotifier(),
 
    manaService: new ManaService(),

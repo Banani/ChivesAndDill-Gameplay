@@ -44,6 +44,7 @@ export interface MonsterDiedEvent extends EngineEvent {
 
 export interface MonsterPulledEvent extends EngineEvent {
    monster: Monster;
+   targetId: string;
 }
 
 export interface ScheduleMonsterAttackEvent extends EngineEvent {

@@ -10,6 +10,7 @@ export interface Character {
    sprites: string; // Should be an object
    size: number; // Should be in that object
    direction: CharacterDirection;
+   speed: number;
    isInMove: boolean;
    currentHp: number;
    maxHp: number;

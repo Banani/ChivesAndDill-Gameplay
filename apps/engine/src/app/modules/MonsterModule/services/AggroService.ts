@@ -41,6 +41,7 @@ export class AggroService extends EventParser {
 
       this.engineEventCrator.asyncCeateEvent<MonsterPulledEvent>({
          type: MonsterEngineEvents.MonsterPulled,
+         targetId: characterId,
          monster,
       });
 
@@ -136,6 +137,7 @@ export class AggroService extends EventParser {
          this.engineEventCrator.asyncCeateEvent<MonsterPulledEvent>({
             type: MonsterEngineEvents.MonsterPulled,
             monster: event.target as Monster,
+            targetId: event.target.id,
          });
       }
 

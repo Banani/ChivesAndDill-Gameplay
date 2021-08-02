@@ -10,6 +10,8 @@ export interface MonsterTemplate {
    spellPower: number;
    division?: string;
    sightRange: number;
+   desiredRange: number;
+   speed: number;
    escapeRange: number;
    spells: Record<string, Spell>;
    attackFrequency: number;
@@ -23,8 +25,10 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       size: 50,
       healthPoints: 60,
       spellPower: 100,
+      speed: 8,
       division: 'PigSlut',
       sightRange: 200,
+      desiredRange: 50,
       escapeRange: 2000,
       attackFrequency: 1500,
       spells: {
@@ -42,7 +46,9 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       healthPoints: 200,
       spellPower: 100,
       division: 'PigFucker',
+      speed: 8,
       sightRange: 200,
+      desiredRange: 200,
       escapeRange: 2000,
       attackFrequency: 500,
       spells: {
@@ -57,7 +63,9 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       size: 50,
       healthPoints: 20000,
       spellPower: 10000,
+      speed: 12,
       sightRange: 200,
+      desiredRange: 50,
       escapeRange: 2000,
       attackFrequency: 900,
       spells: {
