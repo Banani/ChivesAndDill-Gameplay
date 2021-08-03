@@ -95,15 +95,12 @@ const Map = () => {
 
    const scale = 1;
 
-   const [questOpen, setQuestOpen] = useState(false);
-
    return (
       <>
          {activePlayerId ? <SpellsBar player={players[activePlayerId]}></SpellsBar> : null}
          {activePlayerId ? <PlayerIcon player={players[activePlayerId]}></PlayerIcon> : null}
          {<QuestsSideView />}
-         <QuestLog trigger={questOpen} setTrigger={setQuestOpen} />
-         <button className="qOpen" onClick={() => setQuestOpen(!questOpen)}>Q</button>
+         <QuestLog />
          <ReactReduxContext.Consumer>
             {({ store }) => (
                <Stage width={gameWidth} height={gameHeight} options={{ backgroundColor: 0x000000, autoDensity: true }}>

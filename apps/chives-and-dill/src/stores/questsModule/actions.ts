@@ -4,6 +4,7 @@ import type {
   QuestCompletedPayload,
   KillingStagePartProgressPayload,
   NewQuestStageStartedPayload,
+  ActiveQuestDetailsUpdatePayload,
 } from '../../types/quests';
 
 export enum QuestsActionTypes {
@@ -11,6 +12,7 @@ export enum QuestsActionTypes {
   QUEST_COMPLETED = '[QUESTS] QUEST_COMPLETED',
   KILLING_STAGE_PART_PROGRESS = '[QUESTS] KILLING_STAGE_PART_PROGRESS',
   NEW_QUEST_STAGE_STARTED = '[QUESTS] NEW_QUEST_STAGE_STARTED',
+  ACTIVE_QUEST_DETAILS_UPDATE = '[QUESTS] ACTIVE_QUEST_DETAILS_UPDATE',
 }
 
 export type QuestStarted = FSAAuto<
@@ -33,6 +35,11 @@ export type NewQuestStageStarted = FSAAuto<
   NewQuestStageStartedPayload
 >;
 
+export type ActiveQuestDetailsUpdate = FSAAuto<
+  QuestsActionTypes.ACTIVE_QUEST_DETAILS_UPDATE,
+  ActiveQuestDetailsUpdatePayload
+>;
+
 export const questStarted = (payload: QuestStartedPayload): QuestStarted => ({
   type: QuestsActionTypes.QUEST_STARTED,
   payload,
@@ -53,8 +60,14 @@ export const newQuestStageStarted = (payload: NewQuestStageStartedPayload): NewQ
   payload,
 });
 
+export const activeQuestDetailsUpdate = (payload: ActiveQuestDetailsUpdatePayload): ActiveQuestDetailsUpdate => ({
+  type: QuestsActionTypes.ACTIVE_QUEST_DETAILS_UPDATE,
+  payload,
+});
+
 export type QuestAction =
   | QuestStarted
   | QuestCompleted
   | KillingStagePartProgress
-  | NewQuestStageStarted;
+  | NewQuestStageStarted
+  | ActiveQuestDetailsUpdate;

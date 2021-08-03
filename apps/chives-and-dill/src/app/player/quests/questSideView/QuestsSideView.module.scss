@@ -39,6 +39,11 @@
     .questTitle {
         color: #ffc506;
         margin-top: 10px;
+        cursor: pointer;
+
+        &:hover {
+            color: #c09508;
+        }
     }
 
     .questDesc {

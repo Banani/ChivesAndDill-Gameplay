@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import styles from "./QuestsSideView.module.scss";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectQuests } from '../../../../stores';
+import { activeQuestDetailsUpdate } from "../../../../stores";
 import _ from 'lodash';
 
 export const QuestsSideView = () => {
 
+    const dispatch = useDispatch();
     const quests = useSelector(selectQuests);
     const [showQuestsView, updateShowQuestsView] = useState(false);
 
     const renderQuests = _.map(quests, (quest, i) => {
+
         const { name, questStage } = quest;
         let renderQuestStages;
+
         if (questStage) {
             renderQuestStages = _.map(questStage.stageParts, (stage) => {
                 if (stage.type === 0) {
@@ -36,7 +40,7 @@ export const QuestsSideView = () => {
 
         return (
             <div key={i}>
-                <div className={styles.questTitle}>
+                <div className={styles.questTitle} onClick={() => dispatch(activeQuestDetailsUpdate(quest))}>
                     {name}
                 </div>
                 <div className={styles.questDesc}>

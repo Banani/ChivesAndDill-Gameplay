@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 const initialState: QuestsState = {
   quests: {},
+  activeQuestDetails: {},
 };
 
 export const questsReducer = (
@@ -56,7 +57,12 @@ export const questsReducer = (
             }
           },
       };
-    default:
+      case QuestsActionTypes.ACTIVE_QUEST_DETAILS_UPDATE:
+        return {
+          ...state,
+          activeQuestDetails: action.payload
+        }
+      default:
       return state;
   }
 };

@@ -1,7 +1,8 @@
 import type { Quest } from '@bananos/types';
 
 export interface QuestsState {
-  quests: Record<string, Quest>
+  quests: Record<string, Quest>;
+  activeQuestDetails: Quest;
 }
 
 export interface QuestsAwareState {
