@@ -18,8 +18,8 @@ export const QuestsSideView = () => {
                     return (
                         <div key={stage.id}>
                             <div>{stage.description}</div>
-                            <div>x: {stage.targetLocation.x}</div>
-                            <div>y: {stage.targetLocation.y}</div>
+                            <div>- x: {stage.targetLocation.x}</div>
+                            <div>- y: {stage.targetLocation.y}</div>
                         </div>
                     )
                 }
@@ -27,7 +27,7 @@ export const QuestsSideView = () => {
                     return (
                         <div key={stage.id}>
                             <div>{stage.description}</div>
-                            <div>{stage.currentProgress ? stage.currentProgress : 0} / {stage.amount}</div>
+                            <div>- {stage.currentProgress ? stage.currentProgress : 0} / {stage.amount}</div>
                         </div>
                     )
                 }

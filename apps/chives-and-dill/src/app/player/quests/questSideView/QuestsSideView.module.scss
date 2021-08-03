@@ -3,28 +3,28 @@
     right:0;
     top:0;
     padding: 1em;
-    background-color: black;
+    background-color: rgb(20, 20, 20, 0.6);
     width: 200px;
 
     .sectionTitleContainer {
         display: flex;
         justify-content: space-between;
-        border-bottom: 2px solid gold;
+        border-bottom: 2px solid #ffc506;
         padding-bottom: 5px;
 
         .sectionTitle {
-            color: gold;
+            color: #ffc506;
             font-size: 1.5em;
         }
 
         .questViewToggle {
-            color: red;
+            color: rgb(168, 0, 0);
             padding: 0.3em;
             height: 25px;
             width: 25px;
             cursor: pointer;
             background-color: transparent;
-            border: 2px solid gold;
+            border: 2px solid #ffc506;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -37,13 +37,13 @@
     }
 
     .questTitle {
-        color: gold;
+        color: #ffc506;
         margin-top: 10px;
     }
 
     .questDesc {
-        color: white;
+        color: rgb(241, 241, 241);
+        margin-top: 5px;
     }
 
-    
 }
