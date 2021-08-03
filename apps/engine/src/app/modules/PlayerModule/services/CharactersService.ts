@@ -178,7 +178,7 @@ export class CharactersService extends EventParser {
       const characterClass = Classes.Hunter;
       return {
          type: CharacterType.Player,
-         id: this.increment.toString(),
+         id: `player_${this.increment.toString()}`,
          name: `#player_${this.increment}`,
          location: { x: 950, y: 960 },
          direction: CharacterDirection.DOWN,
@@ -190,6 +190,8 @@ export class CharactersService extends EventParser {
          maxHp: 400,
          currentSpellPower: 100,
          maxSpellPower: 100,
+         healthPointsRegen: 5,
+         spellPowerRegen: 5,
          size: 48,
          isDead: false,
          class: characterClass,

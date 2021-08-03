@@ -16,6 +16,8 @@ export interface Character {
    maxHp: number;
    currentSpellPower: number;
    maxSpellPower: number;
+   healthPointsRegen: number;
+   spellPowerRegen: number;
    spells: Record<string, Spell>;
 }
 

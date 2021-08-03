@@ -124,13 +124,36 @@ export interface AddCharacterSpellPowerEvent extends EngineEvent {
 }
 
 export interface CreatePathEvent extends EngineEvent {
+   type: EngineEvents.CreatePath;
    pathSeekerId: string;
    targetId: string;
 }
 
 export interface UpdatePathEvent extends EngineEvent {
+   type: EngineEvents.UpdatePath;
    pathSeekerId: string;
    points: Location[];
+}
+
+export interface ScheduleActionEvent extends EngineEvent {
+   type: EngineEvents.ScheduleAction;
+   id: string;
+   frequency: number;
+   perdiod?: number;
+}
+
+export interface ScheduleActionTriggeredEvent extends EngineEvent {
+   type: EngineEvents.ScheduleActionTriggered;
+   id: string;
+}
+export interface ScheduleActionFinishedEvent extends EngineEvent {
+   type: EngineEvents.ScheduleActionFinished;
+   id: string;
+}
+
+export interface CancelScheduledActionEvent extends EngineEvent {
+   type: EngineEvents.CancelScheduledAction;
+   id: string;
 }
 
 export type EngineEventHandler<T> = ({ event, services }: { event: T; services: Services }) => void;
@@ -156,4 +179,8 @@ export interface EngineEventsMap {
 
    [EngineEvents.CreatePath]: EngineEventHandler<CreatePathEvent>;
    [EngineEvents.UpdatePath]: EngineEventHandler<UpdatePathEvent>;
+   [EngineEvents.ScheduleAction]: EngineEventHandler<ScheduleActionEvent>;
+   [EngineEvents.ScheduleActionTriggered]: EngineEventHandler<ScheduleActionTriggeredEvent>;
+   [EngineEvents.ScheduleActionFinished]: EngineEventHandler<ScheduleActionFinishedEvent>;
+   [EngineEvents.CancelScheduledAction]: EngineEventHandler<CancelScheduledActionEvent>;
 }

@@ -17,6 +17,7 @@ import {
    SpellNotifier,
    TeleportationSpellService,
 } from '../modules';
+import { RegenerationService } from '../modules/CharacterModule/services/RegenerationService';
 import { BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
 import { AggroService } from '../modules/MonsterModule/services/aggroService';
@@ -32,9 +33,11 @@ import { TickEffectOverTimeService } from '../modules/SpellModule/services/Effec
 import { ChannelService } from '../modules/SpellModule/services/SpellHandlers/ChannelService';
 import { GuidedProjectilesService } from '../modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
 import { PathFinderService, SocketConnectionService } from '../services';
+import { SchedulerService } from '../services/SchedulerService';
 
 export interface Services {
    pathFinderService: PathFinderService;
+   schedulerService: SchedulerService;
    characterService: CharactersService;
    playerMovementService: PlayerMovementService;
    projectilesService: ProjectilesService;
@@ -71,4 +74,5 @@ export interface Services {
    powerStackEffectService: PowerStackEffectService;
    absorbShieldEffectService: AbsorbShieldEffectService;
    teleportationSpellService: TeleportationSpellService;
+   regenerationService: RegenerationService;
 }

@@ -1,6 +1,6 @@
 import { EngineEvents } from '../../../../EngineEvents';
 import { EventParser } from '../../../../EventParser';
-import { EngineEventHandler, TakeCharacterHealthPointsEvent } from '../../../../types';
+import { AddCharacterHealthPointsEvent, EngineEventHandler } from '../../../../types';
 import { SpellEngineEvents, ApplyTargetSpellEffectEvent } from '../../Events';
 import { SpellEffectType, HealEffect } from '../../types/spellTypes';
 
@@ -16,9 +16,9 @@ export class HealEffectService extends EventParser {
       if (event.effect.type === SpellEffectType.Heal) {
          const effect = event.effect as HealEffect;
 
-         this.engineEventCrator.asyncCeateEvent<TakeCharacterHealthPointsEvent>({
+         this.engineEventCrator.asyncCeateEvent<AddCharacterHealthPointsEvent>({
             type: EngineEvents.AddCharacterHealthPoints,
-            attackerId: event.caster.id,
+            casterId: event.caster.id,
             characterId: event.target.id,
             amount: effect.amount,
          });

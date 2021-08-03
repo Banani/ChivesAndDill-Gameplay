@@ -45,6 +45,9 @@ import { CharactersService } from './app/modules/PlayerModule/services/Character
 import { CharacterEffectNotifier, PlayerMovementNotifier } from './app/modules/PlayerModule/notifiers';
 import { PathFinderEngine } from './app/engines';
 import { MonsterMovementEngine } from './app/modules/MonsterModule/engines/MonsterMovementEngine';
+import { SchedulerService } from './app/services/SchedulerService';
+import { SchedulerEngine } from './app/engines/SchedulerEngine';
+import { RegenerationService } from './app/modules/CharacterModule/services/RegenerationService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -65,6 +68,7 @@ httpServer.listen(port, hostname, () => {
 });
 
 const pathFinderEngine = new PathFinderEngine();
+const schedulerEngine = new SchedulerEngine();
 const playerMovementEngine = new PlayersMovement();
 const projectileMovement = new ProjectileMovement();
 const guidedProjectileEngine = new GuidedProjectileEngine();
@@ -87,6 +91,7 @@ const fastEngines = [
    tickOverTimeEffectEngine,
    monsterMovementEngine,
    bossFightEngine,
+   schedulerEngine,
 ];
 const slowEngines = [respawnMonsterEngine];
 
@@ -98,6 +103,7 @@ const socketConnectionService = new SocketConnectionService(io, notifiers);
 
 const services: Services = {
    pathFinderService: new PathFinderService(pathFinderEngine),
+   schedulerService: new SchedulerService(schedulerEngine),
    characterService: new CharactersService(),
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
@@ -138,6 +144,7 @@ const services: Services = {
    powerStackEffectService: new PowerStackEffectService(),
    absorbShieldEffectService: new AbsorbShieldEffectService(),
    teleportationSpellService: new TeleportationSpellService(),
+   regenerationService: new RegenerationService(),
 };
 
 const engineEventCreator = new EngineEventCrator(services);
