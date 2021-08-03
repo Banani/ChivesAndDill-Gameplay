@@ -20,6 +20,10 @@ import {
    addActiveSpellCast,
    deleteActiveSpellCast,
    addSpellLanded,
+   questStarted,
+   questCompleted,
+   killingStagePartProgress,
+   newQuestStageStarted,
 } from '../../stores';
 import { SocketContext } from './socketContext';
 
@@ -127,6 +131,22 @@ const SocketCommunicator = ({ children }) => {
 
          context.socket.on(FightingEngineMessages.SpellHasBeenCast, (event) => {
             dispatch(addActiveSpellCast({ event }));
+         });
+
+         context.socket.on(QuestEngineMessages.QuestStarted, ({ questTemplate, characterId }) => {
+            dispatch(questStarted({ questTemplate, characterId }));
+         });
+
+         context.socket.on(QuestEngineMessages.QuestCompleted, ({ questId, characterId }) => {
+            dispatch(questCompleted({ questId, characterId }));
+         });
+
+         context.socket.on(QuestEngineMessages.NewQuestStageStarted, ({ questId, characterId, questStage }) => {
+            dispatch(newQuestStageStarted({ questId, characterId, questStage }));
+         });
+
+         context.socket.on(QuestEngineMessages.KillingStagePartProgress, ({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }) => {
+            dispatch(killingStagePartProgress({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }));
          });
       }
    }, [context]);
