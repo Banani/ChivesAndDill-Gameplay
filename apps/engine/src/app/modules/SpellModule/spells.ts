@@ -1,5 +1,6 @@
 import { Classes } from '../../types/Classes';
-import { AreaType, PowerStackType, Spell, SpellEffectType, SpellType } from './types/spellTypes';
+import type { Spell} from './types/spellTypes';
+import { AreaType, PowerStackType, SpellEffectType, SpellType } from './types/spellTypes';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    Fireball: {

@@ -1,28 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from "./QuestLog.module.scss";
 import { useSelector } from 'react-redux';
 import { selectQuests } from '../../../../stores';
 import _ from 'lodash';
 
-export default function QuestLog(props) {
-  const [questOpen, setQuestOpen] = React.useState(false);
+export const QuestLog = (props) => {
+
+  const [activeQuest, setActiveQuest] = useState({});
   const quests = useSelector(selectQuests);
+
   const renderQuests = _.map(quests, (quest, i) => (
     <div key={i}>
-      <div className={styles.QuestTitle} onClick={() => setQuestOpen(!questOpen)}>
+      <div className={styles.QuestTitle} onClick={() => setActiveQuest(quest)}>
         {quest.name}
       </div>
     </div>
   ));
 
-  const renderQuestDetails = _.map(quests, (quest, i) => (
-    <div key={i}>
+  const questDetails = (quest) => (
+    <div key={quest.id} >
       <div className={styles.QuestDesc}>
-        <h1> {quest.name} </h1>
-        <p> {quest.description} </p>
+        <div className={styles.activeQuestTitle}> {quest.name} </div>
+        <div className={styles.activeQuestDesc}>{quest.questStage?.description}</div>
+        <div className={styles.activeQuestTitle}>{quest.questStage ? "Description" : null}</div>
+        <div className={styles.activeQuestDesc}> {quest.description} </div>
       </div>
-    </div>
-  ));
+    </div >
+  );
 
   return (props.trigger) ? (
     <div className={styles.QuestLog}>
@@ -30,10 +34,9 @@ export default function QuestLog(props) {
         {renderQuests ? renderQuests : null}
       </div>
       <div className={styles.QuestDetails}>
-        {questOpen ? renderQuestDetails : null}
+        {activeQuest ? questDetails(activeQuest) : null}
       </div>
       <button className={styles.closeWindow} onClick={() => props.setTrigger(false)}>x</button>
-      {props.children}
     </div>
   ) : null;
 };

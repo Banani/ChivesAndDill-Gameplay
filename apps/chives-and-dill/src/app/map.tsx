@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Stage, Sprite, Graphics, Container, AppContext } from '@inlet/react-pixi';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
 import {
@@ -14,7 +14,7 @@ import _ from 'lodash';
 import Player from './player/Player';
 import { PlayerIcon } from './player/playerIcon/PlayerIcon';
 import { SpellsBar } from './player/spellsBar/SpellsBar';
-import QuestLog from "./player/quests/questLog/QuestLog";
+import { QuestLog } from "./player/quests/questLog/QuestLog";
 import { QuestsSideView } from './player/quests/questSideView/QuestsSideView';
 import { CastBar } from './mapContent/CastBar';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
@@ -95,7 +95,7 @@ const Map = () => {
 
    const scale = 1;
 
-   const [questOpen, setQuestOpen] = React.useState(false);
+   const [questOpen, setQuestOpen] = useState(false);
 
    return (
       <>

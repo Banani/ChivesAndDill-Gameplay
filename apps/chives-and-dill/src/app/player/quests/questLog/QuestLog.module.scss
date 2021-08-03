@@ -1,67 +1,69 @@
-
 .QuestLog {
-    position: fixed;
-    width: 59.5%;
-    height: 78%;
-    top:15%;
-    left:5%;
+    position: absolute;
+    width: 1000px;
+    height: 650px;
+    top: 15%;
+    left: 5%;
     background: url("../../../../assets/spritesheets/backgrounds/qlog.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     display: flex;
-    align-self:center;
+    align-self: center;
     align-items: flex-end;
-    justify-content: flex-end;
+    
       .QuestList {
-        border-radius: 2px;
-        margin: 0;
-        padding: 0;
-        width:44.4%;
-        height:76.5%;
-        margin-top: 19.5%;
-        margin-bottom: 4%;
-        margin-left: 2%;
-        margin-right: 3.6%;
+        width: 440px;
+        position: absolute;
+        left: 23px;
+        top: 120px;
         display: flex;
         align-self: left;
         flex-direction: column;
+
         .QuestTitle{
-          color:white;
+          color:rgb(224, 224, 224);
           font-size: 18px;
-          padding: 5px;
+          padding: 5px 20px;
+          cursor: pointer;
+
+          &:hover {
+            color:rgb(200, 200, 200);
+          }
         }
       }
       .QuestDetails {
-        margin: 0;
-        padding: 0;
-        width:44.8%;
-        height:76.5%;
-        margin-top: 19.5%;
-        margin-bottom: 4%;
-        margin-left: 1%;
-        margin-right: 4.2%;
-        border-radius: 2px;
+        width: 440px;
+        position: absolute;
+        top: 120px;
+        right: 50px;
         display: flex;
         align-self: right;
         flex-direction: column;
-        .QuestDesc{
-          h1{
-            padding: 10px;
+
+        .QuestDesc {
+          .activeQuestTitle {
+            padding: 5px 25px;
+            font-size: 2em;
           }
-          p{
-            padding-left: 20px;
-            padding-right: 20px;
+
+          .activeQuestDesc {
+            padding: 0 25px 10px 25px;
           }
         }
       }
+
       .closeWindow {
         color: white;
-        position: fixed;
-        left:62.7%;
-        top:17.7%;
-        width:1.25%;
-        background: rgb(39, 39, 39);
+        position: absolute;
+        right: 4px;
+        top: 22px;
+        background: #272727;
+        border: none;
+        padding: 5px 10px;
+        display: flex;
+        border-radius: 8px;
      }
+
       .closeWindow:hover {
         color: red;
         cursor: pointer;
