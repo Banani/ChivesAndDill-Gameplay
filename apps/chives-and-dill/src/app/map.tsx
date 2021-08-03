@@ -14,7 +14,7 @@ import _ from 'lodash';
 import Player from './player/Player';
 import { PlayerIcon } from './player/playerIcon/PlayerIcon';
 import { SpellsBar } from './player/spellsBar/SpellsBar';
-import QuestLog from "./player/quests/Quest-gui";
+import QuestLog from "./player/quests/questLog/QuestLog";
 import { QuestsSideView } from './player/quests/questSideView/QuestsSideView';
 import { CastBar } from './mapContent/CastBar';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
