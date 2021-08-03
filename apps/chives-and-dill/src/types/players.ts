@@ -1,4 +1,4 @@
-import type { Player, Location, Spell, SpriteSheet, Quest } from '@bananos/types';
+import type { Player, Location, Spell, SpriteSheet } from '@bananos/types';
 
 export interface PlayersState {
   activePlayer: string;
@@ -6,7 +6,6 @@ export interface PlayersState {
   characterViewsSettings: Record<string, SpriteSheet>;
   areas: [][];
   projectiles: Record<string, Spell>
-  quests: Record<string, Quest>
 }
 
 export interface PlayersAwareState {
@@ -69,31 +68,4 @@ export interface UpdateCharacterHpPayload {
 
 export interface CharacterDiedPayload {
   characterId: string
-}
-
-export interface QuestStartedPayload {
-  questTemplate: {
-    id: string,
-    name: string,
-    description: string,
- },
- characterId: string,
-}
-
- export interface QuestCompletedPayload {
-    questId: string,
-    characterId: string
-}
-
-export interface KillingStagePartProgressPayload {
-  questId: string,
-  stageId: string,
-  characterId: string,
-  stagePartId: string,
-  currentProgress: number,
-  targetAmount: number
-}
-
-export interface NewQuestStageStartedPayload {
-  questId: string,
 }
