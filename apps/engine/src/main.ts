@@ -90,16 +90,22 @@ const fastEngines = [
 ];
 const slowEngines = [respawnMonsterEngine];
 
+const playerMovementNotifier = new PlayerMovementNotifier();
+const projectileNotifier = new ProjectileNotifier();
+const notifiers = [playerMovementNotifier, projectileNotifier];
+
+const socketConnectionService = new SocketConnectionService(io, notifiers);
+
 const services: Services = {
    pathFinderService: new PathFinderService(pathFinderEngine),
    characterService: new CharactersService(),
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
-   playerMovementNotifier: new PlayerMovementNotifier(),
-   projectileNotifier: new ProjectileNotifier(),
+   playerMovementNotifier,
+   projectileNotifier,
    characterEffectNotifier: new CharacterEffectNotifier(),
    cooldownService: new CooldownService(),
-   socketConnectionService: new SocketConnectionService(io),
+   socketConnectionService,
 
    questProgressService: new QuestProgressService(),
    movementQuestService: new MovementQuestService(),
@@ -141,6 +147,7 @@ let i = 0;
 setInterval(() => {
    engineEventCreator.processEvents();
    fastEngines.forEach((engine) => engine.doAction());
+   socketConnectionService.sendMessages();
    i++;
    //    console.log(1000 / ((Date.now() - startTime) / i));
 }, 1000 / 60);

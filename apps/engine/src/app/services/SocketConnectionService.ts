@@ -1,18 +1,22 @@
 import { EngineMessages } from '@bananos/types';
+import { forEach } from 'lodash';
 import { AREAS } from '../../map';
 import { EngineEvents } from '../EngineEvents';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
 import { SpellsPerClass } from '../modules/SpellModule/spells';
+import { Notifier } from '../Notifier';
 import type { CreateNewPlayerEvent, EngineEventHandler, NewPlayerCreatedEvent, PlayerDisconnectedEvent } from '../types';
 
 export class SocketConnectionService extends EventParser {
    io;
    sockets = {};
+   notifiers: Notifier[] = [];
 
-   constructor(io: any) {
+   constructor(io: any, notifiers: Notifier[]) {
       super();
       this.io = io;
+      this.notifiers = notifiers;
 
       this.eventsToHandlersMap = {
          [EngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
@@ -22,6 +26,16 @@ export class SocketConnectionService extends EventParser {
    getIO = () => this.io;
 
    getSocketById = (userId) => this.sockets[userId];
+
+   sendMessages = () => {
+      const dataPackage = {};
+      forEach(this.notifiers, (notifier) => {
+         const notifierPackage = notifier.getBroadcast();
+         dataPackage[notifierPackage.key] = notifierPackage;
+      });
+
+      this.io.sockets.emit(EngineMessages.Package, dataPackage);
+   };
 
    init(engineEventCrator: EngineEventCrator, services) {
       super.init(engineEventCrator, services);

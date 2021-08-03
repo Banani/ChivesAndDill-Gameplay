@@ -13,6 +13,8 @@ export enum EngineMessages {
    CharacterLostSpellPower = 'CharacterLostSpellPower',
    CharacterGotSpellPower = 'CharacterGotSpellPower',
    CharacterDied = 'CharacterDied',
+
+   Package = 'Package',
 }
 
 export enum QuestEngineMessages {
