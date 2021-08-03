@@ -41,7 +41,18 @@ interface StagePart {
    questId: string,
    stageId: string,
    type: number,
-   rule: any
+   rule: {
+      fieldName: string;
+      comparison: KillingQuestStagePartComparison;
+      value: string;
+   }[];
+   targetLocation: Location,
+   description: string,
+   currentProgress: number,
+}
+
+export enum KillingQuestStagePartComparison {
+   equality = 'equality',
 }
 
 export interface SpriteSheet {

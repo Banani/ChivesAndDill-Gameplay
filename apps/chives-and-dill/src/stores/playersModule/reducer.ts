@@ -244,9 +244,13 @@ export const playersReducer = (
             [action.payload.questId]: {
               ...state.quests[action.payload.questId],
               questStage: {
-                stageParts: {
-                  currentProgress: action.payload.questStage.stageParts.currentProgress,
-                  targetAmount: action.payload.questStage.stageParts.targetAmount
+                ...state.quests[action.payload.questId].questStage,
+                stageParts:{
+                  ...state.quests[action.payload.questId].questStage.stageParts,
+                  [action.payload.stagePartId]: {
+                    ...state.quests[action.payload.questId].questStage.stageParts[action.payload.stagePartId],
+                    currentProgress: action.payload.currentProgress
+                  }
                 }
               }
             }

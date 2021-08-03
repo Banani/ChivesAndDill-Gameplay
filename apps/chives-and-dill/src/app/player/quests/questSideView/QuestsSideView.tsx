@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from "./QuestsSideView.module.scss";
 import { useSelector } from 'react-redux';
 import { selectQuests } from '../../../../stores';
@@ -9,24 +9,38 @@ export const QuestsSideView = () => {
     const quests = useSelector(selectQuests);
     const [showQuestsView, updateShowQuestsView] = useState(false);
 
-    useEffect(()=> {
-        
-    }, [quests])
-
     const renderQuests = _.map(quests, (quest, i) => {
-
-        const {name, questStage} = quest;
-       
-        if(quest.questStage) {
-            console.log(quest.questStage.stageParts[4])
+        const { name, questStage } = quest;
+        let renderQuestStages;
+        if (questStage) {
+            renderQuestStages = _.map(questStage.stageParts, (stage) => {
+                if (stage.type === 0) {
+                    return (
+                        <div key={stage.id}>
+                            <div>{stage.description}</div>
+                            <div>x: {stage.targetLocation.x}</div>
+                            <div>y: {stage.targetLocation.y}</div>
+                        </div>
+                    )
+                }
+                if (stage.type === 1) {
+                    return (
+                        <div key={stage.id}>
+                            <div>{stage.description}</div>
+                            <div>{stage.currentProgress ? stage.currentProgress : 0} / {stage.amount}</div>
+                        </div>
+                    )
+                }
+            });
         }
+
         return (
-            <div key={i}> 
+            <div key={i}>
                 <div className={styles.questTitle}>
                     {name}
                 </div>
                 <div className={styles.questDesc}>
-                    {/* {questStage.stageParts ? questStage.stageParts[4].amount : null} */}
+                    {renderQuestStages}
                 </div>
             </div>
         )
@@ -40,7 +54,7 @@ export const QuestsSideView = () => {
                     {showQuestsView ? "-" : "+"}
                 </button>
             </div>
-            
+
             {showQuestsView ? renderQuests : null}
         </div>
     )
