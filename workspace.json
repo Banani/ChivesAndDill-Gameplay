@@ -94,8 +94,7 @@
           "options": {
             "outputPath": "dist/apps/engine",
             "main": "apps/engine/src/main.ts",
-            "tsConfig": "apps/engine/tsconfig.app.json",
-            "assets": ["apps/engine/src/assets"]
+            "tsConfig": "apps/engine/tsconfig.app.json"
           },
           "configurations": {
             "production": {

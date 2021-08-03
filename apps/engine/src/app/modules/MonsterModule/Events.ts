@@ -1,4 +1,5 @@
 import { EngineEvent, EngineEventHandler } from '../../types';
+import { Spell } from '../SpellModule/types/spellTypes';
 import { MonsterRespawn } from './MonsterRespawns';
 import { Monster } from './types';
 
@@ -8,7 +9,10 @@ export enum MonsterEngineEvents {
    RespawnMonster = 'RespawnMonster',
    MonsterTargetChanged = 'MonsterTargetChanged',
    MonsterLostTarget = 'MonsterLostTarget',
+   MonsterLostAggro = 'MonsterLostAggro',
    MonsterDied = 'MonsterDied',
+   MonsterPulled = 'MonsterPulled',
+   ScheduleMonsterAttack = 'ScheduleMonsterAttack',
 }
 
 export interface CreateNewMonsterEvent extends EngineEvent {
@@ -38,6 +42,21 @@ export interface MonsterDiedEvent extends EngineEvent {
    killerId: string;
 }
 
+export interface MonsterPulledEvent extends EngineEvent {
+   monster: Monster;
+}
+
+export interface ScheduleMonsterAttackEvent extends EngineEvent {
+   spell: Spell;
+   monsterId: string;
+   targetId: string;
+}
+
+export interface MonsterLostAggroEvent extends EngineEvent {
+   type: MonsterEngineEvents.MonsterLostAggro;
+   monsterId: string;
+}
+
 export interface MonsterEngineEventsMap {
    [MonsterEngineEvents.CreateNewMonster]: EngineEventHandler<CreateNewMonsterEvent>;
    [MonsterEngineEvents.NewMonsterCreated]: EngineEventHandler<NewMonsterCreatedEvent>;
@@ -45,4 +64,7 @@ export interface MonsterEngineEventsMap {
    [MonsterEngineEvents.MonsterTargetChanged]: EngineEventHandler<MonsterTargetChangedEvent>;
    [MonsterEngineEvents.MonsterLostTarget]: EngineEventHandler<MonsterLostTargetEvent>;
    [MonsterEngineEvents.MonsterDied]: EngineEventHandler<MonsterDiedEvent>;
+   [MonsterEngineEvents.MonsterPulled]: EngineEventHandler<MonsterPulledEvent>;
+   [MonsterEngineEvents.ScheduleMonsterAttack]: EngineEventHandler<ScheduleMonsterAttackEvent>;
+   [MonsterEngineEvents.MonsterLostAggro]: EngineEventHandler<MonsterLostAggroEvent>;
 }

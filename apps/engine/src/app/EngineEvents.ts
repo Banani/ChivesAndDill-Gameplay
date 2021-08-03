@@ -1,21 +1,20 @@
-import { QuestEngineEvents } from './modules/QuestModule/Events';
-
 export enum EngineEvents {
    CreateNewPlayer = 'CreateNewPlayer',
-   NewCharacterCreated = 'NewCharacterCreated',
+   NewPlayerCreated = 'NewPlayerCreated',
    PlayerDisconnected = 'PlayerDisconnected',
    PlayerStartedMovement = 'PlayerStartedMovement',
    PlayerStopedMovementVector = 'PlayerStopedMovementVector',
    PlayerStopedAllMovementVectors = 'PlayerStopedAllMovementVectors',
    PlayerMoved = 'PlayerMoved',
    PlayerTriesToStartedMovement = 'PlayerTriesToStartedMovement',
-   PlayerTriesToCastASpell = 'PlayerTriesToCastASpell',
-   PlayerCastedSpell = 'PlayerCastedSpell',
-   ProjectileCreated = 'ProjectileCreated',
-   ProjectileMoved = 'ProjectileMoved',
-   RemoveProjectile = 'RemoveProjectile',
-   ProjectileRemoved = 'ProjectileRemoved',
-   CharacterHit = 'CharacterHit',
+
    CharacterLostHp = 'CharacterLostHp',
+   CharacterGotHp = 'CharacterGotHp',
+   CharacterLostSpellPower = 'CharacterLostSpellPower',
+   CharacterGotSpellPower = 'CharacterGotSpellPower',
    CharacterDied = 'CharacterDied',
+   TakeCharacterHealthPoints = 'TakeCharacterHealthPoints',
+   AddCharacterHealthPoints = 'AddCharacterHealthPoints',
+   TakeCharacterSpellPower = 'TakeCharacterSpellPower',
+   AddCharacterSpellPower = 'AddCharacterSpellPower',
 }

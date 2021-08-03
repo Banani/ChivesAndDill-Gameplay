@@ -2,8 +2,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux-dynamic-modules-core';
 import type { IModuleStore } from 'redux-dynamic-modules-core';
-import { PlayersModule, QuestsModule } from '../stores';
-import SocketContext from "./gameController/socketContext";
+import { PlayersModule, SpellsModule, QuestsModule } from '../stores';
+import SocketCommunicator from "./gameController/socketCommunicator";
 import GameController from './gameController/gameController';
 import Map from './map';
 
@@ -14,16 +14,17 @@ const store: IModuleStore<unknown> = createStore(
   },
   PlayersModule,
   QuestsModule,
+  SpellsModule
 );
 export default function App() {
-  
+
   return (
     <Provider store={store}>
-      <SocketContext>
+      <SocketCommunicator>
         <GameController>
           <Map />
         </GameController>
-      </SocketContext>
+      </SocketCommunicator>
     </Provider>
   );
 }

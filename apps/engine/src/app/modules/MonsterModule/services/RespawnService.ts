@@ -30,7 +30,7 @@ export class RespawnService extends EventParser {
       this.respawnMonsterEngine.init(this.engineEventCrator, services);
 
       forEach(MonsterRespawns, (monsterRespawn) => {
-         this.engineEventCrator.createEvent<CreateNewMonsterEvent>({
+         this.engineEventCrator.asyncCeateEvent<CreateNewMonsterEvent>({
             type: MonsterEngineEvents.CreateNewMonster,
             monsterRespawn,
          });
@@ -45,7 +45,7 @@ export class RespawnService extends EventParser {
 
    handleRespawnMonster: EngineEventHandler<RespawnMonsterEvent> = ({ event }) => {
       delete this.waitingRespawns[event.respawnId];
-      this.engineEventCrator.createEvent<CreateNewMonsterEvent>({
+      this.engineEventCrator.asyncCeateEvent<CreateNewMonsterEvent>({
          type: MonsterEngineEvents.CreateNewMonster,
          monsterRespawn: MonsterRespawns[event.respawnId],
       });

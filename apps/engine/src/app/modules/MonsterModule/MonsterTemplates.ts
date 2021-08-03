@@ -1,6 +1,5 @@
-import { ALL_SPELLS } from '../../spells';
-import { SpellType } from '../../SpellType';
-import { Spell } from '../../types/Spell';
+import { ALL_SPELLS } from '../SpellModule/spells';
+import { Spell } from '../SpellModule/types/spellTypes';
 
 export interface MonsterTemplate {
    id: string;
@@ -8,7 +7,8 @@ export interface MonsterTemplate {
    sprites: string;
    size: number;
    healthPoints: number;
-   division: string;
+   spellPower: number;
+   division?: string;
    sightRange: number;
    escapeRange: number;
    spells: Record<string, Spell>;
@@ -22,11 +22,13 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       sprites: 'pigMan',
       size: 50,
       healthPoints: 60,
+      spellPower: 100,
       division: 'PigSlut',
       sightRange: 200,
       escapeRange: 2000,
       attackFrequency: 1500,
       spells: {
+         Teleportation: ALL_SPELLS['Teleportation'],
          MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
          MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
          MonsterInstant2: ALL_SPELLS['MonsterInstant2'],
@@ -38,6 +40,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       sprites: 'pigMan',
       size: 50,
       healthPoints: 200,
+      spellPower: 100,
       division: 'PigFucker',
       sightRange: 200,
       escapeRange: 2000,
@@ -45,6 +48,20 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       spells: {
          MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
          MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
+      },
+   },
+   WorldDestroyer: {
+      id: 'WorldDestroyer',
+      name: 'WorldDestroyer',
+      sprites: 'pigMan',
+      size: 50,
+      healthPoints: 20000,
+      spellPower: 10000,
+      sightRange: 200,
+      escapeRange: 2000,
+      attackFrequency: 900,
+      spells: {
+         DestroyerBasic: ALL_SPELLS['DestroyerBasic'],
       },
    },
 };

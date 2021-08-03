@@ -1,9 +1,10 @@
 import { EngineMessages } from '@bananos/types';
 import { AREAS } from '../../map';
 import { EngineEvents } from '../EngineEvents';
-import { EngineEventCrator } from '../EngineEventsCreator';
+import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
-import { CreateNewPlayerEvent, EngineEventHandler, NewCharacterCreatedEvent, PlayerDisconnectedEvent } from '../types';
+import { SpellsPerClass } from '../modules/SpellModule/spells';
+import type { CreateNewPlayerEvent, EngineEventHandler, NewPlayerCreatedEvent, PlayerDisconnectedEvent } from '../types';
 
 export class SocketConnectionService extends EventParser {
    io;
@@ -14,7 +15,7 @@ export class SocketConnectionService extends EventParser {
       this.io = io;
 
       this.eventsToHandlersMap = {
-         [EngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
+         [EngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
       };
    }
 
@@ -27,7 +28,7 @@ export class SocketConnectionService extends EventParser {
 
       this.io.on('connection', (socket) => {
          this.sockets[socket.id] = socket;
-         this.engineEventCrator.createEvent<CreateNewPlayerEvent>({
+         this.engineEventCrator.asyncCeateEvent<CreateNewPlayerEvent>({
             type: EngineEvents.CreateNewPlayer,
             payload: {
                socketId: socket.id,
@@ -36,7 +37,7 @@ export class SocketConnectionService extends EventParser {
       });
    }
 
-   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event, services }) => {
+   handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event, services }) => {
       const { newCharacter: currentCharacter } = event.payload;
       const currentSocket = this.sockets[currentCharacter.socketId];
 
@@ -45,6 +46,7 @@ export class SocketConnectionService extends EventParser {
          players: { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() },
          projectiles: services.projectilesService.getAllProjectiles(),
          areas: AREAS,
+         spells: SpellsPerClass[currentCharacter.class],
       });
 
       currentSocket.broadcast.emit(EngineMessages.UserConnected, {
@@ -55,7 +57,7 @@ export class SocketConnectionService extends EventParser {
          currentSocket.broadcast.emit(EngineMessages.UserDisconnected, {
             userId: currentCharacter.id,
          });
-         this.engineEventCrator.createEvent<PlayerDisconnectedEvent>({
+         this.engineEventCrator.asyncCeateEvent<PlayerDisconnectedEvent>({
             type: EngineEvents.PlayerDisconnected,
             payload: {
                playerId: currentCharacter.id,

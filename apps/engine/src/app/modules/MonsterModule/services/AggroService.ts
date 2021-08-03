@@ -2,9 +2,11 @@ import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { CharacterDiedEvent, CharacterHitEvent, EngineEventHandler, PlayerDisconnectedEvent, PlayerMovedEvent } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler, PlayerDisconnectedEvent, PlayerMovedEvent } from '../../../types';
 import { Services } from '../../../types/Services';
-import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostTargetEvent, MonsterTargetChangedEvent } from '../Events';
+import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
+import { SpellEffectType, DamageEffect } from '../../SpellModule/types/spellTypes';
+import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostAggroEvent, MonsterLostTargetEvent, MonsterPulledEvent, MonsterTargetChangedEvent } from '../Events';
 import { Monster } from '../types';
 
 interface Aggro {
@@ -24,11 +26,12 @@ export class AggroService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
-         [EngineEvents.CharacterHit]: this.handleCharacterHit,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
          [MonsterEngineEvents.MonsterTargetChanged]: this.handleMonsterTargetChanged,
          [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
+
+         [SpellEngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
       };
    }
 
@@ -36,7 +39,12 @@ export class AggroService extends EventParser {
       const newAggro = { characterId: characterId, level: 0.1 };
       this.monsterAggro[monster.id] = { currentTarget: newAggro, allTargets: { [characterId]: newAggro } };
 
-      this.engineEventCrator.createEvent<MonsterTargetChangedEvent>({
+      this.engineEventCrator.asyncCeateEvent<MonsterPulledEvent>({
+         type: MonsterEngineEvents.MonsterPulled,
+         monster,
+      });
+
+      this.engineEventCrator.asyncCeateEvent<MonsterTargetChangedEvent>({
          type: MonsterEngineEvents.MonsterTargetChanged,
          newTargetId: characterId,
          monster,
@@ -45,8 +53,18 @@ export class AggroService extends EventParser {
 
    deleteAggro = (monsterId: string, targetId: string) => {
       delete this.monsterAggro[monsterId].allTargets[targetId];
+      this.engineEventCrator.asyncCeateEvent<MonsterLostTargetEvent>({
+         type: MonsterEngineEvents.MonsterLostTarget,
+         targetId: targetId,
+         monsterId: monsterId,
+      });
+
       if (Object.keys(this.monsterAggro[monsterId].allTargets).length === 0) {
          delete this.monsterAggro[monsterId];
+         this.engineEventCrator.asyncCeateEvent<MonsterLostAggroEvent>({
+            type: MonsterEngineEvents.MonsterLostAggro,
+            monsterId,
+         });
       } else {
          this.monsterAggro[monsterId].currentTarget = { level: 0, characterId: '0' };
          forEach(this.monsterAggro[monsterId].allTargets, (target) => {
@@ -55,12 +73,6 @@ export class AggroService extends EventParser {
             }
          });
       }
-
-      this.engineEventCrator.createEvent<MonsterLostTargetEvent>({
-         type: MonsterEngineEvents.MonsterLostTarget,
-         targetId: targetId,
-         monsterId: monsterId,
-      });
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event, services }) => {
@@ -72,20 +84,29 @@ export class AggroService extends EventParser {
 
       forEach(this.monsterAggro, (monsterAggro, monsterId) => {
          const monster = services.monsterService.getAllCharacters()[monsterId];
+
+         // BUG
+         if (!monster) {
+            return;
+         }
+
          if (monsterAggro.allTargets[event.characterId] && distanceBetweenTwoPoints(monster.location, event.newLocation) > monster.escapeRange) {
             this.deleteAggro(monsterId, event.characterId);
          }
       });
    };
 
-   wasItDmgFromTheMonster = ({ event, services }: { event: CharacterHitEvent; services: Services }) =>
-      services.monsterService.getAllCharacters()[event.attackerId];
+   wasItDmgFromTheMonster = ({ event, services }: { event: ApplyTargetSpellEffectEvent; services: Services }) =>
+      services.monsterService.getAllCharacters()[event.caster.id];
 
-   wasItDmgToThePlayer = ({ event, services }: { event: CharacterHitEvent; services: Services }) =>
+   wasItDmgToThePlayer = ({ event, services }: { event: ApplyTargetSpellEffectEvent; services: Services }) =>
       services.characterService.getAllCharacters()[event.target.id];
 
-   handleCharacterHit: EngineEventHandler<CharacterHitEvent> = ({ event, services }) => {
-      if (this.wasItDmgToThePlayer({ event, services })) {
+   handleApplySpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event, services }) => {
+      if (event.effect.type !== SpellEffectType.Damage) {
+         return;
+      }
+      if (!event.caster || this.wasItDmgToThePlayer({ event, services })) {
          return;
       }
 
@@ -98,7 +119,7 @@ export class AggroService extends EventParser {
          this.monsterAggro[event.target.id] = {
             currentTarget: {
                level: 0,
-               characterId: event.attackerId,
+               characterId: event.caster.id,
             },
             allTargets: {},
          };
@@ -106,20 +127,27 @@ export class AggroService extends EventParser {
       }
 
       const monsterAggros = aggro.allTargets;
-      if (!monsterAggros[event.attackerId]) {
-         monsterAggros[event.attackerId] = {
+      if (!monsterAggros[event.caster.id]) {
+         monsterAggros[event.caster.id] = {
             level: 0,
-            characterId: event.attackerId,
+            characterId: event.caster.id,
          };
+
+         this.engineEventCrator.asyncCeateEvent<MonsterPulledEvent>({
+            type: MonsterEngineEvents.MonsterPulled,
+            monster: event.target as Monster,
+         });
       }
-      monsterAggros[event.attackerId].level += event.spell.damage;
 
-      if (monsterAggros[event.attackerId].level > aggro.currentTarget.level * 2) {
-         aggro.currentTarget = monsterAggros[event.attackerId];
+      const damageEffect = event.effect as DamageEffect;
+      monsterAggros[event.caster.id].level += damageEffect.amount;
 
-         this.engineEventCrator.createEvent<MonsterTargetChangedEvent>({
+      if (monsterAggros[event.caster.id].level > aggro.currentTarget.level * 2) {
+         aggro.currentTarget = monsterAggros[event.caster.id];
+
+         this.engineEventCrator.asyncCeateEvent<MonsterTargetChangedEvent>({
             type: MonsterEngineEvents.MonsterTargetChanged,
-            newTargetId: event.attackerId,
+            newTargetId: event.caster.id,
             monster: event.target as Monster,
          });
       }

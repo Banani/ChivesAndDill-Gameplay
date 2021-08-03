@@ -1,0 +1,41 @@
+// .displayCooldown {
+//   position: absolute;
+//   width: 50px;
+//   height: 50px;
+//   padding: 3px;
+//   top: 5px;
+//   opacity: 0.7;
+//   background-color: transparent;
+//   background-image:
+//         /* 10% = 126deg = 90 + ( 360 * .1 ) */
+//         linear-gradient(126deg, transparent 50%, black 50%),
+//         linear-gradient(90deg, black 50%, transparent 50%);
+
+// }
+
+// .displayCooldown {
+//   height: 60px;
+//   width: 60px;
+//   overflow: hidden;
+//   position: absolute;
+//   padding: 3px;
+//   top:-50px;
+//   left: 0;
+//   opacity: 0.8;
+// }
+// .displayCooldown:before {
+//   height: inherit;
+//   width: inherit;
+//   position: absolute;
+//   content: "";
+//   border-radius: 10%;
+//   background-color: red;
+//   transform-origin: 50% 100%;
+//   transform: rotate(360deg);
+// }
+
+.cooldown {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

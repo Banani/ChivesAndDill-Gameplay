@@ -22,6 +22,10 @@ export interface Player {
    size: number;
    socketId: string;
    sprites: string;
+   hpLost: number;
+   spellEffect: string;
+   currentSpellPower: number;
+   maxSpellPower: number;
 }
 
 export interface Quest {
@@ -76,9 +80,27 @@ interface SpriteSheetCoordinates {
    spriteAmount: number;
 }
 
-export interface Spell {
+export interface Projectile {
    projectileId: string;
-   name: string;
+   spell: string;
    angle: number;
    newLocation: Location;
+}
+
+export interface Spell {
+   cooldown: number;
+   damage: number;
+   name: string;
+   range: number;
+   speed: number;
+   type: string;
+   image: string;
+   description: string;
+   channelTime: number;
+}
+
+export interface ActiveSpellCast {
+   casterid: number;
+   castTime: number;
+   spellCastTimeStamp: number;
 }

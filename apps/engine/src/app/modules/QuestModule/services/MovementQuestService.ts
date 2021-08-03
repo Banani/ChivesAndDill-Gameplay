@@ -32,7 +32,7 @@ export class MovementQuestService extends EventParser {
 
       forEach(this.activeStages[event.characterId], (stagePart) => {
          if (distanceBetweenTwoPoints(event.newLocation, stagePart.targetLocation) <= stagePart.acceptableRange) {
-            this.engineEventCrator.createEvent<StagePartCompletedEvent>({
+            this.engineEventCrator.asyncCeateEvent<StagePartCompletedEvent>({
                type: QuestEngineEvents.STAGE_PART_COMPLETED,
                questId: stagePart.questId,
                stageId: stagePart.stageId,

@@ -1,52 +1,37 @@
-import React from 'react';
-import styles from "./SpellsBar.module.scss";
+import React, { useContext } from 'react';
+import styles from './SpellsBar.module.scss';
+import { useSelector } from 'react-redux';
+import { selectSpells, selectKeyBinds } from '../../../stores';
+import _ from 'lodash';
+import { GameControllerContext } from '../../gameController/gameControllerContext';
+import { DisplayCooldown } from './displayCooldown/displayCooldown';
 
-export const SpellsBar = ({ player }) => {
+export const SpellsBar = () => {
+   const context = useContext(GameControllerContext);
+   const spells = useSelector(selectSpells);
+   const keyBinds = useSelector(selectKeyBinds);
 
-  const { name, maxHp, currentHp } = player;
+   let renderSpells;
 
-  const spells = [
-    {
-      id: "0",
-      name: "Fireball",
-      image: "../../../assets/spritesheets/spells/mage/fireball.jpg",
-      description: "Inflicts Fire damage to an enemy and causes them to burn for 8 sec.",
-      castTime: "2.5 sec cast",
-      castRange: "40",
-    },
-    {
-      id: "1",
-      name: "Arcane Intellect",
-      image: "../../../assets/spritesheets/spells/mage/arcaneIntellect.jpeg",
-      description: "Infuses the target with brilliance, increasing their Intellect by 5% for 1 hour. If target is in your party or raid, all party and raid members will be affected.",
-      castTime: "Instant",
-      castRange: "30",
-    },
-    {
-      id: "2",
-      name: "Power Word: Shield",
-      image: "../../../assets/spritesheets/spells/mage/shield.jpg",
-      description: "Shields an ally for 15 sec, absorbing 300 damage.",
-      castTime: "Channeled (2.5 sec cast)",
-      castRange: "35",
-    }
-  ]
+   if (Object.keys(spells).length) {
+      renderSpells = _.map(keyBinds, (spell, index) => {
+         const activeSpell = spells[spell];
 
-  const spellsToRender = spells.map(spell =>
-    <div key={spell.id} className={styles.spellContainer}>
-      <img src={spell.image} className={styles.spellImage} alt={spell.name} />
-      <div className={styles.spellTooltip}>
-        <div>{spell.name}</div>
-        <div>{spell.castRange} yd range</div>
-        <div>{spell.castTime}</div>
-        <div className={styles.spellDesc}>{spell.description}</div>
-      </div>
-    </div>
-  )
+         return (
+            <div key={index} className={styles.spellContainer}>
+               <div className={styles.keyboardNumber}>{index}</div>
+               <img src={activeSpell.image} className={styles.spellImage + ' ' + `${context[index] ? styles.activeSpell : null}`} alt={activeSpell.name} />
+               <div className={styles.spellTooltip}>
+                  <div>{activeSpell.name}</div>
+                  <div>{activeSpell.range} yd range</div>
+                  <div>{'Cooldown: ' + activeSpell.cooldown / 1000 + ' sec'}</div>
+                  <div className={styles.spellDesc}>{activeSpell.description}</div>
+               </div>
+               <DisplayCooldown usedSpell={spells.Projectile} />
+            </div>
+         );
+      });
+   }
 
-  return (
-    <div className={styles.spellsBarContainer}>
-      {spellsToRender}
-    </div>
-  )
-}
+   return <div className={styles.spellsBarContainer}>{renderSpells}</div>;
+};
