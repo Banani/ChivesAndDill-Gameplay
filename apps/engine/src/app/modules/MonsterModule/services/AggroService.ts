@@ -7,6 +7,7 @@ import { Services } from '../../../types/Services';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
 import { SpellEffectType, DamageEffect } from '../../SpellModule/types/spellTypes';
 import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostAggroEvent, MonsterLostTargetEvent, MonsterPulledEvent, MonsterTargetChangedEvent } from '../Events';
+import { MonsterRespawns } from '../MonsterRespawns';
 import { Monster } from '../types';
 
 interface Aggro {
@@ -41,6 +42,7 @@ export class AggroService extends EventParser {
 
       this.engineEventCrator.asyncCeateEvent<MonsterPulledEvent>({
          type: MonsterEngineEvents.MonsterPulled,
+         targetId: characterId,
          monster,
       });
 
@@ -76,6 +78,10 @@ export class AggroService extends EventParser {
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event, services }) => {
+      if (services.monsterService.getAllCharacters()[event.characterId]) {
+         return;
+      }
+
       forEach(services.monsterService.getAllCharacters(), (monster) => {
          if (distanceBetweenTwoPoints(monster.location, event.newLocation) <= monster.sightRange && !this.monsterAggro[monster.id]) {
             this.addInitialAgrro(monster, event.characterId);
@@ -90,7 +96,10 @@ export class AggroService extends EventParser {
             return;
          }
 
-         if (monsterAggro.allTargets[event.characterId] && distanceBetweenTwoPoints(monster.location, event.newLocation) > monster.escapeRange) {
+         if (
+            monsterAggro.allTargets[event.characterId] &&
+            distanceBetweenTwoPoints(MonsterRespawns[monster.respawnId].location, event.newLocation) > monster.escapeRange
+         ) {
             this.deleteAggro(monsterId, event.characterId);
          }
       });
@@ -136,6 +145,7 @@ export class AggroService extends EventParser {
          this.engineEventCrator.asyncCeateEvent<MonsterPulledEvent>({
             type: MonsterEngineEvents.MonsterPulled,
             monster: event.target as Monster,
+            targetId: event.target.id,
          });
       }
 

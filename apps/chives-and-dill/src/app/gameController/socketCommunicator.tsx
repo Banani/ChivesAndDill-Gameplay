@@ -148,6 +148,9 @@ const SocketCommunicator = ({ children }) => {
          context.socket.on(QuestEngineMessages.KillingStagePartProgress, ({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }) => {
             dispatch(killingStagePartProgress({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }));
          });
+         //  context.socket.on(EngineMessages.Package, (event) => {
+         //     console.log(event);
+         //  });
       }
    }, [context]);
 

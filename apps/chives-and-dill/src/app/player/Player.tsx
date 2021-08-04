@@ -68,8 +68,8 @@ const Player = ({ player, characterViewsSettings }) => {
 
    useEffect(() => {
       setInterval(() => {
-         setTimer((zxc) => zxc + 1);
-      }, 20);
+         setTimer((i) => i + 1);
+      }, 50);
    }, []);
 
    useEffect(() => {
@@ -125,9 +125,9 @@ const Player = ({ player, characterViewsSettings }) => {
             <>
                <Text
                   text={player.name}
-                  anchor={[0.5, 3.25]}
+                  anchor={[0.5, 1.3]}
                   x={player.location.x}
-                  y={player.location.y}
+                  y={player.location.y - h / 1.5}
                   style={
                      new PIXI.TextStyle({
                         fontSize: 15,

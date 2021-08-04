@@ -115,13 +115,14 @@ const Map = () => {
                                  ]}
                               >
                                  <Graphics draw={drawAreasSpellsEffects} />
+                                 {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
+                                 <Graphics draw={drawBorders} />
                                  {renderSpells}
                                  {renderPlayers}
                                  <CastBar activeSpellsCasts={activeSpellsCasts} activePlayerId={activePlayerId} players={players} />
                                  {players[activePlayerId] ? <Player player={players[activePlayerId]} characterViewsSettings={characterViewsSettings} /> : null}
 
-                                 {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
-                                 <Graphics draw={drawBorders} />
+
 
                                  <BlinkSpellEffect />
                               </Container>

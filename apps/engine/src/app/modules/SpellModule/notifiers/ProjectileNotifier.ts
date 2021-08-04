@@ -1,6 +1,7 @@
-import { EngineMessages, ClientMessages } from '@bananos/types';
+import { EngineMessages, ClientMessages, Projectile } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
+import { Notifier } from '../../../Notifier';
 import { EngineEventHandler, NewPlayerCreatedEvent } from '../../../types';
 import {
    PlayerTriesToCastASpellEvent,
@@ -10,7 +11,10 @@ import {
    SpellEngineEvents,
 } from '../../SpellModule/Events';
 
-export class ProjectileNotifier extends EventParser {
+export class ProjectileNotifier extends EventParser implements Notifier {
+   private projectiles: Record<string, Partial<Projectile>> = {};
+   private toDelete: string[] = [];
+
    constructor() {
       super();
       this.eventsToHandlersMap = {
@@ -21,7 +25,23 @@ export class ProjectileNotifier extends EventParser {
       };
    }
 
+   getBroadcast = () => {
+      const projectileInformations = this.projectiles;
+      const toDelete = [...this.toDelete];
+
+      this.projectiles = {};
+      this.toDelete = [];
+
+      return { data: projectileInformations, key: 'projectileMovements', toDelete };
+   };
+
    ProjectileMoved: EngineEventHandler<ProjectileMovedEvent> = ({ event, services }) => {
+      this.projectiles[event.projectileId] = {
+         ...this.projectiles[event.projectileId],
+         currentLocation: event.newLocation,
+         angle: event.angle,
+      };
+
       services.socketConnectionService.getIO().sockets.emit(EngineMessages.ProjectileMoved, {
          projectileId: event.projectileId,
          newLocation: event.newLocation,
@@ -30,6 +50,12 @@ export class ProjectileNotifier extends EventParser {
    };
 
    ProjectileCreated: EngineEventHandler<ProjectileCreatedEvent> = ({ event, services }) => {
+      this.projectiles[event.projectileId] = {
+         ...this.projectiles[event.projectileId],
+         currentLocation: event.currentLocation,
+         spell: event.spell.name,
+      };
+
       services.socketConnectionService.getIO().sockets.emit(EngineMessages.ProjectileCreated, {
          projectileId: event.projectileId,
          currentLocation: event.currentLocation,
@@ -38,6 +64,7 @@ export class ProjectileNotifier extends EventParser {
    };
 
    ProjectileRemoved: EngineEventHandler<ProjectileRemovedEvent> = ({ event, services }) => {
+      this.toDelete.push(event.projectileId);
       services.socketConnectionService.getIO().sockets.emit(EngineMessages.ProjectileRemoved, {
          projectileId: event.projectileId,
       });

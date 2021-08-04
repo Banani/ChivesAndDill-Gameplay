@@ -85,6 +85,7 @@ export interface Projectile {
    spell: string;
    angle: number;
    newLocation: Location;
+   currentLocation: Location;
 }
 
 export interface Spell {

@@ -103,7 +103,9 @@ export class ChannelService extends EventParser {
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
-      this.interruptChanneling(event.characterId);
+      if (!this.activeChannelSpells[event.characterId]?.spell.canByCastedInMovement) {
+         this.interruptChanneling(event.characterId);
+      }
    };
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
@@ -125,4 +127,7 @@ export class ChannelService extends EventParser {
          });
       }
    };
+
+   willMovementInterruptCasting = (characterId: string) =>
+      this.activeChannelSpells[characterId] && !this.activeChannelSpells[characterId].spell.canByCastedInMovement;
 }

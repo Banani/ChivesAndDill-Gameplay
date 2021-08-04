@@ -87,6 +87,7 @@ export interface ChannelSubSpell extends EffectHolders, BaseSubSpell {
    channelSpells: SubSpell[];
    channelFrequency: number;
    channelTime: number;
+   canByCastedInMovement: boolean;
 }
 
 export type SubSpell = ProjectileSubSpell | GuidedProjectileSubSpell | DirectInstantSubSpell | AngleBlastSpellSubSpell | AreaSubSpell;
@@ -96,14 +97,7 @@ export type GuidedProjectileSpell = GuidedProjectileSubSpell & BaseSpell;
 export type DirectInstantSpell = DirectInstantSubSpell & BaseSpell;
 export type AngleBlastSpell = AngleBlastSpellSubSpell & BaseSpell;
 export type AreaSpell = AreaSubSpell & BaseSpell;
-export type ChannelSpell = BaseSpell &
-   BaseSubSpell &
-   EffectHolders & {
-      type: SpellType.Channel;
-      channelSpells: SubSpell[];
-      channelFrequency: number;
-      channelTime: number;
-   };
+export type ChannelSpell = BaseSpell & BaseSubSpell & EffectHolders & ChannelSubSpell;
 export type TeleportationSpell = BaseSpell & BaseSubSpell & EffectHolders & { type: SpellType.Teleportation; range: number };
 
 export type Spell = ProjectileSpell | GuidedProjectileSpell | DirectInstantSpell | AngleBlastSpell | AreaSpell | ChannelSpell | TeleportationSpell;

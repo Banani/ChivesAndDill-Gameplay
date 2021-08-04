@@ -1,4 +1,4 @@
-import { SocketConnectionService } from './app/services';
+import { PathFinderService, SocketConnectionService } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
 import { Services } from './app/types/Services';
 import {
@@ -23,6 +23,7 @@ import {
    BossFightService,
    MonsterAttackEngine,
    MonsterAttackService,
+   MonsterMovementService,
    MonsterNotifier,
    MonsterService,
    RespawnMonsterEngine,
@@ -42,6 +43,11 @@ import { GuidedProjectilesService } from './app/modules/SpellModule/services/Spe
 import { PlayerMovementService, PlayersMovement } from './app/modules/PlayerModule';
 import { CharactersService } from './app/modules/PlayerModule/services/CharactersService';
 import { CharacterEffectNotifier, PlayerMovementNotifier } from './app/modules/PlayerModule/notifiers';
+import { PathFinderEngine } from './app/engines';
+import { MonsterMovementEngine } from './app/modules/MonsterModule/engines/MonsterMovementEngine';
+import { SchedulerService } from './app/services/SchedulerService';
+import { SchedulerEngine } from './app/engines/SchedulerEngine';
+import { RegenerationService } from './app/modules/CharacterModule/services/RegenerationService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -61,6 +67,8 @@ httpServer.listen(port, hostname, () => {
    console.log(`Server running at http://${hostname}:${port}/`);
 });
 
+const pathFinderEngine = new PathFinderEngine();
+const schedulerEngine = new SchedulerEngine();
 const playerMovementEngine = new PlayersMovement();
 const projectileMovement = new ProjectileMovement();
 const guidedProjectileEngine = new GuidedProjectileEngine();
@@ -69,9 +77,11 @@ const monsterAttackEngine = new MonsterAttackEngine();
 const areaEffectsEngine = new AreaEffectsEngine();
 const channelEngine = new ChannelEngine();
 const tickOverTimeEffectEngine = new TickOverTimeEffectEngine();
+const monsterMovementEngine = new MonsterMovementEngine();
 const bossFightEngine = new BossFightEngine();
 
 const fastEngines = [
+   pathFinderEngine,
    playerMovementEngine,
    projectileMovement,
    guidedProjectileEngine,
@@ -79,19 +89,29 @@ const fastEngines = [
    areaEffectsEngine,
    channelEngine,
    tickOverTimeEffectEngine,
+   monsterMovementEngine,
    bossFightEngine,
+   schedulerEngine,
 ];
 const slowEngines = [respawnMonsterEngine];
 
+const playerMovementNotifier = new PlayerMovementNotifier();
+const projectileNotifier = new ProjectileNotifier();
+const notifiers = [playerMovementNotifier, projectileNotifier];
+
+const socketConnectionService = new SocketConnectionService(io, notifiers);
+
 const services: Services = {
+   pathFinderService: new PathFinderService(pathFinderEngine),
+   schedulerService: new SchedulerService(schedulerEngine),
    characterService: new CharactersService(),
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
-   playerMovementNotifier: new PlayerMovementNotifier(),
-   projectileNotifier: new ProjectileNotifier(),
+   playerMovementNotifier,
+   projectileNotifier,
    characterEffectNotifier: new CharacterEffectNotifier(),
    cooldownService: new CooldownService(),
-   socketConnectionService: new SocketConnectionService(io),
+   socketConnectionService,
 
    questProgressService: new QuestProgressService(),
    movementQuestService: new MovementQuestService(),
@@ -102,6 +122,7 @@ const services: Services = {
    respawnService: new RespawnService(respawnMonsterEngine),
    aggroService: new AggroService(),
    monsterAttackService: new MonsterAttackService(monsterAttackEngine),
+   monsterMovementService: new MonsterMovementService(monsterMovementEngine),
    monsterNotifier: new MonsterNotifier(),
 
    manaService: new ManaService(),
@@ -123,6 +144,7 @@ const services: Services = {
    powerStackEffectService: new PowerStackEffectService(),
    absorbShieldEffectService: new AbsorbShieldEffectService(),
    teleportationSpellService: new TeleportationSpellService(),
+   regenerationService: new RegenerationService(),
 };
 
 const engineEventCreator = new EngineEventCrator(services);
@@ -132,6 +154,7 @@ let i = 0;
 setInterval(() => {
    engineEventCreator.processEvents();
    fastEngines.forEach((engine) => engine.doAction());
+   socketConnectionService.sendMessages();
    i++;
    //    console.log(1000 / ((Date.now() - startTime) / i));
 }, 1000 / 60);

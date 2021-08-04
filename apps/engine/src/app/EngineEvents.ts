@@ -17,4 +17,12 @@ export enum EngineEvents {
    AddCharacterHealthPoints = 'AddCharacterHealthPoints',
    TakeCharacterSpellPower = 'TakeCharacterSpellPower',
    AddCharacterSpellPower = 'AddCharacterSpellPower',
+
+   CreatePath = 'CreatePath',
+   UpdatePath = 'UpdatePath',
+   DeletePath = 'DeletePath',
+   ScheduleAction = 'ScheduleAction',
+   CancelScheduledAction = 'CancelScheduledAction',
+   ScheduleActionTriggered = 'ScheduleActionTriggered',
+   ScheduleActionFinished = 'ScheduleActionFinished',
 }
