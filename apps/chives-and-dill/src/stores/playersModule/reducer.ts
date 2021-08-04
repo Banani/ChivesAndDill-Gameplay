@@ -59,8 +59,11 @@ const initialState: PlayersState = {
    characters: {},
    areas: [],
    characterViewsSettings: {
+      citizen: defaultViewSettings(96, 96, '/spritesheets/monsters/citizen.png'),
       orc: defaultViewSettings(48, 48, '/spritesheets/monsters/orc.png'),
+      minotaur: defaultViewSettings(48, 48, '/spritesheets/monsters/minotaur.png'),
       demon: defaultViewSettings(128, 128, '/spritesheets/monsters/demon.png'),
+      orcSpearman: defaultViewSettings(48, 48, '/spritesheets/monsters/orcSpearman.png'),
    },
 };
 

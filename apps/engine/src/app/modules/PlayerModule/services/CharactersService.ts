@@ -183,7 +183,7 @@ export class CharactersService extends EventParser {
          name: `#player_${this.increment}`,
          location: { x: 950, y: 960 },
          direction: CharacterDirection.DOWN,
-         sprites: 'orc',
+         sprites: 'citizen',
          isInMove: false,
          socketId,
          speed: 10,

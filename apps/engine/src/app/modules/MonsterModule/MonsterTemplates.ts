@@ -20,15 +20,15 @@ export interface MonsterTemplate {
 }
 
 export const MonsterTemplates: Record<string, MonsterTemplate> = {
-   PigSlut: {
-      id: 'PigSlut',
-      name: 'PigSlut',
+   Orc: {
+      id: 'Orc',
+      name: 'Orc',
       sprites: 'orc',
       size: 50,
       healthPoints: 60,
       spellPower: 100,
       speed: 8,
-      division: 'PigSlut',
+      division: 'Orc',
       sightRange: 200,
       desiredRange: 50,
       escapeRange: 2000,
@@ -42,14 +42,14 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
          MonsterInstant2: ALL_SPELLS['MonsterInstant2'],
       },
    },
-   PigFucker: {
-      id: 'PigFucker',
-      name: 'PigFucker',
-      sprites: 'orc',
+   OrcSpearman: {
+      id: 'OrcSpearman',
+      name: 'OrcSpearman',
+      sprites: 'orcSpearman',
       size: 50,
       healthPoints: 200,
       spellPower: 100,
-      division: 'PigFucker',
+      division: 'OrcSpearman',
       speed: 8,
       sightRange: 200,
       desiredRange: 200,

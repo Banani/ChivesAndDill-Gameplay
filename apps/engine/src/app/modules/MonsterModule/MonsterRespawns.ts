@@ -1,5 +1,6 @@
-import { Location } from '../../types';
-import { MonsterTemplate, MonsterTemplates } from './MonsterTemplates';
+import type { Location } from '../../types';
+import type { MonsterTemplate} from './MonsterTemplates';
+import { MonsterTemplates } from './MonsterTemplates';
 
 export interface MonsterRespawn {
    location: Location;
@@ -42,7 +43,7 @@ export const MonsterRespawns = {
    '5': {
       id: '5',
       location: { x: 1300, y: 1000 },
-      monsterTemplate: MonsterTemplates['PigSlut'],
+      monsterTemplate: MonsterTemplates['Orc'],
       time: 2000,
    },
    //    '6': {
@@ -72,7 +73,7 @@ export const MonsterRespawns = {
    '10': {
       id: '10',
       location: { x: 1600, y: 1000 },
-      monsterTemplate: MonsterTemplates['PigFucker'],
+      monsterTemplate: MonsterTemplates['OrcSpearman'],
       time: 2000,
    },
 

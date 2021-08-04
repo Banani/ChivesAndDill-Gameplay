@@ -68,8 +68,8 @@ const Player = ({ player, characterViewsSettings }) => {
 
    useEffect(() => {
       setInterval(() => {
-         setTimer((zxc) => zxc + 1);
-      }, 20);
+         setTimer((i) => i + 1);
+      }, 50);
    }, []);
 
    useEffect(() => {
