@@ -135,6 +135,11 @@ export interface UpdatePathEvent extends EngineEvent {
    points: Location[];
 }
 
+export interface DeletePathEvent extends EngineEvent {
+   type: EngineEvents.DeletePath;
+   pathSeekerId: string;
+}
+
 export interface ScheduleActionEvent extends EngineEvent {
    type: EngineEvents.ScheduleAction;
    id: string;
@@ -179,6 +184,7 @@ export interface EngineEventsMap {
 
    [EngineEvents.CreatePath]: EngineEventHandler<CreatePathEvent>;
    [EngineEvents.UpdatePath]: EngineEventHandler<UpdatePathEvent>;
+   [EngineEvents.DeletePath]: EngineEventHandler<DeletePathEvent>;
    [EngineEvents.ScheduleAction]: EngineEventHandler<ScheduleActionEvent>;
    [EngineEvents.ScheduleActionTriggered]: EngineEventHandler<ScheduleActionTriggeredEvent>;
    [EngineEvents.ScheduleActionFinished]: EngineEventHandler<ScheduleActionFinishedEvent>;

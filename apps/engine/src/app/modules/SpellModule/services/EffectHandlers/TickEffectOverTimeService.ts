@@ -1,6 +1,8 @@
+import { forEach } from 'lodash';
 import { EngineEvents } from '../../../../EngineEvents';
 import { EventParser } from '../../../../EventParser';
 import { Character, EngineEventHandler } from '../../../../types';
+import { MonsterEngineEvents, MonsterLostAggroEvent } from '../../../MonsterModule/Events';
 import { Monster } from '../../../MonsterModule/types';
 import { TickOverTimeEffectEngine } from '../../engines/TickOverTimeEffectEngine';
 import { ApplyTargetSpellEffectEvent, RemoveTickOverTimeEffectEvent, SpellEngineEvents } from '../../Events';
@@ -24,6 +26,7 @@ export class TickEffectOverTimeService extends EventParser {
       this.eventsToHandlersMap = {
          [SpellEngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
          [SpellEngineEvents.RemoveTickOverTimeEffect]: this.handleTickOverTimeFinished,
+         [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
       };
    }
 
@@ -49,6 +52,14 @@ export class TickEffectOverTimeService extends EventParser {
 
    handleTickOverTimeFinished: EngineEventHandler<RemoveTickOverTimeEffectEvent> = ({ event }) => {
       delete this.activeTickEffectOverTime[event.tickOverTimeId];
+   };
+
+   handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
+      forEach(Object.keys(this.activeTickEffectOverTime), (key) => {
+         if (key.includes(`_${event.monsterId}`)) {
+            delete this.activeTickEffectOverTime[key];
+         }
+      });
    };
 
    getActiveTickEffectOverTime = () => this.activeTickEffectOverTime;

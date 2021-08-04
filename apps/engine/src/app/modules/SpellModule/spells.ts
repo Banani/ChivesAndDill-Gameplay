@@ -10,6 +10,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       cooldown: 0,
       channelFrequency: 1500,
       channelTime: 1500,
+      canByCastedInMovement: false,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       channelSpells: [
          {
@@ -34,6 +35,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       cooldown: 8000,
       channelFrequency: 400,
       channelTime: 2500,
+      canByCastedInMovement: false,
       image: '../assets/spritesheets/spells/mage/shield.jpg',
       channelSpells: [
          {
@@ -86,6 +88,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       cooldown: 0,
       channelFrequency: 1500,
       channelTime: 1500,
+      canByCastedInMovement: false,
       image: '../assets/spritesheets/spells/hunter/explosiveShot.jpg',
       channelSpells: [
          {
@@ -134,6 +137,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       cooldown: 0,
       channelFrequency: 1200,
       channelTime: 1200,
+      canByCastedInMovement: false,
       image: '../assets/spritesheets/spells/paladin/healingLight.jpg',
       description: 'It heals your target',
       channelSpells: [
@@ -317,6 +321,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       cooldown: 0,
       channelFrequency: 2000,
       channelTime: 2000,
+      canByCastedInMovement: false,
       channelSpells: [
          {
             name: 'DestroyerPotatoFlyAttack_DirectInstant',
@@ -354,6 +359,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       cooldown: 0,
       channelFrequency: 2000,
       channelTime: 2000,
+      canByCastedInMovement: false,
       channelSpells: [
          {
             name: 'DestroyerRoarAttack_AngleBlast',
@@ -391,6 +397,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       cooldown: 0,
       channelFrequency: 200,
       channelTime: 2000,
+      canByCastedInMovement: false,
       channelSpells: [
          {
             name: 'DestroyerBreatheAttack_AngleBlast',

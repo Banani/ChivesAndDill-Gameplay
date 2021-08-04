@@ -9,6 +9,8 @@ import {
    CharacterType,
    EngineEventHandler,
    PlayerMovedEvent,
+   PlayerStartedMovementEvent,
+   PlayerStopedAllMovementVectorsEvent,
    TakeCharacterHealthPointsEvent,
    TakeCharacterSpellPowerEvent,
 } from '../../../types';
@@ -40,8 +42,22 @@ export class MonsterService extends EventParser {
          [EngineEvents.TakeCharacterSpellPower]: this.handleTakeCharacterSpellPower,
          [EngineEvents.AddCharacterSpellPower]: this.handleAddCharacterSpellPower,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+         [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
+         [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
       };
    }
+
+   handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event }) => {
+      if (this.monsters[event.characterId]) {
+         this.monsters[event.characterId].isInMove = true;
+      }
+   };
+
+   handlePlayerStopedAllMovementVectors: EngineEventHandler<PlayerStopedAllMovementVectorsEvent> = ({ event }) => {
+      if (this.monsters[event.characterId]) {
+         this.monsters[event.characterId].isInMove = false;
+      }
+   };
 
    test: EngineEventHandler<MonsterTargetChangedEvent> = ({ event }) => {
       console.log('targetChanged:', event.newTargetId);

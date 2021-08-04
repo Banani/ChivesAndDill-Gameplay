@@ -20,6 +20,7 @@ export enum EngineEvents {
 
    CreatePath = 'CreatePath',
    UpdatePath = 'UpdatePath',
+   DeletePath = 'DeletePath',
    ScheduleAction = 'ScheduleAction',
    CancelScheduledAction = 'CancelScheduledAction',
    ScheduleActionTriggered = 'ScheduleActionTriggered',

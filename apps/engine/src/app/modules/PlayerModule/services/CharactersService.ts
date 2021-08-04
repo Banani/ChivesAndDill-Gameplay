@@ -17,10 +17,9 @@ import type {
    TakeCharacterSpellPowerEvent,
    CharacterLostSpellPowerEvent,
    AddCharacterSpellPowerEvent,
-   CharacterGotSpellPowerEvent} from '../../../types';
-import {
-   CharacterType,
+   CharacterGotSpellPowerEvent,
 } from '../../../types';
+import { CharacterType } from '../../../types';
 import { Classes } from '../../../types/Classes';
 import type { Player } from '../../../types/Player';
 import { ALL_SPELLS, SpellsPerClass } from '../../SpellModule/spells';
@@ -176,7 +175,7 @@ export class CharactersService extends EventParser {
 
    generatePlayer: ({ socketId: string }) => Player = ({ socketId }) => {
       this.increment++;
-      const characterClass = Classes.Hunter;
+      const characterClass = Classes.Tank;
       return {
          type: CharacterType.Player,
          id: `player_${this.increment.toString()}`,

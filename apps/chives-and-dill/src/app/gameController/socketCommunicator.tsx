@@ -129,9 +129,9 @@ const SocketCommunicator = ({ children }) => {
             dispatch(addActiveSpellCast({ event }));
          });
 
-         context.socket.on(EngineMessages.Package, (event) => {
-            console.log(event);
-         });
+         //  context.socket.on(EngineMessages.Package, (event) => {
+         //     console.log(event);
+         //  });
       }
    }, [context]);
 

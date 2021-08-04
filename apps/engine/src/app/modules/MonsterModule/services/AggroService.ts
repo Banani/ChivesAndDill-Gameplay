@@ -178,7 +178,6 @@ export class AggroService extends EventParser {
    handleMonsterTargetChanged: EngineEventHandler<MonsterTargetChangedEvent> = ({ event, services }) => {
       forEach(services.monsterService.getAllCharacters(), (monster) => {
          if (!this.monsterAggro[monster.id] && distanceBetweenTwoPoints(monster.location, event.monster.location) < monster.sightRange) {
-            console.log(event.newTargetId);
             this.addInitialAgrro(monster, event.newTargetId);
          }
       });
