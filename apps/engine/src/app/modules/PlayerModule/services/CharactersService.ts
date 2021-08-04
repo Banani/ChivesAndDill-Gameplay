@@ -1,7 +1,7 @@
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import {
+import type {
    EngineEventHandler,
    CreateNewPlayerEvent,
    NewPlayerCreatedEvent,
@@ -17,11 +17,12 @@ import {
    TakeCharacterSpellPowerEvent,
    CharacterLostSpellPowerEvent,
    AddCharacterSpellPowerEvent,
-   CharacterGotSpellPowerEvent,
+   CharacterGotSpellPowerEvent} from '../../../types';
+import {
    CharacterType,
 } from '../../../types';
 import { Classes } from '../../../types/Classes';
-import { Player } from '../../../types/Player';
+import type { Player } from '../../../types/Player';
 import { ALL_SPELLS, SpellsPerClass } from '../../SpellModule/spells';
 
 export class CharactersService extends EventParser {
@@ -178,7 +179,7 @@ export class CharactersService extends EventParser {
          name: `#player_${this.increment}`,
          location: { x: 950, y: 960 },
          direction: CharacterDirection.DOWN,
-         sprites: 'nakedFemale',
+         sprites: 'orc',
          isInMove: false,
          socketId,
          currentHp: 400,

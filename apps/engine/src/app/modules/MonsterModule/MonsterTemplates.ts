@@ -1,5 +1,5 @@
 import { ALL_SPELLS } from '../SpellModule/spells';
-import { Spell } from '../SpellModule/types/spellTypes';
+import type { Spell } from '../SpellModule/types/spellTypes';
 
 export interface MonsterTemplate {
    id: string;
@@ -19,7 +19,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
    PigSlut: {
       id: 'PigSlut',
       name: 'PigSlut',
-      sprites: 'pigMan',
+      sprites: 'orc',
       size: 50,
       healthPoints: 60,
       spellPower: 100,
@@ -37,7 +37,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
    PigFucker: {
       id: 'PigFucker',
       name: 'PigFucker',
-      sprites: 'pigMan',
+      sprites: 'orc',
       size: 50,
       healthPoints: 200,
       spellPower: 100,
@@ -53,7 +53,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
    WorldDestroyer: {
       id: 'WorldDestroyer',
       name: 'WorldDestroyer',
-      sprites: 'pigMan',
+      sprites: 'demon',
       size: 50,
       healthPoints: 20000,
       spellPower: 10000,
