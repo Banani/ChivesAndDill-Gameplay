@@ -64,11 +64,15 @@ export class CharactersService extends EventParser {
    };
 
    handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event }) => {
-      this.characters[event.characterId].isInMove = true;
+      if (this.characters[event.characterId]) {
+         this.characters[event.characterId].isInMove = true;
+      }
    };
 
    handlePlayerStopedAllMovementVectors: EngineEventHandler<PlayerStopedAllMovementVectorsEvent> = ({ event }) => {
-      this.characters[event.characterId].isInMove = false;
+      if (this.characters[event.characterId]) {
+         this.characters[event.characterId].isInMove = false;
+      }
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
@@ -172,20 +176,23 @@ export class CharactersService extends EventParser {
 
    generatePlayer: ({ socketId: string }) => Player = ({ socketId }) => {
       this.increment++;
-      const characterClass = Classes.Healer;
+      const characterClass = Classes.Hunter;
       return {
          type: CharacterType.Player,
-         id: this.increment.toString(),
+         id: `player_${this.increment.toString()}`,
          name: `#player_${this.increment}`,
          location: { x: 950, y: 960 },
          direction: CharacterDirection.DOWN,
          sprites: 'orc',
          isInMove: false,
          socketId,
+         speed: 10,
          currentHp: 400,
          maxHp: 400,
          currentSpellPower: 100,
          maxSpellPower: 100,
+         healthPointsRegen: 5,
+         spellPowerRegen: 5,
          size: 48,
          isDead: false,
          class: characterClass,

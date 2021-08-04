@@ -71,8 +71,8 @@ export class PlayersMovement extends Engine {
             );
 
             const newLocation = {
-               x: player.location.x + vector.x * 14,
-               y: player.location.y + vector.y * 14,
+               x: player.location.x + vector.x * player.speed,
+               y: player.location.y + vector.y * player.speed,
             };
 
             const movementSegment = [

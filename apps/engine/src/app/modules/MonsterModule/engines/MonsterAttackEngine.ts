@@ -42,6 +42,7 @@ export class MonsterAttackEngine extends Engine {
          if (!aggro) {
             return;
          }
+
          const character = this.services.characterService.getCharacterById(aggro.currentTarget.characterId);
          const monster = this.services.monsterService.getAllCharacters()[monsterId];
 

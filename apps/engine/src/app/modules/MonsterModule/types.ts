@@ -5,6 +5,7 @@ export interface Monster extends Character {
    division?: string;
    respawnId: string;
    sightRange: number;
+   desiredRange: number;
    escapeRange: number;
    attackFrequency: number;
 }

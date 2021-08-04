@@ -128,6 +128,10 @@ const SocketCommunicator = ({ children }) => {
          context.socket.on(FightingEngineMessages.SpellHasBeenCast, (event) => {
             dispatch(addActiveSpellCast({ event }));
          });
+
+         context.socket.on(EngineMessages.Package, (event) => {
+            console.log(event);
+         });
       }
    }, [context]);
 

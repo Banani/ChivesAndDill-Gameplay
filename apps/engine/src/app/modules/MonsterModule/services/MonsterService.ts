@@ -75,9 +75,13 @@ export class MonsterService extends EventParser {
          maxSpellPower: event.monsterRespawn.monsterTemplate.spellPower,
          respawnId: event.monsterRespawn.id,
          sightRange: event.monsterRespawn.monsterTemplate.sightRange,
+         speed: event.monsterRespawn.monsterTemplate.speed,
+         desiredRange: event.monsterRespawn.monsterTemplate.desiredRange,
          escapeRange: event.monsterRespawn.monsterTemplate.escapeRange,
          spells: event.monsterRespawn.monsterTemplate.spells,
          attackFrequency: event.monsterRespawn.monsterTemplate.attackFrequency,
+         healthPointsRegen: event.monsterRespawn.monsterTemplate.healthPointsRegen,
+         spellPowerRegen: event.monsterRespawn.monsterTemplate.spellPowerRegen,
       };
       this.engineEventCrator.asyncCeateEvent<NewMonsterCreatedEvent>({
          type: MonsterEngineEvents.NewMonsterCreated,
