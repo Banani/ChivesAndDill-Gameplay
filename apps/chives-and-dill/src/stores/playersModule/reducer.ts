@@ -3,161 +3,64 @@ import type { PlayerAction } from './actions';
 import { PlayersActionTypes } from './actions';
 import _ from 'lodash';
 
+const defaultViewSettings = (spriteHeight, spriteWidth, image) => ({
+   image,
+   spriteHeight,
+   spriteWidth,
+   movementDown: {
+      yOffSet: spriteHeight,
+      xOffSet: spriteWidth,
+      spriteAmount: 8,
+   },
+   movementRight: {
+      yOffSet: spriteHeight * 2,
+      xOffSet: spriteWidth,
+      spriteAmount: 8,
+   },
+   movementUp: {
+      yOffSet: 0,
+      xOffSet: spriteWidth,
+      spriteAmount: 8,
+   },
+   movementLeft: {
+      yOffSet: spriteHeight * 3,
+      xOffSet: spriteWidth,
+      spriteAmount: 8,
+   },
+   standingDown: {
+      yOffSet: spriteHeight,
+      xOffSet: 0,
+      spriteAmount: 1,
+   },
+   standingRight: {
+      yOffSet: spriteHeight * 2,
+      xOffSet: 0,
+      spriteAmount: 1,
+   },
+   standingUp: {
+      yOffSet: 0,
+      xOffSet: 0,
+      spriteAmount: 1,
+   },
+   standingLeft: {
+      yOffSet: spriteHeight * 3,
+      xOffSet: 0,
+      spriteAmount: 1,
+   },
+   dead: {
+      yOffSet: spriteHeight * 4,
+      xOffSet: 0,
+      spriteAmount: 1,
+   }
+});
+
 const initialState: PlayersState = {
    activePlayer: null,
    characters: {},
    areas: [],
    characterViewsSettings: {
-      nakedFemale: {
-         spriteHeight: 48,
-         spriteWidth: 28,
-         image: '/spritesheets/player/femalePlayer.png',
-         movementDown: {
-            yOffSet: 96,
-            xOffSet: 28,
-            spriteAmount: 8,
-         },
-         movementRight: {
-            yOffSet: 144,
-            xOffSet: 28,
-            spriteAmount: 8,
-         },
-         movementUp: {
-            yOffSet: 0,
-            xOffSet: 28,
-            spriteAmount: 8,
-         },
-         movementLeft: {
-            yOffSet: 48,
-            xOffSet: 28,
-            spriteAmount: 8,
-         },
-         standingDown: {
-            yOffSet: 96,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         standingRight: {
-            yOffSet: 144,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         standingUp: {
-            yOffSet: 0,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         standingLeft: {
-            yOffSet: 48,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         dead: {
-            yOffSet: 192,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-      },
-      orc: {
-         spriteHeight: 48,
-         spriteWidth: 48,
-         image: '/spritesheets/monsters/orc.png',
-         movementDown: {
-            yOffSet: 48,
-            xOffSet: 48,
-            spriteAmount: 8,
-         },
-         movementRight: {
-            yOffSet: 96,
-            xOffSet: 48,
-            spriteAmount: 8,
-         },
-         movementUp: {
-            yOffSet: 0,
-            xOffSet: 48,
-            spriteAmount: 8,
-         },
-         movementLeft: {
-            yOffSet: 144,
-            xOffSet: 48,
-            spriteAmount: 8,
-         },
-         standingDown: {
-            yOffSet: 48,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         standingRight: {
-            yOffSet: 96,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         standingUp: {
-            yOffSet: 0,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         standingLeft: {
-            yOffSet: 144,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         dead: {
-            yOffSet: 192,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-      },
-      demon: {
-         spriteHeight: 128,
-         spriteWidth: 128,
-         image: '/spritesheets/monsters/demon.png',
-         movementDown: {
-            yOffSet: 128,
-            xOffSet: 128,
-            spriteAmount: 8,
-         },
-         movementRight: {
-            yOffSet: 128 * 2,
-            xOffSet: 128,
-            spriteAmount: 8,
-         },
-         movementUp: {
-            yOffSet: 0,
-            xOffSet: 128,
-            spriteAmount: 8,
-         },
-         movementLeft: {
-            yOffSet: 128 * 3,
-            xOffSet: 128,
-            spriteAmount: 8,
-         },
-         standingDown: {
-            yOffSet: 128,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         standingRight: {
-            yOffSet: 128 * 2,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         standingUp: {
-            yOffSet: 0,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         standingLeft: {
-            yOffSet: 128 * 3,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-         dead: {
-            yOffSet: 128 * 4,
-            xOffSet: 0,
-            spriteAmount: 1,
-         },
-      },
+      orc: defaultViewSettings(48, 48, '/spritesheets/monsters/orc.png'),
+      demon: defaultViewSettings(128, 128, '/spritesheets/monsters/demon.png'),
    },
 };
 
