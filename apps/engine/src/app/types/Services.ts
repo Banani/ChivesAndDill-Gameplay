@@ -1,3 +1,4 @@
+import { PathFinderEngine } from '../engines';
 import {
    AngleBlastSpellService,
    AreaSpellService,
@@ -7,27 +8,36 @@ import {
    KillingQuestService,
    ManaService,
    MovementQuestService,
+   ProjectileNotifier,
    ProjectilesService,
    QuestNotifier,
    QuestProgressService,
    SpellAvailabilityService,
    SpellEffectApplierService,
    SpellNotifier,
+   TeleportationSpellService,
 } from '../modules';
-import { AbsorbShieldEffectService } from '../modules/FightingModule/services/EffectHandlers/AbsorbShieldEffectService';
-import { AreaEffectService } from '../modules/FightingModule/services/EffectHandlers/AreaEffectService';
-import { GenerateSpellPowerEffectService } from '../modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
-import { PowerStackEffectService } from '../modules/FightingModule/services/EffectHandlers/PowerStackEffectService';
-import { TickEffectOverTimeService } from '../modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
-import { ChannelService } from '../modules/FightingModule/services/SpellHandlers/ChannelService';
-import { GuidedProjectilesService } from '../modules/FightingModule/services/SpellHandlers/GuidedProjectilesService';
-import { BossFightService, MonsterAttackService, MonsterService, RespawnService } from '../modules/MonsterModule';
+import { RegenerationService } from '../modules/CharacterModule/services/RegenerationService';
+import { BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
 import { AggroService } from '../modules/MonsterModule/services/aggroService';
-import { PlayerMovementNotifier, ProjectileNotifier, CharacterEffectNotifier } from '../notifiers';
-import { CharactersService, PlayerMovementService, CooldownService, SocketConnectionService } from '../services';
+import { PlayerMovementService } from '../modules/PlayerModule';
+import { PlayerMovementNotifier, CharacterEffectNotifier } from '../modules/PlayerModule/notifiers';
+import { CharactersService } from '../modules/PlayerModule/services/CharactersService';
+import { CooldownService } from '../modules/SpellModule/services/CooldownService';
+import { AbsorbShieldEffectService } from '../modules/SpellModule/services/EffectHandlers/AbsorbShieldEffectService';
+import { AreaEffectService } from '../modules/SpellModule/services/EffectHandlers/AreaEffectService';
+import { GenerateSpellPowerEffectService } from '../modules/SpellModule/services/EffectHandlers/GenerateSpellPowerEffectService';
+import { PowerStackEffectService } from '../modules/SpellModule/services/EffectHandlers/PowerStackEffectService';
+import { TickEffectOverTimeService } from '../modules/SpellModule/services/EffectHandlers/TickEffectOverTimeService';
+import { ChannelService } from '../modules/SpellModule/services/SpellHandlers/ChannelService';
+import { GuidedProjectilesService } from '../modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
+import { PathFinderService, SocketConnectionService } from '../services';
+import { SchedulerService } from '../services/SchedulerService';
 
 export interface Services {
+   pathFinderService: PathFinderService;
+   schedulerService: SchedulerService;
    characterService: CharactersService;
    playerMovementService: PlayerMovementService;
    projectilesService: ProjectilesService;
@@ -55,6 +65,7 @@ export interface Services {
    generateSpellPowerEffectService: GenerateSpellPowerEffectService;
    healEffectService: HealEffectService;
    areaEffectService: AreaEffectService;
+   monsterMovementService: MonsterMovementService;
    channelService: ChannelService;
    spellNotifier: SpellNotifier;
    tickEffectOverTimeService: TickEffectOverTimeService;
@@ -62,4 +73,6 @@ export interface Services {
    guidedProjectilesService: GuidedProjectilesService;
    powerStackEffectService: PowerStackEffectService;
    absorbShieldEffectService: AbsorbShieldEffectService;
+   teleportationSpellService: TeleportationSpellService;
+   regenerationService: RegenerationService;
 }

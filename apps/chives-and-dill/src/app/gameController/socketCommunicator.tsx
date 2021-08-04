@@ -19,6 +19,7 @@ import {
    areaSpellEffectRemoved,
    addActiveSpellCast,
    deleteActiveSpellCast,
+   addSpellLanded,
 } from '../../stores';
 import { SocketContext } from './socketContext';
 
@@ -105,6 +106,7 @@ const SocketCommunicator = ({ children }) => {
          });
 
          context.socket.on(FightingEngineMessages.SpellLanded, (event) => {
+            dispatch(addSpellLanded({ event }));
          });
 
          context.socket.on(FightingEngineMessages.AreaSpellEffectCreated, (event) => {
@@ -126,6 +128,10 @@ const SocketCommunicator = ({ children }) => {
          context.socket.on(FightingEngineMessages.SpellHasBeenCast, (event) => {
             dispatch(addActiveSpellCast({ event }));
          });
+
+         //  context.socket.on(EngineMessages.Package, (event) => {
+         //     console.log(event);
+         //  });
       }
    }, [context]);
 

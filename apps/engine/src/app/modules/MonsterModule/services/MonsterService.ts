@@ -6,7 +6,11 @@ import {
    AddCharacterSpellPowerEvent,
    CharacterGotHpEvent,
    CharacterLostHpEvent,
+   CharacterType,
    EngineEventHandler,
+   PlayerMovedEvent,
+   PlayerStartedMovementEvent,
+   PlayerStopedAllMovementVectorsEvent,
    TakeCharacterHealthPointsEvent,
    TakeCharacterSpellPowerEvent,
 } from '../../../types';
@@ -37,8 +41,23 @@ export class MonsterService extends EventParser {
          [EngineEvents.AddCharacterHealthPoints]: this.handleAddCharacterHealthPoints,
          [EngineEvents.TakeCharacterSpellPower]: this.handleTakeCharacterSpellPower,
          [EngineEvents.AddCharacterSpellPower]: this.handleAddCharacterSpellPower,
+         [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+         [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
+         [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
       };
    }
+
+   handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event }) => {
+      if (this.monsters[event.characterId]) {
+         this.monsters[event.characterId].isInMove = true;
+      }
+   };
+
+   handlePlayerStopedAllMovementVectors: EngineEventHandler<PlayerStopedAllMovementVectorsEvent> = ({ event }) => {
+      if (this.monsters[event.characterId]) {
+         this.monsters[event.characterId].isInMove = false;
+      }
+   };
 
    test: EngineEventHandler<MonsterTargetChangedEvent> = ({ event }) => {
       console.log('targetChanged:', event.newTargetId);
@@ -47,9 +66,17 @@ export class MonsterService extends EventParser {
       console.log('targetLost:', event.targetId);
    };
 
+   handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
+      if (this.monsters[event.characterId]) {
+         this.monsters[event.characterId].location = event.newLocation;
+         this.monsters[event.characterId].direction = event.newCharacterDirection;
+      }
+   };
+
    handleCreateNewMonster: EngineEventHandler<CreateNewMonsterEvent> = ({ event }) => {
       const id = `monster_${(this.increment++).toString()}`;
       this.monsters[id] = {
+         type: CharacterType.Monster,
          id,
          name: event.monsterRespawn.monsterTemplate.name,
          location: event.monsterRespawn.location,
@@ -64,9 +91,13 @@ export class MonsterService extends EventParser {
          maxSpellPower: event.monsterRespawn.monsterTemplate.spellPower,
          respawnId: event.monsterRespawn.id,
          sightRange: event.monsterRespawn.monsterTemplate.sightRange,
+         speed: event.monsterRespawn.monsterTemplate.speed,
+         desiredRange: event.monsterRespawn.monsterTemplate.desiredRange,
          escapeRange: event.monsterRespawn.monsterTemplate.escapeRange,
          spells: event.monsterRespawn.monsterTemplate.spells,
          attackFrequency: event.monsterRespawn.monsterTemplate.attackFrequency,
+         healthPointsRegen: event.monsterRespawn.monsterTemplate.healthPointsRegen,
+         spellPowerRegen: event.monsterRespawn.monsterTemplate.spellPowerRegen,
       };
       this.engineEventCrator.asyncCeateEvent<NewMonsterCreatedEvent>({
          type: MonsterEngineEvents.NewMonsterCreated,
@@ -142,7 +173,9 @@ export class MonsterService extends EventParser {
    };
 
    handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
-      this.resetMonster(event.monsterId);
+      if (this.monsters[event.monsterId]) {
+         this.resetMonster(event.monsterId);
+      }
    };
 
    handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {

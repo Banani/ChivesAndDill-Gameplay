@@ -1,4 +1,2 @@
-export * from './CharactersService';
-export * from './PlayerMovementService';
 export * from './SocketConnectionService';
-export * from './CooldownService';
+export * from './PathFinderService';

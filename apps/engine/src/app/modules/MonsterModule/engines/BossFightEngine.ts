@@ -1,7 +1,7 @@
 import { forEach } from 'lodash';
+import { Engine } from '../../../Engine';
 import { EngineEvents } from '../../../EngineEvents';
-import { Engine } from '../../../engines/Engine';
-import { PlayerCastSpellEvent } from '../../../types';
+import { PlayerCastSpellEvent, SpellEngineEvents } from '../../SpellModule/Events';
 import { BossFightScheme, BossFightSpellItem, BossFightsTemplates, SpellAttackType } from '../BossFightsTemplates';
 import { MonsterEngineEvents, ScheduleMonsterAttackEvent } from '../Events';
 import { Monster } from '../types';
@@ -45,7 +45,7 @@ export class BossFightEngine extends Engine {
          const player = this.services.characterService.getAllCharacters()[playerId];
 
          this.eventCrator.createEvent<PlayerCastSpellEvent>({
-            type: EngineEvents.PlayerCastSpell,
+            type: SpellEngineEvents.PlayerCastSpell,
             casterId: null,
             spell: templateItem.spell,
             directionLocation: player.location,

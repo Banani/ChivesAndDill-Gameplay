@@ -1,5 +1,5 @@
-import { ALL_SPELLS } from '../../spells';
-import { Spell } from '../../types';
+import { ALL_SPELLS } from '../SpellModule/spells';
+import type { Spell } from '../SpellModule/types/spellTypes';
 
 export enum SpellAttackType {
    DirectRandomTarget = 'DirectRandomTarget',

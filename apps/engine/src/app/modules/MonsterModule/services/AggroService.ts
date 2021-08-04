@@ -2,11 +2,12 @@ import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { SpellEffectType } from '../../../SpellType';
-import { ApplyTargetSpellEffectEvent, CharacterDiedEvent, EngineEventHandler, PlayerDisconnectedEvent, PlayerMovedEvent } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler, PlayerDisconnectedEvent, PlayerMovedEvent } from '../../../types';
 import { Services } from '../../../types/Services';
-import { DamageEffect } from '../../../types/Spell';
+import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
+import { SpellEffectType, DamageEffect } from '../../SpellModule/types/spellTypes';
 import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostAggroEvent, MonsterLostTargetEvent, MonsterPulledEvent, MonsterTargetChangedEvent } from '../Events';
+import { MonsterRespawns } from '../MonsterRespawns';
 import { Monster } from '../types';
 
 interface Aggro {
@@ -31,7 +32,7 @@ export class AggroService extends EventParser {
          [MonsterEngineEvents.MonsterTargetChanged]: this.handleMonsterTargetChanged,
          [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
 
-         [EngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
+         [SpellEngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
       };
    }
 
@@ -41,6 +42,7 @@ export class AggroService extends EventParser {
 
       this.engineEventCrator.asyncCeateEvent<MonsterPulledEvent>({
          type: MonsterEngineEvents.MonsterPulled,
+         targetId: characterId,
          monster,
       });
 
@@ -76,6 +78,10 @@ export class AggroService extends EventParser {
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event, services }) => {
+      if (services.monsterService.getAllCharacters()[event.characterId]) {
+         return;
+      }
+
       forEach(services.monsterService.getAllCharacters(), (monster) => {
          if (distanceBetweenTwoPoints(monster.location, event.newLocation) <= monster.sightRange && !this.monsterAggro[monster.id]) {
             this.addInitialAgrro(monster, event.characterId);
@@ -85,7 +91,15 @@ export class AggroService extends EventParser {
       forEach(this.monsterAggro, (monsterAggro, monsterId) => {
          const monster = services.monsterService.getAllCharacters()[monsterId];
 
-         if (monsterAggro.allTargets[event.characterId] && distanceBetweenTwoPoints(monster.location, event.newLocation) > monster.escapeRange) {
+         // BUG
+         if (!monster) {
+            return;
+         }
+
+         if (
+            monsterAggro.allTargets[event.characterId] &&
+            distanceBetweenTwoPoints(MonsterRespawns[monster.respawnId].location, event.newLocation) > monster.escapeRange
+         ) {
             this.deleteAggro(monsterId, event.characterId);
          }
       });
@@ -131,6 +145,7 @@ export class AggroService extends EventParser {
          this.engineEventCrator.asyncCeateEvent<MonsterPulledEvent>({
             type: MonsterEngineEvents.MonsterPulled,
             monster: event.target as Monster,
+            targetId: event.target.id,
          });
       }
 

@@ -1,7 +1,5 @@
-import { PlayersMovement } from './app/engines';
-import { CharactersService, PlayerMovementService, SocketConnectionService, CooldownService } from './app/services';
+import { PathFinderService, SocketConnectionService } from './app/services';
 import { EngineEventCrator } from './app/EngineEventsCreator';
-import { CharacterEffectNotifier, PlayerMovementNotifier, ProjectileNotifier } from './app/notifiers';
 import { Services } from './app/types/Services';
 import {
    AngleBlastSpellService,
@@ -25,21 +23,31 @@ import {
    BossFightService,
    MonsterAttackEngine,
    MonsterAttackService,
+   MonsterMovementService,
    MonsterNotifier,
    MonsterService,
    RespawnMonsterEngine,
    RespawnService,
 } from './app/modules/MonsterModule';
-import { ProjectileMovement, AreaEffectsEngine, TickOverTimeEffectEngine } from './app/modules/FightingModule/engines';
-import { AreaEffectService } from './app/modules/FightingModule/services/EffectHandlers/AreaEffectService';
-import { GenerateSpellPowerEffectService } from './app/modules/FightingModule/services/EffectHandlers/GenerateSpellPowerEffectService';
-import { ChannelService } from './app/modules/FightingModule/services/SpellHandlers/ChannelService';
-import { ChannelEngine } from './app/modules/FightingModule/engines/ChannelEngine';
-import { TickEffectOverTimeService } from './app/modules/FightingModule/services/EffectHandlers/TickEffectOverTimeService';
-import { GuidedProjectileEngine } from './app/modules/FightingModule/engines/GuidedProjectileEngine';
-import { GuidedProjectilesService } from './app/modules/FightingModule/services/SpellHandlers/GuidedProjectilesService';
-import { PowerStackEffectService } from './app/modules/FightingModule/services/EffectHandlers/PowerStackEffectService';
-import { AbsorbShieldEffectService } from './app/modules/FightingModule/services/EffectHandlers/AbsorbShieldEffectService';
+import { ProjectileMovement, AreaEffectsEngine, TickOverTimeEffectEngine, ProjectileNotifier, TeleportationSpellService } from './app/modules/SpellModule';
+import { ChannelEngine } from './app/modules/SpellModule/engines/ChannelEngine';
+import { GuidedProjectileEngine } from './app/modules/SpellModule/engines/GuidedProjectileEngine';
+import { CooldownService } from './app/modules/SpellModule/services/CooldownService';
+import { AbsorbShieldEffectService } from './app/modules/SpellModule/services/EffectHandlers/AbsorbShieldEffectService';
+import { AreaEffectService } from './app/modules/SpellModule/services/EffectHandlers/AreaEffectService';
+import { GenerateSpellPowerEffectService } from './app/modules/SpellModule/services/EffectHandlers/GenerateSpellPowerEffectService';
+import { PowerStackEffectService } from './app/modules/SpellModule/services/EffectHandlers/PowerStackEffectService';
+import { TickEffectOverTimeService } from './app/modules/SpellModule/services/EffectHandlers/TickEffectOverTimeService';
+import { ChannelService } from './app/modules/SpellModule/services/SpellHandlers/ChannelService';
+import { GuidedProjectilesService } from './app/modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
+import { PlayerMovementService, PlayersMovement } from './app/modules/PlayerModule';
+import { CharactersService } from './app/modules/PlayerModule/services/CharactersService';
+import { CharacterEffectNotifier, PlayerMovementNotifier } from './app/modules/PlayerModule/notifiers';
+import { PathFinderEngine } from './app/engines';
+import { MonsterMovementEngine } from './app/modules/MonsterModule/engines/MonsterMovementEngine';
+import { SchedulerService } from './app/services/SchedulerService';
+import { SchedulerEngine } from './app/engines/SchedulerEngine';
+import { RegenerationService } from './app/modules/CharacterModule/services/RegenerationService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -59,6 +67,8 @@ httpServer.listen(port, hostname, () => {
    console.log(`Server running at http://${hostname}:${port}/`);
 });
 
+const pathFinderEngine = new PathFinderEngine();
+const schedulerEngine = new SchedulerEngine();
 const playerMovementEngine = new PlayersMovement();
 const projectileMovement = new ProjectileMovement();
 const guidedProjectileEngine = new GuidedProjectileEngine();
@@ -67,9 +77,11 @@ const monsterAttackEngine = new MonsterAttackEngine();
 const areaEffectsEngine = new AreaEffectsEngine();
 const channelEngine = new ChannelEngine();
 const tickOverTimeEffectEngine = new TickOverTimeEffectEngine();
+const monsterMovementEngine = new MonsterMovementEngine();
 const bossFightEngine = new BossFightEngine();
 
 const fastEngines = [
+   pathFinderEngine,
    playerMovementEngine,
    projectileMovement,
    guidedProjectileEngine,
@@ -77,19 +89,29 @@ const fastEngines = [
    areaEffectsEngine,
    channelEngine,
    tickOverTimeEffectEngine,
+   monsterMovementEngine,
    bossFightEngine,
+   schedulerEngine,
 ];
 const slowEngines = [respawnMonsterEngine];
 
+const playerMovementNotifier = new PlayerMovementNotifier();
+const projectileNotifier = new ProjectileNotifier();
+const notifiers = [playerMovementNotifier, projectileNotifier];
+
+const socketConnectionService = new SocketConnectionService(io, notifiers);
+
 const services: Services = {
+   pathFinderService: new PathFinderService(pathFinderEngine),
+   schedulerService: new SchedulerService(schedulerEngine),
    characterService: new CharactersService(),
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
-   playerMovementNotifier: new PlayerMovementNotifier(),
-   projectileNotifier: new ProjectileNotifier(),
+   playerMovementNotifier,
+   projectileNotifier,
    characterEffectNotifier: new CharacterEffectNotifier(),
    cooldownService: new CooldownService(),
-   socketConnectionService: new SocketConnectionService(io),
+   socketConnectionService,
 
    questProgressService: new QuestProgressService(),
    movementQuestService: new MovementQuestService(),
@@ -100,6 +122,7 @@ const services: Services = {
    respawnService: new RespawnService(respawnMonsterEngine),
    aggroService: new AggroService(),
    monsterAttackService: new MonsterAttackService(monsterAttackEngine),
+   monsterMovementService: new MonsterMovementService(monsterMovementEngine),
    monsterNotifier: new MonsterNotifier(),
 
    manaService: new ManaService(),
@@ -120,6 +143,8 @@ const services: Services = {
    guidedProjectilesService: new GuidedProjectilesService(guidedProjectileEngine),
    powerStackEffectService: new PowerStackEffectService(),
    absorbShieldEffectService: new AbsorbShieldEffectService(),
+   teleportationSpellService: new TeleportationSpellService(),
+   regenerationService: new RegenerationService(),
 };
 
 const engineEventCreator = new EngineEventCrator(services);
@@ -129,6 +154,7 @@ let i = 0;
 setInterval(() => {
    engineEventCreator.processEvents();
    fastEngines.forEach((engine) => engine.doAction());
+   socketConnectionService.sendMessages();
    i++;
    //    console.log(1000 / ((Date.now() - startTime) / i));
 }, 1000 / 60);

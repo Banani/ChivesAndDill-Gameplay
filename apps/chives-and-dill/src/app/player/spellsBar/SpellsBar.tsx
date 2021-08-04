@@ -6,7 +6,6 @@ import _ from 'lodash';
 import { GameControllerContext } from "../../gameController/gameControllerContext";
 
 export const SpellsBar = () => {
-
   const context = useContext(GameControllerContext);
   const spells = useSelector(selectSpells);
   const keyBinds = useSelector(selectKeyBinds);

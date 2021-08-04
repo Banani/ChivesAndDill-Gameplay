@@ -1,7 +1,7 @@
 import { EngineEventCrator } from './EngineEventsCreator';
-import { FightingEngineEvents, FightingEngineEventsMap } from './modules/FightingModule/Events';
 import { MonsterEngineEventsMap } from './modules/MonsterModule/Events';
 import { QuestEngineEventsMap } from './modules/QuestModule/Events';
+import { FightingEngineEventsMap } from './modules/SpellModule/Events';
 import { EngineEvent, EngineEventsMap } from './types';
 import { Services } from './types/Services';
 

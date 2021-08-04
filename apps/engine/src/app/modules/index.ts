@@ -1,2 +1,4 @@
 export * from './QuestModule';
-export * from './FightingModule';
+export * from './SpellModule';
+export * from './MonsterModule';
+export * from './SpellModule';

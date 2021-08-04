@@ -1,7 +1,7 @@
 import { forEach, mapValues, keyBy, filter } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler, NewCharacterCreatedEvent } from '../../../types';
+import { EngineEventHandler, NewPlayerCreatedEvent } from '../../../types';
 import {
    NewQuestStageStartedEvent,
    QuestCompletedEvent,
@@ -20,12 +20,12 @@ export class QuestProgressService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [EngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
+         [EngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
          [QuestEngineEvents.STAGE_PART_COMPLETED]: this.handleStagePartCompleted,
       };
    }
 
-   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event, services }) => {
+   handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event, services }) => {
       this.questProgress[event.payload.newCharacter.id] = {};
 
       forEach(Quests, (quest) => {
