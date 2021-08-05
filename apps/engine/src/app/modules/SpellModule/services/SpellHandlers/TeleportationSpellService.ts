@@ -2,7 +2,8 @@ import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { distanceBetweenTwoPoints, getCrossingPointsWithWalls } from 'apps/engine/src/app/math';
-import { EngineEventHandler, Location, PlayerMovedEvent } from 'apps/engine/src/app/types';
+import { EngineEventHandler, PlayerMovedEvent } from 'apps/engine/src/app/types';
+import { Location } from '@bananos/types';
 import { SpellReachedTargetEvent, SpellEngineEvents, SpellLandedEvent, PlayerCastedSpellEvent, PlayerCastSpellEvent } from '../../Events';
 import { SpellType } from '../../types/spellTypes';
 

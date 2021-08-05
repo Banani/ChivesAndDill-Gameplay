@@ -14,7 +14,7 @@ import {
    Spell,
 } from '../../modules/SpellModule/types/spellTypes';
 import { Character } from '../Character';
-import { Location } from '../Location';
+import { Location } from '@bananos/types';
 import { Player } from '../Player';
 import { Services } from '../Services';
 

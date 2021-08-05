@@ -1,6 +1,6 @@
 import { EngineEvents } from '../../EngineEvents';
 import { Character, EngineEvent, EngineEventHandler } from '../../types';
-import { Location } from '../../types';
+import { Location } from '@bananos/types';
 import { Vector } from '../../types/Vector';
 import { Monster } from '../MonsterModule/types';
 import {

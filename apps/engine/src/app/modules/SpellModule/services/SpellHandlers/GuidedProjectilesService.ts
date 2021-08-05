@@ -1,6 +1,7 @@
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
-import { EngineEventHandler, Location } from 'apps/engine/src/app/types';
+import { EngineEventHandler } from 'apps/engine/src/app/types';
+import { Location } from '@bananos/types';
 import { omit } from 'lodash';
 import { GuidedProjectileEngine } from '../../engines/GuidedProjectileEngine';
 import {

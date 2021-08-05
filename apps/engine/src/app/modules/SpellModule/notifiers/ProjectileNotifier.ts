@@ -1,4 +1,4 @@
-import { EngineMessages, ClientMessages, Projectile } from '@bananos/types';
+import { EngineMessages, ClientMessages, Projectile, ProjectileMovement } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { Notifier } from '../../../Notifier';
@@ -12,7 +12,7 @@ import {
 } from '../../SpellModule/Events';
 
 export class ProjectileNotifier extends EventParser implements Notifier {
-   private projectiles: Record<string, Partial<Projectile>> = {};
+   private projectiles: Record<string, Partial<ProjectileMovement>> = {};
    private toDelete: string[] = [];
 
    constructor() {
@@ -38,7 +38,7 @@ export class ProjectileNotifier extends EventParser implements Notifier {
    ProjectileMoved: EngineEventHandler<ProjectileMovedEvent> = ({ event, services }) => {
       this.projectiles[event.projectileId] = {
          ...this.projectiles[event.projectileId],
-         currentLocation: event.newLocation,
+         location: event.newLocation,
          angle: event.angle,
       };
 
@@ -52,13 +52,13 @@ export class ProjectileNotifier extends EventParser implements Notifier {
    ProjectileCreated: EngineEventHandler<ProjectileCreatedEvent> = ({ event, services }) => {
       this.projectiles[event.projectileId] = {
          ...this.projectiles[event.projectileId],
-         currentLocation: event.currentLocation,
-         spell: event.spell.name,
+         location: event.currentLocation,
+         spellName: event.spell.name,
       };
 
       services.socketConnectionService.getIO().sockets.emit(EngineMessages.ProjectileCreated, {
          projectileId: event.projectileId,
-         currentLocation: event.currentLocation,
+         location: event.currentLocation,
          spell: event.spell.name,
       });
    };

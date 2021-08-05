@@ -24,6 +24,7 @@ import {
    questCompleted,
    killingStagePartProgress,
    newQuestStageStarted,
+   newPackage,
 } from '../../stores';
 import { SocketContext } from './socketContext';
 
@@ -60,7 +61,7 @@ const SocketCommunicator = ({ children }) => {
          });
 
          context.socket.on(QuestEngineMessages.KillingStagePartProgress, (data) => {
-            dispatch(changePlayerMovingStatus({ userId, isInMove: true }));
+            dispatch(changePlayerMovingStatus({ isInMove: true } as any));
          });
 
          context.socket.on(EngineMessages.PlayerStoppedMovement, ({ userId }) => {
@@ -76,7 +77,7 @@ const SocketCommunicator = ({ children }) => {
          });
 
          context.socket.on(EngineMessages.ProjectileCreated, ({ projectileId, spell, currentLocation }) => {
-            dispatch(addProjectile({ projectileId, spell, currentLocation }));
+            dispatch(addProjectile({ projectileId, spell, currentLocation } as any));
          });
 
          context.socket.on(EngineMessages.ProjectileMoved, ({ angle, newLocation, projectileId }) => {
@@ -142,15 +143,16 @@ const SocketCommunicator = ({ children }) => {
          });
 
          context.socket.on(QuestEngineMessages.NewQuestStageStarted, ({ questId, characterId, questStage }) => {
-            dispatch(newQuestStageStarted({ questId, characterId, questStage }));
+            dispatch(newQuestStageStarted({ questId, characterId, questStage } as any));
          });
 
          context.socket.on(QuestEngineMessages.KillingStagePartProgress, ({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }) => {
             dispatch(killingStagePartProgress({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }));
          });
-         //  context.socket.on(EngineMessages.Package, (event) => {
-         //     console.log(event);
-         //  });
+
+         context.socket.on(EngineMessages.Package, (event) => {
+            dispatch(newPackage(event));
+         });
       }
    }, [context]);
 

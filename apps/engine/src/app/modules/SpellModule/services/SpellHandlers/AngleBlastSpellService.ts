@@ -2,7 +2,7 @@ import { EventParser } from 'apps/engine/src/app/EventParser';
 import { isSegementCrossingWithAnyWall, distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
 import { EngineEventHandler } from 'apps/engine/src/app/types';
 import { omit } from 'lodash';
-import { Location } from '../../../../types';
+import { Location } from '@bananos/types';
 import {
    SpellReachedTargetEvent,
    SpellEngineEvents,

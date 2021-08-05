@@ -1,5 +1,6 @@
 import { EventParser } from '../../../../EventParser';
-import { Character, EngineEventHandler, Location } from '../../../../types';
+import { Character, EngineEventHandler } from '../../../../types';
+import { Location } from '@bananos/types';
 import { Monster } from '../../../MonsterModule/types';
 import { AreaEffectsEngine } from '../../engines';
 import {

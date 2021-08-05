@@ -2,7 +2,7 @@ import { EngineEvents } from '../EngineEvents';
 import { EngineEventCrator } from '../EngineEventsCreator';
 import { PathFinderEngine } from '../engines';
 import { EventParser } from '../EventParser';
-import { Location } from '../types/Location';
+import { Location } from '@bananos/types';
 import { CharacterDiedEvent, CreatePathEvent, DeletePathEvent, EngineEventHandler, UpdatePathEvent } from '../types';
 import { MonsterDiedEvent, MonsterEngineEvents } from '../modules/MonsterModule/Events';
 

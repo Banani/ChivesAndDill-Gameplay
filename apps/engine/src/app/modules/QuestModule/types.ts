@@ -1,4 +1,4 @@
-import { Location } from '../../types';
+import { Location } from '@bananos/types';
 
 export enum QuestType {
    MOVEMENT,
@@ -29,6 +29,7 @@ export interface QuestStage {
 
 export interface QuestStagePart {
    id: string;
+   description: string;
    resetConditions?: QuestResetCondition[];
    questId: string;
    stageId: string;
@@ -36,11 +37,13 @@ export interface QuestStagePart {
 }
 
 export interface MovementQuestStagePart extends QuestStagePart {
+   type: QuestType.MOVEMENT;
    targetLocation: Location;
    acceptableRange: number;
 }
 
 export interface KillingQuestStagePart extends QuestStagePart {
+   type: QuestType.KILLING;
    rule: {
       fieldName: string;
       comparison: KillingQuestStagePartComparison;

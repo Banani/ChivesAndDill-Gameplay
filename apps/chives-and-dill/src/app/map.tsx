@@ -14,10 +14,12 @@ import _ from 'lodash';
 import Player from './player/Player';
 import { PlayerIcon } from './player/playerIcon/PlayerIcon';
 import { SpellsBar } from './player/spellsBar/SpellsBar';
-import { QuestLog } from "./player/quests/questLog/QuestLog";
+import { QuestLog } from './player/quests/questLog/QuestLog';
 import { QuestsSideView } from './player/quests/questSideView/QuestsSideView';
 import { CastBar } from './mapContent/CastBar';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
+import { GlobalStore } from '@bananos/types';
+import { getEngineState } from '../stores';
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -28,8 +30,12 @@ const Map = () => {
    const areas = useSelector(selectAreas);
    const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
 
+   // Pacz PeePeePooPoo, tutaj bedzie wszystko i jest tez typowane wiec powinno ci podpowiadac nazwy pol, zawolaj mnie gdyby nie podpowiadalo
+   const engineState = useSelector(getEngineState);
+   console.log(engineState);
+
    const renderPlayers = useCallback(
-      _.map(_.omit(players, [activePlayerId ?? 0]), (player, i) => <Player key={i} player={player} characterViewsSettings={characterViewsSettings} />),
+      () => _.map(_.omit(players, [activePlayerId ?? 0]), (player, i) => <Player key={i} player={player} characterViewsSettings={characterViewsSettings} />),
       [players, characterViewsSettings]
    );
 
@@ -40,7 +46,7 @@ const Map = () => {
    const drawAreasSpellsEffects = useCallback(
       (g) => {
          g.clear();
-         _.map(areaSpellsEffects, (areaSpellEffect, index) => {
+         _.map(areaSpellsEffects, (areaSpellEffect: any, index) => {
             g.beginFill(0x333333);
             g.drawCircle(areaSpellEffect.location.x, areaSpellEffect.location.y, areaSpellEffect.effect.radius);
             g.endFill();
@@ -97,7 +103,7 @@ const Map = () => {
 
    return (
       <>
-         {activePlayerId ? <SpellsBar player={players[activePlayerId]}></SpellsBar> : null}
+         {activePlayerId ? <SpellsBar /> : null}
          {activePlayerId ? <PlayerIcon player={players[activePlayerId]}></PlayerIcon> : null}
          {<QuestsSideView />}
          <QuestLog />
@@ -118,11 +124,9 @@ const Map = () => {
                                  {areas.length !== 0 ? <Graphics draw={drawAreas} /> : null}
                                  <Graphics draw={drawBorders} />
                                  {renderSpells}
-                                 {renderPlayers}
+                                 {renderPlayers()}
                                  <CastBar activeSpellsCasts={activeSpellsCasts} activePlayerId={activePlayerId} players={players} />
                                  {players[activePlayerId] ? <Player player={players[activePlayerId]} characterViewsSettings={characterViewsSettings} /> : null}
-
-
 
                                  <BlinkSpellEffect />
                               </Container>
