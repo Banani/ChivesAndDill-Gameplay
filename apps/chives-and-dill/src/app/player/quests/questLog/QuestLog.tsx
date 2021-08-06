@@ -29,7 +29,7 @@ export const QuestLog = (props) => {
         <div className={styles.activeQuestTitle}> {quest.name} </div>
         <div className={styles.activeQuestDesc}>{quest.questStage?.description}</div>
         <div className={styles.activeQuestTitle}>{quest.questStage ? "Description" : null}</div>
-        <div className={styles.activeQuestDesc}> {quest.description} </div>
+        <div className={styles.activeQuestDesc}> {quest.description}</div>
       </div>
     </div >
   );

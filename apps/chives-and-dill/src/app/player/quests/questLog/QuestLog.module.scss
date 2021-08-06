@@ -13,12 +13,15 @@
     
       .QuestList {
         width: 440px;
+        height: 460px;
         position: absolute;
+        overflow-y: scroll;
         left: 23px;
         top: 120px;
         display: flex;
         align-self: left;
         flex-direction: column;
+        
 
         .QuestTitle{
           color:rgb(224, 224, 224);
@@ -33,6 +36,8 @@
       }
       .QuestDetails {
         width: 440px;
+        height: 460px;
+        overflow-y: scroll;
         position: absolute;
         top: 120px;
         right: 50px;

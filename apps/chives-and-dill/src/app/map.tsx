@@ -26,7 +26,6 @@ const Map = () => {
    const characterViewsSettings = useSelector(selectCharacterViewsSettings);
    const activePlayerId = useSelector(selectActivePlayer);
    const areas = useSelector(selectAreas);
-   const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
 
    const renderPlayers = useCallback(
       _.map(_.omit(players, [activePlayerId ?? 0]), (player, i) => <Player key={i} player={player} characterViewsSettings={characterViewsSettings} />),
@@ -119,10 +118,8 @@ const Map = () => {
                                  <Graphics draw={drawBorders} />
                                  {renderSpells}
                                  {renderPlayers}
-                                 <CastBar activeSpellsCasts={activeSpellsCasts} activePlayerId={activePlayerId} players={players} />
+                                 <CastBar />
                                  {players[activePlayerId] ? <Player player={players[activePlayerId]} characterViewsSettings={characterViewsSettings} /> : null}
-
-
 
                                  <BlinkSpellEffect />
                               </Container>

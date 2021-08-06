@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux';
 import { Graphics } from '@inlet/react-pixi';
 import { selectActiveSpellsCasts, selectActivePlayer, selectCharacters } from '../../stores';
 
-export const CastBar = ({ activeSpellsCasts, players, activePlayerId }) => {
+export const CastBar = () => {
    const [channelSpellProgress, updateChannelSpellProgress] = useState(0);
 
-   //  const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
-   //  const activePlayerId = useSelector(selectActivePlayer);
-   //  const players = useSelector(selectCharacters);
+   const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
+   const activePlayerId = useSelector(selectActivePlayer);
+   const players = useSelector(selectCharacters);
 
    useEffect(() => {
       const interval = setInterval(() => {
