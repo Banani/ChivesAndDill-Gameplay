@@ -1,7 +1,7 @@
 import { pickBy, each, filter } from 'lodash';
 import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints, isSegmentIntersectingWithACircle, getCrossingPointsWithWalls, getTheClosestObject } from '../../../math';
-import { Location } from '../../../types';
+import { Location } from '@bananos/types';
 import { ProjectileIntersection } from '../../PlayerModule/engines/types';
 import { Projectile, ProjectileMovedEvent, RemoveProjectileEvent, SpellEngineEvents, SpellLandedEvent, SpellReachedTargetEvent } from '../Events';
 

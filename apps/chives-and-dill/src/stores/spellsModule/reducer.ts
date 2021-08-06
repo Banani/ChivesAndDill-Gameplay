@@ -41,7 +41,7 @@ export const spellsReducer = (state: SpellsState = initialState, action: SpellsA
                   projectileId: action.payload.projectileId,
                   spell: action.payload.spell,
                   newLocation: action.payload.currentLocation,
-               },
+               } as any,
             },
          };
       }
@@ -69,7 +69,7 @@ export const spellsReducer = (state: SpellsState = initialState, action: SpellsA
             areaSpellsEffects: {
                ...state.areaSpellsEffects,
                [action.payload.event.areaSpellEffectId]: action.payload.event,
-            },
+            } as any,
          };
       }
       case SpellsActionTypes.AREA_SPELL_EFFECT_REMOVED: {

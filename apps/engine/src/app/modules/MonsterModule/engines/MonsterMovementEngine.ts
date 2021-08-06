@@ -3,7 +3,8 @@ import { forEach } from 'lodash';
 import { Engine } from '../../../Engine';
 import { EngineEvents } from '../../../EngineEvents';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { PlayerMovedEvent, PlayerStartedMovementEvent, PlayerStopedAllMovementVectorsEvent, Location } from '../../../types';
+import { PlayerMovedEvent, PlayerStartedMovementEvent, PlayerStopedAllMovementVectorsEvent } from '../../../types';
+import { Location } from '@bananos/types';
 import { MonsterRespawns, WalkingType } from '../MonsterRespawns';
 import { Monster } from '../types';
 

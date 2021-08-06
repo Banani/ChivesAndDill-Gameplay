@@ -1,5 +1,5 @@
 import { PathFinderEngine } from '../engines';
-import {
+import type {
    AngleBlastSpellService,
    AreaSpellService,
    DamageEffectService,
@@ -17,23 +17,23 @@ import {
    SpellNotifier,
    TeleportationSpellService,
 } from '../modules';
-import { RegenerationService } from '../modules/CharacterModule/services/RegenerationService';
-import { BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from '../modules/MonsterModule';
-import { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
-import { AggroService } from '../modules/MonsterModule/services/aggroService';
-import { PlayerMovementService } from '../modules/PlayerModule';
-import { PlayerMovementNotifier, CharacterEffectNotifier } from '../modules/PlayerModule/notifiers';
-import { CharactersService } from '../modules/PlayerModule/services/CharactersService';
-import { CooldownService } from '../modules/SpellModule/services/CooldownService';
-import { AbsorbShieldEffectService } from '../modules/SpellModule/services/EffectHandlers/AbsorbShieldEffectService';
-import { AreaEffectService } from '../modules/SpellModule/services/EffectHandlers/AreaEffectService';
-import { GenerateSpellPowerEffectService } from '../modules/SpellModule/services/EffectHandlers/GenerateSpellPowerEffectService';
-import { PowerStackEffectService } from '../modules/SpellModule/services/EffectHandlers/PowerStackEffectService';
-import { TickEffectOverTimeService } from '../modules/SpellModule/services/EffectHandlers/TickEffectOverTimeService';
-import { ChannelService } from '../modules/SpellModule/services/SpellHandlers/ChannelService';
-import { GuidedProjectilesService } from '../modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
-import { PathFinderService, SocketConnectionService } from '../services';
-import { SchedulerService } from '../services/SchedulerService';
+import type { RegenerationService } from '../modules/CharacterModule/services/RegenerationService';
+import type { BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from '../modules/MonsterModule';
+import type { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
+import type { AggroService } from '../modules/MonsterModule/services/aggroService';
+import type { PlayerMovementService } from '../modules/PlayerModule';
+import type { PlayerMovementNotifier, CharacterEffectNotifier } from '../modules/PlayerModule/notifiers';
+import type { CharactersService } from '../modules/PlayerModule/services/CharactersService';
+import type { CooldownService } from '../modules/SpellModule/services/CooldownService';
+import type { AbsorbShieldEffectService } from '../modules/SpellModule/services/EffectHandlers/AbsorbShieldEffectService';
+import type { AreaEffectService } from '../modules/SpellModule/services/EffectHandlers/AreaEffectService';
+import type { GenerateSpellPowerEffectService } from '../modules/SpellModule/services/EffectHandlers/GenerateSpellPowerEffectService';
+import type { PowerStackEffectService } from '../modules/SpellModule/services/EffectHandlers/PowerStackEffectService';
+import type { TickEffectOverTimeService } from '../modules/SpellModule/services/EffectHandlers/TickEffectOverTimeService';
+import type { ChannelService } from '../modules/SpellModule/services/SpellHandlers/ChannelService';
+import type { GuidedProjectilesService } from '../modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
+import type { PathFinderService, SocketConnectionService } from '../services';
+import type { SchedulerService } from '../services/SchedulerService';
 
 export interface Services {
    pathFinderService: PathFinderService;

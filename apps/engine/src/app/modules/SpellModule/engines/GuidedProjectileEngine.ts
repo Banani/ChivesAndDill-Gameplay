@@ -1,7 +1,7 @@
 import { forEach } from 'lodash';
 import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { Location } from '../../../types';
+import { Location } from '@bananos/types';
 import { ProjectileMovedEvent, RemoveProjectileEvent, SpellEngineEvents, SpellLandedEvent, SpellReachedTargetEvent } from '../Events';
 
 export class GuidedProjectileEngine extends Engine {

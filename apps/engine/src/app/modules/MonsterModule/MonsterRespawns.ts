@@ -1,4 +1,4 @@
-import type { Location } from '../../types';
+import { Location } from '@bananos/types';
 import type { MonsterTemplate } from './MonsterTemplates';
 import { MonsterTemplates } from './MonsterTemplates';
 
