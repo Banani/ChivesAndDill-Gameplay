@@ -15,6 +15,7 @@ export interface EnginePackage {
 export interface GlobalStore {
    characterMovements: Record<string, CharacterMovement>;
    projectileMovements: Record<string, ProjectileMovement>;
+   spellChannels: Record<string, ChannelingTrack>;
 }
 
 export interface CharacterMovement {
