@@ -79,10 +79,14 @@ const Player = ({ player, characterViewsSettings }) => {
    }, []);
 
    useEffect(() => {
+      if (player.currentHp <= 0) {
+         setCharacterStatus('dead');
+         return;
+      }
       if (engineState.characterMovements[player.id]) {
          getDirection(engineState.characterMovements[player.id].direction);
       }
-   }, [engineState.characterMovements, isCharacterMoving, player.id]);
+   }, [engineState.characterMovements, player.currentHp, isCharacterMoving]);
 
    useEffect(() => {
       if (engineState.characterMovements[player.id]) {
