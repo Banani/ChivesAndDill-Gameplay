@@ -56,3 +56,8 @@ export interface UpdateCharacterSpellPowerPayload {
 export interface CharacterDiedPayload {
    characterId: string;
 }
+
+export interface UpdatePlayerAbsorbPayload {
+   targetId: string,
+   newValue: number,
+}

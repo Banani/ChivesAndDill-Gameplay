@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SocketContext } from '../gameController/socketContext';
 import { GameControllerContext } from './gameControllerContext';
 import { useSelector } from 'react-redux';
-import { selectCharacters, selectActivePlayer, selectKeyBinds } from '../../stores';
+import { selectActivePlayer, selectKeyBinds, getEngineState } from '../../stores';
 
 const GameController = ({ children }) => {
    const context = useContext(SocketContext);
@@ -14,7 +14,7 @@ const GameController = ({ children }) => {
    const [mousePosition, setMousePosition] = useState({ x: null, y: null });
 
    const activePlayerId = useSelector(selectActivePlayer);
-   const players = useSelector(selectCharacters);
+   const engineState = useSelector(getEngineState);
 
    let gameWidth = window.innerWidth;
    let gameHeight = window.innerHeight;
@@ -74,8 +74,8 @@ const GameController = ({ children }) => {
       if (keyBinds[key]) {
          socket?.emit(ClientMessages.PerformBasicAttack, {
             directionLocation: {
-               x: players[activePlayerId]?.location.x + mousePosition.x - gameWidth / 2,
-               y: players[activePlayerId]?.location.y + mousePosition.y - gameHeight / 2,
+               x: engineState.characterMovements[activePlayerId].location.x + mousePosition.x - gameWidth / 2,
+               y: engineState.characterMovements[activePlayerId].location.y + mousePosition.y - gameHeight / 2,
             },
             spellName: keyBinds[key],
          });
@@ -126,10 +126,10 @@ const GameController = ({ children }) => {
    const clickHandler = (event) => {
       socket?.emit(ClientMessages.PerformBasicAttack, {
          directionLocation: {
-            x: players[activePlayerId]?.location.x + event.nativeEvent.offsetX - gameWidth / 2,
-            y: players[activePlayerId]?.location.y + event.nativeEvent.offsetY - gameHeight / 2,
+            x: engineState.characterMovements[activePlayerId].location.x + event.nativeEvent.offsetX - gameWidth / 2,
+            y: engineState.characterMovements[activePlayerId].location.y + event.nativeEvent.offsetY - gameHeight / 2,
          },
-         spellName: 'test',
+         spellName: 'ArrowShot',
       });
    };
 

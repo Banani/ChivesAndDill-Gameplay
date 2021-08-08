@@ -2,8 +2,8 @@ import { EngineMessages, ClientMessages } from '@bananos/types';
 import { mapValues, merge } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { Notifier } from '../../../Notifier';
-import {
+import type { Notifier } from '../../../Notifier';
+import type {
    EngineEventHandler,
    PlayerStartedMovementEvent,
    NewPlayerCreatedEvent,
@@ -69,10 +69,6 @@ export class PlayerMovementNotifier extends EventParser implements Notifier {
          ...this.characters[event.characterId],
          isInMove: true,
       };
-
-      services.socketConnectionService.getIO().sockets.emit(EngineMessages.PlayerStartedMovement, {
-         userId: event.characterId,
-      });
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event, services }) => {
@@ -81,12 +77,6 @@ export class PlayerMovementNotifier extends EventParser implements Notifier {
          location: event.newLocation,
          direction: event.newCharacterDirection,
       };
-
-      services.socketConnectionService.getIO().sockets.emit(EngineMessages.PlayerMoved, {
-         playerId: event.characterId,
-         newLocation: event.newLocation,
-         newDirection: event.newCharacterDirection,
-      });
    };
 
    handlePlayerStopedAllMovementVectors: EngineEventHandler<PlayerStopedAllMovementVectorsEvent> = ({ event, services }) => {
@@ -94,9 +84,5 @@ export class PlayerMovementNotifier extends EventParser implements Notifier {
          ...this.characters[event.characterId],
          isInMove: false,
       };
-
-      services.socketConnectionService.getIO().sockets.emit(EngineMessages.PlayerStoppedMovement, {
-         userId: event.characterId,
-      });
    };
 }

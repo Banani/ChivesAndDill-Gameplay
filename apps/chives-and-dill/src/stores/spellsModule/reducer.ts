@@ -30,39 +30,6 @@ export const spellsReducer = (state: SpellsState = initialState, action: SpellsA
             keyBinding,
          };
       }
-
-      case SpellsActionTypes.ADD_PROJECTILE: {
-         return {
-            ...state,
-            projectiles: {
-               ...state.projectiles,
-               [action.payload.projectileId]: {
-                  angle: action.payload.angle,
-                  projectileId: action.payload.projectileId,
-                  spell: action.payload.spell,
-                  newLocation: action.payload.currentLocation,
-               } as any,
-            },
-         };
-      }
-      case SpellsActionTypes.UPDATE_PROJECTILE:
-         return {
-            ...state,
-            projectiles: {
-               ...state.projectiles,
-               [action.payload.projectileId]: {
-                  ...state.projectiles[action.payload.projectileId],
-                  angle: action.payload.angle,
-                  newLocation: action.payload.newLocation,
-               },
-            },
-         };
-      case SpellsActionTypes.DELETE_PROJECTILE: {
-         return {
-            ...state,
-            projectiles: _.omit(state.projectiles, action.payload.projectileId),
-         };
-      }
       case SpellsActionTypes.AREA_SPELL_EFFECT_CREATED: {
          return {
             ...state,

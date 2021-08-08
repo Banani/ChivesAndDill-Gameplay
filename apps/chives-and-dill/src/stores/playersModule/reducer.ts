@@ -112,6 +112,18 @@ export const playersReducer = (state: PlayersState = initialState, action: Playe
                },
             },
          };
+      case PlayersActionTypes.UPDATE_PLAYER_ABSORB: {
+         return {
+            ...state,
+            characters: {
+               ...state.characters,
+               [action.payload.targetId]: {
+                  ...state.characters[action.payload.targetId],
+                  absorb: action.payload.newValue,
+               }
+            }
+         };
+      }
       case PlayersActionTypes.UPDATE_CHARACTER_HP:
          return {
             ...state,

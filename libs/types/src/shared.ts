@@ -26,6 +26,7 @@ export interface Player {
    spellEffect: string;
    currentSpellPower: number;
    maxSpellPower: number;
+   absorb: number;
 }
 
 export interface Quest {

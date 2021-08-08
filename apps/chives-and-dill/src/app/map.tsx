@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Stage, Sprite, Graphics, Container, AppContext } from '@inlet/react-pixi';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
 import {
@@ -6,8 +6,8 @@ import {
    selectCharacterViewsSettings,
    selectAreas,
    selectActivePlayer,
-   selectProjectiles,
    selectAreaSpellsEffects,
+   getEngineState,
    selectActiveSpellsCasts,
 } from '../stores';
 import _ from 'lodash';
@@ -18,34 +18,30 @@ import { QuestLog } from './player/quests/questLog/QuestLog';
 import { QuestsSideView } from './player/quests/questSideView/QuestsSideView';
 import { CastBar } from './mapContent/CastBar';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
-import { GlobalStore } from '@bananos/types';
-import { getEngineState } from '../stores';
-import { spellsReducer } from '../stores/spellsModule/reducer';
 
 const Map = () => {
    const players = useSelector(selectCharacters);
-   const projectiles = useSelector(selectProjectiles);
    const areaSpellsEffects = useSelector(selectAreaSpellsEffects);
    const characterViewsSettings = useSelector(selectCharacterViewsSettings);
    const activePlayerId = useSelector(selectActivePlayer);
    const areas = useSelector(selectAreas);
-
    const engineState = useSelector(getEngineState);
-
-   console.log(engineState.characterMovements);
+   const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
 
    const renderPlayers = useCallback(
       () => _.map(_.omit(players, [activePlayerId ?? 0]), (player, i) => <Player key={i} player={player} characterViewsSettings={characterViewsSettings} />),
-      [players, characterViewsSettings]
+      [players, characterViewsSettings, activePlayerId]
    );
 
-   const renderSpells = _.map(projectiles, (spell, i) => {
-      if (spell.newLocation) {
-         return (
-            <Sprite key={i} image="../assets/spritesheets/spells/potato.png" x={spell.newLocation.x} y={spell.newLocation.y}></Sprite>
-         )
-      }
-   });
+   const renderSpells = useCallback(
+      () => _.map(engineState.projectileMovements, (spell, i) => <Sprite key={i} image="../assets/spritesheets/spells/potato.png" x={spell.location.x} y={spell.location.y}></Sprite>),
+      [engineState.projectileMovements]
+   );
+
+   const renderCastBars = useCallback(
+      () => _.map(activeSpellsCasts, (spellCast, i) => <CastBar playerId={i} />),
+      [activeSpellsCasts]
+   );
 
    const drawAreasSpellsEffects = useCallback(
       (g) => {
@@ -117,19 +113,19 @@ const Map = () => {
                   <AppContext.Consumer>
                      {(app) => (
                         <Provider store={store}>
-                           {activePlayerId && (
+                           {activePlayerId && engineState.characterMovements && (
                               <Container
                                  position={[
-                                    -players[activePlayerId]?.location.x * scale + gameWidth / 2 ?? 0,
-                                    -players[activePlayerId]?.location.y * scale + gameHeight / 2 ?? 0,
+                                    -engineState?.characterMovements[activePlayerId].location.x * scale + gameWidth / 2 ?? 0,
+                                    -engineState?.characterMovements[activePlayerId].location.y * scale + gameHeight / 2 ?? 0,
                                  ]}
                               >
                                  <Graphics draw={drawAreasSpellsEffects} />
                                  {areas.length ? <Graphics draw={drawAreas} /> : null}
                                  <Graphics draw={drawBorders} />
-                                 {renderSpells}
+                                 {renderSpells()}
                                  {renderPlayers()}
-                                 <CastBar />
+                                 {renderCastBars()}
                                  {players[activePlayerId] ? <Player player={players[activePlayerId]} characterViewsSettings={characterViewsSettings} /> : null}
 
                                  <BlinkSpellEffect />

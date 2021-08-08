@@ -1,19 +1,20 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Graphics } from '@inlet/react-pixi';
-import { selectActiveSpellsCasts, selectActivePlayer, selectCharacters } from '../../stores';
+import { selectActiveSpellsCasts, selectCharacters, getEngineState } from '../../stores';
 
-export const CastBar = () => {
+export const CastBar = ({ playerId, spellCast }) => {
    const [channelSpellProgress, updateChannelSpellProgress] = useState(0);
 
    const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
-   const activePlayerId = useSelector(selectActivePlayer);
+
    const players = useSelector(selectCharacters);
+   const engineState = useSelector(getEngineState);
 
    useEffect(() => {
       const interval = setInterval(() => {
-         if (activeSpellsCasts[activePlayerId]) {
-            const { spellCastTimeStamp, castTime } = activeSpellsCasts[players[activePlayerId].id];
+         if (activeSpellsCasts[playerId]) {
+            const { spellCastTimeStamp, castTime } = activeSpellsCasts[players[playerId].id];
             updateChannelSpellProgress((Date.now() - spellCastTimeStamp) / castTime);
          }
       }, 1000 / 60);
@@ -22,19 +23,19 @@ export const CastBar = () => {
       return () => {
          clearInterval(interval);
       };
-   }, [activeSpellsCasts[activePlayerId]]);
+   }, [activeSpellsCasts, playerId]);
 
    const castBar = useCallback(
       (g) => {
          g.clear();
          g.beginFill(0xcfcfcf);
-         g.drawRect(players[activePlayerId]?.location.x - 25, players[activePlayerId]?.location.y + 30, 50, 5);
+         g.drawRect(engineState?.characterMovements[playerId].location.x - 25, engineState?.characterMovements[playerId].location.y + 30, 50, 5);
          g.endFill();
          g.beginFill(0x2372fa);
-         g.drawRect(players[activePlayerId]?.location.x - 25, players[activePlayerId]?.location.y + 30, (channelSpellProgress * 100) / 2, 5);
+         g.drawRect(engineState?.characterMovements[playerId].location.x - 25, engineState?.characterMovements[playerId].location.y + 30, (channelSpellProgress * 100) / 2, 5);
          g.endFill();
       },
-      [players, activePlayerId, channelSpellProgress]
+      [playerId, channelSpellProgress, engineState.characterMovements]
    );
    return channelSpellProgress ? <Graphics draw={castBar} /> : null;
 };

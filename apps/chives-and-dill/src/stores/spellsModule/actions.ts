@@ -40,6 +40,7 @@ export type AddActiveSpellCast = FSAAuto<SpellsActionTypes.ADD_ACTIVE_SPELL_CAST
 export type DeleteActiveSpellCast = FSAAuto<SpellsActionTypes.DELETE_ACTIVE_SPELL_CAST, DeleteSpellCastPayload>;
 
 export type AddSpellLanded = FSAAuto<SpellsActionTypes.ADD_SPELL_LANDED, any>;
+
 export type ClearFirstLandedSpell = FSAAuto<SpellsActionTypes.CLEAR_FIRST_LANDED_SPELL>;
 
 export const initializeSpells = (payload: InitializeSpellsPayload): InitializeSpells => ({
@@ -101,4 +102,5 @@ export type SpellsAction =
    | AddActiveSpellCast
    | DeleteActiveSpellCast
    | AddSpellLanded
-   | ClearFirstLandedSpell;
+   | ClearFirstLandedSpell
+   | UpdatePlayerAbsorb;

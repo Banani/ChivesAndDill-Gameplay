@@ -6,12 +6,7 @@ import {
    initializePlayers,
    initializeSpells,
    addPlayer,
-   changePlayerPosition,
    deletePlayer,
-   changePlayerMovingStatus,
-   addProjectile,
-   updateProjectile,
-   deleteProjectile,
    updateCharacterHp,
    characterDied,
    updateCharacterSpellPower,
@@ -24,6 +19,7 @@ import {
    questCompleted,
    killingStagePartProgress,
    newQuestStageStarted,
+   updatePlayerAbsorb,
    newPackage,
 } from '../../stores';
 import { SocketContext } from './socketContext';
@@ -46,42 +42,12 @@ const SocketCommunicator = ({ children }) => {
             dispatch(initializeSpells({ projectiles, spells }));
          });
 
-         context.socket.on(EngineMessages.PlayerMoved, ({ playerId, newLocation, newDirection }) => {
-            dispatch(
-               changePlayerPosition({
-                  selectedPlayerId: playerId,
-                  newLocation,
-                  newDirection,
-               })
-            );
-         });
-
-         context.socket.on(EngineMessages.PlayerStartedMovement, ({ userId }) => {
-            dispatch(changePlayerMovingStatus({ userId, isInMove: true }));
-         });
-
-         context.socket.on(QuestEngineMessages.KillingStagePartProgress, (data) => {
-            dispatch(changePlayerMovingStatus({ isInMove: true } as any));
-         });
-
-         context.socket.on(EngineMessages.PlayerStoppedMovement, ({ userId }) => {
-            dispatch(changePlayerMovingStatus({ userId, isInMove: false }));
-         });
-
          context.socket.on(EngineMessages.UserConnected, ({ player }) => {
             dispatch(addPlayer({ player }));
          });
 
          context.socket.on(EngineMessages.UserDisconnected, ({ userId }) => {
             dispatch(deletePlayer({ userId }));
-         });
-
-         context.socket.on(EngineMessages.ProjectileCreated, ({ projectileId, spell, currentLocation }) => {
-            dispatch(addProjectile({ projectileId, spell, currentLocation } as any));
-         });
-
-         context.socket.on(EngineMessages.ProjectileMoved, ({ angle, newLocation, projectileId }) => {
-            dispatch(updateProjectile({ projectileId, angle, newLocation }));
          });
 
          context.socket.on(EngineMessages.CharacterLostHp, ({ characterId, currentHp, amount }) => {
@@ -104,10 +70,6 @@ const SocketCommunicator = ({ children }) => {
 
          context.socket.on(EngineMessages.CharacterDied, ({ characterId }) => {
             dispatch(characterDied({ characterId }));
-         });
-
-         context.socket.on(EngineMessages.ProjectileRemoved, ({ projectileId }) => {
-            dispatch(deleteProjectile({ projectileId }));
          });
 
          context.socket.on(FightingEngineMessages.SpellLanded, (event) => {
@@ -152,6 +114,14 @@ const SocketCommunicator = ({ children }) => {
 
          context.socket.on(EngineMessages.Package, (event) => {
             dispatch(newPackage(event));
+         });
+
+         context.socket.on(FightingEngineMessages.AbsorbShieldChanged, ({ targetId, newValue }) => {
+            dispatch(updatePlayerAbsorb({ targetId, newValue }));
+         });
+
+         context.socket.on(FightingEngineMessages.DamageAbsorbed, (event) => {
+
          });
       }
    }, [context]);
