@@ -41,11 +41,14 @@ export class PlayerMovementNotifier extends EventParser implements Notifier {
 
       // BUG - should goes only to new player
 
-      this.characters = mapValues(merge(services.characterService.getAllCharacters(), services.monsterService.getAllCharacters()), (character: Character) => ({
-         isInMove: character.isInMove,
-         location: character.location,
-         direction: character.direction,
-      }));
+      this.characters = mapValues(
+         merge({}, services.characterService.getAllCharacters(), services.monsterService.getAllCharacters()),
+         (character: Character) => ({
+            isInMove: character.isInMove,
+            location: character.location,
+            direction: character.direction,
+         })
+      );
 
       currentSocket.on(ClientMessages.PlayerStartMove, (movement) => {
          this.engineEventCrator.asyncCeateEvent<PlayerTriesToStartedMovementEvent>({
