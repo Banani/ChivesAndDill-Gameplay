@@ -1,4 +1,5 @@
 import { CharacterDirection } from '@bananos/types';
+import { clone } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import type {
@@ -22,7 +23,7 @@ import type {
 import { CharacterType } from '../../../types';
 import { Classes } from '../../../types/Classes';
 import type { Player } from '../../../types/Player';
-import { ALL_SPELLS, SpellsPerClass } from '../../SpellModule/spells';
+import { SpellsPerClass } from '../../SpellModule/spells';
 
 export class CharactersService extends EventParser {
    characters: Record<string, Player> = {};

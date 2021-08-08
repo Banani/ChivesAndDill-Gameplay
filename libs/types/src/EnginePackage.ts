@@ -28,3 +28,10 @@ export interface ProjectileMovement {
    angle: number;
    spellName: string;
 }
+
+export interface ChannelingTrack {
+   channelId: string;
+   casterId: string;
+   castingStartedTimestamp: number;
+   timeToCast: number;
+}

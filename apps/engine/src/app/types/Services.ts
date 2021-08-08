@@ -24,6 +24,7 @@ import type { AggroService } from '../modules/MonsterModule/services/aggroServic
 import type { PlayerMovementService } from '../modules/PlayerModule';
 import type { PlayerMovementNotifier, CharacterEffectNotifier } from '../modules/PlayerModule/notifiers';
 import type { CharactersService } from '../modules/PlayerModule/services/CharactersService';
+import { ChannelingNotifier } from '../modules/SpellModule/notifiers/ChannelingNotifier';
 import type { CooldownService } from '../modules/SpellModule/services/CooldownService';
 import type { AbsorbShieldEffectService } from '../modules/SpellModule/services/EffectHandlers/AbsorbShieldEffectService';
 import type { AreaEffectService } from '../modules/SpellModule/services/EffectHandlers/AreaEffectService';
@@ -53,6 +54,7 @@ export interface Services {
    monsterService: MonsterService;
    respawnService: RespawnService;
    aggroService: AggroService;
+   channelingNotifier: ChannelingNotifier;
    monsterAttackService: MonsterAttackService;
    monsterNotifier: MonsterNotifier;
    manaService: ManaService;

@@ -48,6 +48,7 @@ import { MonsterMovementEngine } from './app/modules/MonsterModule/engines/Monst
 import { SchedulerService } from './app/services/SchedulerService';
 import { SchedulerEngine } from './app/engines/SchedulerEngine';
 import { RegenerationService } from './app/modules/CharacterModule/services/RegenerationService';
+import { ChannelingNotifier } from './app/modules/SpellModule/notifiers/ChannelingNotifier';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -97,7 +98,8 @@ const slowEngines = [respawnMonsterEngine];
 
 const playerMovementNotifier = new PlayerMovementNotifier();
 const projectileNotifier = new ProjectileNotifier();
-const notifiers = [playerMovementNotifier, projectileNotifier];
+const channelingNotifier = new ChannelingNotifier();
+const notifiers = [playerMovementNotifier, projectileNotifier, channelingNotifier];
 
 const socketConnectionService = new SocketConnectionService(io, notifiers);
 
@@ -112,6 +114,7 @@ const services: Services = {
    characterEffectNotifier: new CharacterEffectNotifier(),
    cooldownService: new CooldownService(),
    socketConnectionService,
+   channelingNotifier,
 
    questProgressService: new QuestProgressService(),
    movementQuestService: new MovementQuestService(),
