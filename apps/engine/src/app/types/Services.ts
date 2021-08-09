@@ -2,6 +2,7 @@ import { PathFinderEngine } from '../engines';
 import type {
    AngleBlastSpellService,
    AreaSpellService,
+   AreaTimeEffectNotifier,
    DamageEffectService,
    DirectInstantSpellService,
    HealEffectService,
@@ -58,6 +59,7 @@ export interface Services {
    questNotifier: QuestNotifier;
    monsterService: MonsterService;
    respawnService: RespawnService;
+   areaTimeEffectNotifier: AreaTimeEffectNotifier;
    powerPointsService: PowerPointsService;
    aggroService: AggroService;
    channelingNotifier: ChannelingNotifier;

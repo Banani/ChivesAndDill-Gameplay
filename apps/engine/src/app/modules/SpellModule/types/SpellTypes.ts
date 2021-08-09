@@ -1,3 +1,5 @@
+import { TimeEffectType } from '@bananos/types';
+
 export enum SpellType {
    Projectile = 'Projectile',
    GuidedProjectile = 'GuidedProjectile',
@@ -118,6 +120,7 @@ export interface HealEffect extends SpellEffect {
 
 export interface AreaEffect extends SpellEffect {
    type: SpellEffectType.Area;
+   name: string;
    areaType: AreaType;
    period: number;
    radius: number;
@@ -132,6 +135,9 @@ export interface GenerateSpellPowerEffect extends SpellEffect {
 
 export interface TickOverTimeEffect extends SpellEffect {
    type: SpellEffectType.TickEffectOverTime;
+   name: string;
+   description: string;
+   timeEffectType: TimeEffectType;
    period: number;
    iconImage: string;
    activationFrequency: number;

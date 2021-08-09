@@ -18,6 +18,7 @@ export interface GlobalStore {
    spellChannels: Record<string, ChannelingTrack>;
    characterPowerPoints: Record<string, PowerPointsTrack>;
    timeEffects: Record<string, TimeEffect>;
+   areaTimeEffects: Record<string, AreaTimeEffect>;
 }
 
 export interface CharacterMovement {
@@ -46,10 +47,25 @@ export interface PowerPointsTrack {
    maxSpellPower: number;
 }
 
+export enum TimeEffectType {
+   BUFF,
+   DEBUFF,
+}
+
 export interface TimeEffect {
    id: string;
    period: number;
+   name: string;
+   description: string;
+   timeEffectType: TimeEffectType;
    iconImage: string;
    creationTime: number;
    targetId: string;
+}
+
+export interface AreaTimeEffect {
+   id: string;
+   name: string;
+   location: Location;
+   radius: number;
 }

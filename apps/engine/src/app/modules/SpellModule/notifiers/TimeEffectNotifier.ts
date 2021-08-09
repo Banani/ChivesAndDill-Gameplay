@@ -30,6 +30,9 @@ export class TimeEffectNotifier extends EventParser implements Notifier {
       this.timeEffects[event.timeEffect.id] = {
          id: event.timeEffect.id,
          period: event.timeEffect.period,
+         name: event.timeEffect.name,
+         description: event.timeEffect.description,
+         timeEffectType: event.timeEffect.timeEffectType,
          creationTime: event.timeEffect.creationTime,
          iconImage: event.timeEffect.iconImage,
          targetId: event.timeEffect.targetId,

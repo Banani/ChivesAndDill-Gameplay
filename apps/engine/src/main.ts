@@ -29,7 +29,14 @@ import {
    RespawnMonsterEngine,
    RespawnService,
 } from './app/modules/MonsterModule';
-import { ProjectileMovement, AreaEffectsEngine, TickOverTimeEffectEngine, ProjectileNotifier, TeleportationSpellService } from './app/modules/SpellModule';
+import {
+   ProjectileMovement,
+   AreaEffectsEngine,
+   TickOverTimeEffectEngine,
+   ProjectileNotifier,
+   TeleportationSpellService,
+   AreaTimeEffectNotifier,
+} from './app/modules/SpellModule';
 import { ChannelEngine } from './app/modules/SpellModule/engines/ChannelEngine';
 import { GuidedProjectileEngine } from './app/modules/SpellModule/engines/GuidedProjectileEngine';
 import { CooldownService } from './app/modules/SpellModule/services/CooldownService';
@@ -104,7 +111,8 @@ const projectileNotifier = new ProjectileNotifier();
 const channelingNotifier = new ChannelingNotifier();
 const powerPointsNotifier = new PowerPointsNotifier();
 const timeEffectNotifier = new TimeEffectNotifier();
-const notifiers = [playerMovementNotifier, projectileNotifier, channelingNotifier, powerPointsNotifier, timeEffectNotifier];
+const areaTimeEffectNotifier = new AreaTimeEffectNotifier();
+const notifiers = [playerMovementNotifier, projectileNotifier, channelingNotifier, powerPointsNotifier, timeEffectNotifier, areaTimeEffectNotifier];
 
 const socketConnectionService = new SocketConnectionService(io, notifiers);
 
@@ -113,6 +121,7 @@ const services: Services = {
    schedulerService: new SchedulerService(schedulerEngine),
    characterService: new CharactersService(),
    powerPointsNotifier,
+   areaTimeEffectNotifier,
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
    playerMovementNotifier,
