@@ -12,6 +12,7 @@ import {
    PlayerCastSpellEvent,
    SpellChannelingFinishedEvent,
    SpellChannelingInterruptedEvent,
+   SpellChannelingStartedEvent,
    SpellEngineEvents,
    SpellLandedEvent,
 } from '../../Events';
@@ -72,7 +73,7 @@ export class ChannelService extends EventParser {
             }
          }
 
-         let id = (this.increment++).toString();
+         let id = `channeling_${this.increment++}`;
          if (event.casterId) {
             id = event.casterId;
          }
@@ -85,6 +86,14 @@ export class ChannelService extends EventParser {
             caster: caster,
             castTargetId,
          };
+
+         this.engineEventCrator.asyncCeateEvent<SpellChannelingStartedEvent>({
+            type: SpellEngineEvents.SpellChannelingStarted,
+            channelingStartedTime: this.activeChannelSpells[id].creationTime,
+            casterId: event.casterId,
+            spell: event.spell,
+            channelId: id,
+         });
       }
    };
 

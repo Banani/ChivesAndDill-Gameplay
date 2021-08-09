@@ -1,4 +1,4 @@
-import { EngineMessages, ClientMessages, Projectile, ProjectileMovement } from '@bananos/types';
+import { ClientMessages, ProjectileMovement } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { Notifier } from '../../../Notifier';
@@ -41,12 +41,6 @@ export class ProjectileNotifier extends EventParser implements Notifier {
          location: event.newLocation,
          angle: event.angle,
       };
-
-      services.socketConnectionService.getIO().sockets.emit(EngineMessages.ProjectileMoved, {
-         projectileId: event.projectileId,
-         newLocation: event.newLocation,
-         angle: event.angle,
-      });
    };
 
    ProjectileCreated: EngineEventHandler<ProjectileCreatedEvent> = ({ event, services }) => {
@@ -55,19 +49,10 @@ export class ProjectileNotifier extends EventParser implements Notifier {
          location: event.currentLocation,
          spellName: event.spell.name,
       };
-
-      services.socketConnectionService.getIO().sockets.emit(EngineMessages.ProjectileCreated, {
-         projectileId: event.projectileId,
-         location: event.currentLocation,
-         spell: event.spell.name,
-      });
    };
 
    ProjectileRemoved: EngineEventHandler<ProjectileRemovedEvent> = ({ event, services }) => {
       this.toDelete.push(event.projectileId);
-      services.socketConnectionService.getIO().sockets.emit(EngineMessages.ProjectileRemoved, {
-         projectileId: event.projectileId,
-      });
    };
 
    handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event, services }) => {

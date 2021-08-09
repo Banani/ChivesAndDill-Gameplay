@@ -2,16 +2,12 @@ export enum EngineMessages {
    Inicialization = 'Inicialization',
    UserConnected = 'UserConnected',
    UserDisconnected = 'UserDisconnected',
-   PlayerStartedMovement = 'PlayerStartedMovement',
-   PlayerStoppedMovement = 'PlayerStoppedMovement',
-   PlayerMoved = 'PlayerMoved',
-   ProjectileCreated = 'ProjectileCreated',
-   ProjectileMoved = 'ProjectileMoved',
-   ProjectileRemoved = 'ProjectileRemoved',
+
    CharacterLostHp = 'CharacterLostHp',
    CharacterGotHp = 'CharacterGotHp',
    CharacterLostSpellPower = 'CharacterLostSpellPower',
    CharacterGotSpellPower = 'CharacterGotSpellPower',
+
    CharacterDied = 'CharacterDied',
 
    Package = 'Package',
@@ -29,8 +25,10 @@ export enum FightingEngineMessages {
    SpellLanded = 'SpellLanded',
    AreaSpellEffectCreated = 'AreaSpellEffectCreated',
    AreaSpellEffectRemoved = 'AreaSpellEffectRemoved',
+
    ChannelingFinished = 'ChannelingFinished',
    ChannelingInterrupted = 'ChannelingInterrupted',
+
    CharacterGainPowerStack = 'CharacterGainPowerStack',
    CharacterLosePowerStack = 'CharacterLosePowerStack',
    DamageAbsorbed = 'DamageAbsorbed',

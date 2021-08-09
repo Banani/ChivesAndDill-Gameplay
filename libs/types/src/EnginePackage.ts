@@ -15,6 +15,7 @@ export interface EnginePackage {
 export interface GlobalStore {
    characterMovements: Record<string, CharacterMovement>;
    projectileMovements: Record<string, ProjectileMovement>;
+   spellChannels: Record<string, ChannelingTrack>;
 }
 
 export interface CharacterMovement {
@@ -27,4 +28,11 @@ export interface ProjectileMovement {
    location: Location;
    angle: number;
    spellName: string;
+}
+
+export interface ChannelingTrack {
+   channelId: string;
+   casterId: string;
+   castingStartedTimestamp: number;
+   timeToCast: number;
 }

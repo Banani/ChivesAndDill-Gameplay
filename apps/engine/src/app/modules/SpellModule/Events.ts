@@ -13,6 +13,7 @@ import {
    ProjectileSpell,
    ProjectileSubSpell,
    SpellEffect,
+   ChannelSpell,
 } from './types/spellTypes';
 
 export enum SpellEngineEvents {
@@ -23,6 +24,7 @@ export enum SpellEngineEvents {
    ApplyTargetSpellEffect = 'ApplyTargetSpellEffect',
    ApplyLocationSpellEffect = 'ApplyLocationSpellEffect',
    RemoveAreaSpellEffect = 'RemoveAreaSpellEffect',
+   SpellChannelingStarted = 'SpellChannelingStarted',
    SpellChannelingFinished = 'SpellChannelingFinished',
    SpellChannelingInterrupted = 'SpellChannelingInterrupted',
    RemoveTickOverTimeEffect = 'TickOverTimeFinished',
@@ -131,6 +133,14 @@ export interface RemoveAreaSpellEffectEvent extends EngineEvent {
    areaId: string;
 }
 
+export interface SpellChannelingStartedEvent extends EngineEvent {
+   type: SpellEngineEvents.SpellChannelingStarted;
+   casterId: string;
+   channelingStartedTime: number;
+   channelId: string;
+   spell: ChannelSpell;
+}
+
 export interface SpellChannelingFinishedEvent extends EngineEvent {
    type: SpellEngineEvents.SpellChannelingFinished;
    channelId: string;
@@ -222,6 +232,7 @@ export interface FightingEngineEventsMap {
    [SpellEngineEvents.RemoveProjectile]: EngineEventHandler<RemoveProjectileEvent>;
    [SpellEngineEvents.ProjectileRemoved]: EngineEventHandler<ProjectileRemovedEvent>;
 
+   [SpellEngineEvents.SpellChannelingStarted]: EngineEventHandler<SpellChannelingStartedEvent>;
    [SpellEngineEvents.SpellChannelingFinished]: EngineEventHandler<SpellChannelingFinishedEvent>;
    [SpellEngineEvents.SpellChannelingInterrupted]: EngineEventHandler<SpellChannelingInterruptedEvent>;
 

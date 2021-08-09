@@ -115,6 +115,7 @@ export class AggroService extends EventParser {
       if (event.effect.type !== SpellEffectType.Damage) {
          return;
       }
+
       if (!event.caster || this.wasItDmgToThePlayer({ event, services })) {
          return;
       }
