@@ -1,23 +1,23 @@
 import { EngineMessages } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
+import { EngineEventHandler, CharacterDiedEvent } from '../../../types';
 import {
-   EngineEventHandler,
-   CharacterLostHpEvent,
+   CharacterEngineEvents,
    CharacterGotHpEvent,
    CharacterGotSpellPowerEvent,
+   CharacterLostHpEvent,
    CharacterLostSpellPowerEvent,
-   CharacterDiedEvent,
-} from '../../../types';
+} from '../../CharacterModule/Events';
 
 export class CharacterEffectNotifier extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [EngineEvents.CharacterGotHp]: this.handleCharacterGotHp,
-         [EngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
-         [EngineEvents.CharacterGotSpellPower]: this.handleCharacterGotSpellPower,
-         [EngineEvents.CharacterLostSpellPower]: this.handleCharacterLostSpellPower,
+         [CharacterEngineEvents.CharacterGotHp]: this.handleCharacterGotHp,
+         [CharacterEngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
+         [CharacterEngineEvents.CharacterGotSpellPower]: this.handleCharacterGotSpellPower,
+         [CharacterEngineEvents.CharacterLostSpellPower]: this.handleCharacterLostSpellPower,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
       };
    }
@@ -56,7 +56,7 @@ export class CharacterEffectNotifier extends EventParser {
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
       services.socketConnectionService.getIO().sockets.emit(EngineMessages.CharacterDied, {
-         characterId: event.character.id,
+         characterId: event.characterId,
       });
    };
 }

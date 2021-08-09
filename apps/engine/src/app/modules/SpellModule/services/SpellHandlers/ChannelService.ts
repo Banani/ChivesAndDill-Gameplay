@@ -40,7 +40,6 @@ export class ChannelService extends EventParser {
          [SpellEngineEvents.SpellChannelingFinished]: this.handleSpellChannelingFinished,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
-         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
       };
    }
 
@@ -119,7 +118,7 @@ export class ChannelService extends EventParser {
    };
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
-      this.interruptChanneling(event.character.id);
+      this.interruptChanneling(event.characterId);
    };
 
    handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {

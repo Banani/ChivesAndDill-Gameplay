@@ -5,7 +5,7 @@ import { Character, EngineEventHandler } from '../../../../types';
 import { MonsterEngineEvents, MonsterLostAggroEvent } from '../../../MonsterModule/Events';
 import { Monster } from '../../../MonsterModule/types';
 import { TickOverTimeEffectEngine } from '../../engines/TickOverTimeEffectEngine';
-import { ApplyTargetSpellEffectEvent, RemoveTickOverTimeEffectEvent, SpellEngineEvents } from '../../Events';
+import { ApplyTargetSpellEffectEvent, RemoveTickOverTimeEffectEvent, SpellEngineEvents, TimeEffectCreatedEvent, TimeEffectRemovedEvent } from '../../Events';
 import { TickOverTimeEffect, SpellEffectType } from '../../types/spellTypes';
 
 export interface TickEffectOverTimeTrack {
@@ -47,18 +47,38 @@ export class TickEffectOverTimeService extends EventParser {
             target: event.target,
             caster: event.caster,
          };
+
+         this.engineEventCrator.asyncCeateEvent<TimeEffectCreatedEvent>({
+            type: SpellEngineEvents.TimeEffectCreated,
+            timeEffect: {
+               id,
+               period: effect.period,
+               iconImage: effect.iconImage,
+               creationTime: this.activeTickEffectOverTime[id].creationTime,
+               targetId: event.target.id,
+            },
+         });
       }
    };
 
    handleTickOverTimeFinished: EngineEventHandler<RemoveTickOverTimeEffectEvent> = ({ event }) => {
-      delete this.activeTickEffectOverTime[event.tickOverTimeId];
+      this.deleteTickOverTimeEffect(event.tickOverTimeId);
    };
 
    handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
       forEach(Object.keys(this.activeTickEffectOverTime), (key) => {
          if (key.includes(`_${event.monsterId}`)) {
-            delete this.activeTickEffectOverTime[key];
+            this.deleteTickOverTimeEffect(key);
          }
+      });
+   };
+
+   deleteTickOverTimeEffect = (effectId: string) => {
+      delete this.activeTickEffectOverTime[effectId];
+
+      this.engineEventCrator.asyncCeateEvent<TimeEffectRemovedEvent>({
+         type: SpellEngineEvents.TimeEffectRemoved,
+         tickOverTimeId: effectId,
       });
    };
 

@@ -49,6 +49,9 @@ import { SchedulerService } from './app/services/SchedulerService';
 import { SchedulerEngine } from './app/engines/SchedulerEngine';
 import { RegenerationService } from './app/modules/CharacterModule/services/RegenerationService';
 import { ChannelingNotifier } from './app/modules/SpellModule/notifiers/ChannelingNotifier';
+import { PowerPointsService } from './app/modules/CharacterModule';
+import { PowerPointsNotifier } from './app/modules/CharacterModule/notifiers';
+import { TimeEffectNotifier } from './app/modules/SpellModule/notifiers/TimeEffectNotifier';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -99,7 +102,9 @@ const slowEngines = [respawnMonsterEngine];
 const playerMovementNotifier = new PlayerMovementNotifier();
 const projectileNotifier = new ProjectileNotifier();
 const channelingNotifier = new ChannelingNotifier();
-const notifiers = [playerMovementNotifier, projectileNotifier, channelingNotifier];
+const powerPointsNotifier = new PowerPointsNotifier();
+const timeEffectNotifier = new TimeEffectNotifier();
+const notifiers = [playerMovementNotifier, projectileNotifier, channelingNotifier, powerPointsNotifier, timeEffectNotifier];
 
 const socketConnectionService = new SocketConnectionService(io, notifiers);
 
@@ -107,6 +112,7 @@ const services: Services = {
    pathFinderService: new PathFinderService(pathFinderEngine),
    schedulerService: new SchedulerService(schedulerEngine),
    characterService: new CharactersService(),
+   powerPointsNotifier,
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
    playerMovementNotifier,
@@ -114,7 +120,9 @@ const services: Services = {
    characterEffectNotifier: new CharacterEffectNotifier(),
    cooldownService: new CooldownService(),
    socketConnectionService,
+   powerPointsService: new PowerPointsService(),
    channelingNotifier,
+   timeEffectNotifier,
 
    questProgressService: new QuestProgressService(),
    movementQuestService: new MovementQuestService(),

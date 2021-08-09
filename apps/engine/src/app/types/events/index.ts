@@ -4,22 +4,13 @@ import { MonsterEngineEvents } from '../../modules/MonsterModule/Events';
 import { Monster } from '../../modules/MonsterModule/types';
 import { QuestEngineEvents } from '../../modules/QuestModule/Events';
 import { SpellEngineEvents } from '../../modules/SpellModule/Events';
-import {
-   ProjectileSubSpell,
-   ProjectileSpell,
-   GuidedProjectileSpell,
-   GuidedProjectileSubSpell,
-   SubSpell,
-   SpellEffect,
-   Spell,
-} from '../../modules/SpellModule/types/spellTypes';
-import { Character } from '../Character';
 import { Location } from '@bananos/types';
 import { Player } from '../Player';
 import { Services } from '../Services';
+import { CharacterEngineEvents } from '../../modules/CharacterModule/Events';
 
 export interface EngineEvent {
-   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | SpellEngineEvents;
+   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | SpellEngineEvents | CharacterEngineEvents;
 }
 
 export interface NewPlayerCreatedEvent extends EngineEvent {
@@ -41,32 +32,9 @@ export interface PlayerDisconnectedEvent extends EngineEvent {
 }
 
 export interface CharacterDiedEvent extends EngineEvent {
-   character: Character;
+   characterId: string;
+   character: Monster | Player;
    killerId: string;
-}
-
-export interface CharacterLostHpEvent extends EngineEvent {
-   characterId: string;
-   amount: number;
-   currentHp: number;
-}
-
-export interface CharacterGotHpEvent extends EngineEvent {
-   characterId: string;
-   amount: number;
-   currentHp: number;
-}
-
-export interface CharacterLostSpellPowerEvent extends EngineEvent {
-   characterId: string;
-   amount: number;
-   currentSpellPower: number;
-}
-
-export interface CharacterGotSpellPowerEvent extends EngineEvent {
-   characterId: string;
-   amount: number;
-   currentSpellPower: number;
 }
 
 export interface PlayerStartedMovementEvent extends EngineEvent {
@@ -99,28 +67,6 @@ export interface PlayerStopedMovementVectorEvent extends EngineEvent {
    movement: {
       source: string;
    };
-}
-
-export interface TakeCharacterHealthPointsEvent extends EngineEvent {
-   attackerId: string | null;
-   characterId: string;
-   amount: number;
-}
-
-export interface AddCharacterHealthPointsEvent extends EngineEvent {
-   casterId: string;
-   characterId: string;
-   amount: number;
-}
-
-export interface TakeCharacterSpellPowerEvent extends EngineEvent {
-   characterId: string;
-   amount: number;
-}
-
-export interface AddCharacterSpellPowerEvent extends EngineEvent {
-   characterId: string;
-   amount: number;
 }
 
 export interface CreatePathEvent extends EngineEvent {
@@ -166,7 +112,6 @@ export type EngineEventHandler<T> = ({ event, services }: { event: T; services: 
 export interface EngineEventsMap {
    [EngineEvents.PlayerDisconnected]: EngineEventHandler<PlayerDisconnectedEvent>;
    [EngineEvents.CharacterDied]: EngineEventHandler<CharacterDiedEvent>;
-   [EngineEvents.CharacterLostHp]: EngineEventHandler<CharacterLostHpEvent>;
    [EngineEvents.NewPlayerCreated]: EngineEventHandler<NewPlayerCreatedEvent>;
    [EngineEvents.CreateNewPlayer]: EngineEventHandler<CreateNewPlayerEvent>;
    [EngineEvents.PlayerStartedMovement]: EngineEventHandler<PlayerStartedMovementEvent>;
@@ -174,13 +119,6 @@ export interface EngineEventsMap {
    [EngineEvents.PlayerStopedAllMovementVectors]: EngineEventHandler<PlayerStopedAllMovementVectorsEvent>;
    [EngineEvents.PlayerStopedMovementVector]: EngineEventHandler<PlayerStopedMovementVectorEvent>;
    [EngineEvents.PlayerMoved]: EngineEventHandler<PlayerMovedEvent>;
-   [EngineEvents.TakeCharacterHealthPoints]: EngineEventHandler<TakeCharacterHealthPointsEvent>;
-   [EngineEvents.AddCharacterHealthPoints]: EngineEventHandler<AddCharacterHealthPointsEvent>;
-   [EngineEvents.CharacterGotHp]: EngineEventHandler<CharacterGotHpEvent>;
-   [EngineEvents.TakeCharacterSpellPower]: EngineEventHandler<TakeCharacterSpellPowerEvent>;
-   [EngineEvents.AddCharacterSpellPower]: EngineEventHandler<AddCharacterSpellPowerEvent>;
-   [EngineEvents.CharacterLostSpellPower]: EngineEventHandler<CharacterLostSpellPowerEvent>;
-   [EngineEvents.CharacterGotSpellPower]: EngineEventHandler<CharacterGotSpellPowerEvent>;
 
    [EngineEvents.CreatePath]: EngineEventHandler<CreatePathEvent>;
    [EngineEvents.UpdatePath]: EngineEventHandler<UpdatePathEvent>;

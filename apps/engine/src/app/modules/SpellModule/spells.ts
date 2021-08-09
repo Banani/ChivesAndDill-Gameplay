@@ -1,5 +1,5 @@
 import { Classes } from '../../types/Classes';
-import type { Spell} from './types/spellTypes';
+import type { Spell } from './types/spellTypes';
 import { AreaType, PowerStackType, SpellEffectType, SpellType } from './types/spellTypes';
 
 export const ALL_SPELLS: Record<string, Spell> = {
@@ -123,6 +123,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
          {
             type: SpellEffectType.TickEffectOverTime,
             spellId: 'GuidedShot_DOT_1',
+            iconImage: 'peepeepoopoo_tutajprzyjdzieizmieni',
             period: 6000,
             activationFrequency: 1000,
             spellEffects: [{ type: SpellEffectType.Damage, amount: 20 }],
@@ -244,6 +245,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
          {
             type: SpellEffectType.TickEffectOverTime,
             spellId: 'BleedingStrike_DOT_1',
+            iconImage: 'peepeepoopoo_tutajprzyjdzieizmieni',
             period: 6000,
             activationFrequency: 1000,
             spellEffects: [{ type: SpellEffectType.Damage, amount: 12 }],

@@ -1,6 +1,7 @@
+import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { BossFightsTemplates } from '../BossFightsTemplates';
 import { BossFightEngine } from '../engines';
 import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostAggroEvent, MonsterPulledEvent } from '../Events';
@@ -14,7 +15,7 @@ export class BossFightService extends EventParser {
       this.eventsToHandlersMap = {
          [MonsterEngineEvents.MonsterPulled]: this.handleMonsterPulled,
          [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
-         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
+         [EngineEvents.CharacterDied]: this.handleCharacterDied,
       };
    }
 
@@ -33,7 +34,7 @@ export class BossFightService extends EventParser {
       this.bossFightEngine.stopBossFight(event.monsterId);
    };
 
-   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
-      this.bossFightEngine.stopBossFight(event.monster.id);
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
+      this.bossFightEngine.stopBossFight(event.characterId);
    };
 }

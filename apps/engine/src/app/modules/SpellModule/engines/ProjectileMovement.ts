@@ -21,12 +21,9 @@ export class ProjectileMovement extends Engine {
    }
 
    getCrossingCharacter(movementSegment) {
-      return pickBy(
-         pickBy({ ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }, (char) => !char.isDead),
-         (character) => {
-            return isSegmentIntersectingWithACircle(movementSegment, [character.location.x, character.location.y, character.size / 2]);
-         }
-      );
+      return pickBy({ ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }, (character) => {
+         return isSegmentIntersectingWithACircle(movementSegment, [character.location.x, character.location.y, character.size / 2]);
+      });
    }
 
    doAction() {

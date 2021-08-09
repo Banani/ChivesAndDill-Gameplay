@@ -16,6 +16,8 @@ export interface GlobalStore {
    characterMovements: Record<string, CharacterMovement>;
    projectileMovements: Record<string, ProjectileMovement>;
    spellChannels: Record<string, ChannelingTrack>;
+   characterPowerPoints: Record<string, PowerPointsTrack>;
+   timeEffects: Record<string, TimeEffect>;
 }
 
 export interface CharacterMovement {
@@ -35,4 +37,19 @@ export interface ChannelingTrack {
    casterId: string;
    castingStartedTimestamp: number;
    timeToCast: number;
+}
+
+export interface PowerPointsTrack {
+   currentHp: number;
+   maxHp: number;
+   currentSpellPower: number;
+   maxSpellPower: number;
+}
+
+export interface TimeEffect {
+   id: string;
+   period: number;
+   iconImage: string;
+   creationTime: number;
+   targetId: string;
 }

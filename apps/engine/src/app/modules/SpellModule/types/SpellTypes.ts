@@ -133,6 +133,7 @@ export interface GenerateSpellPowerEffect extends SpellEffect {
 export interface TickOverTimeEffect extends SpellEffect {
    type: SpellEffectType.TickEffectOverTime;
    period: number;
+   iconImage: string;
    activationFrequency: number;
    spellEffects: AllEffects[];
    spellId: string;

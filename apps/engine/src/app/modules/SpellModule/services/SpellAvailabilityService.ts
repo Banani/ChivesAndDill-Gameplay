@@ -37,7 +37,7 @@ export class SpellAvailabilityService extends EventParser {
          return;
       }
 
-      if (character.currentSpellPower < spell.spellPowerCost) {
+      if (services.powerPointsService.getSpellPower(character.id) < spell.spellPowerCost) {
          return;
       }
 
