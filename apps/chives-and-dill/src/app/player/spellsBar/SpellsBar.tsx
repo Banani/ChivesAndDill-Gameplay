@@ -57,7 +57,11 @@ export const SpellsBar = () => {
                />
                <div className={styles.spellTooltip}>
                   <div>{activeSpell.name}</div>
-                  <div>{activeSpell.range} yd range</div>
+                  <div>
+                     <div>{activeSpell.spellPowerCost} Mana</div>
+                     <div>{activeSpell.range} yd range</div>
+                  </div>
+                  <div>{activeSpell.channelTime ? `${activeSpell.channelTime / 1000} sec cast` : 'Instant cast'}</div>
                   <div>{'Cooldown: ' + activeSpell.cooldown / 1000 + ' sec'}</div>
                   <div className={styles.spellDesc}>{activeSpell.description}</div>
                </div>

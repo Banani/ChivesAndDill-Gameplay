@@ -99,6 +99,7 @@ export interface Spell {
    image: string;
    description: string;
    channelTime: number;
+   spellPowerCost: number;
 }
 
 export interface ActiveSpellCast {
