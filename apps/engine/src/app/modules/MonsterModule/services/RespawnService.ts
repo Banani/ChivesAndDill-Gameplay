@@ -2,11 +2,10 @@ import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
 import { RespawnMonsterEngine } from '../engines';
 import { CreateNewMonsterEvent, MonsterDiedEvent, MonsterEngineEvents, RespawnMonsterEvent } from '../Events';
 import { MonsterRespawns } from '../MonsterRespawns';
-import { Monster } from '../types';
 
 interface MonsterDead {
    deadTime: number;
@@ -20,7 +19,7 @@ export class RespawnService extends EventParser {
       super();
       this.respawnMonsterEngine = respawnMonsterEngine;
       this.eventsToHandlersMap = {
-         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
+         [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [MonsterEngineEvents.RespawnMonster]: this.handleRespawnMonster,
       };
    }
@@ -37,10 +36,12 @@ export class RespawnService extends EventParser {
       });
    }
 
-   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
-      this.waitingRespawns[event.monster.respawnId] = {
-         deadTime: Date.now(),
-      };
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
+      if (event.character.type === CharacterType.Monster) {
+         this.waitingRespawns[event.character.respawnId] = {
+            deadTime: Date.now(),
+         };
+      }
    };
 
    handleRespawnMonster: EngineEventHandler<RespawnMonsterEvent> = ({ event }) => {

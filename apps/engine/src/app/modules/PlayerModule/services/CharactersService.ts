@@ -1,5 +1,4 @@
 import { CharacterDirection } from '@bananos/types';
-import { clone } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import type {
@@ -10,15 +9,7 @@ import type {
    PlayerStartedMovementEvent,
    PlayerStopedAllMovementVectorsEvent,
    PlayerMovedEvent,
-   TakeCharacterHealthPointsEvent,
-   CharacterLostHpEvent,
    CharacterDiedEvent,
-   AddCharacterHealthPointsEvent,
-   CharacterGotHpEvent,
-   TakeCharacterSpellPowerEvent,
-   CharacterLostSpellPowerEvent,
-   AddCharacterSpellPowerEvent,
-   CharacterGotSpellPowerEvent,
 } from '../../../types';
 import { CharacterType } from '../../../types';
 import { Classes } from '../../../types/Classes';
@@ -37,11 +28,7 @@ export class CharactersService extends EventParser {
          [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
          [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
-
-         [EngineEvents.TakeCharacterHealthPoints]: this.handleTakeCharacterHealthPoints,
-         [EngineEvents.AddCharacterHealthPoints]: this.handleAddCharacterHealthPoints,
-         [EngineEvents.TakeCharacterSpellPower]: this.handleTakeCharacterSpellPower,
-         [EngineEvents.AddCharacterSpellPower]: this.handleAddCharacterSpellPower,
+         [EngineEvents.CharacterDied]: this.handleCharacterDied,
       };
    }
 
@@ -82,101 +69,13 @@ export class CharactersService extends EventParser {
       }
    };
 
-   handleTakeCharacterHealthPoints: EngineEventHandler<TakeCharacterHealthPointsEvent> = ({ event }) => {
-      if (this.characters[event.characterId]) {
-         this.characters[event.characterId].currentHp = Math.max(this.characters[event.characterId].currentHp - event.amount, 0);
-         this.engineEventCrator.asyncCeateEvent<CharacterLostHpEvent>({
-            type: EngineEvents.CharacterLostHp,
-            characterId: event.characterId,
-            amount: event.amount,
-            currentHp: this.characters[event.characterId].currentHp,
-         });
-         if (this.characters[event.characterId].currentHp === 0) {
-            this.characters[event.characterId].isDead = true;
-            this.engineEventCrator.asyncCeateEvent<CharacterDiedEvent>({
-               type: EngineEvents.CharacterDied,
-               character: this.characters[event.characterId],
-               killerId: event.attackerId,
-            });
-         }
-      }
-   };
-
-   handleAddCharacterHealthPoints: EngineEventHandler<AddCharacterHealthPointsEvent> = ({ event }) => {
-      if (this.characters[event.characterId]) {
-         this.characters[event.characterId].currentHp = Math.min(
-            this.characters[event.characterId].currentHp + event.amount,
-            this.characters[event.characterId].maxHp
-         );
-
-         this.engineEventCrator.asyncCeateEvent<CharacterGotHpEvent>({
-            type: EngineEvents.CharacterGotHp,
-            characterId: event.characterId,
-            amount: event.amount,
-            currentHp: this.characters[event.characterId].currentHp,
-         });
-      }
-   };
-
-   handleTakeCharacterSpellPower: EngineEventHandler<TakeCharacterSpellPowerEvent> = ({ event }) => {
-      if (this.characters[event.characterId]) {
-         this.characters[event.characterId].currentSpellPower -= event.amount;
-
-         this.engineEventCrator.asyncCeateEvent<CharacterLostSpellPowerEvent>({
-            type: EngineEvents.CharacterLostSpellPower,
-            characterId: event.characterId,
-            amount: event.amount,
-            currentSpellPower: this.characters[event.characterId].currentSpellPower,
-         });
-      }
-   };
-
-   handleAddCharacterSpellPower: EngineEventHandler<AddCharacterSpellPowerEvent> = ({ event }) => {
-      if (this.characters[event.characterId]) {
-         this.characters[event.characterId].currentSpellPower = Math.min(
-            this.characters[event.characterId].currentSpellPower + event.amount,
-            this.characters[event.characterId].maxSpellPower
-         );
-
-         this.engineEventCrator.asyncCeateEvent<CharacterGotSpellPowerEvent>({
-            type: EngineEvents.CharacterGotSpellPower,
-            characterId: event.characterId,
-            amount: event.amount,
-            currentSpellPower: this.characters[event.characterId].currentSpellPower,
-         });
-      }
-   };
-
-   classesBaseStats: Record<Classes, Partial<Player>> = {
-      [Classes.Tank]: {
-         currentHp: 400,
-         maxHp: 400,
-         currentSpellPower: 0,
-         maxSpellPower: 100,
-      },
-      [Classes.Healer]: {
-         currentHp: 25000,
-         maxHp: 25000,
-         currentSpellPower: 2000,
-         maxSpellPower: 2000,
-      },
-      [Classes.Hunter]: {
-         currentHp: 180,
-         maxHp: 180,
-         currentSpellPower: 100,
-         maxSpellPower: 100,
-      },
-      [Classes.Mage]: {
-         currentHp: 180,
-         maxHp: 180,
-         currentSpellPower: 2000,
-         maxSpellPower: 2000,
-      },
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
+      delete this.characters[event.characterId];
    };
 
    generatePlayer: ({ socketId: string }) => Player = ({ socketId }) => {
       this.increment++;
-      const characterClass = Classes.Mage;
+      const characterClass = Classes.Tank;
       return {
          type: CharacterType.Player,
          id: `player_${this.increment.toString()}`,
@@ -187,10 +86,6 @@ export class CharactersService extends EventParser {
          isInMove: false,
          socketId,
          speed: 10,
-         currentHp: 400,
-         maxHp: 400,
-         currentSpellPower: 100,
-         maxSpellPower: 100,
          healthPointsRegen: 5,
          spellPowerRegen: 5,
          size: 48,
@@ -198,15 +93,10 @@ export class CharactersService extends EventParser {
          isDead: false,
          class: characterClass,
          spells: SpellsPerClass[characterClass],
-         ...this.classesBaseStats[characterClass],
       };
    };
 
    getAllCharacters = () => this.characters;
 
    getCharacterById = (id) => this.characters[id];
-
-   canMove = (id) => !this.characters[id].isDead;
-
-   canCastASpell = (id) => !this.characters[id].isDead;
 }

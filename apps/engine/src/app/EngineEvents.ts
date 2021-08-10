@@ -8,15 +8,7 @@ export enum EngineEvents {
    PlayerMoved = 'PlayerMoved',
    PlayerTriesToStartedMovement = 'PlayerTriesToStartedMovement',
 
-   CharacterLostHp = 'CharacterLostHp',
-   CharacterGotHp = 'CharacterGotHp',
-   CharacterLostSpellPower = 'CharacterLostSpellPower',
-   CharacterGotSpellPower = 'CharacterGotSpellPower',
    CharacterDied = 'CharacterDied',
-   TakeCharacterHealthPoints = 'TakeCharacterHealthPoints',
-   AddCharacterHealthPoints = 'AddCharacterHealthPoints',
-   TakeCharacterSpellPower = 'TakeCharacterSpellPower',
-   AddCharacterSpellPower = 'AddCharacterSpellPower',
 
    CreatePath = 'CreatePath',
    UpdatePath = 'UpdatePath',

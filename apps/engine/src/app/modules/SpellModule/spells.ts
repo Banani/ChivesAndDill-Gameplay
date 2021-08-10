@@ -1,8 +1,46 @@
+import { TimeEffectType } from '@bananos/types';
 import { Classes } from '../../types/Classes';
-import type { Spell} from './types/spellTypes';
+import type { Spell } from './types/spellTypes';
 import { AreaType, PowerStackType, SpellEffectType, SpellType } from './types/spellTypes';
 
 export const ALL_SPELLS: Record<string, Spell> = {
+   Test: {
+      type: SpellType.Projectile,
+      name: 'Test',
+      speed: 40,
+      range: 600,
+      cooldown: 0,
+      spellPowerCost: 0,
+      image: '../assets/spritesheets/spells/mage/fireball.jpg',
+      description: '',
+      spellEffectsOnTarget: [
+         {
+            type: SpellEffectType.Area,
+            areaType: AreaType.Circle,
+            period: 3000,
+            attackFrequency: 500,
+            name: 'Test_Area',
+            radius: 100,
+            spellEffects: [
+               {
+                  type: SpellEffectType.Damage,
+                  amount: 15,
+               },
+            ],
+         },
+         {
+            type: SpellEffectType.TickEffectOverTime,
+            spellId: 'Test_HOT_1',
+            iconImage: 'peepeepoopoo_tutajprzyjdzieizmieni',
+            period: 10000,
+            name: 'Masarzyk kumpa',
+            description: 'pszyiacielski masarzyk ukaiajoncy nerwy',
+            timeEffectType: TimeEffectType.BUFF,
+            activationFrequency: 1000,
+            spellEffects: [{ type: SpellEffectType.Heal, amount: 20 }],
+         },
+      ],
+   },
    Fireball: {
       type: SpellType.Channel,
       name: 'Fireball',
@@ -123,7 +161,11 @@ export const ALL_SPELLS: Record<string, Spell> = {
          {
             type: SpellEffectType.TickEffectOverTime,
             spellId: 'GuidedShot_DOT_1',
+            iconImage: 'peepeepoopoo_tutajprzyjdzieizmieni',
             period: 6000,
+            name: 'ToxicShot_TickEffectOverTime',
+            description: 'Potworne menki od zatrocia',
+            timeEffectType: TimeEffectType.DEBUFF,
             activationFrequency: 1000,
             spellEffects: [{ type: SpellEffectType.Damage, amount: 20 }],
          },
@@ -243,7 +285,11 @@ export const ALL_SPELLS: Record<string, Spell> = {
       spellEffectsOnTarget: [
          {
             type: SpellEffectType.TickEffectOverTime,
+            name: 'PEEEPEEEPOO_NATOR',
+            description: 'Robie pee pee, atakowanemu',
+            timeEffectType: TimeEffectType.DEBUFF,
             spellId: 'BleedingStrike_DOT_1',
+            iconImage: 'peepeepoopoo_tutajprzyjdzieizmieni',
             period: 6000,
             activationFrequency: 1000,
             spellEffects: [{ type: SpellEffectType.Damage, amount: 12 }],
@@ -336,6 +382,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
             spellEffectsOnDirectionLocation: [
                {
                   type: SpellEffectType.Area,
+                  name: 'DestroyerPotatoFlyAttack_DirectInstant_Area',
                   areaType: AreaType.Circle,
                   radius: 120,
                   period: 100000 * 10,
@@ -374,6 +421,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
                },
                {
                   type: SpellEffectType.Area,
+                  name: 'DestroyerRoarAttack_AngleBlast_Area',
                   areaType: AreaType.Circle,
                   radius: 120,
                   period: 100000 * 10,
@@ -417,7 +465,12 @@ export const ALL_SPELLS: Record<string, Spell> = {
 };
 
 export const SpellsPerClass: Record<Classes, Record<string, Spell>> = {
-   [Classes.Tank]: { BleedingStrike: ALL_SPELLS['BleedingStrike'], TauntingStrike: ALL_SPELLS['TauntingStrike'], HealingStrike: ALL_SPELLS['HealingStrike'] },
+   [Classes.Tank]: {
+      Test: ALL_SPELLS['Test'],
+      BleedingStrike: ALL_SPELLS['BleedingStrike'],
+      TauntingStrike: ALL_SPELLS['TauntingStrike'],
+      HealingStrike: ALL_SPELLS['HealingStrike'],
+   },
 
    [Classes.Healer]: {
       HealingLight: ALL_SPELLS['HealingLight'],

@@ -1,6 +1,6 @@
 import { EngineEvents } from '../../EngineEvents';
 import { Character, EngineEvent, EngineEventHandler } from '../../types';
-import { Location } from '@bananos/types';
+import { Location, TimeEffect } from '@bananos/types';
 import { Vector } from '../../types/Vector';
 import { Monster } from '../MonsterModule/types';
 import {
@@ -28,6 +28,8 @@ export enum SpellEngineEvents {
    SpellChannelingFinished = 'SpellChannelingFinished',
    SpellChannelingInterrupted = 'SpellChannelingInterrupted',
    RemoveTickOverTimeEffect = 'TickOverTimeFinished',
+   TimeEffectRemoved = 'TimeEffectRemoved',
+   TimeEffectCreated = 'TimeEffectCreated',
    ProjectileCreated = 'ProjectileCreated',
    ProjectileMoved = 'ProjectileMoved',
    RemoveProjectile = 'RemoveProjectile',
@@ -156,6 +158,16 @@ export interface RemoveTickOverTimeEffectEvent extends EngineEvent {
    tickOverTimeId: string;
 }
 
+export interface TimeEffectRemovedEvent extends EngineEvent {
+   type: SpellEngineEvents.TimeEffectRemoved;
+   tickOverTimeId: string;
+}
+
+export interface TimeEffectCreatedEvent extends EngineEvent {
+   type: SpellEngineEvents.TimeEffectCreated;
+   timeEffect: TimeEffect;
+}
+
 export interface PlayerCastedSpellEvent extends EngineEvent {
    type: SpellEngineEvents.PlayerCastedSpell;
    casterId: string | null;
@@ -240,6 +252,8 @@ export interface FightingEngineEventsMap {
    [SpellEngineEvents.ApplyLocationSpellEffect]: EngineEventHandler<ApplyLocationSpellEffectEvent>;
    [SpellEngineEvents.RemoveAreaSpellEffect]: EngineEventHandler<RemoveAreaSpellEffectEvent>;
    [SpellEngineEvents.RemoveTickOverTimeEffect]: EngineEventHandler<RemoveTickOverTimeEffectEvent>;
+   [SpellEngineEvents.TimeEffectCreated]: EngineEventHandler<TimeEffectCreatedEvent>;
+   [SpellEngineEvents.TimeEffectRemoved]: EngineEventHandler<TimeEffectRemovedEvent>;
    [SpellEngineEvents.AreaSpellEffectCreated]: EngineEventHandler<AreaSpellEffectCreatedEvent>;
    [SpellEngineEvents.AreaSpellEffectRemoved]: EngineEventHandler<AreaSpellEffectRemovedEvent>;
    [SpellEngineEvents.CharacterGainPowerStack]: EngineEventHandler<CharacterGainPowerStackEvent>;

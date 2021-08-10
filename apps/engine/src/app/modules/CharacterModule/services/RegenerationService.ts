@@ -1,18 +1,17 @@
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import {
-   AddCharacterHealthPointsEvent,
-   AddCharacterSpellPowerEvent,
    CancelScheduledActionEvent,
    Character,
    CharacterDiedEvent,
    EngineEventHandler,
    NewPlayerCreatedEvent,
+   PlayerDisconnectedEvent,
    ScheduleActionEvent,
    ScheduleActionTriggeredEvent,
-   TakeCharacterHealthPointsEvent,
 } from '../../../types';
-import { MonsterDiedEvent, MonsterEngineEvents, NewMonsterCreatedEvent } from '../../MonsterModule/Events';
+import { MonsterEngineEvents, NewMonsterCreatedEvent } from '../../MonsterModule/Events';
+import { AddCharacterHealthPointsEvent, AddCharacterSpellPowerEvent, CharacterEngineEvents } from '../Events';
 
 const SERVICE_PREFIX = 'Regeneration_';
 
@@ -32,7 +31,7 @@ export class RegenerationService extends EventParser {
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [EngineEvents.ScheduleActionTriggered]: this.handleScheduleActionTriggered,
          [MonsterEngineEvents.NewMonsterCreated]: this.handleNewMonsterCreated,
-         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
+         [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
       };
    }
 
@@ -62,14 +61,14 @@ export class RegenerationService extends EventParser {
       const regeneration = this.activeRegenerations[event.id];
 
       this.engineEventCrator.asyncCeateEvent<AddCharacterHealthPointsEvent>({
-         type: EngineEvents.AddCharacterHealthPoints,
+         type: CharacterEngineEvents.AddCharacterHealthPoints,
          casterId: null,
          characterId: regeneration.targetId,
          amount: regeneration.healthPointsRegeneration,
       });
 
       this.engineEventCrator.asyncCeateEvent<AddCharacterSpellPowerEvent>({
-         type: EngineEvents.AddCharacterSpellPower,
+         type: CharacterEngineEvents.AddCharacterSpellPower,
          characterId: regeneration.targetId,
          amount: regeneration.spellPowerRegeneration,
       });
@@ -85,10 +84,10 @@ export class RegenerationService extends EventParser {
    };
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
-      this.cleanAfterCharacter(event.character.id);
+      this.cleanAfterCharacter(event.characterId);
    };
 
-   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
-      this.cleanAfterCharacter(event.monster.id);
+   handlePlayerDisconnected: EngineEventHandler<PlayerDisconnectedEvent> = ({ event }) => {
+      this.cleanAfterCharacter(event.payload.playerId);
    };
 }

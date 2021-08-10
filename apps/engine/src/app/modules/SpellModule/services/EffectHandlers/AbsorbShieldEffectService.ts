@@ -1,7 +1,13 @@
 import { forEach } from 'lodash';
 import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
-import { AbsorbShieldValueChangedEvent, ApplyTargetSpellEffectEvent, SpellEngineEvents, TakeAbsorbShieldValueEvent } from '../../Events';
+import {
+   AbsorbShieldValueChangedEvent,
+   ApplyTargetSpellEffectEvent,
+   SpellEngineEvents,
+   TakeAbsorbShieldValueEvent,
+   TimeEffectCreatedEvent,
+} from '../../Events';
 import { SpellEffectType, AbsorbShieldEffect } from '../../types/spellTypes';
 
 export class AbsorbShieldEffectService extends EventParser {

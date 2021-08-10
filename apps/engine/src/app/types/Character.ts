@@ -12,10 +12,6 @@ export interface Character {
    direction: CharacterDirection;
    speed: number;
    isInMove: boolean;
-   currentHp: number;
-   maxHp: number;
-   currentSpellPower: number;
-   maxSpellPower: number;
    healthPointsRegen: number;
    spellPowerRegen: number;
    spells: Record<string, Spell>;

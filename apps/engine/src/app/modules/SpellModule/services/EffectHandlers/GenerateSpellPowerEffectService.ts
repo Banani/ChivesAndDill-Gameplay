@@ -1,6 +1,6 @@
-import { EngineEvents } from '../../../../EngineEvents';
 import { EventParser } from '../../../../EventParser';
-import { AddCharacterSpellPowerEvent, EngineEventHandler } from '../../../../types';
+import { EngineEventHandler } from '../../../../types';
+import { AddCharacterSpellPowerEvent, CharacterEngineEvents } from '../../../CharacterModule/Events';
 import { SpellEngineEvents, ApplyTargetSpellEffectEvent } from '../../Events';
 import { SpellEffectType, GenerateSpellPowerEffect } from '../../types/spellTypes';
 
@@ -17,7 +17,7 @@ export class GenerateSpellPowerEffectService extends EventParser {
          const effect = event.effect as GenerateSpellPowerEffect;
 
          this.engineEventCrator.asyncCeateEvent<AddCharacterSpellPowerEvent>({
-            type: EngineEvents.AddCharacterSpellPower,
+            type: CharacterEngineEvents.AddCharacterSpellPower,
             characterId: event.target.id,
             amount: effect.amount,
          });

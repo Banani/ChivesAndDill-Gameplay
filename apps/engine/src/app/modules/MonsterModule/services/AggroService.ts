@@ -28,7 +28,6 @@ export class AggroService extends EventParser {
       this.eventsToHandlersMap = {
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
-         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
          [MonsterEngineEvents.MonsterTargetChanged]: this.handleMonsterTargetChanged,
          [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
 
@@ -165,15 +164,15 @@ export class AggroService extends EventParser {
    };
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
-      forEach(this.monsterAggro, (aggro, monsterId) => {
-         if (aggro.allTargets[event.character.id]) {
-            this.deleteAggro(monsterId, event.character.id);
-         }
-      });
-   };
-
-   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
-      delete this.monsterAggro[event.monster.id];
+      if (this.monsterAggro[event.characterId]) {
+         delete this.monsterAggro[event.characterId];
+      } else {
+         forEach(this.monsterAggro, (aggro, monsterId) => {
+            if (aggro.allTargets[event.characterId]) {
+               this.deleteAggro(monsterId, event.characterId);
+            }
+         });
+      }
    };
 
    handleMonsterTargetChanged: EngineEventHandler<MonsterTargetChangedEvent> = ({ event, services }) => {

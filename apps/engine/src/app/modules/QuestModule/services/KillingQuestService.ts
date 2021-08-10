@@ -2,8 +2,8 @@ import * as _ from 'lodash';
 import { forEach, find } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { Character, CharacterDiedEvent, CharacterLostHpEvent, EngineEventHandler } from '../../../types';
-import { MonsterDiedEvent, MonsterEngineEvents } from '../../MonsterModule/Events';
+import { Character, CharacterDiedEvent, EngineEventHandler } from '../../../types';
+import { CharacterEngineEvents, CharacterLostHpEvent } from '../../CharacterModule/Events';
 import { KillingStagePartProgress, QuestEngineEvents, StagePartCompletedEvent, StartNewQuestKillingStagePartEvent } from '../Events';
 import { KillingQuestStagePartComparison, KillingQuestStagePartStatus, QuestResetEvent } from '../types';
 
@@ -18,8 +18,8 @@ export class KillingQuestService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [QuestEngineEvents.START_NEW_QUEST_KILLING_STAGE_PART]: this.handleStartNewQuestKillingStagePart,
-         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
-         [EngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
+         [EngineEvents.CharacterDied]: this.handleCharacterDied,
+         [CharacterEngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
       };
    }
 
@@ -30,10 +30,10 @@ export class KillingQuestService extends EventParser {
       this.activeStages[event.characterId][event.stagePart.id] = { currentAmount: 0, ...event.stagePart };
    };
 
-   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
       if (this.activeStages[event.killerId]) {
          forEach(this.activeStages[event.killerId], (stagePart) => {
-            const matched = find(stagePart.rule, (rule) => comparators[rule.comparison](event.monster, rule.fieldName, rule.value));
+            const matched = find(stagePart.rule, (rule) => comparators[rule.comparison](event.character, rule.fieldName, rule.value));
 
             if (matched) {
                stagePart.currentAmount++;

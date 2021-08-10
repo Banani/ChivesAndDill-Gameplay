@@ -21,6 +21,13 @@ export class PlayersMovement extends Engine {
 
    stopMovement(playerId, { source }) {
       const player = this.services.characterService.getCharacterById(playerId);
+      if (!player) {
+         this.eventCrator.createEvent({
+            type: EngineEvents.PlayerStopedAllMovementVectors,
+            characterId: playerId,
+         });
+         return;
+      }
 
       const movementList = this.movements.get(player);
 

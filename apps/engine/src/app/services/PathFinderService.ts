@@ -24,7 +24,6 @@ export class PathFinderService extends EventParser {
          [EngineEvents.UpdatePath]: this.handleUpdatePath,
          [EngineEvents.DeletePath]: this.handleDeletePath,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
-         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
       };
    }
 
@@ -53,11 +52,7 @@ export class PathFinderService extends EventParser {
    };
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
-      delete this.activePaths[event.character.id];
-   };
-
-   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
-      delete this.activePaths[event.monster.id];
+      delete this.activePaths[event.characterId];
    };
 
    getActivePaths = () => this.activePaths;

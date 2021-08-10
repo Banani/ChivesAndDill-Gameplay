@@ -2,18 +2,14 @@ import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import {
-   AddCharacterHealthPointsEvent,
-   AddCharacterSpellPowerEvent,
-   CharacterGotHpEvent,
-   CharacterLostHpEvent,
+   CharacterDiedEvent,
    CharacterType,
    EngineEventHandler,
    PlayerMovedEvent,
    PlayerStartedMovementEvent,
    PlayerStopedAllMovementVectorsEvent,
-   TakeCharacterHealthPointsEvent,
-   TakeCharacterSpellPowerEvent,
 } from '../../../types';
+import { CharacterEngineEvents, ResetCharacterEvent } from '../../CharacterModule/Events';
 import {
    MonsterEngineEvents,
    CreateNewMonsterEvent,
@@ -35,12 +31,7 @@ export class MonsterService extends EventParser {
          [MonsterEngineEvents.CreateNewMonster]: this.handleCreateNewMonster,
          [MonsterEngineEvents.MonsterTargetChanged]: this.test,
          [MonsterEngineEvents.MonsterLostTarget]: this.test2,
-         [MonsterEngineEvents.MonsterDied]: this.handleMonsterDied,
          [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
-         [EngineEvents.TakeCharacterHealthPoints]: this.handleTakeCharacterHealthPoints,
-         [EngineEvents.AddCharacterHealthPoints]: this.handleAddCharacterHealthPoints,
-         [EngineEvents.TakeCharacterSpellPower]: this.handleTakeCharacterSpellPower,
-         [EngineEvents.AddCharacterSpellPower]: this.handleAddCharacterSpellPower,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
          [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
@@ -85,10 +76,6 @@ export class MonsterService extends EventParser {
          direction: CharacterDirection.DOWN,
          division: event.monsterRespawn.monsterTemplate.division,
          isInMove: false,
-         currentHp: event.monsterRespawn.monsterTemplate.healthPoints,
-         maxHp: event.monsterRespawn.monsterTemplate.healthPoints,
-         currentSpellPower: event.monsterRespawn.monsterTemplate.spellPower,
-         maxSpellPower: event.monsterRespawn.monsterTemplate.spellPower,
          respawnId: event.monsterRespawn.id,
          sightRange: event.monsterRespawn.monsterTemplate.sightRange,
          speed: event.monsterRespawn.monsterTemplate.speed,
@@ -105,81 +92,17 @@ export class MonsterService extends EventParser {
       });
    };
 
-   handleTakeCharacterHealthPoints: EngineEventHandler<TakeCharacterHealthPointsEvent> = ({ event }) => {
-      if (this.monsters[event.characterId]) {
-         this.monsters[event.characterId].currentHp = Math.max(this.monsters[event.characterId].currentHp - event.amount, 0);
-
-         this.engineEventCrator.asyncCeateEvent<CharacterLostHpEvent>({
-            type: EngineEvents.CharacterLostHp,
-            characterId: event.characterId,
-            amount: event.amount,
-            currentHp: this.monsters[event.characterId].currentHp,
-         });
-
-         if (this.monsters[event.characterId].currentHp === 0) {
-            this.engineEventCrator.asyncCeateEvent<MonsterDiedEvent>({
-               type: MonsterEngineEvents.MonsterDied,
-               monster: this.monsters[event.characterId],
-               killerId: event.attackerId,
-            });
-         }
-      }
-   };
-
-   handleAddCharacterHealthPoints: EngineEventHandler<AddCharacterHealthPointsEvent> = ({ event }) => {
-      if (this.monsters[event.characterId]) {
-         this.monsters[event.characterId].currentHp = Math.min(
-            this.monsters[event.characterId].currentHp + event.amount,
-            this.monsters[event.characterId].maxHp
-         );
-
-         this.engineEventCrator.asyncCeateEvent<CharacterGotHpEvent>({
-            type: EngineEvents.CharacterGotHp,
-            characterId: event.characterId,
-            amount: event.amount,
-            currentHp: this.monsters[event.characterId].currentHp,
-         });
-      }
-   };
-
-   handleTakeCharacterSpellPower: EngineEventHandler<TakeCharacterSpellPowerEvent> = ({ event }) => {
-      if (this.monsters[event.characterId]) {
-         this.monsters[event.characterId].currentSpellPower -= event.amount;
-      }
-   };
-
-   handleAddCharacterSpellPower: EngineEventHandler<AddCharacterSpellPowerEvent> = ({ event }) => {
-      if (this.monsters[event.characterId]) {
-         this.monsters[event.characterId].currentSpellPower = Math.min(
-            this.monsters[event.characterId].currentSpellPower + event.amount,
-            this.monsters[event.characterId].maxSpellPower
-         );
-      }
-   };
-
-   resetMonster = (monsterId: string) => {
-      const monster = this.monsters[monsterId];
-      const healthPointsToMax = monster.maxHp - monster.currentHp;
-
-      monster.currentHp = monster.maxHp;
-      monster.currentSpellPower = monster.maxSpellPower;
-
-      this.engineEventCrator.asyncCeateEvent<CharacterGotHpEvent>({
-         type: EngineEvents.CharacterGotHp,
-         characterId: monsterId,
-         amount: healthPointsToMax,
-         currentHp: monster.currentHp,
-      });
-   };
-
    handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
       if (this.monsters[event.monsterId]) {
-         this.resetMonster(event.monsterId);
+         this.engineEventCrator.asyncCeateEvent<ResetCharacterEvent>({
+            type: CharacterEngineEvents.ResetCharacter,
+            characterId: event.monsterId,
+         });
       }
    };
 
-   handleMonsterDied: EngineEventHandler<MonsterDiedEvent> = ({ event }) => {
-      delete this.monsters[event.monster.id];
+   CharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
+      delete this.monsters[event.characterId];
    };
 
    getAllCharacters = () => this.monsters;

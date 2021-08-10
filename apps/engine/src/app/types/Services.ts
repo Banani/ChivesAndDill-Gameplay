@@ -2,6 +2,7 @@ import { PathFinderEngine } from '../engines';
 import type {
    AngleBlastSpellService,
    AreaSpellService,
+   AreaTimeEffectNotifier,
    DamageEffectService,
    DirectInstantSpellService,
    HealEffectService,
@@ -17,6 +18,8 @@ import type {
    SpellNotifier,
    TeleportationSpellService,
 } from '../modules';
+import { PowerPointsService } from '../modules/CharacterModule';
+import { PowerPointsNotifier } from '../modules/CharacterModule/notifiers';
 import type { RegenerationService } from '../modules/CharacterModule/services/RegenerationService';
 import type { BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import type { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
@@ -25,6 +28,7 @@ import type { PlayerMovementService } from '../modules/PlayerModule';
 import type { PlayerMovementNotifier, CharacterEffectNotifier } from '../modules/PlayerModule/notifiers';
 import type { CharactersService } from '../modules/PlayerModule/services/CharactersService';
 import { ChannelingNotifier } from '../modules/SpellModule/notifiers/ChannelingNotifier';
+import { TimeEffectNotifier } from '../modules/SpellModule/notifiers/TimeEffectNotifier';
 import type { CooldownService } from '../modules/SpellModule/services/CooldownService';
 import type { AbsorbShieldEffectService } from '../modules/SpellModule/services/EffectHandlers/AbsorbShieldEffectService';
 import type { AreaEffectService } from '../modules/SpellModule/services/EffectHandlers/AreaEffectService';
@@ -46,13 +50,17 @@ export interface Services {
    projectileNotifier: ProjectileNotifier;
    characterEffectNotifier: CharacterEffectNotifier;
    cooldownService: CooldownService;
+   timeEffectNotifier: TimeEffectNotifier;
    socketConnectionService: SocketConnectionService;
    questProgressService: QuestProgressService;
    movementQuestService: MovementQuestService;
    killingQuestService: KillingQuestService;
+   powerPointsNotifier: PowerPointsNotifier;
    questNotifier: QuestNotifier;
    monsterService: MonsterService;
    respawnService: RespawnService;
+   areaTimeEffectNotifier: AreaTimeEffectNotifier;
+   powerPointsService: PowerPointsService;
    aggroService: AggroService;
    channelingNotifier: ChannelingNotifier;
    monsterAttackService: MonsterAttackService;

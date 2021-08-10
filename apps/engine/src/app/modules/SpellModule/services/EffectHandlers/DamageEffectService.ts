@@ -1,6 +1,6 @@
-import { EngineEvents } from '../../../../EngineEvents';
 import { EventParser } from '../../../../EventParser';
-import { EngineEventHandler, TakeCharacterHealthPointsEvent } from '../../../../types';
+import { EngineEventHandler } from '../../../../types';
+import { CharacterEngineEvents, TakeCharacterHealthPointsEvent } from '../../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, DamageAbsorbedEvent, SpellEngineEvents, TakeAbsorbShieldValueEvent } from '../../Events';
 import { SpellEffectType, DamageEffect } from '../../types/spellTypes';
 
@@ -20,7 +20,7 @@ export class DamageEffectService extends EventParser {
 
          if (absorbsValue < effect.amount) {
             this.engineEventCrator.asyncCeateEvent<TakeCharacterHealthPointsEvent>({
-               type: EngineEvents.TakeCharacterHealthPoints,
+               type: CharacterEngineEvents.TakeCharacterHealthPoints,
                attackerId: event.caster?.id ?? null,
                characterId: event.target.id,
                amount: effect.amount - absorbsValue,
