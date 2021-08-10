@@ -1,83 +1,33 @@
 import React, { useCallback } from 'react';
-import { Stage, Sprite, Graphics, Container, AppContext } from '@inlet/react-pixi';
+import { Stage, Sprite, Container, AppContext } from '@inlet/react-pixi';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
 import {
    selectCharacters,
-   selectCharacterViewsSettings,
-   selectAreas,
    selectActivePlayer,
-   selectAreaSpellsEffects,
    getEngineState,
-   selectActiveSpellsCasts,
 } from '../stores';
 import _ from 'lodash';
-import Player from './player/Player';
+
 import { PlayerIcon } from './player/playerIcon/PlayerIcon';
 import { SpellsBar } from './player/spellsBar/SpellsBar';
 import { QuestLog } from './player/quests/questLog/QuestLog';
 import { QuestsSideView } from './player/quests/questSideView/QuestsSideView';
-import { CastBar } from './mapContent/CastBar';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
 import { ClassesModal } from "./player/classesModal/classesModal";
+import { DrawAreas } from './mapContent/DrawAreas';
+import { CastBarsManager } from './mapContent/CastBarsManager';
+import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
+import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 
 const Map = () => {
    const players = useSelector(selectCharacters);
-   const areaSpellsEffects = useSelector(selectAreaSpellsEffects);
-   const characterViewsSettings = useSelector(selectCharacterViewsSettings);
    const activePlayerId = useSelector(selectActivePlayer);
-   const areas = useSelector(selectAreas);
    const engineState = useSelector(getEngineState);
-   const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
-
-   const renderPlayers = useCallback(
-      () => _.map(_.omit(players, [activePlayerId ?? 0]), (player, i) => <Player key={i} player={player} characterViewsSettings={characterViewsSettings} />),
-      [players, characterViewsSettings, activePlayerId]
-   );
 
    const renderSpells = useCallback(
       () => _.map(engineState.projectileMovements, (spell, i) => <Sprite key={i} image="../assets/spritesheets/spells/potato.png" x={spell.location.x} y={spell.location.y}></Sprite>),
       [engineState.projectileMovements]
    );
-
-   const renderCastBars = useCallback(
-      () => _.map(activeSpellsCasts, (spellCast, i) => <CastBar playerId={i} />),
-      [activeSpellsCasts]
-   );
-
-   const drawAreasSpellsEffects = useCallback(
-      (g) => {
-         g.clear();
-         _.map(areaSpellsEffects, (areaSpellEffect: any, index) => {
-            g.beginFill(0x333333);
-            g.drawCircle(areaSpellEffect.location.x, areaSpellEffect.location.y, areaSpellEffect.effect.radius);
-            g.endFill();
-         });
-      },
-      [areaSpellsEffects]
-   );
-
-   const drawAreas = useCallback(
-      (g) => {
-         areas.forEach((obstacle) => {
-            g.beginFill(0xd94911);
-            g.lineStyle(4, 0xcccccc, 1);
-            g.drawPolygon(obstacle.flat());
-            g.endFill();
-         });
-      },
-      [areas]
-   );
-
-   const drawBorders = useCallback((g) => {
-      g.clear();
-      g.lineStyle(2, 0xcccccc, 1);
-      g.moveTo(0, 0);
-      g.lineTo(3936, 0);
-      g.lineTo(3936, 4408);
-      g.lineTo(0, 4408);
-      g.lineTo(0, 0);
-      g.endFill();
-   }, []);
 
    let gameWidth;
    let gameHeight;
@@ -122,14 +72,11 @@ const Map = () => {
                                     -engineState?.characterMovements[activePlayerId].location.y * scale + gameHeight / 2 ?? 0,
                                  ]}
                               >
-                                 <Graphics draw={drawAreasSpellsEffects} />
-                                 {areas.length ? <Graphics draw={drawAreas} /> : null}
-                                 <Graphics draw={drawBorders} />
+                                 <AreasSpellsEffectsManager />
+                                 <DrawAreas />
                                  {renderSpells()}
-                                 {renderPlayers()}
-                                 {renderCastBars()}
-                                 {players[activePlayerId] ? <Player player={players[activePlayerId]} characterViewsSettings={characterViewsSettings} /> : null}
-
+                                 <CastBarsManager />
+                                 <RenderPlayersManager />
                                  <BlinkSpellEffect />
                               </Container>
                            )}
