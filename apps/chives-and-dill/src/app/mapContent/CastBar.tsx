@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Graphics } from '@inlet/react-pixi';
 import { selectActiveSpellsCasts, selectCharacters, getEngineState } from '../../stores';
 
-export const CastBar = ({ playerId, spellCast }) => {
+export const CastBar = ({ playerId }) => {
    const [channelSpellProgress, updateChannelSpellProgress] = useState(0);
 
    const activeSpellsCasts = useSelector(selectActiveSpellsCasts);

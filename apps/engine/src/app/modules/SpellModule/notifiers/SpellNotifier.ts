@@ -1,4 +1,4 @@
-import { EngineEventType, FightingEngineMessages, SpellEvent } from '@bananos/types';
+import { EngineEventType, FightingEngineMessages, SpellLandedEvent as SpellLandedPackegeEvent } from '@bananos/types';
 import { EventParser } from '../../../EventParser';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
@@ -18,7 +18,7 @@ import {
 } from '../Events';
 
 export class SpellNotifier extends EventParser implements Notifier {
-   private events: Record<string, SpellEvent> = {};
+   private events: Record<string, SpellLandedPackegeEvent> = {};
    private increment = 0;
 
    constructor() {

@@ -17,7 +17,7 @@ const Player = ({ player, characterViewsSettings }) => {
    const w = playerSprite.spriteWidth;
    const h = playerSprite.spriteHeight;
    const engineState = useSelector(getEngineState);
-   const playerPoints = engineState.characterPowerPoints[player.id] ?? { maxHp: 0, currentHp: 0 };
+   const playerPoints = engineState.characterPowerPoints.data[player.id] ?? { maxHp: 0, currentHp: 0 };
    const { maxHp, currentHp } = playerPoints;
 
    const getPlayerSheets = useCallback(() => {
@@ -166,8 +166,8 @@ const Player = ({ player, characterViewsSettings }) => {
       }
       return 'red';
    };
-
-   return engineState.characterMovements[player.id] ? (
+   console.log();
+   return engineState.characterMovements.data[player.id] ? (
       <>
          {currentHp <= 0 ? null : (
             <>

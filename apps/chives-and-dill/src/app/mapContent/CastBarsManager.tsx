@@ -1,19 +1,13 @@
-import React, { useCallback } from "react";
+import React, { useCallback } from 'react';
 import { CastBar } from '../mapContent/CastBar';
-import { useSelector } from "react-redux";
-import { selectActiveSpellsCasts } from "../../stores";
-import _ from "lodash";
+import { useSelector } from 'react-redux';
+import { selectActiveSpellsCasts } from '../../stores';
+import _ from 'lodash';
 
 export const CastBarsManager = () => {
-  const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
+   const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
 
-  const renderCastBars = useCallback(
-    () => _.map(activeSpellsCasts, (spellCast, i) => <CastBar playerId={i} />),
-    [activeSpellsCasts]
-  );
+   const renderCastBars = useCallback(() => _.map(activeSpellsCasts, (_, i) => <CastBar playerId={i} />), [activeSpellsCasts]);
 
-  return <>
-    {renderCastBars()}
-  </>
-
-}
+   return <>{renderCastBars()}</>;
+};
