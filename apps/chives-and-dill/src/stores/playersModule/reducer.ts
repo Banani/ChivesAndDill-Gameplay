@@ -51,7 +51,7 @@ const defaultViewSettings = (spriteHeight, spriteWidth, image) => ({
       yOffSet: spriteHeight * 4,
       xOffSet: 0,
       spriteAmount: 1,
-   }
+   },
 });
 
 const initialState: PlayersState = {
@@ -81,13 +81,15 @@ export const playersReducer = (state: PlayersState = initialState, action: Playe
                },
             },
          };
-      case PlayersActionTypes.INITIALIZE_PLAYERS:
+      case PlayersActionTypes.INITIALIZE_PLAYERS: {
          return {
             ...state,
             activePlayer: action.payload.activePlayer,
             characters: action.payload.characters,
             areas: action.payload.areas,
          };
+      }
+
       case PlayersActionTypes.ADD_PLAYER:
          return {
             ...state,
@@ -120,8 +122,8 @@ export const playersReducer = (state: PlayersState = initialState, action: Playe
                [action.payload.targetId]: {
                   ...state.characters[action.payload.targetId],
                   absorb: action.payload.newValue,
-               }
-            }
+               },
+            },
          };
       }
       case PlayersActionTypes.UPDATE_CHARACTER_HP:

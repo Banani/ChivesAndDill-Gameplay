@@ -29,10 +29,15 @@ export const CastBar = ({ playerId, spellCast }) => {
       (g) => {
          g.clear();
          g.beginFill(0xcfcfcf);
-         g.drawRect(engineState?.characterMovements[playerId].location.x - 25, engineState?.characterMovements[playerId].location.y + 30, 50, 5);
+         g.drawRect(engineState?.characterMovements.data[playerId].location.x - 25, engineState?.characterMovements.data[playerId].location.y + 30, 50, 5);
          g.endFill();
          g.beginFill(0x2372fa);
-         g.drawRect(engineState?.characterMovements[playerId].location.x - 25, engineState?.characterMovements[playerId].location.y + 30, (channelSpellProgress * 100) / 2, 5);
+         g.drawRect(
+            engineState?.characterMovements.data[playerId].location.x - 25,
+            engineState?.characterMovements.data[playerId].location.y + 30,
+            (channelSpellProgress * 100) / 2,
+            5
+         );
          g.endFill();
       },
       [playerId, channelSpellProgress, engineState.characterMovements]

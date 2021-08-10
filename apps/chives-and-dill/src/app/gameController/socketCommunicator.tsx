@@ -120,9 +120,7 @@ const SocketCommunicator = ({ children }) => {
             dispatch(updatePlayerAbsorb({ targetId, newValue }));
          });
 
-         context.socket.on(FightingEngineMessages.DamageAbsorbed, (event) => {
-
-         });
+         context.socket.on(FightingEngineMessages.DamageAbsorbed, (event) => {});
       }
    }, [context]);
 

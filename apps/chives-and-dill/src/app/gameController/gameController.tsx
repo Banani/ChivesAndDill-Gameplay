@@ -74,8 +74,8 @@ const GameController = ({ children }) => {
       if (keyBinds[key]) {
          socket?.emit(ClientMessages.PerformBasicAttack, {
             directionLocation: {
-               x: engineState.characterMovements[activePlayerId].location.x + mousePosition.x - gameWidth / 2,
-               y: engineState.characterMovements[activePlayerId].location.y + mousePosition.y - gameHeight / 2,
+               x: engineState.characterMovements.data[activePlayerId].location.x + mousePosition.x - gameWidth / 2,
+               y: engineState.characterMovements.data[activePlayerId].location.y + mousePosition.y - gameHeight / 2,
             },
             spellName: keyBinds[key],
          });
@@ -126,8 +126,8 @@ const GameController = ({ children }) => {
    const clickHandler = (event) => {
       socket?.emit(ClientMessages.PerformBasicAttack, {
          directionLocation: {
-            x: engineState.characterMovements[activePlayerId].location.x + event.nativeEvent.offsetX - gameWidth / 2,
-            y: engineState.characterMovements[activePlayerId].location.y + event.nativeEvent.offsetY - gameHeight / 2,
+            x: engineState.characterMovements.data[activePlayerId].location.x + event.nativeEvent.offsetX - gameWidth / 2,
+            y: engineState.characterMovements.data[activePlayerId].location.y + event.nativeEvent.offsetY - gameHeight / 2,
          },
          spellName: 'ArrowShot',
       });

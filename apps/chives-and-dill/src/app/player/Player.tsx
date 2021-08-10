@@ -11,6 +11,7 @@ const Player = ({ player, characterViewsSettings }) => {
    const [characterStatus, setCharacterStatus] = useState('standingDown');
    const [isCharacterMoving, setIsCharacterMoving] = useState(false);
    const [yPositionOfUpdatedHp, setYPositionOfUpdatedHp] = useState(2.5);
+
    const sheet = PIXI.BaseTexture.from(`../assets${characterViewsSettings[player.sprites].image}`);
    const engineState = useSelector(getEngineState);
    const playerSprite = characterViewsSettings[player.sprites];
@@ -83,17 +84,16 @@ const Player = ({ player, characterViewsSettings }) => {
          setCharacterStatus('dead');
          return;
       }
-      if (engineState.characterMovements[player.id]) {
-         getDirection(engineState.characterMovements[player.id].direction);
+      if (engineState.characterMovements.data[player.id]) {
+         getDirection(engineState.characterMovements.data[player.id].direction);
       }
    }, [engineState.characterMovements, player.currentHp, isCharacterMoving]);
 
    useEffect(() => {
-      if (engineState.characterMovements[player.id]) {
-         setIsCharacterMoving(engineState.characterMovements[player.id].isInMove);
+      if (engineState.characterMovements.data[player.id]) {
+         setIsCharacterMoving(engineState.characterMovements.data[player.id].isInMove);
       }
-
-   }, [engineState.characterMovements, player.id]);
+   }, [engineState.characterMovements.data, player.id]);
 
    useEffect(() => {
       let position = 2.5;
@@ -103,7 +103,7 @@ const Player = ({ player, characterViewsSettings }) => {
          if (position >= 4.5) {
             clearInterval(positionTimer);
          }
-      }, 20)
+      }, 20);
 
       if (player.currentHp <= 0) {
          setCharacterStatus('dead');
@@ -118,24 +118,39 @@ const Player = ({ player, characterViewsSettings }) => {
          barWidth = (player.absorb / player.maxHp) * 50;
       }
       g.beginFill(0xe8e8e8);
-      g.drawRect(engineState?.characterMovements[player.id].location.x - 25, engineState?.characterMovements[player.id].location.y - h / 1.5, barWidth, 5);
+      g.drawRect(
+         engineState?.characterMovements.data[player.id].location.x - 25,
+         engineState?.characterMovements.data[player.id].location.y - h / 1.5,
+         barWidth,
+         5
+      );
       g.endFill();
-   }
+   };
 
    const drawHealthBar = (g) => {
       g.beginFill(0xff0000);
-      g.drawRect(engineState?.characterMovements[player.id].location.x - 25, engineState?.characterMovements[player.id].location.y - h / 1.5, 50, 5);
+      g.drawRect(engineState?.characterMovements.data[player.id].location.x - 25, engineState?.characterMovements.data[player.id].location.y - h / 1.5, 50, 5);
       g.endFill();
       g.beginFill(0x00ff00);
-      g.drawRect(engineState?.characterMovements[player.id].location.x - 25, engineState?.characterMovements[player.id].location.y - h / 1.5, (player.currentHp / player.maxHp) * 50, 5);
+      g.drawRect(
+         engineState?.characterMovements.data[player.id].location.x - 25,
+         engineState?.characterMovements.data[player.id].location.y - h / 1.5,
+         (player.currentHp / player.maxHp) * 50,
+         5
+      );
       g.endFill();
-   }
+   };
 
    const hpBar = useCallback(
       (g) => {
          g.clear();
          g.beginFill(0x000000);
-         g.drawRect(engineState?.characterMovements[player.id].location.x - 26, (engineState?.characterMovements[player.id].location.y - h / 1.5 - 1), 52, 7);
+         g.drawRect(
+            engineState?.characterMovements.data[player.id].location.x - 26,
+            engineState?.characterMovements.data[player.id].location.y - h / 1.5 - 1,
+            52,
+            7
+         );
          g.endFill();
          drawHealthBar(g);
          drawAbsorbBar(g);
@@ -144,59 +159,58 @@ const Player = ({ player, characterViewsSettings }) => {
    );
 
    const returnColorOfHpNumber = () => {
-      if (player.spellEffect === "heal") {
-         return "green";
+      if (player.spellEffect === 'heal') {
+         return 'green';
       }
-      return "red"
-   }
+      return 'red';
+   };
 
-   return (
-      engineState.characterMovements[player.id] ?
-         <>
-            {player.currentHp <= 0 ? null : (
-               <>
-                  <Text
-                     text={player.name}
-                     anchor={[0.5, 1.3]}
-                     x={engineState.characterMovements[player.id].location.x}
-                     y={engineState.characterMovements[player.id].location.y - h / 1.5}
-                     style={
-                        new PIXI.TextStyle({
-                           fontSize: 15,
-                           fill: "green",
-                           fontWeight: "bold"
-                        })
-                     }
-                  />
-                  <Graphics draw={hpBar} />
-               </>
-            )}
-            {playerSheet['movementDown'] && (
-               <Sprite
-                  key={0}
-                  width={w}
-                  height={h}
-                  texture={playerSheet[characterStatus][timer % 8]}
-                  x={engineState.characterMovements[player.id].location.x - w / 2}
-                  y={engineState.characterMovements[player.id].location.y - h / 2}
-               />
-            )}
-            {
-               yPositionOfUpdatedHp <= 4.5 ? <Text
-                  text={player.hpLost ? player.hpLost : null}
-                  anchor={[0.5, yPositionOfUpdatedHp]}
-                  x={engineState.characterMovements[player.id].location.x}
-                  y={engineState.characterMovements[player.id].location.y}
+   return engineState.characterMovements.data[player.id] ? (
+      <>
+         {player.currentHp <= 0 ? null : (
+            <>
+               <Text
+                  text={player.name}
+                  anchor={[0.5, 1.3]}
+                  x={engineState.characterMovements.data[player.id].location.x}
+                  y={engineState.characterMovements.data[player.id].location.y - h / 1.5}
                   style={
                      new PIXI.TextStyle({
                         fontSize: 15,
-                        fill: returnColorOfHpNumber(),
+                        fill: 'green',
+                        fontWeight: 'bold',
                      })
                   }
-               /> : null
-            }
-         </> : null
-   );
+               />
+               <Graphics draw={hpBar} />
+            </>
+         )}
+         {playerSheet['movementDown'] && (
+            <Sprite
+               key={0}
+               width={w}
+               height={h}
+               texture={playerSheet[characterStatus][timer % 8]}
+               x={engineState.characterMovements.data[player.id].location.x - w / 2}
+               y={engineState.characterMovements.data[player.id].location.y - h / 2}
+            />
+         )}
+         {yPositionOfUpdatedHp <= 4.5 ? (
+            <Text
+               text={player.hpLost ? player.hpLost : null}
+               anchor={[0.5, yPositionOfUpdatedHp]}
+               x={engineState.characterMovements.data[player.id].location.x}
+               y={engineState.characterMovements.data[player.id].location.y}
+               style={
+                  new PIXI.TextStyle({
+                     fontSize: 15,
+                     fill: returnColorOfHpNumber(),
+                  })
+               }
+            />
+         ) : null}
+      </>
+   ) : null;
 };
 
 export default Player;

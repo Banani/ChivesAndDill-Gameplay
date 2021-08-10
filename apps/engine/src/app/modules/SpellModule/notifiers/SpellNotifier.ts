@@ -1,5 +1,6 @@
-import { FightingEngineMessages } from '@bananos/types';
+import { EngineEventType, FightingEngineMessages, SpellEvent } from '@bananos/types';
 import { EventParser } from '../../../EventParser';
+import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import {
    AbsorbShieldValueChangedEvent,
@@ -16,7 +17,10 @@ import {
    SubSpellCastedEvent,
 } from '../Events';
 
-export class SpellNotifier extends EventParser {
+export class SpellNotifier extends EventParser implements Notifier {
+   private events: Record<string, SpellEvent> = {};
+   private increment = 0;
+
    constructor() {
       super();
       this.eventsToHandlersMap = {
@@ -34,7 +38,26 @@ export class SpellNotifier extends EventParser {
       };
    }
 
+   getBroadcast = () => {
+      const events = this.events;
+
+      this.events = {};
+
+      return { data: [], key: 'spells', toDelete: [], events };
+   };
+
    handleSpellLanded: EngineEventHandler<SpellLandedEvent> = ({ event, services }) => {
+      this.increment++;
+      this.events[`spellEvent_${this.increment}`] = {
+         type: EngineEventType.SpellLanded,
+         spellName: event.spell.name,
+         angle: event.angle,
+         castLocation: event.caster.location,
+         directionLocation: event.location,
+      };
+
+      console.log(this.events);
+
       services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.SpellLanded, {
          spell: event.spell,
          angle: event.angle,

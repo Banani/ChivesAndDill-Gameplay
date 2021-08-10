@@ -112,7 +112,16 @@ const channelingNotifier = new ChannelingNotifier();
 const powerPointsNotifier = new PowerPointsNotifier();
 const timeEffectNotifier = new TimeEffectNotifier();
 const areaTimeEffectNotifier = new AreaTimeEffectNotifier();
-const notifiers = [playerMovementNotifier, projectileNotifier, channelingNotifier, powerPointsNotifier, timeEffectNotifier, areaTimeEffectNotifier];
+const spellNotifier = new SpellNotifier();
+const notifiers = [
+   playerMovementNotifier,
+   projectileNotifier,
+   channelingNotifier,
+   powerPointsNotifier,
+   timeEffectNotifier,
+   areaTimeEffectNotifier,
+   spellNotifier,
+];
 
 const socketConnectionService = new SocketConnectionService(io, notifiers);
 
@@ -132,6 +141,7 @@ const services: Services = {
    powerPointsService: new PowerPointsService(),
    channelingNotifier,
    timeEffectNotifier,
+   spellNotifier,
 
    questProgressService: new QuestProgressService(),
    movementQuestService: new MovementQuestService(),
@@ -157,7 +167,6 @@ const services: Services = {
    areaEffectService: new AreaEffectService(areaEffectsEngine),
    channelService: new ChannelService(channelEngine),
 
-   spellNotifier: new SpellNotifier(),
    tickEffectOverTimeService: new TickEffectOverTimeService(tickOverTimeEffectEngine),
    bossFightService: new BossFightService(bossFightEngine),
    guidedProjectilesService: new GuidedProjectilesService(guidedProjectileEngine),

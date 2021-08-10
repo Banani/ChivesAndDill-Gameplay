@@ -2,23 +2,34 @@ import type { Location } from './common/Location';
 import type { CharacterDirection } from './shared';
 
 export interface EnginePackage {
-   characterMovements: {
-      data: Record<string, Partial<CharacterMovement>>;
-      toDelete: string[];
-   };
-   projectileMovements: {
-      data: Record<string, Partial<ProjectileMovement>>;
-      toDelete: string[];
-   };
+   characterMovements: PartialEnginePackage<CharacterMovement>;
+   projectileMovements: PartialEnginePackage<ProjectileMovement>;
+   spellChannels: PartialEnginePackage<ChannelingTrack>;
+   characterPowerPoints: PartialEnginePackage<PowerPointsTrack>;
+   timeEffects: PartialEnginePackage<TimeEffect>;
+   areaTimeEffects: PartialEnginePackage<AreaTimeEffect>;
+   spells: PartialEnginePackage<null>;
+}
+
+interface PartialEnginePackage<Data, Event = null> {
+   data: Record<string, Data>;
+   toDelete: string[];
+   events: Record<string, Event>;
+}
+
+interface StoreModule<Data> {
+   data: Record<string, Data>;
+   events: Record<string, Event>;
 }
 
 export interface GlobalStore {
-   characterMovements: Record<string, CharacterMovement>;
-   projectileMovements: Record<string, ProjectileMovement>;
-   spellChannels: Record<string, ChannelingTrack>;
-   characterPowerPoints: Record<string, PowerPointsTrack>;
-   timeEffects: Record<string, TimeEffect>;
-   areaTimeEffects: Record<string, AreaTimeEffect>;
+   characterMovements: StoreModule<CharacterMovement>;
+   projectileMovements: StoreModule<ProjectileMovement>;
+   spellChannels: StoreModule<ChannelingTrack>;
+   characterPowerPoints: StoreModule<PowerPointsTrack>;
+   timeEffects: StoreModule<TimeEffect>;
+   areaTimeEffects: StoreModule<AreaTimeEffect>;
+   spells: StoreModule<null>;
 }
 
 export interface CharacterMovement {
@@ -68,4 +79,18 @@ export interface AreaTimeEffect {
    name: string;
    location: Location;
    radius: number;
+}
+
+export enum EngineEventType {
+   SpellLanded = 'SpellLanded',
+}
+
+export type EngineEvent = SpellLandedEvent;
+
+export interface SpellLandedEvent {
+   type: EngineEventType.SpellLanded;
+   spellName: string;
+   angle: number;
+   castLocation: Location;
+   directionLocation: Location;
 }

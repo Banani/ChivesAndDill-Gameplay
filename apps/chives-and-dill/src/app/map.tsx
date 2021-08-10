@@ -18,6 +18,7 @@ import { QuestLog } from './player/quests/questLog/QuestLog';
 import { QuestsSideView } from './player/quests/questSideView/QuestsSideView';
 import { CastBar } from './mapContent/CastBar';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
+import { GlobalStore } from '@bananos/types';
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -34,14 +35,14 @@ const Map = () => {
    );
 
    const renderSpells = useCallback(
-      () => _.map(engineState.projectileMovements, (spell, i) => <Sprite key={i} image="../assets/spritesheets/spells/potato.png" x={spell.location.x} y={spell.location.y}></Sprite>),
+      () =>
+         _.map(engineState.projectileMovements.data, (spell, i) => (
+            <Sprite key={i} image="../assets/spritesheets/spells/potato.png" x={spell.location.x} y={spell.location.y}></Sprite>
+         )),
       [engineState.projectileMovements]
    );
 
-   const renderCastBars = useCallback(
-      () => _.map(activeSpellsCasts, (spellCast, i) => <CastBar playerId={i} />),
-      [activeSpellsCasts]
-   );
+   const renderCastBars = useCallback(() => _.map(activeSpellsCasts, (spellCast, i) => <CastBar playerId={i} />), [activeSpellsCasts]);
 
    const drawAreasSpellsEffects = useCallback(
       (g) => {
@@ -116,8 +117,8 @@ const Map = () => {
                            {activePlayerId && engineState.characterMovements && (
                               <Container
                                  position={[
-                                    -engineState?.characterMovements[activePlayerId].location.x * scale + gameWidth / 2 ?? 0,
-                                    -engineState?.characterMovements[activePlayerId].location.y * scale + gameHeight / 2 ?? 0,
+                                    -(engineState?.characterMovements.data[activePlayerId]?.location.x ?? 0) * scale + gameWidth / 2,
+                                    -(engineState?.characterMovements.data[activePlayerId]?.location.y ?? 0) * scale + gameHeight / 2,
                                  ]}
                               >
                                  <Graphics draw={drawAreasSpellsEffects} />

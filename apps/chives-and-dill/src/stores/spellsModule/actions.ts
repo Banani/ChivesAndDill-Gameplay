@@ -102,5 +102,4 @@ export type SpellsAction =
    | AddActiveSpellCast
    | DeleteActiveSpellCast
    | AddSpellLanded
-   | ClearFirstLandedSpell
-   | UpdatePlayerAbsorb;
+   | ClearFirstLandedSpell;

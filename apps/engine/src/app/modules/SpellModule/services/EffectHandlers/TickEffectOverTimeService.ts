@@ -52,6 +52,9 @@ export class TickEffectOverTimeService extends EventParser {
             type: SpellEngineEvents.TimeEffectCreated,
             timeEffect: {
                id,
+               name: effect.name,
+               description: effect.description,
+               timeEffectType: effect.timeEffectType,
                period: effect.period,
                iconImage: effect.iconImage,
                creationTime: this.activeTickEffectOverTime[id].creationTime,

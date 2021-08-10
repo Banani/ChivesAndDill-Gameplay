@@ -1,4 +1,4 @@
-import { EngineMessages } from '@bananos/types';
+import { EngineMessages, EnginePackage } from '@bananos/types';
 import { forEach } from 'lodash';
 import { AREAS } from '../../map';
 import { EngineEvents } from '../EngineEvents';
