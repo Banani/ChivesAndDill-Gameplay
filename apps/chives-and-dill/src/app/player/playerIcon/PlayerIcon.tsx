@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styles from "./PlayerIcon.module.scss";
+import { getEngineState, selectActivePlayer } from "../../../stores";
 
 export const PlayerIcon = ({ player }) => {
 
-  const { name, maxHp, currentHp, currentSpellPower, maxSpellPower, absorb } = player;
+  const { name, absorb } = player;
+  const engineState = useSelector(getEngineState);
+  const activePlayerId = useSelector(selectActivePlayer);
 
   const [absorbBar, updateAbsortBar] = useState(0);
 
+  const playerPoints = engineState.characterPowerPoints ? engineState.characterPowerPoints[activePlayerId] : {};
+  const { maxHp, currentHp, currentSpellPower, maxSpellPower } = playerPoints;
+
   useEffect(() => {
-    if ((player.absorb / player.maxHp) * 100 > 100) {
+    if ((absorb / maxHp) * 100 > 100) {
       updateAbsortBar(100);
     } else {
-      updateAbsortBar((player.absorb / player.maxHp) * 100);
+      updateAbsortBar((absorb / maxHp) * 100);
     }
-  }, [player.absorb, player.maxHp])
+  }, [absorb, maxHp])
 
   return (
     <div className={styles.playerIconContainer}>

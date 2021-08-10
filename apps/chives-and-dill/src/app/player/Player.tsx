@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import * as PIXI from 'pixi.js';
 import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import { useSelector } from 'react-redux';
-import { getEngineState } from '../../stores';
+import { getEngineState } from "../../stores";
 import _ from 'lodash';
 
 const Player = ({ player, characterViewsSettings }) => {
@@ -12,10 +12,12 @@ const Player = ({ player, characterViewsSettings }) => {
    const [isCharacterMoving, setIsCharacterMoving] = useState(false);
    const [yPositionOfUpdatedHp, setYPositionOfUpdatedHp] = useState(2.5);
    const sheet = PIXI.BaseTexture.from(`../assets${characterViewsSettings[player.sprites].image}`);
-   const engineState = useSelector(getEngineState);
    const playerSprite = characterViewsSettings[player.sprites];
    const w = playerSprite.spriteWidth;
    const h = playerSprite.spriteHeight;
+   const engineState = useSelector(getEngineState);
+   const playerPoints = engineState.characterPowerPoints[player.id] ?? { maxHp: 0, currentHp: 0 };
+   const { maxHp, currentHp } = playerPoints;
 
    const getPlayerSheets = useCallback(() => {
       const newPlayerSheets = {
@@ -79,14 +81,14 @@ const Player = ({ player, characterViewsSettings }) => {
    }, []);
 
    useEffect(() => {
-      if (player.currentHp <= 0) {
+      if (currentHp <= 0) {
          setCharacterStatus('dead');
          return;
       }
       if (engineState.characterMovements[player.id]) {
          getDirection(engineState.characterMovements[player.id].direction);
       }
-   }, [engineState.characterMovements, player.currentHp, isCharacterMoving]);
+   }, [engineState.characterMovements, currentHp, isCharacterMoving]);
 
    useEffect(() => {
       if (engineState.characterMovements[player.id]) {
@@ -105,17 +107,17 @@ const Player = ({ player, characterViewsSettings }) => {
          }
       }, 20)
 
-      if (player.currentHp <= 0) {
+      if (currentHp <= 0) {
          setCharacterStatus('dead');
       }
-   }, [player.currentHp]);
+   }, [currentHp]);
 
    const drawAbsorbBar = (g) => {
       let barWidth;
-      if ((player.absorb / player.maxHp) * 50 > 50) {
+      if ((player.absorb / maxHp) * 50 > 50) {
          barWidth = 50;
       } else {
-         barWidth = (player.absorb / player.maxHp) * 50;
+         barWidth = (player.absorb / maxHp) * 50;
       }
       g.beginFill(0xe8e8e8);
       g.drawRect(engineState?.characterMovements[player.id].location.x - 25, engineState?.characterMovements[player.id].location.y - h / 1.5, barWidth, 5);
@@ -127,7 +129,7 @@ const Player = ({ player, characterViewsSettings }) => {
       g.drawRect(engineState?.characterMovements[player.id].location.x - 25, engineState?.characterMovements[player.id].location.y - h / 1.5, 50, 5);
       g.endFill();
       g.beginFill(0x00ff00);
-      g.drawRect(engineState?.characterMovements[player.id].location.x - 25, engineState?.characterMovements[player.id].location.y - h / 1.5, (player.currentHp / player.maxHp) * 50, 5);
+      g.drawRect(engineState?.characterMovements[player.id].location.x - 25, engineState?.characterMovements[player.id].location.y - h / 1.5, (currentHp / maxHp) * 50, 5);
       g.endFill();
    }
 
@@ -153,7 +155,7 @@ const Player = ({ player, characterViewsSettings }) => {
    return (
       engineState.characterMovements[player.id] ?
          <>
-            {player.currentHp <= 0 ? null : (
+            {currentHp <= 0 ? null : (
                <>
                   <Text
                      text={player.name}
