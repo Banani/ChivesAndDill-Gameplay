@@ -18,6 +18,7 @@ import { QuestLog } from './player/quests/questLog/QuestLog';
 import { QuestsSideView } from './player/quests/questSideView/QuestsSideView';
 import { CastBar } from './mapContent/CastBar';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
+import { ClassesModal } from "./player/classesModal/classesModal";
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -107,6 +108,7 @@ const Map = () => {
          {activePlayerId ? <PlayerIcon player={players[activePlayerId]}></PlayerIcon> : null}
          {<QuestsSideView />}
          <QuestLog />
+         {/* <ClassesModal /> */}
          <ReactReduxContext.Consumer>
             {({ store }) => (
                <Stage width={gameWidth} height={gameHeight} options={{ backgroundColor: 0x000000, autoDensity: true }}>

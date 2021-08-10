@@ -19,6 +19,7 @@ export const PlayerIcon = ({ player }) => {
     <div className={styles.playerIconContainer}>
       <div className={styles.playerAvatar}></div>
       <div className={styles.playerLvl}>69</div>
+      <div className={styles.playerRole} />
       <div className={styles.barsContainer}>
         <div className={styles.nameBar}>{name}</div>
         <div className={styles.bar}>

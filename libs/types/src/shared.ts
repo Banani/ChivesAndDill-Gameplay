@@ -27,6 +27,7 @@ export interface Player {
    currentSpellPower: number;
    maxSpellPower: number;
    absorb: number;
+   class: string;
 }
 
 export interface Quest {
