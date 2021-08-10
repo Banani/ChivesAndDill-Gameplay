@@ -13,10 +13,12 @@ const Player = ({ player, characterViewsSettings }) => {
    const [yPositionOfUpdatedHp, setYPositionOfUpdatedHp] = useState(2.5);
 
    const sheet = PIXI.BaseTexture.from(`../assets${characterViewsSettings[player.sprites].image}`);
-   const engineState = useSelector(getEngineState);
    const playerSprite = characterViewsSettings[player.sprites];
    const w = playerSprite.spriteWidth;
    const h = playerSprite.spriteHeight;
+   const engineState = useSelector(getEngineState);
+   const playerPoints = engineState.characterPowerPoints[player.id] ?? { maxHp: 0, currentHp: 0 };
+   const { maxHp, currentHp } = playerPoints;
 
    const getPlayerSheets = useCallback(() => {
       const newPlayerSheets = {
@@ -80,14 +82,14 @@ const Player = ({ player, characterViewsSettings }) => {
    }, []);
 
    useEffect(() => {
-      if (player.currentHp <= 0) {
+      if (currentHp <= 0) {
          setCharacterStatus('dead');
          return;
       }
       if (engineState.characterMovements.data[player.id]) {
          getDirection(engineState.characterMovements.data[player.id].direction);
       }
-   }, [engineState.characterMovements, player.currentHp, isCharacterMoving]);
+   }, [engineState.characterMovements, currentHp, isCharacterMoving]);
 
    useEffect(() => {
       if (engineState.characterMovements.data[player.id]) {
@@ -105,17 +107,17 @@ const Player = ({ player, characterViewsSettings }) => {
          }
       }, 20);
 
-      if (player.currentHp <= 0) {
+      if (currentHp <= 0) {
          setCharacterStatus('dead');
       }
-   }, [player.currentHp]);
+   }, [currentHp]);
 
    const drawAbsorbBar = (g) => {
       let barWidth;
-      if ((player.absorb / player.maxHp) * 50 > 50) {
+      if ((player.absorb / maxHp) * 50 > 50) {
          barWidth = 50;
       } else {
-         barWidth = (player.absorb / player.maxHp) * 50;
+         barWidth = (player.absorb / maxHp) * 50;
       }
       g.beginFill(0xe8e8e8);
       g.drawRect(
@@ -135,7 +137,7 @@ const Player = ({ player, characterViewsSettings }) => {
       g.drawRect(
          engineState?.characterMovements.data[player.id].location.x - 25,
          engineState?.characterMovements.data[player.id].location.y - h / 1.5,
-         (player.currentHp / player.maxHp) * 50,
+         (currentHp / maxHp) * 50,
          5
       );
       g.endFill();
@@ -165,9 +167,9 @@ const Player = ({ player, characterViewsSettings }) => {
       return 'red';
    };
 
-   return engineState.characterMovements.data[player.id] ? (
+   return engineState.characterMovements[player.id] ? (
       <>
-         {player.currentHp <= 0 ? null : (
+         {currentHp <= 0 ? null : (
             <>
                <Text
                   text={player.name}

@@ -8,6 +8,7 @@ import type {
   UpdateCharacterHpPayload,
   UpdateCharacterSpellPowerPayload,
   CharacterDiedPayload,
+  UpdatePlayerClassPayload,
   UpdatePlayerAbsorbPayload,
 } from '../../types/players';
 
@@ -23,7 +24,8 @@ export enum PlayersActionTypes {
   QUEST_STARTED = '[Players] QUEST_STARTED',
   QUEST_COMPLETED = '[Players] QUEST_COMPLETED',
   KILLING_STAGE_PART_PROGRESS = '[Players] KILLING_STAGE_PART_PROGRESS',
-  UPDATE_PLAYER_ABSORB = '[Players] UPDATE_PLAYER_ABSORB'
+  UPDATE_PLAYER_ABSORB = '[Players] UPDATE_PLAYER_ABSORB',
+  UPDATE_PLAYER_CLASS = '[Players} UPDATE_PLAYER_CLASS',
 }
 
 export type ChangePlayerPosition = FSAAuto<
@@ -67,6 +69,8 @@ export type ChangePlayerMovingStatus = FSAAuto<
 >;
 
 export type UpdatePlayerAbsorb = FSAAuto<PlayersActionTypes.UPDATE_PLAYER_ABSORB, UpdatePlayerAbsorbPayload>;
+
+export type UpdatePlayerClass = FSAAuto<PlayersActionTypes.UPDATE_PLAYER_CLASS, UpdatePlayerClassPayload>;
 
 export const changePlayerPosition = (
   payload: ChangeLocationPayload
@@ -119,6 +123,11 @@ export const updatePlayerAbsorb = (payload: UpdatePlayerAbsorbPayload): UpdatePl
   payload,
 });
 
+export const updatePlayerClass = (payload: UpdatePlayerClassPayload): UpdatePlayerClass => ({
+  type: PlayersActionTypes.UPDATE_PLAYER_CLASS,
+  payload,
+});
+
 export type PlayerAction =
   | ChangePlayerPosition
   | InitializePlayers
@@ -128,4 +137,5 @@ export type PlayerAction =
   | UpdateCharacterHp
   | UpdateCharacterSpellPower
   | UpdatePlayerAbsorb
-  | CharacterDied;
+  | CharacterDied
+  | UpdatePlayerClass;

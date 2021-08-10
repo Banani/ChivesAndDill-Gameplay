@@ -61,3 +61,8 @@ export interface UpdatePlayerAbsorbPayload {
    targetId: string,
    newValue: number,
 }
+
+export interface UpdatePlayerClassPayload {
+   activePlayerId: string;
+   class: string;
+}
