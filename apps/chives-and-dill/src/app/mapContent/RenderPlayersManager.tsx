@@ -6,7 +6,6 @@ import _ from 'lodash';
 
 export const RenderPlayersManager = () => {
    const players = useSelector(selectCharacters);
-   console.log(players);
    const activePlayerId = useSelector(selectActivePlayer);
    const characterViewsSettings = useSelector(selectCharacterViewsSettings);
 

@@ -1,7 +1,7 @@
 import type { EngineStateAction } from './actions';
 import { EngineStateActionTypes } from './actions';
 import { merge, mapValues, omit } from 'lodash';
-import type { GlobalStore } from '@bananos/types';
+import { GlobalStore, GlobalStoreModule } from '@bananos/types';
 
 const emptyModule = {
    data: {},
@@ -9,13 +9,13 @@ const emptyModule = {
 };
 
 const initialState: GlobalStore = {
-   characterMovements: emptyModule,
-   projectileMovements: emptyModule,
-   spellChannels: emptyModule,
-   characterPowerPoints: emptyModule,
-   timeEffects: emptyModule,
-   areaTimeEffects: emptyModule,
-   spells: emptyModule,
+   [GlobalStoreModule.CHARACTER_MOVEMENTS]: emptyModule,
+   [GlobalStoreModule.CHARACTER_POWER_POINTS]: emptyModule,
+   [GlobalStoreModule.AREA_TIME_EFFECTS]: emptyModule,
+   [GlobalStoreModule.PROJECTILE_MOVEMENTS]: emptyModule,
+   [GlobalStoreModule.SPELLS]: emptyModule,
+   [GlobalStoreModule.SPELL_CHANNELS]: emptyModule,
+   [GlobalStoreModule.TIME_EFFECTS]: emptyModule,
 };
 
 export const engineStateReducer = (state: GlobalStore = initialState, action: EngineStateAction): GlobalStore => {
@@ -31,6 +31,16 @@ export const engineStateReducer = (state: GlobalStore = initialState, action: En
                return { ...module, data: omit(module.data, action.payload[key]?.toDelete) };
             }
          );
+      }
+
+      case EngineStateActionTypes.CLEAR_EVENT: {
+         return {
+            ...state,
+            [action.payload.module]: {
+               ...state[action.payload.module],
+               events: omit(state[action.payload.module].events, [action.payload.eventId]),
+            },
+         };
       }
 
       default:

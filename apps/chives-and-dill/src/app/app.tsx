@@ -6,8 +6,9 @@ import { PlayersModule, SpellsModule, QuestsModule, EngineStateModule } from '..
 import SocketCommunicator from './gameController/socketCommunicator';
 import GameController from './gameController/gameController';
 import Map from './map';
+import { EngineAwareState } from '../stores/engineStateModule/types';
 
-const store: IModuleStore<unknown> = createStore(
+const store: IModuleStore<EngineAwareState> = createStore(
    {
       initialState: {},
       extensions: [],

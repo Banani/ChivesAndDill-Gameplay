@@ -11,25 +11,35 @@ export interface EnginePackage {
    spells: PartialEnginePackage<null>;
 }
 
-interface PartialEnginePackage<Data, Event = null> {
+interface PartialEnginePackage<Data> {
    data: Record<string, Data>;
    toDelete: string[];
-   events: Record<string, Event>;
+   events: Record<string, EngineEvent>;
 }
 
 interface StoreModule<Data> {
    data: Record<string, Data>;
-   events: Record<string, Event>;
+   events: Record<string, EngineEvent>;
+}
+
+export enum GlobalStoreModule {
+   CHARACTER_MOVEMENTS = 'characterMovements',
+   PROJECTILE_MOVEMENTS = 'projectileMovements',
+   SPELL_CHANNELS = 'spellChannels',
+   CHARACTER_POWER_POINTS = 'characterPowerPoints',
+   TIME_EFFECTS = 'timeEffects',
+   AREA_TIME_EFFECTS = 'areaTimeEffects',
+   SPELLS = 'spells',
 }
 
 export interface GlobalStore {
-   characterMovements: StoreModule<CharacterMovement>;
-   projectileMovements: StoreModule<ProjectileMovement>;
-   spellChannels: StoreModule<ChannelingTrack>;
-   characterPowerPoints: StoreModule<PowerPointsTrack>;
-   timeEffects: StoreModule<TimeEffect>;
-   areaTimeEffects: StoreModule<AreaTimeEffect>;
-   spells: StoreModule<null>;
+   [GlobalStoreModule.CHARACTER_MOVEMENTS]: StoreModule<CharacterMovement>;
+   [GlobalStoreModule.PROJECTILE_MOVEMENTS]: StoreModule<ProjectileMovement>;
+   [GlobalStoreModule.SPELL_CHANNELS]: StoreModule<ChannelingTrack>;
+   [GlobalStoreModule.CHARACTER_POWER_POINTS]: StoreModule<PowerPointsTrack>;
+   [GlobalStoreModule.TIME_EFFECTS]: StoreModule<TimeEffect>;
+   [GlobalStoreModule.AREA_TIME_EFFECTS]: StoreModule<AreaTimeEffect>;
+   [GlobalStoreModule.SPELLS]: StoreModule<null>;
 }
 
 export interface CharacterMovement {
@@ -89,7 +99,7 @@ export type EngineEvent = SpellLandedEvent;
 
 export interface SpellLandedEvent {
    type: EngineEventType.SpellLanded;
-   spellName: string;
+   spell: any;
    angle: number;
    castLocation: Location;
    directionLocation: Location;

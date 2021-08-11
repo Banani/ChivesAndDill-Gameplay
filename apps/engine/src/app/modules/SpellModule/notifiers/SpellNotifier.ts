@@ -50,13 +50,11 @@ export class SpellNotifier extends EventParser implements Notifier {
       this.increment++;
       this.events[`spellEvent_${this.increment}`] = {
          type: EngineEventType.SpellLanded,
-         spellName: event.spell.name,
+         spell: event.spell,
          angle: event.angle,
          castLocation: event.caster.location,
          directionLocation: event.location,
       };
-
-      console.log(this.events);
 
       services.socketConnectionService.getIO().sockets.emit(FightingEngineMessages.SpellLanded, {
          spell: event.spell,

@@ -1,13 +1,14 @@
-import { forEach } from 'lodash';
+import { filter, forEach } from 'lodash';
 import { Graphics } from '@inlet/react-pixi';
 import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearFirstSpellLanded, selectLastSpellLandTimestamp, selectSpellShapesToDisplay } from '../../stores';
+import { clearEvent, getEngineSpellsEvents } from '../../stores';
 import { BlinkSpellDefinitions } from './BlinkSpellDefinitions';
+import { EngineEventType, GlobalStoreModule } from '@bananos/types';
 
 export const BlinkSpellEffect = () => {
-   const activeSpellsCasts = useSelector(selectSpellShapesToDisplay);
-   const lastSpellLandTimestamp = useSelector(selectLastSpellLandTimestamp);
+   const events = useSelector(getEngineSpellsEvents);
+
    const dispatch = useDispatch();
 
    const angleBlastDrawer = (g, spellLandedEvent) => {
@@ -32,23 +33,27 @@ export const BlinkSpellEffect = () => {
    };
 
    useEffect(() => {
-      if (lastSpellLandTimestamp) {
+      if (Object.keys(events).length > 0) {
+         // TODO: Usunac jak juz nie bedzie nie potrzebnych rerenderow
          setTimeout(() => {
-            dispatch(clearFirstSpellLanded());
+            dispatch(clearEvent({ module: GlobalStoreModule.SPELLS, eventId: Object.keys(events).pop() }));
          }, 150);
       }
-   }, [lastSpellLandTimestamp]);
+   }, [events]);
 
    const drawSpellEffect = useCallback(
       (g) => {
          g.clear();
-         forEach(activeSpellsCasts, (spellLandedEvent) => {
-            if (BlinkSpellDefinitions[spellLandedEvent.spell.name] && typeDrawer[spellLandedEvent.spell.type]) {
-               typeDrawer[spellLandedEvent.spell.type](g, spellLandedEvent);
+         const spellLanded = filter(events, (event) => event.type === EngineEventType.SpellLanded);
+
+         forEach(spellLanded, (spellLandedEvent) => {
+            const definition = BlinkSpellDefinitions[spellLandedEvent.spell.name];
+            if (definition && typeDrawer[definition.type]) {
+               typeDrawer[definition.type](g, spellLandedEvent);
             }
          });
       },
-      [activeSpellsCasts]
+      [events]
    );
 
    return <Graphics draw={drawSpellEffect} />;

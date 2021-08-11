@@ -166,7 +166,7 @@ const Player = ({ player, characterViewsSettings }) => {
       }
       return 'red';
    };
-   console.log();
+
    return engineState.characterMovements.data[player.id] ? (
       <>
          {currentHp <= 0 ? null : (
