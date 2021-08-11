@@ -1,3 +1,4 @@
+import { HealthPointsSource } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import {
@@ -65,6 +66,7 @@ export class RegenerationService extends EventParser {
          casterId: null,
          characterId: regeneration.targetId,
          amount: regeneration.healthPointsRegeneration,
+         source: HealthPointsSource.Regeneration,
       });
 
       this.engineEventCrator.asyncCeateEvent<AddCharacterSpellPowerEvent>({

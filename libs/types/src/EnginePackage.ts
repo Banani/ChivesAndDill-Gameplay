@@ -14,12 +14,12 @@ export interface EnginePackage {
 interface PartialEnginePackage<Data> {
    data: Record<string, Data>;
    toDelete: string[];
-   events: Record<string, EngineEvent>;
+   events: Record<string, EnginePackageEvent>;
 }
 
 interface StoreModule<Data> {
    data: Record<string, Data>;
-   events: Record<string, EngineEvent>;
+   events: Record<string, EnginePackageEvent>;
 }
 
 export enum GlobalStoreModule {
@@ -93,9 +93,9 @@ export interface AreaTimeEffect {
 
 export enum EngineEventType {
    SpellLanded = 'SpellLanded',
+   CharacterGotHp = 'CharacterGotHp',
+   CharacterLostHp = 'CharacterLostHp',
 }
-
-export type EngineEvent = SpellLandedEvent;
 
 export interface SpellLandedEvent {
    type: EngineEventType.SpellLanded;
@@ -103,4 +103,25 @@ export interface SpellLandedEvent {
    angle: number;
    castLocation: Location;
    directionLocation: Location;
+}
+
+export interface CharacterGotHpEvent {
+   type: EngineEventType.CharacterGotHp;
+   characterId: string;
+   source: HealthPointsSource;
+   amount: number;
+}
+
+export interface CharacterLostHpEvent {
+   type: EngineEventType.CharacterLostHp;
+   characterId: string;
+   amount: number;
+}
+
+export type EnginePackageEvent = SpellLandedEvent | CharacterGotHpEvent | CharacterLostHpEvent;
+
+export enum HealthPointsSource {
+   Healing = 'Healing',
+   Regeneration = 'Regeneration',
+   CharacterReset = 'CharacterReset',
 }

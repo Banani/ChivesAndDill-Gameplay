@@ -1,4 +1,4 @@
-import { PowerPointsTrack } from '@bananos/types';
+import { EngineEventType, EnginePackageEvent, PowerPointsTrack } from '@bananos/types';
 import { EventParser } from '../../../EventParser';
 import type { Notifier } from '../../../Notifier';
 import type { EngineEventHandler } from '../../../types';
@@ -13,6 +13,8 @@ import {
 
 export class PowerPointsNotifier extends EventParser implements Notifier {
    private powerPointsTrack: Record<string, Partial<PowerPointsTrack>> = {};
+   private events: Record<string, EnginePackageEvent> = {};
+   private increment = 0;
 
    constructor() {
       super();
@@ -27,10 +29,12 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
 
    getBroadcast = () => {
       const powerPointsTrack = this.powerPointsTrack;
+      const events = this.events;
 
       this.powerPointsTrack = {};
+      this.events = {};
 
-      return { data: powerPointsTrack, key: 'characterPowerPoints', toDelete: [] };
+      return { data: powerPointsTrack, key: 'characterPowerPoints', toDelete: [], events };
    };
 
    handleNewPowerTrackCreated: EngineEventHandler<NewPowerTrackCreatedEvent> = ({ event, services }) => {
@@ -39,6 +43,13 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
    };
 
    handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event }) => {
+      this.increment++;
+      this.events[`spellEvent_${this.increment}`] = {
+         type: EngineEventType.CharacterLostHp,
+         characterId: event.characterId,
+         amount: event.amount,
+      };
+
       this.powerPointsTrack[event.characterId] = {
          ...this.powerPointsTrack[event.characterId],
          currentHp: event.currentHp,
@@ -46,6 +57,14 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
    };
 
    handleCharacterGotHp: EngineEventHandler<CharacterGotHpEvent> = ({ event }) => {
+      this.increment++;
+      this.events[`spellEvent_${this.increment}`] = {
+         type: EngineEventType.CharacterGotHp,
+         characterId: event.characterId,
+         amount: event.amount,
+         source: event.source,
+      };
+
       this.powerPointsTrack[event.characterId] = {
          ...this.powerPointsTrack[event.characterId],
          currentHp: event.currentHp,

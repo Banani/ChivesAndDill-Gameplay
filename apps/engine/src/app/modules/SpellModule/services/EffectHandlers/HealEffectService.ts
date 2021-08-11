@@ -1,3 +1,4 @@
+import { HealthPointsSource } from '@bananos/types';
 import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
 import { AddCharacterHealthPointsEvent, CharacterEngineEvents } from '../../../CharacterModule/Events';
@@ -21,6 +22,7 @@ export class HealEffectService extends EventParser {
             casterId: event.caster.id,
             characterId: event.target.id,
             amount: effect.amount,
+            source: HealthPointsSource.Healing,
          });
       }
    };

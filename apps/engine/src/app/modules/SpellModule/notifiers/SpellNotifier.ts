@@ -1,4 +1,4 @@
-import { EngineEventType, FightingEngineMessages, SpellLandedEvent as SpellLandedPackegeEvent } from '@bananos/types';
+import { EngineEventType, FightingEngineMessages, GlobalStoreModule, SpellLandedEvent as SpellLandedPackegeEvent } from '@bananos/types';
 import { EventParser } from '../../../EventParser';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
@@ -43,7 +43,7 @@ export class SpellNotifier extends EventParser implements Notifier {
 
       this.events = {};
 
-      return { data: [], key: 'spells', toDelete: [], events };
+      return { data: [], key: GlobalStoreModule.SPELLS, toDelete: [], events };
    };
 
    handleSpellLanded: EngineEventHandler<SpellLandedEvent> = ({ event, services }) => {

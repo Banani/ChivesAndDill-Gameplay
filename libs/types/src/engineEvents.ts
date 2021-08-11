@@ -3,14 +3,14 @@ export enum EngineMessages {
    UserConnected = 'UserConnected',
    UserDisconnected = 'UserDisconnected',
 
-   CharacterLostHp = 'CharacterLostHp',
-   CharacterGotHp = 'CharacterGotHp',
-   CharacterLostSpellPower = 'CharacterLostSpellPower',
-   CharacterGotSpellPower = 'CharacterGotSpellPower',
+   CharacterLostHp = 'CharacterLostHp', // READY
+   CharacterGotHp = 'CharacterGotHp', // READY
+   CharacterLostSpellPower = 'CharacterLostSpellPower', // READY
+   CharacterGotSpellPower = 'CharacterGotSpellPower', // READY
 
    CharacterDied = 'CharacterDied',
 
-   Package = 'Package',
+   Package = 'Package', // READY
 }
 
 export enum QuestEngineMessages {
@@ -22,12 +22,12 @@ export enum QuestEngineMessages {
 
 export enum FightingEngineMessages {
    SpellHasBeenCast = 'SpellHasBeenCast',
-   SpellLanded = 'SpellLanded',
-   AreaSpellEffectCreated = 'AreaSpellEffectCreated',
-   AreaSpellEffectRemoved = 'AreaSpellEffectRemoved',
+   SpellLanded = 'SpellLanded', // READY
+   AreaSpellEffectCreated = 'AreaSpellEffectCreated', // READY
+   AreaSpellEffectRemoved = 'AreaSpellEffectRemoved', // READY
 
-   ChannelingFinished = 'ChannelingFinished',
-   ChannelingInterrupted = 'ChannelingInterrupted',
+   ChannelingFinished = 'ChannelingFinished', // READY
+   ChannelingInterrupted = 'ChannelingInterrupted', // READY
 
    CharacterGainPowerStack = 'CharacterGainPowerStack',
    CharacterLosePowerStack = 'CharacterLosePowerStack',

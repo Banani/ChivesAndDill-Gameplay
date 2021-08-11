@@ -4,7 +4,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearEvent, getEngineSpellsEvents } from '../../stores';
 import { BlinkSpellDefinitions } from './BlinkSpellDefinitions';
-import { EngineEventType, GlobalStoreModule } from '@bananos/types';
+import { EngineEventType, GlobalStoreModule, SpellLandedEvent } from '@bananos/types';
 
 export const BlinkSpellEffect = () => {
    const events = useSelector(getEngineSpellsEvents);
@@ -44,7 +44,7 @@ export const BlinkSpellEffect = () => {
    const drawSpellEffect = useCallback(
       (g) => {
          g.clear();
-         const spellLanded = filter(events, (event) => event.type === EngineEventType.SpellLanded);
+         const spellLanded = filter(events, (event) => event.type === EngineEventType.SpellLanded) as SpellLandedEvent[];
 
          forEach(spellLanded, (spellLandedEvent) => {
             const definition = BlinkSpellDefinitions[spellLandedEvent.spell.name];

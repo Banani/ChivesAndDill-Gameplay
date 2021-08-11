@@ -1,4 +1,4 @@
-import { PowerPointsTrack } from '@bananos/types';
+import { HealthPointsSource, PowerPointsTrack } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, EngineEventHandler, NewPlayerCreatedEvent } from '../../../types';
@@ -113,6 +113,7 @@ export class PowerPointsService extends EventParser {
             characterId: event.characterId,
             amount: event.amount,
             currentHp: this.powerPoints[event.characterId].currentHp,
+            source: event.source,
          });
       }
    };
@@ -158,6 +159,7 @@ export class PowerPointsService extends EventParser {
          characterId: event.characterId,
          amount: healthPointsToMax,
          currentHp: character.currentHp,
+         source: HealthPointsSource.CharacterReset,
       });
    };
 

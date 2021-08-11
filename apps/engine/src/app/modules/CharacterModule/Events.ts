@@ -1,3 +1,4 @@
+import { HealthPointsSource } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 
 export enum CharacterEngineEvents {
@@ -25,6 +26,7 @@ export interface CharacterGotHpEvent extends EngineEvent {
    characterId: string;
    amount: number;
    currentHp: number;
+   source: HealthPointsSource;
 }
 
 export interface CharacterLostSpellPowerEvent extends EngineEvent {
@@ -49,6 +51,7 @@ export interface AddCharacterHealthPointsEvent extends EngineEvent {
    casterId: string;
    characterId: string;
    amount: number;
+   source: HealthPointsSource;
 }
 
 export interface TakeCharacterSpellPowerEvent extends EngineEvent {
