@@ -1,12 +1,11 @@
 import { EngineEvents } from '../../EngineEvents';
 import { Character, EngineEvent, EngineEventHandler } from '../../types';
-import { Location, TimeEffect } from '@bananos/types';
+import { Location, PowerStackType, TimeEffect } from '@bananos/types';
 import { Vector } from '../../types/Vector';
 import { Monster } from '../MonsterModule/types';
 import {
    SubSpell,
    AreaEffect,
-   PowerStackType,
    Spell,
    GuidedProjectileSpell,
    GuidedProjectileSubSpell,

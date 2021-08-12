@@ -1,4 +1,4 @@
-import { TimeEffectType } from '@bananos/types';
+import { PowerStackType, TimeEffectType } from '@bananos/types';
 
 export enum SpellType {
    Projectile = 'Projectile',
@@ -23,10 +23,6 @@ export enum SpellEffectType {
    GainPowerStack = 'GetPowerStack',
    LosePowerStack = 'LosePowerStack',
    AbsorbShield = 'AbsorbShield',
-}
-
-export enum PowerStackType {
-   HolyPower = 'HolyPower',
 }
 
 export const PowerStackLimit: Record<PowerStackType, number> = {

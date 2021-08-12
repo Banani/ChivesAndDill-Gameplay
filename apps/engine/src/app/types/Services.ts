@@ -28,6 +28,7 @@ import type { PlayerMovementService } from '../modules/PlayerModule';
 import type { PlayerMovementNotifier, CharacterEffectNotifier } from '../modules/PlayerModule/notifiers';
 import type { CharactersService } from '../modules/PlayerModule/services/CharactersService';
 import { ChannelingNotifier } from '../modules/SpellModule/notifiers/ChannelingNotifier';
+import { SpellPowerNotifier } from '../modules/SpellModule/notifiers/SpellPowerNotifier';
 import { TimeEffectNotifier } from '../modules/SpellModule/notifiers/TimeEffectNotifier';
 import type { CooldownService } from '../modules/SpellModule/services/CooldownService';
 import type { AbsorbShieldEffectService } from '../modules/SpellModule/services/EffectHandlers/AbsorbShieldEffectService';
@@ -64,6 +65,7 @@ export interface Services {
    aggroService: AggroService;
    channelingNotifier: ChannelingNotifier;
    monsterAttackService: MonsterAttackService;
+   spellPowerNotifier: SpellPowerNotifier;
    monsterNotifier: MonsterNotifier;
    manaService: ManaService;
    spellEffectApplierService: SpellEffectApplierService;

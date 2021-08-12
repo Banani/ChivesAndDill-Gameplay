@@ -59,6 +59,7 @@ import { ChannelingNotifier } from './app/modules/SpellModule/notifiers/Channeli
 import { PowerPointsService } from './app/modules/CharacterModule';
 import { PowerPointsNotifier } from './app/modules/CharacterModule/notifiers';
 import { TimeEffectNotifier } from './app/modules/SpellModule/notifiers/TimeEffectNotifier';
+import { SpellPowerNotifier } from './app/modules/SpellModule/notifiers/SpellPowerNotifier';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -113,6 +114,7 @@ const powerPointsNotifier = new PowerPointsNotifier();
 const timeEffectNotifier = new TimeEffectNotifier();
 const areaTimeEffectNotifier = new AreaTimeEffectNotifier();
 const spellNotifier = new SpellNotifier();
+const spellPowerNotifier = new SpellPowerNotifier();
 const notifiers = [
    playerMovementNotifier,
    projectileNotifier,
@@ -121,6 +123,7 @@ const notifiers = [
    timeEffectNotifier,
    areaTimeEffectNotifier,
    spellNotifier,
+   spellPowerNotifier,
 ];
 
 const socketConnectionService = new SocketConnectionService(io, notifiers);
@@ -131,6 +134,7 @@ const services: Services = {
    characterService: new CharactersService(),
    powerPointsNotifier,
    areaTimeEffectNotifier,
+   spellPowerNotifier,
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
    playerMovementNotifier,

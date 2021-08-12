@@ -9,6 +9,7 @@ export interface EnginePackage {
    timeEffects: PartialEnginePackage<TimeEffect>;
    areaTimeEffects: PartialEnginePackage<AreaTimeEffect>;
    spells: PartialEnginePackage<null>;
+   [GlobalStoreModule.POWER_STACKS]: PartialEnginePackage<Partial<Record<PowerStackType, number>>>;
 }
 
 interface PartialEnginePackage<Data> {
@@ -30,6 +31,7 @@ export enum GlobalStoreModule {
    TIME_EFFECTS = 'timeEffects',
    AREA_TIME_EFFECTS = 'areaTimeEffects',
    SPELLS = 'spells',
+   POWER_STACKS = 'powerStacks',
 }
 
 export interface GlobalStore {
@@ -40,6 +42,7 @@ export interface GlobalStore {
    [GlobalStoreModule.TIME_EFFECTS]: StoreModule<TimeEffect>;
    [GlobalStoreModule.AREA_TIME_EFFECTS]: StoreModule<AreaTimeEffect>;
    [GlobalStoreModule.SPELLS]: StoreModule<null>;
+   [GlobalStoreModule.POWER_STACKS]: StoreModule<Partial<Record<PowerStackType, number>>>;
 }
 
 export interface CharacterMovement {
@@ -124,4 +127,13 @@ export enum HealthPointsSource {
    Healing = 'Healing',
    Regeneration = 'Regeneration',
    CharacterReset = 'CharacterReset',
+}
+
+export interface PowerStackTrack {
+   powerStackType: PowerStackType;
+   amount: number;
+}
+
+export enum PowerStackType {
+   HolyPower = 'HolyPower',
 }

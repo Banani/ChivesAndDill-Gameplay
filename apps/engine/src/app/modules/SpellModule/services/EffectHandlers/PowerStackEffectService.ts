@@ -1,3 +1,4 @@
+import { PowerStackType } from '@bananos/types';
 import { forEach } from 'lodash';
 import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
@@ -8,7 +9,7 @@ import {
    PlayerCastedSpellEvent,
    SpellEngineEvents,
 } from '../../Events';
-import { PowerStackType, SpellEffectType, GainPowerStackEffect, LosePowerStackEffect, PowerStackLimit } from '../../types/spellTypes';
+import { SpellEffectType, GainPowerStackEffect, LosePowerStackEffect, PowerStackLimit } from '../../types/spellTypes';
 
 export class PowerStackEffectService extends EventParser {
    currentPowerStacks: Record<string, Partial<Record<PowerStackType, number>>> = {};

@@ -1,7 +1,7 @@
-import { TimeEffectType } from '@bananos/types';
+import { TimeEffectType, PowerStackType } from '@bananos/types';
 import { Classes } from '../../types/Classes';
 import type { Spell } from './types/spellTypes';
-import { AreaType, PowerStackType, SpellEffectType, SpellType } from './types/spellTypes';
+import { AreaType, SpellEffectType, SpellType } from './types/spellTypes';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    Test: {
@@ -233,7 +233,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
             amount: 80,
          },
       ],
-      //   requiredPowerStacks: [{ type: PowerStackType.HolyPower, amount: 3 }],
+      requiredPowerStacks: [{ type: PowerStackType.HolyPower, amount: 3 }],
    },
    HolyCone2: {
       type: SpellType.AngleBlast,

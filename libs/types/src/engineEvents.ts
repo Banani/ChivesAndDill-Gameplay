@@ -29,8 +29,8 @@ export enum FightingEngineMessages {
    ChannelingFinished = 'ChannelingFinished', // READY
    ChannelingInterrupted = 'ChannelingInterrupted', // READY
 
-   CharacterGainPowerStack = 'CharacterGainPowerStack',
-   CharacterLosePowerStack = 'CharacterLosePowerStack',
+   CharacterGainPowerStack = 'CharacterGainPowerStack', // READY
+   CharacterLosePowerStack = 'CharacterLosePowerStack', // READY
    DamageAbsorbed = 'DamageAbsorbed',
    AbsorbShieldChanged = 'AbsorbShieldChanged',
 }
