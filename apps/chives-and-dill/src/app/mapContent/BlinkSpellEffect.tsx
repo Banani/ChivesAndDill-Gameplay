@@ -2,13 +2,14 @@ import { filter, forEach } from 'lodash';
 import { Graphics } from '@inlet/react-pixi';
 import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearEvent, getEngineSpellsEvents } from '../../stores';
+import { clearEvent, getEngineState } from '../../stores';
 import { BlinkSpellDefinitions } from './BlinkSpellDefinitions';
-import { EngineEventType, GlobalStoreModule, SpellLandedEvent } from '@bananos/types';
+import type { SpellLandedEvent } from '@bananos/types';
+import { EngineEventType, GlobalStoreModule } from '@bananos/types';
 
 export const BlinkSpellEffect = () => {
-   const events = useSelector(getEngineSpellsEvents);
-
+   const engineState = useSelector(getEngineState);
+   const events = engineState.spells.events;
    const dispatch = useDispatch();
 
    const angleBlastDrawer = (g, spellLandedEvent) => {

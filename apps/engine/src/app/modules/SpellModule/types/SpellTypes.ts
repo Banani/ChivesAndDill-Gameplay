@@ -1,4 +1,5 @@
-import { PowerStackType, TimeEffectType } from '@bananos/types';
+import type { TimeEffectType } from '@bananos/types';
+import { PowerStackType } from '@bananos/types';
 
 export enum SpellType {
    Projectile = 'Projectile',
