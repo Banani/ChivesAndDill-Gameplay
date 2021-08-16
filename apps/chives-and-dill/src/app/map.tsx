@@ -14,6 +14,7 @@ import { DrawAreas } from './mapContent/DrawAreas';
 import { CastBarsManager } from './mapContent/CastBarsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
+import { TimeEffectsbar } from './player/timeEffectsBar/TimeEffectsBar';
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -57,6 +58,7 @@ const Map = () => {
          {activePlayerId ? <PlayerIcon player={players[activePlayerId]}></PlayerIcon> : null}
          {<QuestsSideView />}
          <QuestLog />
+         <TimeEffectsbar />
          {/* <ClassesModal /> */}
          <ReactReduxContext.Consumer>
             {({ store }) => (

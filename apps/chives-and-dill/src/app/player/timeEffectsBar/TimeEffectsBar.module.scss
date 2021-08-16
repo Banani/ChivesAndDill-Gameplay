@@ -1,5 +1,41 @@
 .barContainer {
-  background-color: greenyellow;
-  width: 100%;
-  height: 50px;
+  width: 200px;
+  height: 25px;
+  top: 135px;
+  left: 220px;
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+
+  .debuffImage {
+    height: 100%;
+    width: 25px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 3px;
+
+    &:hover + .spellTooltip{
+      visibility: visible;
+    }
+  }
+
+  .spellTooltip {
+    background-color: #080D21;
+    border: 2px solid silver;
+    border-radius: 10px;
+    position: absolute;
+    top: 50px;
+    width: 300px;
+    left: 50%;
+    right: 0;
+    margin: 0 auto;
+    transform: translateX(-50%);
+    color: white;
+    padding: 8px;
+    visibility: hidden;
+
+    .spellDesc {
+      color: gold;
+    }
+  }
 }
