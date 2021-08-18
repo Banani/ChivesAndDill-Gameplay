@@ -1,3 +1,4 @@
+import { NestedMap } from 'apps/engine/src/app/dataStructures/NestedMap';
 import { countBy, map, sum, sumBy } from 'lodash';
 import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
@@ -10,7 +11,6 @@ import {
    TakeAbsorbShieldValueEvent,
 } from '../../Events';
 import { SpellEffectType, AbsorbShieldEffect } from '../../types/spellTypes';
-import { NestedMap } from './NestedMap';
 
 interface AbsorbEffectNavigation {
    targetId: string;
