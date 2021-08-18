@@ -1,4 +1,4 @@
-import { EngineEventType, EnginePackageEvent, PowerPointsTrack } from '@bananos/types';
+import { EngineEventType, EnginePackageEvent, GlobalStoreModule, PowerPointsTrack } from '@bananos/types';
 import { EventParser } from '../../../EventParser';
 import type { Notifier } from '../../../Notifier';
 import type { EngineEventHandler } from '../../../types';
@@ -13,7 +13,7 @@ import {
 
 export class PowerPointsNotifier extends EventParser implements Notifier {
    private powerPointsTrack: Record<string, Partial<PowerPointsTrack>> = {};
-   private events: Record<string, EnginePackageEvent> = {};
+   private events: EnginePackageEvent[] = [];
    private increment = 0;
 
    constructor() {
@@ -32,9 +32,9 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
       const events = this.events;
 
       this.powerPointsTrack = {};
-      this.events = {};
+      this.events = [];
 
-      return { data: powerPointsTrack, key: 'characterPowerPoints', toDelete: [], events };
+      return { data: powerPointsTrack, key: GlobalStoreModule.CHARACTER_POWER_POINTS, toDelete: [], events };
    };
 
    handleNewPowerTrackCreated: EngineEventHandler<NewPowerTrackCreatedEvent> = ({ event, services }) => {
@@ -43,12 +43,11 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
    };
 
    handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event }) => {
-      this.increment++;
-      this.events[`spellEvent_${this.increment}`] = {
+      this.events.push({
          type: EngineEventType.CharacterLostHp,
          characterId: event.characterId,
          amount: event.amount,
-      };
+      });
 
       this.powerPointsTrack[event.characterId] = {
          ...this.powerPointsTrack[event.characterId],

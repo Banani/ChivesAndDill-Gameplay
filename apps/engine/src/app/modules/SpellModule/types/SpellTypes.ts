@@ -160,6 +160,8 @@ export interface AbsorbShieldEffect extends SpellEffect {
    shieldValue: number;
    period: number;
    stack?: number;
+   timeEffectType: TimeEffectType;
+   iconImage: string;
 }
 
 type AllEffects =

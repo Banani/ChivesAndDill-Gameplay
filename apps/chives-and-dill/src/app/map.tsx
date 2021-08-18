@@ -9,7 +9,6 @@ import { SpellsBar } from './player/spellsBar/SpellsBar';
 import { QuestLog } from './player/quests/questLog/QuestLog';
 import { QuestsSideView } from './player/quests/questSideView/QuestsSideView';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
-import { ClassesModal } from './player/classesModal/classesModal';
 import { DrawAreas } from './mapContent/DrawAreas';
 import { CastBarsManager } from './mapContent/CastBarsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';

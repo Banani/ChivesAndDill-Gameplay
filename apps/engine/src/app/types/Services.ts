@@ -27,6 +27,7 @@ import type { AggroService } from '../modules/MonsterModule/services/aggroServic
 import type { PlayerMovementService } from '../modules/PlayerModule';
 import type { PlayerMovementNotifier, CharacterEffectNotifier } from '../modules/PlayerModule/notifiers';
 import type { CharactersService } from '../modules/PlayerModule/services/CharactersService';
+import { AbsorbShieldNotifier } from '../modules/SpellModule/notifiers/ABsorbShieldNotifier';
 import { ChannelingNotifier } from '../modules/SpellModule/notifiers/ChannelingNotifier';
 import { SpellPowerNotifier } from '../modules/SpellModule/notifiers/SpellPowerNotifier';
 import { TimeEffectNotifier } from '../modules/SpellModule/notifiers/TimeEffectNotifier';
@@ -87,4 +88,5 @@ export interface Services {
    absorbShieldEffectService: AbsorbShieldEffectService;
    teleportationSpellService: TeleportationSpellService;
    regenerationService: RegenerationService;
+   absorbShieldNotifier: AbsorbShieldNotifier;
 }

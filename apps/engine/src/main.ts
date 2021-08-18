@@ -60,6 +60,7 @@ import { PowerPointsService } from './app/modules/CharacterModule';
 import { PowerPointsNotifier } from './app/modules/CharacterModule/notifiers';
 import { TimeEffectNotifier } from './app/modules/SpellModule/notifiers/TimeEffectNotifier';
 import { SpellPowerNotifier } from './app/modules/SpellModule/notifiers/SpellPowerNotifier';
+import { AbsorbShieldNotifier } from './app/modules/SpellModule/notifiers/AbsorbShieldNotifier';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -115,6 +116,7 @@ const timeEffectNotifier = new TimeEffectNotifier();
 const areaTimeEffectNotifier = new AreaTimeEffectNotifier();
 const spellNotifier = new SpellNotifier();
 const spellPowerNotifier = new SpellPowerNotifier();
+const absorbShieldNotifier = new AbsorbShieldNotifier();
 const notifiers = [
    playerMovementNotifier,
    projectileNotifier,
@@ -124,6 +126,7 @@ const notifiers = [
    areaTimeEffectNotifier,
    spellNotifier,
    spellPowerNotifier,
+   absorbShieldNotifier,
 ];
 
 const socketConnectionService = new SocketConnectionService(io, notifiers);
@@ -146,6 +149,7 @@ const services: Services = {
    channelingNotifier,
    timeEffectNotifier,
    spellNotifier,
+   absorbShieldNotifier,
 
    questProgressService: new QuestProgressService(),
    movementQuestService: new MovementQuestService(),

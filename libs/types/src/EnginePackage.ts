@@ -10,17 +10,18 @@ export interface EnginePackage {
    areaTimeEffects: PartialEnginePackage<AreaTimeEffect>;
    spells: PartialEnginePackage<null>;
    [GlobalStoreModule.POWER_STACKS]: PartialEnginePackage<Partial<Record<PowerStackType, number>>>;
+   [GlobalStoreModule.ABSORB_SHIELDS]: PartialEnginePackage<AbsorbShieldTrack>;
 }
 
 interface PartialEnginePackage<Data> {
    data: Record<string, Data>;
    toDelete: string[];
-   events: Record<string, EnginePackageEvent>;
+   events: EnginePackageEvent[];
 }
 
 interface StoreModule<Data> {
    data: Record<string, Data>;
-   events: Record<string, EnginePackageEvent>;
+   events: EnginePackageEvent[];
 }
 
 export enum GlobalStoreModule {
@@ -32,6 +33,7 @@ export enum GlobalStoreModule {
    AREA_TIME_EFFECTS = 'areaTimeEffects',
    SPELLS = 'spells',
    POWER_STACKS = 'powerStacks',
+   ABSORB_SHIELDS = 'absorbShields',
 }
 
 export interface GlobalStore {
@@ -43,6 +45,7 @@ export interface GlobalStore {
    [GlobalStoreModule.AREA_TIME_EFFECTS]: StoreModule<AreaTimeEffect>;
    [GlobalStoreModule.SPELLS]: StoreModule<null>;
    [GlobalStoreModule.POWER_STACKS]: StoreModule<Partial<Record<PowerStackType, number>>>;
+   [GlobalStoreModule.ABSORB_SHIELDS]: StoreModule<AbsorbShieldTrack>;
 }
 
 export interface CharacterMovement {
@@ -72,8 +75,8 @@ export interface PowerPointsTrack {
 }
 
 export enum TimeEffectType {
-   BUFF,
-   DEBUFF,
+   BUFF = 'BUFF',
+   DEBUFF = 'DEBUFF',
 }
 
 export interface TimeEffect {
@@ -98,6 +101,7 @@ export enum EngineEventType {
    SpellLanded = 'SpellLanded',
    CharacterGotHp = 'CharacterGotHp',
    CharacterLostHp = 'CharacterLostHp',
+   DamageAbsorbed = 'DamageAbsorbed',
 }
 
 export interface SpellLandedEvent {
@@ -121,7 +125,12 @@ export interface CharacterLostHpEvent {
    amount: number;
 }
 
-export type EnginePackageEvent = SpellLandedEvent | CharacterGotHpEvent | CharacterLostHpEvent;
+export interface DamageAbsorbedEvent {
+   type: EngineEventType.DamageAbsorbed;
+   characterId: string;
+}
+
+export type EnginePackageEvent = SpellLandedEvent | CharacterGotHpEvent | CharacterLostHpEvent | DamageAbsorbedEvent;
 
 export enum HealthPointsSource {
    Healing = 'Healing',
@@ -136,4 +145,14 @@ export interface PowerStackTrack {
 
 export enum PowerStackType {
    HolyPower = 'HolyPower',
+}
+
+export interface AbsorbShieldTrack {
+   id: string;
+   ownerId: string;
+   value: number;
+   timeEffectType: TimeEffectType;
+   period: number;
+   iconImage: string;
+   creationTime: number;
 }

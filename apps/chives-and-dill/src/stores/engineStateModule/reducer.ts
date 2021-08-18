@@ -5,7 +5,7 @@ import { GlobalStore, GlobalStoreModule } from '@bananos/types';
 
 const emptyModule = {
    data: {},
-   events: {},
+   events: [],
 };
 
 const initialState: GlobalStore = {
@@ -16,6 +16,8 @@ const initialState: GlobalStore = {
    [GlobalStoreModule.SPELLS]: emptyModule,
    [GlobalStoreModule.SPELL_CHANNELS]: emptyModule,
    [GlobalStoreModule.TIME_EFFECTS]: emptyModule,
+   [GlobalStoreModule.POWER_STACKS]: emptyModule,
+   [GlobalStoreModule.ABSORB_SHIELDS]: emptyModule,
 };
 
 export const engineStateReducer = (state: GlobalStore = initialState, action: EngineStateAction): GlobalStore => {
@@ -24,23 +26,13 @@ export const engineStateReducer = (state: GlobalStore = initialState, action: En
          return mapValues(
             merge(
                {},
-               state,
-               mapValues(action.payload, (module) => ({ data: module.data, events: module.events ?? {} }))
+               mapValues(state, (module) => ({ ...module, events: [] })),
+               mapValues(action.payload, (module) => ({ data: module.data, events: module.events ?? [] }))
             ),
             (module, key) => {
                return { ...module, data: omit(module.data, action.payload[key]?.toDelete) };
             }
          );
-      }
-
-      case EngineStateActionTypes.CLEAR_EVENT: {
-         return {
-            ...state,
-            [action.payload.module]: {
-               ...state[action.payload.module],
-               events: omit(state[action.payload.module].events, [action.payload.eventId]),
-            },
-         };
       }
 
       default:
