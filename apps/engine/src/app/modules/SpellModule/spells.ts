@@ -88,6 +88,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
                   stack: 5,
                   id: 'PowerShield_GuidedProjectile_AbsorbShield_1',
                   period: 4000,
+                  timeEffectType: TimeEffectType.BUFF,
+                  iconImage: 'PEEPEE_ZMIENI_IKONE',
                },
             ],
          },

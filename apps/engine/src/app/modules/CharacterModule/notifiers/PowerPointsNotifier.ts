@@ -1,7 +1,8 @@
-import { EngineEventType, EnginePackageEvent, PowerPointsTrack } from '@bananos/types';
+import { EngineEventType, EnginePackageEvent, GlobalStoreModule, PowerPointsTrack } from '@bananos/types';
+import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import type { Notifier } from '../../../Notifier';
-import type { EngineEventHandler } from '../../../types';
+import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import {
    CharacterEngineEvents,
    CharacterGotHpEvent,
@@ -13,13 +14,15 @@ import {
 
 export class PowerPointsNotifier extends EventParser implements Notifier {
    private powerPointsTrack: Record<string, Partial<PowerPointsTrack>> = {};
-   private events: Record<string, EnginePackageEvent> = {};
+   private events: EnginePackageEvent[] = [];
+   private toDelete: string[] = [];
    private increment = 0;
 
    constructor() {
       super();
       this.eventsToHandlersMap = {
          [CharacterEngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
+         [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [CharacterEngineEvents.CharacterGotHp]: this.handleCharacterGotHp,
          [CharacterEngineEvents.CharacterLostSpellPower]: this.handleCharacterLostSpellPower,
          [CharacterEngineEvents.CharacterGotSpellPower]: this.handleCharacterGotSpellPower,
@@ -29,12 +32,19 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
 
    getBroadcast = () => {
       const powerPointsTrack = this.powerPointsTrack;
+      const toDelete = this.toDelete;
       const events = this.events;
 
       this.powerPointsTrack = {};
-      this.events = {};
+      this.toDelete = [];
+      this.events = [];
 
-      return { data: powerPointsTrack, key: 'characterPowerPoints', toDelete: [], events };
+      return { data: powerPointsTrack, key: GlobalStoreModule.CHARACTER_POWER_POINTS, toDelete, events };
+   };
+
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
+      this.toDelete.push(event.characterId);
+      delete this.powerPointsTrack[event.characterId];
    };
 
    handleNewPowerTrackCreated: EngineEventHandler<NewPowerTrackCreatedEvent> = ({ event, services }) => {
@@ -43,12 +53,11 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
    };
 
    handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event }) => {
-      this.increment++;
-      this.events[`spellEvent_${this.increment}`] = {
+      this.events.push({
          type: EngineEventType.CharacterLostHp,
          characterId: event.characterId,
          amount: event.amount,
-      };
+      });
 
       this.powerPointsTrack[event.characterId] = {
          ...this.powerPointsTrack[event.characterId],

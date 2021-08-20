@@ -1,21 +1,30 @@
-import { forEach } from 'lodash';
+import { NestedMap } from 'apps/engine/src/app/dataStructures/NestedMap';
+import { countBy, map, sum, sumBy } from 'lodash';
 import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
 import {
-   AbsorbShieldValueChangedEvent,
+   AbsorbShieldChangedEvent,
+   AbsorbShieldCreatedEvent,
+   AbsorbShieldFinishedEvent,
    ApplyTargetSpellEffectEvent,
    SpellEngineEvents,
    TakeAbsorbShieldValueEvent,
-   TimeEffectCreatedEvent,
 } from '../../Events';
 import { SpellEffectType, AbsorbShieldEffect } from '../../types/spellTypes';
 
+interface AbsorbEffectNavigation {
+   targetId: string;
+   casterId: string;
+   absorbEffectId: string;
+}
+
 export class AbsorbShieldEffectService extends EventParser {
-   // targetId => casterId => absorbId: remaining shield
-   activeAbsorbShields: Record<string, Record<string, Record<string, number>>> = {};
+   private absorbNestedMap: NestedMap<AbsorbEffectNavigation>;
 
    constructor() {
       super();
+      this.absorbNestedMap = new NestedMap<AbsorbEffectNavigation>('absorbShieldEffect');
+
       this.eventsToHandlersMap = {
          [SpellEngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
          [SpellEngineEvents.TakeAbsorbShieldValue]: this.handleTakeAbsorbShieldValue,
@@ -25,78 +34,73 @@ export class AbsorbShieldEffectService extends EventParser {
    handleApplySpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event }) => {
       if (event.effect.type === SpellEffectType.AbsorbShield) {
          const effect = event.effect as AbsorbShieldEffect;
+         const navigationObject: AbsorbEffectNavigation = {
+            targetId: event.target.id,
+            casterId: event.caster.id,
+            absorbEffectId: effect.id,
+         };
+         let newBuff = false;
 
-         if (!this.activeAbsorbShields[event.target.id]) {
-            this.activeAbsorbShields[event.target.id] = {};
+         let absorb = this.absorbNestedMap.getElement(navigationObject);
+         if (!absorb) {
+            newBuff = true;
+            absorb = this.absorbNestedMap.createElement(navigationObject, 0);
          }
-         const targetShields = this.activeAbsorbShields[event.target.id];
-
-         if (!targetShields[event.caster.id]) {
-            targetShields[event.caster.id] = { [effect.id]: 0 };
-         }
-         const casterShields = targetShields[event.caster.id];
 
          if (effect.stack) {
-            casterShields[effect.id] = Math.min(casterShields[effect.id] + effect.shieldValue, effect.shieldValue * effect.stack);
+            this.absorbNestedMap.updateElement(navigationObject, Math.min(absorb.value + effect.shieldValue, effect.shieldValue * effect.stack));
          } else {
-            casterShields[effect.id] = effect.shieldValue;
+            this.absorbNestedMap.updateElement(navigationObject, effect.shieldValue);
          }
 
-         this.engineEventCrator.createEvent<AbsorbShieldValueChangedEvent>({
-            type: SpellEngineEvents.AbsorbShieldValueChanged,
-            ownerId: event.target.id,
-            newValue: this.getAbsorbShieldValue(event.target.id),
-         });
+         absorb = this.absorbNestedMap.getElement(navigationObject);
+         if (newBuff) {
+            this.engineEventCrator.asyncCeateEvent<AbsorbShieldCreatedEvent>({
+               type: SpellEngineEvents.AbsorbShieldCreated,
+               ownerId: event.target.id,
+               absorbId: absorb.id,
+               newValue: absorb.value,
+               timeEffectType: effect.timeEffectType,
+               period: effect.period,
+               iconImage: effect.iconImage,
+               creationTime: Date.now(),
+            });
+         } else {
+            this.engineEventCrator.asyncCeateEvent<AbsorbShieldChangedEvent>({
+               type: SpellEngineEvents.AbsorbShieldChanged,
+               absorbId: absorb.id,
+               value: absorb.value,
+            });
+         }
       }
    };
 
    handleTakeAbsorbShieldValue: EngineEventHandler<TakeAbsorbShieldValueEvent> = ({ event }) => {
-      let amountToTake = event.amount;
+      const absorbs = this.absorbNestedMap.getElementsByCriteriaMatchAll({ targetId: event.targetId });
 
-      forEach(this.activeAbsorbShields[event.targetId], (casterAbsorbs) => {
-         forEach(casterAbsorbs, (absorb, absorbKey) => {
-            casterAbsorbs[absorbKey] = Math.max(0, absorb - amountToTake);
-            amountToTake = Math.max(0, amountToTake - absorb);
-         });
-      });
-
-      this.engineEventCrator.createEvent<AbsorbShieldValueChangedEvent>({
-         type: SpellEngineEvents.AbsorbShieldValueChanged,
-         ownerId: event.targetId,
-         newValue: this.getAbsorbShieldValue(event.targetId),
-      });
-
-      this.clearEmptyShields(event.targetId);
-   };
-
-   clearEmptyShields = (targetid: string) => {
-      forEach(this.activeAbsorbShields[targetid], (casterAbsorbs, casterId) => {
-         forEach(casterAbsorbs, (_, absorbKey) => {
-            if (!casterAbsorbs[absorbKey]) {
-               delete casterAbsorbs[absorbKey];
-            }
-         });
-
-         if (!Object.keys(this.activeAbsorbShields[targetid][casterId]).length) {
-            delete this.activeAbsorbShields[targetid][casterId];
-         }
-      });
-
-      if (!Object.keys(this.activeAbsorbShields[targetid]).length) {
-         delete this.activeAbsorbShields[targetid];
-      }
-   };
-
-   getAbsorbShieldValue = (targetId: string) => {
-      let sum = 0;
-      if (this.activeAbsorbShields[targetId]) {
-         forEach(this.activeAbsorbShields[targetId], (casterAbsorbs) => {
-            forEach(casterAbsorbs, (absorb) => {
-               sum += absorb;
+      let damageToTake = event.amount;
+      for (const id in absorbs) {
+         if (damageToTake >= absorbs[id]) {
+            this.absorbNestedMap.removeElementById(id);
+            this.engineEventCrator.asyncCeateEvent<AbsorbShieldFinishedEvent>({
+               type: SpellEngineEvents.AbsorbShieldFinished,
+               absorbId: id,
             });
-         });
-      }
+         } else {
+            this.engineEventCrator.asyncCeateEvent<AbsorbShieldChangedEvent>({
+               type: SpellEngineEvents.AbsorbShieldChanged,
+               absorbId: id,
+               value: absorbs[id] - damageToTake,
+            });
+            this.absorbNestedMap.updateElementById(id, absorbs[id] - damageToTake);
+            break;
+         }
 
-      return sum;
+         damageToTake -= absorbs[id];
+      }
+   };
+
+   getAbsorbShieldValue = (targetId: string): number => {
+      return sum(map(this.absorbNestedMap.getElementsByCriteriaMatchAll({ targetId: targetId })));
    };
 }

@@ -35,11 +35,16 @@ export class MonsterService extends EventParser {
          [MonsterEngineEvents.MonsterTargetChanged]: this.test,
          [MonsterEngineEvents.MonsterLostTarget]: this.test2,
          [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
+         [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
          [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
       };
    }
+
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
+      delete this.monsters[event.characterId];
+   };
 
    handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event }) => {
       if (this.monsters[event.characterId]) {

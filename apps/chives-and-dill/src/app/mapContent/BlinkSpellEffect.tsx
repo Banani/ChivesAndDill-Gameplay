@@ -1,16 +1,16 @@
-import { filter, forEach } from 'lodash';
+import { filter, forEach, map } from 'lodash';
 import { Graphics } from '@inlet/react-pixi';
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearEvent, getEngineState } from '../../stores';
+import { getEngineState } from '../../stores';
 import { BlinkSpellDefinitions } from './BlinkSpellDefinitions';
 import type { SpellLandedEvent } from '@bananos/types';
-import { EngineEventType, GlobalStoreModule } from '@bananos/types';
+import { EngineEventType } from '@bananos/types';
 
 export const BlinkSpellEffect = () => {
    const engineState = useSelector(getEngineState);
    const events = engineState.spells.events;
-   const dispatch = useDispatch();
+   const [activeShapes, setActiveShapes] = useState([]);
 
    const angleBlastDrawer = (g, spellLandedEvent) => {
       const spellDefintion = BlinkSpellDefinitions[spellLandedEvent.spell.name];
@@ -34,18 +34,24 @@ export const BlinkSpellEffect = () => {
    };
 
    useEffect(() => {
-      if (Object.keys(events).length > 0) {
-         // TODO: Usunac jak juz nie bedzie nie potrzebnych rerenderow
-         setTimeout(() => {
-            dispatch(clearEvent({ module: GlobalStoreModule.SPELLS, eventId: Object.keys(events).pop() }));
-         }, 150);
-      }
+      const interval = setInterval(() => {
+         setActiveShapes((prev) => filter(prev, (shape) => Date.now() - shape.creationTime < 100));
+      }, 20);
+
+      return () => clearInterval(interval);
+   }, []);
+
+   useEffect(() => {
+      setActiveShapes((prev) => [...prev, ...map(events, (event) => ({ creationTime: Date.now(), event }))]);
    }, [events]);
 
    const drawSpellEffect = useCallback(
       (g) => {
          g.clear();
-         const spellLanded = filter(events, (event) => event.type === EngineEventType.SpellLanded) as SpellLandedEvent[];
+         const spellLanded = map(
+            filter(activeShapes, (shape) => shape.event.type === EngineEventType.SpellLanded),
+            (shape) => shape.event
+         ) as SpellLandedEvent[];
 
          forEach(spellLanded, (spellLandedEvent) => {
             const definition = BlinkSpellDefinitions[spellLandedEvent.spell.name];

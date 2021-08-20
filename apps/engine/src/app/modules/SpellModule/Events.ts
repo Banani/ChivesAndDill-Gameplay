@@ -1,6 +1,6 @@
 import { EngineEvents } from '../../EngineEvents';
 import { Character, EngineEvent, EngineEventHandler } from '../../types';
-import { Location, PowerStackType, TimeEffect } from '@bananos/types';
+import { Location, PowerStackType, TimeEffect, TimeEffectType } from '@bananos/types';
 import { Vector } from '../../types/Vector';
 import { Monster } from '../MonsterModule/types';
 import {
@@ -41,7 +41,9 @@ export enum SpellEngineEvents {
    CharacterGainPowerStack = 'CharacterGainPowerStack',
    CharacterLosePowerStack = 'CharacterLosePowerStack',
    TakeAbsorbShieldValue = 'TakeAbsorbShieldValue',
-   AbsorbShieldValueChanged = 'AbsorbShieldValueChanged',
+   AbsorbShieldCreated = 'AbsorbShieldCreated',
+   AbsorbShieldFinished = 'AbsorbShieldFinished',
+   AbsorbShieldChanged = 'AbsorbShieldChanged',
    DamageAbsorbed = 'DamageAbsorbed',
 }
 
@@ -106,10 +108,26 @@ export interface DamageAbsorbedEvent extends EngineEvent {
    targetId: string;
 }
 
-export interface AbsorbShieldValueChangedEvent extends EngineEvent {
-   type: SpellEngineEvents.AbsorbShieldValueChanged;
+export interface AbsorbShieldCreatedEvent extends EngineEvent {
+   type: SpellEngineEvents.AbsorbShieldCreated;
    ownerId: string;
+   absorbId: string;
    newValue: number;
+   timeEffectType: TimeEffectType;
+   period: number;
+   iconImage: string;
+   creationTime: number;
+}
+
+export interface AbsorbShieldFinishedEvent extends EngineEvent {
+   type: SpellEngineEvents.AbsorbShieldFinished;
+   absorbId: string;
+}
+
+export interface AbsorbShieldChangedEvent extends EngineEvent {
+   type: SpellEngineEvents.AbsorbShieldChanged;
+   absorbId: string;
+   value: number;
 }
 
 export interface PlayerTriesToCastASpellEvent extends EngineEvent {
@@ -259,5 +277,7 @@ export interface FightingEngineEventsMap {
    [SpellEngineEvents.CharacterLosePowerStack]: EngineEventHandler<CharacterLosePowerStackEvent>;
    [SpellEngineEvents.TakeAbsorbShieldValue]: EngineEventHandler<TakeAbsorbShieldValueEvent>;
    [SpellEngineEvents.DamageAbsorbed]: EngineEventHandler<DamageAbsorbedEvent>;
-   [SpellEngineEvents.AbsorbShieldValueChanged]: EngineEventHandler<AbsorbShieldValueChangedEvent>;
+   [SpellEngineEvents.AbsorbShieldCreated]: EngineEventHandler<AbsorbShieldCreatedEvent>;
+   [SpellEngineEvents.AbsorbShieldFinished]: EngineEventHandler<AbsorbShieldFinishedEvent>;
+   [SpellEngineEvents.AbsorbShieldChanged]: EngineEventHandler<AbsorbShieldChangedEvent>;
 }

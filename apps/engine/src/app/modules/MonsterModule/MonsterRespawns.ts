@@ -18,13 +18,13 @@ export interface MonsterRespawn {
 }
 
 export const MonsterRespawns: Record<string, MonsterRespawn> = {
-   '1': {
-      id: '1',
-      location: { x: 1300, y: 800 },
-      monsterTemplate: MonsterTemplates['WorldDestroyer'],
-      time: 5000,
-      walkingType: WalkingType.None,
-   },
+   //    '1': {
+   //       id: '1',
+   //       location: { x: 1300, y: 800 },
+   //       monsterTemplate: MonsterTemplates['WorldDestroyer'],
+   //       time: 5000,
+   //       walkingType: WalkingType.None,
+   //    },
    //    '1': {
    //       id: '1',
    //       location: { x: 1300, y: 800 },
@@ -50,46 +50,16 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    //       time: 2000,
    //    },
 
-   '5': {
-      id: '5',
-      location: { x: 1900, y: 1100 },
-      monsterTemplate: MonsterTemplates['Orc'],
-      time: 2000,
-      walkingType: WalkingType.None,
-   },
-      '6': {
-         id: '6',
-         location: { x: 1300, y: 850 },
-         monsterTemplate: MonsterTemplates['OrcSpearman'],
-         walkingType: WalkingType.Patrol,patrolPath: [
-            { x: 1100, y: 950 },
-            { x: 1900, y: 950 },
-         ],
-         time: 2000,
-      },
-      '7': {
-         id: '7',
-         location: { x: 1450, y: 850 },
-         monsterTemplate: MonsterTemplates['OrcSpearman'],
-         walkingType: WalkingType.Patrol,patrolPath: [
-            { x: 1100, y: 950 },
-            { x: 1900, y: 950 },
-         ],
-         time: 2000,
-      },
-      '8': {
-         id: '8',
-         location: { x: 1450, y: 1000 },
-         monsterTemplate: MonsterTemplates['OrcSpearman'],
-         walkingType: WalkingType.Patrol,patrolPath: [
-            { x: 1100, y: 950 },
-            { x: 1900, y: 950 },
-         ],
-         time: 2000,
-      },
-   '9': {
-      id: '9',
-      location: { x: 1600, y: 850 },
+   //    '5': {
+   //       id: '5',
+   //       location: { x: 1900, y: 1100 },
+   //       monsterTemplate: MonsterTemplates['Orc'],
+   //       time: 2000,
+   //       walkingType: WalkingType.None,
+   //    },
+   '6': {
+      id: '6',
+      location: { x: 1300, y: 850 },
       monsterTemplate: MonsterTemplates['OrcSpearman'],
       walkingType: WalkingType.Patrol,
       patrolPath: [
@@ -98,6 +68,37 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
       ],
       time: 2000,
    },
+   //       '7': {
+   //          id: '7',
+   //          location: { x: 1450, y: 850 },
+   //          monsterTemplate: MonsterTemplates['OrcSpearman'],
+   //          walkingType: WalkingType.Patrol,patrolPath: [
+   //             { x: 1100, y: 950 },
+   //             { x: 1900, y: 950 },
+   //          ],
+   //          time: 2000,
+   //       },
+   //       '8': {
+   //          id: '8',
+   //          location: { x: 1450, y: 1000 },
+   //          monsterTemplate: MonsterTemplates['OrcSpearman'],
+   //          walkingType: WalkingType.Patrol,patrolPath: [
+   //             { x: 1100, y: 950 },
+   //             { x: 1900, y: 950 },
+   //          ],
+   //          time: 2000,
+   //       },
+   //    '9': {
+   //       id: '9',
+   //       location: { x: 1600, y: 850 },
+   //       monsterTemplate: MonsterTemplates['OrcSpearman'],
+   //       walkingType: WalkingType.Patrol,
+   //       patrolPath: [
+   //          { x: 1100, y: 950 },
+   //          { x: 1900, y: 950 },
+   //       ],
+   //       time: 2000,
+   //    },
    // '10': {
    //    id: '10',
    //    location: { x: 1600, y: 1000 },
