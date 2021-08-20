@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import * as PIXI from 'pixi.js';
 import { Graphics, Sprite, Text } from '@inlet/react-pixi';
-import { useSelector } from 'react-redux';
-import { getEngineState } from '../../stores';
+import { useSelector, useDispatch } from 'react-redux';
+import { getEngineState, setActiveTarget } from '../../stores';
 import _ from 'lodash';
 
 const Player = ({ player, characterViewsSettings }) => {
@@ -19,6 +19,7 @@ const Player = ({ player, characterViewsSettings }) => {
    const engineState = useSelector(getEngineState);
    const playerPoints = engineState.characterPowerPoints.data[player.id] ?? { maxHp: 0, currentHp: 0 };
    const { maxHp, currentHp } = playerPoints;
+   const dispatch = useDispatch();
 
    const getPlayerSheets = useCallback(() => {
       const newPlayerSheets = {
@@ -191,10 +192,12 @@ const Player = ({ player, characterViewsSettings }) => {
             <Sprite
                key={0}
                width={w}
+               interactive={true}
                height={h}
                texture={playerSheet[characterStatus][timer % 8]}
                x={engineState.characterMovements.data[player.id].location.x - w / 2}
                y={engineState.characterMovements.data[player.id].location.y - h / 2}
+               pointerdown={() => dispatch(setActiveTarget({ characterId: player.id }))}
             />
          )}
          {yPositionOfUpdatedHp <= 4.5 ? (

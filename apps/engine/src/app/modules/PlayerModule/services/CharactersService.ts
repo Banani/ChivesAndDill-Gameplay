@@ -83,6 +83,7 @@ export class CharactersService extends EventParser {
          location: { x: 600, y: 960 },
          direction: CharacterDirection.DOWN,
          sprites: 'citizen',
+         avatar: '../../../../assets/spritesheets/avatars/dogAvatar.PNG',
          isInMove: false,
          socketId,
          speed: 10,

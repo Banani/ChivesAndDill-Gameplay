@@ -10,7 +10,9 @@ export const RenderPlayersManager = () => {
    const characterViewsSettings = useSelector(selectCharacterViewsSettings);
 
    const renderPlayers = useCallback(
-      () => _.map(_.omit(players, [activePlayerId ?? 0]), (player, i) => <Player key={i} player={player} characterViewsSettings={characterViewsSettings} />),
+      () => _.map(_.omit(players, [activePlayerId ?? 0]), (player, i) =>
+         <Player key={i} player={player} characterViewsSettings={characterViewsSettings} />
+      ),
       [players, characterViewsSettings, activePlayerId]
    );
 

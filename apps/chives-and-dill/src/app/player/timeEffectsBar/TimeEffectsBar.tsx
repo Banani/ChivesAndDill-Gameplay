@@ -7,7 +7,7 @@ import _ from "lodash";
 export const TimeEffectsbar = () => {
    const engineState = useSelector(getEngineState);
    const activePlayerId = useSelector(selectActivePlayer);
-
+   console.log(engineState.timeEffects.data)
    const debuffs = _.map(engineState.timeEffects.data, (debuff, i) => {
       if (debuff.targetId === activePlayerId) {
          return (

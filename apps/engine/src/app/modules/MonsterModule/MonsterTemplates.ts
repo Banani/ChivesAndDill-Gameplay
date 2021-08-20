@@ -5,6 +5,7 @@ export interface MonsterTemplate {
    id: string;
    name: string;
    sprites: string;
+   avatar: string;
    size: number;
    healthPoints: number;
    spellPower: number;
@@ -24,6 +25,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       id: 'Orc',
       name: 'Orc',
       sprites: 'orc',
+      avatar: '../../../../assets/spritesheets/avatars/orcAvatar.png',
       size: 50,
       healthPoints: 60,
       spellPower: 100,
@@ -46,6 +48,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       id: 'OrcSpearman',
       name: 'OrcSpearman',
       sprites: 'orcSpearman',
+      avatar: '../../../../assets/spritesheets/avatars/orcSpearmanAvatar.png',
       size: 50,
       healthPoints: 200,
       spellPower: 100,
@@ -66,6 +69,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       id: 'WorldDestroyer',
       name: 'WorldDestroyer',
       sprites: 'demon',
+      avatar: '../../../../assets/spritesheets/avatars/demonAvatar.png',
       size: 50,
       healthPoints: 20000,
       spellPower: 10000,

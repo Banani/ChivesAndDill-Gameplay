@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Stage, Sprite, Container, AppContext } from '@inlet/react-pixi';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
 import { selectCharacters, selectActivePlayer, getEngineState } from '../stores';
@@ -15,6 +15,7 @@ import { CastBarsManager } from './mapContent/CastBarsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { TimeEffectsbar } from './player/timeEffectsBar/TimeEffectsBar';
+import { TargetIcon } from './mapContent/targetIcon/TargetIcon';
 
 const Map = () => {
    const players = useSelector(selectCharacters);
@@ -55,7 +56,8 @@ const Map = () => {
    return (
       <>
          {activePlayerId ? <SpellsBar /> : null}
-         {activePlayerId ? <PlayerIcon player={players[activePlayerId]}></PlayerIcon> : null}
+         {activePlayerId ? <PlayerIcon playerId={activePlayerId}></PlayerIcon> : null}
+         <TargetIcon />
          {<QuestsSideView />}
          <QuestLog />
          <TimeEffectsbar />

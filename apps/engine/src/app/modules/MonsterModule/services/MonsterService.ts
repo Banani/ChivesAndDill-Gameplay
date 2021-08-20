@@ -1,25 +1,28 @@
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import {
+import type {
    CharacterDiedEvent,
-   CharacterType,
    EngineEventHandler,
    PlayerMovedEvent,
    PlayerStartedMovementEvent,
-   PlayerStopedAllMovementVectorsEvent,
-} from '../../../types';
-import { CharacterEngineEvents, ResetCharacterEvent } from '../../CharacterModule/Events';
+   PlayerStopedAllMovementVectorsEvent} from '../../../types';
 import {
-   MonsterEngineEvents,
+   CharacterType
+} from '../../../types';
+import type { ResetCharacterEvent } from '../../CharacterModule/Events';
+import { CharacterEngineEvents } from '../../CharacterModule/Events';
+import type {
    CreateNewMonsterEvent,
    NewMonsterCreatedEvent,
    MonsterTargetChangedEvent,
    MonsterLostTargetEvent,
-   MonsterDiedEvent,
-   MonsterLostAggroEvent,
+   MonsterLostAggroEvent} from '../Events';
+import {
+   MonsterEngineEvents,
+   MonsterDiedEvent
 } from '../Events';
-import { Monster } from '../types';
+import type { Monster } from '../types';
 
 export class MonsterService extends EventParser {
    monsters: Record<string, Monster> = {};
@@ -72,6 +75,7 @@ export class MonsterService extends EventParser {
          name: event.monsterRespawn.monsterTemplate.name,
          location: event.monsterRespawn.location,
          sprites: event.monsterRespawn.monsterTemplate.sprites,
+         avatar: event.monsterRespawn.monsterTemplate.avatar,
          size: event.monsterRespawn.monsterTemplate.size,
          direction: CharacterDirection.DOWN,
          division: event.monsterRespawn.monsterTemplate.division,

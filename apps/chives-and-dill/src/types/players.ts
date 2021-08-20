@@ -3,6 +3,7 @@ import type { Player, Location, SpriteSheet } from '@bananos/types';
 export interface PlayersState {
    activePlayer: string | null;
    characters: Record<string, Player>;
+   activeTargetId: string | null;
    characterViewsSettings: Record<string, SpriteSheet>;
    areas: [][];
 }
@@ -65,4 +66,8 @@ export interface UpdatePlayerAbsorbPayload {
 export interface UpdatePlayerClassPayload {
    activePlayerId: string;
    class: string;
+}
+
+export interface SetActiveTargetPayload {
+   characterId: string;
 }

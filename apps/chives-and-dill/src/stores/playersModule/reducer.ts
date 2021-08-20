@@ -58,6 +58,7 @@ const initialState: PlayersState = {
    activePlayer: null,
    characters: {},
    areas: [],
+   activeTargetId: null,
    characterViewsSettings: {
       citizen: defaultViewSettings(60, 60, '/spritesheets/monsters/citizen.png'),
       orc: defaultViewSettings(48, 48, '/spritesheets/monsters/orc.png'),
@@ -161,6 +162,12 @@ export const playersReducer = (state: PlayersState = initialState, action: Playe
                },
             },
          };
+
+      case PlayersActionTypes.SET_ACTIVE_TARGET:
+         return {
+            ...state,
+            activeTargetId: action.payload.characterId
+         }
       default:
          return state;
    }

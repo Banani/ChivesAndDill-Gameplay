@@ -10,6 +10,7 @@ import type {
   CharacterDiedPayload,
   UpdatePlayerClassPayload,
   UpdatePlayerAbsorbPayload,
+  SetActiveTargetPayload,
 } from '../../types/players';
 
 export enum PlayersActionTypes {
@@ -26,6 +27,7 @@ export enum PlayersActionTypes {
   KILLING_STAGE_PART_PROGRESS = '[Players] KILLING_STAGE_PART_PROGRESS',
   UPDATE_PLAYER_ABSORB = '[Players] UPDATE_PLAYER_ABSORB',
   UPDATE_PLAYER_CLASS = '[Players} UPDATE_PLAYER_CLASS',
+  SET_ACTIVE_TARGET = 'SET_ACTIVE_TARGET',
 }
 
 export type ChangePlayerPosition = FSAAuto<
@@ -71,6 +73,8 @@ export type ChangePlayerMovingStatus = FSAAuto<
 export type UpdatePlayerAbsorb = FSAAuto<PlayersActionTypes.UPDATE_PLAYER_ABSORB, UpdatePlayerAbsorbPayload>;
 
 export type UpdatePlayerClass = FSAAuto<PlayersActionTypes.UPDATE_PLAYER_CLASS, UpdatePlayerClassPayload>;
+
+export type SetActiveTarget = FSAAuto<PlayersActionTypes.SET_ACTIVE_TARGET, SetActiveTargetPayload>;
 
 export const changePlayerPosition = (
   payload: ChangeLocationPayload
@@ -128,6 +132,11 @@ export const updatePlayerClass = (payload: UpdatePlayerClassPayload): UpdatePlay
   payload,
 });
 
+export const setActiveTarget = (payload: SetActiveTargetPayload): SetActiveTarget => ({
+  type: PlayersActionTypes.SET_ACTIVE_TARGET,
+  payload,
+});
+
 export type PlayerAction =
   | ChangePlayerPosition
   | InitializePlayers
@@ -138,4 +147,5 @@ export type PlayerAction =
   | UpdateCharacterSpellPower
   | UpdatePlayerAbsorb
   | CharacterDied
-  | UpdatePlayerClass;
+  | UpdatePlayerClass
+  | SetActiveTarget;

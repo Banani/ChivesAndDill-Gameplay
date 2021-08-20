@@ -1,7 +1,8 @@
 import type { EngineStateAction } from './actions';
 import { EngineStateActionTypes } from './actions';
 import { merge, mapValues, omit } from 'lodash';
-import { GlobalStore, GlobalStoreModule } from '@bananos/types';
+import type { GlobalStore} from '@bananos/types';
+import { GlobalStoreModule } from '@bananos/types';
 
 const emptyModule = {
    data: {},
@@ -27,9 +28,7 @@ export const engineStateReducer = (state: GlobalStore = initialState, action: En
                state,
                mapValues(action.payload, (module) => ({ data: module.data, events: module.events ?? {} }))
             ),
-            (module, key) => {
-               return { ...module, data: omit(module.data, action.payload[key]?.toDelete) };
-            }
+            (module, key) => ({ ...module, data: omit(module.data, action.payload[key]?.toDelete) })
          );
       }
 

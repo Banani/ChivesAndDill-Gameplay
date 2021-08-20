@@ -1,6 +1,6 @@
-import { CharacterDirection } from '@bananos/types';
-import { Spell } from '../modules/SpellModule/types/spellTypes';
-import { Location } from '@bananos/types';
+import type { CharacterDirection } from '@bananos/types';
+import type { Spell } from '../modules/SpellModule/types/spellTypes';
+import type { Location } from '@bananos/types';
 
 export interface Character {
    type: CharacterType;
@@ -9,6 +9,7 @@ export interface Character {
    location: Location;
    sprites: string; // Should be an object
    size: number; // Should be in that object
+   avatar: string;
    direction: CharacterDirection;
    speed: number;
    isInMove: boolean;

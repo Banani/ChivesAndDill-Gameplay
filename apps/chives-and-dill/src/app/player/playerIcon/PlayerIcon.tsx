@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './PlayerIcon.module.scss';
-import { getEngineState, selectActivePlayer } from '../../../stores';
+import { getEngineState, selectCharacters } from '../../../stores';
 
-export const PlayerIcon = ({ player }) => {
-   const { name, absorb } = player;
+export const PlayerIcon = ({ playerId }) => {
+
    const engineState = useSelector(getEngineState);
-   const activePlayerId = useSelector(selectActivePlayer);
+   const players = useSelector(selectCharacters);
+   const player = players[playerId];
+   const { name, absorb, avatar } = player;
 
    const [absorbBar, updateAbsortBar] = useState(0);
 
-   const playerPoints = engineState.characterPowerPoints.data[activePlayerId];
+   const playerPoints = engineState.characterPowerPoints.data[playerId];
 
    useEffect(() => {
       if (!playerPoints) {
@@ -33,7 +35,7 @@ export const PlayerIcon = ({ player }) => {
    return (
       <div>
          <div className={styles.playerIconContainer}>
-            <div className={styles.playerAvatar}></div>
+            <div className={styles.playerAvatar} style={{ backgroundImage: `url(${avatar})` }}></div>
             <div className={styles.playerLvl}>69</div>
             <div className={styles.playerRole} />
             <div className={styles.barsContainer}>

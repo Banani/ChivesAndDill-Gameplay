@@ -1,4 +1,4 @@
-import { Character, CharacterType } from '../../types';
+import type { Character, CharacterType } from '../../types';
 
 export interface Monster extends Character {
    type: CharacterType.Monster;
