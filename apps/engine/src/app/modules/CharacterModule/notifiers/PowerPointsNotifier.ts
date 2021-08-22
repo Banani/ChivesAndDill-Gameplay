@@ -1,15 +1,20 @@
-import { EngineEventType, EnginePackageEvent, GlobalStoreModule, PowerPointsTrack } from '@bananos/types';
+import { MonsterRespawns } from './../../MonsterModule/MonsterRespawns';
+import type { NewMonsterCreatedEvent } from './../../MonsterModule/Events';
+import { MonsterEngineEvents } from './../../MonsterModule/Events';
+import type { EnginePackageEvent, PowerPointsTrack } from '@bananos/types';
+import { EngineEventType, GlobalStoreModule } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import type { Notifier } from '../../../Notifier';
 import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
-import {
-   CharacterEngineEvents,
+import type {
    CharacterGotHpEvent,
    CharacterGotSpellPowerEvent,
    CharacterLostHpEvent,
    CharacterLostSpellPowerEvent,
-   NewPowerTrackCreatedEvent,
+   NewPowerTrackCreatedEvent} from '../Events';
+import {
+   CharacterEngineEvents
 } from '../Events';
 
 export class PowerPointsNotifier extends EventParser implements Notifier {
@@ -27,6 +32,7 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
          [CharacterEngineEvents.CharacterLostSpellPower]: this.handleCharacterLostSpellPower,
          [CharacterEngineEvents.CharacterGotSpellPower]: this.handleCharacterGotSpellPower,
          [CharacterEngineEvents.NewPowerTrackCreated]: this.handleNewPowerTrackCreated,
+         [MonsterEngineEvents.NewMonsterCreated]: this.handleNewMonsterCreated
       };
    }
 
@@ -93,4 +99,15 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
          currentSpellPower: event.currentSpellPower,
       };
    };
+
+   handleNewMonsterCreated: EngineEventHandler<NewMonsterCreatedEvent> = ({ event }) => {
+      const template = MonsterRespawns[event.monster.respawnId].monsterTemplate;
+      
+      this.powerPointsTrack[event.monster.id] = {
+         maxHp: template.healthPoints,
+         currentHp: template.healthPoints,
+         currentSpellPower: template.spellPower,
+         maxSpellPower: template.spellPower
+      };
+   }
 }

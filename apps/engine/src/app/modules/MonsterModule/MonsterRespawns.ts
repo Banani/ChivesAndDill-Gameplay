@@ -200,31 +200,31 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    //          },
    //       ],
    //    },
-   //    '14': {
-   //       id: '14',
-   //       location: { x: 1450, y: 900 },
-   //       monsterTemplate: MonsterTemplates['WorldDestroyer'],
-   //       time: 2000,
-   //       walkingType: WalkingType.Patrol,
-   //       patrolPath: [
-   //          {
-   //             x: 1100,
-   //             y: 800,
-   //          },
-   //          {
-   //             x: 1100,
-   //             y: 1100,
-   //          },
-   //          {
-   //             x: 1900,
-   //             y: 1100,
-   //          },
-   //          {
-   //             x: 1900,
-   //             y: 800,
-   //          },
-   //       ],
-   //    },
+      // '14': {
+      //    id: '14',
+      //    location: { x: 1450, y: 900 },
+      //    monsterTemplate: MonsterTemplates['WorldDestroyer'],
+      //    time: 2000,
+      //    walkingType: WalkingType.Patrol,
+      //    patrolPath: [
+      //       {
+      //          x: 1100,
+      //          y: 800,
+      //       },
+      //       {
+      //          x: 1100,
+      //          y: 1100,
+      //       },
+      //       {
+      //          x: 1900,
+      //          y: 1100,
+      //       },
+      //       {
+      //          x: 1900,
+      //          y: 800,
+      //       },
+      //    ],
+      // },
    //    '15': {
    //       id: '15',
    //       location: { x: 1500, y: 900 },

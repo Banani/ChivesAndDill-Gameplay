@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './PlayerIcon.module.scss';
 import { getEngineState, selectCharacters } from '../../../stores';
+import { TimeEffectsbar } from '../timeEffectsBar/TimeEffectsBar';
 
 export const PlayerIcon = ({ playerId }) => {
 
@@ -51,7 +52,7 @@ export const PlayerIcon = ({ playerId }) => {
                </div>
             </div>
          </div>
-         <div></div>
+         <TimeEffectsbar playerId={playerId} />
       </div>
    );
 };

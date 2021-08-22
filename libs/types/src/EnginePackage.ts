@@ -149,6 +149,7 @@ export enum PowerStackType {
 
 export interface AbsorbShieldTrack {
    id: string;
+   name: string,
    ownerId: string;
    value: number;
    timeEffectType: TimeEffectType;

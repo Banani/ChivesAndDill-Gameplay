@@ -157,6 +157,7 @@ export interface LosePowerStackEffect extends SpellEffect {
 export interface AbsorbShieldEffect extends SpellEffect {
    type: SpellEffectType.AbsorbShield;
    id: string;
+   name: string,
    shieldValue: number;
    period: number;
    stack?: number;
