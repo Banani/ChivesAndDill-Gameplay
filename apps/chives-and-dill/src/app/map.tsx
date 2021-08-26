@@ -13,6 +13,7 @@ import { DrawAreas } from './mapContent/DrawAreas';
 import { CastBarsManager } from './mapContent/CastBarsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
+import { FloatingNumbersManager } from "./mapContent/FloatingNumbersManager";
 import { TargetIcon } from './mapContent/targetIcon/TargetIcon';
 
 const Map = () => {
@@ -76,6 +77,7 @@ const Map = () => {
                                  {renderSpells()}
                                  <CastBarsManager />
                                  <RenderPlayersManager />
+                                 <FloatingNumbersManager />
                                  <BlinkSpellEffect />
                               </Container>
                            )}

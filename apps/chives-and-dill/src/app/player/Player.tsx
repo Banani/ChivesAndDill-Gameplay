@@ -10,7 +10,6 @@ const Player = ({ player, characterViewsSettings }) => {
    const [playerSheet, setPlayerSheet] = useState({});
    const [characterStatus, setCharacterStatus] = useState('standingDown');
    const [isCharacterMoving, setIsCharacterMoving] = useState(false);
-   const [yPositionOfUpdatedHp, setYPositionOfUpdatedHp] = useState(2.5);
 
    const sheet = PIXI.BaseTexture.from(`../assets${characterViewsSettings[player.sprites].image}`);
    const playerSprite = characterViewsSettings[player.sprites];
@@ -98,21 +97,6 @@ const Player = ({ player, characterViewsSettings }) => {
       }
    }, [engineState.characterMovements.data, player.id]);
 
-   useEffect(() => {
-      let position = 2.5;
-      const positionTimer = setInterval(() => {
-         position += 0.1;
-         setYPositionOfUpdatedHp(position);
-         if (position >= 4.5) {
-            clearInterval(positionTimer);
-         }
-      }, 20);
-
-      if (currentHp <= 0) {
-         setCharacterStatus('dead');
-      }
-   }, [currentHp]);
-
    const drawAbsorbBar = (g) => {
       let barWidth;
       if ((player.absorb / maxHp) * 50 > 50) {
@@ -161,13 +145,6 @@ const Player = ({ player, characterViewsSettings }) => {
       [engineState.characterMovements, player, h]
    );
 
-   const returnColorOfHpNumber = () => {
-      if (player.spellEffect === 'heal') {
-         return 'green';
-      }
-      return 'red';
-   };
-
    return engineState.characterMovements.data[player.id] ? (
       <>
          {currentHp <= 0 ? null : (
@@ -200,20 +177,6 @@ const Player = ({ player, characterViewsSettings }) => {
                pointerdown={() => dispatch(setActiveTarget({ characterId: player.id }))}
             />
          )}
-         {yPositionOfUpdatedHp <= 4.5 ? (
-            <Text
-               text={player.hpLost ? player.hpLost : null}
-               anchor={[0.5, yPositionOfUpdatedHp]}
-               x={engineState.characterMovements.data[player.id].location.x}
-               y={engineState.characterMovements.data[player.id].location.y}
-               style={
-                  new PIXI.TextStyle({
-                     fontSize: 15,
-                     fill: returnColorOfHpNumber(),
-                  })
-               }
-            />
-         ) : null}
       </>
    ) : null;
 };

@@ -1,7 +1,7 @@
 import { filter, forEach, map } from 'lodash';
 import { Graphics } from '@inlet/react-pixi';
 import React, { useEffect, useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getEngineState } from '../../stores';
 import { BlinkSpellDefinitions } from './BlinkSpellDefinitions';
 import type { SpellLandedEvent } from '@bananos/types';

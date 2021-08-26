@@ -21,7 +21,6 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
    private powerPointsTrack: Record<string, Partial<PowerPointsTrack>> = {};
    private events: EnginePackageEvent[] = [];
    private toDelete: string[] = [];
-   private increment = 0;
 
    constructor() {
       super();
@@ -72,13 +71,12 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
    };
 
    handleCharacterGotHp: EngineEventHandler<CharacterGotHpEvent> = ({ event }) => {
-      this.increment++;
-      this.events[`spellEvent_${this.increment}`] = {
+      this.events.push({
          type: EngineEventType.CharacterGotHp,
          characterId: event.characterId,
          amount: event.amount,
          source: event.source,
-      };
+      });
 
       this.powerPointsTrack[event.characterId] = {
          ...this.powerPointsTrack[event.characterId],
