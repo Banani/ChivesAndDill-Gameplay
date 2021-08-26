@@ -26,6 +26,18 @@ export const FloatingNumbersManager = () => {
   }, [events]);
 
   useEffect(() => {
+    setActiveShapes((prev) => [...prev, ...map(engineState.absorbShields.events, (event) =>
+    ({
+      creationTime: Date.now(), y: 3.5, x: randomNumber(1.5, -1.5), event: {
+        type: event.type,
+        characterId: event.characterId,
+        amount: "absorb"
+      }
+    })
+    )]);
+  }, [engineState.absorbShields.events]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       forEach(activeShapes, (event) => {
         event.y += 0.1;
@@ -46,9 +58,7 @@ export const FloatingNumbersManager = () => {
     }
   }
 
-  function randomNumber(n, b) {
-    return Math.random() * (b - n) + n;
-  }
+  const randomNumber = (n, b) => Math.random() * (b - n) + n;
 
   const getLostHp = useCallback(
     () =>

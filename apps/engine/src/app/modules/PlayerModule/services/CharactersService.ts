@@ -75,7 +75,7 @@ export class CharactersService extends EventParser {
 
    generatePlayer: ({ socketId: string }) => Player = ({ socketId }) => {
       this.increment++;
-      const characterClass = Classes.Healer;
+      const characterClass = Classes.Mage;
       return {
          type: CharacterType.Player,
          id: `player_${this.increment.toString()}`,
