@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import styles from './PlayerIcon.module.scss';
 import { getEngineState, selectCharacters } from '../../../stores';
 import { TimeEffectsbar } from '../timeEffectsBar/TimeEffectsBar';
-import _ from "lodash";
+import { GetAbsorbsValue } from "../GetPlayerAbsorbs";
 
 export const PlayerIcon = ({ playerId }) => {
 
@@ -11,37 +11,18 @@ export const PlayerIcon = ({ playerId }) => {
    const players = useSelector(selectCharacters);
    const player = players[playerId];
    const { name, avatar } = player;
-   const [activeShields, setActiveShields] = useState(0);
-   const [absorbSpells, setAbsorbSpells] = useState([]);
+   const playerAbsorb = GetAbsorbsValue(playerId);
    const [absorbBarWidth, setAbsorbBarWidth] = useState(0);
 
    const playerPoints = engineState.characterPowerPoints.data[playerId];
-
-   useEffect(() => {
-      const playerAbsorbSpells = _.filter(engineState.absorbShields.data, function (value, key) {
-         return value.ownerId === player.id;
-      });
-      setAbsorbSpells(new Array(...playerAbsorbSpells));
-   }, [engineState.absorbShields.data, player.id]);
-
-   useEffect(() => {
-      if (absorbSpells.length) {
-         absorbSpells.forEach((key) => {
-            setActiveShields(key.value);
-         });
-      } else {
-         setActiveShields(0);
-      }
-   }, [absorbSpells]);
 
    useEffect(() => {
       if (!playerPoints) {
          return;
       }
 
-      setAbsorbBarWidth((activeShields / (activeShields + playerPoints.maxHp)) * 100);
-
-   }, [activeShields, playerPoints]);
+      setAbsorbBarWidth((playerAbsorb / (playerAbsorb + playerPoints.maxHp)) * 100);
+   }, [playerAbsorb, playerPoints]);
 
    if (!playerPoints) {
       return <></>;

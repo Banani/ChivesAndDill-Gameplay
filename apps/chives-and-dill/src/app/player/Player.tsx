@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import { useSelector, useDispatch } from 'react-redux';
 import { getEngineState, setActiveTarget } from '../../stores';
+import { GetAbsorbsValue } from "./GetPlayerAbsorbs";
 import _ from 'lodash';
 
 const Player = ({ player, characterViewsSettings }) => {
@@ -19,27 +20,7 @@ const Player = ({ player, characterViewsSettings }) => {
    const playerPoints = engineState.characterPowerPoints.data[player.id] ?? { maxHp: 0, currentHp: 0 };
    const { maxHp, currentHp } = playerPoints;
    const dispatch = useDispatch();
-
-   const [activeShields, setActiveShields] = useState(0);
-   const [absorbSpells, setAbsorbSpells] = useState([]);
-
-   useEffect(() => {
-      const playerAbsorbSpells = _.filter(engineState.absorbShields.data, function (value, key) {
-         return value.ownerId === player.id;
-      });
-
-      setAbsorbSpells(new Array(...playerAbsorbSpells));
-   }, [engineState.absorbShields.data, player.id]);
-
-   useEffect(() => {
-      if (absorbSpells.length) {
-         absorbSpells.forEach((key) => {
-            setActiveShields(key.value);
-         });
-      } else {
-         setActiveShields(0);
-      }
-   }, [absorbSpells]);
+   const playerAbsorb = GetAbsorbsValue(player.id);
 
    const getPlayerSheets = useCallback(() => {
       const newPlayerSheets = {
@@ -119,7 +100,7 @@ const Player = ({ player, characterViewsSettings }) => {
    }, [engineState.characterMovements.data, player.id]);
 
    const drawAbsorbBar = (g) => {
-      const barWidth = (activeShields / (activeShields + maxHp)) * 50;
+      const barWidth = (playerAbsorb / (playerAbsorb + maxHp)) * 50;
 
       g.beginFill(0xe8e8e8);
       g.drawRect(
