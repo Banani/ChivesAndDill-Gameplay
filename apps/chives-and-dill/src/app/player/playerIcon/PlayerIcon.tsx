@@ -15,6 +15,7 @@ export const PlayerIcon = ({ playerId }) => {
    const [absorbBarWidth, setAbsorbBarWidth] = useState(0);
 
    const playerPoints = engineState.characterPowerPoints.data[playerId];
+   const powerStacks = engineState.powerStacks.data[playerId]?.HolyPower;
 
    useEffect(() => {
       if (!playerPoints) {
@@ -26,6 +27,13 @@ export const PlayerIcon = ({ playerId }) => {
 
    if (!playerPoints) {
       return <></>;
+   }
+
+   const renderPowerStacks = (stacksType, amount) => {
+      if (!amount) {
+         return;
+      }
+      return Array.from(Array(amount).keys()).map((i) => <div className={styles.powerStackCircle} />)
    }
 
    const { maxHp, currentHp, currentSpellPower, maxSpellPower } = playerPoints;
@@ -48,6 +56,9 @@ export const PlayerIcon = ({ playerId }) => {
                   <div className={styles.manaColor} style={{ width: currentSpellPower >= 0 ? (currentSpellPower / maxSpellPower) * 100 + '%' : '0' }}></div>
                </div>
             </div>
+         </div>
+         <div className={styles.powerStacks}>
+            {renderPowerStacks("HolyPower", powerStacks)}
          </div>
          <TimeEffectsbar playerId={playerId} />
       </div>
