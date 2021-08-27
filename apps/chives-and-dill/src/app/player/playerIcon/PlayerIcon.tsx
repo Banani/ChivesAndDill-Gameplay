@@ -3,29 +3,45 @@ import { useSelector } from 'react-redux';
 import styles from './PlayerIcon.module.scss';
 import { getEngineState, selectCharacters } from '../../../stores';
 import { TimeEffectsbar } from '../timeEffectsBar/TimeEffectsBar';
+import _ from "lodash";
 
 export const PlayerIcon = ({ playerId }) => {
 
    const engineState = useSelector(getEngineState);
    const players = useSelector(selectCharacters);
    const player = players[playerId];
-   const { name, absorb, avatar } = player;
-
-   const [absorbBar, updateAbsortBar] = useState(0);
+   const { name, avatar } = player;
+   const [activeShields, setActiveShields] = useState(0);
+   const [absorbSpells, setAbsorbSpells] = useState([]);
+   const [absorbBarWidth, setAbsorbBarWidth] = useState(0);
 
    const playerPoints = engineState.characterPowerPoints.data[playerId];
+
+   useEffect(() => {
+      const playerAbsorbSpells = _.filter(engineState.absorbShields.data, function (value, key) {
+         return value.ownerId === player.id;
+      });
+      setAbsorbSpells(new Array(...playerAbsorbSpells));
+   }, [engineState.absorbShields.data, player.id]);
+
+   useEffect(() => {
+      if (absorbSpells.length) {
+         absorbSpells.forEach((key) => {
+            setActiveShields(key.value);
+         });
+      } else {
+         setActiveShields(0);
+      }
+   }, [absorbSpells]);
 
    useEffect(() => {
       if (!playerPoints) {
          return;
       }
 
-      if ((absorb / playerPoints.maxHp) * 100 > 100) {
-         updateAbsortBar(100);
-      } else {
-         updateAbsortBar((absorb / playerPoints.maxHp) * 100);
-      }
-   }, [absorb, playerPoints]);
+      setAbsorbBarWidth((activeShields / (activeShields + playerPoints.maxHp)) * 100);
+
+   }, [activeShields, playerPoints]);
 
    if (!playerPoints) {
       return <></>;
@@ -44,7 +60,7 @@ export const PlayerIcon = ({ playerId }) => {
                <div className={styles.bar}>
                   <div className={styles.barText}>{currentHp >= 0 ? currentHp + '/' + maxHp : 0}</div>
                   <div className={styles.hpColor} style={{ width: currentHp >= 0 ? (currentHp / maxHp) * 100 + '%' : '0' }}></div>
-                  <div className={styles.absorbColor} style={{ width: absorbBar + '%' }}></div>
+                  <div className={styles.absorbColor} style={{ width: absorbBarWidth + '%' }}></div>
                </div>
                <div className={styles.bar}>
                   <div className={styles.barText}>{currentSpellPower >= 0 ? currentSpellPower + '/' + maxSpellPower : 0}</div>

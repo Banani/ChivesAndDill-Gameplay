@@ -26,7 +26,6 @@ export interface Player {
    spellEffect: string;
    currentSpellPower: number;
    maxSpellPower: number;
-   absorb: number;
    class: string;
    avatar: string;
 }

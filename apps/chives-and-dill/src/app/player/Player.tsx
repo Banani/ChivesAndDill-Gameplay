@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 const Player = ({ player, characterViewsSettings }) => {
    const [timer, setTimer] = useState(0);
-   const [playerSheet, setPlayerSheet] = useState({});
+   const [playerSheet, setPlayerSheet] = useState({ });
    const [characterStatus, setCharacterStatus] = useState('standingDown');
    const [isCharacterMoving, setIsCharacterMoving] = useState(false);
 
@@ -19,6 +19,27 @@ const Player = ({ player, characterViewsSettings }) => {
    const playerPoints = engineState.characterPowerPoints.data[player.id] ?? { maxHp: 0, currentHp: 0 };
    const { maxHp, currentHp } = playerPoints;
    const dispatch = useDispatch();
+
+   const [activeShields, setActiveShields] = useState(0);
+   const [absorbSpells, setAbsorbSpells] = useState([]);
+
+   useEffect(() => {
+      const playerAbsorbSpells = _.filter(engineState.absorbShields.data, function (value, key) {
+         return value.ownerId === player.id;
+      });
+
+      setAbsorbSpells(new Array(...playerAbsorbSpells));
+   }, [engineState.absorbShields.data, player.id]);
+
+   useEffect(() => {
+      if (absorbSpells.length) {
+         absorbSpells.forEach((key) => {
+            setActiveShields(key.value);
+         });
+      } else {
+         setActiveShields(0);
+      }
+   }, [absorbSpells]);
 
    const getPlayerSheets = useCallback(() => {
       const newPlayerSheets = {
@@ -98,17 +119,13 @@ const Player = ({ player, characterViewsSettings }) => {
    }, [engineState.characterMovements.data, player.id]);
 
    const drawAbsorbBar = (g) => {
-      let barWidth;
-      if ((player.absorb / maxHp) * 50 > 50) {
-         barWidth = 50;
-      } else {
-         barWidth = (player.absorb / maxHp) * 50;
-      }
+      const barWidth = (activeShields / (activeShields + maxHp)) * 50;
+
       g.beginFill(0xe8e8e8);
       g.drawRect(
-         engineState?.characterMovements.data[player.id].location.x - 25,
+         engineState?.characterMovements.data[player.id].location.x + 25,
          engineState?.characterMovements.data[player.id].location.y - h / 1.5,
-         barWidth,
+         -barWidth,
          5
       );
       g.endFill();

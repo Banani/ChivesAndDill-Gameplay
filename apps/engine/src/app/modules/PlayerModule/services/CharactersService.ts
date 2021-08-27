@@ -90,7 +90,6 @@ export class CharactersService extends EventParser {
          healthPointsRegen: 5,
          spellPowerRegen: 5,
          size: 48,
-         absorb: 0,
          isDead: false,
          class: characterClass,
          spells: SpellsPerClass[characterClass],
