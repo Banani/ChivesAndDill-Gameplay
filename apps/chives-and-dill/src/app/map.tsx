@@ -15,6 +15,7 @@ import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { FloatingNumbersManager } from "./mapContent/FloatingNumbersManager";
 import { TargetIcon } from './mapContent/targetIcon/TargetIcon';
+import { BloodPoolManager } from './mapContent/bloodPoolsManager';
 
 const Map = () => {
    const activePlayerId = useSelector(selectActivePlayer);
@@ -77,6 +78,7 @@ const Map = () => {
                                  <RenderPlayersManager />
                                  <FloatingNumbersManager />
                                  <BlinkSpellEffect />
+                                 <BloodPoolManager />
                               </Container>
                            )}
                         </Provider>
