@@ -22,9 +22,7 @@ const Map = () => {
 
    const renderSpells = useCallback(
       () =>
-         _.map(engineState.projectileMovements.data, (spell, i) => (
-            <Sprite key={i} image="../assets/spritesheets/spells/potato.png" x={spell.location.x} y={spell.location.y}></Sprite>
-         )),
+         _.map(engineState.projectileMovements.data, (spell, i) => <Sprite rotation={spell.angle + 1.5} key={i} image="../assets/spritesheets/spells/mage/spellsView/fireball.png" x={spell.location.x} y={spell.location.y}></Sprite>),
       [engineState.projectileMovements]
    );
 
