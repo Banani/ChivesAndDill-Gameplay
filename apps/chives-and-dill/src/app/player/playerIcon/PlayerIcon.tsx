@@ -48,8 +48,8 @@ export const PlayerIcon = ({ playerId }) => {
                <div className={styles.nameBar}>{name}</div>
                <div className={styles.bar}>
                   <div className={styles.barText}>{currentHp >= 0 ? currentHp + '/' + maxHp : 0}</div>
-                  <div className={styles.hpColor} style={{ width: currentHp >= 0 ? (currentHp / maxHp) * 100 + '%' : '0' }}></div>
-                  <div className={styles.absorbColor} style={{ width: absorbBarWidth + '%' }}></div>
+                  <div className={styles.hpColor} style={{ width: currentHp >= 0 ? (currentHp / (maxHp + playerAbsorb)) * 100 + '%' : '0' }}></div>
+                  <div className={styles.absorbColor} style={{ width: absorbBarWidth + '%', left: `${(currentHp / (maxHp + playerAbsorb)) * 100}%` }}></div>
                </div>
                <div className={styles.bar}>
                   <div className={styles.barText}>{currentSpellPower >= 0 ? currentSpellPower + '/' + maxSpellPower : 0}</div>

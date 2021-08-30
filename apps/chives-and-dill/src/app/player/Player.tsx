@@ -101,26 +101,32 @@ const Player = ({ player, characterViewsSettings }) => {
 
    const drawAbsorbBar = (g) => {
       const barWidth = (playerAbsorb / (playerAbsorb + maxHp)) * 50;
-
+      const healthBarWidth = (currentHp / (playerAbsorb + maxHp)) * 50 - 25;
       g.beginFill(0xe8e8e8);
       g.drawRect(
-         engineState?.characterMovements.data[player.id].location.x + 25,
+         engineState?.characterMovements.data[player.id].location.x + healthBarWidth,
          engineState?.characterMovements.data[player.id].location.y - h / 1.5,
-         -barWidth,
+         barWidth,
          5
       );
       g.endFill();
    };
 
    const drawHealthBar = (g) => {
+      const barWidth = (currentHp / (playerAbsorb + maxHp)) * 50;
       g.beginFill(0xff0000);
-      g.drawRect(engineState?.characterMovements.data[player.id].location.x - 25, engineState?.characterMovements.data[player.id].location.y - h / 1.5, 50, 5);
+      g.drawRect(
+         engineState?.characterMovements.data[player.id].location.x - 25,
+         engineState?.characterMovements.data[player.id].location.y - h / 1.5,
+         50,
+         5
+      );
       g.endFill();
       g.beginFill(0x00ff00);
       g.drawRect(
          engineState?.characterMovements.data[player.id].location.x - 25,
          engineState?.characterMovements.data[player.id].location.y - h / 1.5,
-         (currentHp / maxHp) * 50,
+         barWidth,
          5
       );
       g.endFill();
