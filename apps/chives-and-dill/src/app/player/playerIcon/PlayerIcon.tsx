@@ -60,7 +60,6 @@ export const PlayerIcon = ({ playerId }) => {
          <div className={styles.powerStacks}>
             {renderPowerStacks("HolyPower", powerStacks)}
          </div>
-         <TimeEffectsbar playerId={playerId} />
       </div>
    );
 };

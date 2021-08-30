@@ -16,6 +16,7 @@ import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManage
 import { FloatingNumbersManager } from "./mapContent/FloatingNumbersManager";
 import { TargetIcon } from './mapContent/targetIcon/TargetIcon';
 import { BloodPoolManager } from './mapContent/bloodPoolsManager';
+import { ActivePlayerTimeEffects } from "./mapContent/activePlayerTimeEffects/ActivePlayerTimeEffects";
 
 const Map = () => {
    const activePlayerId = useSelector(selectActivePlayer);
@@ -55,6 +56,7 @@ const Map = () => {
          {activePlayerId ? <SpellsBar /> : null}
          {activePlayerId ? <PlayerIcon playerId={activePlayerId}></PlayerIcon> : null}
          <TargetIcon />
+         {activePlayerId ? <ActivePlayerTimeEffects playerId={activePlayerId} /> : null}
          {<QuestsSideView />}
          <QuestLog />
          {/* <ClassesModal /> */}
