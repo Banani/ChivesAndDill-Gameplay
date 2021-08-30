@@ -46,13 +46,15 @@
         flex-direction: column;
 
         .QuestDesc {
+          padding: 0 25px;
+
           .activeQuestTitle {
-            padding: 5px 25px;
+            padding: 5px 0;
             font-size: 2em;
           }
 
           .activeQuestDesc {
-            padding: 0 25px 10px 25px;
+            padding: 10px 0;
           }
         }
       }

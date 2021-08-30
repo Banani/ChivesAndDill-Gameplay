@@ -15,8 +15,6 @@ export const SpellsBar = () => {
 
    let renderSpells;
 
-   console.log(spellsOnCooldown, clickedSpell)
-
    useEffect(() => {
       _.forIn(context, function (value, key) {
          if (keyBinds[key] && value) {
