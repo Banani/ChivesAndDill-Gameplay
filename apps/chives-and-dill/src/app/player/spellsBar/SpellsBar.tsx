@@ -15,24 +15,27 @@ export const SpellsBar = () => {
 
    let renderSpells;
 
+   console.log(spellsOnCooldown, clickedSpell)
+
    useEffect(() => {
       _.forIn(context, function (value, key) {
          if (keyBinds[key] && value) {
             const spell = [keyBinds[key]];
             setSpellOnCooldown([...spellsOnCooldown, ...spell.filter((c) => !spellsOnCooldown.includes(c))]);
-            setClickedSpell({ ...spell } as any);
+            setClickedSpell(...spell as string);
          }
       });
    }, [context]);
 
    useEffect(() => {
       if (spellsOnCooldown.includes(clickedSpell) && clickedSpell !== '') {
+
          setTimeout(() => {
             setSpellOnCooldown(spellsOnCooldown.filter((item) => item !== clickedSpell));
             setClickedSpell('');
          }, spells[clickedSpell].cooldown);
       }
-   }, [spellsOnCooldown]);
+   }, [clickedSpell]);
 
    const colorOfSpellBorder = (spell) => {
       if (spellsOnCooldown.includes(spell.name)) {

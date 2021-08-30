@@ -102,7 +102,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       name: 'Teleportation',
       range: 1000,
       spellPowerCost: 10,
-      cooldown: 10000,
+      cooldown: 4000,
       image: '../assets/spritesheets/spells/hunter/arcaneShot.jpg',
    },
 
