@@ -5,20 +5,24 @@ import type { EnginePackageEvent, PowerPointsTrack } from '@bananos/types';
 import { EngineEventType, GlobalStoreModule } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import type { Notifier } from '../../../Notifier';
+import type { MulticastPackage, Notifier } from '../../../Notifier';
 import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import type {
    CharacterGotHpEvent,
    CharacterGotSpellPowerEvent,
    CharacterLostHpEvent,
    CharacterLostSpellPowerEvent,
-   NewPowerTrackCreatedEvent} from '../Events';
-import {
-   CharacterEngineEvents
+   NewPowerTrackCreatedEvent,
 } from '../Events';
+import { CharacterEngineEvents } from '../Events';
+import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
+import { cloneDeep } from 'lodash';
+
+const emptyMulticastPackage: MulticastPackage = { key: GlobalStoreModule.CHARACTER_POWER_POINTS, messages: {} };
 
 export class PowerPointsNotifier extends EventParser implements Notifier {
    private powerPointsTrack: Record<string, Partial<PowerPointsTrack>> = {};
+   private multicast: MulticastPackage = cloneDeep(emptyMulticastPackage);
    private events: EnginePackageEvent[] = [];
    private toDelete: string[] = [];
    private increment = 0;
@@ -26,13 +30,14 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
    constructor() {
       super();
       this.eventsToHandlersMap = {
+         [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
          [CharacterEngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [CharacterEngineEvents.CharacterGotHp]: this.handleCharacterGotHp,
          [CharacterEngineEvents.CharacterLostSpellPower]: this.handleCharacterLostSpellPower,
          [CharacterEngineEvents.CharacterGotSpellPower]: this.handleCharacterGotSpellPower,
          [CharacterEngineEvents.NewPowerTrackCreated]: this.handleNewPowerTrackCreated,
-         [MonsterEngineEvents.NewMonsterCreated]: this.handleNewMonsterCreated
+         [MonsterEngineEvents.NewMonsterCreated]: this.handleNewMonsterCreated,
       };
    }
 
@@ -48,6 +53,20 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
       return { data: powerPointsTrack, key: GlobalStoreModule.CHARACTER_POWER_POINTS, toDelete, events };
    };
 
+   getMulticast = () => {
+      const tempMulticast = this.multicast;
+      this.multicast = cloneDeep(emptyMulticastPackage);
+      return tempMulticast;
+   };
+
+   handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
+      if (!this.multicast.messages[event.playerCharacter.ownerId]) {
+         this.multicast.messages[event.playerCharacter.ownerId] = { events: [], data: {}, toDelete: [] };
+      }
+
+      this.multicast.messages[event.playerCharacter.ownerId].data = services.powerPointsService.getAllPowerTracks();
+   };
+
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
       this.toDelete.push(event.characterId);
       delete this.powerPointsTrack[event.characterId];
@@ -55,7 +74,7 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
 
    handleNewPowerTrackCreated: EngineEventHandler<NewPowerTrackCreatedEvent> = ({ event, services }) => {
       // BUG - should goes only to new player
-      this.powerPointsTrack = services.powerPointsService.getAllPowerTracks();
+      //this.powerPointsTrack = services.powerPointsService.getAllPowerTracks();
    };
 
    handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event }) => {
@@ -102,12 +121,12 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
 
    handleNewMonsterCreated: EngineEventHandler<NewMonsterCreatedEvent> = ({ event }) => {
       const template = MonsterRespawns[event.monster.respawnId].monsterTemplate;
-      
+
       this.powerPointsTrack[event.monster.id] = {
          maxHp: template.healthPoints,
          currentHp: template.healthPoints,
          currentSpellPower: template.spellPower,
-         maxSpellPower: template.spellPower
+         maxSpellPower: template.spellPower,
       };
-   }
+   };
 }

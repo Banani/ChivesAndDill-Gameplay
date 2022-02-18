@@ -1,7 +1,7 @@
 import { HealthPointsSource, PowerPointsTrack } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { CharacterDiedEvent, EngineEventHandler, NewPlayerCreatedEvent } from '../../../types';
+import { CharacterDiedEvent, CharacterType, EngineEventHandler, NewPlayerCreatedEvent } from '../../../types';
 import { Classes } from '../../../types/Classes';
 import { MonsterEngineEvents, NewMonsterCreatedEvent } from '../../MonsterModule/Events';
 import { MonsterRespawns } from '../../MonsterModule/MonsterRespawns';
@@ -13,6 +13,7 @@ import {
    CharacterGotSpellPowerEvent,
    CharacterLostHpEvent,
    CharacterLostSpellPowerEvent,
+   NewCharacterCreatedEvent,
    NewPowerTrackCreatedEvent,
    ResetCharacterEvent,
    TakeCharacterHealthPointsEvent,
@@ -52,9 +53,7 @@ export class PowerPointsService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [EngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
-         [MonsterEngineEvents.NewMonsterCreated]: this.handleNewMonsterCreated,
-
+         [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
          [CharacterEngineEvents.TakeCharacterHealthPoints]: this.handleTakeCharacterHealthPoints,
          [CharacterEngineEvents.AddCharacterHealthPoints]: this.handleAddCharacterHealthPoints,
          [CharacterEngineEvents.TakeCharacterSpellPower]: this.handleTakeCharacterSpellPower,
@@ -63,22 +62,24 @@ export class PowerPointsService extends EventParser {
       };
    }
 
-   handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event }) => {
-      this.powerPoints[event.payload.newCharacter.id] = classesBaseStats[event.payload.newCharacter.class];
+   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
+      if (event.character.type === CharacterType.Player) {
+         this.powerPoints[event.character.id] = classesBaseStats[event.character.class];
 
-      this.engineEventCrator.asyncCeateEvent<NewPowerTrackCreatedEvent>({
-         type: CharacterEngineEvents.NewPowerTrackCreated,
-      });
-   };
+         this.engineEventCrator.asyncCeateEvent<NewPowerTrackCreatedEvent>({
+            type: CharacterEngineEvents.NewPowerTrackCreated,
+         });
+      }
 
-   handleNewMonsterCreated: EngineEventHandler<NewMonsterCreatedEvent> = ({ event }) => {
-      const respawn = MonsterRespawns[event.monster.respawnId];
-      this.powerPoints[event.monster.id] = {
-         currentHp: respawn.monsterTemplate.healthPoints,
-         maxHp: respawn.monsterTemplate.healthPoints,
-         currentSpellPower: respawn.monsterTemplate.spellPower,
-         maxSpellPower: respawn.monsterTemplate.spellPower,
-      };
+      if (event.character.type === CharacterType.Monster) {
+         const respawn = MonsterRespawns[event.character.respawnId];
+         this.powerPoints[event.character.id] = {
+            currentHp: respawn.monsterTemplate.healthPoints,
+            maxHp: respawn.monsterTemplate.healthPoints,
+            currentSpellPower: respawn.monsterTemplate.spellPower,
+            maxSpellPower: respawn.monsterTemplate.spellPower,
+         };
+      }
    };
 
    handleTakeCharacterHealthPoints: EngineEventHandler<TakeCharacterHealthPointsEvent> = ({ event, services }) => {
