@@ -19,14 +19,16 @@ import type {
    TeleportationSpellService,
 } from '../modules';
 import { PowerPointsService } from '../modules/CharacterModule';
-import { PowerPointsNotifier } from '../modules/CharacterModule/notifiers';
+import { ActiveCharacterNotifier, AreaNotifier, CharacterNotifier, PowerPointsNotifier } from '../modules/CharacterModule/notifiers';
 import type { RegenerationService } from '../modules/CharacterModule/services/RegenerationService';
 import type { BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import type { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
 import type { AggroService } from '../modules/MonsterModule/services/aggroService';
 import type { PlayerMovementService } from '../modules/PlayerModule';
 import type { PlayerMovementNotifier, CharacterEffectNotifier } from '../modules/PlayerModule/notifiers';
-import type { CharactersService } from '../modules/PlayerModule/services/CharactersService';
+import { PlayerNotifier } from '../modules/PlayerModule/notifiers/PlayerNotifier';
+import type { CharactersService } from '../modules/CharacterModule/services/CharactersService';
+import { PlayerService } from '../modules/PlayerModule/services/PlayerService';
 import { AbsorbShieldNotifier } from '../modules/SpellModule/notifiers/ABsorbShieldNotifier';
 import { ChannelingNotifier } from '../modules/SpellModule/notifiers/ChannelingNotifier';
 import { SpellPowerNotifier } from '../modules/SpellModule/notifiers/SpellPowerNotifier';
@@ -41,6 +43,7 @@ import type { ChannelService } from '../modules/SpellModule/services/SpellHandle
 import type { GuidedProjectilesService } from '../modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
 import type { PathFinderService, SocketConnectionService } from '../services';
 import type { SchedulerService } from '../services/SchedulerService';
+import { PlayerCharacterService } from '../modules/PlayerModule/services/PlayerCharacterService';
 
 export interface Services {
    pathFinderService: PathFinderService;
@@ -49,10 +52,13 @@ export interface Services {
    playerMovementService: PlayerMovementService;
    projectilesService: ProjectilesService;
    playerMovementNotifier: PlayerMovementNotifier;
+   playerService: PlayerService;
    projectileNotifier: ProjectileNotifier;
    characterEffectNotifier: CharacterEffectNotifier;
    cooldownService: CooldownService;
    timeEffectNotifier: TimeEffectNotifier;
+   playerNotifier: PlayerNotifier;
+   playerCharacterService: PlayerCharacterService;
    socketConnectionService: SocketConnectionService;
    questProgressService: QuestProgressService;
    movementQuestService: MovementQuestService;
@@ -89,4 +95,7 @@ export interface Services {
    teleportationSpellService: TeleportationSpellService;
    regenerationService: RegenerationService;
    absorbShieldNotifier: AbsorbShieldNotifier;
+   characterNotifier: CharacterNotifier;
+   activeCharacterNotifier: ActiveCharacterNotifier;
+   areaNotifier: AreaNotifier;
 }

@@ -1,7 +1,11 @@
 import { HealthPointsSource } from '@bananos/types';
-import { EngineEvent, EngineEventHandler } from '../../types';
+import { Character, EngineEvent, EngineEventHandler } from '../../types';
+import { CharacterUnion } from '../../types/CharacterUnion';
 
 export enum CharacterEngineEvents {
+   CreateCharacter = 'CreateCharacter',
+   NewCharacterCreated = 'NewCharacterCreated',
+
    CharacterLostHp = 'CharacterLostHp',
    CharacterGotHp = 'CharacterGotHp',
    CharacterLostSpellPower = 'CharacterLostSpellPower',
@@ -14,6 +18,16 @@ export enum CharacterEngineEvents {
 
    ResetCharacter = 'ResetCharacter',
    NewPowerTrackCreated = 'NewPowerTrackCreated',
+}
+
+export interface CreateCharacterEvent extends EngineEvent {
+   type: CharacterEngineEvents.CreateCharacter;
+   character: CharacterUnion;
+}
+
+export interface NewCharacterCreatedEvent extends EngineEvent {
+   type: CharacterEngineEvents.NewCharacterCreated;
+   character: CharacterUnion;
 }
 
 export interface CharacterLostHpEvent extends EngineEvent {
@@ -74,6 +88,9 @@ export interface NewPowerTrackCreatedEvent extends EngineEvent {
 }
 
 export interface CharacterEngineEventsMap {
+   [CharacterEngineEvents.CreateCharacter]: EngineEventHandler<any>;
+   [CharacterEngineEvents.NewCharacterCreated]: EngineEventHandler<NewCharacterCreatedEvent>;
+
    [CharacterEngineEvents.CharacterLostHp]: EngineEventHandler<CharacterLostHpEvent>;
    [CharacterEngineEvents.TakeCharacterHealthPoints]: EngineEventHandler<TakeCharacterHealthPointsEvent>;
    [CharacterEngineEvents.AddCharacterHealthPoints]: EngineEventHandler<AddCharacterHealthPointsEvent>;

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Stage, Sprite, Container, AppContext } from '@inlet/react-pixi';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
-import { selectActivePlayer, getEngineState } from '../stores';
+import { getEngineState, selectActiveCharacterId } from '../stores';
 import _ from 'lodash';
 
 import { PlayerIcon } from './player/playerIcon/PlayerIcon';
@@ -16,7 +16,7 @@ import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManage
 import { TargetIcon } from './mapContent/targetIcon/TargetIcon';
 
 const Map = () => {
-   const activePlayerId = useSelector(selectActivePlayer);
+   const activePlayerId = useSelector(selectActiveCharacterId);
    const engineState = useSelector(getEngineState);
 
    const renderSpells = useCallback(
@@ -57,7 +57,6 @@ const Map = () => {
          <TargetIcon />
          {<QuestsSideView />}
          <QuestLog />
-         {/* <ClassesModal /> */}
          <ReactReduxContext.Consumer>
             {({ store }) => (
                <Stage width={gameWidth} height={gameHeight} options={{ backgroundColor: 0x000000, autoDensity: true }}>

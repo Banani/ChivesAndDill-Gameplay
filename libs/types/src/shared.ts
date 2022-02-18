@@ -20,7 +20,6 @@ export interface Player {
    maxHp: number;
    name: string;
    size: number;
-   socketId: string;
    sprites: string;
    hpLost: number;
    spellEffect: string;
@@ -36,26 +35,26 @@ export interface Quest {
    name: string;
    description: string;
    questStage: {
-      description: string,
-      id: string
-      stageParts: Record<string, StagePart>
-   }
+      description: string;
+      id: string;
+      stageParts: Record<string, StagePart>;
+   };
 }
 
 interface StagePart {
-   amount: number,
-   id: string,
-   questId: string,
-   stageId: string,
-   type: number,
+   amount: number;
+   id: string;
+   questId: string;
+   stageId: string;
+   type: number;
    rule: {
       fieldName: string;
       comparison: KillingQuestStagePartComparison;
       value: string;
    }[];
-   targetLocation: Location,
-   description: string,
-   currentProgress: number,
+   targetLocation: Location;
+   description: string;
+   currentProgress: number;
 }
 
 export enum KillingQuestStagePartComparison {

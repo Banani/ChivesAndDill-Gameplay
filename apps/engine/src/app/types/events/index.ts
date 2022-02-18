@@ -5,23 +5,18 @@ import { Monster } from '../../modules/MonsterModule/types';
 import { QuestEngineEvents } from '../../modules/QuestModule/Events';
 import { SpellEngineEvents } from '../../modules/SpellModule/Events';
 import { Location } from '@bananos/types';
-import { Player } from '../Player';
+import { PlayerCharacter } from '../PlayerCharacter';
 import { Services } from '../Services';
 import { CharacterEngineEvents } from '../../modules/CharacterModule/Events';
+import { PlayerEngineEvents } from '../../modules/PlayerModule/Events';
 
 export interface EngineEvent {
-   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | SpellEngineEvents | CharacterEngineEvents;
+   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | SpellEngineEvents | CharacterEngineEvents | PlayerEngineEvents;
 }
 
 export interface NewPlayerCreatedEvent extends EngineEvent {
    payload: {
-      newCharacter: Player;
-   };
-}
-
-export interface CreateNewPlayerEvent extends EngineEvent {
-   payload: {
-      socketId: string;
+      newCharacter: PlayerCharacter;
    };
 }
 
@@ -33,7 +28,7 @@ export interface PlayerDisconnectedEvent extends EngineEvent {
 
 export interface CharacterDiedEvent extends EngineEvent {
    characterId: string;
-   character: Monster | Player;
+   character: Monster | PlayerCharacter;
    killerId: string;
 }
 
@@ -113,7 +108,6 @@ export interface EngineEventsMap {
    [EngineEvents.PlayerDisconnected]: EngineEventHandler<PlayerDisconnectedEvent>;
    [EngineEvents.CharacterDied]: EngineEventHandler<CharacterDiedEvent>;
    [EngineEvents.NewPlayerCreated]: EngineEventHandler<NewPlayerCreatedEvent>;
-   [EngineEvents.CreateNewPlayer]: EngineEventHandler<CreateNewPlayerEvent>;
    [EngineEvents.PlayerStartedMovement]: EngineEventHandler<PlayerStartedMovementEvent>;
    [EngineEvents.PlayerTriesToStartedMovement]: EngineEventHandler<PlayerTriesToStartedMovementEvent>;
    [EngineEvents.PlayerStopedAllMovementVectors]: EngineEventHandler<PlayerStopedAllMovementVectorsEvent>;

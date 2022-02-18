@@ -6,13 +6,14 @@ import type { Notifier } from '../../../Notifier';
 import type {
    EngineEventHandler,
    PlayerStartedMovementEvent,
-   NewPlayerCreatedEvent,
    PlayerTriesToStartedMovementEvent,
    PlayerStopedMovementVectorEvent,
    PlayerMovedEvent,
    PlayerStopedAllMovementVectorsEvent,
    Character,
 } from '../../../types';
+import { CharacterEngineEvents, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
+import { NewPlayerCreatedEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
 
 export class PlayerMovementNotifier extends EventParser implements Notifier {
    private characters: Record<string, Partial<Character>> = {};
@@ -20,7 +21,7 @@ export class PlayerMovementNotifier extends EventParser implements Notifier {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [EngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
+         [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
          [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
@@ -35,9 +36,8 @@ export class PlayerMovementNotifier extends EventParser implements Notifier {
       return { data: characterInformations, key: 'characterMovements', toDelete: [] };
    };
 
-   handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event, services }) => {
-      const { newCharacter: currentCharacter } = event.payload;
-      const currentSocket = services.socketConnectionService.getSocketById(currentCharacter.socketId);
+   handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
+      const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
       // BUG - should goes only to new player
 
@@ -53,7 +53,7 @@ export class PlayerMovementNotifier extends EventParser implements Notifier {
       currentSocket.on(ClientMessages.PlayerStartMove, (movement) => {
          this.engineEventCrator.asyncCeateEvent<PlayerTriesToStartedMovementEvent>({
             type: EngineEvents.PlayerTriesToStartedMovement,
-            characterId: currentCharacter.id,
+            characterId: event.playerCharacter.id,
             movement,
          });
       });
@@ -61,7 +61,7 @@ export class PlayerMovementNotifier extends EventParser implements Notifier {
       currentSocket.on(ClientMessages.PlayerStopMove, (movement) => {
          this.engineEventCrator.asyncCeateEvent<PlayerStopedMovementVectorEvent>({
             type: EngineEvents.PlayerStopedMovementVector,
-            characterId: currentCharacter.id,
+            characterId: event.playerCharacter.id,
             movement,
          });
       });

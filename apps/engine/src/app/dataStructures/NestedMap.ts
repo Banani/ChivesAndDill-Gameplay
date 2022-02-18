@@ -1,4 +1,4 @@
-import { filter, keyBy, map, mapValues, pickBy } from 'lodash';
+import { keyBy, map, mapValues, pickBy } from 'lodash';
 
 export class NestedMap<NavigationObject> {
    private increment = 0;

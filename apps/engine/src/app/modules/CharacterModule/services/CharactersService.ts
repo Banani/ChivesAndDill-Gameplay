@@ -3,27 +3,28 @@ import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import type {
    EngineEventHandler,
-   CreateNewPlayerEvent,
    NewPlayerCreatedEvent,
    PlayerDisconnectedEvent,
    PlayerStartedMovementEvent,
    PlayerStopedAllMovementVectorsEvent,
    PlayerMovedEvent,
    CharacterDiedEvent,
+   Character,
 } from '../../../types';
 import { CharacterType } from '../../../types';
 import { Classes } from '../../../types/Classes';
-import type { Player } from '../../../types/Player';
+import type { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { SpellsPerClass } from '../../SpellModule/spells';
+import { CharacterEngineEvents, CreateCharacterEvent, NewCharacterCreatedEvent } from '../Events';
 
 export class CharactersService extends EventParser {
-   characters: Record<string, Player> = {};
+   characters: Record<string, Character> = {};
    increment = 0;
 
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [EngineEvents.CreateNewPlayer]: this.handleCreateNewPlayer,
+         [CharacterEngineEvents.CreateCharacter]: this.handleCreateCharacter,
          [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
          [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
          [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
@@ -32,17 +33,12 @@ export class CharactersService extends EventParser {
       };
    }
 
-   handleCreateNewPlayer: EngineEventHandler<CreateNewPlayerEvent> = ({ event }) => {
-      const newCharacter = this.generatePlayer({
-         socketId: event.payload.socketId,
-      });
-      this.characters[newCharacter.id] = newCharacter;
+   handleCreateCharacter: EngineEventHandler<CreateCharacterEvent> = ({ event }) => {
+      this.characters[event.character.id] = event.character;
 
-      this.engineEventCrator.asyncCeateEvent<NewPlayerCreatedEvent>({
-         type: EngineEvents.NewPlayerCreated,
-         payload: {
-            newCharacter,
-         },
+      this.engineEventCrator.asyncCeateEvent<NewCharacterCreatedEvent>({
+         type: CharacterEngineEvents.NewCharacterCreated,
+         character: event.character,
       });
    };
 
@@ -71,30 +67,6 @@ export class CharactersService extends EventParser {
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
       delete this.characters[event.characterId];
-   };
-
-   generatePlayer: ({ socketId: string }) => Player = ({ socketId }) => {
-      this.increment++;
-      const characterClass = Classes.Mage;
-      return {
-         type: CharacterType.Player,
-         id: `player_${this.increment.toString()}`,
-         name: `#player_${this.increment}`,
-         location: { x: 600, y: 960 },
-         direction: CharacterDirection.DOWN,
-         sprites: 'citizen',
-         avatar: '../../../../assets/spritesheets/avatars/dogAvatar.PNG',
-         isInMove: false,
-         socketId,
-         speed: 10,
-         healthPointsRegen: 5,
-         spellPowerRegen: 5,
-         size: 48,
-         absorb: 0,
-         isDead: false,
-         class: characterClass,
-         spells: SpellsPerClass[characterClass],
-      };
    };
 
    getAllCharacters = () => this.characters;

@@ -39,4 +39,5 @@ export enum ClientMessages {
    PlayerStartMove = 'PlayerMove',
    PlayerStopMove = 'PlayerStopMove',
    PerformBasicAttack = 'PerformBasicAttack',
+   CreateCharacter = 'CreateCharacter',
 }

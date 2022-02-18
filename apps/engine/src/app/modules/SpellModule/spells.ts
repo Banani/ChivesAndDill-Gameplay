@@ -83,7 +83,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
             speed: 40,
             spellEffectsOnTarget: [
                {
-                  name: "PowerShield",
+                  name: 'PowerShield',
                   type: SpellEffectType.AbsorbShield,
                   shieldValue: 50,
                   stack: 5,
@@ -111,8 +111,8 @@ export const ALL_SPELLS: Record<string, Spell> = {
       name: 'ArrowShot',
       speed: 40,
       range: 600,
-      cooldown: 800,
-      spellPowerCost: 40,
+      cooldown: 0,
+      spellPowerCost: 0,
       image: '../assets/spritesheets/spells/hunter/arcaneShot.jpg',
       description: '',
       spellEffectsOnTarget: [

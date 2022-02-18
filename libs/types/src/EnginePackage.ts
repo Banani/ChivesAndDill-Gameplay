@@ -11,6 +11,9 @@ export interface EnginePackage {
    spells: PartialEnginePackage<null>;
    [GlobalStoreModule.POWER_STACKS]: PartialEnginePackage<Partial<Record<PowerStackType, number>>>;
    [GlobalStoreModule.ABSORB_SHIELDS]: PartialEnginePackage<AbsorbShieldTrack>;
+   [GlobalStoreModule.CHARACTER]: PartialEnginePackage<any>; // TODO: PlayerCharacter
+   [GlobalStoreModule.ACTIVE_CHARACTER]: PartialEnginePackage<string>;
+   [GlobalStoreModule.AREAS]: PartialEnginePackage<number[][]>;
 }
 
 interface PartialEnginePackage<Data> {
@@ -25,6 +28,8 @@ interface StoreModule<Data> {
 }
 
 export enum GlobalStoreModule {
+   CHARACTER = 'character',
+   ACTIVE_CHARACTER = 'activeCharacter',
    CHARACTER_MOVEMENTS = 'characterMovements',
    PROJECTILE_MOVEMENTS = 'projectileMovements',
    SPELL_CHANNELS = 'spellChannels',
@@ -34,6 +39,8 @@ export enum GlobalStoreModule {
    SPELLS = 'spells',
    POWER_STACKS = 'powerStacks',
    ABSORB_SHIELDS = 'absorbShields',
+   PLAYER = 'player',
+   AREAS = 'areas',
 }
 
 export interface GlobalStore {
@@ -46,6 +53,15 @@ export interface GlobalStore {
    [GlobalStoreModule.SPELLS]: StoreModule<null>;
    [GlobalStoreModule.POWER_STACKS]: StoreModule<Partial<Record<PowerStackType, number>>>;
    [GlobalStoreModule.ABSORB_SHIELDS]: StoreModule<AbsorbShieldTrack>;
+   [GlobalStoreModule.PLAYER]: StoreModule<undefined>;
+
+   [GlobalStoreModule.CHARACTER]: StoreModule<any>; // TODO: PlayerCharacter
+   [GlobalStoreModule.ACTIVE_CHARACTER]: StoreModule<string>;
+   [GlobalStoreModule.AREAS]: StoreModule<number[][]>;
+}
+
+export interface ActiveCharacterStorePart {
+   activeCharacterId: string;
 }
 
 export interface CharacterMovement {
@@ -98,10 +114,15 @@ export interface AreaTimeEffect {
 }
 
 export enum EngineEventType {
+   PlayerCreated = 'PlayerCreated',
    SpellLanded = 'SpellLanded',
    CharacterGotHp = 'CharacterGotHp',
    CharacterLostHp = 'CharacterLostHp',
    DamageAbsorbed = 'DamageAbsorbed',
+}
+
+export interface PlayerCreatedEvent {
+   type: EngineEventType.PlayerCreated;
 }
 
 export interface SpellLandedEvent {
@@ -130,7 +151,7 @@ export interface DamageAbsorbedEvent {
    characterId: string;
 }
 
-export type EnginePackageEvent = SpellLandedEvent | CharacterGotHpEvent | CharacterLostHpEvent | DamageAbsorbedEvent;
+export type EnginePackageEvent = SpellLandedEvent | CharacterGotHpEvent | CharacterLostHpEvent | DamageAbsorbedEvent | PlayerCreatedEvent;
 
 export enum HealthPointsSource {
    Healing = 'Healing',
@@ -149,7 +170,7 @@ export enum PowerStackType {
 
 export interface AbsorbShieldTrack {
    id: string;
-   name: string,
+   name: string;
    ownerId: string;
    value: number;
    timeEffectType: TimeEffectType;

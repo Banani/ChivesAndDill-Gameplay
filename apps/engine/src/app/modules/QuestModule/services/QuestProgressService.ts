@@ -2,6 +2,8 @@ import { forEach, mapValues, keyBy, filter } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler, NewPlayerCreatedEvent } from '../../../types';
+import { CharacterEngineEvents, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
+import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
    NewQuestStageStartedEvent,
    QuestCompletedEvent,
@@ -20,13 +22,13 @@ export class QuestProgressService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [EngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
          [QuestEngineEvents.STAGE_PART_COMPLETED]: this.handleStagePartCompleted,
+         [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
       };
    }
 
-   handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event, services }) => {
-      this.questProgress[event.payload.newCharacter.id] = {};
+   handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
+      this.questProgress[event.playerCharacter.id] = {};
 
       forEach(Quests, (quest) => {
          this.engineEventCrator.asyncCeateEvent<QuestStartedEvent>({
@@ -36,12 +38,12 @@ export class QuestProgressService extends EventParser {
                name: quest.name,
                description: quest.description,
             },
-            characterId: event.payload.newCharacter.id,
+            characterId: event.playerCharacter.id,
          });
 
          const firstStageId = quest.stageOrder[0];
          this.startAllStagesParts({
-            characterId: event.payload.newCharacter.id,
+            characterId: event.playerCharacter.id,
             stageId: firstStageId,
             questId: quest.id,
          });

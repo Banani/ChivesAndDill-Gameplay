@@ -1,7 +1,6 @@
 export enum EngineEvents {
-   CreateNewPlayer = 'CreateNewPlayer',
-   NewPlayerCreated = 'NewPlayerCreated',
-   PlayerDisconnected = 'PlayerDisconnected',
+   NewPlayerCreated = 'NewPlayerCreated05',
+   PlayerDisconnected = 'PlayerDisconnectedv05',
    PlayerStartedMovement = 'PlayerStartedMovement',
    PlayerStopedMovementVector = 'PlayerStopedMovementVector',
    PlayerStopedAllMovementVectors = 'PlayerStopedAllMovementVectors',

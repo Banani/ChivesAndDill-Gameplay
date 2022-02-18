@@ -48,7 +48,7 @@ import { TickEffectOverTimeService } from './app/modules/SpellModule/services/Ef
 import { ChannelService } from './app/modules/SpellModule/services/SpellHandlers/ChannelService';
 import { GuidedProjectilesService } from './app/modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
 import { PlayerMovementService, PlayersMovement } from './app/modules/PlayerModule';
-import { CharactersService } from './app/modules/PlayerModule/services/CharactersService';
+import { CharactersService } from './app/modules/CharacterModule/services/CharactersService';
 import { CharacterEffectNotifier, PlayerMovementNotifier } from './app/modules/PlayerModule/notifiers';
 import { PathFinderEngine } from './app/engines';
 import { MonsterMovementEngine } from './app/modules/MonsterModule/engines/MonsterMovementEngine';
@@ -57,10 +57,13 @@ import { SchedulerEngine } from './app/engines/SchedulerEngine';
 import { RegenerationService } from './app/modules/CharacterModule/services/RegenerationService';
 import { ChannelingNotifier } from './app/modules/SpellModule/notifiers/ChannelingNotifier';
 import { PowerPointsService } from './app/modules/CharacterModule';
-import { PowerPointsNotifier } from './app/modules/CharacterModule/notifiers';
+import { ActiveCharacterNotifier, AreaNotifier, CharacterNotifier, PowerPointsNotifier } from './app/modules/CharacterModule/notifiers';
 import { TimeEffectNotifier } from './app/modules/SpellModule/notifiers/TimeEffectNotifier';
 import { SpellPowerNotifier } from './app/modules/SpellModule/notifiers/SpellPowerNotifier';
 import { AbsorbShieldNotifier } from './app/modules/SpellModule/notifiers/AbsorbShieldNotifier';
+import { PlayerService } from './app/modules/PlayerModule/services/PlayerService';
+import { PlayerNotifier } from './app/modules/PlayerModule/notifiers/PlayerNotifier';
+import { PlayerCharacterService } from './app/modules/PlayerModule/services/PlayerCharacterService';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -116,7 +119,11 @@ const timeEffectNotifier = new TimeEffectNotifier();
 const areaTimeEffectNotifier = new AreaTimeEffectNotifier();
 const spellNotifier = new SpellNotifier();
 const spellPowerNotifier = new SpellPowerNotifier();
+const playerNotifier = new PlayerNotifier();
 const absorbShieldNotifier = new AbsorbShieldNotifier();
+const characterNotifier = new CharacterNotifier();
+const activeCharacterNotifier = new ActiveCharacterNotifier();
+const areaNotifier = new AreaNotifier();
 const notifiers = [
    playerMovementNotifier,
    projectileNotifier,
@@ -126,7 +133,11 @@ const notifiers = [
    areaTimeEffectNotifier,
    spellNotifier,
    spellPowerNotifier,
+   playerNotifier,
    absorbShieldNotifier,
+   characterNotifier,
+   activeCharacterNotifier,
+   areaNotifier,
 ];
 
 const socketConnectionService = new SocketConnectionService(io, notifiers);
@@ -138,6 +149,7 @@ const services: Services = {
    powerPointsNotifier,
    areaTimeEffectNotifier,
    spellPowerNotifier,
+   playerCharacterService: new PlayerCharacterService(),
    playerMovementService: new PlayerMovementService(playerMovementEngine),
    projectilesService: new ProjectilesService(projectileMovement),
    playerMovementNotifier,
@@ -150,12 +162,17 @@ const services: Services = {
    timeEffectNotifier,
    spellNotifier,
    absorbShieldNotifier,
+   playerNotifier,
+   characterNotifier,
+   activeCharacterNotifier,
+   areaNotifier,
 
    questProgressService: new QuestProgressService(),
    movementQuestService: new MovementQuestService(),
    killingQuestService: new KillingQuestService(),
    questNotifier: new QuestNotifier(),
 
+   playerService: new PlayerService(),
    monsterService: new MonsterService(),
    respawnService: new RespawnService(respawnMonsterEngine),
    aggroService: new AggroService(),

@@ -1,27 +1,12 @@
 import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import type {
-   CharacterDiedEvent,
-   EngineEventHandler,
-   PlayerMovedEvent,
-   PlayerStartedMovementEvent,
-   PlayerStopedAllMovementVectorsEvent} from '../../../types';
-import {
-   CharacterType
-} from '../../../types';
-import type { ResetCharacterEvent } from '../../CharacterModule/Events';
+import type { CharacterDiedEvent, EngineEventHandler, PlayerMovedEvent, PlayerStartedMovementEvent, PlayerStopedAllMovementVectorsEvent } from '../../../types';
+import { CharacterType } from '../../../types';
+import type { CreateCharacterEvent, ResetCharacterEvent } from '../../CharacterModule/Events';
 import { CharacterEngineEvents } from '../../CharacterModule/Events';
-import type {
-   CreateNewMonsterEvent,
-   NewMonsterCreatedEvent,
-   MonsterTargetChangedEvent,
-   MonsterLostTargetEvent,
-   MonsterLostAggroEvent} from '../Events';
-import {
-   MonsterEngineEvents,
-   MonsterDiedEvent
-} from '../Events';
+import type { CreateNewMonsterEvent, NewMonsterCreatedEvent, MonsterTargetChangedEvent, MonsterLostTargetEvent, MonsterLostAggroEvent } from '../Events';
+import { MonsterEngineEvents, MonsterDiedEvent } from '../Events';
 import type { Monster } from '../types';
 
 export class MonsterService extends EventParser {
@@ -95,6 +80,13 @@ export class MonsterService extends EventParser {
          healthPointsRegen: event.monsterRespawn.monsterTemplate.healthPointsRegen,
          spellPowerRegen: event.monsterRespawn.monsterTemplate.spellPowerRegen,
       };
+      console.log('new monster created');
+
+      this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
+         type: CharacterEngineEvents.CreateCharacter,
+         character: this.monsters[id],
+      });
+
       this.engineEventCrator.asyncCeateEvent<NewMonsterCreatedEvent>({
          type: MonsterEngineEvents.NewMonsterCreated,
          monster: this.monsters[id],

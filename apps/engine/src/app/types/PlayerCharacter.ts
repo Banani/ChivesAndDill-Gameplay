@@ -1,8 +1,8 @@
 import { Character, CharacterType } from './Character';
 import { Classes } from './Classes';
 
-export interface Player extends Character {
+export interface PlayerCharacter extends Character {
    type: CharacterType.Player;
-   socketId?: string;
+   ownerId: string;
    class: Classes;
 }

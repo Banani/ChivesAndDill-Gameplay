@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SocketContext } from '../gameController/socketContext';
 import { GameControllerContext } from './gameControllerContext';
 import { useSelector } from 'react-redux';
-import { selectActivePlayer, selectKeyBinds, getEngineState } from '../../stores';
+import { selectActiveCharacterId, selectKeyBinds, getEngineState } from '../../stores';
 
 const GameController = ({ children }) => {
    const context = useContext(SocketContext);
@@ -13,7 +13,7 @@ const GameController = ({ children }) => {
    const [keysState, setKeysState] = useState<Record<string, boolean>>({});
    const [mousePosition, setMousePosition] = useState({ x: null, y: null });
 
-   const activePlayerId = useSelector(selectActivePlayer);
+   const activePlayerId = useSelector(selectActiveCharacterId);
    const engineState = useSelector(getEngineState);
 
    let gameWidth = window.innerWidth;
