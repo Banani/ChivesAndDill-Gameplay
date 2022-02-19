@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Stage, Sprite, Container, AppContext } from '@inlet/react-pixi';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
 import { getEngineState, selectActiveCharacterId } from '../stores';
@@ -18,6 +18,7 @@ import { TargetIcon } from './mapContent/targetIcon/TargetIcon';
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
    const engineState = useSelector(getEngineState);
+   const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
 
    const renderSpells = useCallback(
       () =>
@@ -27,12 +28,9 @@ const Map = () => {
       [engineState.projectileMovements]
    );
 
-   let gameWidth;
-   let gameHeight;
-
    const resizeGame = () => {
-      gameWidth = window.innerWidth;
-      gameHeight = window.innerHeight;
+      let gameWidth = window.innerWidth;
+      let gameHeight = window.innerHeight;
       const ratio = 16 / 9;
 
       if (gameHeight < gameWidth / ratio) {
@@ -40,13 +38,18 @@ const Map = () => {
       } else {
          gameHeight = gameWidth / ratio;
       }
+
+      setGameSize({ width: gameWidth, height: gameHeight });
    };
 
-   resizeGame();
-
-   window.addEventListener('resize', () => {
+   useEffect(() => {
       resizeGame();
-   });
+      window.addEventListener('resize', resizeGame);
+
+      return () => {
+         window.removeEventListener('resize', resizeGame);
+      };
+   }, []);
 
    const scale = 1;
 
@@ -59,19 +62,19 @@ const Map = () => {
          <QuestLog />
          <ReactReduxContext.Consumer>
             {({ store }) => (
-               <Stage width={gameWidth} height={gameHeight} options={{ backgroundColor: 0x000000, autoDensity: true }}>
+               <Stage width={gameSize.width} height={gameSize.height} options={{ backgroundColor: 0x000000, autoDensity: true }}>
                   <AppContext.Consumer>
                      {(app) => (
                         <Provider store={store}>
                            {activePlayerId && engineState.characterMovements && (
                               <Container
                                  position={[
-                                    -(engineState?.characterMovements.data[activePlayerId]?.location.x ?? 0) * scale + gameWidth / 2,
-                                    -(engineState?.characterMovements.data[activePlayerId]?.location.y ?? 0) * scale + gameHeight / 2,
+                                    -(engineState?.characterMovements.data[activePlayerId]?.location.x ?? 0) * scale + gameSize.width / 2,
+                                    -(engineState?.characterMovements.data[activePlayerId]?.location.y ?? 0) * scale + gameSize.height / 2,
                                  ]}
                               >
                                  <AreasSpellsEffectsManager />
-                                 <DrawAreas />
+                                 <AreasManager />
                                  {renderSpells()}
                                  <CastBarsManager />
                                  <RenderPlayersManager />
