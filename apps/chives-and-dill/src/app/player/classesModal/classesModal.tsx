@@ -55,7 +55,7 @@ export const ClassesModal = () => {
    const onSubmit = (e) => {
       e.preventDefault();
       socket?.emit(ClientMessages.CreateCharacter, {
-         nick,
+         name: nick,
          class: selectedClass,
       });
    };
