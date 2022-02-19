@@ -7,10 +7,10 @@ import { selectActiveCharacterId, selectKeyBinds, getEngineState } from '../../s
 
 const GameController = ({ children }) => {
    const context = useContext(SocketContext);
-   const [gameControllerContext, setGameControllerContext] = useState<any>({});
+   const [gameControllerContext, setGameControllerContext] = useState<any>({ });
    const keyBinds = useSelector(selectKeyBinds);
    const { socket } = context;
-   const [keysState, setKeysState] = useState<Record<string, boolean>>({});
+   const [keysState, setKeysState] = useState<Record<string, boolean>>({ });
    const [mousePosition, setMousePosition] = useState({ x: null, y: null });
 
    const activePlayerId = useSelector(selectActiveCharacterId);
@@ -129,7 +129,7 @@ const GameController = ({ children }) => {
             x: engineState.characterMovements.data[activePlayerId].location.x + event.nativeEvent.offsetX - gameWidth / 2,
             y: engineState.characterMovements.data[activePlayerId].location.y + event.nativeEvent.offsetY - gameHeight / 2,
          },
-         spellName: 'ArrowShot',
+         spellName: 'Fireball',
       });
    };
 

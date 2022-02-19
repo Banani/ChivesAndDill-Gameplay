@@ -115,12 +115,6 @@ const SocketCommunicator = ({ children }) => {
          context.socket.on(EngineMessages.Package, (event) => {
             dispatch(newPackage(event));
          });
-
-         context.socket.on(FightingEngineMessages.AbsorbShieldChanged, ({ targetId, newValue }) => {
-            dispatch(updatePlayerAbsorb({ targetId, newValue }));
-         });
-
-         context.socket.on(FightingEngineMessages.DamageAbsorbed, (event) => {});
       }
    }, [context]);
 

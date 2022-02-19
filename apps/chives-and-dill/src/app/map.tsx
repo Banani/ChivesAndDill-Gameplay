@@ -13,7 +13,10 @@ import { AreasManager } from './mapContent/AreasManager';
 import { CastBarsManager } from './mapContent/CastBarsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
+import { FloatingNumbersManager } from "./mapContent/FloatingNumbersManager";
 import { TargetIcon } from './mapContent/targetIcon/TargetIcon';
+import { BloodPoolManager } from './mapContent/bloodPoolsManager';
+import { ActivePlayerTimeEffects } from "./mapContent/activePlayerTimeEffects/ActivePlayerTimeEffects";
 
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
@@ -22,9 +25,7 @@ const Map = () => {
 
    const renderSpells = useCallback(
       () =>
-         _.map(engineState.projectileMovements.data, (spell, i) => (
-            <Sprite key={i} image="../assets/spritesheets/spells/potato.png" x={spell.location.x} y={spell.location.y}></Sprite>
-         )),
+         _.map(engineState.projectileMovements.data, (spell, i) => <Sprite rotation={spell.angle + 1.5} key={i} image="../assets/spritesheets/spells/mage/spellsView/fireball.png" x={spell.location.x} y={spell.location.y}></Sprite>),
       [engineState.projectileMovements]
    );
 
@@ -58,6 +59,7 @@ const Map = () => {
          {activePlayerId ? <SpellsBar /> : null}
          {activePlayerId ? <PlayerIcon playerId={activePlayerId}></PlayerIcon> : null}
          <TargetIcon />
+         {activePlayerId ? <ActivePlayerTimeEffects playerId={activePlayerId} /> : null}
          {<QuestsSideView />}
          <QuestLog />
          <ReactReduxContext.Consumer>
@@ -78,7 +80,9 @@ const Map = () => {
                                  {renderSpells()}
                                  <CastBarsManager />
                                  <RenderPlayersManager />
+                                 <FloatingNumbersManager />
                                  <BlinkSpellEffect />
+                                 <BloodPoolManager />
                               </Container>
                            )}
                         </Provider>

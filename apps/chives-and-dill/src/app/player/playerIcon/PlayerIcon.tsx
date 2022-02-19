@@ -3,32 +3,37 @@ import { useSelector } from 'react-redux';
 import styles from './PlayerIcon.module.scss';
 import { getEngineState, selectCharacters } from '../../../stores';
 import { TimeEffectsbar } from '../timeEffectsBar/TimeEffectsBar';
+import { GetAbsorbsValue } from "../GetPlayerAbsorbs";
 
 export const PlayerIcon = ({ playerId }) => {
 
    const engineState = useSelector(getEngineState);
    const players = useSelector(selectCharacters);
    const player = players[playerId];
-   const { name, absorb, avatar } = player;
-
-   const [absorbBar, updateAbsortBar] = useState(0);
+   const { name, avatar } = player;
+   const playerAbsorb = GetAbsorbsValue(playerId);
+   const [absorbBarWidth, setAbsorbBarWidth] = useState(0);
 
    const playerPoints = engineState.characterPowerPoints.data[playerId];
+   const powerStacks = engineState.powerStacks.data[playerId]?.HolyPower;
 
    useEffect(() => {
       if (!playerPoints) {
          return;
       }
 
-      if ((absorb / playerPoints.maxHp) * 100 > 100) {
-         updateAbsortBar(100);
-      } else {
-         updateAbsortBar((absorb / playerPoints.maxHp) * 100);
-      }
-   }, [absorb, playerPoints]);
+      setAbsorbBarWidth((playerAbsorb / (playerAbsorb + playerPoints.maxHp)) * 100);
+   }, [playerAbsorb, playerPoints]);
 
    if (!playerPoints) {
       return <></>;
+   }
+
+   const renderPowerStacks = (stacksType, amount) => {
+      if (!amount) {
+         return;
+      }
+      return Array.from(Array(amount).keys()).map((i) => <div className={styles.powerStackCircle} />)
    }
 
    const { maxHp, currentHp, currentSpellPower, maxSpellPower } = playerPoints;
@@ -43,8 +48,8 @@ export const PlayerIcon = ({ playerId }) => {
                <div className={styles.nameBar}>{name}</div>
                <div className={styles.bar}>
                   <div className={styles.barText}>{currentHp >= 0 ? currentHp + '/' + maxHp : 0}</div>
-                  <div className={styles.hpColor} style={{ width: currentHp >= 0 ? (currentHp / maxHp) * 100 + '%' : '0' }}></div>
-                  <div className={styles.absorbColor} style={{ width: absorbBar + '%' }}></div>
+                  <div className={styles.hpColor} style={{ width: currentHp >= 0 ? (currentHp / (maxHp + playerAbsorb)) * 100 + '%' : '0' }}></div>
+                  <div className={styles.absorbColor} style={{ width: absorbBarWidth + '%', left: `${(currentHp / (maxHp + playerAbsorb)) * 100}%` }}></div>
                </div>
                <div className={styles.bar}>
                   <div className={styles.barText}>{currentSpellPower >= 0 ? currentSpellPower + '/' + maxSpellPower : 0}</div>
@@ -52,7 +57,9 @@ export const PlayerIcon = ({ playerId }) => {
                </div>
             </div>
          </div>
-         <TimeEffectsbar playerId={playerId} />
+         <div className={styles.powerStacks}>
+            {renderPowerStacks("HolyPower", powerStacks)}
+         </div>
       </div>
    );
 };

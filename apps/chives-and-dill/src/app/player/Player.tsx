@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import { useSelector, useDispatch } from 'react-redux';
 import { getEngineState, selectCharacterPowerPointsEvents, setActiveTarget } from '../../stores';
+import { GetAbsorbsValue } from './GetPlayerAbsorbs';
 import _ from 'lodash';
 
 const Player = ({ player, characterViewsSettings }) => {
@@ -10,7 +11,6 @@ const Player = ({ player, characterViewsSettings }) => {
    const [playerSheet, setPlayerSheet] = useState({});
    const [characterStatus, setCharacterStatus] = useState('standingDown');
    const [isCharacterMoving, setIsCharacterMoving] = useState(false);
-   const [yPositionOfUpdatedHp, setYPositionOfUpdatedHp] = useState(2.5);
 
    const powerPointsEvent = useSelector(selectCharacterPowerPointsEvents);
    useEffect(() => {
@@ -27,6 +27,7 @@ const Player = ({ player, characterViewsSettings }) => {
    const playerPoints = engineState.characterPowerPoints.data[player.id] ?? { maxHp: 0, currentHp: 0 };
    const { maxHp, currentHp } = playerPoints;
    const dispatch = useDispatch();
+   const playerAbsorb = GetAbsorbsValue(player.id);
 
    const getPlayerSheets = useCallback(() => {
       const newPlayerSheets = {
@@ -105,32 +106,12 @@ const Player = ({ player, characterViewsSettings }) => {
       }
    }, [engineState.characterMovements.data, player.id]);
 
-   useEffect(() => {
-      let position = 2.5;
-      const positionTimer = setInterval(() => {
-         position += 0.1;
-         setYPositionOfUpdatedHp(position);
-         if (position >= 4.5) {
-            clearInterval(positionTimer);
-         }
-      }, 20);
-
-      if (currentHp <= 0) {
-         // PEEPEEPOOPOO: character should have 'dead' sprite only when te status isDead is set to true
-         setCharacterStatus('dead');
-      }
-   }, [currentHp]);
-
    const drawAbsorbBar = (g) => {
-      let barWidth;
-      if ((player.absorb / maxHp) * 50 > 50) {
-         barWidth = 50;
-      } else {
-         barWidth = (player.absorb / maxHp) * 50;
-      }
+      const barWidth = (playerAbsorb / (playerAbsorb + maxHp)) * 50;
+      const healthBarWidth = (currentHp / (playerAbsorb + maxHp)) * 50 - 25;
       g.beginFill(0xe8e8e8);
       g.drawRect(
-         engineState?.characterMovements.data[player.id].location.x - 25,
+         engineState?.characterMovements.data[player.id].location.x + healthBarWidth,
          engineState?.characterMovements.data[player.id].location.y - h / 1.5,
          barWidth,
          5
@@ -139,6 +120,7 @@ const Player = ({ player, characterViewsSettings }) => {
    };
 
    const drawHealthBar = (g) => {
+      const barWidth = (currentHp / (playerAbsorb + maxHp)) * 50;
       g.beginFill(0xff0000);
       g.drawRect(engineState?.characterMovements.data[player.id].location.x - 25, engineState?.characterMovements.data[player.id].location.y - h / 1.5, 50, 5);
       g.endFill();
@@ -146,7 +128,7 @@ const Player = ({ player, characterViewsSettings }) => {
       g.drawRect(
          engineState?.characterMovements.data[player.id].location.x - 25,
          engineState?.characterMovements.data[player.id].location.y - h / 1.5,
-         (currentHp / maxHp) * 50,
+         barWidth,
          5
       );
       g.endFill();
@@ -168,13 +150,6 @@ const Player = ({ player, characterViewsSettings }) => {
       },
       [engineState.characterMovements, player, h]
    );
-
-   const returnColorOfHpNumber = () => {
-      if (player.spellEffect === 'heal') {
-         return 'green';
-      }
-      return 'red';
-   };
 
    return engineState.characterMovements.data[player.id] ? (
       <>
@@ -208,20 +183,6 @@ const Player = ({ player, characterViewsSettings }) => {
                pointerdown={() => dispatch(setActiveTarget({ characterId: player.id }))}
             />
          )}
-         {yPositionOfUpdatedHp <= 4.5 ? (
-            <Text
-               text={player.hpLost ? player.hpLost : null}
-               anchor={[0.5, yPositionOfUpdatedHp]}
-               x={engineState.characterMovements.data[player.id].location.x}
-               y={engineState.characterMovements.data[player.id].location.y}
-               style={
-                  new PIXI.TextStyle({
-                     fontSize: 15,
-                     fill: returnColorOfHpNumber(),
-                  })
-               }
-            />
-         ) : null}
       </>
    ) : null;
 };

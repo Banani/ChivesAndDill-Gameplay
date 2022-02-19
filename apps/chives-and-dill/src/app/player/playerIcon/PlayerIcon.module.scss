@@ -115,10 +115,23 @@
         position: absolute;
         height: 100%;
         width: 100%;
-        left: 0;
       }
     }
   }
 }
 
+.powerStacks{
+  position: absolute;
+  top: 130px;
+  left: 250px;
+  display: flex;
 
+  .powerStackCircle {
+    margin-right: 20px;
+    background-color: gold;
+    border: 1px solid black;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+  }
+}

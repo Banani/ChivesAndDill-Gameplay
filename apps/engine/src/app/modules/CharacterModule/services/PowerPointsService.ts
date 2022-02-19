@@ -1,14 +1,15 @@
-import { HealthPointsSource, PowerPointsTrack } from '@bananos/types';
+import type { PowerPointsTrack } from '@bananos/types';
+import { HealthPointsSource } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
 import { Classes } from '../../../types/Classes';
-import { MonsterEngineEvents, NewMonsterCreatedEvent } from '../../MonsterModule/Events';
+import type { NewMonsterCreatedEvent } from '../../MonsterModule/Events';
+import { MonsterEngineEvents } from '../../MonsterModule/Events';
 import { MonsterRespawns } from '../../MonsterModule/MonsterRespawns';
-import {
+import type {
    AddCharacterHealthPointsEvent,
    AddCharacterSpellPowerEvent,
-   CharacterEngineEvents,
    CharacterGotHpEvent,
    CharacterGotSpellPowerEvent,
    CharacterLostHpEvent,
@@ -19,6 +20,7 @@ import {
    TakeCharacterHealthPointsEvent,
    TakeCharacterSpellPowerEvent,
 } from '../Events';
+import { CharacterEngineEvents } from '../Events';
 
 const classesBaseStats: Record<Classes, PowerPointsTrack> = {
    [Classes.Tank]: {
@@ -34,14 +36,14 @@ const classesBaseStats: Record<Classes, PowerPointsTrack> = {
       maxSpellPower: 2000,
    },
    [Classes.Hunter]: {
-      currentHp: 180,
-      maxHp: 180,
+      currentHp: 300,
+      maxHp: 300,
       currentSpellPower: 100,
       maxSpellPower: 100,
    },
    [Classes.Mage]: {
-      currentHp: 180,
-      maxHp: 180,
+      currentHp: 300,
+      maxHp: 300,
       currentSpellPower: 2000,
       maxSpellPower: 2000,
    },
