@@ -12,8 +12,7 @@ import type {
    PlayerStopedAllMovementVectorsEvent,
    Character,
 } from '../../../types';
-import { CharacterEngineEvents, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
-import { NewPlayerCreatedEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
+import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
 
 export class PlayerMovementNotifier extends EventParser implements Notifier {
    private characters: Record<string, Partial<Character>> = {};

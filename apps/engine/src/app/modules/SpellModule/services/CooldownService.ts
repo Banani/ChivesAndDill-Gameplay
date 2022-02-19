@@ -1,8 +1,8 @@
 import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler, NewPlayerCreatedEvent, PlayerDisconnectedEvent } from '../../../types';
-import { MonsterEngineEvents, NewMonsterCreatedEvent } from '../../MonsterModule/Events';
+import { EngineEventHandler } from '../../../types';
+import { CharacterEngineEvents, CharacterRemovedEvent, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
 import { PlayerCastedSpellEvent, PlayerCastSpellEvent, SpellEngineEvents } from '../Events';
 import { Spell } from '../types/spellTypes';
 
@@ -13,10 +13,10 @@ export class CooldownService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [SpellEngineEvents.PlayerCastedSpell]: this.handlePlayerCastedSpell,
-         [EngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
-         [MonsterEngineEvents.NewMonsterCreated]: this.handleNewMonsterCreatedEvent,
-         [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
+         [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
+         [CharacterEngineEvents.CharacterRemoved]: this.handleCharacterRemoved,
          [SpellEngineEvents.PlayerCastSpell]: this.handlePlayerCastSpell,
+         // TODO: CLEAR OLD VALUES ABOUT MONSTER WHEN IT DIES
       };
    }
 
@@ -24,25 +24,25 @@ export class CooldownService extends EventParser {
       super.init(engineEventCrator);
    }
 
+   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
+      this.cooldownHistoryPerUserSpells[event.character.id] = {};
+   };
+
    handlePlayerCastedSpell: EngineEventHandler<PlayerCastedSpellEvent> = ({ event }) => {
       if (event.casterId) {
          this.cooldownHistoryPerUserSpells[event.casterId][event.spell.name] = Date.now();
       }
    };
 
-   handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event }) => {
-      this.cooldownHistoryPerUserSpells[event.payload.newCharacter.id] = {};
-   };
-
-   handleNewMonsterCreatedEvent: EngineEventHandler<NewMonsterCreatedEvent> = ({ event }) => {
-      this.cooldownHistoryPerUserSpells[event.monster.id] = {};
-   };
-
-   handlePlayerDisconnected: EngineEventHandler<PlayerDisconnectedEvent> = ({ event }) => {
-      delete this.cooldownHistoryPerUserSpells[event.payload.playerId];
+   handleCharacterRemoved: EngineEventHandler<CharacterRemovedEvent> = ({ event }) => {
+      delete this.cooldownHistoryPerUserSpells[event.character.id];
    };
 
    isSpellAvailable = (characterId: string, spell: Spell) => {
+      if (!this.cooldownHistoryPerUserSpells[characterId]) {
+         throw new Error('Character not registered');
+      }
+
       const spellLastCast = this.cooldownHistoryPerUserSpells[characterId][spell.name];
 
       return spellLastCast ? Date.now() - spellLastCast > spell.cooldown : true;

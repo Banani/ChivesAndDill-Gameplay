@@ -1,10 +1,12 @@
-import { HealthPointsSource } from '@bananos/types';
-import { Character, EngineEvent, EngineEventHandler } from '../../types';
+import { HealthPointsSource, PowerPointsTrack } from '@bananos/types';
+import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterUnion } from '../../types/CharacterUnion';
 
 export enum CharacterEngineEvents {
    CreateCharacter = 'CreateCharacter',
    NewCharacterCreated = 'NewCharacterCreated',
+   RemoveCharacter = 'RemoveCharacter',
+   CharacterRemoved = 'CharacterRemoved',
 
    CharacterLostHp = 'CharacterLostHp',
    CharacterGotHp = 'CharacterGotHp',
@@ -27,6 +29,16 @@ export interface CreateCharacterEvent extends EngineEvent {
 
 export interface NewCharacterCreatedEvent extends EngineEvent {
    type: CharacterEngineEvents.NewCharacterCreated;
+   character: CharacterUnion;
+}
+
+export interface RemoveCharacterEvent extends EngineEvent {
+   type: CharacterEngineEvents.RemoveCharacter;
+   character: CharacterUnion;
+}
+
+export interface CharacterRemovedEvent extends EngineEvent {
+   type: CharacterEngineEvents.CharacterRemoved;
    character: CharacterUnion;
 }
 
@@ -85,20 +97,26 @@ export interface ResetCharacterEvent extends EngineEvent {
 
 export interface NewPowerTrackCreatedEvent extends EngineEvent {
    type: CharacterEngineEvents.NewPowerTrackCreated;
+   characterId: string;
+   powerPoints: PowerPointsTrack;
 }
 
 export interface CharacterEngineEventsMap {
    [CharacterEngineEvents.CreateCharacter]: EngineEventHandler<any>;
    [CharacterEngineEvents.NewCharacterCreated]: EngineEventHandler<NewCharacterCreatedEvent>;
+   [CharacterEngineEvents.RemoveCharacter]: EngineEventHandler<RemoveCharacterEvent>;
+   [CharacterEngineEvents.CharacterRemoved]: EngineEventHandler<CharacterRemovedEvent>;
 
    [CharacterEngineEvents.CharacterLostHp]: EngineEventHandler<CharacterLostHpEvent>;
    [CharacterEngineEvents.TakeCharacterHealthPoints]: EngineEventHandler<TakeCharacterHealthPointsEvent>;
    [CharacterEngineEvents.AddCharacterHealthPoints]: EngineEventHandler<AddCharacterHealthPointsEvent>;
    [CharacterEngineEvents.CharacterGotHp]: EngineEventHandler<CharacterGotHpEvent>;
+
    [CharacterEngineEvents.TakeCharacterSpellPower]: EngineEventHandler<TakeCharacterSpellPowerEvent>;
    [CharacterEngineEvents.AddCharacterSpellPower]: EngineEventHandler<AddCharacterSpellPowerEvent>;
    [CharacterEngineEvents.CharacterLostSpellPower]: EngineEventHandler<CharacterLostSpellPowerEvent>;
    [CharacterEngineEvents.CharacterGotSpellPower]: EngineEventHandler<CharacterGotSpellPowerEvent>;
+
    [CharacterEngineEvents.ResetCharacter]: EngineEventHandler<ResetCharacterEvent>;
    [CharacterEngineEvents.NewPowerTrackCreated]: EngineEventHandler<NewPowerTrackCreatedEvent>;
 }

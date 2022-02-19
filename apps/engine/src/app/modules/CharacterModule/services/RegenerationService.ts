@@ -6,13 +6,10 @@ import {
    Character,
    CharacterDiedEvent,
    EngineEventHandler,
-   NewPlayerCreatedEvent,
-   PlayerDisconnectedEvent,
    ScheduleActionEvent,
    ScheduleActionTriggeredEvent,
 } from '../../../types';
-import { MonsterEngineEvents, NewMonsterCreatedEvent } from '../../MonsterModule/Events';
-import { AddCharacterHealthPointsEvent, AddCharacterSpellPowerEvent, CharacterEngineEvents } from '../Events';
+import { AddCharacterHealthPointsEvent, AddCharacterSpellPowerEvent, CharacterEngineEvents, CharacterRemovedEvent, NewCharacterCreatedEvent } from '../Events';
 
 const SERVICE_PREFIX = 'Regeneration_';
 
@@ -28,20 +25,15 @@ export class RegenerationService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [EngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
+         [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [EngineEvents.ScheduleActionTriggered]: this.handleScheduleActionTriggered,
-         [MonsterEngineEvents.NewMonsterCreated]: this.handleNewMonsterCreated,
-         [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
+         [CharacterEngineEvents.CharacterRemoved]: this.handleCharacterRemoved,
       };
    }
 
-   handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event }) => {
-      this.scheduleRegenerations(event.payload.newCharacter);
-   };
-
-   handleNewMonsterCreated: EngineEventHandler<NewMonsterCreatedEvent> = ({ event }) => {
-      this.scheduleRegenerations(event.monster);
+   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
+      this.scheduleRegenerations(event.character);
    };
 
    scheduleRegenerations = (character: Character) => {
@@ -89,7 +81,7 @@ export class RegenerationService extends EventParser {
       this.cleanAfterCharacter(event.characterId);
    };
 
-   handlePlayerDisconnected: EngineEventHandler<PlayerDisconnectedEvent> = ({ event }) => {
-      this.cleanAfterCharacter(event.payload.playerId);
+   handleCharacterRemoved: EngineEventHandler<CharacterRemovedEvent> = ({ event }) => {
+      this.cleanAfterCharacter(event.character.id);
    };
 }

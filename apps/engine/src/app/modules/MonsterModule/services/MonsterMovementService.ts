@@ -1,7 +1,7 @@
 import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { CreatePathEvent, DeletePathEvent, EngineEventHandler, PlayerDisconnectedEvent } from '../../../types';
+import { CreatePathEvent, DeletePathEvent, EngineEventHandler } from '../../../types';
 import { MonsterMovementEngine } from '../engines/MonsterMovementEngine';
 import { MonsterEngineEvents, MonsterLostAggroEvent, MonsterPulledEvent } from '../Events';
 

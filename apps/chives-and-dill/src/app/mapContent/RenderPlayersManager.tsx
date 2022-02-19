@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import Player from '../player/Player';
-import { selectCharacterViewsSettings, selectActiveCharacterId, selectCharacters } from '../../stores';
+import { selectCharacterViewsSettings, selectActiveCharacterId, selectCharacters, selectCharacterPowerPointsEvents } from '../../stores';
 import _ from 'lodash';
 
 export const RenderPlayersManager = () => {

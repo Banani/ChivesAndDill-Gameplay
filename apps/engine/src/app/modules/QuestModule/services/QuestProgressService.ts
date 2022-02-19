@@ -1,7 +1,7 @@
 import { forEach, mapValues, keyBy, filter } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler, NewPlayerCreatedEvent } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { CharacterEngineEvents, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {

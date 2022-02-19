@@ -14,18 +14,6 @@ export interface EngineEvent {
    type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | SpellEngineEvents | CharacterEngineEvents | PlayerEngineEvents;
 }
 
-export interface NewPlayerCreatedEvent extends EngineEvent {
-   payload: {
-      newCharacter: PlayerCharacter;
-   };
-}
-
-export interface PlayerDisconnectedEvent extends EngineEvent {
-   payload: {
-      playerId: string;
-   };
-}
-
 export interface CharacterDiedEvent extends EngineEvent {
    characterId: string;
    character: Monster | PlayerCharacter;
@@ -105,9 +93,7 @@ export interface CancelScheduledActionEvent extends EngineEvent {
 export type EngineEventHandler<T> = ({ event, services }: { event: T; services: Services }) => void;
 
 export interface EngineEventsMap {
-   [EngineEvents.PlayerDisconnected]: EngineEventHandler<PlayerDisconnectedEvent>;
    [EngineEvents.CharacterDied]: EngineEventHandler<CharacterDiedEvent>;
-   [EngineEvents.NewPlayerCreated]: EngineEventHandler<NewPlayerCreatedEvent>;
    [EngineEvents.PlayerStartedMovement]: EngineEventHandler<PlayerStartedMovementEvent>;
    [EngineEvents.PlayerTriesToStartedMovement]: EngineEventHandler<PlayerTriesToStartedMovementEvent>;
    [EngineEvents.PlayerStopedAllMovementVectors]: EngineEventHandler<PlayerStopedAllMovementVectorsEvent>;

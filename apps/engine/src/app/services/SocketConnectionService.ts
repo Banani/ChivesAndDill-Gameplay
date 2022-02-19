@@ -4,9 +4,9 @@ import { AREAS } from '../../map';
 import { EngineEvents } from '../EngineEvents';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
-import { CreateNewPlayerEvent, NewPlayerCreatedEvent, PlayerEngineEvents } from '../modules/PlayerModule/Events';
+import { CreateNewPlayerEvent, NewPlayerCreatedEvent, PlayerDisconnectedEvent, PlayerEngineEvents } from '../modules/PlayerModule/Events';
 import { Notifier } from '../Notifier';
-import type { EngineEventHandler, PlayerDisconnectedEvent } from '../types';
+import type { EngineEventHandler } from '../types';
 
 export class SocketConnectionService extends EventParser {
    io;
@@ -68,10 +68,8 @@ export class SocketConnectionService extends EventParser {
 
       event.socket.on('disconnect', () => {
          this.engineEventCrator.asyncCeateEvent<PlayerDisconnectedEvent>({
-            type: EngineEvents.PlayerDisconnected,
-            payload: {
-               playerId: event.playerId,
-            },
+            type: PlayerEngineEvents.PlayerDisconnected,
+            playerId: event.playerId,
          });
          delete this.sockets[event.playerId];
       });

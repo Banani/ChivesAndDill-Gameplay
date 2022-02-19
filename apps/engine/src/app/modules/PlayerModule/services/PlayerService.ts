@@ -1,7 +1,10 @@
 import { EventParser } from '../../../EventParser';
-import type { EngineEventHandler } from '../../../types';
+import { CharacterType, EngineEventHandler } from '../../../types';
 import type { Player } from '../types';
 import { CreateNewPlayerEvent, NewPlayerCreatedEvent, PlayerDisconnectedEvent, PlayerEngineEvents } from '../Events';
+import { CharacterEngineEvents, RemoveCharacterEvent } from '../../CharacterModule/Events';
+import * as _ from 'lodash';
+import { PlayerCharacter } from '../../../types/PlayerCharacter';
 
 export class PlayerService extends EventParser {
    players: Record<string, Player> = {};
@@ -27,7 +30,19 @@ export class PlayerService extends EventParser {
       });
    };
 
-   handlePlayerDisconnected: EngineEventHandler<PlayerDisconnectedEvent> = ({ event }) => {
+   handlePlayerDisconnected: EngineEventHandler<PlayerDisconnectedEvent> = ({ event, services }) => {
       delete this.players[event.playerId];
+
+      const playerCharacter = _.find(
+         services.characterService.getAllCharacters(),
+         (character) => character.type === CharacterType.Player && character.ownerId === event.playerId
+      );
+
+      if (playerCharacter) {
+         this.engineEventCrator.asyncCeateEvent<RemoveCharacterEvent>({
+            type: CharacterEngineEvents.RemoveCharacter,
+            character: playerCharacter,
+         });
+      }
    };
 }

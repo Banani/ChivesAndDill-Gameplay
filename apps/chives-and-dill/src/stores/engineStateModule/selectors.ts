@@ -9,3 +9,5 @@ export const selectActiveCharacterId = (state: EngineAwareState) => state.engine
 export const selectCharacters = (state: EngineAwareState) => state.engineStateModule.character.data;
 
 export const selectAreas = (state: EngineAwareState) => state.engineStateModule.areas.data.area;
+
+export const selectCharacterPowerPointsEvents = (state: EngineAwareState) => state.engineStateModule.characterPowerPoints.events;

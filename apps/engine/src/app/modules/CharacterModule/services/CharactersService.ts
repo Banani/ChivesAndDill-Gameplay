@@ -1,37 +1,34 @@
-import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import type {
-   EngineEventHandler,
-   NewPlayerCreatedEvent,
-   PlayerDisconnectedEvent,
-   PlayerStartedMovementEvent,
-   PlayerStopedAllMovementVectorsEvent,
-   PlayerMovedEvent,
-   CharacterDiedEvent,
-   Character,
-} from '../../../types';
-import { CharacterType } from '../../../types';
-import { Classes } from '../../../types/Classes';
-import type { PlayerCharacter } from '../../../types/PlayerCharacter';
-import { SpellsPerClass } from '../../SpellModule/spells';
-import { CharacterEngineEvents, CreateCharacterEvent, NewCharacterCreatedEvent } from '../Events';
+import type { EngineEventHandler, PlayerStartedMovementEvent, PlayerStopedAllMovementVectorsEvent, PlayerMovedEvent, CharacterDiedEvent } from '../../../types';
+import { CharacterUnion } from '../../../types/CharacterUnion';
+import { CharacterEngineEvents, CharacterRemovedEvent, CreateCharacterEvent, NewCharacterCreatedEvent, RemoveCharacterEvent } from '../Events';
 
 export class CharactersService extends EventParser {
-   characters: Record<string, Character> = {};
+   characters: Record<string, CharacterUnion> = {};
    increment = 0;
 
    constructor() {
       super();
       this.eventsToHandlersMap = {
+         [CharacterEngineEvents.RemoveCharacter]: this.handleRemoveCharacter,
          [CharacterEngineEvents.CreateCharacter]: this.handleCreateCharacter,
-         [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
          [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
          [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
       };
    }
+
+   handleRemoveCharacter: EngineEventHandler<RemoveCharacterEvent> = ({ event }) => {
+      const characterToRemove = this.characters[event.character.id];
+      delete this.characters[event.character.id];
+
+      this.engineEventCrator.asyncCeateEvent<CharacterRemovedEvent>({
+         type: CharacterEngineEvents.CharacterRemoved,
+         character: characterToRemove,
+      });
+   };
 
    handleCreateCharacter: EngineEventHandler<CreateCharacterEvent> = ({ event }) => {
       this.characters[event.character.id] = event.character;
@@ -40,10 +37,6 @@ export class CharactersService extends EventParser {
          type: CharacterEngineEvents.NewCharacterCreated,
          character: event.character,
       });
-   };
-
-   handlePlayerDisconnected: EngineEventHandler<PlayerDisconnectedEvent> = ({ event }) => {
-      delete this.characters[event.payload.playerId];
    };
 
    handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event }) => {

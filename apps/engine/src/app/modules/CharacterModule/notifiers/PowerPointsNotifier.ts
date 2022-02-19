@@ -31,12 +31,12 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
       super();
       this.eventsToHandlersMap = {
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
+         [CharacterEngineEvents.NewPowerTrackCreated]: this.handleNewPowerTrackCreated,
          [CharacterEngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [CharacterEngineEvents.CharacterGotHp]: this.handleCharacterGotHp,
          [CharacterEngineEvents.CharacterLostSpellPower]: this.handleCharacterLostSpellPower,
          [CharacterEngineEvents.CharacterGotSpellPower]: this.handleCharacterGotSpellPower,
-         [CharacterEngineEvents.NewPowerTrackCreated]: this.handleNewPowerTrackCreated,
          [MonsterEngineEvents.NewMonsterCreated]: this.handleNewMonsterCreated,
       };
    }
@@ -67,14 +67,13 @@ export class PowerPointsNotifier extends EventParser implements Notifier {
       this.multicast.messages[event.playerCharacter.ownerId].data = services.powerPointsService.getAllPowerTracks();
    };
 
+   handleNewPowerTrackCreated: EngineEventHandler<NewPowerTrackCreatedEvent> = ({ event, services }) => {
+      this.powerPointsTrack[event.characterId] = event.powerPoints;
+   };
+
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
       this.toDelete.push(event.characterId);
       delete this.powerPointsTrack[event.characterId];
-   };
-
-   handleNewPowerTrackCreated: EngineEventHandler<NewPowerTrackCreatedEvent> = ({ event, services }) => {
-      // BUG - should goes only to new player
-      //this.powerPointsTrack = services.powerPointsService.getAllPowerTracks();
    };
 
    handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event }) => {

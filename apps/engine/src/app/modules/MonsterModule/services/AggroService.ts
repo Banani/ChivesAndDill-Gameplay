@@ -2,8 +2,9 @@ import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { CharacterDiedEvent, EngineEventHandler, PlayerDisconnectedEvent, PlayerMovedEvent } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler, PlayerMovedEvent } from '../../../types';
 import { Services } from '../../../types/Services';
+import { CharacterEngineEvents, CharacterRemovedEvent } from '../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
 import { SpellEffectType, DamageEffect } from '../../SpellModule/types/spellTypes';
 import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostAggroEvent, MonsterLostTargetEvent, MonsterPulledEvent, MonsterTargetChangedEvent } from '../Events';
@@ -29,7 +30,7 @@ export class AggroService extends EventParser {
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [MonsterEngineEvents.MonsterTargetChanged]: this.handleMonsterTargetChanged,
-         [EngineEvents.PlayerDisconnected]: this.handlePlayerDisconnected,
+         [CharacterEngineEvents.CharacterRemoved]: this.handleCharacterRemoved,
 
          [SpellEngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
       };
@@ -185,10 +186,10 @@ export class AggroService extends EventParser {
 
    getMonsterAggro = () => this.monsterAggro;
 
-   handlePlayerDisconnected: EngineEventHandler<PlayerDisconnectedEvent> = ({ event }) => {
+   handleCharacterRemoved: EngineEventHandler<CharacterRemovedEvent> = ({ event }) => {
       forEach(this.monsterAggro, (aggro, monsterId) => {
-         if (aggro.allTargets[event.payload.playerId]) {
-            this.deleteAggro(monsterId, event.payload.playerId);
+         if (aggro.allTargets[event.character.id]) {
+            this.deleteAggro(monsterId, event.character.id);
          }
       });
    };
