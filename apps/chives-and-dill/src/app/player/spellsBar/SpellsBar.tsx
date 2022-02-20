@@ -1,14 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styles from './SpellsBar.module.scss';
 import { useSelector } from 'react-redux';
-import { selectSpells, selectKeyBinds } from '../../../stores';
+import { selectKeyBinds } from '../../../stores';
+import { selectCharacters, selectActiveCharacterId } from '../../../stores';
 import _ from 'lodash';
 import { GameControllerContext } from '../../gameController/gameControllerContext';
 
 export const SpellsBar = () => {
    const context = useContext(GameControllerContext);
-   const spells = useSelector(selectSpells);
+   const characters = useSelector(selectCharacters);
+   const activePlayerId = useSelector(selectActiveCharacterId);
    const keyBinds = useSelector(selectKeyBinds);
+   const spells = characters[activePlayerId].spells;
 
    const [spellsOnCooldown, setSpellOnCooldown] = useState([]);
    const [clickedSpell, setClickedSpell] = useState('');
@@ -44,16 +47,17 @@ export const SpellsBar = () => {
    };
 
    if (Object.keys(spells).length) {
-      renderSpells = _.map(keyBinds, (spell, index) => {
-         const activeSpell = spells[spell];
-
+      let i = 0;
+      renderSpells = _.map(spells, (spell, key) => {
+         i++;
+         const activeSpell = spell;
          return (
-            <div key={index} className={styles.spellContainer}>
-               <div className={styles.keyboardNumber}>{index}</div>
+            <div key={key} className={styles.spellContainer}>
+               <div className={styles.keyboardNumber}>{i}</div>
                <img
                   src={activeSpell.image}
                   style={{ borderColor: `${colorOfSpellBorder(activeSpell)}` }}
-                  className={styles.spellImage + ' ' + `${context[index] ? styles.activeSpell : null}`}
+                  className={styles.spellImage + ' ' + `${context[key] ? styles.activeSpell : null}`}
                   alt={activeSpell.name}
                />
                <div className={styles.spellTooltip}>

@@ -19,7 +19,6 @@ import {
    questCompleted,
    killingStagePartProgress,
    newQuestStageStarted,
-   updatePlayerAbsorb,
    newPackage,
 } from '../../stores';
 import { SocketContext } from './socketContext';

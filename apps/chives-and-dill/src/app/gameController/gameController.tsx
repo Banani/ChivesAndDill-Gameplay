@@ -3,16 +3,17 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SocketContext } from '../gameController/socketContext';
 import { GameControllerContext } from './gameControllerContext';
 import { useSelector } from 'react-redux';
-import { selectActiveCharacterId, selectKeyBinds, getEngineState } from '../../stores';
+import { selectActiveCharacterId, selectCharacters, getEngineState } from '../../stores';
+import _ from "lodash";
 
 const GameController = ({ children }) => {
    const context = useContext(SocketContext);
-   const [gameControllerContext, setGameControllerContext] = useState<any>({ });
-   const keyBinds = useSelector(selectKeyBinds);
+   const [gameControllerContext, setGameControllerContext] = useState<any>({});
    const { socket } = context;
-   const [keysState, setKeysState] = useState<Record<string, boolean>>({ });
+   const [keysState, setKeysState] = useState<Record<string, boolean>>({});
    const [mousePosition, setMousePosition] = useState({ x: null, y: null });
 
+   const characters = useSelector(selectCharacters);
    const activePlayerId = useSelector(selectActiveCharacterId);
    const engineState = useSelector(getEngineState);
 
@@ -71,6 +72,13 @@ const GameController = ({ children }) => {
       }
 
       const key = event.key.toLowerCase();
+
+      let keyBinds = _.map(characters[activePlayerId].spells, spell => spell.name);
+      keyBinds = keyBinds.reduce((prev, current, index) => {
+         prev[index + 1] = current;
+         return prev;
+      }, {})
+
       if (keyBinds[key]) {
          socket?.emit(ClientMessages.PerformBasicAttack, {
             directionLocation: {
@@ -123,19 +131,9 @@ const GameController = ({ children }) => {
       return () => window.removeEventListener('mousemove', updateMousePosition);
    }, []);
 
-   const clickHandler = (event) => {
-      socket?.emit(ClientMessages.PerformBasicAttack, {
-         directionLocation: {
-            x: engineState.characterMovements.data[activePlayerId].location.x + event.nativeEvent.offsetX - gameWidth / 2,
-            y: engineState.characterMovements.data[activePlayerId].location.y + event.nativeEvent.offsetY - gameHeight / 2,
-         },
-         spellName: 'Fireball',
-      });
-   };
-
    return (
       <GameControllerContext.Provider value={gameControllerContext}>
-         <div onKeyDown={(event) => keyPressHandler(event)} onKeyUp={keyUpHandler} onClick={(event) => clickHandler(event)} tabIndex={0}>
+         <div onKeyDown={(event) => keyPressHandler(event)} onKeyUp={keyUpHandler} tabIndex={0}>
             {children}
          </div>
       </GameControllerContext.Provider>
