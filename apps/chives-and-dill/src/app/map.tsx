@@ -17,7 +17,7 @@ import { FloatingNumbersManager } from "./mapContent/FloatingNumbersManager";
 import { TargetIcon } from './mapContent/targetIcon/TargetIcon';
 import { BloodPoolManager } from './mapContent/bloodPoolsManager';
 import { ActivePlayerTimeEffects } from "./mapContent/activePlayerTimeEffects/ActivePlayerTimeEffects";
-import { MapManager } from './mapContent/AreasManager/MapManager';
+import { MapManager } from './mapContent/mapManager/MapManager';
 
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
