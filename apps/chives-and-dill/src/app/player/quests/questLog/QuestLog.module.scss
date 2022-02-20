@@ -21,7 +21,6 @@
         display: flex;
         align-self: left;
         flex-direction: column;
-        
 
         .QuestTitle{
           color:rgb(224, 224, 224);
@@ -31,6 +30,14 @@
 
           &:hover {
             color:rgb(200, 200, 200);
+          }
+        }
+
+        .ActiveTitle {
+          color: rgb(255, 0, 0);
+
+          &:hover {
+            color:rgb(177, 0, 0);
           }
         }
       }

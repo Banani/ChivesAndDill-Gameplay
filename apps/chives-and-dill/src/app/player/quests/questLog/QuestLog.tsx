@@ -4,12 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectQuests, selectActiveQuestDetails, activeQuestDetailsUpdate } from '../../../../stores';
 import _ from 'lodash';
 
-export const QuestLog = (props) => {
+export const QuestLog = () => {
 
   const dispatch = useDispatch();
   const quests = useSelector(selectQuests);
   const activeQuestDetails = useSelector(selectActiveQuestDetails);
-  const [activeQuest, setActiveQuest] = useState({ });
+  const [activeQuest, setActiveQuest] = useState({});
 
   useEffect(() => {
     setActiveQuest(activeQuestDetails);
@@ -17,7 +17,7 @@ export const QuestLog = (props) => {
 
   const renderQuests = _.map(quests, (quest, i) => (
     <div key={i}>
-      <div className={styles.QuestTitle} onClick={() => setActiveQuest(quest)}>
+      <div className={`${styles.QuestTitle} ${quest === activeQuest ? styles.ActiveTitle : ''}`} onClick={() => setActiveQuest(quest)}>
         {quest.name}
       </div>
     </div>
@@ -71,7 +71,7 @@ export const QuestLog = (props) => {
       <div className={styles.QuestDetails}>
         {activeQuest ? questDetails(activeQuest) : null}
       </div>
-      <button className={styles.closeWindow} onClick={() => dispatch(activeQuestDetailsUpdate({ }))}>x</button>
+      <button className={styles.closeWindow} onClick={() => dispatch(activeQuestDetailsUpdate({}))}>x</button>
     </div>
   ) : null;
 };
