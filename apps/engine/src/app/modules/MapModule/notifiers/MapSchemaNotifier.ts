@@ -1,14 +1,16 @@
 import { GlobalStoreModule } from '@bananos/types';
-import { AREAS, BORDER } from 'apps/engine/src/map';
+import { AREAS, BORDER } from 'apps/engine/src/app/modules/MapModule/map';
 import { cloneDeep } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import type { MulticastPackage, Notifier } from '../../../Notifier';
 import type { EngineEventHandler } from '../../../types';
 import { NewPlayerCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
+import { mapDefinition } from '../mapDefinition';
+import { mapSchema } from '../mapSchema';
 
-const emptyMulticastPackage: MulticastPackage = { key: GlobalStoreModule.AREAS, messages: {} };
+const emptyMulticastPackage: MulticastPackage = { key: GlobalStoreModule.MAP_SCHEMA, messages: {} };
 
-export class AreaNotifier extends EventParser implements Notifier {
+export class MapSchemaNotifier extends EventParser implements Notifier {
    multicast: MulticastPackage = cloneDeep(emptyMulticastPackage);
 
    constructor() {
@@ -19,7 +21,7 @@ export class AreaNotifier extends EventParser implements Notifier {
    }
 
    getBroadcast = () => {
-      return { data: {}, key: GlobalStoreModule.AREAS, toDelete: [] };
+      return { data: {}, key: GlobalStoreModule.MAP_SCHEMA, toDelete: [] };
    };
 
    getMulticast = () => {
@@ -32,7 +34,7 @@ export class AreaNotifier extends EventParser implements Notifier {
       if (!this.multicast.messages[event.playerId]) {
          this.multicast.messages[event.playerId] = { events: [], data: {}, toDelete: [] };
       }
-      this.multicast.messages[event.playerId].data.area = AREAS;
-      this.multicast.messages[event.playerId].data.border = BORDER;
+      this.multicast.messages[event.playerId].data.mapSchema = mapSchema;
+      this.multicast.messages[event.playerId].data.mapDefinition = mapDefinition;
    };
 }

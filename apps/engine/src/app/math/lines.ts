@@ -1,4 +1,4 @@
-import { AREAS, BORDER } from '../../map';
+import { AREAS, BORDER } from '../modules';
 import { distanceBetweenTwoPoints } from './points';
 
 function getLine([firstPointsSet, secondPointsSet]) {

@@ -41,6 +41,7 @@ export enum GlobalStoreModule {
    ABSORB_SHIELDS = 'absorbShields',
    PLAYER = 'player',
    AREAS = 'areas',
+   MAP_SCHEMA = 'mapSchema',
 }
 
 export interface GlobalStore {

@@ -1,6 +1,6 @@
-import { PathFinderEngine } from '../engines';
 import type {
    AngleBlastSpellService,
+   AreaNotifier,
    AreaSpellService,
    AreaTimeEffectNotifier,
    DamageEffectService,
@@ -19,7 +19,7 @@ import type {
    TeleportationSpellService,
 } from '../modules';
 import { PowerPointsService } from '../modules/CharacterModule';
-import { ActiveCharacterNotifier, AreaNotifier, CharacterNotifier, PowerPointsNotifier } from '../modules/CharacterModule/notifiers';
+import { CharacterNotifier, PowerPointsNotifier } from '../modules/CharacterModule/notifiers';
 import type { RegenerationService } from '../modules/CharacterModule/services/RegenerationService';
 import type { BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from '../modules/MonsterModule';
 import type { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
@@ -44,6 +44,8 @@ import type { GuidedProjectilesService } from '../modules/SpellModule/services/S
 import type { PathFinderService, SocketConnectionService } from '../services';
 import type { SchedulerService } from '../services/SchedulerService';
 import { PlayerCharacterService } from '../modules/PlayerModule/services/PlayerCharacterService';
+import { ActiveCharacterNotifier } from '../modules/PlayerModule/notifiers/ActiveCharacterNotifier';
+import { MapSchemaNotifier } from '../modules/MapModule/notifiers/MapSchemaNotifier';
 
 export interface Services {
    pathFinderService: PathFinderService;
@@ -98,4 +100,5 @@ export interface Services {
    characterNotifier: CharacterNotifier;
    activeCharacterNotifier: ActiveCharacterNotifier;
    areaNotifier: AreaNotifier;
+   mapSchemaNotifier: MapSchemaNotifier;
 }

@@ -1,10 +1,10 @@
 import { CharacterDirection } from '@bananos/types';
-import { BORDER, AREAS } from 'apps/engine/src/map';
 import { each } from 'lodash';
 import { Engine } from '../../../Engine';
 import { EngineEvents } from '../../../EngineEvents';
 import { areSegmentsIntersecting } from '../../../math';
 import { PlayerMovedEvent } from '../../../types';
+import { AREAS, BORDER } from '../../';
 
 export class PlayersMovement extends Engine {
    movements = new WeakMap();

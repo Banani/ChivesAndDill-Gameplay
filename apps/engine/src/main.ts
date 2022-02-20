@@ -3,6 +3,7 @@ import { EngineEventCrator } from './app/EngineEventsCreator';
 import { Services } from './app/types/Services';
 import {
    AngleBlastSpellService,
+   AreaNotifier,
    AreaSpellService,
    DamageEffectService,
    DirectInstantSpellService,
@@ -57,13 +58,15 @@ import { SchedulerEngine } from './app/engines/SchedulerEngine';
 import { RegenerationService } from './app/modules/CharacterModule/services/RegenerationService';
 import { ChannelingNotifier } from './app/modules/SpellModule/notifiers/ChannelingNotifier';
 import { PowerPointsService } from './app/modules/CharacterModule';
-import { ActiveCharacterNotifier, AreaNotifier, CharacterNotifier, PowerPointsNotifier } from './app/modules/CharacterModule/notifiers';
+import { CharacterNotifier, PowerPointsNotifier } from './app/modules/CharacterModule/notifiers';
 import { TimeEffectNotifier } from './app/modules/SpellModule/notifiers/TimeEffectNotifier';
 import { SpellPowerNotifier } from './app/modules/SpellModule/notifiers/SpellPowerNotifier';
 import { AbsorbShieldNotifier } from './app/modules/SpellModule/notifiers/AbsorbShieldNotifier';
 import { PlayerService } from './app/modules/PlayerModule/services/PlayerService';
 import { PlayerNotifier } from './app/modules/PlayerModule/notifiers/PlayerNotifier';
 import { PlayerCharacterService } from './app/modules/PlayerModule/services/PlayerCharacterService';
+import { ActiveCharacterNotifier } from './app/modules/PlayerModule/notifiers/ActiveCharacterNotifier';
+import { MapSchemaNotifier } from './app/modules/MapModule/notifiers/MapSchemaNotifier';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -112,6 +115,7 @@ const fastEngines = [
 const slowEngines = [respawnMonsterEngine];
 
 const playerMovementNotifier = new PlayerMovementNotifier();
+const mapSchemaNotifier = new MapSchemaNotifier();
 const projectileNotifier = new ProjectileNotifier();
 const channelingNotifier = new ChannelingNotifier();
 const powerPointsNotifier = new PowerPointsNotifier();
@@ -138,6 +142,7 @@ const notifiers = [
    characterNotifier,
    activeCharacterNotifier,
    areaNotifier,
+   mapSchemaNotifier,
 ];
 
 const socketConnectionService = new SocketConnectionService(io, notifiers);
@@ -154,6 +159,7 @@ const services: Services = {
    projectilesService: new ProjectilesService(projectileMovement),
    playerMovementNotifier,
    projectileNotifier,
+   mapSchemaNotifier,
    characterEffectNotifier: new CharacterEffectNotifier(),
    cooldownService: new CooldownService(),
    socketConnectionService,
