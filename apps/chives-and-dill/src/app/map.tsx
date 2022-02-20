@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Stage, Sprite, Container, AppContext } from '@inlet/react-pixi';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
-import { getEngineState, selectActiveCharacterId } from '../stores';
+import { getEngineState, selectActiveCharacterId, selectMapSchema } from '../stores';
 import _ from 'lodash';
 
 import { PlayerIcon } from './player/playerIcon/PlayerIcon';
@@ -13,20 +13,29 @@ import { AreasManager } from './mapContent/AreasManager';
 import { CastBarsManager } from './mapContent/CastBarsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
-import { FloatingNumbersManager } from "./mapContent/FloatingNumbersManager";
+import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
 import { TargetIcon } from './mapContent/targetIcon/TargetIcon';
 import { BloodPoolManager } from './mapContent/bloodPoolsManager';
-import { ActivePlayerTimeEffects } from "./mapContent/activePlayerTimeEffects/ActivePlayerTimeEffects";
+import { ActivePlayerTimeEffects } from './mapContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { MapManager } from './mapContent/mapManager/MapManager';
 
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
    const engineState = useSelector(getEngineState);
+   const mapSchema = useSelector(selectMapSchema);
    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
 
    const renderSpells = useCallback(
       () =>
-         _.map(engineState.projectileMovements.data, (spell, i) => <Sprite rotation={spell.angle + 1.5} key={i} image="../assets/spritesheets/spells/mage/spellsView/fireball.png" x={spell.location.x} y={spell.location.y}></Sprite>),
+         _.map(engineState.projectileMovements.data, (spell, i) => (
+            <Sprite
+               rotation={spell.angle + 1.5}
+               key={i}
+               image="../assets/spritesheets/spells/mage/spellsView/fireball.png"
+               x={spell.location.x}
+               y={spell.location.y}
+            ></Sprite>
+         )),
       [engineState.projectileMovements]
    );
 
@@ -77,8 +86,8 @@ const Map = () => {
                                  ]}
                               >
                                  <AreasSpellsEffectsManager />
+                                 <MapManager mapSchema={mapSchema} />
                                  <AreasManager />
-                                 <MapManager />
                                  {renderSpells()}
                                  <CastBarsManager />
                                  <RenderPlayersManager />
