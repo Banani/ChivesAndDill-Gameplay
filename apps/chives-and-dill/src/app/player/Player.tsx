@@ -14,7 +14,7 @@ const Player = ({ player, characterViewsSettings }) => {
 
    const powerPointsEvent = useSelector(selectCharacterPowerPointsEvents);
    useEffect(() => {
-      console.log(powerPointsEvent);
+      //console.log(powerPointsEvent);
    }, [powerPointsEvent]);
    // PEEPEEPOOPOO: if when someone will be hit, then this will contain information about this hit. In that case you should display floating number of lost hp points.
    // Please keep in mind that at one point of time it can have one than one object, when two characters will be hit at the same time, or if one character will be hit twice
