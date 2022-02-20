@@ -4,7 +4,7 @@ import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
 import { omit } from 'lodash';
 import { EngineEventHandler, Character, PlayerMovedEvent, CharacterDiedEvent } from '../../../../types';
 import { Location } from '@bananos/types';
-import { MonsterDiedEvent, MonsterEngineEvents } from '../../../MonsterModule/Events';
+import { MonsterDiedEvent } from '../../../MonsterModule/Events';
 import { Monster } from '../../../MonsterModule/types';
 import { ChannelEngine } from '../../engines/ChannelEngine';
 import {
@@ -39,6 +39,8 @@ export class ChannelService extends EventParser {
          [SpellEngineEvents.PlayerCastSpell]: this.handlePlayerCastSpell,
          [SpellEngineEvents.SpellChannelingFinished]: this.handleSpellChannelingFinished,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+
+         // TODO: after migration the channel should be stopped both for caster and target, when on of them is dead
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
       };
    }
@@ -112,7 +114,7 @@ export class ChannelService extends EventParser {
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
-      if (!this.activeChannelSpells[event.characterId]?.spell.canByCastedInMovement) {
+      if (this.willMovementInterruptCasting(event.characterId)) {
          this.interruptChanneling(event.characterId);
       }
    };

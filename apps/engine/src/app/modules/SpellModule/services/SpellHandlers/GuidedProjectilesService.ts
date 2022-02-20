@@ -49,8 +49,8 @@ export class GuidedProjectilesService extends EventParser {
 
    handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
       if (event.spell.type === SpellType.GuidedProjectile) {
-         const allCharacters = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() };
-         const character = allCharacters[event.casterId];
+         const character = services.characterService.getCharacterById(event.casterId);
+         const allCharacters = services.characterService.getAllCharacters();
 
          let castTargetId;
 
@@ -88,7 +88,11 @@ export class GuidedProjectilesService extends EventParser {
 
    handlePlayerCastSubSpell: EngineEventHandler<PlayerCastSubSpellEvent> = ({ event, services }) => {
       if (event.spell.type === SpellType.GuidedProjectile) {
-         const character = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() }[event.casterId];
+         const casterCharacter = services.characterService.getCharacterById(event.casterId);
+
+         if (!services.characterService.getCharacterById(event.targetId)) {
+            return;
+         }
 
          this.increment++;
          const projectileId = 'guided_projectile_' + this.increment;
@@ -97,8 +101,8 @@ export class GuidedProjectilesService extends EventParser {
             spell: event.spell,
             directionLocation: event.directionLocation as Location,
             targetId: event.targetId,
-            startLocation: character.location,
-            currentLocation: character.location,
+            startLocation: casterCharacter.location,
+            currentLocation: casterCharacter.location,
          };
 
          this.engineEventCrator.asyncCeateEvent<SubSpellCastedEvent>({
@@ -110,7 +114,7 @@ export class GuidedProjectilesService extends EventParser {
          this.engineEventCrator.asyncCeateEvent<ProjectileCreatedEvent>({
             type: SpellEngineEvents.ProjectileCreated,
             projectileId,
-            currentLocation: character.location,
+            currentLocation: casterCharacter.location,
             spell: event.spell,
          });
       }

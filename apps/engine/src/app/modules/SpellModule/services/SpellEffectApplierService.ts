@@ -36,16 +36,22 @@ export class SpellEffectApplierService extends EventParser {
       }
    };
 
-   handleSpellReachedTarget: EngineEventHandler<SpellReachedTargetEvent> = ({ event }) => {
-      if (event.spell.spellEffectsOnTarget) {
-         forEach(event.spell.spellEffectsOnTarget, (spellEffect) => {
-            this.engineEventCrator.asyncCeateEvent<ApplyTargetSpellEffectEvent>({
-               type: SpellEngineEvents.ApplyTargetSpellEffect,
-               caster: event.caster,
-               target: event.target,
-               effect: spellEffect,
-            });
-         });
+   handleSpellReachedTarget: EngineEventHandler<SpellReachedTargetEvent> = ({ event, services }) => {
+      if (!event.spell.spellEffectsOnTarget) {
+         return;
       }
+
+      if (!event.target) {
+         return;
+      }
+
+      forEach(event.spell.spellEffectsOnTarget, (spellEffect) => {
+         this.engineEventCrator.asyncCeateEvent<ApplyTargetSpellEffectEvent>({
+            type: SpellEngineEvents.ApplyTargetSpellEffect,
+            caster: event.caster,
+            target: event.target,
+            effect: spellEffect,
+         });
+      });
    };
 }
