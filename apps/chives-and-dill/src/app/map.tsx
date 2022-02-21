@@ -30,6 +30,7 @@ const Map = () => {
          _.map(engineState.projectileMovements.data, (spell, i) => (
             <Sprite
                rotation={spell.angle + 1.5}
+               scale={2}
                key={i}
                image="../assets/spritesheets/spells/mage/spellsView/fireball.png"
                x={spell.location.x}
@@ -62,8 +63,6 @@ const Map = () => {
       };
    }, []);
 
-   const scale = 1;
-
    return (
       <>
          {activePlayerId ? <SpellsBar /> : null}
@@ -81,8 +80,8 @@ const Map = () => {
                            {activePlayerId && engineState.characterMovements && (
                               <Container
                                  position={[
-                                    -(engineState?.characterMovements.data[activePlayerId]?.location.x ?? 0) * scale + gameSize.width / 2,
-                                    -(engineState?.characterMovements.data[activePlayerId]?.location.y ?? 0) * scale + gameSize.height / 2,
+                                    -(engineState?.characterMovements.data[activePlayerId]?.location.x ?? 0) + gameSize.width / 2,
+                                    -(engineState?.characterMovements.data[activePlayerId]?.location.y ?? 0) + gameSize.height / 2,
                                  ]}
                               >
                                  <AreasSpellsEffectsManager />

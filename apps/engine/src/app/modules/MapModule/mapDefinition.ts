@@ -1,9 +1,9 @@
 export const mapDefinition = [{
-   s: "6",
+   s: "15",
    x: 0,
    y: 0
  }, {
-   s: "10",
+   s: "15",
    x: 0,
    y: 1
  }, {
@@ -399,11 +399,11 @@ export const mapDefinition = [{
    x: 0,
    y: 99
  }, {
-   s: "1",
+   s: "15",
    x: 1,
    y: 0
  }, {
-   s: "9",
+   s: "15",
    x: 1,
    y: 1
  }, {
@@ -799,11 +799,11 @@ export const mapDefinition = [{
    x: 1,
    y: 99
  }, {
-   s: "8",
+   s: "15",
    x: 2,
    y: 0
  }, {
-   s: "12",
+   s: "15",
    x: 2,
    y: 1
  }, {
@@ -1199,11 +1199,11 @@ export const mapDefinition = [{
    x: 2,
    y: 99
  }, {
-   s: "4",
+   s: "15",
    x: 3,
    y: 0
  }, {
-   s: "2",
+   s: "15",
    x: 3,
    y: 1
  }, {
@@ -1599,11 +1599,11 @@ export const mapDefinition = [{
    x: 3,
    y: 99
  }, {
-   s: "12",
+   s: "15",
    x: 4,
    y: 0
  }, {
-   s: "11",
+   s: "15",
    x: 4,
    y: 1
  }, {
@@ -1999,11 +1999,11 @@ export const mapDefinition = [{
    x: 4,
    y: 99
  }, {
-   s: "13",
+   s: "15",
    x: 5,
    y: 0
  }, {
-   s: "14",
+   s: "15",
    x: 5,
    y: 1
  }, {
@@ -2399,11 +2399,11 @@ export const mapDefinition = [{
    x: 5,
    y: 99
  }, {
-   s: "10",
+   s: "15",
    x: 6,
    y: 0
  }, {
-   s: "6",
+   s: "15",
    x: 6,
    y: 1
  }, {
@@ -2799,11 +2799,11 @@ export const mapDefinition = [{
    x: 6,
    y: 99
  }, {
-   s: "7",
+   s: "15",
    x: 7,
    y: 0
  }, {
-   s: "6",
+   s: "15",
    x: 7,
    y: 1
  }, {
@@ -3199,11 +3199,11 @@ export const mapDefinition = [{
    x: 7,
    y: 99
  }, {
-   s: "12",
+   s: "15",
    x: 8,
    y: 0
  }, {
-   s: "8",
+   s: "15",
    x: 8,
    y: 1
  }, {
@@ -3599,11 +3599,11 @@ export const mapDefinition = [{
    x: 8,
    y: 99
  }, {
-   s: "11",
+   s: "15",
    x: 9,
    y: 0
  }, {
-   s: "13",
+   s: "15",
    x: 9,
    y: 1
  }, {
@@ -3999,11 +3999,11 @@ export const mapDefinition = [{
    x: 9,
    y: 99
  }, {
-   s: "10",
+   s: "15",
    x: 10,
    y: 0
  }, {
-   s: "5",
+   s: "15",
    x: 10,
    y: 1
  }, {
@@ -4399,11 +4399,11 @@ export const mapDefinition = [{
    x: 10,
    y: 99
  }, {
-   s: "13",
+   s: "15",
    x: 11,
    y: 0
  }, {
-   s: "10",
+   s: "15",
    x: 11,
    y: 1
  }, {
@@ -4799,11 +4799,11 @@ export const mapDefinition = [{
    x: 11,
    y: 99
  }, {
-   s: "5",
+   s: "15",
    x: 12,
    y: 0
  }, {
-   s: "6",
+   s: "15",
    x: 12,
    y: 1
  }, {
@@ -5199,11 +5199,11 @@ export const mapDefinition = [{
    x: 12,
    y: 99
  }, {
-   s: "11",
+   s: "15",
    x: 13,
    y: 0
  }, {
-   s: "13",
+   s: "15",
    x: 13,
    y: 1
  }, {
@@ -5599,11 +5599,11 @@ export const mapDefinition = [{
    x: 13,
    y: 99
  }, {
-   s: "11",
+   s: "15",
    x: 14,
    y: 0
  }, {
-   s: "4",
+   s: "15",
    x: 14,
    y: 1
  }, {
@@ -5999,11 +5999,11 @@ export const mapDefinition = [{
    x: 14,
    y: 99
  }, {
-   s: "8",
+   s: "15",
    x: 15,
    y: 0
  }, {
-   s: "5",
+   s: "15",
    x: 15,
    y: 1
  }, {
@@ -6399,11 +6399,11 @@ export const mapDefinition = [{
    x: 15,
    y: 99
  }, {
-   s: "12",
+   s: "15",
    x: 16,
    y: 0
  }, {
-   s: "13",
+   s: "15",
    x: 16,
    y: 1
  }, {

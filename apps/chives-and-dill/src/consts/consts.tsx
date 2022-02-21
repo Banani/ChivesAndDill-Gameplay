@@ -1,0 +1,1 @@
+export const sizeOfField = 96;
