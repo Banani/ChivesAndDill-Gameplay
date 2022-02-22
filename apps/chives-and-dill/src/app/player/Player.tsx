@@ -4,8 +4,8 @@ import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import { useSelector, useDispatch } from 'react-redux';
 import { getEngineState, selectCharacterPowerPointsEvents, setActiveTarget } from '../../stores';
 import { GetAbsorbsValue } from './GetPlayerAbsorbs';
-import { sizeOfField } from '../../consts/consts';
 import _ from 'lodash';
+import { BLOCK_SIZE } from '../../consts/consts';
 
 const Player = ({ player, characterViewsSettings }) => {
    const [timer, setTimer] = useState(0);
@@ -175,9 +175,9 @@ const Player = ({ player, characterViewsSettings }) => {
          {playerSheet['movementDown'] && (
             <Sprite
                key={0}
-               width={sizeOfField}
+               width={BLOCK_SIZE}
                interactive={true}
-               height={sizeOfField}
+               height={BLOCK_SIZE}
                texture={playerSheet[characterStatus][timer % 8]}
                x={engineState.characterMovements.data[player.id].location.x - w / 2}
                y={engineState.characterMovements.data[player.id].location.y - h / 2}
