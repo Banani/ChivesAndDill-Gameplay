@@ -1,32 +1,6 @@
 import type { Location } from './common/Location';
 import type { CharacterDirection } from './shared';
 
-export interface EnginePackage {
-   characterMovements: PartialEnginePackage<CharacterMovement>;
-   projectileMovements: PartialEnginePackage<ProjectileMovement>;
-   spellChannels: PartialEnginePackage<ChannelingTrack>;
-   characterPowerPoints: PartialEnginePackage<PowerPointsTrack>;
-   timeEffects: PartialEnginePackage<TimeEffect>;
-   areaTimeEffects: PartialEnginePackage<AreaTimeEffect>;
-   spells: PartialEnginePackage<null>;
-   [GlobalStoreModule.POWER_STACKS]: PartialEnginePackage<Partial<Record<PowerStackType, number>>>;
-   [GlobalStoreModule.ABSORB_SHIELDS]: PartialEnginePackage<AbsorbShieldTrack>;
-   [GlobalStoreModule.CHARACTER]: PartialEnginePackage<any>; // TODO: PlayerCharacter
-   [GlobalStoreModule.ACTIVE_CHARACTER]: PartialEnginePackage<string>;
-   [GlobalStoreModule.AREAS]: PartialEnginePackage<number[][]>;
-}
-
-interface PartialEnginePackage<Data> {
-   data: Record<string, Data>;
-   toDelete: string[];
-   events: EnginePackageEvent[];
-}
-
-interface StoreModule<Data> {
-   data: Record<string, Data>;
-   events: EnginePackageEvent[];
-}
-
 export enum GlobalStoreModule {
    CHARACTER = 'character',
    ACTIVE_CHARACTER = 'activeCharacter',
@@ -45,6 +19,33 @@ export enum GlobalStoreModule {
    MAP_SCHEMA = 'mapSchema',
 }
 
+interface PartialEnginePackage<Data> {
+   data: Record<string, Data>;
+   toDelete: string[];
+   events: EnginePackageEvent[];
+}
+
+export interface EnginePackage {
+   [GlobalStoreModule.CHARACTER_MOVEMENTS]: PartialEnginePackage<CharacterMovement>;
+   [GlobalStoreModule.PROJECTILE_MOVEMENTS]: PartialEnginePackage<ProjectileMovement>;
+   [GlobalStoreModule.SPELL_CHANNELS]: PartialEnginePackage<ChannelingTrack>;
+   [GlobalStoreModule.CHARACTER_POWER_POINTS]: PartialEnginePackage<PowerPointsTrack>;
+   [GlobalStoreModule.TIME_EFFECTS]: PartialEnginePackage<TimeEffect>;
+   [GlobalStoreModule.AREA_TIME_EFFECTS]: PartialEnginePackage<AreaTimeEffect>;
+   [GlobalStoreModule.SPELLS]: PartialEnginePackage<null>;
+   [GlobalStoreModule.POWER_STACKS]: PartialEnginePackage<Partial<Record<PowerStackType, number>>>;
+   [GlobalStoreModule.ABSORB_SHIELDS]: PartialEnginePackage<AbsorbShieldTrack>;
+   [GlobalStoreModule.CHARACTER]: PartialEnginePackage<any>; // TODO: PlayerCharacter
+   [GlobalStoreModule.ACTIVE_CHARACTER]: PartialEnginePackage<string>;
+   [GlobalStoreModule.AREAS]: PartialEnginePackage<number[][]>;
+   [GlobalStoreModule.MAP_SCHEMA]: PartialEnginePackage<MapSchema | MapDefinition>;
+}
+
+interface StoreModule<Data> {
+   data: Record<string, Data>;
+   events: EnginePackageEvent[];
+}
+
 export interface GlobalStore {
    [GlobalStoreModule.CHARACTER_MOVEMENTS]: StoreModule<CharacterMovement>;
    [GlobalStoreModule.PROJECTILE_MOVEMENTS]: StoreModule<ProjectileMovement>;
@@ -56,10 +57,10 @@ export interface GlobalStore {
    [GlobalStoreModule.POWER_STACKS]: StoreModule<Partial<Record<PowerStackType, number>>>;
    [GlobalStoreModule.ABSORB_SHIELDS]: StoreModule<AbsorbShieldTrack>;
    [GlobalStoreModule.PLAYER]: StoreModule<undefined>;
-
    [GlobalStoreModule.CHARACTER]: StoreModule<any>; // TODO: PlayerCharacter
    [GlobalStoreModule.ACTIVE_CHARACTER]: StoreModule<string>;
    [GlobalStoreModule.AREAS]: StoreModule<number[][]>;
+   [GlobalStoreModule.MAP_SCHEMA]: StoreModule<MapSchema | MapDefinition>;
 }
 
 export interface ActiveCharacterStorePart {
@@ -151,6 +152,16 @@ export interface CharacterLostHpEvent {
 export interface DamageAbsorbedEvent {
    type: EngineEventType.DamageAbsorbed;
    characterId: string;
+}
+
+export interface MapSchema {
+   [key: string]: {
+      path: string;
+      location: Location;
+   };
+}
+export interface MapDefinition {
+   [key: string]: string[];
 }
 
 export type EnginePackageEvent = SpellLandedEvent | CharacterGotHpEvent | CharacterLostHpEvent | DamageAbsorbedEvent | PlayerCreatedEvent;

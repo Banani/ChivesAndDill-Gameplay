@@ -25,7 +25,6 @@ import {
    MonsterAttackEngine,
    MonsterAttackService,
    MonsterMovementService,
-   MonsterNotifier,
    MonsterService,
    RespawnMonsterEngine,
    RespawnService,

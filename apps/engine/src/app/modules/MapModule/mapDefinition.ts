@@ -1,5 +1,7 @@
-export const mapDefinition = {
-   '0:0': ['6'],
+import { MapDefinition } from "@bananos/types";
+
+export const mapDefinition: MapDefinition = {
+   '0:0': ['6', 'id_drzewa'],
    '0:1': ['10'],
    '0:2': ['7'],
    '0:3': ['1'],

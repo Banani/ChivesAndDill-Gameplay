@@ -1,9 +1,9 @@
 import { EnginePackageEvent, GlobalStoreModule } from '@bananos/types';
-import { cloneDeep, merge } from 'lodash';
+import { merge } from 'lodash';
 import { EventParser } from './EventParser';
 
 export interface ModulePackage<T> {
-   data: T;
+   data: Record<string, T>;
    events?: EnginePackageEvent[];
    toDelete: string[];
 }
@@ -15,10 +15,6 @@ export interface MulticastPackage<T> {
 
 interface NotifierProps {
    key: GlobalStoreModule;
-}
-
-interface DataUpdatePackage<T> {
-   objects: { [key: string]: T };
 }
 
 export abstract class Notifier<T = never> extends EventParser {
@@ -68,7 +64,7 @@ export abstract class Notifier<T = never> extends EventParser {
       ids.forEach((id) => {
          delete this.dataToSend[id];
       });
-      // do the same for multicast
+      //TODO: do the same for multicast
       this.idsToDelete = this.idsToDelete.concat(ids);
    };
 

@@ -1,6 +1,8 @@
+import { MapSchema } from '@bananos/types';
+
 const BLOCK_SIZE = 32;
 
-export const mapSchema = {
+export const mapSchema: MapSchema = {
    // Grass
    '1': {
       path: '../assets/spritesheets/mapTextures/Sprites-110575-110718.png',

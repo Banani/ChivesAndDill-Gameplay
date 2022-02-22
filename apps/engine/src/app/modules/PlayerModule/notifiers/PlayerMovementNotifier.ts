@@ -13,7 +13,7 @@ import type {
 } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
 
-// TODO: wrong type, it should be Character
+// TODO: wrong type, it should not be Character
 export class PlayerMovementNotifier extends Notifier<Character> {
    constructor() {
       super({ key: GlobalStoreModule.CHARACTER_MOVEMENTS });
@@ -27,14 +27,6 @@ export class PlayerMovementNotifier extends Notifier<Character> {
 
    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
       const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
-      console.log({
-         receiverId: event.playerCharacter.ownerId,
-         objects: mapValues(services.characterService.getAllCharacters(), (character: Character) => ({
-            isInMove: character.isInMove,
-            location: character.location,
-            direction: character.direction,
-         })),
-      });
       this.multicastMultipleObjectsUpdate([
          {
             receiverId: event.playerCharacter.ownerId,
