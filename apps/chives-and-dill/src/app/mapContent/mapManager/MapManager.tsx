@@ -2,19 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { MapField } from './MapField';
 import * as PIXI from 'pixi.js';
 import _ from 'lodash';
-
-const BLOCK_SIZE = 64;
-const SIDE_BLOCKS_AMOUNT = 20;
-const BOTTOM_UP_BLOCKS_AMOUNT = 12;
+import { BLOCK_SIZE, SIDE_BLOCKS_AMOUNT, BOTTOM_UP_BLOCKS_AMOUNT } from 'apps/chives-and-dill/src/consts/consts';
 
 export const MapManager = React.memo(
    ({ mapSchema, location }: { mapSchema: any; location: { x: number; y: number } }) => {
       const [texturesMap, setTexturesMap] = useState({});
 
       useEffect(() => {
-         const baseTexture = PIXI.BaseTexture.from(mapSchema.mapSchema['1'].path);
-
          const output = {};
+         const baseTexture = PIXI.BaseTexture.from(mapSchema.mapSchema['1'].path);
          _.forEach(mapSchema.mapSchema, (mapElement, key) => {
             output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.location.x + 1, mapElement.location.y + 1, 30, 30));
          });

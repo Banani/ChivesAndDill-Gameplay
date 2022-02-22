@@ -100,6 +100,12 @@ export const mapSchema = {
          x: 8 * BLOCK_SIZE,
       },
    },
-
-   // Hik
+   // Water
+   '15': {
+      path: '../assets/spritesheets/mapTextures/water.png',
+      location: {
+         y: 0 * BLOCK_SIZE,
+         x: 6 * BLOCK_SIZE,
+      },
+   },
 };
