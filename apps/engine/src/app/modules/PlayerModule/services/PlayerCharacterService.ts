@@ -53,7 +53,7 @@ export class PlayerCharacterService extends EventParser {
          type: CharacterType.Player,
          id: `player_${this.increment.toString()}`,
          name,
-         location: { x: 600, y: 960 },
+         location: { x: 50, y: 100 },
          direction: CharacterDirection.DOWN,
          sprites: 'citizen',
          avatar: '../../../../assets/spritesheets/avatars/dogAvatar.PNG',
