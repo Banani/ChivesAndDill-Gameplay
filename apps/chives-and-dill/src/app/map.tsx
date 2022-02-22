@@ -86,7 +86,7 @@ const Map = () => {
                                  ]}
                               >
                                  <AreasSpellsEffectsManager />
-                                 <MapManager mapSchema={mapSchema} />
+                                 <MapManager mapSchema={mapSchema} location={engineState?.characterMovements.data[activePlayerId]?.location} />
                                  <AreasManager />
                                  {renderSpells()}
                                  <CastBarsManager />

@@ -30,16 +30,17 @@ interface StoreModule<Data> {
 export enum GlobalStoreModule {
    CHARACTER = 'character',
    ACTIVE_CHARACTER = 'activeCharacter',
+   AREA_TIME_EFFECTS = 'areaTimeEffects',
    CHARACTER_MOVEMENTS = 'characterMovements',
    PROJECTILE_MOVEMENTS = 'projectileMovements',
    SPELL_CHANNELS = 'spellChannels',
    CHARACTER_POWER_POINTS = 'characterPowerPoints',
    TIME_EFFECTS = 'timeEffects',
-   AREA_TIME_EFFECTS = 'areaTimeEffects',
    SPELLS = 'spells',
    POWER_STACKS = 'powerStacks',
    ABSORB_SHIELDS = 'absorbShields',
    PLAYER = 'player',
+   PLAYER_MOVEMENT = 'playerMovement',
    AREAS = 'areas',
    MAP_SCHEMA = 'mapSchema',
 }

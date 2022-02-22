@@ -22,7 +22,6 @@ import { PowerPointsService } from '../modules/CharacterModule';
 import { CharacterNotifier, PowerPointsNotifier } from '../modules/CharacterModule/notifiers';
 import type { RegenerationService } from '../modules/CharacterModule/services/RegenerationService';
 import type { BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from '../modules/MonsterModule';
-import type { MonsterNotifier } from '../modules/MonsterModule/notifiers/MonsterNotifier';
 import type { AggroService } from '../modules/MonsterModule/services/aggroService';
 import type { PlayerMovementService } from '../modules/PlayerModule';
 import type { PlayerMovementNotifier, CharacterEffectNotifier } from '../modules/PlayerModule/notifiers';
@@ -75,7 +74,6 @@ export interface Services {
    channelingNotifier: ChannelingNotifier;
    monsterAttackService: MonsterAttackService;
    spellPowerNotifier: SpellPowerNotifier;
-   monsterNotifier: MonsterNotifier;
    manaService: ManaService;
    spellEffectApplierService: SpellEffectApplierService;
    spellAvailabilityService: SpellAvailabilityService;

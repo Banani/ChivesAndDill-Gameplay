@@ -1,8 +1,7 @@
-import { EngineMessages, ClientMessages } from '@bananos/types';
+import { ClientMessages, GlobalStoreModule } from '@bananos/types';
 import { mapValues, merge } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
-import { EventParser } from '../../../EventParser';
-import type { Notifier } from '../../../Notifier';
+import { Notifier } from '../../../Notifier';
 import type {
    EngineEventHandler,
    PlayerStartedMovementEvent,
@@ -14,11 +13,10 @@ import type {
 } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
 
-export class PlayerMovementNotifier extends EventParser implements Notifier {
-   private characters: Record<string, Partial<Character>> = {};
-
+// TODO: wrong type, it should be Character
+export class PlayerMovementNotifier extends Notifier<Character> {
    constructor() {
-      super();
+      super({ key: GlobalStoreModule.CHARACTER_MOVEMENTS });
       this.eventsToHandlersMap = {
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
@@ -27,27 +25,26 @@ export class PlayerMovementNotifier extends EventParser implements Notifier {
       };
    }
 
-   getBroadcast = () => {
-      const characterInformations = this.characters;
-
-      this.characters = {};
-
-      return { data: characterInformations, key: 'characterMovements', toDelete: [] };
-   };
-
    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
       const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
-
-      // BUG - should goes only to new player
-
-      this.characters = mapValues(
-         merge({}, services.characterService.getAllCharacters(), services.monsterService.getAllCharacters()),
-         (character: Character) => ({
+      console.log({
+         receiverId: event.playerCharacter.ownerId,
+         objects: mapValues(services.characterService.getAllCharacters(), (character: Character) => ({
             isInMove: character.isInMove,
             location: character.location,
             direction: character.direction,
-         })
-      );
+         })),
+      });
+      this.multicastMultipleObjectsUpdate([
+         {
+            receiverId: event.playerCharacter.ownerId,
+            objects: mapValues(services.characterService.getAllCharacters(), (character: Character) => ({
+               isInMove: character.isInMove,
+               location: character.location,
+               direction: character.direction,
+            })),
+         },
+      ]);
 
       currentSocket.on(ClientMessages.PlayerStartMove, (movement) => {
          this.engineEventCrator.asyncCeateEvent<PlayerTriesToStartedMovementEvent>({
@@ -67,24 +64,26 @@ export class PlayerMovementNotifier extends EventParser implements Notifier {
    };
 
    handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event, services }) => {
-      this.characters[event.characterId] = {
-         ...this.characters[event.characterId],
-         isInMove: true,
-      };
+      this.broadcastObjectsUpdate({
+         objects: {
+            [event.characterId]: { isInMove: true },
+         },
+      });
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event, services }) => {
-      this.characters[event.characterId] = {
-         ...this.characters[event.characterId],
-         location: event.newLocation,
-         direction: event.newCharacterDirection,
-      };
+      this.broadcastObjectsUpdate({
+         objects: {
+            [event.characterId]: { location: event.newLocation, direction: event.newCharacterDirection },
+         },
+      });
    };
 
    handlePlayerStopedAllMovementVectors: EngineEventHandler<PlayerStopedAllMovementVectorsEvent> = ({ event, services }) => {
-      this.characters[event.characterId] = {
-         ...this.characters[event.characterId],
-         isInMove: false,
-      };
+      this.broadcastObjectsUpdate({
+         objects: {
+            [event.characterId]: { isInMove: false },
+         },
+      });
    };
 }

@@ -1,15 +1,11 @@
-import { ChannelingTrack } from '@bananos/types';
-import { EventParser } from '../../../EventParser';
+import { ChannelingTrack, GlobalStoreModule } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import { SpellChannelingFinishedEvent, SpellChannelingInterruptedEvent, SpellChannelingStartedEvent, SpellEngineEvents } from '../Events';
 
-export class ChannelingNotifier extends EventParser implements Notifier {
-   private channelings: Record<string, ChannelingTrack> = {};
-   private toDelete: string[] = [];
-
+export class ChannelingNotifier extends Notifier<ChannelingTrack> {
    constructor() {
-      super();
+      super({ key: GlobalStoreModule.SPELL_CHANNELS });
       this.eventsToHandlersMap = {
          [SpellEngineEvents.SpellChannelingStarted]: this.handleSpellChannelingStarted,
          [SpellEngineEvents.SpellChannelingFinished]: this.handleSpellChannelingFinished,
@@ -17,32 +13,24 @@ export class ChannelingNotifier extends EventParser implements Notifier {
       };
    }
 
-   getBroadcast = () => {
-      const channelings = this.channelings;
-      const toDelete = [...this.toDelete];
-
-      this.channelings = {};
-      this.toDelete = [];
-
-      return { data: channelings, key: 'spellChannels', toDelete };
-   };
-
    handleSpellChannelingStarted: EngineEventHandler<SpellChannelingStartedEvent> = ({ event }) => {
-      this.channelings[event.channelId] = {
-         channelId: event.channelId,
-         timeToCast: event.spell.channelTime,
-         castingStartedTimestamp: event.channelingStartedTime,
-         casterId: event.casterId,
-      };
+      this.broadcastObjectsUpdate({
+         objects: {
+            [event.channelId]: {
+               channelId: event.channelId,
+               timeToCast: event.spell.channelTime,
+               castingStartedTimestamp: event.channelingStartedTime,
+               casterId: event.casterId,
+            },
+         },
+      });
    };
 
    handleSpellChannelingFinished: EngineEventHandler<SpellChannelingFinishedEvent> = ({ event }) => {
-      this.toDelete.push(event.channelId);
-      delete this.channelings[event.channelId];
+      this.broadcastObjectsDeletion({ ids: [event.channelId] });
    };
 
    handleSpellChannelingInterrupted: EngineEventHandler<SpellChannelingInterruptedEvent> = ({ event }) => {
-      this.toDelete.push(event.channelId);
-      delete this.channelings[event.channelId];
+      this.broadcastObjectsDeletion({ ids: [event.channelId] });
    };
 }

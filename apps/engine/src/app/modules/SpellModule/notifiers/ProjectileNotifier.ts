@@ -1,15 +1,11 @@
-import { ProjectileMovement } from '@bananos/types';
-import { EventParser } from '../../../EventParser';
+import { GlobalStoreModule, ProjectileMovement } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import { ProjectileCreatedEvent, ProjectileMovedEvent, ProjectileRemovedEvent, SpellEngineEvents } from '../../SpellModule/Events';
 
-export class ProjectileNotifier extends EventParser implements Notifier {
-   private projectiles: Record<string, Partial<ProjectileMovement>> = {};
-   private toDelete: string[] = [];
-
+export class ProjectileNotifier extends Notifier<ProjectileMovement> {
    constructor() {
-      super();
+      super({ key: GlobalStoreModule.PROJECTILE_MOVEMENTS });
       this.eventsToHandlersMap = {
          [SpellEngineEvents.ProjectileCreated]: this.ProjectileCreated,
          [SpellEngineEvents.ProjectileMoved]: this.ProjectileMoved,
@@ -17,33 +13,23 @@ export class ProjectileNotifier extends EventParser implements Notifier {
       };
    }
 
-   getBroadcast = () => {
-      const projectileInformations = this.projectiles;
-      const toDelete = [...this.toDelete];
-
-      this.projectiles = {};
-      this.toDelete = [];
-
-      return { data: projectileInformations, key: 'projectileMovements', toDelete };
+   ProjectileMoved: EngineEventHandler<ProjectileMovedEvent> = ({ event }) => {
+      this.broadcastObjectsUpdate({
+         objects: {
+            [event.projectileId]: { location: event.newLocation, angle: event.angle },
+         },
+      });
    };
 
-   ProjectileMoved: EngineEventHandler<ProjectileMovedEvent> = ({ event, services }) => {
-      this.projectiles[event.projectileId] = {
-         ...this.projectiles[event.projectileId],
-         location: event.newLocation,
-         angle: event.angle,
-      };
+   ProjectileCreated: EngineEventHandler<ProjectileCreatedEvent> = ({ event }) => {
+      this.broadcastObjectsUpdate({
+         objects: {
+            [event.projectileId]: { location: event.currentLocation, spellName: event.spell.name },
+         },
+      });
    };
 
-   ProjectileCreated: EngineEventHandler<ProjectileCreatedEvent> = ({ event, services }) => {
-      this.projectiles[event.projectileId] = {
-         ...this.projectiles[event.projectileId],
-         location: event.currentLocation,
-         spellName: event.spell.name,
-      };
-   };
-
-   ProjectileRemoved: EngineEventHandler<ProjectileRemovedEvent> = ({ event, services }) => {
-      this.toDelete.push(event.projectileId);
+   ProjectileRemoved: EngineEventHandler<ProjectileRemovedEvent> = ({ event }) => {
+      this.broadcastObjectsDeletion({ ids: [event.projectileId] });
    };
 }

@@ -1,30 +1,17 @@
-import { ClientMessages, EngineEventType, GlobalStoreModule } from '@bananos/types';
-import { cloneDeep } from 'lodash';
-import { EventParser } from '../../../EventParser';
-import type { MulticastPackage, Notifier } from '../../../Notifier';
+import { ClientMessages, GlobalStoreModule } from '@bananos/types';
+import { Notifier } from '../../../Notifier';
 import type { EngineEventHandler } from '../../../types';
-import { CreateCharacterEvent, CharacterEngineEvents } from '../../CharacterModule/Events';
 import { PlayerTriesToCastASpellEvent, SpellEngineEvents } from '../../SpellModule/Events';
 import { CreatePlayerCharacterEvent, NewPlayerCreatedEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
 
-const emptyMulticastPackage: MulticastPackage = { key: GlobalStoreModule.PLAYER, messages: {} };
-
-export class PlayerNotifier extends EventParser implements Notifier {
-   multicast: MulticastPackage = cloneDeep(emptyMulticastPackage);
-
+export class PlayerNotifier extends Notifier {
    constructor() {
-      super();
+      super({ key: GlobalStoreModule.PLAYER });
       this.eventsToHandlersMap = {
          [PlayerEngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
       };
    }
-
-   getMulticast = () => {
-      const tempMulticast = this.multicast;
-      this.multicast = cloneDeep(emptyMulticastPackage);
-      return tempMulticast;
-   };
 
    handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event, services }) => {
       const currentSocket = services.socketConnectionService.getSocketById(event.playerId);
@@ -36,14 +23,6 @@ export class PlayerNotifier extends EventParser implements Notifier {
             name: character.name,
             class: character.class,
          });
-      });
-
-      if (!this.multicast.messages[event.playerId]) {
-         this.multicast.messages[event.playerId] = { events: [], data: {}, toDelete: [] };
-      }
-
-      this.multicast.messages[event.playerId].events.push({
-         type: EngineEventType.PlayerCreated,
       });
    };
 

@@ -184,7 +184,6 @@ const services: Services = {
    aggroService: new AggroService(),
    monsterAttackService: new MonsterAttackService(monsterAttackEngine),
    monsterMovementService: new MonsterMovementService(monsterMovementEngine),
-   monsterNotifier: new MonsterNotifier(),
 
    manaService: new ManaService(),
    spellAvailabilityService: new SpellAvailabilityService(),
