@@ -1,8 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import styles from './classesModal.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
-import { updatePlayerClass, selectActiveCharacterId } from '../../../stores';
 import mage from '../../../assets/spritesheets/classes/classIcons/mageIcon.png';
 import warrior from '../../../assets/spritesheets/classes/classIcons/warriorIcon.png';
 import hunter from '../../../assets/spritesheets/classes/classIcons/hunterIcon.png';
@@ -11,8 +9,6 @@ import { SocketContext } from '../../gameController/socketContext';
 import { ClientMessages } from '@bananos/types';
 
 export const ClassesModal = () => {
-   const dispatch = useDispatch();
-   const activePlayerId = useSelector(selectActiveCharacterId);
    const [selectedClass, setSelectedClass] = useState('Tank');
    const [nick, setNick] = useState('Kamil');
    const context = useContext(SocketContext);
@@ -52,13 +48,27 @@ export const ClassesModal = () => {
       ></div>
    ));
 
-   const onSubmit = (e) => {
+   const onSubmit = useCallback((e) => {
       e.preventDefault();
       socket?.emit(ClientMessages.CreateCharacter, {
          name: nick,
          class: selectedClass,
       });
-   };
+   }, [nick, selectedClass, socket]);
+
+   const submitOnEnter = useCallback((e) => {
+      if (e.key === 'Enter') {
+         onSubmit(e);
+      }
+   }, [onSubmit]);
+
+   useEffect(() => {
+      window.addEventListener('keydown', submitOnEnter);
+
+      return () => {
+         window.removeEventListener('keydown', submitOnEnter);
+      }
+   }, [submitOnEnter]);
 
    return (
       <div className={styles.modalContainer}>
@@ -69,7 +79,7 @@ export const ClassesModal = () => {
                <input type="text" name="nick" className={styles.inputName} value={nick} onChange={(e) => setNick(e.target.value)} />
             </div>
             <div className={styles.classImages}>{classesToRender}</div>
-            <input type="submit" value="Create" disabled={!selectedClass || !nick} className={styles.submitButton} />
+            <button disabled={!selectedClass || !nick} className={styles.submitButton}>Create</button>
          </form>
       </div>
    );
