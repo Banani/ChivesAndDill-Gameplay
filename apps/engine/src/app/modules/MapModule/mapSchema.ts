@@ -1,4 +1,4 @@
-import { MapSchema } from '@bananos/types';
+import type { MapSchema } from '@bananos/types';
 
 const BLOCK_SIZE = 32;
 
@@ -107,6 +107,28 @@ export const mapSchema: MapSchema = {
       path: '../assets/spritesheets/mapTextures/water.png',
       location: {
          y: 0 * BLOCK_SIZE,
+         x: 6 * BLOCK_SIZE,
+      },
+   },
+   // Bushes
+   '16': {
+      path: '../assets/spritesheets/mapTextures/bushes.png',
+      location: {
+         y: 9 * BLOCK_SIZE,
+         x: 5 * BLOCK_SIZE,
+      },
+   },
+   '17': {
+      path: '../assets/spritesheets/mapTextures/bushes.png',
+      location: {
+         y: 10 * BLOCK_SIZE,
+         x: 3 * BLOCK_SIZE,
+      },
+   },
+   '18': {
+      path: '../assets/spritesheets/mapTextures/bushes.png',
+      location: {
+         y: 9 * BLOCK_SIZE,
          x: 6 * BLOCK_SIZE,
       },
    },

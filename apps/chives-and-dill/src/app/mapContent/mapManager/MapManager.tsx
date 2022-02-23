@@ -10,8 +10,9 @@ export const MapManager = React.memo(
 
       useEffect(() => {
          const output = {};
-         const baseTexture = PIXI.BaseTexture.from(mapSchema.mapSchema['1'].path);
+
          _.forEach(mapSchema.mapSchema, (mapElement, key) => {
+            const baseTexture = PIXI.BaseTexture.from(mapElement.path);
             output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.location.x + 1, mapElement.location.y + 1, 30, 30));
          });
 
@@ -23,18 +24,16 @@ export const MapManager = React.memo(
       }
 
       return _.range(Math.round(location.x / BLOCK_SIZE) - SIDE_BLOCKS_AMOUNT, Math.round(location.x / BLOCK_SIZE) + SIDE_BLOCKS_AMOUNT)
-         .map((x) => {
-            return _.range(Math.round(location.y / BLOCK_SIZE) - BOTTOM_UP_BLOCKS_AMOUNT, Math.round(location.y / BLOCK_SIZE) + BOTTOM_UP_BLOCKS_AMOUNT).map(
-               (y) => {
-                  const sprites = mapSchema.mapDefinition[`${x}:${y}`];
-                  if (!sprites) {
-                     return <></>;
-                  }
-
-                  return sprites.map((sprite) => <MapField texture={texturesMap[sprite]} spriteIndex={sprite} location={{ x, y }} key={`${x}:${y}`} />);
+         .map((x) => _.range(Math.round(location.y / BLOCK_SIZE) - BOTTOM_UP_BLOCKS_AMOUNT, Math.round(location.y / BLOCK_SIZE) + BOTTOM_UP_BLOCKS_AMOUNT).map(
+            (y) => {
+               const sprites = mapSchema.mapDefinition[`${x}:${y}`];
+               if (!sprites) {
+                  return <></>;
                }
-            );
-         })
+
+               return sprites.map((sprite) => <MapField texture={texturesMap[sprite]} spriteIndex={sprite} location={{ x, y }} key={`${x}:${y}`} />);
+            }
+         ))
          .flat();
    },
    (old, newProps) => Math.round(old.location / BLOCK_SIZE) === Math.round(newProps.location / BLOCK_SIZE)
