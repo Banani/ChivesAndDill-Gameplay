@@ -19,7 +19,7 @@ interface NotifierProps {
 
 export abstract class Notifier<T = never> extends EventParser {
    private notifierKey: string;
-   private dataToSend: Record<string, Partial<T>> = {};
+   private dataToSend: Record<string, Partial<T> | T> = {};
    private idsToDelete: string[] = [];
    private events: EnginePackageEvent[] = [];
    private multicast: MulticastPackage<T>;
@@ -56,7 +56,7 @@ export abstract class Notifier<T = never> extends EventParser {
       this.events = this.events.concat(events);
    };
 
-   protected broadcastObjectsUpdate = ({ objects }: { objects: Record<string, Partial<T>> }) => {
+   protected broadcastObjectsUpdate = ({ objects }: { objects: Record<string, Partial<T> | T> }) => {
       this.dataToSend = merge({}, this.dataToSend, objects);
    };
 
@@ -68,7 +68,7 @@ export abstract class Notifier<T = never> extends EventParser {
       this.idsToDelete = this.idsToDelete.concat(ids);
    };
 
-   protected multicastMultipleObjectsUpdate = (dataUpdatePackages: { receiverId: string; objects: Record<string, Partial<T>> }[]) => {
+   protected multicastMultipleObjectsUpdate = (dataUpdatePackages: { receiverId: string; objects: Record<string, Partial<T> | T> }[]) => {
       dataUpdatePackages.forEach((dataUpdatePackage) => {
          if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
             this.multicast.messages[dataUpdatePackage.receiverId] = { events: [], data: {}, toDelete: [] };

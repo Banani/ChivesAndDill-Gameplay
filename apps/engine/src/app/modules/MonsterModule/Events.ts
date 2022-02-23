@@ -1,6 +1,7 @@
 import { EngineEvent, EngineEventHandler } from '../../types';
+import { CharacterRespawn } from '../../types/CharacterRespawn';
 import { Spell } from '../SpellModule/types/spellTypes';
-import { MonsterRespawn } from './MonsterRespawns';
+import { MonsterTemplate } from './MonsterTemplates';
 import { Monster } from './types';
 
 export enum MonsterEngineEvents {
@@ -16,7 +17,7 @@ export enum MonsterEngineEvents {
 }
 
 export interface CreateNewMonsterEvent extends EngineEvent {
-   monsterRespawn: MonsterRespawn;
+   monsterRespawn: CharacterRespawn<MonsterTemplate>;
 }
 
 export interface NewMonsterCreatedEvent extends EngineEvent {

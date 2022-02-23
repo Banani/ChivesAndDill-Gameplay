@@ -9,6 +9,7 @@ export enum GlobalStoreModule {
    PROJECTILE_MOVEMENTS = 'projectileMovements',
    SPELL_CHANNELS = 'spellChannels',
    CHARACTER_POWER_POINTS = 'characterPowerPoints',
+   CHARACTER_EFFECT_NOTIFIER = 'characterEffectNotifier',
    TIME_EFFECTS = 'timeEffects',
    SPELLS = 'spells',
    POWER_STACKS = 'powerStacks',
@@ -17,6 +18,7 @@ export enum GlobalStoreModule {
    PLAYER_MOVEMENT = 'playerMovement',
    AREAS = 'areas',
    MAP_SCHEMA = 'mapSchema',
+   QUESTS = 'quests',
 }
 
 interface PartialEnginePackage<Data> {
@@ -119,6 +121,7 @@ export interface AreaTimeEffect {
 export enum EngineEventType {
    PlayerCreated = 'PlayerCreated',
    SpellLanded = 'SpellLanded',
+   SpellCasted = 'SpellCasted',
    CharacterGotHp = 'CharacterGotHp',
    CharacterLostHp = 'CharacterLostHp',
    DamageAbsorbed = 'DamageAbsorbed',
@@ -134,6 +137,12 @@ export interface SpellLandedEvent {
    angle: number;
    castLocation: Location;
    directionLocation: Location;
+}
+
+export interface SpellCastedEvent {
+   type: EngineEventType.SpellCasted;
+   spell: any;
+   casterId: string;
 }
 
 export interface CharacterGotHpEvent {
@@ -164,7 +173,7 @@ export interface MapDefinition {
    [key: string]: string[];
 }
 
-export type EnginePackageEvent = SpellLandedEvent | CharacterGotHpEvent | CharacterLostHpEvent | DamageAbsorbedEvent | PlayerCreatedEvent;
+export type EnginePackageEvent = SpellLandedEvent | SpellCastedEvent | CharacterGotHpEvent | CharacterLostHpEvent | DamageAbsorbedEvent | PlayerCreatedEvent;
 
 export enum HealthPointsSource {
    Healing = 'Healing',

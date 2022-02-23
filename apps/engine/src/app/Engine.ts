@@ -9,4 +9,6 @@ export abstract class Engine {
       this.eventCrator = eventCrator;
       this.services = services;
    }
+
+   abstract doAction();
 }

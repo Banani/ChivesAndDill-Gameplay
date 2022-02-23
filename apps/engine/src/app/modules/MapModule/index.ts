@@ -1,2 +1,2 @@
-export * from './notifiers';
+export * from './module';
 export * from './map';

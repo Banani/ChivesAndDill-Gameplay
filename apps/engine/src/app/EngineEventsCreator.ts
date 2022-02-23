@@ -1,16 +1,21 @@
 import { each } from 'lodash';
 import { EventParser } from './EventParser';
+import { Notifier } from './Notifier';
 import { EngineEvent } from './types';
 import { Services } from './types/Services';
 
 export class EngineEventCrator {
    services: Services;
+   eventParsers: EventParser[];
    eventsToBeProcessed: EngineEvent[] = [];
 
-   constructor(services: Services) {
+   constructor(services: Services, notifiers: Notifier<any>[]) {
       this.services = services;
+      this.eventParsers = Object.keys(services)
+         .map((serviceName) => services[serviceName])
+         .concat(notifiers);
 
-      each(this.services, (service) => service.init(this, { ...this.services }));
+      each(this.eventParsers, (service) => service.init(this, { ...this.services }));
    }
 
    createEvent<T extends EngineEvent>(event: T) {
@@ -21,7 +26,7 @@ export class EngineEventCrator {
    processEvents = () => {
       while (this.eventsToBeProcessed.length > 0) {
          const eventToBeProcessed = this.eventsToBeProcessed.shift();
-         each(this.services, (service: EventParser) => {
+         each(this.eventParsers, (service: EventParser) => {
             service.handleEvent({
                event: eventToBeProcessed,
                services: this.services,

@@ -1,66 +1,50 @@
-import type { Location } from '@bananos/types';
-import type { MonsterTemplate } from './MonsterTemplates';
-import { MonsterTemplates } from './MonsterTemplates';
+import { CharacterRespawn, WalkingType } from '../../types/CharacterRespawn';
+import { MonsterTemplate, MonsterTemplates } from './MonsterTemplates';
 
-export enum WalkingType {
-   None,
-   Stroll,
-   Patrol,
-}
-
-export interface MonsterRespawn {
-   location: Location;
-   monsterTemplate: MonsterTemplate;
-   time: number;
-   id: string;
-   walkingType: WalkingType;
-   patrolPath?: Location[];
-}
-
-export const MonsterRespawns: Record<string, MonsterRespawn> = {
+export const MonsterRespawns: Record<string, CharacterRespawn<MonsterTemplate>> = {
    //    '1': {
    //       id: '1',
    //       location: { x: 1300, y: 800 },
-   //       monsterTemplate: MonsterTemplates['WorldDestroyer'],
+   //       characterTemplate: MonsterTemplates['WorldDestroyer'],
    //       time: 5000,
    //       walkingType: WalkingType.None,
    //    },
    //    '1': {
    //       id: '1',
    //       location: { x: 1300, y: 800 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '2': {
    //       id: '2',
    //       location: { x: 1350, y: 800 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '3': {
    //       id: '3',
    //       location: { x: 1400, y: 800 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '4': {
    //       id: '4',
    //       location: { x: 1450, y: 800 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
 
    //    '5': {
    //       id: '5',
    //       location: { x: 1900, y: 1100 },
-   //       monsterTemplate: MonsterTemplates['Orc'],
+   //       characterTemplate: MonsterTemplates['Orc'],
    //       time: 2000,
    //       walkingType: WalkingType.None,
    //    },
    '6': {
       id: '6',
       location: { x: 1300, y: 850 },
-      monsterTemplate: MonsterTemplates['OrcSpearman'],
+      characterTemplate: MonsterTemplates['OrcSpearman'],
       walkingType: WalkingType.Patrol,
       patrolPath: [
          { x: 1100, y: 950 },
@@ -71,7 +55,7 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    '7': {
       id: '7',
       location: { x: 1450, y: 850 },
-      monsterTemplate: MonsterTemplates['OrcSpearman'],
+      characterTemplate: MonsterTemplates['OrcSpearman'],
       walkingType: WalkingType.Patrol,
       patrolPath: [
          { x: 1100, y: 950 },
@@ -82,7 +66,7 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    '8': {
       id: '8',
       location: { x: 1450, y: 1000 },
-      monsterTemplate: MonsterTemplates['OrcSpearman'],
+      characterTemplate: MonsterTemplates['OrcSpearman'],
       walkingType: WalkingType.Patrol,
       patrolPath: [
          { x: 1100, y: 950 },
@@ -93,7 +77,7 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    //    '9': {
    //       id: '9',
    //       location: { x: 1600, y: 850 },
-   //       monsterTemplate: MonsterTemplates['OrcSpearman'],
+   //       characterTemplate: MonsterTemplates['OrcSpearman'],
    //       walkingType: WalkingType.Patrol,
    //       patrolPath: [
    //          { x: 1100, y: 950 },
@@ -104,7 +88,7 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    //    '10': {
    //       id: '10',
    //       location: { x: 1600, y: 1000 },
-   //       monsterTemplate: MonsterTemplates['OrcSpearman'],
+   //       characterTemplate: MonsterTemplates['OrcSpearman'],
    //       time: 2000,
    //       walkingType: WalkingType.Patrol,
    //       patrolPath: [
@@ -130,7 +114,7 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    '11': {
       id: '11',
       location: { x: 1300, y: 900 },
-      monsterTemplate: MonsterTemplates['OrcSpearman'],
+      characterTemplate: MonsterTemplates['OrcSpearman'],
       time: 2000,
       walkingType: WalkingType.Patrol,
       patrolPath: [
@@ -155,7 +139,7 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    //    '12': {
    //       id: '12',
    //       location: { x: 1350, y: 900 },
-   //       monsterTemplate: MonsterTemplates['OrcSpearman'],
+   //       characterTemplate: MonsterTemplates['OrcSpearman'],
    //       time: 2000,
    //       walkingType: WalkingType.Patrol,
    //       patrolPath: [
@@ -180,7 +164,7 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    //    '13': {
    //       id: '13',
    //       location: { x: 1400, y: 900 },
-   //       monsterTemplate: MonsterTemplates['OrcSpearman'],
+   //       characterTemplate: MonsterTemplates['OrcSpearman'],
    //       time: 2000,
    //       walkingType: WalkingType.Patrol,
    //       patrolPath: [
@@ -205,7 +189,7 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    //    '14': {
    //       id: '14',
    //       location: { x: 1450, y: 900 },
-   //       monsterTemplate: MonsterTemplates['WorldDestroyer'],
+   //       characterTemplate: MonsterTemplates['WorldDestroyer'],
    //       time: 2000,
    //       walkingType: WalkingType.Patrol,
    //       patrolPath: [
@@ -230,69 +214,69 @@ export const MonsterRespawns: Record<string, MonsterRespawn> = {
    //    '15': {
    //       id: '15',
    //       location: { x: 1500, y: 900 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
 
    //    '16': {
    //       id: '16',
    //       location: { x: 1300, y: 950 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '17': {
    //       id: '17',
    //       location: { x: 1350, y: 950 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '18': {
    //       id: '18',
    //       location: { x: 1400, y: 950 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '19': {
    //       id: '19',
    //       location: { x: 1450, y: 950 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '20': {
    //       id: '20',
    //       location: { x: 1500, y: 950 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
 
    //    '21': {
    //       id: '21',
    //       location: { x: 1300, y: 1000 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '22': {
    //       id: '22',
    //       location: { x: 1350, y: 1000 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '23': {
    //       id: '23',
    //       location: { x: 1400, y: 1000 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '24': {
    //       id: '24',
    //       location: { x: 1450, y: 1000 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
    //    '25': {
    //       id: '25',
    //       location: { x: 1500, y: 1000 },
-   //       monsterTemplate: MonsterTemplates['PigSlut'],
+   //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
 };

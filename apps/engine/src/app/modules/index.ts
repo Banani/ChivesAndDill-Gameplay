@@ -3,3 +3,4 @@ export * from './SpellModule';
 export * from './MonsterModule';
 export * from './SpellModule';
 export * from './MapModule';
+export * from './NpcModule';

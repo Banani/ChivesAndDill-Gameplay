@@ -59,26 +59,27 @@ export class MonsterService extends EventParser {
 
    handleCreateNewMonster: EngineEventHandler<CreateNewMonsterEvent> = ({ event }) => {
       const id = `monster_${(this.increment++).toString()}`;
+
       this.monsters[id] = {
          type: CharacterType.Monster,
          id,
-         name: event.monsterRespawn.monsterTemplate.name,
+         name: event.monsterRespawn.characterTemplate.name,
          location: event.monsterRespawn.location,
-         sprites: event.monsterRespawn.monsterTemplate.sprites,
-         avatar: event.monsterRespawn.monsterTemplate.avatar,
-         size: event.monsterRespawn.monsterTemplate.size,
+         sprites: event.monsterRespawn.characterTemplate.sprites,
+         avatar: event.monsterRespawn.characterTemplate.avatar,
+         size: event.monsterRespawn.characterTemplate.size,
          direction: CharacterDirection.DOWN,
-         division: event.monsterRespawn.monsterTemplate.division,
+         division: event.monsterRespawn.characterTemplate.division,
          isInMove: false,
          respawnId: event.monsterRespawn.id,
-         sightRange: event.monsterRespawn.monsterTemplate.sightRange,
-         speed: event.monsterRespawn.monsterTemplate.speed,
-         desiredRange: event.monsterRespawn.monsterTemplate.desiredRange,
-         escapeRange: event.monsterRespawn.monsterTemplate.escapeRange,
-         spells: event.monsterRespawn.monsterTemplate.spells,
-         attackFrequency: event.monsterRespawn.monsterTemplate.attackFrequency,
-         healthPointsRegen: event.monsterRespawn.monsterTemplate.healthPointsRegen,
-         spellPowerRegen: event.monsterRespawn.monsterTemplate.spellPowerRegen,
+         sightRange: event.monsterRespawn.characterTemplate.sightRange,
+         speed: event.monsterRespawn.characterTemplate.speed,
+         desiredRange: event.monsterRespawn.characterTemplate.desiredRange,
+         escapeRange: event.monsterRespawn.characterTemplate.escapeRange,
+         spells: event.monsterRespawn.characterTemplate.spells,
+         attackFrequency: event.monsterRespawn.characterTemplate.attackFrequency,
+         healthPointsRegen: event.monsterRespawn.characterTemplate.healthPointsRegen,
+         spellPowerRegen: event.monsterRespawn.characterTemplate.spellPowerRegen,
       };
       console.log('new monster created');
 

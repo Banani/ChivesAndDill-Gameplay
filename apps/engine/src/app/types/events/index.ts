@@ -9,14 +9,16 @@ import { PlayerCharacter } from '../PlayerCharacter';
 import { Services } from '../Services';
 import { CharacterEngineEvents } from '../../modules/CharacterModule/Events';
 import { PlayerEngineEvents } from '../../modules/PlayerModule/Events';
+import { NpcEngineEvents } from '../../modules/NpcModule/Events';
+import { CharacterUnion } from '../CharacterUnion';
 
 export interface EngineEvent {
-   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | SpellEngineEvents | CharacterEngineEvents | PlayerEngineEvents;
+   type: EngineEvents | QuestEngineEvents | MonsterEngineEvents | SpellEngineEvents | CharacterEngineEvents | PlayerEngineEvents | NpcEngineEvents;
 }
 
 export interface CharacterDiedEvent extends EngineEvent {
    characterId: string;
-   character: Monster | PlayerCharacter;
+   character: CharacterUnion;
    killerId: string;
 }
 

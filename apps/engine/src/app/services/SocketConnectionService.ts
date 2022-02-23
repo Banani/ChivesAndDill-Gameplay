@@ -9,9 +9,9 @@ import type { EngineEventHandler } from '../types';
 export class SocketConnectionService extends EventParser {
    io;
    sockets: Record<string, any> = {};
-   notifiers: Notifier[] = [];
+   notifiers: Notifier<any>[] = [];
 
-   constructor(io: any, notifiers: Notifier[]) {
+   constructor(io: any, notifiers: Notifier<any>[]) {
       super();
       this.io = io;
       this.notifiers = notifiers;

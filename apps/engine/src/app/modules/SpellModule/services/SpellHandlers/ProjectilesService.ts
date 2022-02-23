@@ -1,6 +1,6 @@
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { EngineEventHandler } from 'apps/engine/src/app/types';
-import { ProjectileMovement } from '../..';
+import { ProjectileMovement } from '../../engines';
 import {
    SubSpellCastedEvent,
    SpellEngineEvents,

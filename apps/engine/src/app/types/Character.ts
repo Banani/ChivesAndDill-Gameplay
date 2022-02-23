@@ -21,4 +21,5 @@ export interface Character {
 export enum CharacterType {
    Player = 'Player',
    Monster = 'Monster',
+   Npc = 'Npc',
 }

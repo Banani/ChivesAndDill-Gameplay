@@ -1,71 +1,8 @@
-import { PathFinderService, SocketConnectionService } from './app/services';
-import { EngineEventCrator } from './app/EngineEventsCreator';
-import { Services } from './app/types/Services';
-import {
-   AngleBlastSpellService,
-   AreaNotifier,
-   AreaSpellService,
-   DamageEffectService,
-   DirectInstantSpellService,
-   HealEffectService,
-   KillingQuestService,
-   ManaService,
-   MovementQuestService,
-   ProjectilesService,
-   QuestNotifier,
-   QuestProgressService,
-   SpellAvailabilityService,
-   SpellEffectApplierService,
-   SpellNotifier,
-} from './app/modules';
-import {
-   AggroService,
-   BossFightEngine,
-   BossFightService,
-   MonsterAttackEngine,
-   MonsterAttackService,
-   MonsterMovementService,
-   MonsterService,
-   RespawnMonsterEngine,
-   RespawnService,
-} from './app/modules/MonsterModule';
-import {
-   ProjectileMovement,
-   AreaEffectsEngine,
-   TickOverTimeEffectEngine,
-   ProjectileNotifier,
-   TeleportationSpellService,
-   AreaTimeEffectNotifier,
-} from './app/modules/SpellModule';
-import { ChannelEngine } from './app/modules/SpellModule/engines/ChannelEngine';
-import { GuidedProjectileEngine } from './app/modules/SpellModule/engines/GuidedProjectileEngine';
-import { CooldownService } from './app/modules/SpellModule/services/CooldownService';
-import { AbsorbShieldEffectService } from './app/modules/SpellModule/services/EffectHandlers/AbsorbShieldEffectService';
-import { AreaEffectService } from './app/modules/SpellModule/services/EffectHandlers/AreaEffectService';
-import { GenerateSpellPowerEffectService } from './app/modules/SpellModule/services/EffectHandlers/GenerateSpellPowerEffectService';
-import { PowerStackEffectService } from './app/modules/SpellModule/services/EffectHandlers/PowerStackEffectService';
-import { TickEffectOverTimeService } from './app/modules/SpellModule/services/EffectHandlers/TickEffectOverTimeService';
-import { ChannelService } from './app/modules/SpellModule/services/SpellHandlers/ChannelService';
-import { GuidedProjectilesService } from './app/modules/SpellModule/services/SpellHandlers/GuidedProjectilesService';
-import { PlayerMovementService, PlayersMovement } from './app/modules/PlayerModule';
-import { CharactersService } from './app/modules/CharacterModule/services/CharactersService';
-import { CharacterEffectNotifier, PlayerMovementNotifier } from './app/modules/PlayerModule/notifiers';
-import { PathFinderEngine } from './app/engines';
-import { MonsterMovementEngine } from './app/modules/MonsterModule/engines/MonsterMovementEngine';
-import { SchedulerService } from './app/services/SchedulerService';
-import { SchedulerEngine } from './app/engines/SchedulerEngine';
-import { RegenerationService } from './app/modules/CharacterModule/services/RegenerationService';
-import { ChannelingNotifier } from './app/modules/SpellModule/notifiers/ChannelingNotifier';
-import { PowerPointsService } from './app/modules/CharacterModule';
-import { CharacterNotifier, PowerPointsNotifier } from './app/modules/CharacterModule/notifiers';
-import { TimeEffectNotifier } from './app/modules/SpellModule/notifiers/TimeEffectNotifier';
-import { SpellPowerNotifier } from './app/modules/SpellModule/notifiers/SpellPowerNotifier';
-import { AbsorbShieldNotifier } from './app/modules/SpellModule/notifiers/AbsorbShieldNotifier';
-import { PlayerService } from './app/modules/PlayerModule/services/PlayerService';
-import { PlayerNotifier } from './app/modules/PlayerModule/notifiers/PlayerNotifier';
-import { PlayerCharacterService } from './app/modules/PlayerModule/services/PlayerCharacterService';
-import { ActiveCharacterNotifier } from './app/modules/PlayerModule/notifiers/ActiveCharacterNotifier';
-import { MapSchemaNotifier } from './app/modules/MapModule/notifiers/MapSchemaNotifier';
+import { getMapModule, getMonsterModule, getNpcModule, getQuestModule, getSpellModule } from './app/modules';
+import { getPlayerModule } from './app/modules/PlayerModule';
+import { getCharacterModule } from './app/modules/CharacterModule/module';
+import * as _ from 'lodash';
+import { MainEngine } from './app/engines/MainEngine';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -85,138 +22,13 @@ httpServer.listen(port, hostname, () => {
    console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-const pathFinderEngine = new PathFinderEngine();
-const schedulerEngine = new SchedulerEngine();
-const playerMovementEngine = new PlayersMovement();
-const projectileMovement = new ProjectileMovement();
-const guidedProjectileEngine = new GuidedProjectileEngine();
-const respawnMonsterEngine = new RespawnMonsterEngine();
-const monsterAttackEngine = new MonsterAttackEngine();
-const areaEffectsEngine = new AreaEffectsEngine();
-const channelEngine = new ChannelEngine();
-const tickOverTimeEffectEngine = new TickOverTimeEffectEngine();
-const monsterMovementEngine = new MonsterMovementEngine();
-const bossFightEngine = new BossFightEngine();
-
-const fastEngines = [
-   pathFinderEngine,
-   playerMovementEngine,
-   projectileMovement,
-   guidedProjectileEngine,
-   monsterAttackEngine,
-   areaEffectsEngine,
-   channelEngine,
-   tickOverTimeEffectEngine,
-   monsterMovementEngine,
-   bossFightEngine,
-   schedulerEngine,
-];
-const slowEngines = [respawnMonsterEngine];
-
-const playerMovementNotifier = new PlayerMovementNotifier();
-const mapSchemaNotifier = new MapSchemaNotifier();
-const projectileNotifier = new ProjectileNotifier();
-const channelingNotifier = new ChannelingNotifier();
-const powerPointsNotifier = new PowerPointsNotifier();
-const timeEffectNotifier = new TimeEffectNotifier();
-const areaTimeEffectNotifier = new AreaTimeEffectNotifier();
-const spellNotifier = new SpellNotifier();
-const spellPowerNotifier = new SpellPowerNotifier();
-const playerNotifier = new PlayerNotifier();
-const absorbShieldNotifier = new AbsorbShieldNotifier();
-const characterNotifier = new CharacterNotifier();
-const activeCharacterNotifier = new ActiveCharacterNotifier();
-const areaNotifier = new AreaNotifier();
-const notifiers = [
-   playerMovementNotifier,
-   projectileNotifier,
-   channelingNotifier,
-   powerPointsNotifier,
-   timeEffectNotifier,
-   areaTimeEffectNotifier,
-   spellNotifier,
-   spellPowerNotifier,
-   playerNotifier,
-   absorbShieldNotifier,
-   characterNotifier,
-   activeCharacterNotifier,
-   areaNotifier,
-   mapSchemaNotifier,
-];
-
-const socketConnectionService = new SocketConnectionService(io, notifiers);
-
-const services: Services = {
-   pathFinderService: new PathFinderService(pathFinderEngine),
-   schedulerService: new SchedulerService(schedulerEngine),
-   characterService: new CharactersService(),
-   powerPointsNotifier,
-   areaTimeEffectNotifier,
-   spellPowerNotifier,
-   playerCharacterService: new PlayerCharacterService(),
-   playerMovementService: new PlayerMovementService(playerMovementEngine),
-   projectilesService: new ProjectilesService(projectileMovement),
-   playerMovementNotifier,
-   projectileNotifier,
-   mapSchemaNotifier,
-   characterEffectNotifier: new CharacterEffectNotifier(),
-   cooldownService: new CooldownService(),
-   socketConnectionService,
-   powerPointsService: new PowerPointsService(),
-   channelingNotifier,
-   timeEffectNotifier,
-   spellNotifier,
-   absorbShieldNotifier,
-   playerNotifier,
-   characterNotifier,
-   activeCharacterNotifier,
-   areaNotifier,
-
-   questProgressService: new QuestProgressService(),
-   movementQuestService: new MovementQuestService(),
-   killingQuestService: new KillingQuestService(),
-   questNotifier: new QuestNotifier(),
-
-   playerService: new PlayerService(),
-   monsterService: new MonsterService(),
-   respawnService: new RespawnService(respawnMonsterEngine),
-   aggroService: new AggroService(),
-   monsterAttackService: new MonsterAttackService(monsterAttackEngine),
-   monsterMovementService: new MonsterMovementService(monsterMovementEngine),
-
-   manaService: new ManaService(),
-   spellAvailabilityService: new SpellAvailabilityService(),
-   spellEffectApplierService: new SpellEffectApplierService(),
-   directInstantSpellService: new DirectInstantSpellService(),
-   angleBlastSpellService: new AngleBlastSpellService(),
-   areaSpellService: new AreaSpellService(),
-   damageEffectService: new DamageEffectService(),
-   healEffectService: new HealEffectService(),
-   generateSpellPowerEffectService: new GenerateSpellPowerEffectService(),
-   areaEffectService: new AreaEffectService(areaEffectsEngine),
-   channelService: new ChannelService(channelEngine),
-
-   tickEffectOverTimeService: new TickEffectOverTimeService(tickOverTimeEffectEngine),
-   bossFightService: new BossFightService(bossFightEngine),
-   guidedProjectilesService: new GuidedProjectilesService(guidedProjectileEngine),
-   powerStackEffectService: new PowerStackEffectService(),
-   absorbShieldEffectService: new AbsorbShieldEffectService(),
-   teleportationSpellService: new TeleportationSpellService(),
-   regenerationService: new RegenerationService(),
-};
-
-const engineEventCreator = new EngineEventCrator(services);
-
-const startTime = Date.now();
-let i = 0;
-setInterval(() => {
-   engineEventCreator.processEvents();
-   fastEngines.forEach((engine) => engine.doAction());
-   socketConnectionService.sendMessages();
-   i++;
-   //    console.log(1000 / ((Date.now() - startTime) / i));
-}, 1000 / 60);
-
-setInterval(() => {
-   slowEngines.forEach((engine) => engine.doAction());
-}, 1000);
+const mainEngine = new MainEngine(io, [
+   getPlayerModule(),
+   getCharacterModule(),
+   getQuestModule(),
+   getMonsterModule(),
+   getSpellModule(),
+   getMapModule(),
+   getNpcModule(),
+]);
+mainEngine.start();
