@@ -4,10 +4,10 @@ import { Provider, ReactReduxContext, useSelector } from 'react-redux';
 import { getEngineState, selectActiveCharacterId, selectMapSchema } from '../stores';
 import _ from 'lodash';
 
-import { PlayerIcon } from './player/playerIcon/PlayerIcon';
-import { SpellsBar } from './player/spellsBar/SpellsBar';
-import { QuestLog } from './player/quests/questLog/QuestLog';
-import { QuestsSideView } from './player/quests/questSideView/QuestsSideView';
+import { PlayerIcon } from './guiContent/playerIcon/PlayerIcon';
+import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
+import { QuestLog } from './guiContent/quests/questLog/QuestLog';
+import { QuestsSideView } from './guiContent/quests/questSideView/QuestsSideView';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
 import { AreasManager } from './mapContent/AreasManager';
 import { CastBarsManager } from './mapContent/CastBarsManager';

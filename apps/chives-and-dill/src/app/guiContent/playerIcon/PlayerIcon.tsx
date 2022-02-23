@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './PlayerIcon.module.scss';
 import { getEngineState, selectCharacters } from '../../../stores';
-import { TimeEffectsbar } from '../timeEffectsBar/TimeEffectsBar';
-import { GetAbsorbsValue } from "../GetPlayerAbsorbs";
+import { GetAbsorbsValue } from "../../player/GetPlayerAbsorbs";
 
 export const PlayerIcon = ({ playerId }) => {
 

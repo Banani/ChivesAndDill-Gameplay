@@ -1,9 +1,9 @@
 import React from 'react';
-import { PlayerIcon } from '../../player/playerIcon/PlayerIcon';
+import { PlayerIcon } from '../../guiContent/playerIcon/PlayerIcon';
 import { selectActiveTargetId } from '../../../stores';
 import { useSelector } from "react-redux";
 import styles from "./TargetIcon.module.scss";
-import { TimeEffectsbar } from '../../player/timeEffectsBar/TimeEffectsBar';
+import { TimeEffectsbar } from '../../guiContent/timeEffectsBar/TimeEffectsBar';
 
 export const TargetIcon = () => {
 

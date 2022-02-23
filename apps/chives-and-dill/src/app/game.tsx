@@ -1,6 +1,6 @@
 import React from 'react';
 import GameController from './gameController/gameController';
-import { ClassesModal } from './player/classesModal/classesModal';
+import { ClassesModal } from './guiContent/classesModal/classesModal';
 import Map from './map';
 import { useSelector } from 'react-redux';
 import { selectActiveCharacterId } from '../stores';
