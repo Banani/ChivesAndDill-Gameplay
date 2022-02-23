@@ -27,13 +27,11 @@ export class SpellAvailabilityService extends EventParser {
    };
 
    handlePlayerTriesToCastASpell: EngineEventHandler<PlayerTriesToCastASpellEvent> = ({ event, services }) => {
-      const character = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() }[
-         event.spellData.characterId
-      ] as Character;
+      const character = services.characterService.getCharacterById(event.spellData.characterId);
 
       const spell = ALL_SPELLS[event.spellData.spellName];
 
-      if (!character.spells[spell?.name]) {
+      if (!character || !character.spells[spell?.name]) {
          return;
       }
 
