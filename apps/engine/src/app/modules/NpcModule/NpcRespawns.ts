@@ -9,10 +9,10 @@ export const NpcRespawns: Record<string, CharacterRespawn<NpcTemplate>> = {
       time: 20000,
       walkingType: WalkingType.None,
    },
-   Roberto: {
-      id: 'Roberto',
+   KretonPL: {
+      id: 'KretonPL',
       location: { x: 450, y: 200 },
-      characterTemplate: NpcTemplates['Roberto'],
+      characterTemplate: NpcTemplates['KretonPL'],
       time: 20000,
       walkingType: WalkingType.None,
    },

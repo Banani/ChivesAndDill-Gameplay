@@ -61,7 +61,7 @@ export class PlayerCharacterService extends EventParser {
          speed: 4,
          healthPointsRegen: 5,
          spellPowerRegen: 5,
-         size: 48,
+         size: 96,
          absorb: 0,
          isDead: false,
          class: className,
