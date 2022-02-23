@@ -7,6 +7,7 @@ import { Classes } from '../../../types/Classes';
 import type { NewMonsterCreatedEvent } from '../../MonsterModule/Events';
 import { MonsterEngineEvents } from '../../MonsterModule/Events';
 import { MonsterRespawns } from '../../MonsterModule/MonsterRespawns';
+import { NpcTemplates } from '../../NpcModule/NpcTemplate';
 import type {
    AddCharacterHealthPointsEvent,
    AddCharacterSpellPowerEvent,
@@ -72,10 +73,20 @@ export class PowerPointsService extends EventParser {
       if (event.character.type === CharacterType.Monster) {
          const respawn = MonsterRespawns[event.character.respawnId];
          this.powerPoints[event.character.id] = {
-            currentHp: respawn.monsterTemplate.healthPoints,
-            maxHp: respawn.monsterTemplate.healthPoints,
-            currentSpellPower: respawn.monsterTemplate.spellPower,
-            maxSpellPower: respawn.monsterTemplate.spellPower,
+            currentHp: respawn.characterTemplate.healthPoints,
+            maxHp: respawn.characterTemplate.healthPoints,
+            currentSpellPower: respawn.characterTemplate.spellPower,
+            maxSpellPower: respawn.characterTemplate.spellPower,
+         };
+      }
+      // TODO: powinno byc jakies wspolne rozwiazanie dla wszystkich
+      if (event.character.type === CharacterType.Npc) {
+         const template = NpcTemplates[event.character.templateId];
+         this.powerPoints[event.character.id] = {
+            currentHp: template.healthPoints,
+            maxHp: template.healthPoints,
+            currentSpellPower: template.spellPower,
+            maxSpellPower: template.spellPower,
          };
       }
 

@@ -1,4 +1,4 @@
-import { PlayerNotifier, PlayerMovementNotifier, ActiveCharacterNotifier, CharacterEffectNotifier } from './notifiers';
+import { PlayerNotifier, PlayerMovementNotifier, ActiveCharacterNotifier } from './notifiers';
 import { PlayerCharacterService, PlayerMovementService, PlayerService } from './services';
 import { PlayersMovement } from './engines';
 import { EngineModule } from '../../types/EngineModule';
@@ -13,7 +13,7 @@ export const getPlayerModule: () => EngineModule<PlayerModuleServices> = () => {
    const playerMovementEngine = new PlayersMovement();
 
    return {
-      notifiers: [new PlayerNotifier(), new PlayerMovementNotifier(), new CharacterEffectNotifier(), new ActiveCharacterNotifier()],
+      notifiers: [new PlayerNotifier(), new PlayerMovementNotifier(), new ActiveCharacterNotifier()],
       services: {
          playerCharacterService: new PlayerCharacterService(),
          playerMovementService: new PlayerMovementService(playerMovementEngine),

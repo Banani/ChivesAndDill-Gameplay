@@ -1,4 +1,4 @@
-import { getMapModule, getMonsterModule, getQuestModule, getSpellModule } from './app/modules';
+import { getMapModule, getMonsterModule, getNpcModule, getQuestModule, getSpellModule } from './app/modules';
 import { getPlayerModule } from './app/modules/PlayerModule';
 import { getCharacterModule } from './app/modules/CharacterModule/module';
 import * as _ from 'lodash';
@@ -22,5 +22,13 @@ httpServer.listen(port, hostname, () => {
    console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-const mainEngine = new MainEngine(io, [getPlayerModule(), getCharacterModule(), getQuestModule(), getMonsterModule(), getSpellModule(), getMapModule()]);
+const mainEngine = new MainEngine(io, [
+   getPlayerModule(),
+   getCharacterModule(),
+   getQuestModule(),
+   getMonsterModule(),
+   getSpellModule(),
+   getMapModule(),
+   getNpcModule(),
+]);
 mainEngine.start();

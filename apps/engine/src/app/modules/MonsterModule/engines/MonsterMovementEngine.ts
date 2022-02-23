@@ -5,8 +5,9 @@ import { EngineEvents } from '../../../EngineEvents';
 import { distanceBetweenTwoPoints } from '../../../math';
 import { PlayerMovedEvent, PlayerStartedMovementEvent, PlayerStopedAllMovementVectorsEvent } from '../../../types';
 import { Location } from '@bananos/types';
-import { MonsterRespawns, WalkingType } from '../MonsterRespawns';
+import { MonsterRespawns } from '../MonsterRespawns';
 import { Monster } from '../types';
+import { WalkingType } from '../../../types/CharacterRespawn';
 
 interface Patrol {
    currentPoint: number;
