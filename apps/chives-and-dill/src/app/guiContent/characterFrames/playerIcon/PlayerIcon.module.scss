@@ -1,10 +1,8 @@
 .playerIconContainer {
-  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  top: 20px;
-  left: 5%;
+  margin-right: 50px;
 
   .playerAvatar {
     border-radius: 50%;
@@ -29,7 +27,7 @@
     align-items: center;
     color: gold;
     left: 65px;
-    bottom: 5px;
+    bottom: 0;
     background: black;
   }
 
@@ -40,8 +38,8 @@
     position: absolute;
     z-index: 9;
     left: 0;
-    bottom: 5px;
-    background-image: url("../../../assets/spritesheets/partyRoles/dpsIcon.png");
+    bottom: 0;
+    background-image: url("../../../../assets/spritesheets/partyRoles/dpsIcon.png");
     background-position: center;
     background-size: cover;
     cursor: pointer;
@@ -120,11 +118,9 @@
   }
 }
 
-.powerStacks{
-  position: absolute;
-  top: 130px;
-  left: 250px;
+.powerStacks {
   display: flex;
+  margin: 0 20px;
 
   .powerStackCircle {
     margin-right: 20px;

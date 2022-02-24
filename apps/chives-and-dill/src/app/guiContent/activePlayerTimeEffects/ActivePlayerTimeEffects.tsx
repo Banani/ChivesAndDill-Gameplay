@@ -1,5 +1,5 @@
 import React from 'react';
-import { TimeEffectsbar } from '../../guiContent/timeEffectsBar/TimeEffectsBar';
+import { TimeEffectsbar } from '../timeEffectsBar/TimeEffectsBar';
 import styles from './ActivePlayerTimeEffects.module.scss';
 
 export const ActivePlayerTimeEffects = ({ playerId }) => (
