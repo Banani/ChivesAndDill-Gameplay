@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './PlayerIcon.module.scss';
-import { getEngineState, selectCharacters } from '../../../stores';
-import { GetAbsorbsValue } from "../../player/GetPlayerAbsorbs";
+import { getEngineState, selectCharacters } from '../../../../stores';
+import { GetAbsorbsValue } from "../../../player/GetPlayerAbsorbs";
 
 export const PlayerIcon = ({ playerId }) => {
 
@@ -43,22 +43,25 @@ export const PlayerIcon = ({ playerId }) => {
             <div className={styles.playerAvatar} style={{ backgroundImage: `url(${avatar})` }}></div>
             <div className={styles.playerLvl}>69</div>
             <div className={styles.playerRole} />
-            <div className={styles.barsContainer}>
-               <div className={styles.nameBar}>{name}</div>
-               <div className={styles.bar}>
-                  <div className={styles.barText}>{currentHp >= 0 ? currentHp + '/' + maxHp : 0}</div>
-                  <div className={styles.hpColor} style={{ width: currentHp >= 0 ? (currentHp / (maxHp + playerAbsorb)) * 100 + '%' : '0' }}></div>
-                  <div className={styles.absorbColor} style={{ width: absorbBarWidth + '%', left: `${(currentHp / (maxHp + playerAbsorb)) * 100}%` }}></div>
+            <div>
+               <div className={styles.barsContainer}>
+                  <div className={styles.nameBar}>{name}</div>
+                  <div className={styles.bar}>
+                     <div className={styles.barText}>{currentHp >= 0 ? currentHp + '/' + maxHp : 0}</div>
+                     <div className={styles.hpColor} style={{ width: currentHp >= 0 ? (currentHp / (maxHp + playerAbsorb)) * 100 + '%' : '0' }}></div>
+                     <div className={styles.absorbColor} style={{ width: absorbBarWidth + '%', left: `${(currentHp / (maxHp + playerAbsorb)) * 100}%` }}></div>
+                  </div>
+                  <div className={styles.bar}>
+                     <div className={styles.barText}>{currentSpellPower >= 0 ? currentSpellPower + '/' + maxSpellPower : 0}</div>
+                     <div className={styles.manaColor} style={{ width: currentSpellPower >= 0 ? (currentSpellPower / maxSpellPower) * 100 + '%' : '0' }}></div>
+                  </div>
                </div>
-               <div className={styles.bar}>
-                  <div className={styles.barText}>{currentSpellPower >= 0 ? currentSpellPower + '/' + maxSpellPower : 0}</div>
-                  <div className={styles.manaColor} style={{ width: currentSpellPower >= 0 ? (currentSpellPower / maxSpellPower) * 100 + '%' : '0' }}></div>
+               <div className={styles.powerStacks}>
+                  {renderPowerStacks("HolyPower", powerStacks)}
                </div>
             </div>
          </div>
-         <div className={styles.powerStacks}>
-            {renderPowerStacks("HolyPower", powerStacks)}
-         </div>
+
       </div>
    );
 };

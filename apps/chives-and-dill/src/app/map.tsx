@@ -4,7 +4,6 @@ import { Provider, ReactReduxContext, useSelector } from 'react-redux';
 import { getEngineState, selectActiveCharacterId, selectMapSchema } from '../stores';
 import _ from 'lodash';
 
-import { PlayerIcon } from './guiContent/playerIcon/PlayerIcon';
 import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
 import { QuestLog } from './guiContent/quests/questLog/QuestLog';
 import { QuestsSideView } from './guiContent/quests/questSideView/QuestsSideView';
@@ -14,10 +13,10 @@ import { CastBarsManager } from './mapContent/CastBarsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
-import { TargetIcon } from './mapContent/targetIcon/TargetIcon';
 import { BloodPoolManager } from './mapContent/bloodPoolsManager';
-import { ActivePlayerTimeEffects } from './mapContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
+import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { MapManager } from './mapContent/mapManager/MapManager';
+import { CharacterFrames } from './guiContent/characterFrames/characterFrames';
 
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
@@ -66,9 +65,8 @@ const Map = () => {
    return (
       <>
          {activePlayerId ? <SpellsBar /> : null}
-         {activePlayerId ? <PlayerIcon playerId={activePlayerId}></PlayerIcon> : null}
-         <TargetIcon />
          {activePlayerId ? <ActivePlayerTimeEffects playerId={activePlayerId} /> : null}
+         <CharacterFrames />
          {<QuestsSideView />}
          <QuestLog />
          <ReactReduxContext.Consumer>
