@@ -1,29 +1,33 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Graphics } from '@inlet/react-pixi';
-import { selectActiveSpellsCasts, selectCharacters, getEngineState } from '../../stores';
+import { selectCharacters, getEngineState } from '../../stores';
+import { selectSpellChannels } from '../../stores';
 
 export const CastBar = ({ playerId }) => {
    const [channelSpellProgress, updateChannelSpellProgress] = useState(0);
 
-   const activeSpellsCasts = useSelector(selectActiveSpellsCasts);
-
    const players = useSelector(selectCharacters);
    const engineState = useSelector(getEngineState);
-
+   const activeSpellChannel = useSelector(selectSpellChannels);
+   console.log(activeSpellChannel)
    useEffect(() => {
-      const interval = setInterval(() => {
-         if (activeSpellsCasts[playerId]) {
-            const { spellCastTimeStamp, castTime } = activeSpellsCasts[players[playerId].id];
-            updateChannelSpellProgress((Date.now() - spellCastTimeStamp) / castTime);
-         }
-      }, 1000 / 60);
+      console.log(activeSpellChannel)
+   }, [activeSpellChannel]);
 
-      updateChannelSpellProgress(0);
-      return () => {
-         clearInterval(interval);
-      };
-   }, [activeSpellsCasts, playerId]);
+   // useEffect(() => {
+   //    const interval = setInterval(() => {
+   //       if (activeSpellsCasts[playerId]) {
+   //          const { spellCastTimeStamp, castTime } = activeSpellsCasts[players[playerId].id];
+   //          updateChannelSpellProgress((Date.now() - spellCastTimeStamp) / castTime);
+   //       }
+   //    }, 1000 / 60);
+
+   //    updateChannelSpellProgress(0);
+   //    return () => {
+   //       clearInterval(interval);
+   //    };
+   // }, [activeSpellsCasts, playerId]);
 
    const castBar = useCallback(
       (g) => {

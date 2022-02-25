@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styles from './SpellsBar.module.scss';
 import { useSelector } from 'react-redux';
-import { selectKeyBinds } from '../../../stores';
 import { selectCharacters, selectActiveCharacterId } from '../../../stores';
 import _ from 'lodash';
 import { GameControllerContext } from '../../gameController/gameControllerContext';
@@ -10,13 +9,18 @@ export const SpellsBar = () => {
    const context = useContext(GameControllerContext);
    const characters = useSelector(selectCharacters);
    const activePlayerId = useSelector(selectActiveCharacterId);
-   const keyBinds = useSelector(selectKeyBinds);
    const spells = characters[activePlayerId].spells;
 
    const [spellsOnCooldown, setSpellOnCooldown] = useState([]);
    const [clickedSpell, setClickedSpell] = useState('');
 
    let renderSpells;
+
+   let keyBinds = _.map(characters[activePlayerId].spells, spell => spell.name);
+   keyBinds = keyBinds.reduce((prev, current, index) => {
+      prev[index + 1] = current;
+      return prev;
+   }, {})
 
    useEffect(() => {
       _.forIn(context, function (value, key) {
