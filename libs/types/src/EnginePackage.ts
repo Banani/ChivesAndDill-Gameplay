@@ -20,6 +20,7 @@ export enum GlobalStoreModule {
    MAP_SCHEMA = 'mapSchema',
    QUESTS = 'quests',
    EXPERIENCE = 'experience',
+   CURRENCY = 'currency',
 }
 
 interface PartialEnginePackage<Data> {

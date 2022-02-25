@@ -40,7 +40,7 @@ export class ChannelService extends EventParser {
          [SpellEngineEvents.SpellChannelingFinished]: this.handleSpellChannelingFinished,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
 
-         // TODO: after migration the channel should be stopped both for caster and target, when on of them is dead
+         // TODO: after migration the channel should be stopped both for caster and target, when one of them is dead
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
       };
    }

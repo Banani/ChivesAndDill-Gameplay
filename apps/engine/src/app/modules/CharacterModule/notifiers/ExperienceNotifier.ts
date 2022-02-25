@@ -3,16 +3,9 @@ import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import type {
-   CharacterGainExperienceEvent,
-   CharacterLevelChangedEvent,
-   CharacterRemovedEvent,
-   ExperienceTrackCreatedEvent,
-   ExperienceTrackRemovedEvent,
-} from '../Events';
+import type { CharacterGainExperienceEvent, CharacterLevelChangedEvent, ExperienceTrackCreatedEvent, ExperienceTrackRemovedEvent } from '../Events';
 import { CharacterEngineEvents } from '../Events';
 import { ExperienceTable } from '../ExperienceTable';
-import { ExperienceTrack } from '../types';
 
 export class ExperienceNotifier extends Notifier<Partial<ExperienceExternalTrack>> {
    constructor() {
@@ -76,6 +69,7 @@ export class ExperienceNotifier extends Notifier<Partial<ExperienceExternalTrack
          },
       ]);
 
+      // TODO: multicastEvents
       this.broadcastEvents({
          events: [
             {
