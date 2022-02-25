@@ -24,16 +24,16 @@ export const MapManager = React.memo(
       }
 
       return _.range(Math.round(location.x / BLOCK_SIZE) - SIDE_BLOCKS_AMOUNT, Math.round(location.x / BLOCK_SIZE) + SIDE_BLOCKS_AMOUNT)
-         .map((x) => _.range(Math.round(location.y / BLOCK_SIZE) - BOTTOM_UP_BLOCKS_AMOUNT, Math.round(location.y / BLOCK_SIZE) + BOTTOM_UP_BLOCKS_AMOUNT).map(
-            (y) => {
+         .map((x) =>
+            _.range(Math.round(location.y / BLOCK_SIZE) - BOTTOM_UP_BLOCKS_AMOUNT, Math.round(location.y / BLOCK_SIZE) + BOTTOM_UP_BLOCKS_AMOUNT).map((y) => {
                const sprites = mapSchema.mapDefinition[`${x}:${y}`];
                if (!sprites) {
                   return <></>;
                }
 
-               return sprites.map((sprite) => <MapField texture={texturesMap[sprite]} spriteIndex={sprite} location={{ x, y }} key={`${x}:${y}`} />);
-            }
-         ))
+               return sprites.map((sprite, i) => <MapField texture={texturesMap[sprite]} spriteIndex={sprite} location={{ x, y }} key={`${x}:${y}:${i}`} />);
+            })
+         )
          .flat();
    },
    (old, newProps) => Math.round(old.location / BLOCK_SIZE) === Math.round(newProps.location / BLOCK_SIZE)

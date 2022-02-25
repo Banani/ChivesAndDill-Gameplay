@@ -1,6 +1,7 @@
 import { HealthPointsSource, PowerPointsTrack } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterUnion } from '../../types/CharacterUnion';
+import { ExperienceTrack } from './types';
 
 export enum CharacterEngineEvents {
    CreateCharacter = 'CreateCharacter',
@@ -20,6 +21,12 @@ export enum CharacterEngineEvents {
 
    ResetCharacter = 'ResetCharacter',
    NewPowerTrackCreated = 'NewPowerTrackCreated',
+
+   ExperienceTrackCreated = 'ExperienceTrackCreated',
+   AddExperience = 'AddExperience',
+   CharacterLevelChanged = 'CharacterLevelChanged',
+   CharacterGainExperience = 'CharacterGainExperience',
+   ExperienceTrackRemoved = 'ExperienceTrackRemoved',
 }
 
 export interface CreateCharacterEvent extends EngineEvent {
@@ -101,6 +108,36 @@ export interface NewPowerTrackCreatedEvent extends EngineEvent {
    powerPoints: PowerPointsTrack;
 }
 
+export interface ExperienceTrackCreatedEvent extends EngineEvent {
+   type: CharacterEngineEvents.ExperienceTrackCreated;
+   experienceTrack: ExperienceTrack;
+   trackId: string;
+}
+
+export interface AddExperienceEvent extends EngineEvent {
+   type: CharacterEngineEvents.AddExperience;
+   amount: number;
+   characterId: string;
+}
+
+export interface CharacterGainExperienceEvent extends EngineEvent {
+   type: CharacterEngineEvents.CharacterGainExperience;
+   characterId: string;
+   amount: number;
+   experienceTrack: ExperienceTrack;
+}
+
+export interface CharacterLevelChangedEvent extends EngineEvent {
+   type: CharacterEngineEvents.CharacterLevelChanged;
+   characterId: string;
+   newLevel: number;
+}
+
+export interface ExperienceTrackRemovedEvent extends EngineEvent {
+   type: CharacterEngineEvents.ExperienceTrackRemoved;
+   trackId: string;
+}
+
 export interface CharacterEngineEventsMap {
    [CharacterEngineEvents.CreateCharacter]: EngineEventHandler<any>;
    [CharacterEngineEvents.NewCharacterCreated]: EngineEventHandler<NewCharacterCreatedEvent>;
@@ -119,4 +156,10 @@ export interface CharacterEngineEventsMap {
 
    [CharacterEngineEvents.ResetCharacter]: EngineEventHandler<ResetCharacterEvent>;
    [CharacterEngineEvents.NewPowerTrackCreated]: EngineEventHandler<NewPowerTrackCreatedEvent>;
+
+   [CharacterEngineEvents.ExperienceTrackCreated]: EngineEventHandler<ExperienceTrackCreatedEvent>;
+   [CharacterEngineEvents.AddExperience]: EngineEventHandler<AddExperienceEvent>;
+   [CharacterEngineEvents.CharacterGainExperience]: EngineEventHandler<CharacterGainExperienceEvent>;
+   [CharacterEngineEvents.CharacterLevelChanged]: EngineEventHandler<CharacterLevelChangedEvent>;
+   [CharacterEngineEvents.ExperienceTrackRemoved]: EngineEventHandler<ExperienceTrackRemovedEvent>;
 }

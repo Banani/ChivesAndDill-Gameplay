@@ -19,6 +19,7 @@ export enum GlobalStoreModule {
    AREAS = 'areas',
    MAP_SCHEMA = 'mapSchema',
    QUESTS = 'quests',
+   EXPERIENCE = 'experience',
 }
 
 interface PartialEnginePackage<Data> {
@@ -118,6 +119,12 @@ export interface AreaTimeEffect {
    radius: number;
 }
 
+export interface ExperienceExternalTrack {
+   experienceAmount: number;
+   level: number;
+   toNextLevel: number;
+}
+
 export enum EngineEventType {
    PlayerCreated = 'PlayerCreated',
    SpellLanded = 'SpellLanded',
@@ -125,6 +132,8 @@ export enum EngineEventType {
    CharacterGotHp = 'CharacterGotHp',
    CharacterLostHp = 'CharacterLostHp',
    DamageAbsorbed = 'DamageAbsorbed',
+   LevelChanged = 'LevelChanged',
+   ExperienceGain = 'ExperienceGain',
 }
 
 export interface PlayerCreatedEvent {
@@ -163,6 +172,18 @@ export interface DamageAbsorbedEvent {
    characterId: string;
 }
 
+export interface LevelChangedEvent {
+   type: EngineEventType.LevelChanged;
+   characterId: string;
+   level: number;
+}
+
+export interface ExperienceGainEvent {
+   type: EngineEventType.ExperienceGain;
+   characterId: string;
+   amount: number;
+}
+
 export interface MapSchema {
    [key: string]: {
       path: string;
@@ -173,7 +194,15 @@ export interface MapDefinition {
    [key: string]: string[];
 }
 
-export type EnginePackageEvent = SpellLandedEvent | SpellCastedEvent | CharacterGotHpEvent | CharacterLostHpEvent | DamageAbsorbedEvent | PlayerCreatedEvent;
+export type EnginePackageEvent =
+   | SpellLandedEvent
+   | SpellCastedEvent
+   | CharacterGotHpEvent
+   | CharacterLostHpEvent
+   | DamageAbsorbedEvent
+   | PlayerCreatedEvent
+   | LevelChangedEvent
+   | ExperienceGainEvent;
 
 export enum HealthPointsSource {
    Healing = 'Healing',
