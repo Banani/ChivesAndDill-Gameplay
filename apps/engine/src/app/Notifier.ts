@@ -81,4 +81,18 @@ export abstract class Notifier<T = never> extends EventParser {
          );
       });
    };
+
+   protected multicastObjectsDeletion = (dataUpdatePackages: { receiverId: string; ids: string[] }[]) => {
+      dataUpdatePackages.forEach((dataUpdatePackage) => {
+         if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
+            this.multicast.messages[dataUpdatePackage.receiverId] = { events: [], data: {}, toDelete: [] };
+         }
+
+         this.multicast.messages[dataUpdatePackage.receiverId].toDelete = merge(
+            {},
+            this.multicast.messages[dataUpdatePackage.receiverId].toDelete,
+            dataUpdatePackage.ids
+         );
+      });
+   };
 }

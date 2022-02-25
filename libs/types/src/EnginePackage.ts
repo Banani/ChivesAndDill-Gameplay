@@ -21,6 +21,7 @@ export enum GlobalStoreModule {
    QUESTS = 'quests',
    EXPERIENCE = 'experience',
    CURRENCY = 'currency',
+   ACTIVE_LOOT = 'activeLoot',
 }
 
 interface PartialEnginePackage<Data> {
