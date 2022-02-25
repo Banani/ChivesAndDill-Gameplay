@@ -4,6 +4,8 @@ export const getEngineState = (state: EngineAwareState) => state.engineStateModu
 
 export const getEngineSpellsEvents = (state: EngineAwareState) => state.engineStateModule.spells.events;
 
+export const selectSpellChannels = (state: EngineAwareState) => state.engineStateModule.spellChannels.data;
+
 export const selectActiveCharacterId = (state: EngineAwareState) => state.engineStateModule.activeCharacter?.data?.activeCharacterId ?? null;
 
 export const selectCharacters = (state: EngineAwareState) => state.engineStateModule.character.data;
