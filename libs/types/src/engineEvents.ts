@@ -42,4 +42,5 @@ export enum ClientMessages {
    CreateCharacter = 'CreateCharacter',
    OpenLoot = 'OpenLoot',
    CloseLoot = 'CloseLoot',
+   TakeLootItem = 'TakeLootItem',
 }

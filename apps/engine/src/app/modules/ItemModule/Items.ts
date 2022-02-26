@@ -1,13 +1,4 @@
-export enum DropItemType {
-   CURRENCY,
-}
-
-export interface DropCurrency {
-   type: DropItemType.CURRENCY;
-   name: string;
-}
-
-export type DropItem = DropCurrency; // OR DropObject
+import { DropItem, DropItemType } from '@bananos/types';
 
 export const items: Record<string, DropItem> = {
    money: {

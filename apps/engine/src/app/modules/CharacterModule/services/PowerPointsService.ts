@@ -109,7 +109,7 @@ export class PowerPointsService extends EventParser {
          if (this.powerPoints[event.characterId].currentHp === 0) {
             this.engineEventCrator.asyncCeateEvent<CharacterDiedEvent>({
                type: EngineEvents.CharacterDied,
-               character: { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() }[event.characterId],
+               character: services.characterService.getAllCharacters()[event.characterId],
                characterId: event.characterId,
                killerId: event.attackerId,
             });

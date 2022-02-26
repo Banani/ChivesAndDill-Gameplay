@@ -1,4 +1,5 @@
-import { DropItem, items } from '../ItemModule/Items';
+import { DropItem } from '@bananos/types';
+import { items } from '../ItemModule/Items';
 import { ALL_SPELLS } from '../SpellModule/spells';
 import type { Spell } from '../SpellModule/types/spellTypes';
 
@@ -81,6 +82,14 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
          MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
          MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
       },
+      dropSchema: [
+         {
+            item: items['money'],
+            dropChance: 0.75,
+            maxAmount: 30,
+            minAmount: 0,
+         },
+      ],
    },
    WorldDestroyer: {
       id: 'WorldDestroyer',

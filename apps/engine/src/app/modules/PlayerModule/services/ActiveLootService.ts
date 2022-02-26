@@ -17,15 +17,19 @@ export class ActiveLootService extends EventParser {
       };
    }
 
-   handlePlayerTriesToOpenLoot: EngineEventHandler<PlayerTriesToOpenLootEvent> = ({ event }) => {
+   handlePlayerTriesToOpenLoot: EngineEventHandler<PlayerTriesToOpenLootEvent> = ({ event, services }) => {
       // check distance and if it exists
       this.activeLoots[event.characterId] = event.corpseId;
+      const items = services.corpseDropService.getCorpseDropTrackById(event.corpseId);
 
-      this.engineEventCrator.asyncCeateEvent<LootOpenedEvent>({
-         type: PlayerEngineEvents.LootOpened,
-         characterId: event.characterId,
-         corpseId: event.corpseId,
-      });
+      if (items) {
+         this.engineEventCrator.asyncCeateEvent<LootOpenedEvent>({
+            type: PlayerEngineEvents.LootOpened,
+            characterId: event.characterId,
+            corpseId: event.corpseId,
+            items,
+         });
+      }
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {

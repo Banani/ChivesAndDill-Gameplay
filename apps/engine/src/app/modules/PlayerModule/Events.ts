@@ -1,3 +1,4 @@
+import { CorpseDropTrack } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { Classes } from '../../types/Classes';
 import { PlayerCharacter } from '../../types/PlayerCharacter';
@@ -51,6 +52,7 @@ export interface PlayerTriesToOpenLootEvent extends EngineEvent {
 export interface LootOpenedEvent extends EngineEvent {
    type: PlayerEngineEvents.LootOpened;
    characterId: string;
+   items: CorpseDropTrack;
    corpseId: string;
 }
 
