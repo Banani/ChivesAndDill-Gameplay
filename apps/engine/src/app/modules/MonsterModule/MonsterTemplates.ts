@@ -1,5 +1,13 @@
+import { DropItem, items } from '../ItemModule/Items';
 import { ALL_SPELLS } from '../SpellModule/spells';
 import type { Spell } from '../SpellModule/types/spellTypes';
+
+export interface DropSchema {
+   item: DropItem;
+   dropChance: number;
+   maxAmount: number;
+   minAmount: number;
+}
 
 export interface MonsterTemplate {
    id: string;
@@ -18,6 +26,7 @@ export interface MonsterTemplate {
    attackFrequency: number;
    healthPointsRegen: number;
    spellPowerRegen: number;
+   dropSchema?: DropSchema[];
 }
 
 export const MonsterTemplates: Record<string, MonsterTemplate> = {
@@ -43,6 +52,14 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
          MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
          MonsterInstant2: ALL_SPELLS['MonsterInstant2'],
       },
+      dropSchema: [
+         {
+            item: items['money'],
+            dropChance: 0.9,
+            maxAmount: 30,
+            minAmount: 0,
+         },
+      ],
    },
    OrcSpearman: {
       id: 'OrcSpearman',
