@@ -52,6 +52,10 @@ export class ExperienceNotifier extends Notifier<Partial<ExperienceExternalTrack
             },
          ],
       });
+
+      this.broadcastObjectsUpdate({
+         objects: { [event.characterId]: { toNextLevel: ExperienceTable[event.newLevel] } },
+      });
    };
 
    handleCharacterGainExperience: EngineEventHandler<CharacterGainExperienceEvent> = ({ event, services }) => {
@@ -69,15 +73,17 @@ export class ExperienceNotifier extends Notifier<Partial<ExperienceExternalTrack
          },
       ]);
 
-      // TODO: multicastEvents
-      this.broadcastEvents({
-         events: [
-            {
-               type: EngineEventType.ExperienceGain,
-               characterId: event.characterId,
-               amount: event.amount,
-            },
-         ],
-      });
+      this.multicastEvents([
+         {
+            receiverId: character.ownerId,
+            events: [
+               {
+                  type: EngineEventType.ExperienceGain,
+                  characterId: event.characterId,
+                  amount: event.amount,
+               },
+            ],
+         },
+      ]);
    };
 }

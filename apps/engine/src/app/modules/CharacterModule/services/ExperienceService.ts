@@ -14,6 +14,7 @@ import { ExperienceTable } from '../ExperienceTable';
 import { ExperienceTrack } from '../types';
 
 export class ExperienceService extends EventParser {
+   // character id
    private experienceTracks: Record<string, ExperienceTrack> = {};
 
    constructor() {
