@@ -1,0 +1,30 @@
+.ExperienceBar {
+  width: 100%;
+  height: 16px;
+  background-color: black;
+  border: 1px solid white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .ProgressBarDetails {
+    z-index: 9;
+    color: white;
+    visibility: hidden;
+  }
+
+  &:hover > div{
+    visibility: visible;
+  }
+
+  .ProgressBar {
+    background-color: #340f4a;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+  }
+}

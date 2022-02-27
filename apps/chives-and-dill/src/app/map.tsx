@@ -17,6 +17,7 @@ import { BloodPoolManager } from './mapContent/bloodPoolsManager';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { MapManager } from './mapContent/mapManager/MapManager';
 import { CharacterFrames } from './guiContent/characterFrames/characterFrames';
+import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
 
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
@@ -69,6 +70,7 @@ const Map = () => {
          <CharacterFrames />
          {<QuestsSideView />}
          <QuestLog />
+         <ExperienceBar />
          <ReactReduxContext.Consumer>
             {({ store }) => (
                <Stage width={gameSize.width} height={gameSize.height} options={{ backgroundColor: 0x000000, autoDensity: true }}>
