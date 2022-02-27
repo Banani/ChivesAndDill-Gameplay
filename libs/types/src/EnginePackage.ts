@@ -23,6 +23,7 @@ export enum GlobalStoreModule {
    CURRENCY = 'currency',
    ACTIVE_LOOT = 'activeLoot',
    CORPSE_DROP = 'corpseDrop',
+   ERROR_MESSAGES = 'errorMessages',
 }
 
 interface PartialEnginePackage<Data> {
@@ -46,6 +47,7 @@ export interface EnginePackage {
    [GlobalStoreModule.AREAS]: PartialEnginePackage<number[][]>;
    [GlobalStoreModule.MAP_SCHEMA]: PartialEnginePackage<MapSchema | MapDefinition>;
    [GlobalStoreModule.ACTIVE_LOOT]: PartialEnginePackage<ActiveLootTrack>;
+   [GlobalStoreModule.ERROR_MESSAGES]: PartialEnginePackage<undefined>;
 }
 
 interface StoreModule<Data> {
@@ -69,6 +71,7 @@ export interface GlobalStore {
    [GlobalStoreModule.AREAS]: StoreModule<number[][]>;
    [GlobalStoreModule.MAP_SCHEMA]: StoreModule<MapSchema | MapDefinition>;
    [GlobalStoreModule.ACTIVE_LOOT]: StoreModule<ActiveLootTrack>;
+   [GlobalStoreModule.ERROR_MESSAGES]: PartialEnginePackage<undefined>;
 }
 
 export interface ActiveCharacterStorePart {
@@ -162,6 +165,7 @@ export enum EngineEventType {
    DamageAbsorbed = 'DamageAbsorbed',
    LevelChanged = 'LevelChanged',
    ExperienceGain = 'ExperienceGain',
+   ErrorMessage = 'ErrorMessage',
 }
 
 export interface PlayerCreatedEvent {
@@ -222,6 +226,11 @@ export interface MapDefinition {
    [key: string]: string[];
 }
 
+export interface ErrorMessage {
+   type: EngineEventType.ErrorMessage;
+   message: string;
+}
+
 export type EnginePackageEvent =
    | SpellLandedEvent
    | SpellCastedEvent
@@ -230,7 +239,8 @@ export type EnginePackageEvent =
    | DamageAbsorbedEvent
    | PlayerCreatedEvent
    | LevelChangedEvent
-   | ExperienceGainEvent;
+   | ExperienceGainEvent
+   | ErrorMessage;
 
 export enum HealthPointsSource {
    Healing = 'Healing',

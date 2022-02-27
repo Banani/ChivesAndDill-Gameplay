@@ -50,6 +50,7 @@ export class CooldownService extends EventParser {
 
    handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event }) => {
       if (event.casterId) {
+         // TODO: Bug, it should happen when spell was really cast, not when player only tries to do it
          this.cooldownHistoryPerUserSpells[event.casterId][event.spell.name] = Date.now();
       }
    };

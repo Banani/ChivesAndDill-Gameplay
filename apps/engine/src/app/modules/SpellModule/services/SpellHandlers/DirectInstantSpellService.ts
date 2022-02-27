@@ -2,6 +2,7 @@ import { EventParser } from 'apps/engine/src/app/EventParser';
 import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
 import { EngineEventHandler } from 'apps/engine/src/app/types';
 import { omit } from 'lodash';
+import { PlayerEngineEvents, SendErrorMessageEvent } from '../../../PlayerModule/Events';
 import {
    SpellLandedEvent,
    SpellEngineEvents,
@@ -28,6 +29,11 @@ export class DirectInstantSpellService extends EventParser {
          const character = allCharacters[event.casterId];
 
          if (character && distanceBetweenTwoPoints(character.location, event.directionLocation) > event.spell.range) {
+            this.engineEventCrator.asyncCeateEvent<SendErrorMessageEvent>({
+               type: PlayerEngineEvents.SendErrorMessage,
+               characterId: event.casterId,
+               message: 'Out of range.',
+            });
             return;
          }
 

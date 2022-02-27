@@ -14,6 +14,8 @@ export enum PlayerEngineEvents {
    LootOpened = 'LootOpened',
    CloseLoot = 'CloseLoot',
    LootClosed = 'LootClosed',
+
+   SendErrorMessage = 'SendErrorMessage',
 }
 
 export interface CreateNewPlayerEvent extends EngineEvent {
@@ -66,6 +68,12 @@ export interface LootClosedEvent extends EngineEvent {
    characterId: string;
 }
 
+export interface SendErrorMessageEvent extends EngineEvent {
+   type: PlayerEngineEvents.SendErrorMessage;
+   characterId: string;
+   message: string;
+}
+
 export interface PlayerEngineEventsMap {
    [PlayerEngineEvents.CreateNewPlayer]: EngineEventHandler<CreateNewPlayerEvent>;
    [PlayerEngineEvents.NewPlayerCreated]: EngineEventHandler<NewPlayerCreatedEvent>;
@@ -77,4 +85,6 @@ export interface PlayerEngineEventsMap {
    [PlayerEngineEvents.LootOpened]: EngineEventHandler<LootOpenedEvent>;
    [PlayerEngineEvents.CloseLoot]: EngineEventHandler<CloseLootEvent>;
    [PlayerEngineEvents.LootClosed]: EngineEventHandler<LootClosedEvent>;
+
+   [PlayerEngineEvents.SendErrorMessage]: EngineEventHandler<SendErrorMessageEvent>;
 }
