@@ -15,3 +15,5 @@ export const selectAreas = (state: EngineAwareState) => state.engineStateModule.
 export const selectCharacterPowerPointsEvents = (state: EngineAwareState) => state.engineStateModule.characterPowerPoints.events;
 
 export const selectMapSchema = (state: EngineAwareState) => state.engineStateModule.mapSchema.data;
+
+export const getExperience = (state: EngineAwareState) => state.engineStateModule.experience.data;
