@@ -40,4 +40,7 @@ export enum ClientMessages {
    PlayerStopMove = 'PlayerStopMove',
    PerformBasicAttack = 'PerformBasicAttack',
    CreateCharacter = 'CreateCharacter',
+   OpenLoot = 'OpenLoot',
+   CloseLoot = 'CloseLoot',
+   TakeLootItem = 'TakeLootItem',
 }

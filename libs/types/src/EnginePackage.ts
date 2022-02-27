@@ -20,6 +20,9 @@ export enum GlobalStoreModule {
    MAP_SCHEMA = 'mapSchema',
    QUESTS = 'quests',
    EXPERIENCE = 'experience',
+   CURRENCY = 'currency',
+   ACTIVE_LOOT = 'activeLoot',
+   CORPSE_DROP = 'corpseDrop',
 }
 
 interface PartialEnginePackage<Data> {
@@ -42,6 +45,7 @@ export interface EnginePackage {
    [GlobalStoreModule.ACTIVE_CHARACTER]: PartialEnginePackage<string>;
    [GlobalStoreModule.AREAS]: PartialEnginePackage<number[][]>;
    [GlobalStoreModule.MAP_SCHEMA]: PartialEnginePackage<MapSchema | MapDefinition>;
+   [GlobalStoreModule.ACTIVE_LOOT]: PartialEnginePackage<ActiveLootTrack>;
 }
 
 interface StoreModule<Data> {
@@ -64,6 +68,7 @@ export interface GlobalStore {
    [GlobalStoreModule.ACTIVE_CHARACTER]: StoreModule<string>;
    [GlobalStoreModule.AREAS]: StoreModule<number[][]>;
    [GlobalStoreModule.MAP_SCHEMA]: StoreModule<MapSchema | MapDefinition>;
+   [GlobalStoreModule.ACTIVE_LOOT]: StoreModule<ActiveLootTrack>;
 }
 
 export interface ActiveCharacterStorePart {
@@ -123,6 +128,29 @@ export interface ExperienceExternalTrack {
    experienceAmount: number;
    level: number;
    toNextLevel: number;
+}
+
+export enum DropItemType {
+   CURRENCY,
+}
+
+export interface DropCurrency {
+   type: DropItemType.CURRENCY;
+   name: string;
+}
+
+export type DropItem = DropCurrency; // OR DropObject
+
+export interface CorpseDroppedItemStack {
+   amount: number;
+   item: DropItem;
+}
+
+export type CorpseDropTrack = Record<string, CorpseDroppedItemStack>;
+
+export interface ActiveLootTrack {
+   corpseId: string;
+   items: CorpseDropTrack;
 }
 
 export enum EngineEventType {

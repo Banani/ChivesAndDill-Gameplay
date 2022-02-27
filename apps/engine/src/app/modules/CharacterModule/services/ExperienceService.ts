@@ -79,7 +79,7 @@ export class ExperienceService extends EventParser {
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
       const character = services.characterService.getCharacterById(event.killerId);
 
-      if (character.type !== CharacterType.Player) {
+      if (!character || character.type !== CharacterType.Player) {
          return;
       }
 

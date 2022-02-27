@@ -48,7 +48,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       spellPowerCost: 20,
       cooldown: 0,
       channelFrequency: 1500,
-      channelTime: 1500,
+      channelTime: 3000,
       canByCastedInMovement: false,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       channelSpells: [
@@ -59,7 +59,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
             spellEffectsOnTarget: [
                {
                   type: SpellEffectType.Damage,
-                  amount: 60,
+                  amount: 10,
                },
             ],
          },

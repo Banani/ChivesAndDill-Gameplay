@@ -34,13 +34,13 @@ export const MonsterRespawns: Record<string, CharacterRespawn<MonsterTemplate>> 
    //       time: 2000,
    //    },
 
-   //    '5': {
-   //       id: '5',
-   //       location: { x: 1900, y: 1100 },
-   //       characterTemplate: MonsterTemplates['Orc'],
-   //       time: 2000,
-   //       walkingType: WalkingType.None,
-   //    },
+   '5': {
+      id: '5',
+      location: { x: 300, y: 400 },
+      characterTemplate: MonsterTemplates['Orc'],
+      time: 10000,
+      walkingType: WalkingType.None,
+   },
    '6': {
       id: '6',
       location: { x: 1300, y: 850 },

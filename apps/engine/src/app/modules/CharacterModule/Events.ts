@@ -27,6 +27,8 @@ export enum CharacterEngineEvents {
    CharacterLevelChanged = 'CharacterLevelChanged',
    CharacterGainExperience = 'CharacterGainExperience',
    ExperienceTrackRemoved = 'ExperienceTrackRemoved',
+
+   CorpseDropTrackCreated = 'CorpseDropTrackCreated',
 }
 
 export interface CreateCharacterEvent extends EngineEvent {
@@ -138,6 +140,11 @@ export interface ExperienceTrackRemovedEvent extends EngineEvent {
    trackId: string;
 }
 
+export interface CorpseDropTrackCreatedEvent extends EngineEvent {
+   type: CharacterEngineEvents.CorpseDropTrackCreated;
+   characterId: string;
+}
+
 export interface CharacterEngineEventsMap {
    [CharacterEngineEvents.CreateCharacter]: EngineEventHandler<any>;
    [CharacterEngineEvents.NewCharacterCreated]: EngineEventHandler<NewCharacterCreatedEvent>;
@@ -162,4 +169,6 @@ export interface CharacterEngineEventsMap {
    [CharacterEngineEvents.CharacterGainExperience]: EngineEventHandler<CharacterGainExperienceEvent>;
    [CharacterEngineEvents.CharacterLevelChanged]: EngineEventHandler<CharacterLevelChangedEvent>;
    [CharacterEngineEvents.ExperienceTrackRemoved]: EngineEventHandler<ExperienceTrackRemovedEvent>;
+
+   [CharacterEngineEvents.CorpseDropTrackCreated]: EngineEventHandler<CorpseDropTrackCreatedEvent>;
 }
