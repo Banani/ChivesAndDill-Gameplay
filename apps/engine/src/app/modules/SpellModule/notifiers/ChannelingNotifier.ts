@@ -27,10 +27,10 @@ export class ChannelingNotifier extends Notifier<ChannelingTrack> {
    };
 
    handleSpellChannelingFinished: EngineEventHandler<SpellChannelingFinishedEvent> = ({ event }) => {
-      this.broadcastObjectsDeletion({ ids: [event.channelId] });
+      this.broadcastObjectsDeletion({ objects: { [event.channelId]: null } });
    };
 
    handleSpellChannelingInterrupted: EngineEventHandler<SpellChannelingInterruptedEvent> = ({ event }) => {
-      this.broadcastObjectsDeletion({ ids: [event.channelId] });
+      this.broadcastObjectsDeletion({ objects: { [event.channelId]: null } });
    };
 }

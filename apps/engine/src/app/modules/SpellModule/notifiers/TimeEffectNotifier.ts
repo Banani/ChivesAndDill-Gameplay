@@ -31,6 +31,6 @@ export class TimeEffectNotifier extends Notifier<TimeEffect> {
    };
 
    handleTimeEffectRemoved: EngineEventHandler<TimeEffectRemovedEvent> = ({ event }) => {
-      this.broadcastObjectsDeletion({ ids: [event.tickOverTimeId] });
+      this.broadcastObjectsDeletion({ objects: { [event.tickOverTimeId]: null } });
    };
 }

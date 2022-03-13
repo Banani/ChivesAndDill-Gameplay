@@ -45,7 +45,7 @@ export class PowerPointsNotifier extends Notifier<PowerPointsTrack> {
    };
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
-      this.broadcastObjectsDeletion({ ids: [event.characterId] });
+      this.broadcastObjectsDeletion({ objects: { [event.characterId]: null } });
    };
 
    handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event }) => {

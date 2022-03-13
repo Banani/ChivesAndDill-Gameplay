@@ -19,7 +19,7 @@ export class EngineEventCrator {
    }
 
    createEvent<T extends EngineEvent>(event: T) {
-      this.asyncCeateEvent(event);
+      this.eventsToBeProcessed.push(event);
       this.processEvents();
    }
 

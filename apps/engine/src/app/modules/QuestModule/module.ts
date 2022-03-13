@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { EngineModule } from '../../types/EngineModule';
 import { QuestNotifier } from './notifiers';
 import { KillingQuestService, MovementQuestService, QuestProgressService } from './services';

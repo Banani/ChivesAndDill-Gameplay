@@ -1,7 +1,7 @@
 import type { EngineStateAction } from './actions';
 import { EngineStateActionTypes } from './actions';
-import { merge, mapValues, omit } from 'lodash';
-import type { GlobalStore} from '@bananos/types';
+import _, { merge, mapValues, omit, forEach, clone, pickBy } from 'lodash';
+import type { GlobalStore } from '@bananos/types';
 import { GlobalStoreModule } from '@bananos/types';
 
 const emptyModule = {
@@ -11,27 +11,67 @@ const emptyModule = {
 
 const initialState: GlobalStore = {
    [GlobalStoreModule.CHARACTER_MOVEMENTS]: emptyModule,
-   [GlobalStoreModule.CHARACTER_POWER_POINTS]: emptyModule,
-   [GlobalStoreModule.AREA_TIME_EFFECTS]: emptyModule,
    [GlobalStoreModule.PROJECTILE_MOVEMENTS]: emptyModule,
-   [GlobalStoreModule.SPELLS]: emptyModule,
    [GlobalStoreModule.SPELL_CHANNELS]: emptyModule,
+   [GlobalStoreModule.CHARACTER_POWER_POINTS]: emptyModule,
    [GlobalStoreModule.TIME_EFFECTS]: emptyModule,
+   [GlobalStoreModule.AREA_TIME_EFFECTS]: emptyModule,
+   [GlobalStoreModule.SPELLS]: emptyModule,
    [GlobalStoreModule.POWER_STACKS]: emptyModule,
    [GlobalStoreModule.ABSORB_SHIELDS]: emptyModule,
+   [GlobalStoreModule.PLAYER]: emptyModule,
+   [GlobalStoreModule.CHARACTER]: emptyModule,
+   [GlobalStoreModule.ACTIVE_CHARACTER]: emptyModule,
+   [GlobalStoreModule.AREAS]: emptyModule,
+   [GlobalStoreModule.MAP_SCHEMA]: emptyModule,
+   [GlobalStoreModule.ACTIVE_LOOT]: emptyModule,
+   [GlobalStoreModule.ERROR_MESSAGES]: emptyModule,
+   [GlobalStoreModule.CHAT_CHANNEL]: emptyModule,
+   [GlobalStoreModule.CHAT_MESSAGES]: emptyModule,
+   [GlobalStoreModule.EXPERIENCE]: emptyModule,
+   [GlobalStoreModule.CURRENCY]: emptyModule,
+};
+
+const deleteRequestedFields = (data: any, pathToDelete: any) => {
+   forEach(pathToDelete, (toDelete, key) => {
+      if (toDelete === null) {
+         delete data[key];
+      } else {
+         deleteRequestedFields(data[key], toDelete);
+      }
+   });
 };
 
 export const engineStateReducer = (state: GlobalStore = initialState, action: EngineStateAction): GlobalStore => {
    switch (action.type) {
       case EngineStateActionTypes.NEW_PACKAGE: {
-         return mapValues(
-            merge(
-               {},
-               mapValues(state, (module) => ({ ...module, events: [] })),
-               mapValues(action.payload, (module) => ({ data: module.data, events: module.events ?? [] }))
-            ),
-            (module, key) => ({ ...module, data: omit(module.data, action.payload[key]?.toDelete) })
+         let newState = clone(state);
+
+         forEach(newState, (module) => {
+            module.events = [];
+         });
+
+         forEach(action.payload, (module, moduleName) => {
+            if (module.events) {
+               newState[moduleName].events = module.events;
+            }
+         });
+
+         newState = merge(
+            {},
+            newState,
+            mapValues(
+               pickBy(action.payload, (module) => module.data),
+               (module) => ({ data: module.data })
+            )
          );
+
+         forEach(
+            pickBy(action.payload, (module) => module.toDelete),
+            (module, moduleName) => deleteRequestedFields(newState[moduleName].data, module.toDelete)
+         );
+
+         return newState;
       }
 
       default:

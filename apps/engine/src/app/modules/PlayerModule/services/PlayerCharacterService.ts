@@ -51,7 +51,7 @@ export class PlayerCharacterService extends EventParser {
       this.increment++;
       return {
          type: CharacterType.Player,
-         id: `player_${this.increment.toString()}`,
+         id: `playerCharacter_${this.increment.toString()}`,
          name,
          location: { x: 50, y: 100 },
          direction: CharacterDirection.DOWN,

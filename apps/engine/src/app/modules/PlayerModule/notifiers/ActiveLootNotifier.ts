@@ -1,4 +1,4 @@
-import { ActiveLootTrack, ClientMessages, GlobalStoreModule } from '@bananos/types';
+import { ActiveLootTrack, ClientMessages, CommonClientMessages, GlobalStoreModule } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { CloseLootEvent, LootClosedEvent, LootOpenedEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents, PlayerTriesToOpenLootEvent } from '../Events';
@@ -16,7 +16,7 @@ export class ActiveLootNotifier extends Notifier<ActiveLootTrack> {
    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
       const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-      currentSocket.on(ClientMessages.OpenLoot, ({ corpseId }) => {
+      currentSocket.on(CommonClientMessages.OpenLoot, ({ corpseId }) => {
          this.engineEventCrator.asyncCeateEvent<PlayerTriesToOpenLootEvent>({
             type: PlayerEngineEvents.PlayerTriesToOpenLoot,
             characterId: event.playerCharacter.id,
@@ -24,7 +24,7 @@ export class ActiveLootNotifier extends Notifier<ActiveLootTrack> {
          });
       });
 
-      currentSocket.on(ClientMessages.CloseLoot, () => {
+      currentSocket.on(CommonClientMessages.CloseLoot, () => {
          this.engineEventCrator.asyncCeateEvent<CloseLootEvent>({
             type: PlayerEngineEvents.CloseLoot,
             characterId: event.playerCharacter.id,
@@ -50,7 +50,7 @@ export class ActiveLootNotifier extends Notifier<ActiveLootTrack> {
       this.multicastObjectsDeletion([
          {
             receiverId: character.ownerId,
-            ids: [event.characterId],
+            objects: { [event.characterId]: null },
          },
       ]);
    };

@@ -21,8 +21,6 @@ export class SocketConnectionService extends EventParser {
       };
    }
 
-   getIO = () => this.io;
-
    // Not sure about it
    getSocketById = (userId) => this.sockets[userId];
 

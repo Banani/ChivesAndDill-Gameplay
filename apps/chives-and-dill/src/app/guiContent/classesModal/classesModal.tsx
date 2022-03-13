@@ -6,7 +6,7 @@ import warrior from '../../../assets/spritesheets/classes/classIcons/warriorIcon
 import hunter from '../../../assets/spritesheets/classes/classIcons/hunterIcon.png';
 import paladin from '../../../assets/spritesheets/classes/classIcons/paladinIcon.png';
 import { SocketContext } from '../../gameController/socketContext';
-import { ClientMessages } from '@bananos/types';
+import { ClientMessages, CommonClientMessages } from '@bananos/types';
 
 export const ClassesModal = () => {
    const [selectedClass, setSelectedClass] = useState('Tank');
@@ -48,26 +48,32 @@ export const ClassesModal = () => {
       ></div>
    ));
 
-   const onSubmit = useCallback((e) => {
-      e.preventDefault();
-      socket?.emit(ClientMessages.CreateCharacter, {
-         name: nick,
-         class: selectedClass,
-      });
-   }, [nick, selectedClass, socket]);
+   const onSubmit = useCallback(
+      (e) => {
+         e.preventDefault();
+         socket?.emit(CommonClientMessages.CreateCharacter, {
+            name: nick,
+            class: selectedClass,
+         });
+      },
+      [nick, selectedClass, socket]
+   );
 
-   const submitOnEnter = useCallback((e) => {
-      if (e.key === 'Enter') {
-         onSubmit(e);
-      }
-   }, [onSubmit]);
+   const submitOnEnter = useCallback(
+      (e) => {
+         if (e.key === 'Enter') {
+            onSubmit(e);
+         }
+      },
+      [onSubmit]
+   );
 
    useEffect(() => {
       window.addEventListener('keydown', submitOnEnter);
 
       return () => {
          window.removeEventListener('keydown', submitOnEnter);
-      }
+      };
    }, [submitOnEnter]);
 
    return (
@@ -79,7 +85,9 @@ export const ClassesModal = () => {
                <input type="text" name="nick" className={styles.inputName} value={nick} onChange={(e) => setNick(e.target.value)} />
             </div>
             <div className={styles.classImages}>{classesToRender}</div>
-            <button disabled={!selectedClass || !nick} className={styles.submitButton}>Create</button>
+            <button disabled={!selectedClass || !nick} className={styles.submitButton}>
+               Create
+            </button>
          </form>
       </div>
    );

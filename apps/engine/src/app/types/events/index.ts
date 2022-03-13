@@ -12,6 +12,7 @@ import { PlayerEngineEvents } from '../../modules/PlayerModule/Events';
 import { NpcEngineEvents } from '../../modules/NpcModule/Events';
 import { CharacterUnion } from '../CharacterUnion';
 import { ItemEngineEvents } from '../../modules/ItemModule/Events';
+import { ChatEngineEvents } from '../../modules/ChatModule/Events';
 
 export interface EngineEvent {
    type:
@@ -22,7 +23,10 @@ export interface EngineEvent {
       | CharacterEngineEvents
       | PlayerEngineEvents
       | NpcEngineEvents
-      | ItemEngineEvents;
+      | ItemEngineEvents
+      | ChatEngineEvents;
+
+   requestingCharacterId?: string;
 }
 
 export interface CharacterDiedEvent extends EngineEvent {

@@ -1,10 +1,10 @@
-import { ClientMessages } from '@bananos/types';
+import { CommonClientMessages } from '@bananos/types';
 import React, { useContext, useEffect, useState } from 'react';
 import { SocketContext } from '../gameController/socketContext';
 import { GameControllerContext } from './gameControllerContext';
 import { useSelector } from 'react-redux';
 import { selectActiveCharacterId, selectCharacters, getEngineState } from '../../stores';
-import _ from "lodash";
+import _ from 'lodash';
 
 const GameController = ({ children }) => {
    const context = useContext(SocketContext);
@@ -35,7 +35,7 @@ const GameController = ({ children }) => {
       switch (event.key) {
          case 'a':
             if (!keysState.a) {
-               socket?.emit(ClientMessages.PlayerStartMove, {
+               socket?.emit(CommonClientMessages.PlayerStartMove, {
                   x: -1,
                   source: 'key-a',
                });
@@ -44,7 +44,7 @@ const GameController = ({ children }) => {
             break;
          case 'd':
             if (!keysState.d) {
-               socket?.emit(ClientMessages.PlayerStartMove, {
+               socket?.emit(CommonClientMessages.PlayerStartMove, {
                   x: 1,
                   source: 'key-d',
                });
@@ -53,7 +53,7 @@ const GameController = ({ children }) => {
             break;
          case 'w':
             if (!keysState.w) {
-               socket?.emit(ClientMessages.PlayerStartMove, {
+               socket?.emit(CommonClientMessages.PlayerStartMove, {
                   y: -1,
                   source: 'key-w',
                });
@@ -62,7 +62,7 @@ const GameController = ({ children }) => {
             break;
          case 's':
             if (!keysState.s) {
-               socket?.emit(ClientMessages.PlayerStartMove, {
+               socket?.emit(CommonClientMessages.PlayerStartMove, {
                   y: 1,
                   source: 'key-s',
                });
@@ -73,14 +73,14 @@ const GameController = ({ children }) => {
 
       const key = event.key.toLowerCase();
 
-      let keyBinds = _.map(characters[activePlayerId].spells, spell => spell.name);
+      let keyBinds = _.map(characters[activePlayerId].spells, (spell) => spell.name);
       keyBinds = keyBinds.reduce((prev, current, index) => {
          prev[index + 1] = current;
          return prev;
-      }, {})
+      }, {});
 
       if (keyBinds[key]) {
-         socket?.emit(ClientMessages.PerformBasicAttack, {
+         socket?.emit(CommonClientMessages.PerformBasicAttack, {
             directionLocation: {
                x: engineState.characterMovements.data[activePlayerId].location.x + mousePosition.x - gameWidth / 2,
                y: engineState.characterMovements.data[activePlayerId].location.y + mousePosition.y - gameHeight / 2,
@@ -95,19 +95,19 @@ const GameController = ({ children }) => {
       switch (event.key) {
          case 'a':
             setKeysState({ ...keysState, a: false });
-            socket?.emit(ClientMessages.PlayerStopMove, { source: 'key-a' });
+            socket?.emit(CommonClientMessages.PlayerStopMove, { source: 'key-a' });
             break;
          case 'd':
             setKeysState({ ...keysState, d: false });
-            socket?.emit(ClientMessages.PlayerStopMove, { source: 'key-d' });
+            socket?.emit(CommonClientMessages.PlayerStopMove, { source: 'key-d' });
             break;
          case 'w':
             setKeysState({ ...keysState, w: false });
-            socket?.emit(ClientMessages.PlayerStopMove, { source: 'key-w' });
+            socket?.emit(CommonClientMessages.PlayerStopMove, { source: 'key-w' });
             break;
          case 's':
             setKeysState({ ...keysState, s: false });
-            socket?.emit(ClientMessages.PlayerStopMove, { source: 'key-s' });
+            socket?.emit(CommonClientMessages.PlayerStopMove, { source: 'key-s' });
             break;
          case '1':
             setKeysState({ ...keysState, 1: false });

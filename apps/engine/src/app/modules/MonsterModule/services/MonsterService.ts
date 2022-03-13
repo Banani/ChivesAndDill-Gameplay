@@ -81,7 +81,6 @@ export class MonsterService extends EventParser {
          healthPointsRegen: event.monsterRespawn.characterTemplate.healthPointsRegen,
          spellPowerRegen: event.monsterRespawn.characterTemplate.spellPowerRegen,
       };
-      console.log('new monster created');
 
       this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
          type: CharacterEngineEvents.CreateCharacter,

@@ -1,4 +1,4 @@
-import { getItemModule, getMapModule, getMonsterModule, getNpcModule, getQuestModule, getSpellModule } from './app/modules';
+import { getChatModule, getItemModule, getMapModule, getMonsterModule, getNpcModule, getQuestModule, getSpellModule } from './app/modules';
 import { getPlayerModule } from './app/modules/PlayerModule';
 import { getCharacterModule } from './app/modules/CharacterModule/module';
 import * as _ from 'lodash';
@@ -31,5 +31,6 @@ const mainEngine = new MainEngine(io, [
    getMapModule(),
    getNpcModule(),
    getItemModule(),
+   getChatModule(),
 ]);
 mainEngine.start();

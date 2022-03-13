@@ -32,7 +32,7 @@ export class CharacterNotifier extends Notifier<Character> {
 
    handleCharacterRemoved: EngineEventHandler<CharacterRemovedEvent> = ({ event }) => {
       this.broadcastObjectsDeletion({
-         ids: [event.character.id],
+         objects: { [event.character.id]: null },
       });
    };
 }

@@ -1,4 +1,7 @@
+import { ChatMessage } from '.';
+import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
+import { CommonClientMessages } from './engineEvents';
 import type { CharacterDirection } from './shared';
 
 export enum GlobalStoreModule {
@@ -24,11 +27,13 @@ export enum GlobalStoreModule {
    ACTIVE_LOOT = 'activeLoot',
    CORPSE_DROP = 'corpseDrop',
    ERROR_MESSAGES = 'errorMessages',
+   CHAT_CHANNEL = 'chatChannel',
+   CHAT_MESSAGES = 'chatMessages',
 }
 
-interface PartialEnginePackage<Data> {
+export interface PartialEnginePackage<Data> {
    data: Record<string, Data>;
-   toDelete: string[];
+   toDelete: {};
    events: EnginePackageEvent[];
 }
 
@@ -48,6 +53,10 @@ export interface EnginePackage {
    [GlobalStoreModule.MAP_SCHEMA]: PartialEnginePackage<MapSchema | MapDefinition>;
    [GlobalStoreModule.ACTIVE_LOOT]: PartialEnginePackage<ActiveLootTrack>;
    [GlobalStoreModule.ERROR_MESSAGES]: PartialEnginePackage<undefined>;
+   [GlobalStoreModule.CHAT_CHANNEL]: PartialEnginePackage<ChatChannel>;
+   [GlobalStoreModule.CHAT_MESSAGES]: PartialEnginePackage<ChatMessage>;
+   [GlobalStoreModule.EXPERIENCE]: PartialEnginePackage<ExperienceExternalTrack>;
+   [GlobalStoreModule.CURRENCY]: PartialEnginePackage<number>;
 }
 
 interface StoreModule<Data> {
@@ -71,7 +80,11 @@ export interface GlobalStore {
    [GlobalStoreModule.AREAS]: StoreModule<number[][]>;
    [GlobalStoreModule.MAP_SCHEMA]: StoreModule<MapSchema | MapDefinition>;
    [GlobalStoreModule.ACTIVE_LOOT]: StoreModule<ActiveLootTrack>;
-   [GlobalStoreModule.ERROR_MESSAGES]: PartialEnginePackage<undefined>;
+   [GlobalStoreModule.ERROR_MESSAGES]: StoreModule<undefined>;
+   [GlobalStoreModule.CHAT_CHANNEL]: StoreModule<ChatChannel>;
+   [GlobalStoreModule.CHAT_MESSAGES]: StoreModule<ChatMessage>;
+   [GlobalStoreModule.EXPERIENCE]: StoreModule<ExperienceExternalTrack>;
+   [GlobalStoreModule.CURRENCY]: StoreModule<number>;
 }
 
 export interface ActiveCharacterStorePart {
@@ -166,6 +179,8 @@ export enum EngineEventType {
    LevelChanged = 'LevelChanged',
    ExperienceGain = 'ExperienceGain',
    ErrorMessage = 'ErrorMessage',
+
+   CreateCharacter = 'CreateCharacter',
 }
 
 export interface PlayerCreatedEvent {
@@ -231,6 +246,12 @@ export interface ErrorMessage {
    message: string;
 }
 
+export interface CreateCharacter {
+   type: CommonClientMessages.CreateCharacter;
+   name: string;
+   class: any; // MOve classes
+}
+
 export type EnginePackageEvent =
    | SpellLandedEvent
    | SpellCastedEvent
@@ -240,7 +261,9 @@ export type EnginePackageEvent =
    | PlayerCreatedEvent
    | LevelChangedEvent
    | ExperienceGainEvent
-   | ErrorMessage;
+   | ErrorMessage
+   | CreateCharacter
+   | EngineChatAction;
 
 export enum HealthPointsSource {
    Healing = 'Healing',

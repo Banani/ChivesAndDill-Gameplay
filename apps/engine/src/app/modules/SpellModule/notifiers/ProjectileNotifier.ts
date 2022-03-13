@@ -30,6 +30,6 @@ export class ProjectileNotifier extends Notifier<ProjectileMovement> {
    };
 
    ProjectileRemoved: EngineEventHandler<ProjectileRemovedEvent> = ({ event }) => {
-      this.broadcastObjectsDeletion({ ids: [event.projectileId] });
+      this.broadcastObjectsDeletion({ objects: { [event.projectileId]: null } });
    };
 }

@@ -27,7 +27,7 @@ export class ExperienceNotifier extends Notifier<Partial<ExperienceExternalTrack
 
    handleExperienceTrackRemoved: EngineEventHandler<ExperienceTrackRemovedEvent> = ({ event }) => {
       this.broadcastObjectsDeletion({
-         ids: [event.trackId],
+         objects: { [event.trackId]: null },
       });
    };
 

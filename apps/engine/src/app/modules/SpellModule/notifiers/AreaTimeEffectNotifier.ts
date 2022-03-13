@@ -26,6 +26,6 @@ export class AreaTimeEffectNotifier extends Notifier<AreaTimeEffect> {
    };
 
    handleAreaSpellEffectRemoved: EngineEventHandler<AreaSpellEffectRemovedEvent> = ({ event }) => {
-      this.broadcastObjectsDeletion({ ids: [event.areaSpellEffectId] });
+      this.broadcastObjectsDeletion({ objects: { [event.areaSpellEffectId]: null } });
    };
 }

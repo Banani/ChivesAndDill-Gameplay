@@ -1,3 +1,5 @@
+import { ChatChannelClientMessages } from './ChatPackage';
+
 export enum EngineMessages {
    Inicialization = 'Inicialization',
    UserConnected = 'UserConnected',
@@ -35,7 +37,7 @@ export enum FightingEngineMessages {
    AbsorbShieldChanged = 'AbsorbShieldChanged',
 }
 
-export enum ClientMessages {
+export enum CommonClientMessages {
    PlayerStartMove = 'PlayerMove',
    PlayerStopMove = 'PlayerStopMove',
    PerformBasicAttack = 'PerformBasicAttack',
@@ -44,3 +46,5 @@ export enum ClientMessages {
    CloseLoot = 'CloseLoot',
    TakeLootItem = 'TakeLootItem',
 }
+
+export type ClientMessages = CommonClientMessages | ChatChannelClientMessages;

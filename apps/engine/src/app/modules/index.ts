@@ -5,3 +5,6 @@ export * from './SpellModule';
 export * from './MapModule';
 export * from './NpcModule';
 export * from './ItemModule';
+export * from './ChatModule';
+export * from './CharacterModule';
+export * from './PlayerModule';

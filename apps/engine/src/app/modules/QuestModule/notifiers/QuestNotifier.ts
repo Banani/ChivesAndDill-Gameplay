@@ -16,7 +16,6 @@ export class QuestNotifier extends EventParser {
    }
 
    handleQuestStarted: EngineEventHandler<QuestStartedEvent> = ({ event, services }) => {
-      console.log('Quest started: ', event.questTemplate.name);
       const character = services.characterService.getCharacterById(event.characterId);
       if (character.type === CharacterType.Player) {
          services.socketConnectionService.getSocketById(character.ownerId).emit(QuestEngineMessages.QuestStarted, omit(event, 'type'));
@@ -24,7 +23,6 @@ export class QuestNotifier extends EventParser {
    };
 
    handleQuestCompleted: EngineEventHandler<QuestCompletedEvent> = ({ event, services }) => {
-      console.log('Quest completed: ', event.questId);
       const character = services.characterService.getCharacterById(event.characterId);
       if (character.type === CharacterType.Player) {
          services.socketConnectionService.getSocketById(character.ownerId).emit(QuestEngineMessages.QuestCompleted, omit(event, 'type'));
@@ -32,7 +30,6 @@ export class QuestNotifier extends EventParser {
    };
 
    handleKillingStagePartProgress: EngineEventHandler<KillingStagePartProgress> = ({ event, services }) => {
-      console.log(`Killing stage progress: ${event.currentProgress} / ${event.targetAmount}`);
       const character = services.characterService.getCharacterById(event.characterId);
       if (character.type === CharacterType.Player) {
          services.socketConnectionService.getSocketById(character.ownerId).emit(QuestEngineMessages.KillingStagePartProgress, omit(event, 'type'));
@@ -40,7 +37,6 @@ export class QuestNotifier extends EventParser {
    };
 
    handleNewQuestStageStarted: EngineEventHandler<NewQuestStageStartedEvent> = ({ event, services }) => {
-      console.log('Quest stage started: ', event.questStage.description);
       const character = services.characterService.getCharacterById(event.characterId);
       if (character.type === CharacterType.Player) {
          services.socketConnectionService.getSocketById(character.ownerId).emit(QuestEngineMessages.NewQuestStageStarted, omit(event, 'type'));

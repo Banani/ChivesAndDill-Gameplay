@@ -1,8 +1,9 @@
 import { EngineEventCrator } from './EngineEventsCreator';
 import { CharacterEngineEventsMap } from './modules/CharacterModule/Events';
+import { ChatEngineEventsMap } from './modules/ChatModule/Events';
 import { ItemEngineEventsMap } from './modules/ItemModule/Events';
 import { MonsterEngineEventsMap } from './modules/MonsterModule/Events';
-import { PlayerEngineEventsMap } from './modules/PlayerModule/Events';
+import { PlayerEngineEvents, PlayerEngineEventsMap, SendErrorMessageEvent } from './modules/PlayerModule/Events';
 import { QuestEngineEventsMap } from './modules/QuestModule/Events';
 import { FightingEngineEventsMap } from './modules/SpellModule/Events';
 import { EngineEvent, EngineEventsMap } from './types';
@@ -17,7 +18,8 @@ export abstract class EventParser {
          FightingEngineEventsMap &
          CharacterEngineEventsMap &
          PlayerEngineEventsMap &
-         ItemEngineEventsMap
+         ItemEngineEventsMap &
+         ChatEngineEventsMap
    > = {};
 
    init(engineEventCrator: EngineEventCrator, services?: Services) {
@@ -29,4 +31,16 @@ export abstract class EventParser {
          this.eventsToHandlersMap[event.type]({ event: event as any, services });
       }
    }
+
+   wasRequestedByPlayer(event: EngineEvent) {
+      return event.requestingCharacterId;
+   }
+
+   sendErrorMessage = (receiverId: string, message: string) => {
+      this.engineEventCrator.asyncCeateEvent<SendErrorMessageEvent>({
+         type: PlayerEngineEvents.SendErrorMessage,
+         characterId: receiverId,
+         message: message,
+      });
+   };
 }

@@ -32,7 +32,7 @@ export class AbsorbShieldNotifier extends Notifier<AbsorbShieldTrack> {
    };
 
    handleAbsorbShieldFinished: EngineEventHandler<AbsorbShieldFinishedEvent> = ({ event }) => {
-      this.broadcastObjectsDeletion({ ids: [event.absorbId] });
+      this.broadcastObjectsDeletion({ objects: { [event.absorbId]: null } });
    };
 
    handleDamageAbsorbed: EngineEventHandler<DamageAbsorbedEvent> = ({ event }) => {
