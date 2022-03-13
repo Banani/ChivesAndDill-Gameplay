@@ -38,12 +38,23 @@ export const FloatingNumbersManager = () => {
   }, [engineState.absorbShields.events]);
 
   useEffect(() => {
+    setActiveShapes((prev) => [...prev, ...map(engineState.experience.events, (event) =>
+    ({
+      creationTime: Date.now(), y: 3.5, x: randomNumber(1.5, -1.5), event: {
+        type: event.type,
+        characterId: event.characterId,
+        amount: event.amount,
+      }
+    })
+    )]);
+  }, [engineState.experience.events]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       forEach(activeShapes, (event) => {
         event.y += 0.1;
       });
     }, 16);
-
     return () => clearInterval(interval);
   }, [events])
 
@@ -55,6 +66,8 @@ export const FloatingNumbersManager = () => {
         return "red"
       case "DamageAbsorbed":
         return "silver"
+      case "ExperienceGain":
+        return "purple"
     }
   }
 
@@ -63,7 +76,6 @@ export const FloatingNumbersManager = () => {
   const getLostHp = useCallback(
     () =>
       map(activeShapes, ({ event, y, x }, i) => {
-
         const location = engineState.characterMovements.data[event.characterId].location;
         return (
           <Text

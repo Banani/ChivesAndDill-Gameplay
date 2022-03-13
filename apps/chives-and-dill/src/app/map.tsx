@@ -18,6 +18,7 @@ import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/Ac
 import { MapManager } from './mapContent/mapManager/MapManager';
 import { CharacterFrames } from './guiContent/characterFrames/characterFrames';
 import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
+import { Chat } from './guiContent/chat/Chat';
 
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
@@ -70,6 +71,7 @@ const Map = () => {
          <CharacterFrames />
          {<QuestsSideView />}
          <QuestLog />
+         <Chat />
          <ExperienceBar />
          <ReactReduxContext.Consumer>
             {({ store }) => (

@@ -16,7 +16,7 @@ export const ExperienceBar = () => {
     <div className={styles.ExperienceBar}>
       <div className={styles.ProgressBar} style={{ width: levelProgress + '%' }}>
       </div>
-      <div className={styles.ProgressBarDetails}>{experienceAmount + ' / ' + toNextLevel + ' exp'}</div>
+      <div className={styles.ProgressBarDetails}>{experienceAmount + ' / ' + toNextLevel + ' (' + levelProgress + ' %) exp'}</div>
     </div>
   )
 };

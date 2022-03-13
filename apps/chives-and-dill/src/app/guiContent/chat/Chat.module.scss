@@ -1,0 +1,40 @@
+.chatContainer {
+  position: absolute;
+  bottom: 2%;
+  left: 0;
+  width: 400px;
+
+  .channelsContainer {
+    width: 100%;
+    display: flex;
+
+    .channel {
+      color: gold;
+      padding: 5px 8px;
+      cursor: pointer;
+
+      &:hover {
+        color: rgb(214, 214, 214);
+      }
+    }
+  }
+
+  .chatContent {
+    width: 100%;
+    height: 250px;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .chatInput {
+    width: 100%;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    padding: 5px;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
