@@ -100,7 +100,7 @@ export class EngineManager {
       const calls = this.playerSockets[playerId].emit.mock.calls;
       const lastCall: EnginePackage = calls[calls.length - 1][1];
 
-      if (this.watchForErrors) {
+      if (this.watchForErrors && lastCall.errorMessages) {
          expect(lastCall.errorMessages.events).toStrictEqual([]);
       }
 

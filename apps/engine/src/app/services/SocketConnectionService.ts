@@ -33,7 +33,9 @@ export class SocketConnectionService extends EventParser {
 
       forEach(filter(this.notifiers, (notifier) => notifier.getBroadcast) as Notifier[], (notifier) => {
          const notifierPackage = notifier.getBroadcast();
-         commonPackage[notifierPackage.key] = notifierPackage;
+         if (Object.keys(notifierPackage).length > 1) {
+            commonPackage[notifierPackage.key] = notifierPackage;
+         }
       });
 
       forEach(filter(this.notifiers, (notifier) => notifier.getMulticast) as Notifier[], (notifier) => {
