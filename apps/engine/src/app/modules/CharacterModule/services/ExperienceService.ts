@@ -1,3 +1,4 @@
+import { ExperienceGainSource } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
@@ -31,6 +32,7 @@ export class ExperienceService extends EventParser {
       this.experienceTracks[event.character.id] = {
          experienceAmount: 0,
          level: 1,
+         ownerCharacterId: event.character.id,
       };
 
       this.engineEventCrator.asyncCeateEvent<ExperienceTrackCreatedEvent>({
@@ -74,6 +76,7 @@ export class ExperienceService extends EventParser {
          experienceTrack: currentTrack,
          amount: event.amount,
          characterId: event.characterId,
+         experienceGainDetails: event.experienceGainDetails,
       });
    };
 
@@ -88,6 +91,10 @@ export class ExperienceService extends EventParser {
          type: CharacterEngineEvents.AddExperience,
          characterId: event.killerId,
          amount: 100,
+         experienceGainDetails: {
+            type: ExperienceGainSource.MonsterKill,
+            monsterId: event.characterId,
+         },
       });
 
       delete this.experienceTracks[event.characterId];

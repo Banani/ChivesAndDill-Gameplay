@@ -12,9 +12,10 @@ import {
    getChatModule,
 } from '../modules';
 import { Classes } from '../types/Classes';
+import { EngineEvent } from '../types/events';
 
 export class EngineManager {
-   private mainEngine;
+   private mainEngine: MainEngine;
    private ioHandler = {};
    private watchForErrors = false;
 
@@ -105,5 +106,10 @@ export class EngineManager {
       }
 
       return lastCall;
+   }
+
+   createSystemAction<T extends EngineEvent>(event: T) {
+      this.mainEngine.createEvent<T>(event);
+      this.mainEngine.doActions();
    }
 }

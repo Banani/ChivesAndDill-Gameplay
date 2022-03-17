@@ -4,7 +4,7 @@ import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
 import { RespawnMonsterEngine } from '../engines';
-import { CreateNewMonsterEvent, MonsterDiedEvent, MonsterEngineEvents, RespawnMonsterEvent } from '../Events';
+import { CreateNewMonsterEvent, MonsterEngineEvents, RespawnMonsterEvent } from '../Events';
 import { MonsterRespawns } from '../MonsterRespawns';
 
 interface MonsterDead {

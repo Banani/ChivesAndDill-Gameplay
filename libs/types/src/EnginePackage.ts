@@ -1,4 +1,5 @@
 import { ChatMessage } from '.';
+import { CharacterEvents } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
 import { CommonClientMessages } from './engineEvents';
@@ -177,7 +178,6 @@ export enum EngineEventType {
    CharacterLostHp = 'CharacterLostHp',
    DamageAbsorbed = 'DamageAbsorbed',
    LevelChanged = 'LevelChanged',
-   ExperienceGain = 'ExperienceGain',
    ErrorMessage = 'ErrorMessage',
 
    CreateCharacter = 'CreateCharacter',
@@ -225,12 +225,6 @@ export interface LevelChangedEvent {
    level: number;
 }
 
-export interface ExperienceGainEvent {
-   type: EngineEventType.ExperienceGain;
-   characterId: string;
-   amount: number;
-}
-
 export interface MapSchema {
    [key: string]: {
       path: string;
@@ -260,10 +254,10 @@ export type EnginePackageEvent =
    | DamageAbsorbedEvent
    | PlayerCreatedEvent
    | LevelChangedEvent
-   | ExperienceGainEvent
    | ErrorMessage
    | CreateCharacter
-   | EngineChatAction;
+   | EngineChatAction
+   | CharacterEvents;
 
 export enum HealthPointsSource {
    Healing = 'Healing',

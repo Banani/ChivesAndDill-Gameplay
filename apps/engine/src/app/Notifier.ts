@@ -6,6 +6,7 @@ export interface ModulePackage<T> {
    data: Record<string, T>;
    events?: EnginePackageEvent[];
    toDelete: Record<string, T>;
+   key: GlobalStoreModule;
 }
 
 export interface MulticastPackage<T> {
@@ -18,7 +19,7 @@ interface NotifierProps {
 }
 
 export abstract class Notifier<T = never> extends EventParser {
-   private notifierKey: string;
+   private notifierKey: GlobalStoreModule;
    private dataToSend: Record<string, Partial<T> | T> = {};
    private objectsToDelete: Record<string, Partial<T> | T> = {};
    private events: EnginePackageEvent[] = [];
@@ -43,7 +44,7 @@ export abstract class Notifier<T = never> extends EventParser {
       this.objectsToDelete = {};
       this.events = [];
 
-      const packageToSend: any = { key: this.notifierKey };
+      const packageToSend: Partial<ModulePackage<any>> = { key: this.notifierKey };
 
       if (Object.keys(dataToSend).length) {
          packageToSend.data = dataToSend;
@@ -85,7 +86,7 @@ export abstract class Notifier<T = never> extends EventParser {
    protected multicastMultipleObjectsUpdate = (dataUpdatePackages: { receiverId: string; objects: Record<string, Partial<T> | T> }[]) => {
       dataUpdatePackages.forEach((dataUpdatePackage) => {
          if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
-            this.multicast.messages[dataUpdatePackage.receiverId] = {};
+            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey };
          }
 
          this.multicast.messages[dataUpdatePackage.receiverId].data = merge(
@@ -99,7 +100,7 @@ export abstract class Notifier<T = never> extends EventParser {
    protected multicastObjectsDeletion = (dataUpdatePackages: { receiverId: string; objects: Record<string, Partial<T> | T> }[]) => {
       dataUpdatePackages.forEach((dataUpdatePackage) => {
          if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
-            this.multicast.messages[dataUpdatePackage.receiverId] = {};
+            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey };
          }
 
          this.multicast.messages[dataUpdatePackage.receiverId].toDelete = merge(
@@ -113,7 +114,7 @@ export abstract class Notifier<T = never> extends EventParser {
    protected multicastEvents = (dataUpdatePackages: { receiverId: string; events: EnginePackageEvent[] }[]) => {
       dataUpdatePackages.forEach((dataUpdatePackage) => {
          if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
-            this.multicast.messages[dataUpdatePackage.receiverId] = {};
+            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey };
          }
 
          this.multicast.messages[dataUpdatePackage.receiverId].events = merge(
