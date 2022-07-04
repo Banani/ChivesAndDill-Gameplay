@@ -1,4 +1,4 @@
-import type { ChatModuleServices, MonsterModuleServices, QuestModuleServices, SpellModuleServices } from '../modules';
+import type { ChatModuleServices, ItemModuleServices, MonsterModuleServices, QuestModuleServices, SpellModuleServices } from '../modules';
 import type { PathFinderService, SocketConnectionService } from '../services';
 import type { SchedulerService } from '../services/SchedulerService';
 import { PlayerModuleServices } from '../modules/PlayerModule';
@@ -16,4 +16,5 @@ export type Services = CommonServices &
    QuestModuleServices &
    MonsterModuleServices &
    SpellModuleServices &
-   ChatModuleServices;
+   ChatModuleServices &
+   ItemModuleServices;

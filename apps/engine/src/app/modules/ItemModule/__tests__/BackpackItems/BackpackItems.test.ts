@@ -1,6 +1,8 @@
 import { GlobalStoreModule } from '@bananos/types';
-import { checkIfPackageIsValid, EngineManager } from '../../../../testUtilities';
+import _ = require('lodash');
+import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from '../../../../testUtilities';
 import { Classes } from '../../../../types/Classes';
+import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../Events';
 
 const CURRENT_MODULE = GlobalStoreModule.BACKPACK_ITEMS;
 
@@ -17,7 +19,7 @@ const setupEngine = () => {
 };
 
 describe('BackpackItemsContainment', () => {
-   it('Player should get information about his backpack items', () => {
+   it('Player should get information about his empty backpack state', () => {
       const { players, engineManager } = setupEngine();
 
       const dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
@@ -25,12 +27,7 @@ describe('BackpackItemsContainment', () => {
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
          data: {
             playerCharacter_3: {
-               '1': {
-                  '3': {
-                     amount: 1,
-                     itemId: '2',
-                  },
-               },
+               '1': {},
             },
          },
       });
@@ -42,4 +39,53 @@ describe('BackpackItemsContainment', () => {
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, undefined);
    });
+
+   it('Should inform player about getting new item', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               '1': {
+                  '0': {
+                     amount: 1,
+                     itemId: 'ItemInstance_0',
+                  },
+               },
+            },
+         },
+      });
+   });
+
+   it('should return error message if backpack is full', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      _.range(0, 17).forEach(() => {
+         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+            type: ItemEngineEvents.GenerateItemForCharacter,
+            characterId: players['1'].characterId,
+            itemTemplateId: '1',
+            amount: 1,
+         });
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfErrorWasHandled(CURRENT_MODULE, 'Your backpack is full.', dataPackage);
+   });
+
+   it('Item should be placed in second bag if the first one is already full', () => {});
+
+   it('Item should be placed in first empty spot', () => {});
 });

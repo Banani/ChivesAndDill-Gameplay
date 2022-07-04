@@ -1,4 +1,4 @@
-import { BackpackItemsContainment, BackpackTrack, ChatMessage } from '.';
+import { BackpackItemsSpot, BackpackTrack, ChatMessage } from '.';
 import { CharacterEvents } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
@@ -61,7 +61,7 @@ export interface EnginePackage {
    [GlobalStoreModule.EXPERIENCE]: PartialEnginePackage<ExperienceExternalTrack>;
    [GlobalStoreModule.CURRENCY]: PartialEnginePackage<number>;
    [GlobalStoreModule.BACKPACK_SCHEMA]: PartialEnginePackage<BackpackTrack>;
-   [GlobalStoreModule.BACKPACK_ITEMS]: PartialEnginePackage<BackpackItemsContainment>;
+   [GlobalStoreModule.BACKPACK_ITEMS]: PartialEnginePackage<BackpackItemsSpot>;
 }
 
 interface StoreModule<Data> {
@@ -91,7 +91,7 @@ export interface GlobalStore {
    [GlobalStoreModule.EXPERIENCE]: StoreModule<ExperienceExternalTrack>;
    [GlobalStoreModule.CURRENCY]: StoreModule<number>;
    [GlobalStoreModule.BACKPACK_SCHEMA]: StoreModule<BackpackTrack>;
-   [GlobalStoreModule.BACKPACK_ITEMS]: StoreModule<BackpackItemsContainment>;
+   [GlobalStoreModule.BACKPACK_ITEMS]: StoreModule<BackpackItemsSpot>;
 }
 
 export interface ActiveCharacterStorePart {

@@ -6,4 +6,14 @@ export interface BackpackTrack {
    '5': number | null;
 }
 
-export type BackpackItemsContainment = Record<string, Record<string, { itemId: string; amount: number }>>;
+export type BackpackItemsSpot = Record<string, Record<string, { itemId: string; amount: number }>>;
+
+export enum ItemClientMessages {
+   MoveItemInBackpack = 'MoveItemInBackpack',
+}
+
+export interface MoveItemInBackpack {
+   type: ItemClientMessages.MoveItemInBackpack;
+}
+
+export type EngineItemMessages = MoveItemInBackpack;

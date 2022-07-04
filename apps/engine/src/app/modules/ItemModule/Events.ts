@@ -1,4 +1,4 @@
-import { BackpackItemsContainment, BackpackTrack } from '@bananos/types';
+import { BackpackItemsSpot, BackpackTrack } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 
 export enum ItemEngineEvents {
@@ -7,6 +7,10 @@ export enum ItemEngineEvents {
    BackpackTrackCreated = 'BackpackTrackCreated',
 
    BackpackItemsContainmentUpdated = 'BackpackItemsContainmentUpdated',
+
+   GenerateItemForCharacter = 'GenerateItemForCharacter',
+   AddItemToCharacter = 'AddItemToCharacter',
+   ItemAddedToCharacter = 'ItemAddedToCharacter',
 }
 
 export interface CurrencyAmountUpdatedEvent extends EngineEvent {
@@ -24,11 +28,36 @@ export interface BackpackTrackCreatedEvent extends EngineEvent {
 export interface BackpackItemsContainmentUpdatedEvent extends EngineEvent {
    type: ItemEngineEvents.BackpackItemsContainmentUpdated;
    characterId: string;
-   backpackItemsContainment: BackpackItemsContainment;
+   backpackItemsContainment: BackpackItemsSpot;
+}
+
+export interface GenerateItemForCharacterEvent extends EngineEvent {
+   type: ItemEngineEvents.GenerateItemForCharacter;
+   characterId: string;
+   itemTemplateId: string;
+   amount: number;
+}
+
+export interface AddItemToCharacterEvent extends EngineEvent {
+   type: ItemEngineEvents.AddItemToCharacter;
+   characterId: string;
+   itemId: string;
+   amount: number;
+}
+
+export interface ItemAddedToCharacterEvent extends EngineEvent {
+   type: ItemEngineEvents.ItemAddedToCharacter;
+   characterId: string;
+   itemId: string;
+   amount: number;
+   position: { backpack: number; spot: number };
 }
 
 export interface ItemEngineEventsMap {
    [ItemEngineEvents.CurrencyAmountUpdated]: EngineEventHandler<CurrencyAmountUpdatedEvent>;
    [ItemEngineEvents.BackpackTrackCreated]: EngineEventHandler<BackpackTrackCreatedEvent>;
    [ItemEngineEvents.BackpackItemsContainmentUpdated]: EngineEventHandler<BackpackItemsContainmentUpdatedEvent>;
+   [ItemEngineEvents.GenerateItemForCharacter]: EngineEventHandler<GenerateItemForCharacterEvent>;
+   [ItemEngineEvents.AddItemToCharacter]: EngineEventHandler<AddItemToCharacterEvent>;
+   [ItemEngineEvents.ItemAddedToCharacter]: EngineEventHandler<ItemAddedToCharacterEvent>;
 }
