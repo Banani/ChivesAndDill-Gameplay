@@ -10,10 +10,16 @@ export type BackpackItemsSpot = Record<string, Record<string, { itemId: string; 
 
 export enum ItemClientMessages {
    MoveItemInBackpack = 'MoveItemInBackpack',
+   Deleteitem = 'DeleteItem',
 }
 
 export interface MoveItemInBackpack {
    type: ItemClientMessages.MoveItemInBackpack;
 }
 
-export type EngineItemMessages = MoveItemInBackpack;
+export interface DeleteItem {
+   type: ItemClientMessages.Deleteitem;
+   itemId: string;
+}
+
+export type EngineItemMessages = MoveItemInBackpack | DeleteItem;

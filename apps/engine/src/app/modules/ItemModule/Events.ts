@@ -11,6 +11,10 @@ export enum ItemEngineEvents {
    GenerateItemForCharacter = 'GenerateItemForCharacter',
    AddItemToCharacter = 'AddItemToCharacter',
    ItemAddedToCharacter = 'ItemAddedToCharacter',
+
+   PlayerTriesToDeleteItem = 'PlayerTriesToDeleteItem',
+   ItemDeleted = 'ItemDeleted',
+   ItemRemovedFromBag = 'ItemRemovedFromBag',
 }
 
 export interface CurrencyAmountUpdatedEvent extends EngineEvent {
@@ -53,6 +57,24 @@ export interface ItemAddedToCharacterEvent extends EngineEvent {
    position: { backpack: number; spot: number };
 }
 
+export interface PlayerTriesToDeleteItemEvent extends EngineEvent {
+   type: ItemEngineEvents.PlayerTriesToDeleteItem;
+   itemId: string;
+}
+
+export interface ItemDeletedEvent extends EngineEvent {
+   type: ItemEngineEvents.ItemDeleted;
+   lastCharacterOwnerId: string;
+   itemId: string;
+}
+
+export interface ItemRemovedFromBagEvent extends EngineEvent {
+   type: ItemEngineEvents.ItemRemovedFromBag;
+   ownerId: string;
+   itemId: string;
+   position: { backpack: number; spot: number };
+}
+
 export interface ItemEngineEventsMap {
    [ItemEngineEvents.CurrencyAmountUpdated]: EngineEventHandler<CurrencyAmountUpdatedEvent>;
    [ItemEngineEvents.BackpackTrackCreated]: EngineEventHandler<BackpackTrackCreatedEvent>;
@@ -60,4 +82,7 @@ export interface ItemEngineEventsMap {
    [ItemEngineEvents.GenerateItemForCharacter]: EngineEventHandler<GenerateItemForCharacterEvent>;
    [ItemEngineEvents.AddItemToCharacter]: EngineEventHandler<AddItemToCharacterEvent>;
    [ItemEngineEvents.ItemAddedToCharacter]: EngineEventHandler<ItemAddedToCharacterEvent>;
+   [ItemEngineEvents.PlayerTriesToDeleteItem]: EngineEventHandler<PlayerTriesToDeleteItemEvent>;
+   [ItemEngineEvents.ItemDeleted]: EngineEventHandler<ItemDeletedEvent>;
+   [ItemEngineEvents.ItemRemovedFromBag]: EngineEventHandler<ItemRemovedFromBagEvent>;
 }

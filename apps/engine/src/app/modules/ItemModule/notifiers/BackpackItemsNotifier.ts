@@ -1,7 +1,7 @@
 import { BackpackItemsSpot, GlobalStoreModule } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
-import { BackpackItemsContainmentUpdatedEvent, ItemAddedToCharacterEvent, ItemEngineEvents } from '../Events';
+import { BackpackItemsContainmentUpdatedEvent, ItemAddedToCharacterEvent, ItemEngineEvents, ItemRemovedFromBagEvent } from '../Events';
 
 export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
    constructor() {
@@ -9,6 +9,7 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
       this.eventsToHandlersMap = {
          [ItemEngineEvents.BackpackItemsContainmentUpdated]: this.handleBackpackItemsContainmentUpdated,
          [ItemEngineEvents.ItemAddedToCharacter]: this.handleItemAddedToCharacter,
+         [ItemEngineEvents.ItemRemovedFromBag]: this.handleItemRemovedFromBag,
       };
    }
 
@@ -45,6 +46,20 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
                   },
                },
             },
+         },
+      ]);
+   };
+
+   handleItemRemovedFromBag: EngineEventHandler<ItemRemovedFromBagEvent> = ({ event, services }) => {
+      const player = services.characterService.getCharacterById(event.ownerId);
+      if (player.type !== CharacterType.Player) {
+         return;
+      }
+
+      this.multicastObjectsDeletion([
+         {
+            receiverId: player.ownerId,
+            objects: { [event.position.backpack]: { [event.position.spot]: null } },
          },
       ]);
    };

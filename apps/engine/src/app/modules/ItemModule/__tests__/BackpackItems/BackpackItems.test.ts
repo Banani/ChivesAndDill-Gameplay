@@ -1,4 +1,4 @@
-import { GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
 import _ = require('lodash');
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from '../../../../testUtilities';
 import { Classes } from '../../../../types/Classes';
@@ -83,6 +83,52 @@ describe('BackpackItemsContainment', () => {
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
       checkIfErrorWasHandled(CURRENT_MODULE, 'Your backpack is full.', dataPackage);
+   });
+
+   it('Player should be able to remove his item', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.Deleteitem, itemId });
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, { toDelete: { '1': { '0': null } } });
+   });
+
+   it('Player should get error when tries to delete item that does not exist', () => {
+      const { players, engineManager } = setupEngine();
+
+      const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.Deleteitem, itemId: 'SOME_ITEM_ID' });
+
+      checkIfErrorWasHandled(CURRENT_MODULE, 'Item does not exist.', dataPackage);
+   });
+
+   it('Player should get error when tries to delete item that does not belong to him', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['2'].socketId, { type: ItemClientMessages.Deleteitem, itemId });
+
+      checkIfErrorWasHandled(CURRENT_MODULE, 'Item does not exist.', dataPackage);
    });
 
    it('Item should be placed in second bag if the first one is already full', () => {});

@@ -7,7 +7,9 @@ import {
    BackpackItemsContainmentUpdatedEvent,
    BackpackTrackCreatedEvent,
    ItemAddedToCharacterEvent,
+   ItemDeletedEvent,
    ItemEngineEvents,
+   ItemRemovedFromBagEvent,
 } from '../Events';
 
 export class BackpackItemsService extends EventParser {
@@ -19,6 +21,7 @@ export class BackpackItemsService extends EventParser {
       this.eventsToHandlersMap = {
          [ItemEngineEvents.BackpackTrackCreated]: this.handleBackpackTrackCreated,
          [ItemEngineEvents.AddItemToCharacter]: this.handleAddItemToCharacter,
+         [ItemEngineEvents.ItemDeleted]: this.handleItemDeleted,
       };
    }
 
@@ -64,6 +67,31 @@ export class BackpackItemsService extends EventParser {
          amount: event.amount,
          itemId: event.itemId,
          position: { backpack: backpackNumber, spot },
+      });
+   };
+
+   handleItemDeleted: EngineEventHandler<ItemDeletedEvent> = ({ event }) => {
+      let backpack, spot;
+      _.forEach(this.itemsPositions[event.lastCharacterOwnerId], (currentBackpack, backpackKey) => {
+         _.forEach(currentBackpack, (currentSpot, slotKey) => {
+            if (currentSpot.itemId === event.itemId) {
+               backpack = backpackKey;
+               spot = slotKey;
+            }
+         });
+      });
+
+      if (!backpack) {
+         return;
+      }
+
+      delete this.itemsPositions[event.lastCharacterOwnerId][backpack][spot];
+
+      this.engineEventCrator.asyncCeateEvent<ItemRemovedFromBagEvent>({
+         type: ItemEngineEvents.ItemRemovedFromBag,
+         ownerId: event.lastCharacterOwnerId,
+         itemId: event.itemId,
+         position: { backpack, spot },
       });
    };
 }
