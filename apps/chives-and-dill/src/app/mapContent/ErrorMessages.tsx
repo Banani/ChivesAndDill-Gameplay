@@ -59,8 +59,8 @@ export const ErrorMessages = () => {
             new PIXI.TextStyle({
               fontSize: 40,
               fill: '#8f0303',
-              dropShadow: true,
-              dropShadowColor: "#141414",
+              stroke: '#000000',
+              strokeThickness: 2,
             })
           }
         />
