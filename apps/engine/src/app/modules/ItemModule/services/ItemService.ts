@@ -1,6 +1,7 @@
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { AddItemToCharacterEvent, GenerateItemForCharacterEvent, ItemDeletedEvent, ItemEngineEvents, PlayerTriesToDeleteItemEvent } from '../Events';
+import { ItemTemplates } from '../ItemTemplates';
 
 export class ItemService extends EventParser {
    private items: Record<string, { itemId: string; ownerId: string }> = {};
@@ -15,15 +16,29 @@ export class ItemService extends EventParser {
    }
 
    handleGenerateItemForCharacter: EngineEventHandler<GenerateItemForCharacterEvent> = ({ event }) => {
-      const itemId = `ItemInstance_${this.increment++}`;
-      this.items[itemId] = { itemId, ownerId: event.characterId };
+      if (!ItemTemplates[event.itemTemplateId]) {
+         return;
+      }
 
-      this.engineEventCrator.asyncCeateEvent<AddItemToCharacterEvent>({
-         type: ItemEngineEvents.AddItemToCharacter,
-         characterId: event.characterId,
-         amount: event.amount,
-         itemId,
-      });
+      const amount = event.amount ?? 1;
+      const stackSize = ItemTemplates[event.itemTemplateId].stack ?? 1;
+
+      for (let i = 0; i < amount / stackSize; i++) {
+         const itemId = `ItemInstance_${this.increment++}`;
+         this.items[itemId] = { itemId, ownerId: event.characterId };
+
+         let amount = stackSize;
+         if (i - 1 > amount / stackSize) {
+            amount = amount % stackSize;
+         }
+
+         this.engineEventCrator.asyncCeateEvent<AddItemToCharacterEvent>({
+            type: ItemEngineEvents.AddItemToCharacter,
+            characterId: event.characterId,
+            itemId,
+            amount,
+         });
+      }
    };
 
    handlePlayerTriesToDeleteItem: EngineEventHandler<PlayerTriesToDeleteItemEvent> = ({ event }) => {

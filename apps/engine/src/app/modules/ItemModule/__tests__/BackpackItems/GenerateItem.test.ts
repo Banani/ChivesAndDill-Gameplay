@@ -129,9 +129,11 @@ describe('GenerateItem', () => {
                '1': {
                   '0': {
                      itemId: 'ItemInstance_0',
+                     amount: 1,
                   },
                   '1': {
                      itemId: 'ItemInstance_1',
+                     amount: 1,
                   },
                },
             },

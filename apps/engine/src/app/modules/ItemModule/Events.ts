@@ -42,7 +42,7 @@ export interface GenerateItemForCharacterEvent extends EngineEvent {
    type: ItemEngineEvents.GenerateItemForCharacter;
    characterId: string;
    itemTemplateId: string;
-   amount: number;
+   amount?: number;
 }
 
 export interface AddItemToCharacterEvent extends EngineEvent {
