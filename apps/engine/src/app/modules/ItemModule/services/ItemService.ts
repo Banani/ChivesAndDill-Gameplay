@@ -20,16 +20,16 @@ export class ItemService extends EventParser {
          return;
       }
 
-      const amount = event.amount ?? 1;
+      const amountToGenerate = event.amount ?? 1;
       const stackSize = ItemTemplates[event.itemTemplateId].stack ?? 1;
 
-      for (let i = 0; i < amount / stackSize; i++) {
+      for (let i = 0; i < amountToGenerate / stackSize; i++) {
          const itemId = `ItemInstance_${this.increment++}`;
          this.items[itemId] = { itemId, ownerId: event.characterId };
 
          let amount = stackSize;
-         if (i - 1 > amount / stackSize) {
-            amount = amount % stackSize;
+         if (i + 1 > amountToGenerate / stackSize) {
+            amount = amountToGenerate % stackSize;
          }
 
          this.engineEventCrator.asyncCeateEvent<AddItemToCharacterEvent>({

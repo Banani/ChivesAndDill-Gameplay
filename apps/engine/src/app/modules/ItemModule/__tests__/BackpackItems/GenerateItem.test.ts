@@ -141,5 +141,36 @@ describe('GenerateItem', () => {
       });
    });
 
+   it('if item has a stack size smaller then requested amount, then more item stacks should be generated', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 35,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               '1': {
+                  '0': {
+                     itemId: 'ItemInstance_0',
+                     amount: 20,
+                  },
+                  '1': {
+                     itemId: 'ItemInstance_1',
+                     amount: 15,
+                  },
+               },
+            },
+         },
+      });
+   });
+
    it('Item should be placed in second bag if the first one is already full', () => {});
 });
