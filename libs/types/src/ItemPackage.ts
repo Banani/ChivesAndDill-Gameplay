@@ -6,7 +6,12 @@ export interface BackpackTrack {
    '5': number | null;
 }
 
-export type BackpackItemsSpot = Record<string, Record<string, { itemId: string; amount: number }>>;
+export interface ItemInstance {
+   itemId: string;
+   amount: number;
+}
+
+export type BackpackItemsSpot = Record<string, Record<string, ItemInstance>>;
 
 export enum ItemClientMessages {
    Deleteitem = 'DeleteItem',

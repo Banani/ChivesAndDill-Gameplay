@@ -1,4 +1,4 @@
-import { BackpackItemsSpot, BackpackTrack } from '@bananos/types';
+import { BackpackItemsSpot, BackpackTrack, ItemInstance } from '@bananos/types';
 import { EngineEvent, EngineEventHandler, RecursivePartial } from '../../types';
 
 export enum ItemEngineEvents {
@@ -96,7 +96,7 @@ export interface PlayerTriesToMoveItemInBagEvent extends EngineEvent {
 export interface ItemsMovedInBagEvent extends EngineEvent {
    type: ItemEngineEvents.ItemsMovedInBag;
    characterId: string;
-   items: { itemId: string; newLocation: ItemLocationInBag; oldPosition: ItemLocationInBag }[];
+   items: { itemInstance: ItemInstance; newLocation: ItemLocationInBag; oldPosition: ItemLocationInBag }[];
 }
 
 export interface PlayerTriesToSplitItemStackEvent extends EngineEvent {

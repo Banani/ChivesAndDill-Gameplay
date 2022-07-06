@@ -121,7 +121,7 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
          }
 
          delete toDelete[item.newLocation.backpack][item.newLocation.spot];
-         toUpdate[item.newLocation.backpack][item.newLocation.spot] = { itemId: item.itemId };
+         toUpdate[item.newLocation.backpack][item.newLocation.spot] = item.itemInstance;
       });
 
       _.forEach(toDelete, (backpack, keys) => {

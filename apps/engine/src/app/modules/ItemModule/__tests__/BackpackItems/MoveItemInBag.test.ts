@@ -46,6 +46,7 @@ describe('MoveItemInBag', () => {
          data: {
             '1': {
                '2': {
+                  amount: 1,
                   itemId: 'ItemInstance_0',
                },
             },
@@ -141,9 +142,11 @@ describe('MoveItemInBag', () => {
          data: {
             '1': {
                '0': {
+                  amount: 1,
                   itemId: 'ItemInstance_1',
                },
                '1': {
+                  amount: 1,
                   itemId: 'ItemInstance_0',
                },
             },

@@ -112,11 +112,34 @@ export class BackpackItemsService extends EventParser {
 
    handlePlayerTriesToSplitItemStack: EngineEventHandler<PlayerTriesToSplitItemStackEvent> = ({ event, services }) => {
       const { backpack, spot } = this.findItemInBag(event.requestingCharacterId, event.itemId);
-      if (!backpack) {
+      if (!backpack || !spot) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You does not have that item.');
          return;
       }
 
-      this.itemsPositions[event.requestingCharacterId][backpack][spot].amount -= event.amount;
+      const bagSpot = this.itemsPositions[event.requestingCharacterId][backpack][spot];
+
+      if (bagSpot.amount < event.amount) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You does not have that many items.');
+         return;
+      }
+
+      if (this.itemsPositions[event.requestingCharacterId][event.directionLocation.backpack][event.directionLocation.spot]) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You cannot do that items split.');
+         return;
+      }
+
+      if (bagSpot.amount === event.amount) {
+         this.engineEventCrator.asyncCeateEvent<PlayerTriesToMoveItemInBagEvent>({
+            type: ItemEngineEvents.PlayerTriesToMoveItemInBag,
+            directionLocation: event.directionLocation,
+            requestingCharacterId: event.requestingCharacterId,
+            itemId: event.itemId,
+         });
+         return;
+      }
+
+      bagSpot.amount -= event.amount;
 
       const item = services.itemService.getItemById(event.itemId);
 
@@ -126,7 +149,7 @@ export class BackpackItemsService extends EventParser {
          backpackItemsContainment: {
             [backpack]: {
                [spot]: {
-                  amount: this.itemsPositions[event.requestingCharacterId][backpack][spot].amount,
+                  amount: bagSpot.amount,
                },
             },
          },
@@ -175,13 +198,17 @@ export class BackpackItemsService extends EventParser {
 
       if (this.getItemFromSpot(characterId, directionLocation)) {
          this.swapItemsInBag(characterId, directionLocation, { backpack, spot });
-         items.push({ itemId: characterItems[backpack][spot].itemId, newLocation: { backpack, spot }, oldPosition: directionLocation });
+         items.push({ itemInstance: characterItems[backpack][spot], newLocation: { backpack, spot }, oldPosition: directionLocation });
       } else {
-         delete this.itemsPositions[characterId][backpack][spot];
          characterItems[directionLocation.backpack][directionLocation.spot] = characterItems[backpack][spot];
+         delete characterItems[backpack][spot];
       }
 
-      items.push({ itemId: event.itemId, newLocation: directionLocation, oldPosition: { backpack, spot } });
+      items.push({
+         itemInstance: characterItems[directionLocation.backpack][directionLocation.spot],
+         newLocation: directionLocation,
+         oldPosition: { backpack, spot },
+      });
 
       this.engineEventCrator.asyncCeateEvent<ItemsMovedInBagEvent>({
          type: ItemEngineEvents.ItemsMovedInBag,

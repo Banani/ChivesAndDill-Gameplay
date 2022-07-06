@@ -56,4 +56,110 @@ describe('SplitItemInBag', () => {
          },
       });
    });
+
+   it('Player should get error message if tries to split item that he does not have', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.SplitItemStackInBag,
+         itemId: 'RANDOM_ID',
+         amount: 5,
+         directionLocation: { backpack: '1', spot: '1' },
+      });
+
+      checkIfErrorWasHandled(CURRENT_MODULE, 'You does not have that item.', dataPackage);
+   });
+
+   it('Player should get error message if tries to split stack for more parts that he has', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 10,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.SplitItemStackInBag,
+         itemId,
+         amount: 15,
+         directionLocation: { backpack: '1', spot: '1' },
+      });
+
+      checkIfErrorWasHandled(CURRENT_MODULE, 'You does not have that many items.', dataPackage);
+   });
+
+   it('if players tries to split all items from stack to another place then the items should be just moved', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 20,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.SplitItemStackInBag,
+         itemId,
+         amount: 20,
+         directionLocation: { backpack: '1', spot: '1' },
+      });
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            '1': {
+               '1': {
+                  itemId: 'ItemInstance_0',
+                  amount: 20,
+               },
+            },
+         },
+         toDelete: {
+            '1': {
+               '0': null,
+            },
+         },
+      });
+   });
+
+   it('Player should get error message if tries to split stack to place that is occupied by another item.', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 10,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.SplitItemStackInBag,
+         itemId,
+         amount: 5,
+         directionLocation: { backpack: '1', spot: '1' },
+      });
+
+      checkIfErrorWasHandled(CURRENT_MODULE, 'You cannot do that items split.', dataPackage);
+   });
 });
