@@ -153,4 +153,136 @@ describe('MoveItemInBag', () => {
          },
       });
    });
+
+   it('if player moves item to a place taken by item of the same type, but not full stack it should be combined', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 5,
+      });
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 6,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.MoveItemInBag,
+         itemId,
+         directionLocation: {
+            backpack: '1',
+            spot: '0',
+         },
+      });
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            '1': {
+               '0': {
+                  amount: 11,
+                  itemId: 'ItemInstance_0',
+               },
+            },
+         },
+         toDelete: {
+            '1': { '1': null },
+         },
+      });
+   });
+
+   it('if player moves item to a place taken by item of the same type, but sum of those is bigger then stackSize, then is should trasfer as much as it can', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 15,
+      });
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 13,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.MoveItemInBag,
+         itemId,
+         directionLocation: {
+            backpack: '1',
+            spot: '0',
+         },
+      });
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            '1': {
+               '0': {
+                  amount: 20,
+                  itemId: 'ItemInstance_0',
+               },
+               '1': {
+                  amount: 8,
+                  itemId: 'ItemInstance_1',
+               },
+            },
+         },
+      });
+   });
+
+   it('if player moves item to a place taken by item of the same type, but stack size is 1 they should be replaced', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+      });
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.MoveItemInBag,
+         itemId,
+         directionLocation: {
+            backpack: '1',
+            spot: '0',
+         },
+      });
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            '1': {
+               '0': {
+                  amount: 1,
+                  itemId: 'ItemInstance_0',
+               },
+               '1': {
+                  amount: 1,
+                  itemId: 'ItemInstance_1',
+               },
+            },
+         },
+      });
+   });
 });

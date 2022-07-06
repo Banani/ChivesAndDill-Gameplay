@@ -1,6 +1,13 @@
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
-import { AddItemToCharacterEvent, GenerateItemForCharacterEvent, ItemDeletedEvent, ItemEngineEvents, PlayerTriesToDeleteItemEvent } from '../Events';
+import {
+   AddItemToCharacterEvent,
+   DeleteItemEvent,
+   GenerateItemForCharacterEvent,
+   ItemDeletedEvent,
+   ItemEngineEvents,
+   PlayerTriesToDeleteItemEvent,
+} from '../Events';
 import { ItemTemplates } from '../ItemTemplates';
 
 export class ItemService extends EventParser {
@@ -12,6 +19,7 @@ export class ItemService extends EventParser {
       this.eventsToHandlersMap = {
          [ItemEngineEvents.GenerateItemForCharacter]: this.handleGenerateItemForCharacter,
          [ItemEngineEvents.PlayerTriesToDeleteItem]: this.handlePlayerTriesToDeleteItem,
+         [ItemEngineEvents.DeleteItem]: this.handleDeleteItem,
       };
    }
 
@@ -47,6 +55,20 @@ export class ItemService extends EventParser {
    handlePlayerTriesToDeleteItem: EngineEventHandler<PlayerTriesToDeleteItemEvent> = ({ event }) => {
       if (!this.items[event.itemId] || this.items[event.itemId].ownerId !== event.requestingCharacterId) {
          this.sendErrorMessage(event.requestingCharacterId, 'Item does not exist.');
+         return;
+      }
+
+      delete this.items[event.itemId];
+
+      this.engineEventCrator.asyncCeateEvent<ItemDeletedEvent>({
+         type: ItemEngineEvents.ItemDeleted,
+         lastCharacterOwnerId: event.requestingCharacterId,
+         itemId: event.itemId,
+      });
+   };
+
+   handleDeleteItem: EngineEventHandler<DeleteItemEvent> = ({ event }) => {
+      if (!this.items[event.itemId]) {
          return;
       }
 

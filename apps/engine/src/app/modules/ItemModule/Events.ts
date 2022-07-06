@@ -13,6 +13,7 @@ export enum ItemEngineEvents {
    ItemAddedToCharacter = 'ItemAddedToCharacter',
 
    PlayerTriesToDeleteItem = 'PlayerTriesToDeleteItem',
+   DeleteItem = 'DeleteItem',
    ItemDeleted = 'ItemDeleted',
    ItemRemovedFromBag = 'ItemRemovedFromBag',
 
@@ -106,6 +107,11 @@ export interface PlayerTriesToSplitItemStackEvent extends EngineEvent {
    directionLocation: ItemLocationInBag;
 }
 
+export interface DeleteItemEvent extends EngineEvent {
+   type: ItemEngineEvents.DeleteItem;
+   itemId: string;
+}
+
 export interface ItemEngineEventsMap {
    [ItemEngineEvents.CurrencyAmountUpdated]: EngineEventHandler<CurrencyAmountUpdatedEvent>;
    [ItemEngineEvents.BackpackTrackCreated]: EngineEventHandler<BackpackTrackCreatedEvent>;
@@ -119,4 +125,5 @@ export interface ItemEngineEventsMap {
    [ItemEngineEvents.PlayerTriesToMoveItemInBag]: EngineEventHandler<PlayerTriesToMoveItemInBagEvent>;
    [ItemEngineEvents.ItemsMovedInBag]: EngineEventHandler<ItemsMovedInBagEvent>;
    [ItemEngineEvents.PlayerTriesToSplitItemStack]: EngineEventHandler<PlayerTriesToSplitItemStackEvent>;
+   [ItemEngineEvents.DeleteItem]: EngineEventHandler<DeleteItemEvent>;
 }

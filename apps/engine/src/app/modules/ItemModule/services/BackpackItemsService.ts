@@ -7,6 +7,7 @@ import {
    AddItemToCharacterEvent,
    BackpackItemsContainmentUpdatedEvent,
    BackpackTrackCreatedEvent,
+   DeleteItemEvent,
    GenerateItemForCharacterEvent,
    ItemAddedToCharacterEvent,
    ItemDeletedEvent,
@@ -17,6 +18,7 @@ import {
    PlayerTriesToMoveItemInBagEvent,
    PlayerTriesToSplitItemStackEvent,
 } from '../Events';
+import { ItemTemplates } from '../ItemTemplates';
 
 export class BackpackItemsService extends EventParser {
    // character_id => backpack => slot
@@ -94,7 +96,7 @@ export class BackpackItemsService extends EventParser {
    };
 
    handleItemDeleted: EngineEventHandler<ItemDeletedEvent> = ({ event }) => {
-      const { backpack, spot } = this.findItemInBag(event.lastCharacterOwnerId, event.itemId);
+      const { backpack, spot } = this.findItemLocationInBag(event.lastCharacterOwnerId, event.itemId);
 
       if (!backpack) {
          return;
@@ -111,7 +113,7 @@ export class BackpackItemsService extends EventParser {
    };
 
    handlePlayerTriesToSplitItemStack: EngineEventHandler<PlayerTriesToSplitItemStackEvent> = ({ event, services }) => {
-      const { backpack, spot } = this.findItemInBag(event.requestingCharacterId, event.itemId);
+      const { backpack, spot } = this.findItemLocationInBag(event.requestingCharacterId, event.itemId);
       if (!backpack || !spot) {
          this.sendErrorMessage(event.requestingCharacterId, 'You does not have that item.');
          return;
@@ -164,7 +166,7 @@ export class BackpackItemsService extends EventParser {
       });
    };
 
-   findItemInBag = (characterId: string, itemId: string) => {
+   findItemLocationInBag = (characterId: string, itemId: string) => {
       let backpack, spot;
       _.forEach(this.itemsPositions[characterId], (currentBackpack, backpackKey) => {
          _.forEach(currentBackpack, (currentSpot, slotKey) => {
@@ -180,7 +182,7 @@ export class BackpackItemsService extends EventParser {
 
    handlePlayerTriesToMoveItemInBag: EngineEventHandler<PlayerTriesToMoveItemInBagEvent> = ({ event, services }) => {
       const characterId = event.requestingCharacterId;
-      const { backpack, spot } = this.findItemInBag(characterId, event.itemId);
+      const { backpack, spot } = this.findItemLocationInBag(characterId, event.itemId);
       const backpackSizes = services.backpackService.getBackpackSizes(characterId);
 
       if (!backpack) {
@@ -192,13 +194,38 @@ export class BackpackItemsService extends EventParser {
          return;
       }
 
+      const items = [];
       const characterItems = this.itemsPositions[characterId];
       const { directionLocation } = event;
-      const items = [];
+      const itemToMove = characterItems[backpack][spot];
+      const itemOnDirectionSpot = this.getItemFromSpot(characterId, directionLocation);
 
-      if (this.getItemFromSpot(characterId, directionLocation)) {
-         this.swapItemsInBag(characterId, directionLocation, { backpack, spot });
-         items.push({ itemInstance: characterItems[backpack][spot], newLocation: { backpack, spot }, oldPosition: directionLocation });
+      if (itemOnDirectionSpot && itemOnDirectionSpot.itemId) {
+         const itemOnDirectionSpotTemplateId = services.itemService.getItemById(itemOnDirectionSpot.itemId).itemTemplateId;
+         const itemToMoveTemplateId = services.itemService.getItemById(itemToMove.itemId).itemTemplateId;
+
+         if (itemOnDirectionSpotTemplateId === itemToMoveTemplateId) {
+            const stackSize = ItemTemplates[itemToMoveTemplateId].stack ?? 1;
+            const sum = Math.min(itemOnDirectionSpot.amount + itemToMove.amount, stackSize);
+
+            if (itemOnDirectionSpot.amount + itemToMove.amount <= stackSize) {
+               this.engineEventCrator.asyncCeateEvent<DeleteItemEvent>({
+                  type: ItemEngineEvents.DeleteItem,
+                  itemId: itemToMove.itemId,
+               });
+            } else {
+               items.push({
+                  itemInstance: { ...characterItems[backpack][spot], amount: itemOnDirectionSpot.amount + itemToMove.amount - sum },
+                  newLocation: { backpack, spot },
+                  oldPosition: directionLocation,
+               });
+            }
+
+            characterItems[directionLocation.backpack][directionLocation.spot].amount = sum;
+         } else {
+            this.swapItemsInBag(characterId, directionLocation, { backpack, spot });
+            items.push({ itemInstance: characterItems[backpack][spot], newLocation: { backpack, spot }, oldPosition: directionLocation });
+         }
       } else {
          characterItems[directionLocation.backpack][directionLocation.spot] = characterItems[backpack][spot];
          delete characterItems[backpack][spot];
