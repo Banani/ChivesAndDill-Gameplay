@@ -1,4 +1,5 @@
-import { ChatMessage } from '.';
+import { BackpackTrack, ChatMessage } from '.';
+import { CharacterEvents } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
 import { CommonClientMessages } from './engineEvents';
@@ -29,6 +30,7 @@ export enum GlobalStoreModule {
    ERROR_MESSAGES = 'errorMessages',
    CHAT_CHANNEL = 'chatChannel',
    CHAT_MESSAGES = 'chatMessages',
+   BACKPACK_SCHEMA = 'backpackSchema',
 }
 
 export interface PartialEnginePackage<Data> {
@@ -57,6 +59,7 @@ export interface EnginePackage {
    [GlobalStoreModule.CHAT_MESSAGES]: PartialEnginePackage<ChatMessage>;
    [GlobalStoreModule.EXPERIENCE]: PartialEnginePackage<ExperienceExternalTrack>;
    [GlobalStoreModule.CURRENCY]: PartialEnginePackage<number>;
+   [GlobalStoreModule.BACKPACK_SCHEMA]: PartialEnginePackage<BackpackTrack>;
 }
 
 interface StoreModule<Data> {
@@ -85,6 +88,7 @@ export interface GlobalStore {
    [GlobalStoreModule.CHAT_MESSAGES]: StoreModule<ChatMessage>;
    [GlobalStoreModule.EXPERIENCE]: StoreModule<ExperienceExternalTrack>;
    [GlobalStoreModule.CURRENCY]: StoreModule<number>;
+   [GlobalStoreModule.BACKPACK_SCHEMA]: StoreModule<BackpackTrack>;
 }
 
 export interface ActiveCharacterStorePart {
@@ -177,7 +181,6 @@ export enum EngineEventType {
    CharacterLostHp = 'CharacterLostHp',
    DamageAbsorbed = 'DamageAbsorbed',
    LevelChanged = 'LevelChanged',
-   ExperienceGain = 'ExperienceGain',
    ErrorMessage = 'ErrorMessage',
 
    CreateCharacter = 'CreateCharacter',
@@ -225,12 +228,6 @@ export interface LevelChangedEvent {
    level: number;
 }
 
-export interface ExperienceGainEvent {
-   type: EngineEventType.ExperienceGain;
-   characterId: string;
-   amount: number;
-}
-
 export interface MapSchema {
    [key: string]: {
       path: string;
@@ -260,10 +257,10 @@ export type EnginePackageEvent =
    | DamageAbsorbedEvent
    | PlayerCreatedEvent
    | LevelChangedEvent
-   | ExperienceGainEvent
    | ErrorMessage
    | CreateCharacter
-   | EngineChatAction;
+   | EngineChatAction
+   | CharacterEvents;
 
 export enum HealthPointsSource {
    Healing = 'Healing',

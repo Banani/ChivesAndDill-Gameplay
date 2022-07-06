@@ -96,9 +96,7 @@ describe('Chat module - Send chat message action', () => {
 
       dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
 
-      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
-         data: {},
-      });
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, undefined);
    });
 
    it('Player should get error message when tries to write a message when chat channel does not exist', () => {

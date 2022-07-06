@@ -1,4 +1,4 @@
-import { EngineEventType, ExperienceExternalTrack, GlobalStoreModule } from '@bananos/types';
+import { CharacterClientEvents, EngineEventType, ExperienceExternalTrack, GlobalStoreModule } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
@@ -19,10 +19,29 @@ export class ExperienceNotifier extends Notifier<Partial<ExperienceExternalTrack
       };
    }
 
-   handleExperienceTrackCreated: EngineEventHandler<ExperienceTrackCreatedEvent> = ({ event }) => {
+   handleExperienceTrackCreated: EngineEventHandler<ExperienceTrackCreatedEvent> = ({ event, services }) => {
       this.broadcastObjectsUpdate({
-         objects: { [event.trackId]: { ...event.experienceTrack, toNextLevel: ExperienceTable[event.experienceTrack.level] } },
+         objects: { [event.trackId]: { level: event.experienceTrack.level } },
       });
+
+      const character = services.characterService.getCharacterById(event.experienceTrack.ownerCharacterId);
+
+      if (!character || character?.type !== CharacterType.Player) {
+         return;
+      }
+
+      this.multicastMultipleObjectsUpdate([
+         {
+            receiverId: character.ownerId,
+            objects: {
+               [event.trackId]: {
+                  level: event.experienceTrack.level,
+                  experienceAmount: event.experienceTrack.experienceAmount,
+                  toNextLevel: ExperienceTable[event.experienceTrack.level],
+               },
+            },
+         },
+      ]);
    };
 
    handleExperienceTrackRemoved: EngineEventHandler<ExperienceTrackRemovedEvent> = ({ event }) => {
@@ -54,8 +73,25 @@ export class ExperienceNotifier extends Notifier<Partial<ExperienceExternalTrack
       });
 
       this.broadcastObjectsUpdate({
-         objects: { [event.characterId]: { toNextLevel: ExperienceTable[event.newLevel] } },
+         objects: { [event.characterId]: { level: event.newLevel } },
       });
+
+      const character = services.characterService.getCharacterById(event.characterId);
+      if (character.type !== CharacterType.Player) {
+         return;
+      }
+
+      this.multicastMultipleObjectsUpdate([
+         {
+            receiverId: character.ownerId,
+            objects: {
+               [event.characterId]: {
+                  level: event.newLevel,
+                  toNextLevel: ExperienceTable[event.newLevel],
+               },
+            },
+         },
+      ]);
    };
 
    handleCharacterGainExperience: EngineEventHandler<CharacterGainExperienceEvent> = ({ event, services }) => {
@@ -68,7 +104,9 @@ export class ExperienceNotifier extends Notifier<Partial<ExperienceExternalTrack
          {
             receiverId: character.ownerId,
             objects: {
-               [event.characterId]: event.experienceTrack,
+               [event.characterId]: {
+                  experienceAmount: event.experienceTrack.experienceAmount,
+               },
             },
          },
       ]);
@@ -78,9 +116,10 @@ export class ExperienceNotifier extends Notifier<Partial<ExperienceExternalTrack
             receiverId: character.ownerId,
             events: [
                {
-                  type: EngineEventType.ExperienceGain,
+                  type: CharacterClientEvents.ExperienceGain,
                   characterId: event.characterId,
                   amount: event.amount,
+                  experienceGainDetails: event.experienceGainDetails,
                },
             ],
          },

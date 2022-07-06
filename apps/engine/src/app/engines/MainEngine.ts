@@ -4,6 +4,7 @@ import { Engine } from '../Engine';
 import { EngineEventCrator } from '../EngineEventsCreator';
 import { PathFinderService, SocketConnectionService } from '../services';
 import { SchedulerService } from '../services/SchedulerService';
+import { EngineEvent } from '../types';
 import { EngineModule } from '../types/EngineModule';
 import { Services } from '../types/Services';
 import { PathFinderEngine } from './PathFinderEngine';
@@ -64,5 +65,9 @@ export class MainEngine {
       this.slowEngines.forEach((engine) => engine.doAction());
 
       this.socketConnectionService.sendMessages();
+   }
+
+   createEvent<T extends EngineEvent>(event: T) {
+      this.engineEventCreator.asyncCeateEvent<T>(event);
    }
 }

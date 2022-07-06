@@ -1,4 +1,4 @@
-import { HealthPointsSource, PowerPointsTrack } from '@bananos/types';
+import { ExperienceGainDetails, ExperienceGainSource, HealthPointsSource, PowerPointsTrack } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterUnion } from '../../types/CharacterUnion';
 import { ExperienceTrack } from './types';
@@ -120,6 +120,7 @@ export interface AddExperienceEvent extends EngineEvent {
    type: CharacterEngineEvents.AddExperience;
    amount: number;
    characterId: string;
+   experienceGainDetails: ExperienceGainDetails;
 }
 
 export interface CharacterGainExperienceEvent extends EngineEvent {
@@ -127,6 +128,7 @@ export interface CharacterGainExperienceEvent extends EngineEvent {
    characterId: string;
    amount: number;
    experienceTrack: ExperienceTrack;
+   experienceGainDetails: ExperienceGainDetails;
 }
 
 export interface CharacterLevelChangedEvent extends EngineEvent {

@@ -12,9 +12,10 @@ import {
    getChatModule,
 } from '../modules';
 import { Classes } from '../types/Classes';
+import { EngineEvent } from '../types/events';
 
 export class EngineManager {
-   private mainEngine;
+   private mainEngine: MainEngine;
    private ioHandler = {};
    private watchForErrors = false;
 
@@ -100,10 +101,15 @@ export class EngineManager {
       const calls = this.playerSockets[playerId].emit.mock.calls;
       const lastCall: EnginePackage = calls[calls.length - 1][1];
 
-      if (this.watchForErrors) {
+      if (this.watchForErrors && lastCall.errorMessages) {
          expect(lastCall.errorMessages.events).toStrictEqual([]);
       }
 
       return lastCall;
+   }
+
+   createSystemAction<T extends EngineEvent>(event: T) {
+      this.mainEngine.createEvent<T>(event);
+      this.mainEngine.doActions();
    }
 }

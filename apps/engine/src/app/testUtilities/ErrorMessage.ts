@@ -3,10 +3,14 @@ import { merge } from 'lodash';
 
 export const checkIfErrorWasHandled = (moduleName: GlobalStoreModule, message: string, enginePackage: EnginePackage) => {
    expect(enginePackage.errorMessages.events).toStrictEqual([{ message, type: EngineEventType.ErrorMessage }]);
-   expect(enginePackage[moduleName]).toStrictEqual({ data: {}, events: [], key: moduleName, toDelete: {} });
+   expect(enginePackage[moduleName]).toBeUndefined();
 };
 
 export const checkIfPackageIsValid = (moduleName: GlobalStoreModule, enginePackage: EnginePackage, expectedPackage: Partial<PartialEnginePackage<any>>) => {
-   expect(enginePackage.errorMessages.events).toStrictEqual([]);
-   expect(enginePackage[moduleName]).toStrictEqual(merge({ data: {}, events: [], key: moduleName, toDelete: {} }, expectedPackage));
+   expect(enginePackage.errorMessages?.events ?? []).toStrictEqual([]);
+   if (expectedPackage) {
+      expect(enginePackage[moduleName]).toStrictEqual(merge(expectedPackage, { key: moduleName }));
+   } else {
+      expect(enginePackage[moduleName]).toBeUndefined();
+   }
 };

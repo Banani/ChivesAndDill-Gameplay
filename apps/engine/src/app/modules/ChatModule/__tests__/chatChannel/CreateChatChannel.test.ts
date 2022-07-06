@@ -47,9 +47,7 @@ describe('Chat channel create action', () => {
 
       const dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
 
-      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
-         data: {},
-      });
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, undefined);
    });
 
    it('Owner should be a member of chat channel', () => {
