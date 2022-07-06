@@ -13,6 +13,7 @@ import { CastBarsManager } from './mapContent/CastBarsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
+import { ErrorMessages } from './mapContent/ErrorMessages';
 import { BloodPoolManager } from './mapContent/bloodPoolsManager';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { MapManager } from './mapContent/mapManager/MapManager';
@@ -95,6 +96,7 @@ const Map = () => {
                                  <FloatingNumbersManager />
                                  <BlinkSpellEffect />
                                  <BloodPoolManager />
+                                 <ErrorMessages />
                               </Container>
                            )}
                         </Provider>
