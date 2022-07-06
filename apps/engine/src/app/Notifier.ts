@@ -1,6 +1,7 @@
 import { EnginePackageEvent, GlobalStoreModule } from '@bananos/types';
 import { merge } from 'lodash';
 import { EventParser } from './EventParser';
+import { RecursivePartial } from './types';
 
 export interface ModulePackage<T> {
    data: Record<string, T>;
@@ -83,7 +84,7 @@ export abstract class Notifier<T = never> extends EventParser {
       this.objectsToDelete = merge({}, this.objectsToDelete, objects);
    };
 
-   protected multicastMultipleObjectsUpdate = (dataUpdatePackages: { receiverId: string; objects: Record<string, Partial<T> | T> }[]) => {
+   protected multicastMultipleObjectsUpdate = (dataUpdatePackages: { receiverId: string; objects: Record<string, RecursivePartial<T> | T> }[]) => {
       dataUpdatePackages.forEach((dataUpdatePackage) => {
          if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
             this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey };

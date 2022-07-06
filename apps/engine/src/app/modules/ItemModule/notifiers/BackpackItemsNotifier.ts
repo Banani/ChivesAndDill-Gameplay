@@ -10,6 +10,7 @@ import {
    ItemRemovedFromBagEvent,
    ItemsMovedInBagEvent,
    PlayerTriesToMoveItemInBagEvent,
+   PlayerTriesToSplitItemStackEvent,
 } from '../Events';
 
 export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
@@ -32,6 +33,16 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
             type: ItemEngineEvents.PlayerTriesToMoveItemInBag,
             requestingCharacterId: event.playerCharacter.id,
             itemId,
+            directionLocation,
+         });
+      });
+
+      currentSocket.on(ItemClientMessages.SplitItemStackInBag, ({ itemId, directionLocation, amount }) => {
+         this.engineEventCrator.asyncCeateEvent<PlayerTriesToSplitItemStackEvent>({
+            type: ItemEngineEvents.PlayerTriesToSplitItemStack,
+            requestingCharacterId: event.playerCharacter.id,
+            itemId,
+            amount,
             directionLocation,
          });
       });

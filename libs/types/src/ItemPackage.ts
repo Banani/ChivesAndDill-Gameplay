@@ -11,6 +11,7 @@ export type BackpackItemsSpot = Record<string, Record<string, { itemId: string; 
 export enum ItemClientMessages {
    Deleteitem = 'DeleteItem',
    MoveItemInBag = 'MoveItemInBag',
+   SplitItemStackInBag = 'SplitItemStackInBag',
 }
 
 export interface DeleteItem {
@@ -24,4 +25,11 @@ export interface MoveItemInBag {
    directionLocation: { backpack: string; spot: string };
 }
 
-export type EngineItemMessages = DeleteItem | MoveItemInBag;
+export interface SplitItemStackInBag {
+   type: ItemClientMessages.SplitItemStackInBag;
+   itemId: string;
+   amount: number;
+   directionLocation: { backpack: string; spot: string };
+}
+
+export type EngineItemMessages = DeleteItem | MoveItemInBag | SplitItemStackInBag;

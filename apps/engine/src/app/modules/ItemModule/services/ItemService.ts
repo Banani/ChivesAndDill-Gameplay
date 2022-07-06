@@ -4,7 +4,7 @@ import { AddItemToCharacterEvent, GenerateItemForCharacterEvent, ItemDeletedEven
 import { ItemTemplates } from '../ItemTemplates';
 
 export class ItemService extends EventParser {
-   private items: Record<string, { itemId: string; ownerId: string }> = {};
+   private items: Record<string, { itemId: string; ownerId: string; itemTemplateId: string }> = {};
    private increment = 0;
 
    constructor() {
@@ -14,6 +14,8 @@ export class ItemService extends EventParser {
          [ItemEngineEvents.PlayerTriesToDeleteItem]: this.handlePlayerTriesToDeleteItem,
       };
    }
+
+   getItemById = (id: string) => this.items[id];
 
    handleGenerateItemForCharacter: EngineEventHandler<GenerateItemForCharacterEvent> = ({ event }) => {
       if (!ItemTemplates[event.itemTemplateId]) {
@@ -25,7 +27,7 @@ export class ItemService extends EventParser {
 
       for (let i = 0; i < amountToGenerate / stackSize; i++) {
          const itemId = `ItemInstance_${this.increment++}`;
-         this.items[itemId] = { itemId, ownerId: event.characterId };
+         this.items[itemId] = { itemId, ownerId: event.characterId, itemTemplateId: event.itemTemplateId };
 
          let amount = stackSize;
          if (i + 1 > amountToGenerate / stackSize) {
@@ -35,6 +37,7 @@ export class ItemService extends EventParser {
          this.engineEventCrator.asyncCeateEvent<AddItemToCharacterEvent>({
             type: ItemEngineEvents.AddItemToCharacter,
             characterId: event.characterId,
+            desiredLocation: event.desiredLocation,
             itemId,
             amount,
          });

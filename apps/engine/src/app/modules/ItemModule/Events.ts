@@ -1,5 +1,5 @@
 import { BackpackItemsSpot, BackpackTrack } from '@bananos/types';
-import { EngineEvent, EngineEventHandler } from '../../types';
+import { EngineEvent, EngineEventHandler, RecursivePartial } from '../../types';
 
 export enum ItemEngineEvents {
    CurrencyAmountUpdated = 'CurrencyAmountUpdated',
@@ -18,6 +18,8 @@ export enum ItemEngineEvents {
 
    PlayerTriesToMoveItemInBag = 'PlayerTriesToMoveItemInBag',
    ItemsMovedInBag = 'ItemsMovedInBag',
+
+   PlayerTriesToSplitItemStack = 'PlayerTriesToSplitItemStack',
 }
 
 export interface CurrencyAmountUpdatedEvent extends EngineEvent {
@@ -35,7 +37,7 @@ export interface BackpackTrackCreatedEvent extends EngineEvent {
 export interface BackpackItemsContainmentUpdatedEvent extends EngineEvent {
    type: ItemEngineEvents.BackpackItemsContainmentUpdated;
    characterId: string;
-   backpackItemsContainment: BackpackItemsSpot;
+   backpackItemsContainment: RecursivePartial<BackpackItemsSpot>;
 }
 
 export interface GenerateItemForCharacterEvent extends EngineEvent {
@@ -43,6 +45,7 @@ export interface GenerateItemForCharacterEvent extends EngineEvent {
    characterId: string;
    itemTemplateId: string;
    amount?: number;
+   desiredLocation?: ItemLocationInBag;
 }
 
 export interface AddItemToCharacterEvent extends EngineEvent {
@@ -50,6 +53,7 @@ export interface AddItemToCharacterEvent extends EngineEvent {
    characterId: string;
    itemId: string;
    amount: number;
+   desiredLocation?: ItemLocationInBag;
 }
 
 export interface ItemAddedToCharacterEvent extends EngineEvent {
@@ -57,7 +61,7 @@ export interface ItemAddedToCharacterEvent extends EngineEvent {
    characterId: string;
    itemId: string;
    amount: number;
-   position: { backpack: number; spot: number };
+   position: ItemLocationInBag;
 }
 
 export interface PlayerTriesToDeleteItemEvent extends EngineEvent {
@@ -95,6 +99,13 @@ export interface ItemsMovedInBagEvent extends EngineEvent {
    items: { itemId: string; newLocation: ItemLocationInBag; oldPosition: ItemLocationInBag }[];
 }
 
+export interface PlayerTriesToSplitItemStackEvent extends EngineEvent {
+   type: ItemEngineEvents.PlayerTriesToSplitItemStack;
+   itemId: string;
+   amount: number;
+   directionLocation: ItemLocationInBag;
+}
+
 export interface ItemEngineEventsMap {
    [ItemEngineEvents.CurrencyAmountUpdated]: EngineEventHandler<CurrencyAmountUpdatedEvent>;
    [ItemEngineEvents.BackpackTrackCreated]: EngineEventHandler<BackpackTrackCreatedEvent>;
@@ -107,4 +118,5 @@ export interface ItemEngineEventsMap {
    [ItemEngineEvents.ItemRemovedFromBag]: EngineEventHandler<ItemRemovedFromBagEvent>;
    [ItemEngineEvents.PlayerTriesToMoveItemInBag]: EngineEventHandler<PlayerTriesToMoveItemInBagEvent>;
    [ItemEngineEvents.ItemsMovedInBag]: EngineEventHandler<ItemsMovedInBagEvent>;
+   [ItemEngineEvents.PlayerTriesToSplitItemStack]: EngineEventHandler<PlayerTriesToSplitItemStackEvent>;
 }

@@ -2,10 +2,12 @@ import { BackpackItemsSpot } from '@bananos/types';
 import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
+import { Services } from '../../../types/Services';
 import {
    AddItemToCharacterEvent,
    BackpackItemsContainmentUpdatedEvent,
    BackpackTrackCreatedEvent,
+   GenerateItemForCharacterEvent,
    ItemAddedToCharacterEvent,
    ItemDeletedEvent,
    ItemEngineEvents,
@@ -13,6 +15,7 @@ import {
    ItemRemovedFromBagEvent,
    ItemsMovedInBagEvent,
    PlayerTriesToMoveItemInBagEvent,
+   PlayerTriesToSplitItemStackEvent,
 } from '../Events';
 
 export class BackpackItemsService extends EventParser {
@@ -26,6 +29,7 @@ export class BackpackItemsService extends EventParser {
          [ItemEngineEvents.AddItemToCharacter]: this.handleAddItemToCharacter,
          [ItemEngineEvents.ItemDeleted]: this.handleItemDeleted,
          [ItemEngineEvents.PlayerTriesToMoveItemInBag]: this.handlePlayerTriesToMoveItemInBag,
+         [ItemEngineEvents.PlayerTriesToSplitItemStack]: this.handlePlayerTriesToSplitItemStack,
       };
    }
 
@@ -50,17 +54,32 @@ export class BackpackItemsService extends EventParser {
       );
    };
 
+   findNextFreeSpot = (characterId: string, services: Services): ItemLocationInBag => {
+      const characterItems = this.itemsPositions[characterId];
+
+      const backpackSizes = services.backpackService.getBackpackSizes(characterId);
+      const backpack = parseInt(_.findKey(backpackSizes, (backpack, key) => backpack > Object.keys(characterItems[key]).length));
+      const spot = _.range(0, backpackSizes[backpack]).find((spot) => !characterItems[backpack][spot]);
+
+      return { backpack: backpack.toString(), spot: spot.toString() };
+   };
+
    handleAddItemToCharacter: EngineEventHandler<AddItemToCharacterEvent> = ({ event, services }) => {
-      const backpackSizes = services.backpackService.getBackpackSizes(event.characterId);
       if (this.getAmountOfTakenSlots(event.characterId) >= services.backpackService.getAmountOfAllSlots(event.characterId)) {
          this.sendErrorMessage(event.characterId, 'Your backpack is full.');
          return;
       }
 
-      const backpackNumber = parseInt(_.findKey(backpackSizes, (backpack, key) => backpack > Object.keys(this.itemsPositions[event.characterId][key]).length));
-      const spot = _.range(0, backpackSizes[backpackNumber]).find((spot) => !this.itemsPositions[event.characterId][backpackNumber][spot]);
+      let location: ItemLocationInBag;
+      const characterItems = this.itemsPositions[event.characterId];
 
-      this.itemsPositions[event.characterId][backpackNumber][spot] = {
+      if (event.desiredLocation && !characterItems[event.desiredLocation.backpack][event.desiredLocation.spot]) {
+         location = event.desiredLocation;
+      } else {
+         location = this.findNextFreeSpot(event.characterId, services);
+      }
+
+      characterItems[location.backpack][location.spot] = {
          amount: event.amount,
          itemId: event.itemId,
       };
@@ -70,7 +89,7 @@ export class BackpackItemsService extends EventParser {
          characterId: event.characterId,
          amount: event.amount,
          itemId: event.itemId,
-         position: { backpack: backpackNumber, spot },
+         position: location,
       });
    };
 
@@ -88,6 +107,37 @@ export class BackpackItemsService extends EventParser {
          ownerId: event.lastCharacterOwnerId,
          itemId: event.itemId,
          position: { backpack, spot },
+      });
+   };
+
+   handlePlayerTriesToSplitItemStack: EngineEventHandler<PlayerTriesToSplitItemStackEvent> = ({ event, services }) => {
+      const { backpack, spot } = this.findItemInBag(event.requestingCharacterId, event.itemId);
+      if (!backpack) {
+         return;
+      }
+
+      this.itemsPositions[event.requestingCharacterId][backpack][spot].amount -= event.amount;
+
+      const item = services.itemService.getItemById(event.itemId);
+
+      this.engineEventCrator.asyncCeateEvent<BackpackItemsContainmentUpdatedEvent>({
+         type: ItemEngineEvents.BackpackItemsContainmentUpdated,
+         characterId: event.requestingCharacterId,
+         backpackItemsContainment: {
+            [backpack]: {
+               [spot]: {
+                  amount: this.itemsPositions[event.requestingCharacterId][backpack][spot].amount,
+               },
+            },
+         },
+      });
+
+      this.engineEventCrator.asyncCeateEvent<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         desiredLocation: event.directionLocation,
+         characterId: event.requestingCharacterId,
+         itemTemplateId: item.itemTemplateId,
+         amount: event.amount,
       });
    };
 
