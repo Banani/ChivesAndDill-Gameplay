@@ -9,12 +9,8 @@ export interface BackpackTrack {
 export type BackpackItemsSpot = Record<string, Record<string, { itemId: string; amount: number }>>;
 
 export enum ItemClientMessages {
-   MoveItemInBackpack = 'MoveItemInBackpack',
    Deleteitem = 'DeleteItem',
-}
-
-export interface MoveItemInBackpack {
-   type: ItemClientMessages.MoveItemInBackpack;
+   MoveItemInBag = 'MoveItemInBag',
 }
 
 export interface DeleteItem {
@@ -22,4 +18,10 @@ export interface DeleteItem {
    itemId: string;
 }
 
-export type EngineItemMessages = MoveItemInBackpack | DeleteItem;
+export interface MoveItemInBag {
+   type: ItemClientMessages.MoveItemInBag;
+   itemId: string;
+   directionLocation: { backpack: string; spot: string };
+}
+
+export type EngineItemMessages = DeleteItem | MoveItemInBag;

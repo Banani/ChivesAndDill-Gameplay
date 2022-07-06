@@ -9,7 +9,10 @@ import {
    ItemAddedToCharacterEvent,
    ItemDeletedEvent,
    ItemEngineEvents,
+   ItemLocationInBag,
    ItemRemovedFromBagEvent,
+   ItemsMovedInBagEvent,
+   PlayerTriesToMoveItemInBagEvent,
 } from '../Events';
 
 export class BackpackItemsService extends EventParser {
@@ -22,6 +25,7 @@ export class BackpackItemsService extends EventParser {
          [ItemEngineEvents.BackpackTrackCreated]: this.handleBackpackTrackCreated,
          [ItemEngineEvents.AddItemToCharacter]: this.handleAddItemToCharacter,
          [ItemEngineEvents.ItemDeleted]: this.handleItemDeleted,
+         [ItemEngineEvents.PlayerTriesToMoveItemInBag]: this.handlePlayerTriesToMoveItemInBag,
       };
    }
 
@@ -71,15 +75,7 @@ export class BackpackItemsService extends EventParser {
    };
 
    handleItemDeleted: EngineEventHandler<ItemDeletedEvent> = ({ event }) => {
-      let backpack, spot;
-      _.forEach(this.itemsPositions[event.lastCharacterOwnerId], (currentBackpack, backpackKey) => {
-         _.forEach(currentBackpack, (currentSpot, slotKey) => {
-            if (currentSpot.itemId === event.itemId) {
-               backpack = backpackKey;
-               spot = slotKey;
-            }
-         });
-      });
+      const { backpack, spot } = this.findItemInBag(event.lastCharacterOwnerId, event.itemId);
 
       if (!backpack) {
          return;
@@ -93,5 +89,64 @@ export class BackpackItemsService extends EventParser {
          itemId: event.itemId,
          position: { backpack, spot },
       });
+   };
+
+   findItemInBag = (characterId: string, itemId: string) => {
+      let backpack, spot;
+      _.forEach(this.itemsPositions[characterId], (currentBackpack, backpackKey) => {
+         _.forEach(currentBackpack, (currentSpot, slotKey) => {
+            if (currentSpot.itemId === itemId) {
+               backpack = backpackKey;
+               spot = slotKey;
+            }
+         });
+      });
+
+      return { backpack, spot };
+   };
+
+   handlePlayerTriesToMoveItemInBag: EngineEventHandler<PlayerTriesToMoveItemInBagEvent> = ({ event, services }) => {
+      const characterId = event.requestingCharacterId;
+      const { backpack, spot } = this.findItemInBag(characterId, event.itemId);
+      const backpackSizes = services.backpackService.getBackpackSizes(characterId);
+
+      if (!backpack) {
+         return;
+      }
+
+      if (!backpackSizes[event.directionLocation.backpack] || backpackSizes[event.directionLocation.backpack] <= event.directionLocation.spot) {
+         this.sendErrorMessage(characterId, 'Invalid backpack location.');
+         return;
+      }
+
+      const characterItems = this.itemsPositions[characterId];
+      const { directionLocation } = event;
+      const items = [];
+
+      if (this.getItemFromSpot(characterId, directionLocation)) {
+         this.swapItemsInBag(characterId, directionLocation, { backpack, spot });
+         items.push({ itemId: characterItems[backpack][spot].itemId, newLocation: { backpack, spot }, oldPosition: directionLocation });
+      } else {
+         delete this.itemsPositions[characterId][backpack][spot];
+         characterItems[directionLocation.backpack][directionLocation.spot] = characterItems[backpack][spot];
+      }
+
+      items.push({ itemId: event.itemId, newLocation: directionLocation, oldPosition: { backpack, spot } });
+
+      this.engineEventCrator.asyncCeateEvent<ItemsMovedInBagEvent>({
+         type: ItemEngineEvents.ItemsMovedInBag,
+         characterId,
+         items,
+      });
+   };
+
+   getItemFromSpot = (characterId: string, location: ItemLocationInBag) => this.itemsPositions[characterId][location.backpack][location.spot];
+
+   swapItemsInBag = (characterId: string, firstLocation: ItemLocationInBag, secLocation: ItemLocationInBag) => {
+      const characterItems = this.itemsPositions[characterId];
+
+      const tempItem = characterItems[firstLocation.backpack][firstLocation.spot];
+      characterItems[firstLocation.backpack][firstLocation.spot] = characterItems[secLocation.backpack][secLocation.spot];
+      characterItems[secLocation.backpack][secLocation.spot] = tempItem;
    };
 }

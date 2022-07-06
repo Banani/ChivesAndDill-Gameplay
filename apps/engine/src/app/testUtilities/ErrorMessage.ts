@@ -2,6 +2,9 @@ import { EngineEventType, EnginePackage, GlobalStoreModule, PartialEnginePackage
 import { merge } from 'lodash';
 
 export const checkIfErrorWasHandled = (moduleName: GlobalStoreModule, message: string, enginePackage: EnginePackage) => {
+   if (!enginePackage.errorMessages) {
+      throw new Error('Error message was not sent.');
+   }
    expect(enginePackage.errorMessages.events).toStrictEqual([{ message, type: EngineEventType.ErrorMessage }]);
    expect(enginePackage[moduleName]).toBeUndefined();
 };

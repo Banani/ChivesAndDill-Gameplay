@@ -131,7 +131,183 @@ describe('BackpackItemsContainment', () => {
       checkIfErrorWasHandled(CURRENT_MODULE, 'Item does not exist.', dataPackage);
    });
 
-   it('Item should be placed in second bag if the first one is already full', () => {});
+   it('Player should be able to move his item', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-   it('Item should be placed in first empty spot', () => {});
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.MoveItemInBag,
+         itemId,
+         directionLocation: {
+            backpack: '1',
+            spot: '2',
+         },
+      });
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            '1': {
+               '2': {
+                  itemId: 'ItemInstance_0',
+               },
+            },
+         },
+         toDelete: {
+            '1': { '0': null },
+         },
+      });
+   });
+
+   it('Player should get an error if it is trying to move item to spot that does not exist', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.MoveItemInBag,
+         itemId,
+         directionLocation: {
+            backpack: '1',
+            spot: '16',
+         },
+      });
+
+      checkIfErrorWasHandled(CURRENT_MODULE, 'Invalid backpack location.', dataPackage);
+   });
+
+   it('Player should get an error if it is trying to move item to bag that does not exist', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.MoveItemInBag,
+         itemId,
+         directionLocation: {
+            backpack: '2',
+            spot: '1',
+         },
+      });
+
+      checkIfErrorWasHandled(CURRENT_MODULE, 'Invalid backpack location.', dataPackage);
+   });
+
+   it('Item should be placed in first empty spot', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.MoveItemInBag,
+         itemId,
+         directionLocation: {
+            backpack: '1',
+            spot: '2',
+         },
+      });
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               '1': {
+                  '0': {
+                     amount: 1,
+                     itemId: 'ItemInstance_1',
+                  },
+               },
+            },
+         },
+      });
+   });
+
+   it('If player will move item to a place in a bag which is already taken by other item, then their places should be switched', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '1',
+         amount: 1,
+      });
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '2',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.MoveItemInBag,
+         itemId,
+         directionLocation: {
+            backpack: '1',
+            spot: '0',
+         },
+      });
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            '1': {
+               '0': {
+                  itemId: 'ItemInstance_1',
+               },
+               '1': {
+                  itemId: 'ItemInstance_0',
+               },
+            },
+         },
+      });
+   });
+
+   it('Item should be placed in second bag if the first one is already full', () => {});
 });

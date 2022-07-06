@@ -15,6 +15,9 @@ export enum ItemEngineEvents {
    PlayerTriesToDeleteItem = 'PlayerTriesToDeleteItem',
    ItemDeleted = 'ItemDeleted',
    ItemRemovedFromBag = 'ItemRemovedFromBag',
+
+   PlayerTriesToMoveItemInBag = 'PlayerTriesToMoveItemInBag',
+   ItemsMovedInBag = 'ItemsMovedInBag',
 }
 
 export interface CurrencyAmountUpdatedEvent extends EngineEvent {
@@ -68,11 +71,28 @@ export interface ItemDeletedEvent extends EngineEvent {
    itemId: string;
 }
 
+export interface ItemLocationInBag {
+   backpack: string;
+   spot: string;
+}
+
 export interface ItemRemovedFromBagEvent extends EngineEvent {
    type: ItemEngineEvents.ItemRemovedFromBag;
    ownerId: string;
    itemId: string;
-   position: { backpack: number; spot: number };
+   position: ItemLocationInBag;
+}
+
+export interface PlayerTriesToMoveItemInBagEvent extends EngineEvent {
+   type: ItemEngineEvents.PlayerTriesToMoveItemInBag;
+   itemId: string;
+   directionLocation: ItemLocationInBag;
+}
+
+export interface ItemsMovedInBagEvent extends EngineEvent {
+   type: ItemEngineEvents.ItemsMovedInBag;
+   characterId: string;
+   items: { itemId: string; newLocation: ItemLocationInBag; oldPosition: ItemLocationInBag }[];
 }
 
 export interface ItemEngineEventsMap {
@@ -85,4 +105,6 @@ export interface ItemEngineEventsMap {
    [ItemEngineEvents.PlayerTriesToDeleteItem]: EngineEventHandler<PlayerTriesToDeleteItemEvent>;
    [ItemEngineEvents.ItemDeleted]: EngineEventHandler<ItemDeletedEvent>;
    [ItemEngineEvents.ItemRemovedFromBag]: EngineEventHandler<ItemRemovedFromBagEvent>;
+   [ItemEngineEvents.PlayerTriesToMoveItemInBag]: EngineEventHandler<PlayerTriesToMoveItemInBagEvent>;
+   [ItemEngineEvents.ItemsMovedInBag]: EngineEventHandler<ItemsMovedInBagEvent>;
 }
