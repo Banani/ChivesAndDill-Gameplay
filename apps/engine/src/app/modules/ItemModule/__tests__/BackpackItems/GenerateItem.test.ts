@@ -172,5 +172,109 @@ describe('GenerateItem', () => {
       });
    });
 
+   it('If there are some not full stacks, first newly generated item should be added to them. and then all remaining items should take first empty space', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 20,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.SplitItemStackInBag,
+         itemId,
+         amount: 5,
+         directionLocation: { backpack: '1', spot: '3' },
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.SplitItemStackInBag,
+         itemId,
+         amount: 5,
+         directionLocation: { backpack: '1', spot: '5' },
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.SplitItemStackInBag,
+         itemId,
+         amount: 5,
+         directionLocation: { backpack: '1', spot: '6' },
+      });
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 65,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               '1': {
+                  '0': {
+                     amount: 20,
+                  },
+                  '1': {
+                     itemId: 'ItemInstance_7',
+                     amount: 5,
+                  },
+                  '3': {
+                     amount: 20,
+                  },
+                  '5': {
+                     amount: 20,
+                  },
+                  '6': {
+                     amount: 20,
+                  },
+               },
+            },
+         },
+      });
+   });
+
+   it('If there is not full stack of items, and then new stack is generated but with different template id, tehn is should take different spot in bag', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 5,
+      });
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '4',
+         amount: 5,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               '1': {
+                  '1': {
+                     itemId: 'ItemInstance_1',
+                     amount: 5,
+                  },
+               },
+            },
+         },
+      });
+   });
+
    it('Item should be placed in second bag if the first one is already full', () => {});
 });

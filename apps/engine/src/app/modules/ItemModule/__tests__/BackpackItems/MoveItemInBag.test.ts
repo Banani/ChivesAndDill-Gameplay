@@ -2,7 +2,7 @@ import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
 import _ = require('lodash');
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from '../../../../testUtilities';
 import { Classes } from '../../../../types/Classes';
-import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../Events';
+import { GenerateItemForCharacterEvent, ItemEngineEvents, PlayerTriesToSplitItemStackEvent } from '../../Events';
 
 const CURRENT_MODULE = GlobalStoreModule.BACKPACK_ITEMS;
 
@@ -162,17 +162,22 @@ describe('MoveItemInBag', () => {
          type: ItemEngineEvents.GenerateItemForCharacter,
          characterId: players['1'].characterId,
          itemTemplateId: '3',
-         amount: 5,
+         amount: 11,
       });
-      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
-         type: ItemEngineEvents.GenerateItemForCharacter,
-         characterId: players['1'].characterId,
-         itemTemplateId: '3',
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      engineManager.createSystemAction<PlayerTriesToSplitItemStackEvent>({
+         type: ItemEngineEvents.PlayerTriesToSplitItemStack,
+         requestingCharacterId: players['1'].characterId,
+         directionLocation: { backpack: '1', spot: '1' },
+         itemId,
          amount: 6,
       });
 
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
+      itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
 
       dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
          type: ItemClientMessages.MoveItemInBag,

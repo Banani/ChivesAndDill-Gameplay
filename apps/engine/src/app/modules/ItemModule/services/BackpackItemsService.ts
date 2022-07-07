@@ -66,6 +66,23 @@ export class BackpackItemsService extends EventParser {
       return { backpack: backpack.toString(), spot: spot.toString() };
    };
 
+   findItemOfTheSameTemplateId = (characterId: string, itemId: string, services: Services): ItemLocationInBag[] => {
+      const { itemTemplateId } = services.itemService.getItemById(itemId);
+
+      const itemsWithTheSameTemplate = [];
+
+      _.forEach(this.itemsPositions[characterId], (currentBackpack, backpackKey) => {
+         _.forEach(currentBackpack, (currentSpot, slotKey) => {
+            const currentItemTemplateId = services.itemService.getItemById(currentSpot.itemId).itemTemplateId;
+            if (currentItemTemplateId === itemTemplateId) {
+               itemsWithTheSameTemplate.push({ backpack: backpackKey, spot: slotKey });
+            }
+         });
+      });
+
+      return itemsWithTheSameTemplate;
+   };
+
    handleAddItemToCharacter: EngineEventHandler<AddItemToCharacterEvent> = ({ event, services }) => {
       if (this.getAmountOfTakenSlots(event.characterId) >= services.backpackService.getAmountOfAllSlots(event.characterId)) {
          this.sendErrorMessage(event.characterId, 'Your backpack is full.');
@@ -74,25 +91,61 @@ export class BackpackItemsService extends EventParser {
 
       let location: ItemLocationInBag;
       const characterItems = this.itemsPositions[event.characterId];
+      let amountToAdd = event.amount;
 
       if (event.desiredLocation && !characterItems[event.desiredLocation.backpack][event.desiredLocation.spot]) {
          location = event.desiredLocation;
       } else {
-         location = this.findNextFreeSpot(event.characterId, services);
+         const itemsWithTheSameTemplate = this.findItemOfTheSameTemplateId(event.characterId, event.itemId, services);
+         const stackSize = ItemTemplates[services.itemService.getItemById(event.itemId).itemTemplateId].stack ?? 1;
+         const newItemPositions = {};
+
+         _.forEach(itemsWithTheSameTemplate, ({ backpack, spot }) => {
+            const freeSpaceSize = stackSize - characterItems[backpack][spot].amount;
+            const amountToMove = Math.min(freeSpaceSize, amountToAdd);
+            amountToAdd -= amountToMove;
+            characterItems[backpack][spot].amount += amountToMove;
+
+            if (amountToMove) {
+               if (!newItemPositions[backpack]) {
+                  newItemPositions[backpack] = {};
+               }
+               newItemPositions[backpack][spot] = { amount: characterItems[backpack][spot].amount };
+            }
+         });
+
+         if (Object.keys(newItemPositions).length > 0) {
+            this.engineEventCrator.asyncCeateEvent<BackpackItemsContainmentUpdatedEvent>({
+               type: ItemEngineEvents.BackpackItemsContainmentUpdated,
+               characterId: event.characterId,
+               backpackItemsContainment: newItemPositions,
+            });
+         }
+
+         if (amountToAdd > 0) {
+            location = this.findNextFreeSpot(event.characterId, services);
+         } else {
+            this.engineEventCrator.asyncCeateEvent<DeleteItemEvent>({
+               type: ItemEngineEvents.DeleteItem,
+               itemId: event.itemId,
+            });
+         }
       }
 
-      characterItems[location.backpack][location.spot] = {
-         amount: event.amount,
-         itemId: event.itemId,
-      };
+      if (location) {
+         characterItems[location.backpack][location.spot] = {
+            amount: amountToAdd,
+            itemId: event.itemId,
+         };
 
-      this.engineEventCrator.asyncCeateEvent<ItemAddedToCharacterEvent>({
-         type: ItemEngineEvents.ItemAddedToCharacter,
-         characterId: event.characterId,
-         amount: event.amount,
-         itemId: event.itemId,
-         position: location,
-      });
+         this.engineEventCrator.asyncCeateEvent<ItemAddedToCharacterEvent>({
+            type: ItemEngineEvents.ItemAddedToCharacter,
+            characterId: event.characterId,
+            amount: amountToAdd,
+            itemId: event.itemId,
+            position: location,
+         });
+      }
    };
 
    handleItemDeleted: EngineEventHandler<ItemDeletedEvent> = ({ event }) => {
