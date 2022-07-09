@@ -65,7 +65,7 @@ export class PowerPointsService extends EventParser {
       };
    }
 
-   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
+   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event, services }) => {
       if (event.character.type === CharacterType.Player) {
          this.powerPoints[event.character.id] = classesBaseStats[event.character.class];
       }
@@ -81,7 +81,7 @@ export class PowerPointsService extends EventParser {
       }
       // TODO: powinno byc jakies wspolne rozwiazanie dla wszystkich
       if (event.character.type === CharacterType.Npc) {
-         const template = NpcTemplates[event.character.templateId];
+         const template = services.npcTemplateService.getData()[event.character.templateId];
          this.powerPoints[event.character.id] = {
             currentHp: template.healthPoints,
             maxHp: template.healthPoints,

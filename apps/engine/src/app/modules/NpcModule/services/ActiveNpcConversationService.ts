@@ -9,6 +9,7 @@ import {
    PlayerTriesToFinishConversationEvent,
    PlayerTriesToStartConversationEvent,
 } from '../Events';
+import { distanceBetweenTwoPoints } from '../../../math';
 
 export class ActiveNpcConversationService extends EventParser {
    // character_id => npc_id
@@ -24,10 +25,15 @@ export class ActiveNpcConversationService extends EventParser {
    }
 
    handlePlayerTriesToStartConversation: EngineEventHandler<PlayerTriesToStartConversationEvent> = ({ event, services }) => {
-      // check distance
-
-      if (!services.npcService.getNpcById(event.npcId)) {
+      const npc = services.npcService.getNpcById(event.npcId);
+      if (!npc) {
          this.sendErrorMessage(event.requestingCharacterId, 'That npc does not exist.');
+         return;
+      }
+
+      const character = services.characterService.getCharacterById(event.requestingCharacterId);
+      if (distanceBetweenTwoPoints(npc.location, character.location) > 100) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You are too far away.');
          return;
       }
 
