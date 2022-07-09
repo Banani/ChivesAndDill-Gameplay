@@ -1,4 +1,4 @@
-import { BackpackItemsSpot, BackpackTrack, ChatMessage, EngineItemMessages } from '.';
+import { ActiveNpcConversation, BackpackItemsSpot, BackpackTrack, ChatMessage, EngineItemMessages, EngineNpcAction } from '.';
 import { CharacterEvents } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
@@ -33,6 +33,7 @@ export enum GlobalStoreModule {
    BACKPACK_SCHEMA = 'backpackSchema',
    BACKPACK_ITEMS = 'backpackItems',
    ITEMS = 'items',
+   NPC_CONVERSATION = 'npcConversation',
 }
 
 export interface PartialEnginePackage<Data> {
@@ -64,6 +65,7 @@ export interface EnginePackage {
    [GlobalStoreModule.BACKPACK_SCHEMA]: PartialEnginePackage<BackpackTrack>;
    [GlobalStoreModule.BACKPACK_ITEMS]: PartialEnginePackage<BackpackItemsSpot>;
    [GlobalStoreModule.ITEMS]: PartialEnginePackage<null>;
+   [GlobalStoreModule.NPC_CONVERSATION]: PartialEnginePackage<ActiveNpcConversation>;
 }
 
 interface StoreModule<Data> {
@@ -95,6 +97,7 @@ export interface GlobalStore {
    [GlobalStoreModule.BACKPACK_SCHEMA]: StoreModule<BackpackTrack>;
    [GlobalStoreModule.BACKPACK_ITEMS]: StoreModule<BackpackItemsSpot>;
    [GlobalStoreModule.ITEMS]: StoreModule<null>;
+   [GlobalStoreModule.NPC_CONVERSATION]: StoreModule<ActiveNpcConversation>;
 }
 
 export interface ActiveCharacterStorePart {
@@ -267,7 +270,8 @@ export type EnginePackageEvent =
    | CreateCharacter
    | EngineChatAction
    | EngineItemMessages
-   | CharacterEvents;
+   | CharacterEvents
+   | EngineNpcAction;
 
 export enum HealthPointsSource {
    Healing = 'Healing',

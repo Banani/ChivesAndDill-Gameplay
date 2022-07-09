@@ -2,7 +2,6 @@ import { EventParser } from '../../../EventParser';
 import type { Npc } from '../types';
 import * as _ from 'lodash';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
-import { NpcTemplates } from '../NpcTemplate';
 import { CharacterEngineEvents, CreateCharacterEvent } from '../../CharacterModule/Events';
 import { CharacterType } from '../../../types';
 import { NpcRespawns } from '../NpcRespawns';
@@ -42,4 +41,6 @@ export class NpcService extends EventParser {
          });
       });
    }
+
+   getNpcById = (npcId: string) => this.npcs[npcId];
 }

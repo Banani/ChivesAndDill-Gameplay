@@ -12,8 +12,8 @@ export class ActiveLootService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [PlayerEngineEvents.PlayerTriesToOpenLoot]: this.handlePlayerTriesToOpenLoot,
-         [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [PlayerEngineEvents.CloseLoot]: this.handleCloseLoot,
+         [EngineEvents.PlayerMoved]: this.handlePlayerMoved, // TODO: ten event powinien byc odpalany tylko dla characterow w activeLoots
       };
    }
 
@@ -33,7 +33,9 @@ export class ActiveLootService extends EventParser {
    };
 
    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
-      this.closeLoot(event.characterId);
+      if (this.activeLoots[event.characterId]) {
+         this.closeLoot(event.characterId);
+      }
    };
 
    handleCloseLoot: EngineEventHandler<CloseLootEvent> = ({ event }) => {
