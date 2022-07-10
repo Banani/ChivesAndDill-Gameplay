@@ -2,6 +2,7 @@ import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { CharacterRespawn, WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { Classes } from 'apps/engine/src/app/types/Classes';
+import _ = require('lodash');
 import { NpcTemplate, NpcTemplates } from '../../NpcTemplate';
 import { NpcRespawnTemplateService } from '../../services/NpcRespawnTemplateService';
 
@@ -47,13 +48,16 @@ describe('OpenNpcConversationDialog action', () => {
    it('Player should be able to start conversation', () => {
       const { players, engineManager } = setupEngine();
 
-      let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
          type: NpcClientMessages.OpenNpcConversationDialog,
-         npcId: 'npc_1',
+         npcId,
       });
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
-         data: { playerCharacter_1: { npcId: 'npc_1' } },
+         data: { playerCharacter_1: { npcId } },
       });
    });
 
@@ -79,9 +83,12 @@ describe('OpenNpcConversationDialog action', () => {
          },
       });
 
-      let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
          type: NpcClientMessages.OpenNpcConversationDialog,
-         npcId: 'npc_1',
+         npcId,
       });
 
       checkIfErrorWasHandled(CURRENT_MODULE, 'You are too far away.', dataPackage);

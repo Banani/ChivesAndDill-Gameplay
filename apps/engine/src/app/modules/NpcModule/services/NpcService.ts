@@ -28,6 +28,7 @@ export class NpcService extends EventParser {
             ...npcRespawn.characterTemplate,
             location: npcRespawn.location,
             templateId: npcRespawn.characterTemplate.id,
+            id,
          };
 
          this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
