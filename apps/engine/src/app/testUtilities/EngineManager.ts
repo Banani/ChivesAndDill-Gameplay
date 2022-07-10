@@ -112,4 +112,6 @@ export class EngineManager {
       this.mainEngine.createEvent<T>(event);
       this.mainEngine.doActions();
    }
+
+   getNotifiers = () => this.mainEngine.getNotifiers();
 }

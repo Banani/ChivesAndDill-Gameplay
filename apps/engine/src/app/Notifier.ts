@@ -32,6 +32,8 @@ export abstract class Notifier<T = never> extends EventParser {
       this.multicast = this.getEmptyPackage();
    }
 
+   getNotifierKey = () => this.notifierKey;
+
    getEmptyPackage = () => {
       return { key: this.notifierKey, messages: {} };
    };

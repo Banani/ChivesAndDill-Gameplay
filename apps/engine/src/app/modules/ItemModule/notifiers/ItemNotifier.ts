@@ -6,7 +6,7 @@ import { ItemEngineEvents, PlayerTriesToDeleteItemEvent } from '../Events';
 
 export class ItemNotifier extends Notifier {
    constructor() {
-      super({ key: GlobalStoreModule.CURRENCY });
+      super({ key: GlobalStoreModule.ITEMS });
       this.eventsToHandlersMap = {
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
       };
