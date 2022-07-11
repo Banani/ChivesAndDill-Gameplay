@@ -1,4 +1,4 @@
-import { BackpackItemsSpot } from '@bananos/types';
+import { BackpackItemsSpot, ItemLocationInBag } from '@bananos/types';
 import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
@@ -12,7 +12,6 @@ import {
    ItemAddedToCharacterEvent,
    ItemDeletedEvent,
    ItemEngineEvents,
-   ItemLocationInBag,
    ItemRemovedFromBagEvent,
    ItemsMovedInBagEvent,
    PlayerTriesToMoveItemInBagEvent,

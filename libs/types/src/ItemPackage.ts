@@ -18,6 +18,11 @@ export interface ItemTemplate {
    value: number;
 }
 
+export interface ItemLocationInBag {
+   backpack: string;
+   spot: string;
+}
+
 export type BackpackItemsSpot = Record<string, Record<string, ItemInstance>>;
 
 export enum ItemClientMessages {

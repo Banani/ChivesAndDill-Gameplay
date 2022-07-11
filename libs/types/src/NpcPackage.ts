@@ -1,8 +1,9 @@
-import { ItemTemplate } from './ItemPackage';
+import { ItemLocationInBag, ItemTemplate } from './ItemPackage';
 
 export enum NpcClientMessages {
    OpenNpcConversationDialog = 'OpenNpcConversationDialog',
    CloseNpcConversationDialog = 'CloseNpcConversationDialog',
+   BuyItemFromNpc = 'BuyItemFromNpc',
 }
 
 export interface ActiveNpcConversation {
@@ -22,4 +23,12 @@ export interface CloseNpcConversationDialog {
    npcId: string;
 }
 
-export type EngineNpcAction = OpenNpcConversationDialog | CloseNpcConversationDialog;
+export interface BuyItemFromNpc {
+   type: NpcClientMessages.BuyItemFromNpc;
+   npcId: string;
+   itemTemplateId: string;
+   amount?: number;
+   desiredLocation?: ItemLocationInBag;
+}
+
+export type EngineNpcAction = OpenNpcConversationDialog | CloseNpcConversationDialog | BuyItemFromNpc;

@@ -68,4 +68,6 @@ export class ActiveNpcConversationService extends EventParser {
          characterId,
       });
    };
+
+   getConversationById = (characterId: string) => this.activeDialogs[characterId];
 }

@@ -5,12 +5,14 @@ import { ActiveNpcConversationService } from './services/ActiveNpcConversationSe
 import { NpcRespawnTemplateService } from './services/NpcRespawnTemplateService';
 import { NpcService } from './services/NpcService';
 import { NpcTemplateService } from './services/NpcTemplateService';
+import { NpcTradeService } from './services/NpcTradeService';
 
 export interface NpcModuleServices {
    npcService: NpcService;
    activeNpcConversationService: ActiveNpcConversationService;
    npcTemplateService: NpcTemplateService;
    npcRespawnTemplateService: NpcRespawnTemplateService;
+   npcTradeService: NpcTradeService;
 }
 
 export const getNpcModule: () => EngineModule<NpcModuleServices> = () => {
@@ -21,6 +23,7 @@ export const getNpcModule: () => EngineModule<NpcModuleServices> = () => {
          activeNpcConversationService: new ActiveNpcConversationService(),
          npcTemplateService: new NpcTemplateService(),
          npcRespawnTemplateService: new NpcRespawnTemplateService(),
+         npcTradeService: new NpcTradeService(),
       },
    };
 };

@@ -1,5 +1,6 @@
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterRespawn } from '../../types/CharacterRespawn';
+import { ItemLocationInBag } from '../ItemModule/Events';
 import { NpcTemplate } from './NpcTemplate';
 import { Npc } from './types';
 
@@ -12,6 +13,8 @@ export enum NpcEngineEvents {
 
    PlayerTriesToFinishConversation = 'PlayerTriesToFinishConversation',
    ConversationWithNpcEnded = 'ConversationWithNpcEnded',
+
+   PlayerTriesToBuyItemFromNpc = 'PlayerTriesToBuyItemFromNpc',
 }
 
 export interface CreateNewNpcEvent extends EngineEvent {
@@ -44,6 +47,14 @@ export interface ConversationWithNpcEndedEvent extends EngineEvent {
    characterId: string;
 }
 
+export interface PlayerTriesToBuyItemFromNpcEvent extends EngineEvent {
+   type: NpcEngineEvents.PlayerTriesToBuyItemFromNpc;
+   npcId: string;
+   itemTemplateId: string;
+   amount?: number;
+   desiredLocation?: ItemLocationInBag;
+}
+
 export interface NpcEngineEventsMap {
    [NpcEngineEvents.CreateNewNpc]: EngineEventHandler<CreateNewNpcEvent>;
    [NpcEngineEvents.NewNpcCreated]: EngineEventHandler<NewNpcCreatedEvent>;
@@ -53,4 +64,6 @@ export interface NpcEngineEventsMap {
 
    [NpcEngineEvents.PlayerTriesToFinishConversation]: EngineEventHandler<PlayerTriesToFinishConversationEvent>;
    [NpcEngineEvents.ConversationWithNpcEnded]: EngineEventHandler<ConversationWithNpcEndedEvent>;
+
+   [NpcEngineEvents.PlayerTriesToBuyItemFromNpc]: EngineEventHandler<PlayerTriesToBuyItemFromNpcEvent>;
 }
