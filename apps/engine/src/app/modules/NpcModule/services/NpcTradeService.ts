@@ -1,16 +1,7 @@
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler, PlayerMovedEvent } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import * as _ from 'lodash';
-import { EngineEvents } from '../../../EngineEvents';
-import {
-   ConversationWithNpcEndedEvent,
-   ConversationWithNpcStartedEvent,
-   NpcEngineEvents,
-   PlayerTriesToBuyItemFromNpcEvent,
-   PlayerTriesToFinishConversationEvent,
-   PlayerTriesToStartConversationEvent,
-} from '../Events';
-import { distanceBetweenTwoPoints } from '../../../math';
+import { NpcEngineEvents, PlayerTriesToBuyItemFromNpcEvent } from '../Events';
 import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../ItemModule/Events';
 
 export class NpcTradeService extends EventParser {
@@ -25,6 +16,13 @@ export class NpcTradeService extends EventParser {
       const npcIdThatCharacterIsTalkingWith = services.activeNpcConversationService.getConversationById(event.requestingCharacterId);
       if (npcIdThatCharacterIsTalkingWith !== event.npcId) {
          this.sendErrorMessage(event.requestingCharacterId, 'You are not talking with that NPC.');
+         return;
+      }
+
+      const npc = services.npcService.getNpcById(npcIdThatCharacterIsTalkingWith);
+      const npcTemplate = services.npcTemplateService.getData()[npc.templateId];
+      if (!npcTemplate.stock[event.itemTemplateId]) {
+         this.sendErrorMessage(event.requestingCharacterId, 'This npc is not selling that item.');
          return;
       }
 

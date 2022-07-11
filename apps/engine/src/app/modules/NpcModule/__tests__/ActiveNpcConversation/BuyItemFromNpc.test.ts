@@ -131,4 +131,25 @@ describe('BuyItemFromNpc action', () => {
 
       checkIfErrorWasHandled(GlobalStoreModule.NPC_CONVERSATION, 'You are not talking with that NPC.', dataPackage);
    });
+
+   it('Player should get error if tries to buy item that this npc is not selling', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.OpenNpcConversationDialog,
+         npcId,
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.BuyItemFromNpc,
+         itemTemplateId: 'some_random_id',
+         amount: 1,
+         npcId,
+      });
+
+      checkIfErrorWasHandled(GlobalStoreModule.NPC_CONVERSATION, 'This npc is not selling that item.', dataPackage);
+   });
 });
