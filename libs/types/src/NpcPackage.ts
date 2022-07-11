@@ -1,3 +1,5 @@
+import { ItemTemplate } from './ItemPackage';
+
 export enum NpcClientMessages {
    OpenNpcConversationDialog = 'OpenNpcConversationDialog',
    CloseNpcConversationDialog = 'CloseNpcConversationDialog',
@@ -6,6 +8,9 @@ export enum NpcClientMessages {
 export interface ActiveNpcConversation {
    npcId: string;
 }
+
+//itemTemplateId
+export type NpcStock = Record<string, boolean>;
 
 export interface OpenNpcConversationDialog {
    type: NpcClientMessages.OpenNpcConversationDialog;

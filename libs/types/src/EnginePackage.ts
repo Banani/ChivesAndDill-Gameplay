@@ -1,4 +1,4 @@
-import { ActiveNpcConversation, BackpackItemsSpot, BackpackTrack, ChatMessage, EngineItemMessages, EngineNpcAction } from '.';
+import { ActiveNpcConversation, BackpackItemsSpot, BackpackTrack, ChatMessage, EngineItemMessages, EngineNpcAction, NpcStock } from '.';
 import { CharacterEvents } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
@@ -34,6 +34,7 @@ export enum GlobalStoreModule {
    BACKPACK_ITEMS = 'backpackItems',
    ITEMS = 'items',
    NPC_CONVERSATION = 'npcConversation',
+   NPC_STOCK = 'npcStock',
 }
 
 export interface PartialEnginePackage<Data> {
@@ -66,6 +67,7 @@ export interface EnginePackage {
    [GlobalStoreModule.BACKPACK_ITEMS]: PartialEnginePackage<BackpackItemsSpot>;
    [GlobalStoreModule.ITEMS]: PartialEnginePackage<null>;
    [GlobalStoreModule.NPC_CONVERSATION]: PartialEnginePackage<ActiveNpcConversation>;
+   [GlobalStoreModule.NPC_STOCK]: PartialEnginePackage<NpcStock>;
 }
 
 interface StoreModule<Data> {
@@ -98,6 +100,7 @@ export interface GlobalStore {
    [GlobalStoreModule.BACKPACK_ITEMS]: StoreModule<BackpackItemsSpot>;
    [GlobalStoreModule.ITEMS]: StoreModule<null>;
    [GlobalStoreModule.NPC_CONVERSATION]: StoreModule<ActiveNpcConversation>;
+   [GlobalStoreModule.NPC_STOCK]: StoreModule<NpcStock>;
 }
 
 export interface ActiveCharacterStorePart {

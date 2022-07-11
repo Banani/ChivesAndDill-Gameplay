@@ -1,5 +1,6 @@
 import { EngineModule } from '../../types/EngineModule';
 import { ActiveNpcConversationNotifier } from './notifiers';
+import { NpcStockNotifier } from './notifiers/NpcStockNotifier';
 import { ActiveNpcConversationService } from './services/ActiveNpcConversationService';
 import { NpcRespawnTemplateService } from './services/NpcRespawnTemplateService';
 import { NpcService } from './services/NpcService';
@@ -14,7 +15,7 @@ export interface NpcModuleServices {
 
 export const getNpcModule: () => EngineModule<NpcModuleServices> = () => {
    return {
-      notifiers: [new ActiveNpcConversationNotifier()],
+      notifiers: [new ActiveNpcConversationNotifier(), new NpcStockNotifier()],
       services: {
          npcService: new NpcService(),
          activeNpcConversationService: new ActiveNpcConversationService(),

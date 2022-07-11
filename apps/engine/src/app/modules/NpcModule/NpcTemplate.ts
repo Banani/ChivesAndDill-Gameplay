@@ -1,4 +1,5 @@
-import { CharacterDirection } from '@bananos/types';
+import { CharacterDirection, ItemTemplate } from '@bananos/types';
+import { ItemTemplates } from '../ItemModule/ItemTemplates';
 import { Spell } from '../SpellModule/types/spellTypes';
 
 export interface NpcTemplate {
@@ -15,6 +16,7 @@ export interface NpcTemplate {
    healthPointsRegen: number;
    spellPowerRegen: number;
    spells: Record<string, Spell>;
+   stock?: Record<string, ItemTemplate>;
 }
 
 export const NpcTemplates: Record<string, NpcTemplate> = {
@@ -32,6 +34,11 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
       healthPointsRegen: 5,
       spellPowerRegen: 5,
       spells: {},
+      stock: {
+         '1': ItemTemplates['1'],
+         '2': ItemTemplates['2'],
+         '4': ItemTemplates['4'],
+      },
    },
    KretonPL: {
       id: 'KretonPL',

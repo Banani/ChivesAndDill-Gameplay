@@ -11,6 +11,13 @@ export interface ItemInstance {
    amount: number;
 }
 
+export interface ItemTemplate {
+   name: string;
+   image: string;
+   stack?: number;
+   value: number;
+}
+
 export type BackpackItemsSpot = Record<string, Record<string, ItemInstance>>;
 
 export enum ItemClientMessages {
