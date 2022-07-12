@@ -1,4 +1,4 @@
-import { BackpackTrack, ChatMessage } from '.';
+import { ActiveNpcConversation, BackpackItemsSpot, BackpackTrack, ChatMessage, EngineItemMessages, EngineNpcAction, NpcStock } from '.';
 import { CharacterEvents } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
@@ -31,6 +31,10 @@ export enum GlobalStoreModule {
    CHAT_CHANNEL = 'chatChannel',
    CHAT_MESSAGES = 'chatMessages',
    BACKPACK_SCHEMA = 'backpackSchema',
+   BACKPACK_ITEMS = 'backpackItems',
+   ITEMS = 'items',
+   NPC_CONVERSATION = 'npcConversation',
+   NPC_STOCK = 'npcStock',
 }
 
 export interface PartialEnginePackage<Data> {
@@ -60,6 +64,10 @@ export interface EnginePackage {
    [GlobalStoreModule.EXPERIENCE]: PartialEnginePackage<ExperienceExternalTrack>;
    [GlobalStoreModule.CURRENCY]: PartialEnginePackage<number>;
    [GlobalStoreModule.BACKPACK_SCHEMA]: PartialEnginePackage<BackpackTrack>;
+   [GlobalStoreModule.BACKPACK_ITEMS]: PartialEnginePackage<BackpackItemsSpot>;
+   [GlobalStoreModule.ITEMS]: PartialEnginePackage<null>;
+   [GlobalStoreModule.NPC_CONVERSATION]: PartialEnginePackage<ActiveNpcConversation>;
+   [GlobalStoreModule.NPC_STOCK]: PartialEnginePackage<NpcStock>;
 }
 
 interface StoreModule<Data> {
@@ -89,6 +97,10 @@ export interface GlobalStore {
    [GlobalStoreModule.EXPERIENCE]: StoreModule<ExperienceExternalTrack>;
    [GlobalStoreModule.CURRENCY]: StoreModule<number>;
    [GlobalStoreModule.BACKPACK_SCHEMA]: StoreModule<BackpackTrack>;
+   [GlobalStoreModule.BACKPACK_ITEMS]: StoreModule<BackpackItemsSpot>;
+   [GlobalStoreModule.ITEMS]: StoreModule<null>;
+   [GlobalStoreModule.NPC_CONVERSATION]: StoreModule<ActiveNpcConversation>;
+   [GlobalStoreModule.NPC_STOCK]: StoreModule<NpcStock>;
 }
 
 export interface ActiveCharacterStorePart {
@@ -260,7 +272,9 @@ export type EnginePackageEvent =
    | ErrorMessage
    | CreateCharacter
    | EngineChatAction
-   | CharacterEvents;
+   | EngineItemMessages
+   | CharacterEvents
+   | EngineNpcAction;
 
 export enum HealthPointsSource {
    Healing = 'Healing',

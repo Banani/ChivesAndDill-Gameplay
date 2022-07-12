@@ -29,11 +29,7 @@ export class DirectInstantSpellService extends EventParser {
          const character = allCharacters[event.casterId];
 
          if (character && distanceBetweenTwoPoints(character.location, event.directionLocation) > event.spell.range) {
-            this.engineEventCrator.asyncCeateEvent<SendErrorMessageEvent>({
-               type: PlayerEngineEvents.SendErrorMessage,
-               characterId: event.casterId,
-               message: 'Out of range.',
-            });
+            this.sendErrorMessage(event.casterId, 'Out of range.');
             return;
          }
 

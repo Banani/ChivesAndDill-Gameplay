@@ -2,11 +2,10 @@ import { EventParser } from '../../../EventParser';
 import type { Npc } from '../types';
 import * as _ from 'lodash';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
-import { NpcTemplates } from '../NpcTemplate';
 import { CharacterEngineEvents, CreateCharacterEvent } from '../../CharacterModule/Events';
 import { CharacterType } from '../../../types';
-import { NpcRespawns } from '../NpcRespawns';
 import { NewNpcCreatedEvent, NpcEngineEvents } from '../Events';
+import { Services } from '../../../types/Services';
 
 export class NpcService extends EventParser {
    npcs: Record<string, Npc> = {};
@@ -17,10 +16,10 @@ export class NpcService extends EventParser {
       this.eventsToHandlersMap = {};
    }
 
-   init(engineEventCrator: EngineEventCrator, services) {
+   init(engineEventCrator: EngineEventCrator, services: Services) {
       super.init(engineEventCrator);
 
-      _.map(NpcRespawns, (npcRespawn) => {
+      _.map(services.npcRespawnTemplateService.getData(), (npcRespawn) => {
          this.increment++;
          const id = 'npc_' + this.increment;
 
@@ -29,6 +28,7 @@ export class NpcService extends EventParser {
             ...npcRespawn.characterTemplate,
             location: npcRespawn.location,
             templateId: npcRespawn.characterTemplate.id,
+            id,
          };
 
          this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
@@ -42,4 +42,6 @@ export class NpcService extends EventParser {
          });
       });
    }
+
+   getNpcById = (npcId: string) => this.npcs[npcId];
 }

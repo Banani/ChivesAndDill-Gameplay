@@ -1,8 +1,9 @@
 import { BackpackTrack } from '@bananos/types';
+import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { BackpackTrackCreatedEvent, CurrencyAmountUpdatedEvent, ItemEngineEvents } from '../Events';
+import { AddItemToCharacterEvent, BackpackTrackCreatedEvent, CurrencyAmountUpdatedEvent, ItemAddedToCharacterEvent, ItemEngineEvents } from '../Events';
 
 export class BackpackService extends EventParser {
    // id usera => backpack spot => amount of spaces
@@ -29,5 +30,14 @@ export class BackpackService extends EventParser {
          characterId: event.playerCharacter.id,
          backpackTrack: this.backpacks[event.playerCharacter.id],
       });
+   };
+
+   getBackpackSizes = (characterId: string) => this.backpacks[characterId];
+
+   getAmountOfAllSlots = (characterId) => {
+      return _.chain(this.backpacks[characterId])
+         .filter((val) => val != null)
+         .reduce((prev, current) => prev + current, 0)
+         .value();
    };
 }

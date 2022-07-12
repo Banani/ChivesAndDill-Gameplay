@@ -79,7 +79,7 @@ export class EngineManager {
       }
 
       if (!this.playerActionHandlers[playerId][action.type]) {
-         throw new Error(`Action: [${action}] is not handled by Engine for playerId: [${playerId}]`);
+         throw new Error(`Action: [${action.type}] is not handled by Engine for playerId: [${playerId}]`);
       }
 
       this.playerActionHandlers[playerId][action.type](action);
@@ -112,4 +112,6 @@ export class EngineManager {
       this.mainEngine.createEvent<T>(event);
       this.mainEngine.doActions();
    }
+
+   getNotifiers = () => this.mainEngine.getNotifiers();
 }
