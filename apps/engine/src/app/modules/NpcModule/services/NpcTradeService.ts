@@ -26,6 +26,11 @@ export class NpcTradeService extends EventParser {
          return;
       }
 
+      if (!services.backpackItemsService.canAddThanManyItems(event.requestingCharacterId, event.itemTemplateId, event.amount ?? 1, services)) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You do not have enough space in your backpack.');
+         return;
+      }
+
       this.engineEventCrator.asyncCeateEvent<GenerateItemForCharacterEvent>({
          type: ItemEngineEvents.GenerateItemForCharacter,
          amount: event.amount,

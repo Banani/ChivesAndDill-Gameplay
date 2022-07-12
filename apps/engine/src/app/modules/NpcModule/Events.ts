@@ -1,6 +1,6 @@
+import { ItemLocationInBag } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterRespawn } from '../../types/CharacterRespawn';
-import { ItemLocationInBag } from '../ItemModule/Events';
 import { NpcTemplate } from './NpcTemplate';
 import { Npc } from './types';
 

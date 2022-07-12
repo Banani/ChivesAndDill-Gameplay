@@ -3,6 +3,7 @@ import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'ap
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import _ = require('lodash');
+import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../../ItemModule/Events';
 import { ItemTemplates } from '../../../ItemModule/ItemTemplates';
 import { NpcTemplates } from '../../NpcTemplate';
 import { NpcRespawnTemplateService } from '../../services/NpcRespawnTemplateService';
@@ -151,5 +152,75 @@ describe('BuyItemFromNpc action', () => {
       });
 
       checkIfErrorWasHandled(GlobalStoreModule.NPC_CONVERSATION, 'This npc is not selling that item.', dataPackage);
+   });
+
+   it('Player should get error if tries to buy item, but do not have empty slot in bag', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      _.range(0, 16).forEach(() => {
+         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+            type: ItemEngineEvents.GenerateItemForCharacter,
+            characterId: players['1'].characterId,
+            itemTemplateId: '1',
+            amount: 1,
+         });
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.OpenNpcConversationDialog,
+         npcId,
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.BuyItemFromNpc,
+         itemTemplateId: '1',
+         amount: 1,
+         npcId,
+      });
+
+      checkIfErrorWasHandled(GlobalStoreModule.NPC_CONVERSATION, 'You do not have enough space in your backpack.', dataPackage);
+   });
+
+   it('Player should have items placed in the last stack if he has place only there', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      _.range(0, 16).forEach(() => {
+         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+            type: ItemEngineEvents.GenerateItemForCharacter,
+            characterId: players['1'].characterId,
+            itemTemplateId: '4',
+            amount: 19,
+         });
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.OpenNpcConversationDialog,
+         npcId,
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.BuyItemFromNpc,
+         itemTemplateId: '4',
+         amount: 1,
+         npcId,
+      });
+
+      checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               '1': {
+                  '15': {
+                     amount: 5,
+                  },
+               },
+            },
+         },
+      });
    });
 });

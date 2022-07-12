@@ -55,6 +55,32 @@ export class BackpackItemsService extends EventParser {
       );
    };
 
+   canAddThanManyItems = (characterId: string, itemTemplateId: string, amount: number, services: Services) => {
+      const amountOfAllSlots = services.backpackService.getAmountOfAllSlots(characterId);
+      const amountOfFreeSpots = amountOfAllSlots - this.getAmountOfTakenSlots(characterId);
+      const stackSize = ItemTemplates[itemTemplateId].stack ?? 1;
+
+      const amountOfSpacesInAlreadyExistingStacks = _.chain(this.itemsPositions[characterId])
+         .map((backpack) =>
+            _.chain(backpack)
+               .map((item) => {
+                  const templateId = services.itemService.getItemById(item.itemId).itemTemplateId;
+                  return {
+                     templateId,
+                     amount: item.amount,
+                  };
+               })
+               .filter((item) => item.templateId === itemTemplateId)
+               .map((item) => stackSize - item.amount)
+               .sum()
+               .value()
+         )
+         .sum()
+         .value();
+
+      return amountOfFreeSpots * stackSize + amountOfSpacesInAlreadyExistingStacks > amount;
+   };
+
    findNextFreeSpot = (characterId: string, services: Services): ItemLocationInBag => {
       const characterItems = this.itemsPositions[characterId];
 
@@ -83,7 +109,8 @@ export class BackpackItemsService extends EventParser {
    };
 
    handleAddItemToCharacter: EngineEventHandler<AddItemToCharacterEvent> = ({ event, services }) => {
-      if (this.getAmountOfTakenSlots(event.characterId) >= services.backpackService.getAmountOfAllSlots(event.characterId)) {
+      const { itemTemplateId } = services.itemService.getItemById(event.itemId);
+      if (!this.canAddThanManyItems(event.characterId, itemTemplateId, event.amount, services)) {
          this.sendErrorMessage(event.characterId, 'Your backpack is full.');
          return;
       }

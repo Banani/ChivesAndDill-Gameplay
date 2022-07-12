@@ -64,6 +64,41 @@ describe('GenerateItem', () => {
       checkIfErrorWasHandled(CURRENT_MODULE, 'Your backpack is full.', dataPackage);
    });
 
+   it('should add item if all slots are taken but some stack can take that item', () => {
+      const { players, engineManager } = setupEngine();
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      _.range(0, 16).forEach(() => {
+         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+            type: ItemEngineEvents.GenerateItemForCharacter,
+            characterId: players['1'].characterId,
+            itemTemplateId: '3',
+            amount: 19,
+         });
+      });
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 5,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               '1': {
+                  '15': {
+                     amount: 9,
+                  },
+               },
+            },
+         },
+      });
+   });
+
    it('Item should be placed in first empty spot', () => {
       const { players, engineManager } = setupEngine();
       let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
