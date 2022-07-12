@@ -20,6 +20,7 @@ import { MapManager } from './mapContent/mapManager/MapManager';
 import { CharacterFrames } from './guiContent/characterFrames/characterFrames';
 import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
 import { Chat } from './guiContent/chat/Chat';
+import { NextLevelManager } from './mapContent/NextLevelManager';
 
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
@@ -97,6 +98,7 @@ const Map = () => {
                                  <BlinkSpellEffect />
                                  <BloodPoolManager />
                                  <ErrorMessages />
+                                 <NextLevelManager />
                               </Container>
                            )}
                         </Provider>
