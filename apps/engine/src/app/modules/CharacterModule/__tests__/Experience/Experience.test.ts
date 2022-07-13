@@ -97,4 +97,135 @@ describe('Character experience', () => {
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, undefined);
    });
+
+   it('Other players should not be informed about experience gain', () => {
+      const { engineManager, players } = setupEngine();
+
+      engineManager.createSystemAction<AddExperienceEvent>({
+         type: CharacterEngineEvents.AddExperience,
+         amount: 100,
+         characterId: players['1'].characterId,
+         experienceGainDetails: {
+            type: ExperienceGainSource.MonsterKill,
+            monsterId: '123',
+         },
+      });
+
+      const dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, undefined);
+   });
+
+   it('Player should be notifier when his character is gaining new level', () => {
+      const { engineManager, players } = setupEngine();
+
+      engineManager.createSystemAction<AddExperienceEvent>({
+         type: CharacterEngineEvents.AddExperience,
+         amount: 300,
+         characterId: players['1'].characterId,
+         experienceGainDetails: {
+            type: ExperienceGainSource.MonsterKill,
+            monsterId: '123',
+         },
+      });
+
+      const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: { playerCharacter_1: { experienceAmount: 50, level: 2, toNextLevel: 655 } },
+         events: [
+            {
+               type: EngineEventType.LevelChanged,
+               characterId: 'playerCharacter_1',
+               level: 2,
+            },
+            {
+               amount: 300,
+               characterId: 'playerCharacter_1',
+               type: CharacterClientEvents.ExperienceGain,
+               experienceGainDetails: {
+                  type: ExperienceGainSource.MonsterKill,
+                  monsterId: '123',
+               },
+            },
+         ],
+      });
+   });
+
+   it('Player should be notifier when his character is gaining new level', () => {
+      const { engineManager, players } = setupEngine();
+
+      engineManager.createSystemAction<AddExperienceEvent>({
+         type: CharacterEngineEvents.AddExperience,
+         amount: 300,
+         characterId: players['1'].characterId,
+         experienceGainDetails: {
+            type: ExperienceGainSource.MonsterKill,
+            monsterId: '123',
+         },
+      });
+
+      const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: { playerCharacter_1: { experienceAmount: 50, level: 2, toNextLevel: 655 } },
+         events: [
+            {
+               type: EngineEventType.LevelChanged,
+               characterId: 'playerCharacter_1',
+               level: 2,
+            },
+            {
+               amount: 300,
+               characterId: 'playerCharacter_1',
+               type: CharacterClientEvents.ExperienceGain,
+               experienceGainDetails: {
+                  type: ExperienceGainSource.MonsterKill,
+                  monsterId: '123',
+               },
+            },
+         ],
+      });
+   });
+
+   it('Player should be notifier about two level updated, when it happes', () => {
+      const { engineManager, players } = setupEngine();
+
+      engineManager.createSystemAction<AddExperienceEvent>({
+         type: CharacterEngineEvents.AddExperience,
+         amount: 1000,
+         characterId: players['1'].characterId,
+         experienceGainDetails: {
+            type: ExperienceGainSource.MonsterKill,
+            monsterId: '123',
+         },
+      });
+
+      const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+         data: { playerCharacter_1: { experienceAmount: 95, level: 3, toNextLevel: 1265 } },
+         events: [
+            {
+               type: EngineEventType.LevelChanged,
+               characterId: 'playerCharacter_1',
+               level: 2,
+            },
+            {
+               type: EngineEventType.LevelChanged,
+               characterId: 'playerCharacter_1',
+               level: 3,
+            },
+            {
+               amount: 1000,
+               characterId: 'playerCharacter_1',
+               type: CharacterClientEvents.ExperienceGain,
+               experienceGainDetails: {
+                  type: ExperienceGainSource.MonsterKill,
+                  monsterId: '123',
+               },
+            },
+         ],
+      });
+   });
 });

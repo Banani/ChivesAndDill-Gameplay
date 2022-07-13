@@ -9,10 +9,9 @@ import type {
    CharacterLevelChangedEvent,
    ExperienceTrackCreatedEvent,
    ExperienceTrackRemovedEvent,
-   NewCharacterCreatedEvent} from '../Events';
-import {
-   CharacterEngineEvents
+   NewCharacterCreatedEvent,
 } from '../Events';
+import { CharacterEngineEvents } from '../Events';
 import { ExperienceTable } from '../ExperienceTable';
 import type { ExperienceTrack } from '../types';
 

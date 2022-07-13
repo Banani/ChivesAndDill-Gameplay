@@ -1,10 +1,17 @@
 import { EngineMessages } from '@bananos/types';
-import { filter, forEach, merge } from 'lodash';
+import * as _ from 'lodash';
+import { filter, forEach, merge, mergeWith } from 'lodash';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
 import { CreateNewPlayerEvent, NewPlayerCreatedEvent, PlayerDisconnectedEvent, PlayerEngineEvents } from '../modules/PlayerModule/Events';
 import { Notifier } from '../Notifier';
 import type { EngineEventHandler } from '../types';
+
+function customizer(objValue, srcValue) {
+   if (_.isArray(objValue)) {
+      return objValue.concat(srcValue);
+   }
+}
 
 export class SocketConnectionService extends EventParser {
    io;
@@ -46,7 +53,8 @@ export class SocketConnectionService extends EventParser {
       });
 
       forEach(this.sockets, (socket, playerId) => {
-         socket.emit(EngineMessages.Package, merge({}, commonPackage, targetSpecificPackage[playerId]));
+         // TODO: Probably there is a bug here, because data should be order by date, when they were changed
+         socket.emit(EngineMessages.Package, mergeWith({}, commonPackage, targetSpecificPackage[playerId], customizer));
       });
    };
 
