@@ -1,4 +1,4 @@
-import { ActiveNpcConversation, BackpackItemsSpot, BackpackTrack, ChatMessage, EngineItemMessages, EngineNpcAction, NpcStock } from '.';
+import { ActiveNpcConversation, BackpackItemsSpot, BackpackTrack, ChatMessage, EngineItemMessages, EngineNpcAction, ItemTemplate, NpcStock } from '.';
 import { CharacterEvents } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
@@ -65,7 +65,7 @@ export interface EnginePackage {
    [GlobalStoreModule.CURRENCY]: PartialEnginePackage<number>;
    [GlobalStoreModule.BACKPACK_SCHEMA]: PartialEnginePackage<BackpackTrack>;
    [GlobalStoreModule.BACKPACK_ITEMS]: PartialEnginePackage<BackpackItemsSpot>;
-   [GlobalStoreModule.ITEMS]: PartialEnginePackage<null>;
+   [GlobalStoreModule.ITEMS]: PartialEnginePackage<ItemTemplate>;
    [GlobalStoreModule.NPC_CONVERSATION]: PartialEnginePackage<ActiveNpcConversation>;
    [GlobalStoreModule.NPC_STOCK]: PartialEnginePackage<NpcStock>;
 }
@@ -98,7 +98,7 @@ export interface GlobalStore {
    [GlobalStoreModule.CURRENCY]: StoreModule<number>;
    [GlobalStoreModule.BACKPACK_SCHEMA]: StoreModule<BackpackTrack>;
    [GlobalStoreModule.BACKPACK_ITEMS]: StoreModule<BackpackItemsSpot>;
-   [GlobalStoreModule.ITEMS]: StoreModule<null>;
+   [GlobalStoreModule.ITEMS]: StoreModule<ItemTemplate>;
    [GlobalStoreModule.NPC_CONVERSATION]: StoreModule<ActiveNpcConversation>;
    [GlobalStoreModule.NPC_STOCK]: StoreModule<NpcStock>;
 }

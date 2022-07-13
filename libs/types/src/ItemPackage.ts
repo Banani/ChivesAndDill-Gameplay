@@ -12,6 +12,7 @@ export interface ItemInstance {
 }
 
 export interface ItemTemplate {
+   id: string;
    name: string;
    image: string;
    stack?: number;
@@ -29,6 +30,7 @@ export enum ItemClientMessages {
    Deleteitem = 'DeleteItem',
    MoveItemInBag = 'MoveItemInBag',
    SplitItemStackInBag = 'SplitItemStackInBag',
+   RequestItemTemplates = 'RequestItemTemplates',
 }
 
 export interface DeleteItem {
@@ -49,4 +51,9 @@ export interface SplitItemStackInBag {
    directionLocation: { backpack: string; spot: string };
 }
 
-export type EngineItemMessages = DeleteItem | MoveItemInBag | SplitItemStackInBag;
+export interface RequestItemTemplates {
+   type: ItemClientMessages.RequestItemTemplates;
+   itemTemplateIds: string[];
+}
+
+export type EngineItemMessages = DeleteItem | MoveItemInBag | SplitItemStackInBag | RequestItemTemplates;

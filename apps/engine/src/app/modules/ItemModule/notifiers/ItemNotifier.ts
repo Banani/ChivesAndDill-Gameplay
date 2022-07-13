@@ -1,10 +1,12 @@
-import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
+import { GlobalStoreModule, ItemClientMessages, ItemTemplate } from '@bananos/types';
+import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import { ItemEngineEvents, PlayerTriesToDeleteItemEvent } from '../Events';
+import { ItemTemplates } from '../ItemTemplates';
 
-export class ItemNotifier extends Notifier {
+export class ItemNotifier extends Notifier<ItemTemplate> {
    constructor() {
       super({ key: GlobalStoreModule.ITEMS });
       this.eventsToHandlersMap = {
@@ -21,6 +23,21 @@ export class ItemNotifier extends Notifier {
             requestingCharacterId: event.playerCharacter.id,
             itemId,
          });
+      });
+
+      currentSocket.on(ItemClientMessages.RequestItemTemplates, ({ itemTemplateIds }) => {
+         const itemtemplates = _.chain(itemTemplateIds)
+            .map((id) => ({ id }))
+            .keyBy('id')
+            .mapValues(({ id }) => ItemTemplates[id])
+            .value();
+
+         this.multicastMultipleObjectsUpdate([
+            {
+               receiverId: event.playerCharacter.ownerId,
+               objects: { [event.playerCharacter.id]: itemtemplates },
+            },
+         ]);
       });
    };
 }
