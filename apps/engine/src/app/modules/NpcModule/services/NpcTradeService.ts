@@ -58,7 +58,18 @@ export class NpcTradeService extends EventParser {
    };
 
    handlePlayerTriesToSellItemToNpc: EngineEventHandler<PlayerTriesToSellItemToNpcEvent> = ({ event, services }) => {
+      const npcIdThatCharacterIsTalkingWith = services.activeNpcConversationService.getConversationById(event.requestingCharacterId);
+      if (npcIdThatCharacterIsTalkingWith !== event.npcId) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You are not talking with that NPC.');
+         return;
+      }
+
       const item = services.itemService.getItemById(event.itemId);
+      if (!item) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You do not have that item.');
+         return;
+      }
+
       const itemPrice = ItemTemplates[item.itemTemplateId].value;
       const amount = services.backpackItemsService.getItemById(event.requestingCharacterId, item.itemId).amount;
 

@@ -1,5 +1,5 @@
 import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
-import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
+import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import _ = require('lodash');
@@ -75,5 +75,40 @@ describe('SellItemToNpc action', () => {
             playerCharacter_1: 45323815,
          },
       });
+   });
+
+   it('Player should get an error if tries to sell item to NPC that he is not talking with', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.SellItemToNpc,
+         itemId: '1',
+         npcId,
+      });
+
+      checkIfErrorWasHandled(GlobalStoreModule.NPC_CONVERSATION, 'You are not talking with that NPC.', dataPackage);
+   });
+
+   it('Player should get an error if tries to sell item that he does not have', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.OpenNpcConversationDialog,
+         npcId,
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.SellItemToNpc,
+         itemId: '1',
+         npcId,
+      });
+
+      checkIfErrorWasHandled(GlobalStoreModule.NPC_CONVERSATION, 'You do not have that item.', dataPackage);
    });
 });

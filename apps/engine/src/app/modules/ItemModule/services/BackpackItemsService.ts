@@ -42,6 +42,8 @@ export class BackpackItemsService extends EventParser {
             }
          }
       }
+
+      return null;
    };
 
    handleBackpackTrackCreated: EngineEventHandler<BackpackTrackCreatedEvent> = ({ event }) => {
