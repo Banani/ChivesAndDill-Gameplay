@@ -3,6 +3,7 @@ import { EngineEvent, EngineEventHandler, RecursivePartial } from '../../types';
 
 export enum ItemEngineEvents {
    CurrencyAmountUpdated = 'CurrencyAmountUpdated',
+   RemoveCurrencyFromCharacter = 'RemoveCurrencyFromCharacter',
 
    BackpackTrackCreated = 'BackpackTrackCreated',
 
@@ -27,6 +28,12 @@ export interface CurrencyAmountUpdatedEvent extends EngineEvent {
    type: ItemEngineEvents.CurrencyAmountUpdated;
    characterId: string;
    newAmount: number;
+}
+
+export interface RemoveCurrencyFromCharacterEvent extends EngineEvent {
+   type: ItemEngineEvents.RemoveCurrencyFromCharacter;
+   characterId: string;
+   amount: number;
 }
 
 export interface BackpackTrackCreatedEvent extends EngineEvent {
@@ -109,6 +116,7 @@ export interface DeleteItemEvent extends EngineEvent {
 
 export interface ItemEngineEventsMap {
    [ItemEngineEvents.CurrencyAmountUpdated]: EngineEventHandler<CurrencyAmountUpdatedEvent>;
+   [ItemEngineEvents.RemoveCurrencyFromCharacter]: EngineEventHandler<RemoveCurrencyFromCharacterEvent>;
    [ItemEngineEvents.BackpackTrackCreated]: EngineEventHandler<BackpackTrackCreatedEvent>;
    [ItemEngineEvents.BackpackItemsContainmentUpdated]: EngineEventHandler<BackpackItemsContainmentUpdatedEvent>;
    [ItemEngineEvents.GenerateItemForCharacter]: EngineEventHandler<GenerateItemForCharacterEvent>;

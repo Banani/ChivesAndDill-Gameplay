@@ -38,6 +38,7 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
          '1': ItemTemplates['1'],
          '2': ItemTemplates['2'],
          '4': ItemTemplates['4'],
+         '5': ItemTemplates['5'],
       },
    },
    KretonPL: {

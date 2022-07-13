@@ -2,7 +2,8 @@ import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import * as _ from 'lodash';
 import { NpcEngineEvents, PlayerTriesToBuyItemFromNpcEvent } from '../Events';
-import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../ItemModule/Events';
+import { GenerateItemForCharacterEvent, ItemEngineEvents, RemoveCurrencyFromCharacterEvent } from '../../ItemModule/Events';
+import { ItemTemplates } from '../../ItemModule/ItemTemplates';
 
 export class NpcTradeService extends EventParser {
    constructor() {
@@ -26,10 +27,25 @@ export class NpcTradeService extends EventParser {
          return;
       }
 
-      if (!services.backpackItemsService.canAddThanManyItems(event.requestingCharacterId, event.itemTemplateId, event.amount ?? 1, services)) {
+      const amountToBuy = event.amount ?? 1;
+      if (!services.backpackItemsService.canAddThanManyItems(event.requestingCharacterId, event.itemTemplateId, amountToBuy, services)) {
          this.sendErrorMessage(event.requestingCharacterId, 'You do not have enough space in your backpack.');
          return;
       }
+
+      const itemPrice = ItemTemplates[event.itemTemplateId].value;
+      const totalCost = amountToBuy * itemPrice;
+
+      if (services.currencyService.getCharacterMoneyById(event.requestingCharacterId) < totalCost) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You do not have enough money.');
+         return;
+      }
+
+      this.engineEventCrator.asyncCeateEvent<RemoveCurrencyFromCharacterEvent>({
+         type: ItemEngineEvents.RemoveCurrencyFromCharacter,
+         amount: totalCost,
+         characterId: event.requestingCharacterId,
+      });
 
       this.engineEventCrator.asyncCeateEvent<GenerateItemForCharacterEvent>({
          type: ItemEngineEvents.GenerateItemForCharacter,

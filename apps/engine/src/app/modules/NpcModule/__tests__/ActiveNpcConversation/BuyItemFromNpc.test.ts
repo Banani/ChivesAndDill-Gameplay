@@ -83,6 +83,52 @@ describe('BuyItemFromNpc action', () => {
       });
    });
 
+   it('Player should have some money removed when he is buying new item', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.OpenNpcConversationDialog,
+         npcId,
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.BuyItemFromNpc,
+         itemTemplateId: '4',
+         amount: 3,
+         npcId,
+      });
+
+      checkIfPackageIsValid(GlobalStoreModule.CURRENCY, dataPackage, {
+         data: {
+            playerCharacter_1: 45322870,
+         },
+      });
+   });
+
+   it('Player should get error if he is trying to but item that cost to much', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.OpenNpcConversationDialog,
+         npcId,
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.BuyItemFromNpc,
+         itemTemplateId: '5',
+         amount: 3,
+         npcId,
+      });
+
+      checkIfErrorWasHandled(GlobalStoreModule.NPC_CONVERSATION, 'You do not have enough money.', dataPackage);
+   });
+
    it('item should be place in desired location if it is provided', () => {
       const { players, engineManager } = setupEngine();
 

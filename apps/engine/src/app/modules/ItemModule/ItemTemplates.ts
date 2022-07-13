@@ -23,4 +23,9 @@ export const ItemTemplates: Record<string, ItemTemplate> = {
       stack: 20,
       value: 125,
    },
+   '5': {
+      name: 'Espada',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxZpYfoHsd9VDiU0pOgwUhlyBMRpZLzQPJ0Z-fm7LsmPlI-EkGm1wyJKEEMN3ElAp9NIE&usqp=CAU',
+      value: 999999999,
+   },
 };

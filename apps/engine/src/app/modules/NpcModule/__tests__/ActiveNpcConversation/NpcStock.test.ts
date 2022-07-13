@@ -77,7 +77,7 @@ describe('Npc Stock', () => {
       });
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
-         data: { [npcs['Manczur'].id]: { '1': true, '2': true, '4': true } },
+         data: { [npcs['Manczur'].id]: { '1': true, '2': true, '4': true, '5': true } },
       });
    });
 
