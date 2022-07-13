@@ -1,23 +1,40 @@
 {
-  "implicitDependencies": {
-    "workspace.json": "*",
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
-    "tsconfig.base.json": "*",
-    "tslint.json": "*",
-    ".eslintrc.json": "*",
-    "nx.json": "*"
-  },
-  "affected": { "defaultBase": "master" },
-  "npmScope": "bananos",
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
-    }
-  },
-  "projects": {
-    "chives-and-dill": { "tags": [] },
-    "engine": { "tags": [] },
-    "types": { "tags": [] }
-  }
+   "implicitDependencies": {
+      "workspace.json": "*",
+      "package.json": {
+         "dependencies": "*",
+         "devDependencies": "*"
+      },
+      "tsconfig.base.json": "*",
+      "tslint.json": "*",
+      ".eslintrc.json": "*",
+      "nx.json": "*",
+      "go.mod": "*"
+   },
+   "affected": {
+      "defaultBase": "master"
+   },
+   "npmScope": "bananos",
+   "tasksRunnerOptions": {
+      "default": {
+         "runner": "@nrwl/workspace/tasks-runners/default",
+         "options": {
+            "cacheableOperations": ["build", "lint", "test", "e2e"]
+         }
+      }
+   },
+   "projects": {
+      "chives-and-dill": {
+         "tags": []
+      },
+      "engine": {
+         "tags": []
+      },
+      "types": {
+         "tags": []
+      },
+      "creator": {
+         "tags": []
+      }
+   }
 }

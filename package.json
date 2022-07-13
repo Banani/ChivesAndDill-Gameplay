@@ -61,6 +61,7 @@
     "@nrwl/tao": "11.6.1",
     "@nrwl/web": "11.6.1",
     "@nrwl/workspace": "11.6.1",
+    "@nx-go/nx-go": "^2.6.0",
     "@testing-library/react": "11.1.2",
     "@types/jest": "26.0.8",
     "@types/lodash": "^4.14.171",
