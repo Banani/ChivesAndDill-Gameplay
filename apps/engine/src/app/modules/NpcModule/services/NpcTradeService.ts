@@ -1,8 +1,8 @@
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import * as _ from 'lodash';
-import { NpcEngineEvents, PlayerTriesToBuyItemFromNpcEvent } from '../Events';
-import { GenerateItemForCharacterEvent, ItemEngineEvents, RemoveCurrencyFromCharacterEvent } from '../../ItemModule/Events';
+import { NpcEngineEvents, PlayerTriesToBuyItemFromNpcEvent, PlayerTriesToSellItemToNpcEvent } from '../Events';
+import { AddCurrencyToCharacterEvent, GenerateItemForCharacterEvent, ItemEngineEvents, RemoveCurrencyFromCharacterEvent } from '../../ItemModule/Events';
 import { ItemTemplates } from '../../ItemModule/ItemTemplates';
 
 export class NpcTradeService extends EventParser {
@@ -10,6 +10,7 @@ export class NpcTradeService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [NpcEngineEvents.PlayerTriesToBuyItemFromNpc]: this.handlePlayerTriesToBuyItemFromNpc,
+         [NpcEngineEvents.PlayerTriesToSellItemToNpc]: this.handlePlayerTriesToSellItemToNpc,
       };
    }
 
@@ -53,6 +54,18 @@ export class NpcTradeService extends EventParser {
          characterId: event.requestingCharacterId,
          itemTemplateId: event.itemTemplateId,
          desiredLocation: event.desiredLocation,
+      });
+   };
+
+   handlePlayerTriesToSellItemToNpc: EngineEventHandler<PlayerTriesToSellItemToNpcEvent> = ({ event, services }) => {
+      const item = services.itemService.getItemById(event.itemId);
+      const itemPrice = ItemTemplates[item.itemTemplateId].value;
+      const amount = services.backpackItemsService.getItemById(event.requestingCharacterId, item.itemId).amount;
+
+      this.engineEventCrator.asyncCeateEvent<AddCurrencyToCharacterEvent>({
+         type: ItemEngineEvents.AddCurrencyToCharacter,
+         amount: itemPrice * amount,
+         characterId: event.requestingCharacterId,
       });
    };
 }

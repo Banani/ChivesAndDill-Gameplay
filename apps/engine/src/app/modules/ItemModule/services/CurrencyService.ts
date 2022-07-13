@@ -1,7 +1,7 @@
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { CurrencyAmountUpdatedEvent, ItemEngineEvents, RemoveCurrencyFromCharacterEvent } from '../Events';
+import { AddCurrencyToCharacterEvent, CurrencyAmountUpdatedEvent, ItemEngineEvents, RemoveCurrencyFromCharacterEvent } from '../Events';
 
 export class CurrencyService extends EventParser {
    private currencyTracks: Record<string, number> = {};
@@ -11,6 +11,7 @@ export class CurrencyService extends EventParser {
       this.eventsToHandlersMap = {
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handleNewPlayerCreated,
          [ItemEngineEvents.RemoveCurrencyFromCharacter]: this.handleRemoveCurrencyFromCharacter,
+         [ItemEngineEvents.AddCurrencyToCharacter]: this.handleAddCurrencyToCharacter,
       };
    }
 
@@ -26,6 +27,16 @@ export class CurrencyService extends EventParser {
 
    handleRemoveCurrencyFromCharacter: EngineEventHandler<RemoveCurrencyFromCharacterEvent> = ({ event }) => {
       this.currencyTracks[event.characterId] = Math.max(0, this.currencyTracks[event.characterId] - event.amount);
+
+      this.engineEventCrator.asyncCeateEvent<CurrencyAmountUpdatedEvent>({
+         type: ItemEngineEvents.CurrencyAmountUpdated,
+         characterId: event.characterId,
+         newAmount: this.currencyTracks[event.characterId],
+      });
+   };
+
+   handleAddCurrencyToCharacter: EngineEventHandler<AddCurrencyToCharacterEvent> = ({ event }) => {
+      this.currencyTracks[event.characterId] = this.currencyTracks[event.characterId] + event.amount;
 
       this.engineEventCrator.asyncCeateEvent<CurrencyAmountUpdatedEvent>({
          type: ItemEngineEvents.CurrencyAmountUpdated,

@@ -4,6 +4,7 @@ export enum NpcClientMessages {
    OpenNpcConversationDialog = 'OpenNpcConversationDialog',
    CloseNpcConversationDialog = 'CloseNpcConversationDialog',
    BuyItemFromNpc = 'BuyItemFromNpc',
+   SellItemToNpc = 'SellItemToNpc',
 }
 
 export interface ActiveNpcConversation {
@@ -31,4 +32,10 @@ export interface BuyItemFromNpc {
    desiredLocation?: ItemLocationInBag;
 }
 
-export type EngineNpcAction = OpenNpcConversationDialog | CloseNpcConversationDialog | BuyItemFromNpc;
+export interface SellItemToNpc {
+   type: NpcClientMessages.SellItemToNpc;
+   npcId: string;
+   itemId: string;
+}
+
+export type EngineNpcAction = OpenNpcConversationDialog | CloseNpcConversationDialog | BuyItemFromNpc | SellItemToNpc;

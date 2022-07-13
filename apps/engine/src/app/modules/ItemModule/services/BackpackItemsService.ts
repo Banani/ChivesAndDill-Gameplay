@@ -34,6 +34,16 @@ export class BackpackItemsService extends EventParser {
       };
    }
 
+   getItemById = (characterId: string, itemId: string) => {
+      for (let backpack in this.itemsPositions[characterId]) {
+         for (let spot in this.itemsPositions[characterId][backpack]) {
+            if (itemId === this.itemsPositions[characterId][backpack][spot].itemId) {
+               return this.itemsPositions[characterId][backpack][spot];
+            }
+         }
+      }
+   };
+
    handleBackpackTrackCreated: EngineEventHandler<BackpackTrackCreatedEvent> = ({ event }) => {
       this.itemsPositions[event.characterId] = { '1': {} };
 

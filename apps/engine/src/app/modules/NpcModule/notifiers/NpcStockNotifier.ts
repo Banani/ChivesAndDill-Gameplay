@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { ConversationWithNpcStartedEvent, NpcEngineEvents, PlayerTriesToBuyItemFromNpcEvent } from '../Events';
+import { ConversationWithNpcStartedEvent, NpcEngineEvents, PlayerTriesToBuyItemFromNpcEvent, PlayerTriesToSellItemToNpcEvent } from '../Events';
 
 export class NpcStockNotifier extends Notifier<ActiveNpcConversation> {
    constructor() {
@@ -25,6 +25,15 @@ export class NpcStockNotifier extends Notifier<ActiveNpcConversation> {
             itemTemplateId,
             amount,
             desiredLocation,
+         });
+      });
+
+      currentSocket.on(NpcClientMessages.SellItemToNpc, ({ npcId, itemId }) => {
+         this.engineEventCrator.asyncCeateEvent<PlayerTriesToSellItemToNpcEvent>({
+            type: NpcEngineEvents.PlayerTriesToSellItemToNpc,
+            requestingCharacterId: event.playerCharacter.id,
+            npcId,
+            itemId,
          });
       });
    };

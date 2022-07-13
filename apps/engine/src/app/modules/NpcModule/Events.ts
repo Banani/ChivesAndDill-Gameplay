@@ -15,6 +15,7 @@ export enum NpcEngineEvents {
    ConversationWithNpcEnded = 'ConversationWithNpcEnded',
 
    PlayerTriesToBuyItemFromNpc = 'PlayerTriesToBuyItemFromNpc',
+   PlayerTriesToSellItemToNpc = 'PlayerTriesToSellItemToNpc',
 }
 
 export interface CreateNewNpcEvent extends EngineEvent {
@@ -55,6 +56,12 @@ export interface PlayerTriesToBuyItemFromNpcEvent extends EngineEvent {
    desiredLocation?: ItemLocationInBag;
 }
 
+export interface PlayerTriesToSellItemToNpcEvent extends EngineEvent {
+   type: NpcEngineEvents.PlayerTriesToSellItemToNpc;
+   npcId: string;
+   itemId: string;
+}
+
 export interface NpcEngineEventsMap {
    [NpcEngineEvents.CreateNewNpc]: EngineEventHandler<CreateNewNpcEvent>;
    [NpcEngineEvents.NewNpcCreated]: EngineEventHandler<NewNpcCreatedEvent>;
@@ -66,4 +73,5 @@ export interface NpcEngineEventsMap {
    [NpcEngineEvents.ConversationWithNpcEnded]: EngineEventHandler<ConversationWithNpcEndedEvent>;
 
    [NpcEngineEvents.PlayerTriesToBuyItemFromNpc]: EngineEventHandler<PlayerTriesToBuyItemFromNpcEvent>;
+   [NpcEngineEvents.PlayerTriesToSellItemToNpc]: EngineEventHandler<PlayerTriesToSellItemToNpcEvent>;
 }
