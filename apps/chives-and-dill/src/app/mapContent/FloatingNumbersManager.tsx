@@ -55,7 +55,7 @@ export const FloatingNumbersManager = () => {
             event: {
                type: event.type,
                characterId: event.characterId,
-               amount: event.amount,
+               amount: `XP: ${event.amount}`,
             },
          })),
       ]);

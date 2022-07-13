@@ -1,18 +1,20 @@
 import { ExperienceGainSource } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
-import {
+import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
+import { CharacterType } from '../../../types';
+import type {
    AddExperienceEvent,
-   CharacterEngineEvents,
    CharacterGainExperienceEvent,
    CharacterLevelChangedEvent,
    ExperienceTrackCreatedEvent,
    ExperienceTrackRemovedEvent,
-   NewCharacterCreatedEvent,
+   NewCharacterCreatedEvent} from '../Events';
+import {
+   CharacterEngineEvents
 } from '../Events';
 import { ExperienceTable } from '../ExperienceTable';
-import { ExperienceTrack } from '../types';
+import type { ExperienceTrack } from '../types';
 
 export class ExperienceService extends EventParser {
    // character id
