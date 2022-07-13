@@ -2,7 +2,13 @@ import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import * as _ from 'lodash';
 import { NpcEngineEvents, PlayerTriesToBuyItemFromNpcEvent, PlayerTriesToSellItemToNpcEvent } from '../Events';
-import { AddCurrencyToCharacterEvent, GenerateItemForCharacterEvent, ItemEngineEvents, RemoveCurrencyFromCharacterEvent } from '../../ItemModule/Events';
+import {
+   AddCurrencyToCharacterEvent,
+   DeleteItemEvent,
+   GenerateItemForCharacterEvent,
+   ItemEngineEvents,
+   RemoveCurrencyFromCharacterEvent,
+} from '../../ItemModule/Events';
 import { ItemTemplates } from '../../ItemModule/ItemTemplates';
 
 export class NpcTradeService extends EventParser {
@@ -72,6 +78,11 @@ export class NpcTradeService extends EventParser {
 
       const itemPrice = ItemTemplates[item.itemTemplateId].value;
       const amount = services.backpackItemsService.getItemById(event.requestingCharacterId, item.itemId).amount;
+
+      this.engineEventCrator.asyncCeateEvent<DeleteItemEvent>({
+         type: ItemEngineEvents.DeleteItem,
+         itemId: event.itemId,
+      });
 
       this.engineEventCrator.asyncCeateEvent<AddCurrencyToCharacterEvent>({
          type: ItemEngineEvents.AddCurrencyToCharacter,

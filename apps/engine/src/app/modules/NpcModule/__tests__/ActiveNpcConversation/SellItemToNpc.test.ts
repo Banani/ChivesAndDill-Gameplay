@@ -43,6 +43,42 @@ const setupEngine = () => {
 };
 
 describe('SellItemToNpc action', () => {
+   it('Player should have item removed from bag when he is selling it', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 6,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.OpenNpcConversationDialog,
+         npcId,
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.SellItemToNpc,
+         itemId,
+         npcId,
+      });
+
+      checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
+         toDelete: {
+            '1': {
+               '0': null,
+            },
+         },
+      });
+   });
+
    it('Player should have some money removed when he is buying new item', () => {
       const { players, engineManager } = setupEngine();
 

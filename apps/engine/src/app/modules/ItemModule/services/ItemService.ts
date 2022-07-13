@@ -72,11 +72,12 @@ export class ItemService extends EventParser {
          return;
       }
 
+      const lastCharacterOwnerId = this.items[event.itemId].ownerId;
       delete this.items[event.itemId];
 
       this.engineEventCrator.asyncCeateEvent<ItemDeletedEvent>({
          type: ItemEngineEvents.ItemDeleted,
-         lastCharacterOwnerId: event.requestingCharacterId,
+         lastCharacterOwnerId,
          itemId: event.itemId,
       });
    };
