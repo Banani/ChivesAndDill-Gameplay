@@ -4,7 +4,7 @@ import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { CharacterEngineEvents, CharacterRemovedEvent, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
 import { PlayerCastedSpellEvent, PlayerCastSpellEvent, SpellEngineEvents } from '../Events';
-import { Spell } from '../types/spellTypes';
+import { Spell } from '../types/SpellTypes';
 
 export class CooldownService extends EventParser {
    cooldownHistoryPerUserSpells: Record<string, Record<string, number>> = {};

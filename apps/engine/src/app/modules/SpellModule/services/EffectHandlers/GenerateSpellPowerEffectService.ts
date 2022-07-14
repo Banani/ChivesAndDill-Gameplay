@@ -2,7 +2,7 @@ import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
 import { AddCharacterSpellPowerEvent, CharacterEngineEvents } from '../../../CharacterModule/Events';
 import { SpellEngineEvents, ApplyTargetSpellEffectEvent } from '../../Events';
-import { SpellEffectType, GenerateSpellPowerEffect } from '../../types/spellTypes';
+import { SpellEffectType, GenerateSpellPowerEffect } from '../../types/SpellTypes';
 
 export class GenerateSpellPowerEffectService extends EventParser {
    constructor() {

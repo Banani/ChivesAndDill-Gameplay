@@ -12,7 +12,7 @@ import {
    PlayerCastSpellEvent,
    PlayerCastSubSpellEvent,
 } from '../../Events';
-import { SpellType } from '../../types/spellTypes';
+import { SpellType } from '../../types/SpellTypes';
 
 export class AngleBlastSpellService extends EventParser {
    constructor() {

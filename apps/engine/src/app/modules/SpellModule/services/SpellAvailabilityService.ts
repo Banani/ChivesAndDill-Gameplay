@@ -3,7 +3,7 @@ import { Character, EngineEventHandler } from '../../../types';
 import { Services } from '../../../types/Services';
 import { PlayerCastSpellEvent, PlayerTriesToCastASpellEvent, SpellEngineEvents } from '../Events';
 import { ALL_SPELLS } from '../spells';
-import { Spell } from '../types/spellTypes';
+import { Spell } from '../types/SpellTypes';
 
 export class SpellAvailabilityService extends EventParser {
    constructor() {

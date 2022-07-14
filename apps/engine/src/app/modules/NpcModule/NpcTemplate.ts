@@ -1,6 +1,6 @@
 import { CharacterDirection, ItemTemplate } from '@bananos/types';
 import { ItemTemplates } from '../ItemModule/ItemTemplates';
-import { Spell } from '../SpellModule/types/spellTypes';
+import { Spell } from '../SpellModule/types/SpellTypes';
 
 export interface NpcTemplate {
    id: string;

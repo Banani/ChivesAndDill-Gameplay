@@ -16,25 +16,25 @@ export const SpellsBar = () => {
 
    let renderSpells;
 
-   let keyBinds = _.map(characters[activePlayerId].spells, spell => spell.name);
+   let keyBinds = _.map(characters[activePlayerId].spells, (spell) => spell.name);
    keyBinds = keyBinds.reduce((prev, current, index) => {
       prev[index + 1] = current;
       return prev;
-   }, {})
+   }, {});
 
    useEffect(() => {
       _.forIn(context, function (value, key) {
          if (keyBinds[key] && value) {
             const spell = [keyBinds[key]];
             setSpellOnCooldown([...spellsOnCooldown, ...spell.filter((c) => !spellsOnCooldown.includes(c))]);
-            setClickedSpell(...spell as string);
+
+            setClickedSpell(spell[0]);
          }
       });
    }, [context]);
 
    useEffect(() => {
       if (spellsOnCooldown.includes(clickedSpell) && clickedSpell !== '') {
-
          setTimeout(() => {
             setSpellOnCooldown(spellsOnCooldown.filter((item) => item !== clickedSpell));
             setClickedSpell('');

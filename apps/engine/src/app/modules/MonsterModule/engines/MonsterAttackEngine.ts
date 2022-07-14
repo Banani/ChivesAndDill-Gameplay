@@ -3,7 +3,7 @@ import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints, isSegementCrossingWithAnyWall } from '../../../math';
 import { Character } from '../../../types';
 import { PlayerCastSpellEvent, SpellEngineEvents, PlayerTriesToCastASpellEvent } from '../../SpellModule/Events';
-import { Spell } from '../../SpellModule/types/spellTypes';
+import { Spell } from '../../SpellModule/types/SpellTypes';
 import { Monster } from '../types';
 
 interface ScheduledAttack {

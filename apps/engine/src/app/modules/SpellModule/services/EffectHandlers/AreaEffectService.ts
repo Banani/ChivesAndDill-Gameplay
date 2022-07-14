@@ -11,7 +11,7 @@ import {
    RemoveAreaSpellEffectEvent,
    SpellEngineEvents,
 } from '../../Events';
-import { AreaEffect, SpellEffectType } from '../../types/spellTypes';
+import { AreaEffect, SpellEffectType } from '../../types/SpellTypes';
 
 export interface AreaSpellEffectTrack {
    id: string;

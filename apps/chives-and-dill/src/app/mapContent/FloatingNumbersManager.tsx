@@ -3,13 +3,12 @@ import { useSelector } from 'react-redux';
 import { getEngineState } from '../../stores';
 import { Text } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
-import { filter, map, forEach } from 'lodash';
-import { CharacterClientEvents, HealthPointsSource } from '@bananos/types';
+import { filter, map, forEach, chain } from 'lodash';
+import { CharacterClientEvents, DamageAbsorbedEvent, EngineEventType, ExperienceGainEvent, HealthPointsSource } from '@bananos/types';
 
 export const FloatingNumbersManager = () => {
    const engineState = useSelector(getEngineState);
    const [activeShapes, setActiveShapes] = useState([]);
-   const events = engineState.characterPowerPoints.events;
 
    useEffect(() => {
       const interval = setInterval(() => {
@@ -22,42 +21,50 @@ export const FloatingNumbersManager = () => {
    useEffect(() => {
       setActiveShapes((prev) => [
          ...prev,
-         ...map(
-            filter(events, (event) => event.source !== HealthPointsSource.Regeneration),
-            (event) => ({ creationTime: Date.now(), y: 3.5, x: randomNumber(1.5, -1.5), event })
-         ),
+         ...chain(engineState.characterPowerPoints.events)
+            .filter((event) => event.type === EngineEventType.CharacterGotHp && event.source !== HealthPointsSource.Regeneration)
+            .map((event) => ({ creationTime: Date.now(), y: 3.5, x: randomNumber(1.5, -1.5), event }))
+            .value(),
       ]);
-   }, [events]);
+   }, [engineState.characterPowerPoints.events]);
 
    useEffect(() => {
       setActiveShapes((prev) => [
          ...prev,
-         ...map(engineState.absorbShields.events, (event) => ({
-            creationTime: Date.now(),
-            y: 3.5,
-            x: randomNumber(1.5, -1.5),
-            event: {
-               type: event.type,
-               characterId: event.characterId,
-               amount: 'absorb',
-            },
-         })),
+         ...chain(engineState.absorbShields.events)
+            .filter((event) => event.type === EngineEventType.DamageAbsorbed)
+            .map((event: DamageAbsorbedEvent) => ({
+               creationTime: Date.now(),
+               y: 3.5,
+               x: randomNumber(1.5, -1.5),
+               event: {
+                  type: event.type,
+                  characterId: event.characterId,
+                  amount: 'absorb',
+               },
+            }))
+            .value(),
       ]);
    }, [engineState.absorbShields.events]);
 
    useEffect(() => {
       setActiveShapes((prev) => [
          ...prev,
-         ...map(engineState.experience.events, (event) => ({
-            creationTime: Date.now(),
-            y: 3.5,
-            x: randomNumber(1.5, -1.5),
-            event: {
-               type: event.type,
-               characterId: event.characterId,
-               amount: `XP: ${event.amount}`,
-            },
-         })),
+         ...chain(engineState.experience.events)
+            .filter((event) => event.type === CharacterClientEvents.ExperienceGain)
+            .map((event: ExperienceGainEvent) => {
+               return {
+                  creationTime: Date.now(),
+                  y: 3.5,
+                  x: randomNumber(1.5, -1.5),
+                  event: {
+                     type: event.type,
+                     characterId: event.characterId,
+                     amount: `XP: ${event.amount}`,
+                  },
+               };
+            })
+            .value(),
       ]);
    }, [engineState.experience.events]);
 
@@ -68,7 +75,7 @@ export const FloatingNumbersManager = () => {
          });
       }, 16);
       return () => clearInterval(interval);
-   }, [events]);
+   }, [engineState.characterPowerPoints.events]);
 
    const getColorOfEvent = (type) => {
       switch (type) {

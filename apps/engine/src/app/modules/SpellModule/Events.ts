@@ -13,7 +13,7 @@ import {
    ProjectileSubSpell,
    SpellEffect,
    ChannelSpell,
-} from './types/spellTypes';
+} from './types/SpellTypes';
 
 export enum SpellEngineEvents {
    PlayerTriesToCastASpell = 'PlayerTriesToCastASpell',

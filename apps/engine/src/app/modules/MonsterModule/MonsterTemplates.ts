@@ -1,7 +1,7 @@
 import { DropItem } from '@bananos/types';
 import { items } from '../ItemModule/Items';
 import { ALL_SPELLS } from '../SpellModule/spells';
-import type { Spell } from '../SpellModule/types/spellTypes';
+import type { Spell } from '../SpellModule/types/SpellTypes';
 
 export interface DropSchema {
    item: DropItem;

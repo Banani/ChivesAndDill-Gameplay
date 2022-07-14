@@ -30,6 +30,11 @@ const initialState: GlobalStore = {
    [GlobalStoreModule.CHAT_MESSAGES]: emptyModule,
    [GlobalStoreModule.EXPERIENCE]: emptyModule,
    [GlobalStoreModule.CURRENCY]: emptyModule,
+   [GlobalStoreModule.BACKPACK_SCHEMA]: emptyModule,
+   [GlobalStoreModule.BACKPACK_ITEMS]: emptyModule,
+   [GlobalStoreModule.ITEMS]: emptyModule,
+   [GlobalStoreModule.NPC_CONVERSATION]: emptyModule,
+   [GlobalStoreModule.NPC_STOCK]: emptyModule,
 };
 
 const deleteRequestedFields = (data: any, pathToDelete: any) => {

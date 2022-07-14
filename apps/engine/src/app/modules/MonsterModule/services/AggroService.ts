@@ -6,7 +6,7 @@ import { CharacterDiedEvent, EngineEventHandler, PlayerMovedEvent } from '../../
 import { Services } from '../../../types/Services';
 import { CharacterEngineEvents, CharacterRemovedEvent } from '../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
-import { SpellEffectType, DamageEffect } from '../../SpellModule/types/spellTypes';
+import { SpellEffectType, DamageEffect } from '../../SpellModule/types/SpellTypes';
 import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostAggroEvent, MonsterLostTargetEvent, MonsterPulledEvent, MonsterTargetChangedEvent } from '../Events';
 import { MonsterRespawns } from '../MonsterRespawns';
 import { Monster } from '../types';

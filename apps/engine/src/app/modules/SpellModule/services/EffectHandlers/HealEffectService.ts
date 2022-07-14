@@ -3,7 +3,7 @@ import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
 import { AddCharacterHealthPointsEvent, CharacterEngineEvents } from '../../../CharacterModule/Events';
 import { SpellEngineEvents, ApplyTargetSpellEffectEvent } from '../../Events';
-import { SpellEffectType, HealEffect } from '../../types/spellTypes';
+import { SpellEffectType, HealEffect } from '../../types/SpellTypes';
 
 export class HealEffectService extends EventParser {
    constructor() {

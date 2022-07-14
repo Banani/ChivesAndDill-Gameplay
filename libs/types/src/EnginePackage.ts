@@ -240,12 +240,14 @@ export interface LevelChangedEvent {
    level: number;
 }
 
-export interface MapSchema {
-   [key: string]: {
+export type MapSchema = Record<
+   string,
+   {
       path: string;
       location: Location;
-   };
-}
+   }
+>;
+
 export interface MapDefinition {
    [key: string]: string[];
 }

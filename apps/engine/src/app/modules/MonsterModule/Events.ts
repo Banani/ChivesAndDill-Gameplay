@@ -1,6 +1,6 @@
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterRespawn } from '../../types/CharacterRespawn';
-import { Spell } from '../SpellModule/types/spellTypes';
+import { Spell } from '../SpellModule/types/SpellTypes';
 import { MonsterTemplate } from './MonsterTemplates';
 import { Monster } from './types';
 

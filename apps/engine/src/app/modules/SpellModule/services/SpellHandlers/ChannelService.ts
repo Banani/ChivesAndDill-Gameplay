@@ -16,7 +16,7 @@ import {
    SpellEngineEvents,
    SpellLandedEvent,
 } from '../../Events';
-import { ChannelSpell, SpellType } from '../../types/spellTypes';
+import { ChannelSpell, SpellType } from '../../types/SpellTypes';
 
 export interface ChannelSpellsTrack {
    id: string;

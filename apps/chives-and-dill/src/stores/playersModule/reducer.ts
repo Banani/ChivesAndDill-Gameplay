@@ -115,18 +115,6 @@ export const playersReducer = (state: PlayersState = initialState, action: Playe
                },
             },
          };
-      case PlayersActionTypes.UPDATE_PLAYER_ABSORB: {
-         return {
-            ...state,
-            characters: {
-               ...state.characters,
-               [action.payload.targetId]: {
-                  ...state.characters[action.payload.targetId],
-                  absorb: action.payload.newValue,
-               },
-            },
-         };
-      }
       case PlayersActionTypes.UPDATE_CHARACTER_HP:
          return {
             ...state,
@@ -166,8 +154,8 @@ export const playersReducer = (state: PlayersState = initialState, action: Playe
       case PlayersActionTypes.SET_ACTIVE_TARGET:
          return {
             ...state,
-            activeTargetId: action.payload.characterId
-         }
+            activeTargetId: action.payload.characterId,
+         };
       default:
          return state;
    }

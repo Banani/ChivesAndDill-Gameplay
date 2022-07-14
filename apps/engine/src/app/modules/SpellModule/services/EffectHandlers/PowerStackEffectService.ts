@@ -9,7 +9,7 @@ import {
    PlayerCastedSpellEvent,
    SpellEngineEvents,
 } from '../../Events';
-import { SpellEffectType, GainPowerStackEffect, LosePowerStackEffect, PowerStackLimit } from '../../types/spellTypes';
+import { SpellEffectType, GainPowerStackEffect, LosePowerStackEffect, PowerStackLimit } from '../../types/SpellTypes';
 
 export class PowerStackEffectService extends EventParser {
    currentPowerStacks: Record<string, Partial<Record<PowerStackType, number>>> = {};

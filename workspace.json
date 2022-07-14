@@ -1,25 +1,5 @@
 {
    "version": 2,
-   "cli": {
-      "defaultCollection": "@nrwl/react"
-   },
-   "defaultProject": "chives-and-dill",
-   "generators": {
-      "@nrwl/react": {
-         "application": {
-            "style": "scss",
-            "linter": "eslint",
-            "babel": true
-         },
-         "component": {
-            "style": "scss"
-         },
-         "library": {
-            "style": "scss",
-            "linter": "eslint"
-         }
-      }
-   },
    "projects": {
       "chives-and-dill": {
          "root": "apps/chives-and-dill",
@@ -91,7 +71,35 @@
                   "passWithNoTests": true
                }
             }
-         }
+         },
+         "tags": []
+      },
+      "creator": {
+         "root": "apps/creator",
+         "projectType": "application",
+         "sourceRoot": "apps/creator",
+         "targets": {
+            "build": {
+               "executor": "@nx-go/nx-go:build",
+               "options": {
+                  "outputPath": "dist/apps/creator",
+                  "main": "apps/creator/main.go"
+               }
+            },
+            "serve": {
+               "executor": "@nx-go/nx-go:serve",
+               "options": {
+                  "main": "apps/creator/main.go"
+               }
+            },
+            "test": {
+               "executor": "@nx-go/nx-go:test"
+            },
+            "lint": {
+               "executor": "@nx-go/nx-go:lint"
+            }
+         },
+         "tags": []
       },
       "engine": {
          "root": "apps/engine",
@@ -140,7 +148,8 @@
                   "passWithNoTests": true
                }
             }
-         }
+         },
+         "tags": []
       },
       "types": {
          "root": "libs/types",
@@ -161,33 +170,8 @@
                   "passWithNoTests": true
                }
             }
-         }
-      },
-      "creator": {
-         "root": "apps/creator",
-         "projectType": "application",
-         "sourceRoot": "apps/creator",
-         "targets": {
-            "build": {
-               "executor": "@nx-go/nx-go:build",
-               "options": {
-                  "outputPath": "dist/apps/creator",
-                  "main": "apps/creator/main.go"
-               }
-            },
-            "serve": {
-               "executor": "@nx-go/nx-go:serve",
-               "options": {
-                  "main": "apps/creator/main.go"
-               }
-            },
-            "test": {
-               "executor": "@nx-go/nx-go:test"
-            },
-            "lint": {
-               "executor": "@nx-go/nx-go:lint"
-            }
-         }
+         },
+         "tags": []
       }
    }
 }

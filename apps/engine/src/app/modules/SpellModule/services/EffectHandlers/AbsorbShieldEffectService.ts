@@ -10,7 +10,7 @@ import {
    SpellEngineEvents,
    TakeAbsorbShieldValueEvent,
 } from '../../Events';
-import { SpellEffectType, AbsorbShieldEffect } from '../../types/spellTypes';
+import { SpellEffectType, AbsorbShieldEffect } from '../../types/SpellTypes';
 
 interface AbsorbEffectNavigation {
    targetId: string;

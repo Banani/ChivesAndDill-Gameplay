@@ -13,7 +13,7 @@ import {
    ProjectileRemovedEvent,
    RemoveProjectileEvent,
 } from '../../Events';
-import { SpellType } from '../../types/spellTypes';
+import { SpellType } from '../../types/SpellTypes';
 
 export class ProjectilesService extends EventParser {
    projectileEngine: ProjectileMovement;

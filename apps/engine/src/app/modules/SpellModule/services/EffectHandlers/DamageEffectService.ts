@@ -2,7 +2,7 @@ import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
 import { CharacterEngineEvents, TakeCharacterHealthPointsEvent } from '../../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, DamageAbsorbedEvent, SpellEngineEvents, TakeAbsorbShieldValueEvent } from '../../Events';
-import { SpellEffectType, DamageEffect } from '../../types/spellTypes';
+import { SpellEffectType, DamageEffect } from '../../types/SpellTypes';
 
 export class DamageEffectService extends EventParser {
    constructor() {

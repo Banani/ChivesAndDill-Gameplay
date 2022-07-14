@@ -1,7 +1,7 @@
 import { TimeEffectType, PowerStackType } from '@bananos/types';
 import { Classes } from '../../types/Classes';
-import type { Spell } from './types/spellTypes';
-import { AreaType, SpellEffectType, SpellType } from './types/spellTypes';
+import type { Spell } from './types/SpellTypes';
+import { AreaType, SpellEffectType, SpellType } from './types/SpellTypes';
 
 export const ALL_SPELLS: Record<string, Spell> = {
    Test: {

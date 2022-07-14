@@ -6,7 +6,7 @@ import { MonsterEngineEvents, MonsterLostAggroEvent } from '../../../MonsterModu
 import { Monster } from '../../../MonsterModule/types';
 import { TickOverTimeEffectEngine } from '../../engines/TickOverTimeEffectEngine';
 import { ApplyTargetSpellEffectEvent, RemoveTickOverTimeEffectEvent, SpellEngineEvents, TimeEffectCreatedEvent, TimeEffectRemovedEvent } from '../../Events';
-import { TickOverTimeEffect, SpellEffectType } from '../../types/spellTypes';
+import { TickOverTimeEffect, SpellEffectType } from '../../types/SpellTypes';
 
 export interface TickEffectOverTimeTrack {
    id: string;

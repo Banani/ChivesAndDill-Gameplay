@@ -7,5 +7,5 @@ export const MapField = React.memo(
    ({ texture, spriteIndex, location }: { texture: any; spriteIndex: string; location: any }) => (
       <Sprite height={BLOCK_SIZE} width={BLOCK_SIZE} texture={texture} x={location.x * BLOCK_SIZE} y={location.y * BLOCK_SIZE}></Sprite>
    ),
-   (a, b) => a.spriteIndex === a.spriteIndex
+   (a, b) => a.spriteIndex === b.spriteIndex
 );

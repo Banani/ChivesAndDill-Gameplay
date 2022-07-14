@@ -14,13 +14,14 @@ import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
 import { ErrorMessages } from './mapContent/ErrorMessages';
-import { BloodPoolManager } from './mapContent/bloodPoolsManager';
+import { BloodPoolManager } from './mapContent/BloodPoolsManager';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { MapManager } from './mapContent/mapManager/MapManager';
-import { CharacterFrames } from './guiContent/characterFrames/characterFrames';
+import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
 import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
 import { Chat } from './guiContent/chat/Chat';
 import { NextLevelManager } from './mapContent/NextLevelManager';
+import { MapSchema } from '@bananos/types';
 
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);

@@ -15,7 +15,7 @@ import {
    ProjectileRemovedEvent,
    RemoveProjectileEvent,
 } from '../../Events';
-import { GuidedProjectileSubSpell, GuidedProjectileSpell, SpellType } from '../../types/spellTypes';
+import { GuidedProjectileSubSpell, GuidedProjectileSpell, SpellType } from '../../types/SpellTypes';
 
 interface GuidedProjectileTrack {
    casterId: string;

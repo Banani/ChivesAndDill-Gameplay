@@ -5,7 +5,7 @@ import { distanceBetweenTwoPoints, getCrossingPointsWithWalls } from 'apps/engin
 import { EngineEventHandler, PlayerMovedEvent } from 'apps/engine/src/app/types';
 import { Location } from '@bananos/types';
 import { SpellReachedTargetEvent, SpellEngineEvents, SpellLandedEvent, PlayerCastedSpellEvent, PlayerCastSpellEvent } from '../../Events';
-import { SpellType } from '../../types/spellTypes';
+import { SpellType } from '../../types/SpellTypes';
 
 export class TeleportationSpellService extends EventParser {
    constructor() {
