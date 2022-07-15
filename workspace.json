@@ -7,7 +7,7 @@
          "projectType": "application",
          "targets": {
             "build": {
-               "executor": "@nrwl/web:build",
+               "executor": "@nrwl/web:webpack",
                "outputs": ["{options.outputPath}"],
                "options": {
                   "outputPath": "dist/apps/chives-and-dill",
@@ -107,7 +107,7 @@
          "projectType": "application",
          "targets": {
             "build": {
-               "executor": "@nrwl/node:build",
+               "executor": "@nrwl/node:webpack",
                "outputs": ["{options.outputPath}"],
                "options": {
                   "outputPath": "dist/apps/engine",
@@ -129,7 +129,7 @@
                }
             },
             "serve": {
-               "executor": "@nrwl/node:execute",
+               "executor": "@nrwl/node:node",
                "options": {
                   "buildTarget": "engine:build"
                }
