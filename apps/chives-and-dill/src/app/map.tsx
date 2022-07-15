@@ -89,8 +89,8 @@ const Map = () => {
                                     -(engineState?.characterMovements.data[activePlayerId]?.location.y ?? 0) + gameSize.height / 2,
                                  ]}
                               >
-                                 <AreasSpellsEffectsManager />
                                  <MapManager mapSchema={mapSchema} location={engineState?.characterMovements.data[activePlayerId]?.location} />
+                                 <AreasSpellsEffectsManager />
                                  <AreasManager />
                                  {renderSpells()}
                                  <CastBarsManager />

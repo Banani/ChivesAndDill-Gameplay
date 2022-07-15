@@ -8,7 +8,7 @@ import { MapSchema } from '@bananos/types';
 export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y: number } }>(
    ({ mapSchema, location }) => {
       const [texturesMap, setTexturesMap] = useState({});
-
+      console.log(123);
       useEffect(() => {
          const output = {};
 
@@ -45,5 +45,7 @@ export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y:
          </>
       );
    },
-   (old, newProps) => Math.round(old.location.x / BLOCK_SIZE) === Math.round(newProps.location.x / BLOCK_SIZE)
+   (old, newProps) =>
+      Math.round(old.location.x / BLOCK_SIZE) === Math.round(newProps.location.x / BLOCK_SIZE) &&
+      Math.round(old.location.y / BLOCK_SIZE) === Math.round(newProps.location.y / BLOCK_SIZE)
 );
