@@ -1,33 +1,27 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Graphics } from '@inlet/react-pixi';
-import { selectCharacters, getEngineState } from '../../stores';
-import { selectSpellChannels } from '../../stores';
+import { getEngineState } from '../../stores';
 
-export const CastBar = ({ playerId }) => {
+export const CastBar = ({ playerId, castBarData }) => {
+
    const [channelSpellProgress, updateChannelSpellProgress] = useState(0);
 
-   const players = useSelector(selectCharacters);
    const engineState = useSelector(getEngineState);
-   const activeSpellChannel = useSelector(selectSpellChannels);
-   console.log(activeSpellChannel)
+
    useEffect(() => {
-      console.log(activeSpellChannel)
-   }, [activeSpellChannel]);
+      const interval = setInterval(() => {
+         if (castBarData) {
+            const { castingStartedTimestamp, timeToCast } = castBarData;
+            updateChannelSpellProgress((Date.now() - castingStartedTimestamp) / timeToCast);
+         }
+      }, 1000 / 60);
 
-   // useEffect(() => {
-   //    const interval = setInterval(() => {
-   //       if (activeSpellsCasts[playerId]) {
-   //          const { spellCastTimeStamp, castTime } = activeSpellsCasts[players[playerId].id];
-   //          updateChannelSpellProgress((Date.now() - spellCastTimeStamp) / castTime);
-   //       }
-   //    }, 1000 / 60);
-
-   //    updateChannelSpellProgress(0);
-   //    return () => {
-   //       clearInterval(interval);
-   //    };
-   // }, [activeSpellsCasts, playerId]);
+      updateChannelSpellProgress(0);
+      return () => {
+         clearInterval(interval);
+      };
+   }, [castBarData, playerId]);
 
    const castBar = useCallback(
       (g) => {
@@ -46,5 +40,5 @@ export const CastBar = ({ playerId }) => {
       },
       [playerId, channelSpellProgress, engineState.characterMovements]
    );
-   return channelSpellProgress ? <Graphics draw={castBar} /> : null;
+   return <Graphics draw={castBar} />;
 };

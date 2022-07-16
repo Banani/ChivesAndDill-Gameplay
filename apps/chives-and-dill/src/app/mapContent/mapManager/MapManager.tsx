@@ -8,7 +8,7 @@ import { MapSchema } from '@bananos/types';
 export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y: number } }>(
    ({ mapSchema, location }) => {
       const [texturesMap, setTexturesMap] = useState({});
-      console.log(123);
+
       useEffect(() => {
          const output = {};
 
