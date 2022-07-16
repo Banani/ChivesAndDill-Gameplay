@@ -101,6 +101,87 @@
          },
          "tags": []
       },
+      "creator-web": {
+         "root": "apps/creator-web",
+         "sourceRoot": "apps/creator-web/src",
+         "projectType": "application",
+         "targets": {
+            "build": {
+               "executor": "@nrwl/web:webpack",
+               "outputs": ["{options.outputPath}"],
+               "defaultConfiguration": "production",
+               "options": {
+                  "compiler": "babel",
+                  "outputPath": "dist/apps/creator-web",
+                  "index": "apps/creator-web/src/index.html",
+                  "baseHref": "/",
+                  "main": "apps/creator-web/src/main.tsx",
+                  "polyfills": "apps/creator-web/src/polyfills.ts",
+                  "tsConfig": "apps/creator-web/tsconfig.app.json",
+                  "assets": ["apps/creator-web/src/favicon.ico", "apps/creator-web/src/assets"],
+                  "styles": [],
+                  "scripts": [],
+                  "webpackConfig": "@nrwl/react/plugins/webpack"
+               },
+               "configurations": {
+                  "development": {
+                     "extractLicenses": false,
+                     "optimization": false,
+                     "sourceMap": true,
+                     "vendorChunk": true
+                  },
+                  "production": {
+                     "fileReplacements": [
+                        {
+                           "replace": "apps/creator-web/src/environments/environment.ts",
+                           "with": "apps/creator-web/src/environments/environment.prod.ts"
+                        }
+                     ],
+                     "optimization": true,
+                     "outputHashing": "all",
+                     "sourceMap": false,
+                     "extractCss": true,
+                     "namedChunks": false,
+                     "extractLicenses": true,
+                     "vendorChunk": false
+                  }
+               }
+            },
+            "serve": {
+               "executor": "@nrwl/web:dev-server",
+               "defaultConfiguration": "development",
+               "options": {
+                  "buildTarget": "creator-web:build",
+                  "hmr": true
+               },
+               "configurations": {
+                  "development": {
+                     "buildTarget": "creator-web:build:development"
+                  },
+                  "production": {
+                     "buildTarget": "creator-web:build:production",
+                     "hmr": false
+                  }
+               }
+            },
+            "lint": {
+               "executor": "@nrwl/linter:eslint",
+               "outputs": ["{options.outputFile}"],
+               "options": {
+                  "lintFilePatterns": ["apps/creator-web/**/*.{ts,tsx,js,jsx}"]
+               }
+            },
+            "test": {
+               "executor": "@nrwl/jest:jest",
+               "outputs": ["coverage/apps/creator-web"],
+               "options": {
+                  "jestConfig": "apps/creator-web/jest.config.ts",
+                  "passWithNoTests": true
+               }
+            }
+         },
+         "tags": []
+      },
       "engine": {
          "root": "apps/engine",
          "sourceRoot": "apps\\engine\\src",
