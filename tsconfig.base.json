@@ -15,6 +15,7 @@
       "skipDefaultLibCheck": true,
       "baseUrl": ".",
       "paths": {
+         "@bananos/socket-store": ["libs/socket-store/src/index.ts"],
          "@bananos/types": ["libs/types/src/index.ts"]
       }
    },

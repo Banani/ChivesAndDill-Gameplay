@@ -232,6 +232,7 @@
          },
          "tags": []
       },
+      "socket-store": "libs/socket-store",
       "types": {
          "root": "libs/types",
          "sourceRoot": "libs/types/src",

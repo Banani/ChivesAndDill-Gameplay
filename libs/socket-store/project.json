@@ -1,0 +1,15 @@
+{
+   "root": "libs/socket-store",
+   "sourceRoot": "libs/socket-store/src",
+   "targets": {
+      "test": {
+         "executor": "@nrwl/jest:jest",
+         "outputs": ["coverage/libs/socket-store"],
+         "options": {
+            "jestConfig": "libs/socket-store/jest.config.ts",
+            "passWithNoTests": true
+         }
+      }
+   },
+   "tags": []
+}
