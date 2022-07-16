@@ -1,13 +1,10 @@
 import React, { useCallback } from 'react';
 import { CastBar } from '../mapContent/CastBar';
-import { useSelector } from 'react-redux';
-import { selectSpellChannels } from "../../stores";
 import _ from 'lodash';
 
-export const CastBarsManager = () => {
-   const spellChannels = useSelector(selectSpellChannels);
+export const CastBarsManager = ({ location, spellChannels }) => {
 
-   const renderCastBars = useCallback(() => _.map(spellChannels, (_, i) => <CastBar playerId={i} castBarData={spellChannels[i]} />), [spellChannels]);
+   const renderCastBars = _.map(spellChannels, (_, i) => <CastBar playerId={i} location={location} castBarData={spellChannels[i]} />);
 
-   return <>{renderCastBars()}</>;
+   return <>{renderCastBars}</>;
 };

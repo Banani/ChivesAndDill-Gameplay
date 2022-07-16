@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Stage, Sprite, Container, AppContext } from '@inlet/react-pixi';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
-import { getEngineState, selectActiveCharacterId, selectMapSchema } from '../stores';
+import { getEngineState, selectActiveCharacterId, selectMapSchema, selectSpellChannels } from '../stores';
 import _ from 'lodash';
 
 import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
@@ -26,6 +26,7 @@ const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
    const engineState = useSelector(getEngineState);
    const mapSchema = useSelector(selectMapSchema);
+   const spellChannels = useSelector(selectSpellChannels);
    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
 
    const renderSpells = useCallback(
@@ -96,7 +97,7 @@ const Map = () => {
                                  <FloatingNumbersManager />
                                  <BlinkSpellEffect />
                                  <BloodPoolManager />
-                                 <CastBarsManager />
+                                 <CastBarsManager location={engineState?.characterMovements.data[activePlayerId]?.location} spellChannels={spellChannels} />
                                  <ErrorMessages />
                                  <NextLevelManager />
                               </Container>
