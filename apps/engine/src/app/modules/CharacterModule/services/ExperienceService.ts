@@ -91,7 +91,7 @@ export class ExperienceService extends EventParser {
       this.engineEventCrator.asyncCeateEvent<AddExperienceEvent>({
          type: CharacterEngineEvents.AddExperience,
          characterId: event.killerId,
-         amount: 100,
+         amount: 250,
          experienceGainDetails: {
             type: ExperienceGainSource.MonsterKill,
             monsterId: event.characterId,
