@@ -21,7 +21,6 @@ import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
 import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
 import { Chat } from './guiContent/chat/Chat';
 import { NextLevelManager } from './mapContent/NextLevelManager';
-import { MapSchema } from '@bananos/types';
 
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
@@ -93,11 +92,11 @@ const Map = () => {
                                  <AreasSpellsEffectsManager />
                                  <AreasManager />
                                  {renderSpells()}
-                                 <CastBarsManager />
                                  <RenderPlayersManager />
                                  <FloatingNumbersManager />
                                  <BlinkSpellEffect />
                                  <BloodPoolManager />
+                                 <CastBarsManager />
                                  <ErrorMessages />
                                  <NextLevelManager />
                               </Container>
