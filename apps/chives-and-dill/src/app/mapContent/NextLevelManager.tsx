@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { Text } from '@inlet/react-pixi';
+import { Text, Graphics } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import { selectActiveCharacterId, selectCharacters, getCharactersMovements, getEngineState } from '../../stores';
 import { EngineEventType } from '@bananos/types';
@@ -37,8 +37,19 @@ export const NextLevelManager = () => {
       }, 3000);
    }, [characterLevel]);
 
+   const drawLines = useCallback((g) => {
+      g.clear();
+      g.lineStyle(1, 0xfac20a, 1);
+      g.moveTo(messageLocation.x - 150, messageLocation.y - 80);
+      g.lineTo(messageLocation.x + 260, messageLocation.y - 80);
+
+      g.moveTo(messageLocation.x - 150, messageLocation.y + 80);
+      g.lineTo(messageLocation.x + 260, messageLocation.y + 80);
+   }, [characterMovements]);
+
    return characterLevel ? (
       <>
+         <Graphics draw={drawLines} />
          <Text
             text={"You've Reached"}
             x={messageLocation.x - 40}
@@ -49,6 +60,11 @@ export const NextLevelManager = () => {
                   fill: '#e8e8e8',
                   stroke: '#000000',
                   strokeThickness: 2,
+                  dropShadow: true,
+                  dropShadowColor: '#363837',
+                  dropShadowBlur: 4,
+                  dropShadowAngle: Math.PI / 6,
+                  dropShadowDistance: 6,
                })
             }
          />
@@ -63,6 +79,11 @@ export const NextLevelManager = () => {
                   fill: '#fac20a',
                   stroke: '#000000',
                   strokeThickness: 3,
+                  dropShadow: true,
+                  dropShadowColor: '#363837',
+                  dropShadowBlur: 6,
+                  dropShadowAngle: Math.PI / 6,
+                  dropShadowDistance: 3,
                })
             }
          />
