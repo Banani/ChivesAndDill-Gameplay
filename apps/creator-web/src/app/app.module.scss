@@ -1,0 +1,16 @@
+.app-view {
+    display: flex;
+    flex:1;
+
+    .control-panel {
+        flex: 1;
+        box-shadow: 1px 2px 3px #999;
+        padding: 10px;
+    }
+    
+    .map-editor {
+        flex: 5;
+        margin: 20px;
+    }
+}
+
