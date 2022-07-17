@@ -1,0 +1,17 @@
+.MoneyBar {
+  display: flex;
+  position: absolute;
+  bottom: 50px;
+  right: 20px;
+  color: white;
+  justify-content: space-between;
+
+  .MoneyTypeContainer {
+    display: flex;
+    position: relative;
+    
+    .MoneyAmount {
+      margin: 0 4px 0 8px;
+    }
+  }
+}

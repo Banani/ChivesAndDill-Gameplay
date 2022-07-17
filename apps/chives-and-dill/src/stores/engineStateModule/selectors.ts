@@ -18,4 +18,6 @@ export const selectMapSchema = (state: EngineAwareState) => state.engineStateMod
 
 export const getExperience = (state: EngineAwareState) => state.engineStateModule.experience.data;
 
+export const getCurrency = (state: EngineAwareState) => state.engineStateModule.currency.data;
+
 export const getCharactersMovements = (state: EngineAwareState) => state.engineStateModule.characterMovements.data
