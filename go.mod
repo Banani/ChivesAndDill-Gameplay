@@ -8,6 +8,7 @@ require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/gookit/config/v2 v2.1.2 // indirect
 	github.com/gookit/goutil v0.5.2 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/kamva/mgm/v3 v3.4.1 // indirect

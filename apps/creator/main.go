@@ -6,12 +6,25 @@ import (
 	"log"
 	"time"
 
+	"net/http"
+
 	"github.com/gookit/config/v2"
 	"github.com/gookit/config/v2/yaml"
+	"github.com/gorilla/websocket"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		origin := r.Header.Get("Origin")
+		fmt.Println(origin)
+		return origin == "http://localhost:4200"
+	},
+}
 
 func main() {
 	config.WithOptions(config.ParseEnv)
@@ -43,4 +56,27 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(sprites)
+
+	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
+		(w).Header().Set("Access-Control-Allow-Origin", "*")
+		conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
+
+		for {
+			// Read message from browser
+			_, msg, err := conn.ReadMessage()
+			if err != nil {
+				return
+			}
+
+			// Print the message to the console
+			fmt.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
+
+			// Write message back to browser
+			// if err = conn.WriteMessage(msgType, msg); err != nil {
+			// 	return
+			// }
+		}
+	})
+
+	http.ListenAndServe(":8080", nil)
 }

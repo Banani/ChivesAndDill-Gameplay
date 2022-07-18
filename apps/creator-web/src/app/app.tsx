@@ -6,6 +6,11 @@ import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 
 import styles from './app.module.scss';
+import { SocketModule, SocketAwareState } from 'libs/socket-store/src';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux-dynamic-modules-core';
+import { IModuleStore } from 'redux-dynamic-modules';
+import SocketCommunicator from './socketCommunicator';
 
 const darkTheme = createTheme({
    palette: {
@@ -16,89 +21,99 @@ const darkTheme = createTheme({
    },
 });
 
+const store: IModuleStore<SocketAwareState> = createStore(
+   {
+      initialState: {},
+      extensions: [],
+   },
+   SocketModule
+);
+
 export function App() {
    return (
-      <>
-         <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
-            <AppBar className={styles['app-bar']} position="static">
-               <Toolbar>
-                  <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                     Creator
-                  </Typography>
-               </Toolbar>
-            </AppBar>
-            <div className={styles['app-view']}>
-               <div className={styles['control-panel']}>
-                  <ImageList cols={3}>
-                     <ImageListItem>
-                        <img src={`https://a.allegroimg.com/s1024/0c6dd0/f2e4c2034ec397baf5f831538dbd`} loading="lazy" onClick={() => console.log(122)} />
-                        <ImageListItemBar
-                           title={'Fire sword'}
-                           actionIcon={
-                              <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
-                                 <EditIcon />
-                              </IconButton>
-                           }
-                        />
-                     </ImageListItem>
-                     <ImageListItem>
-                        <img src={`https://a.allegroimg.com/s1024/0c6dd0/f2e4c2034ec397baf5f831538dbd`} loading="lazy" />
-                        <ImageListItemBar
-                           title={'Fire sword'}
-                           actionIcon={
-                              <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
-                                 <EditIcon />
-                              </IconButton>
-                           }
-                        />
-                     </ImageListItem>
-                     <ImageListItem>
-                        <img src={`https://a.allegroimg.com/s1024/0c6dd0/f2e4c2034ec397baf5f831538dbd`} loading="lazy" />
-                        <ImageListItemBar
-                           title={'Fire sword'}
-                           actionIcon={
-                              <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
-                                 <EditIcon />
-                              </IconButton>
-                           }
-                        />
-                     </ImageListItem>
-                     <ImageListItem>
-                        <img src={`https://a.allegroimg.com/s1024/0c6dd0/f2e4c2034ec397baf5f831538dbd`} loading="lazy" />
-                        <ImageListItemBar
-                           title={'Fire sword'}
-                           actionIcon={
-                              <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
-                                 <EditIcon />
-                              </IconButton>
-                           }
-                        />
-                     </ImageListItem>
-                     <ImageListItem>
-                        <img src={`https://a.allegroimg.com/s1024/0c6dd0/f2e4c2034ec397baf5f831538dbd`} loading="lazy" />
-                        <ImageListItemBar
-                           title={'Fire sword'}
-                           actionIcon={
-                              <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
-                                 <EditIcon />
-                              </IconButton>
-                           }
-                        />
-                     </ImageListItem>
-                  </ImageList>
+      <Provider store={store}>
+         <SocketCommunicator>
+            <ThemeProvider theme={darkTheme}>
+               <CssBaseline />
+               <AppBar className={styles['app-bar']} position="static">
+                  <Toolbar>
+                     <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+                        Creator
+                     </Typography>
+                  </Toolbar>
+               </AppBar>
+               <div className={styles['app-view']}>
+                  <div className={styles['control-panel']}>
+                     <ImageList cols={3}>
+                        <ImageListItem>
+                           <img src={`https://a.allegroimg.com/s1024/0c6dd0/f2e4c2034ec397baf5f831538dbd`} loading="lazy" onClick={() => console.log(122)} />
+                           <ImageListItemBar
+                              title={'Fire sword'}
+                              actionIcon={
+                                 <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
+                                    <EditIcon />
+                                 </IconButton>
+                              }
+                           />
+                        </ImageListItem>
+                        <ImageListItem>
+                           <img src={`https://a.allegroimg.com/s1024/0c6dd0/f2e4c2034ec397baf5f831538dbd`} loading="lazy" />
+                           <ImageListItemBar
+                              title={'Fire sword'}
+                              actionIcon={
+                                 <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
+                                    <EditIcon />
+                                 </IconButton>
+                              }
+                           />
+                        </ImageListItem>
+                        <ImageListItem>
+                           <img src={`https://a.allegroimg.com/s1024/0c6dd0/f2e4c2034ec397baf5f831538dbd`} loading="lazy" />
+                           <ImageListItemBar
+                              title={'Fire sword'}
+                              actionIcon={
+                                 <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
+                                    <EditIcon />
+                                 </IconButton>
+                              }
+                           />
+                        </ImageListItem>
+                        <ImageListItem>
+                           <img src={`https://a.allegroimg.com/s1024/0c6dd0/f2e4c2034ec397baf5f831538dbd`} loading="lazy" />
+                           <ImageListItemBar
+                              title={'Fire sword'}
+                              actionIcon={
+                                 <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
+                                    <EditIcon />
+                                 </IconButton>
+                              }
+                           />
+                        </ImageListItem>
+                        <ImageListItem>
+                           <img src={`https://a.allegroimg.com/s1024/0c6dd0/f2e4c2034ec397baf5f831538dbd`} loading="lazy" />
+                           <ImageListItemBar
+                              title={'Fire sword'}
+                              actionIcon={
+                                 <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
+                                    <EditIcon />
+                                 </IconButton>
+                              }
+                           />
+                        </ImageListItem>
+                     </ImageList>
+                  </div>
+                  <Paper className={styles['map-editor']}>
+                     asdassdaaaaaaaaadsad <br />
+                     asdassdaaaaaaaaadsad <br />
+                     asdassdaaaaaaaaadsad <br />
+                     asdassdaaaaaaaaadsad <br />
+                     asdassdaaaaaaaaadsad <br />
+                     asdassdaaaaaaaaadsad <br />
+                  </Paper>
                </div>
-               <Paper className={styles['map-editor']}>
-                  asdassdaaaaaaaaadsad <br />
-                  asdassdaaaaaaaaadsad <br />
-                  asdassdaaaaaaaaadsad <br />
-                  asdassdaaaaaaaaadsad <br />
-                  asdassdaaaaaaaaadsad <br />
-                  asdassdaaaaaaaaadsad <br />
-               </Paper>
-            </div>
-         </ThemeProvider>
-      </>
+            </ThemeProvider>
+         </SocketCommunicator>
+      </Provider>
    );
 }
 
