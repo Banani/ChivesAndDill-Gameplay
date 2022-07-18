@@ -1,7 +1,9 @@
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler } from '../../../types';
-import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { AddCurrencyToCharacterEvent, CurrencyAmountUpdatedEvent, ItemEngineEvents, RemoveCurrencyFromCharacterEvent } from '../Events';
+import type { EngineEventHandler } from '../../../types';
+import type { PlayerCharacterCreatedEvent} from '../../PlayerModule/Events';
+import { PlayerEngineEvents } from '../../PlayerModule/Events';
+import type { AddCurrencyToCharacterEvent, CurrencyAmountUpdatedEvent, RemoveCurrencyFromCharacterEvent } from '../Events';
+import { ItemEngineEvents } from '../Events';
 
 export class CurrencyService extends EventParser {
    private currencyTracks: Record<string, number> = {};
@@ -16,7 +18,7 @@ export class CurrencyService extends EventParser {
    }
 
    handleNewPlayerCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event }) => {
-      this.currencyTracks[event.playerCharacter.id] = 45323245;
+      this.currencyTracks[event.playerCharacter.id] = 243798;
 
       this.engineEventCrator.asyncCeateEvent<CurrencyAmountUpdatedEvent>({
          type: ItemEngineEvents.CurrencyAmountUpdated,
