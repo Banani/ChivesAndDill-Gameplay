@@ -102,9 +102,9 @@ const Map = () => {
                                  <BloodPoolManager />
                                  <CastBarsManager location={engineState?.characterMovements.data[activePlayerId]?.location} spellChannels={spellChannels} />
                                  <ErrorMessages />
-                                 <NextLevelManager />
                               </Container>
                            )}
+                           <NextLevelManager experienceEvents={engineState.experience.events} />
                         </Provider>
                      )}
                   </AppContext.Consumer>
