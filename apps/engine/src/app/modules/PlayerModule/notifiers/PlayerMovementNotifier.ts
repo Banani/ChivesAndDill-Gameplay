@@ -38,6 +38,16 @@ export class PlayerMovementNotifier extends Notifier<Character> {
          },
       ]);
 
+      this.broadcastObjectsUpdate({
+         objects: {
+            [event.playerCharacter.id]: {
+               isInMove: event.playerCharacter.isInMove,
+               location: event.playerCharacter.location,
+               direction: event.playerCharacter.direction,
+            },
+         },
+      });
+
       currentSocket.on(CommonClientMessages.PlayerStartMove, (movement) => {
          this.engineEventCrator.asyncCeateEvent<PlayerTriesToStartedMovementEvent>({
             type: EngineEvents.PlayerTriesToStartedMovement,
