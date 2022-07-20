@@ -13,13 +13,6 @@ const Player = ({ player, characterViewsSettings }) => {
    const [characterStatus, setCharacterStatus] = useState('standingDown');
    const [isCharacterMoving, setIsCharacterMoving] = useState(false);
 
-   const powerPointsEvent = useSelector(selectCharacterPowerPointsEvents);
-   useEffect(() => {
-      //console.log(powerPointsEvent);
-   }, [powerPointsEvent]);
-   // PEEPEEPOOPOO: if when someone will be hit, then this will contain information about this hit. In that case you should display floating number of lost hp points.
-   // Please keep in mind that at one point of time it can have one than one object, when two characters will be hit at the same time, or if one character will be hit twice
-
    const sheet = PIXI.BaseTexture.from(`../assets${characterViewsSettings[player.sprites].image}`);
    const playerSprite = characterViewsSettings[player.sprites];
    const w = playerSprite.spriteWidth;
