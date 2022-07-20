@@ -103,7 +103,7 @@ describe('BuyItemFromNpc action', () => {
 
       checkIfPackageIsValid(GlobalStoreModule.CURRENCY, dataPackage, {
          data: {
-            playerCharacter_1: 45322870,
+            playerCharacter_1: 243423,
          },
       });
    });

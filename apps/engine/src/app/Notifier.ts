@@ -119,10 +119,7 @@ export abstract class Notifier<T = never> extends EventParser {
          if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
             this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey };
          }
-
-         this.multicast.messages[dataUpdatePackage.receiverId].events = merge(
-            [],
-            this.multicast.messages[dataUpdatePackage.receiverId].events ?? [],
+         this.multicast.messages[dataUpdatePackage.receiverId].events = (this.multicast.messages[dataUpdatePackage.receiverId].events ?? []).concat(
             dataUpdatePackage.events
          );
       });

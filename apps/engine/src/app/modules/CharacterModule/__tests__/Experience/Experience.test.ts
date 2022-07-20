@@ -152,42 +152,6 @@ describe('Character experience', () => {
       });
    });
 
-   it('Player should be notifier when his character is gaining new level', () => {
-      const { engineManager, players } = setupEngine();
-
-      engineManager.createSystemAction<AddExperienceEvent>({
-         type: CharacterEngineEvents.AddExperience,
-         amount: 300,
-         characterId: players['1'].characterId,
-         experienceGainDetails: {
-            type: ExperienceGainSource.MonsterKill,
-            monsterId: '123',
-         },
-      });
-
-      const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
-         data: { playerCharacter_1: { experienceAmount: 50, level: 2, toNextLevel: 655 } },
-         events: [
-            {
-               type: EngineEventType.LevelChanged,
-               characterId: 'playerCharacter_1',
-               level: 2,
-            },
-            {
-               amount: 300,
-               characterId: 'playerCharacter_1',
-               type: CharacterClientEvents.ExperienceGain,
-               experienceGainDetails: {
-                  type: ExperienceGainSource.MonsterKill,
-                  monsterId: '123',
-               },
-            },
-         ],
-      });
-   });
-
    it('Player should be notifier about two level updated, when it happes', () => {
       const { engineManager, players } = setupEngine();
 
