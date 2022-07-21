@@ -6,24 +6,19 @@ import (
 	"log"
 	"time"
 
+	"encoding/json"
 	"net/http"
 
 	"github.com/gookit/config/v2"
 	"github.com/gookit/config/v2/yaml"
-	"github.com/gorilla/websocket"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool {
-		origin := r.Header.Get("Origin")
-		fmt.Println(origin)
-		return origin == "http://localhost:4200"
-	},
+type EnginePackage struct {
+	Data map[string]primitive.M `json:"data"`
 }
 
 func main() {
@@ -57,26 +52,27 @@ func main() {
 	}
 	fmt.Println(sprites)
 
-	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
-		(w).Header().Set("Access-Control-Allow-Origin", "*")
-		conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
+	spriteMap := make(map[string]primitive.M)
+	for _, sprite := range sprites {
+		spriteMap[sprite["_id"].(primitive.ObjectID).String()] = sprite
+	}
 
-		for {
-			// Read message from browser
-			_, msg, err := conn.ReadMessage()
-			if err != nil {
-				return
-			}
+	output := make(map[string]EnginePackage)
+	output["sprites"] = EnginePackage{Data: spriteMap}
 
-			// Print the message to the console
-			fmt.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
+	hub := newHub()
+	go hub.run()
 
-			// Write message back to browser
-			// if err = conn.WriteMessage(msgType, msg); err != nil {
-			// 	return
-			// }
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		conn, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println(err)
+			return
 		}
+
+		converted, _ := json.Marshal(output)
+		conn.WriteJSON(string(converted))
 	})
 
-	http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

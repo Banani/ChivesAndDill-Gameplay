@@ -1,29 +1,36 @@
 import { EngineMessages } from '@bananos/types';
 import { newPackage } from 'libs/socket-store/src';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
+import { PackageContext } from './PackageContext';
 
 export const SocketContext = React.createContext(null);
 
 const SocketCommunicator = ({ children }: any) => {
    const [context, setContext] = useState<any>({});
+   const packageContext = useContext(PackageContext);
+
    const dispatch = useDispatch();
    useEffect(() => {
-      const URL = 'http://localhost:8080';
+      const URL = 'ws://localhost:8080';
+      const socket = new WebSocket(URL);
       setContext({
          ...context,
-         socket: io(URL, { autoConnect: true }),
+         socket,
       });
+      socket.onclose = function (...evt) {
+         console.log(evt);
+      };
+
+      socket.onmessage = (...message) => {
+         packageContext.updatePackage(JSON.parse(JSON.parse(message[0].data)));
+      };
    }, []);
 
    useEffect(() => {
-      if (context.socket) {
-         context.socket.on(EngineMessages.Package, (event: any) => {
-            dispatch(newPackage(event));
-         });
-      }
-   }, [context]);
+      console.log(packageContext.backendStore);
+   }, [packageContext.backendStore]);
 
    return <SocketContext.Provider value={context}>{children}</SocketContext.Provider>;
 };
