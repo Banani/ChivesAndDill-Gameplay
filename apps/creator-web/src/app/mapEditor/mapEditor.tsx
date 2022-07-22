@@ -3,10 +3,11 @@ import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 
-import styles from './app.module.scss';
 import { useContext } from 'react';
-import { PackageContext } from './PackageContext';
+import { PackageContext } from '../PackageContext';
 import { map } from 'lodash';
+
+import styles from './mapEditor.module.scss';
 
 export const MapEditor = () => {
    const packageContext = useContext(PackageContext);
@@ -25,7 +26,15 @@ export const MapEditor = () => {
                <ImageList cols={2}>
                   {map(packageContext?.backendStore?.sprites?.data, (sprite) => (
                      <ImageListItem>
-                        <img src={'./assets/' + sprite.spriteSheet} loading="lazy" onClick={() => console.log(122)} />
+                        <div className={styles['imageHolder']}>
+                           <img
+                              style={{ marginLeft: `${-sprite.x * 100}%`, marginTop: `${-sprite.y * 100}%` }}
+                              className={styles['image']}
+                              src={'./assets/' + sprite.spriteSheet}
+                              loading="lazy"
+                              onClick={() => console.log(122)}
+                           />
+                        </div>
                         <ImageListItemBar
                            title={'-'}
                            actionIcon={

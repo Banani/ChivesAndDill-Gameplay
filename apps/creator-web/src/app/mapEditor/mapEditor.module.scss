@@ -17,4 +17,9 @@
 .imageHolder {
     width: 96px;
     height: 96px;
+    overflow: hidden;
+
+    .image {
+        width: calc(384px * 3);
+    }
 }

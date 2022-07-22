@@ -7,7 +7,7 @@ import { createStore } from 'redux-dynamic-modules-core';
 import { IModuleStore } from 'redux-dynamic-modules';
 import SocketCommunicator from './socketCommunicator';
 import { PackageContextProvider } from './PackageContext';
-import { MapEditor } from './mapEditor';
+import { MapEditor } from './mapEditor/mapEditor';
 
 const darkTheme = createTheme({
    palette: {
