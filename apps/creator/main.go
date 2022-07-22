@@ -11,6 +11,7 @@ import (
 
 	"github.com/gookit/config/v2"
 	"github.com/gookit/config/v2/yaml"
+	"github.com/gorilla/websocket"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,6 +21,16 @@ import (
 type EnginePackage struct {
 	Data map[string]primitive.M `json:"data"`
 }
+
+type EnginePackageStringArray struct {
+	Data map[string][]string `json:"data"`
+}
+
+var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {
+	origin := r.Header.Get("Origin")
+	fmt.Println(origin)
+	return origin == "http://localhost:4200"
+}}
 
 func main() {
 	config.WithOptions(config.ParseEnv)
@@ -57,11 +68,17 @@ func main() {
 		spriteMap[sprite["_id"].(primitive.ObjectID).String()] = sprite
 	}
 
-	output := make(map[string]EnginePackage)
-	output["sprites"] = EnginePackage{Data: spriteMap}
+	spriteMapPackage := make(map[string]EnginePackage)
+	spriteMapPackage["sprites"] = EnginePackage{Data: spriteMap}
 
-	hub := newHub()
-	go hub.run()
+	mapFields := make(map[string][]string)
+	mapFields["2:0"] = []string{"1"}
+	mapFields["2:5"] = []string{"2"}
+	mapFields["7:3"] = []string{"1"}
+	mapFields["8:2"] = []string{"2"}
+
+	mapFieldPackage := make(map[string]EnginePackageStringArray)
+	mapFieldPackage["map"] = EnginePackageStringArray{Data: mapFields}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		conn, err := upgrader.Upgrade(w, r, nil)
@@ -70,8 +87,11 @@ func main() {
 			return
 		}
 
-		converted, _ := json.Marshal(output)
+		converted, _ := json.Marshal(spriteMapPackage)
 		conn.WriteJSON(string(converted))
+
+		convertedMapField, _ := json.Marshal(mapFieldPackage)
+		conn.WriteJSON(string(convertedMapField))
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))

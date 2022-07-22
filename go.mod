@@ -5,7 +5,10 @@ go 1.18
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
+	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/snappy v0.0.1 // indirect
+	github.com/gomodule/redigo v1.8.4 // indirect
+	github.com/googollee/go-socket.io v1.6.2 // indirect
 	github.com/gookit/config/v2 v2.1.2 // indirect
 	github.com/gookit/goutil v0.5.2 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
@@ -28,6 +31,7 @@ require (
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
 	golang.org/x/text v0.3.5 // indirect
+	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
