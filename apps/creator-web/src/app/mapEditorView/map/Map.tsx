@@ -7,6 +7,7 @@ import { MapSprite } from './mapSprite/mapSprite';
 import { BLOCK_SIZE } from '../../consts';
 import { Texture } from 'pixi.js';
 import { PackageContext } from '../../PackageContext';
+import { SocketContext } from '../../socketCommunicator';
 
 const mapSchema = {
    '1': {
@@ -42,6 +43,7 @@ const mapSchema = {
 export const Map = () => {
    const [texturesMap, setTexturesMap] = useState<Record<string, Texture>>({});
    const packageContext = useContext(PackageContext);
+   const socketContext = useContext(SocketContext);
 
    useEffect(() => {
       const output: Record<string, Texture> = {};
@@ -59,9 +61,19 @@ export const Map = () => {
    }
 
    return (
-      <Stage width={900} height={600} options={{ backgroundColor: 0x000000, autoDensity: true }}>
-         {range(0, 10).map((x) =>
-            range(0, 10)
+      <Stage
+         width={900}
+         height={600}
+         options={{ backgroundColor: 0x000000, autoDensity: true }}
+         onClick={(e) => {
+            socketContext.updateMapField({
+               x: Math.floor(e.nativeEvent.offsetX / 32),
+               y: Math.floor(e.nativeEvent.offsetY / 32),
+            });
+         }}
+      >
+         {range(0, 100).map((x) =>
+            range(0, 100)
                .filter((y) => !!packageContext.backendStore.map.data[`${x}:${y}`])
                .map((y) =>
                   packageContext.backendStore.map.data[`${x}:${y}`].map((spriteId: string, i: string) => (

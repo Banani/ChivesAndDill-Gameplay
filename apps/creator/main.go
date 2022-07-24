@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
-	"encoding/json"
 	"net/http"
 
 	"github.com/gookit/config/v2"
@@ -31,6 +32,76 @@ var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {
 	fmt.Println(origin)
 	return origin == "http://localhost:4200"
 }}
+
+type User struct {
+	services *Services
+	conn     *websocket.Conn
+}
+
+func (u *User) writer() {
+	defer func() {
+		u.conn.Close()
+	}()
+
+	for {
+		select {
+		case updateMapField := <-u.services.mapFieldService.update:
+			u.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+			mapFields := make(map[string][]string)
+			mapFields[strconv.Itoa(updateMapField.X)+":"+strconv.Itoa(updateMapField.Y)] = []string{updateMapField.SpriteId}
+
+			mapFieldPackage := make(map[string]EnginePackageStringArray)
+			mapFieldPackage["map"] = EnginePackageStringArray{Data: mapFields}
+
+			err := u.conn.WriteJSON(mapFieldPackage)
+			fmt.Println(err)
+		}
+	}
+}
+
+func (u *User) reader() {
+	defer func() {
+		u.conn.Close()
+	}()
+
+	for {
+		_, message, err := u.conn.ReadMessage()
+		if err != nil {
+			log.Printf("Error: %v", err)
+		}
+
+		var updateMapField UpdateMapField
+		json.Unmarshal(message, &updateMapField)
+		u.services.mapFieldService.update <- UpdateMapField{X: updateMapField.X, Y: updateMapField.Y, SpriteId: "1"}
+	}
+}
+
+type Services struct {
+	mapFieldService *MapFieldsService
+}
+
+type UpdateMapField struct {
+	X        int `json:"x"`
+	Y        int `json:"y"`
+	SpriteId string
+}
+
+type MapFieldsService struct {
+	mapFields map[string][]string
+	update    chan UpdateMapField
+	updated   chan UpdateMapField
+}
+
+func (service *MapFieldsService) serve() {
+	for {
+		select {
+		case updateMapField := <-service.update:
+			service.mapFields[strconv.Itoa(updateMapField.X)+":"+strconv.Itoa(updateMapField.Y)] = []string{updateMapField.SpriteId}
+			fmt.Println(service.mapFields)
+			service.updated <- updateMapField
+		}
+	}
+}
 
 func main() {
 	config.WithOptions(config.ParseEnv)
@@ -80,6 +151,10 @@ func main() {
 	mapFieldPackage := make(map[string]EnginePackageStringArray)
 	mapFieldPackage["map"] = EnginePackageStringArray{Data: mapFields}
 
+	mapFieldsService := MapFieldsService{mapFields: mapFields, update: make(chan UpdateMapField, 256)}
+	go mapFieldsService.serve()
+	services := Services{mapFieldService: &mapFieldsService}
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
@@ -87,11 +162,13 @@ func main() {
 			return
 		}
 
-		converted, _ := json.Marshal(spriteMapPackage)
-		conn.WriteJSON(string(converted))
+		user := User{conn: conn, services: &services}
 
-		convertedMapField, _ := json.Marshal(mapFieldPackage)
-		conn.WriteJSON(string(convertedMapField))
+		go user.reader()
+		go user.writer()
+
+		conn.WriteJSON(spriteMapPackage)
+		conn.WriteJSON(mapFieldPackage)
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))

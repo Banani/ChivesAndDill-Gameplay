@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { PackageContext } from './PackageContext';
 
-export const SocketContext = React.createContext(null);
+export const SocketContext = React.createContext<any>(null);
 
 const SocketCommunicator = ({ children }: any) => {
    const [socket, setSocket] = useState<any>({});
@@ -17,11 +17,18 @@ const SocketCommunicator = ({ children }: any) => {
       };
 
       socket.onmessage = (message: any) => {
-         packageContext.updatePackage(JSON.parse(JSON.parse(message.data)));
+         packageContext.updatePackage(JSON.parse(message.data));
       };
    }, []);
 
-   return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
+   const updateMapField = useCallback(
+      ({ x, y }) => {
+         socket.send(JSON.stringify({ x, y }));
+      },
+      [socket]
+   );
+
+   return <SocketContext.Provider value={{ socket, updateMapField }}>{children}</SocketContext.Provider>;
 };
 
 export default SocketCommunicator;
