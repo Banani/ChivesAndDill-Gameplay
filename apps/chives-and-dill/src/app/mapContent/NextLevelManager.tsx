@@ -1,12 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { Text, Graphics, useApp } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
-import { EngineEventType, EnginePackageEvent } from '@bananos/types';
+import { selectActiveCharacterId } from "../../stores";
+import type { EnginePackageEvent } from '@bananos/types';
+import { EngineEventType } from '@bananos/types';
 
 export const NextLevelManager = React.memo<{ experienceEvents: EnginePackageEvent[] }>(
    ({ experienceEvents }) => {
       const [characterLevel, setCharacterLevel] = useState(0);
+      const [characterId, setCharacterId] = useState('');
       const [messageLocation, setMessageLocation] = useState({ x: 300, y: 300 });
+      const activePlayerId = useSelector(selectActiveCharacterId);
       const app = useApp();
 
       useEffect(() => {
@@ -18,6 +23,7 @@ export const NextLevelManager = React.memo<{ experienceEvents: EnginePackageEven
             if (event.type === EngineEventType.LevelChanged) {
                if (event.level > characterLevel) {
                   setCharacterLevel(event.level);
+                  setCharacterId(event.characterId);
                }
             }
          });
@@ -42,7 +48,7 @@ export const NextLevelManager = React.memo<{ experienceEvents: EnginePackageEven
          [messageLocation]
       );
 
-      return characterLevel ? (
+      return characterLevel && characterId === activePlayerId ? (
          <>
             <Graphics draw={drawLines} />
             <Text
