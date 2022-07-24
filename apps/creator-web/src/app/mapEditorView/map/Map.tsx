@@ -104,11 +104,14 @@ export const Map = () => {
                )
          )}
          {mousePosition && (
-            <Rectangle
-               color={'fff'}
-               location={{ x: mousePosition?.x - (mousePosition?.x % 32) - 1, y: mousePosition?.y - (mousePosition?.y % 32) - 1 }}
-               size={{ width: 34, height: 34 }}
-            />
+            <>
+               <Rectangle
+                  color={'33aa33'}
+                  location={{ x: mousePosition?.x - (mousePosition?.x % 32) - 2, y: mousePosition?.y - (mousePosition?.y % 32) - 2 }}
+                  size={{ width: 36, height: 36 }}
+               />
+               <MapSprite texture={texturesMap['1']} location={{ x: Math.floor(mousePosition?.x / 32), y: Math.floor(mousePosition?.y / 32) }} />
+            </>
          )}
       </Stage>
    );

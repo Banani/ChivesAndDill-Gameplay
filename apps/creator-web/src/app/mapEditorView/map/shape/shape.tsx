@@ -16,7 +16,7 @@ export const Rectangle: FunctionComponent<ShapeProps> = ({ location, color, size
    const draw = useCallback(
       (g) => {
          g.clear();
-         g.beginFill(0xff700b, 1);
+         g.beginFill('0x' + color, 1);
          g.drawRect(location.x, location.y, size.width, size.height);
       },
       [location, size]
