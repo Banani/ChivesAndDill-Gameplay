@@ -10,6 +10,7 @@ import { PackageContext } from '../../contexts/packageContext';
 import { SocketContext } from '../../contexts';
 import { MapEditorContext } from '../contexts/mapEditorContextProvider';
 import { Location } from '@bananos/types';
+import { Rectangle } from './shape/shape';
 
 const mapSchema = {
    '1': {
@@ -89,6 +90,9 @@ export const Map = () => {
                y: e.nativeEvent.offsetY,
             });
          }}
+         onMouseLeave={() => {
+            setMousePosition(null);
+         }}
       >
          {range(0, 100).map((x) =>
             range(0, 100)
@@ -98,6 +102,13 @@ export const Map = () => {
                      <MapSprite key={`${x}:${y}:${i}`} location={{ x, y }} texture={texturesMap[spriteId]} />
                   ))
                )
+         )}
+         {mousePosition && (
+            <Rectangle
+               color={'fff'}
+               location={{ x: mousePosition?.x - (mousePosition?.x % 32) - 1, y: mousePosition?.y - (mousePosition?.y % 32) - 1 }}
+               size={{ width: 34, height: 34 }}
+            />
          )}
       </Stage>
    );
