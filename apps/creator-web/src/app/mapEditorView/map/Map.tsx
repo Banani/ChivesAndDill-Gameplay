@@ -2,12 +2,14 @@ import { Stage } from '@inlet/react-pixi';
 import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import { range } from 'lodash';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { MapSprite } from './mapSprite/mapSprite';
 import { BLOCK_SIZE } from '../../consts';
 import { Texture } from 'pixi.js';
-import { PackageContext } from '../../PackageContext';
-import { SocketContext } from '../../socketCommunicator';
+import { PackageContext } from '../../contexts/packageContext';
+import { SocketContext } from '../../contexts';
+import { MapEditorContext } from '../contexts/mapEditorContextProvider';
+import { Location } from '@bananos/types';
 
 const mapSchema = {
    '1': {
@@ -42,8 +44,9 @@ const mapSchema = {
 
 export const Map = () => {
    const [texturesMap, setTexturesMap] = useState<Record<string, Texture>>({});
+   const [mousePosition, setMousePosition] = useState<Location | null>(null);
    const packageContext = useContext(PackageContext);
-   const socketContext = useContext(SocketContext);
+   const mapEditorContext = useContext(MapEditorContext);
 
    useEffect(() => {
       const output: Record<string, Texture> = {};
@@ -56,6 +59,20 @@ export const Map = () => {
       setTexturesMap(output);
    }, []);
 
+   const mapClick = useCallback(
+      (e) => {
+         if (mapEditorContext.activeSprite) {
+            mapEditorContext.updateMapField({
+               x: Math.floor(e.nativeEvent.offsetX / 32),
+               y: Math.floor(e.nativeEvent.offsetY / 32),
+            });
+         } else {
+            console.log('Nie wybrano sprite');
+         }
+      },
+      [mapEditorContext]
+   );
+
    if (!Object.keys(texturesMap).length || !packageContext?.backendStore?.map) {
       return <></>;
    }
@@ -65,10 +82,11 @@ export const Map = () => {
          width={900}
          height={600}
          options={{ backgroundColor: 0x000000, autoDensity: true }}
-         onClick={(e) => {
-            socketContext.updateMapField({
-               x: Math.floor(e.nativeEvent.offsetX / 32),
-               y: Math.floor(e.nativeEvent.offsetY / 32),
+         onClick={mapClick}
+         onMouseMove={(e) => {
+            setMousePosition({
+               x: e.nativeEvent.offsetX,
+               y: e.nativeEvent.offsetY,
             });
          }}
       >

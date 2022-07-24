@@ -9,11 +9,17 @@
 
     
 .imageHolder {
-    width: 96px;
-    height: 96px;
+    width: calc(96px + 12px);
+    height: calc(96px + 12px);
     overflow: hidden;
-
+    box-sizing: border-box;
+    border: 6px solid #CCC;
+    
     .image {
         width: calc(384px * 3);
+    }
+
+    &.active {
+        border: 6px solid #1976D3;
     }
 }

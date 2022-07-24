@@ -1,9 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { PackageContext } from './PackageContext';
+import React, { useContext, useEffect, useState } from 'react';
+import { PackageContext } from './packageContext';
 
 export const SocketContext = React.createContext<any>(null);
 
-const SocketCommunicator = ({ children }: any) => {
+export const SocketCommunicator = ({ children }: any) => {
    const [socket, setSocket] = useState<any>({});
    const packageContext = useContext(PackageContext);
 
@@ -21,14 +21,5 @@ const SocketCommunicator = ({ children }: any) => {
       };
    }, []);
 
-   const updateMapField = useCallback(
-      ({ x, y }) => {
-         socket.send(JSON.stringify({ x, y }));
-      },
-      [socket]
-   );
-
-   return <SocketContext.Provider value={{ socket, updateMapField }}>{children}</SocketContext.Provider>;
+   return <SocketContext.Provider value={{ socket }}>{children}</SocketContext.Provider>;
 };
-
-export default SocketCommunicator;

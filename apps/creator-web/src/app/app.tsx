@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import SocketCommunicator from './socketCommunicator';
-import { PackageContextProvider } from './PackageContext';
+import { SocketCommunicator, PackageContext } from './contexts';
+import { PackageContextProvider } from './contexts/packageContext';
 import { MapEditor } from './mapEditorView/mapEditor';
 
 const darkTheme = createTheme({
