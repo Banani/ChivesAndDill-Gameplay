@@ -8,8 +8,8 @@ export const MapEditorContextProvider = ({ children }: any) => {
    const [activeSprite, setActiveSprite] = useState<null>();
 
    const updateMapField = useCallback(
-      ({ x, y }) => {
-         socket.send(JSON.stringify({ x, y }));
+      ({ x, y, spriteId }) => {
+         socket.send(JSON.stringify({ x, y, spriteId }));
       },
       [socket]
    );

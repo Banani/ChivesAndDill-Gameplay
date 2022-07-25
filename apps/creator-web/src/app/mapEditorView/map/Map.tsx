@@ -68,6 +68,7 @@ export const Map = () => {
             mapEditorContext.updateMapField({
                x: Math.floor(e.nativeEvent.offsetX / 32),
                y: Math.floor(e.nativeEvent.offsetY / 32),
+               spriteId: mapEditorContext.activeSprite,
             });
          } else {
             console.log('Nie wybrano sprite');
