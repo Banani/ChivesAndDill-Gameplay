@@ -3,47 +3,15 @@ import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import { range } from 'lodash';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { MapSprite } from './mapSprite/mapSprite';
+import { MapSprite } from './mapSprite';
 import { BLOCK_SIZE } from '../../consts';
 import { Texture } from 'pixi.js';
 import { PackageContext } from '../../contexts/packageContext';
-import { SocketContext } from '../../contexts';
 import { MapEditorContext } from '../contexts/mapEditorContextProvider';
 import { Location } from '@bananos/types';
 import { Rectangle } from './shape/shape';
 
-import styles from './Map.module.scss';
-
-const mapSchema = {
-   'ObjectID("62d2f43587803a92bd861ca3")': {
-      path: '../../../assets/293455953_3410615272514371_4647754778913308020_n.png',
-      location: {
-         y: 4 * BLOCK_SIZE,
-         x: 4 * BLOCK_SIZE,
-      },
-   },
-   'ObjectID("62d9b9db156416ecaf66beaf")': {
-      path: '../../../assets/293455953_3410615272514371_4647754778913308020_n.png',
-      location: {
-         y: 4 * BLOCK_SIZE,
-         x: 5 * BLOCK_SIZE,
-      },
-   },
-   'ObjectID("62d9b9f1156416ecaf66beb0")': {
-      path: '../../../assets/293455953_3410615272514371_4647754778913308020_n.png',
-      location: {
-         y: 4 * BLOCK_SIZE,
-         x: 6 * BLOCK_SIZE,
-      },
-   },
-   'ObjectID("62d9b82e156416ecaf66bead")': {
-      path: '../../../assets/293455953_3410615272514371_4647754778913308020_n.png',
-      location: {
-         y: 4 * BLOCK_SIZE,
-         x: 7 * BLOCK_SIZE,
-      },
-   },
-};
+import styles from './map.module.scss';
 
 export const Map = () => {
    const [texturesMap, setTexturesMap] = useState<Record<string, Texture>>({});

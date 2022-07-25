@@ -3,7 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import { MapEditorContextProvider } from './contexts/mapEditorContextProvider';
 
-import { Map } from './map/map';
+import { Map } from './map';
 
 import styles from './mapEditor.module.scss';
 import { SpritePanel } from './spritePanel/spritePanel';
