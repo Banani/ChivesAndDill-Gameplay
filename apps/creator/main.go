@@ -72,7 +72,7 @@ func (u *User) reader() {
 
 		var updateMapField UpdateMapField
 		json.Unmarshal(message, &updateMapField)
-		u.services.mapFieldService.update <- UpdateMapField{X: updateMapField.X, Y: updateMapField.Y, SpriteId: "1"}
+		u.services.mapFieldService.update <- UpdateMapField{X: updateMapField.X, Y: updateMapField.Y, SpriteId: "ObjectID(\"62d2f43587803a92bd861ca3\")"}
 	}
 }
 
@@ -143,10 +143,10 @@ func main() {
 	spriteMapPackage["sprites"] = EnginePackage{Data: spriteMap}
 
 	mapFields := make(map[string][]string)
-	mapFields["2:0"] = []string{"1"}
-	mapFields["2:5"] = []string{"2"}
-	mapFields["7:3"] = []string{"1"}
-	mapFields["8:2"] = []string{"2"}
+	mapFields["2:0"] = []string{"ObjectID(\"62d2f43587803a92bd861ca3\")"}
+	mapFields["2:5"] = []string{"ObjectID(\"62d2f43587803a92bd861ca3\")"}
+	mapFields["7:3"] = []string{"ObjectID(\"62d2f43587803a92bd861ca3\")"}
+	mapFields["8:2"] = []string{"ObjectID(\"62d2f43587803a92bd861ca3\")"}
 
 	mapFieldPackage := make(map[string]EnginePackageStringArray)
 	mapFieldPackage["map"] = EnginePackageStringArray{Data: mapFields}

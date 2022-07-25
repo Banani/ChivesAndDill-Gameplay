@@ -12,29 +12,31 @@ import { MapEditorContext } from '../contexts/mapEditorContextProvider';
 import { Location } from '@bananos/types';
 import { Rectangle } from './shape/shape';
 
+import styles from './Map.module.scss';
+
 const mapSchema = {
-   '1': {
+   'ObjectID("62d2f43587803a92bd861ca3")': {
       path: '../../../assets/293455953_3410615272514371_4647754778913308020_n.png',
       location: {
          y: 4 * BLOCK_SIZE,
          x: 4 * BLOCK_SIZE,
       },
    },
-   '2': {
+   'ObjectID("62d9b9db156416ecaf66beaf")': {
       path: '../../../assets/293455953_3410615272514371_4647754778913308020_n.png',
       location: {
          y: 4 * BLOCK_SIZE,
          x: 5 * BLOCK_SIZE,
       },
    },
-   '3': {
+   'ObjectID("62d9b9f1156416ecaf66beb0")': {
       path: '../../../assets/293455953_3410615272514371_4647754778913308020_n.png',
       location: {
          y: 4 * BLOCK_SIZE,
          x: 6 * BLOCK_SIZE,
       },
    },
-   '4': {
+   'ObjectID("62d9b82e156416ecaf66bead")': {
       path: '../../../assets/293455953_3410615272514371_4647754778913308020_n.png',
       location: {
          y: 4 * BLOCK_SIZE,
@@ -52,13 +54,13 @@ export const Map = () => {
    useEffect(() => {
       const output: Record<string, Texture> = {};
 
-      _.forEach(mapSchema, (mapElement, key) => {
-         const baseTexture = PIXI.BaseTexture.from(mapElement.path);
-         output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.location.x + 1, mapElement.location.y + 1, 30, 30));
+      _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
+         const baseTexture = PIXI.BaseTexture.from('../../../assets/' + mapElement.spriteSheet);
+         output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.x * BLOCK_SIZE + 1, mapElement.y * BLOCK_SIZE + 1, 30, 30));
       });
-
+      console.log(output);
       setTexturesMap(output);
-   }, []);
+   }, [packageContext?.backendStore?.sprites?.data]);
 
    const mapClick = useCallback(
       (e) => {
@@ -79,40 +81,45 @@ export const Map = () => {
    }
 
    return (
-      <Stage
-         width={900}
-         height={600}
-         options={{ backgroundColor: 0x000000, autoDensity: true }}
-         onClick={mapClick}
-         onMouseMove={(e) => {
-            setMousePosition({
-               x: e.nativeEvent.offsetX,
-               y: e.nativeEvent.offsetY,
-            });
-         }}
-         onMouseLeave={() => {
-            setMousePosition(null);
-         }}
-      >
-         {range(0, 100).map((x) =>
-            range(0, 100)
-               .filter((y) => !!packageContext.backendStore.map.data[`${x}:${y}`])
-               .map((y) =>
-                  packageContext.backendStore.map.data[`${x}:${y}`].map((spriteId: string, i: string) => (
-                     <MapSprite key={`${x}:${y}:${i}`} location={{ x, y }} texture={texturesMap[spriteId]} />
-                  ))
-               )
-         )}
-         {mousePosition && (
-            <>
-               <Rectangle
-                  color={'33aa33'}
-                  location={{ x: mousePosition?.x - (mousePosition?.x % 32) - 2, y: mousePosition?.y - (mousePosition?.y % 32) - 2 }}
-                  size={{ width: 36, height: 36 }}
-               />
-               <MapSprite texture={texturesMap['1']} location={{ x: Math.floor(mousePosition?.x / 32), y: Math.floor(mousePosition?.y / 32) }} />
-            </>
-         )}
-      </Stage>
+      <div className={styles['stage']}>
+         <Stage
+            width={900}
+            height={600}
+            options={{ backgroundColor: 0x000000, autoDensity: true }}
+            onClick={mapClick}
+            onMouseMove={(e) => {
+               setMousePosition({
+                  x: e.nativeEvent.offsetX,
+                  y: e.nativeEvent.offsetY,
+               });
+            }}
+            onMouseLeave={() => {
+               setMousePosition(null);
+            }}
+         >
+            {range(0, 100).map((x) =>
+               range(0, 100)
+                  .filter((y) => !!packageContext.backendStore.map.data[`${x}:${y}`])
+                  .map((y) =>
+                     packageContext.backendStore.map.data[`${x}:${y}`].map((spriteId: string, i: string) => (
+                        <MapSprite key={`${x}:${y}:${i}`} location={{ x, y }} texture={texturesMap[spriteId]} />
+                     ))
+                  )
+            )}
+            {mousePosition && mapEditorContext.activeSprite && (
+               <>
+                  <Rectangle
+                     color={'33aa33'}
+                     location={{ x: mousePosition?.x - (mousePosition?.x % 32) - 2, y: mousePosition?.y - (mousePosition?.y % 32) - 2 }}
+                     size={{ width: 36, height: 36 }}
+                  />
+                  <MapSprite
+                     texture={texturesMap[mapEditorContext.activeSprite]}
+                     location={{ x: Math.floor(mousePosition?.x / 32), y: Math.floor(mousePosition?.y / 32) }}
+                  />
+               </>
+            )}
+         </Stage>
+      </div>
    );
 };
