@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Stage, Sprite, Container, AppContext } from '@inlet/react-pixi';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
-import { getEngineState, selectActiveCharacterId, selectMapSchema, selectSpellChannels, getCurrency } from '../stores';
+import { getEngineState, selectActiveCharacterId, selectMapSchema, selectSpellChannels, getCurrency, getCharactersMovements } from '../stores';
 import _ from 'lodash';
 
 import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
@@ -28,6 +28,7 @@ const Map = () => {
    const engineState = useSelector(getEngineState);
    const mapSchema = useSelector(selectMapSchema);
    const spellChannels = useSelector(selectSpellChannels);
+   const charactersMovements = useSelector(getCharactersMovements);
    const currency = useSelector(getCurrency);
    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
 
@@ -88,11 +89,11 @@ const Map = () => {
                            {activePlayerId && engineState.characterMovements && (
                               <Container
                                  position={[
-                                    -(engineState?.characterMovements.data[activePlayerId]?.location.x ?? 0) + gameSize.width / 2,
-                                    -(engineState?.characterMovements.data[activePlayerId]?.location.y ?? 0) + gameSize.height / 2,
+                                    -(charactersMovements[activePlayerId]?.location.x ?? 0) + gameSize.width / 2,
+                                    -(charactersMovements[activePlayerId]?.location.y ?? 0) + gameSize.height / 2,
                                  ]}
                               >
-                                 <MapManager mapSchema={mapSchema} location={engineState?.characterMovements.data[activePlayerId]?.location} />
+                                 <MapManager mapSchema={mapSchema} location={charactersMovements[activePlayerId]?.location} />
                                  <AreasSpellsEffectsManager />
                                  <AreasManager />
                                  {renderSpells()}
@@ -100,7 +101,7 @@ const Map = () => {
                                  <FloatingNumbersManager />
                                  <BlinkSpellEffect />
                                  <BloodPoolManager />
-                                 <CastBarsManager location={engineState?.characterMovements.data[activePlayerId]?.location} spellChannels={spellChannels} />
+                                 <CastBarsManager location={charactersMovements[activePlayerId]?.location} spellChannels={spellChannels} />
                                  <ErrorMessages />
                               </Container>
                            )}
