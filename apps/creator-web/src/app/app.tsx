@@ -3,7 +3,7 @@ import { CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SocketCommunicator, PackageContext } from './contexts';
 import { PackageContextProvider } from './contexts/packageContext';
-import { MapEditor } from './mapEditorView/mapEditor';
+import { MapEditor } from './mapEditor/mapEditor';
 
 const darkTheme = createTheme({
    palette: {
