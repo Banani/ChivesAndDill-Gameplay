@@ -3,7 +3,7 @@ import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import { range } from 'lodash';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { MapSprite } from './mapSprite';
+import { MapSprite } from './mapSprite/mapSprite';
 import { BLOCK_SIZE } from '../../consts';
 import { Texture } from 'pixi.js';
 import { PackageContext } from '../../contexts/packageContext';
