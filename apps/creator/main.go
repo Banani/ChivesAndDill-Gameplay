@@ -72,7 +72,7 @@ func (u *User) reader() {
 
 		var updateMapField UpdateMapField
 		json.Unmarshal(message, &updateMapField)
-		u.services.mapFieldService.update <- UpdateMapField{X: updateMapField.X, Y: updateMapField.Y, SpriteId: "ObjectID(\"62d2f43587803a92bd861ca3\")"}
+		u.services.mapFieldService.update <- UpdateMapField{X: updateMapField.X, Y: updateMapField.Y, SpriteId: updateMapField.SpriteId}
 	}
 }
 
@@ -81,9 +81,9 @@ type Services struct {
 }
 
 type UpdateMapField struct {
-	X        int `json:"x"`
-	Y        int `json:"y"`
-	SpriteId string
+	X        int    `json:"x"`
+	Y        int    `json:"y"`
+	SpriteId string `json:spriteId`
 }
 
 type MapFieldsService struct {
