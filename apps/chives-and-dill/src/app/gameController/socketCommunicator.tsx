@@ -2,6 +2,7 @@ import { EngineMessages, FightingEngineMessages, QuestEngineMessages } from '@ba
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
+import { environment } from '../../environments/environment';
 import {
    initializePlayers,
    initializeSpells,
@@ -27,7 +28,7 @@ const SocketCommunicator = ({ children }) => {
    const [context, setContext] = useState<any>({});
    const dispatch = useDispatch();
    useEffect(() => {
-      const URL = 'http://localhost:3000';
+      const URL = environment.engineUrl;
       setContext({
          ...context,
          socket: io(URL, { autoConnect: true }),
