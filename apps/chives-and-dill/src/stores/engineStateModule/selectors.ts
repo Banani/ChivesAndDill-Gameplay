@@ -12,7 +12,7 @@ export const selectCharacters = (state: EngineAwareState) => state.engineStateMo
 
 export const selectAreas = (state: EngineAwareState) => state.engineStateModule.areas.data.area;
 
-export const selectCharacterPowerPointsEvents = (state: EngineAwareState) => state.engineStateModule.characterPowerPoints.events;
+export const selectCharacterPowerPointsEvents = (state: EngineAwareState) => state.engineStateModule.characterPowerPoints.data;
 
 export const selectMapSchema = (state: EngineAwareState) => state.engineStateModule.mapSchema.data;
 
