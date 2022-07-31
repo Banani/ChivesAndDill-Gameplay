@@ -1,27 +1,28 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Stage, Sprite, Container, AppContext } from '@inlet/react-pixi';
-import { Provider, ReactReduxContext, useSelector } from 'react-redux';
-import { getEngineState, selectActiveCharacterId, selectMapSchema, selectSpellChannels, getCurrency, getCharactersMovements } from '../stores';
+import { AppContext, Container, Sprite, Stage } from '@inlet/react-pixi';
 import _ from 'lodash';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Provider, ReactReduxContext, useSelector } from 'react-redux';
+import { getCharactersMovements, getCurrency, getEngineState, selectActiveCharacterId, selectMapSchema, selectSpellChannels } from '../stores';
+import { SocketContext } from './gameController/socketContext';
 
-import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
+import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
+import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
+import { Chat } from './guiContent/chat/Chat';
+import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
+import { MoneyBar } from './guiContent/moneyBar/MoneyBar';
 import { QuestLog } from './guiContent/quests/questLog/QuestLog';
 import { QuestsSideView } from './guiContent/quests/questSideView/QuestsSideView';
-import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
+import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
 import { AreasManager } from './mapContent/AreasManager';
-import { CastBarsManager } from './mapContent/CastBarsManager';
-import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
-import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
-import { ErrorMessages } from './mapContent/ErrorMessages';
+import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
 import { BloodPoolManager } from './mapContent/BloodPoolsManager';
-import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
+import { CastBarsManager } from './mapContent/CastBarsManager';
+import { ErrorMessages } from './mapContent/ErrorMessages';
+import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
 import { MapManager } from './mapContent/mapManager/MapManager';
-import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
-import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
-import { Chat } from './guiContent/chat/Chat';
 import { NextLevelManager } from './mapContent/NextLevelManager';
-import { MoneyBar } from './guiContent/moneyBar/MoneyBar';
+import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 
 const Map = () => {
    const activePlayerId = useSelector(selectActiveCharacterId);
@@ -80,38 +81,44 @@ const Map = () => {
          <Chat />
          <MoneyBar currency={currency} activePlayerId={activePlayerId} />
          <ExperienceBar />
-         <ReactReduxContext.Consumer>
-            {({ store }) => (
-               <Stage width={gameSize.width} height={gameSize.height} options={{ backgroundColor: 0x000000, autoDensity: true }}>
-                  <AppContext.Consumer>
-                     {(app) => (
-                        <Provider store={store}>
-                           {activePlayerId && engineState.characterMovements && (
-                              <Container
-                                 position={[
-                                    -(charactersMovements[activePlayerId]?.location.x ?? 0) + gameSize.width / 2,
-                                    -(charactersMovements[activePlayerId]?.location.y ?? 0) + gameSize.height / 2,
-                                 ]}
-                              >
-                                 <MapManager mapSchema={mapSchema} location={charactersMovements[activePlayerId]?.location} />
-                                 <AreasSpellsEffectsManager />
-                                 <AreasManager />
-                                 {renderSpells()}
-                                 <RenderPlayersManager />
-                                 <FloatingNumbersManager />
-                                 <BlinkSpellEffect />
-                                 <BloodPoolManager />
-                                 <CastBarsManager location={charactersMovements[activePlayerId]?.location} spellChannels={spellChannels} />
-                                 <ErrorMessages />
-                              </Container>
+         <SocketContext.Consumer>
+            {(socketContext) => (
+               <ReactReduxContext.Consumer>
+                  {({ store }) => (
+                     <Stage width={gameSize.width} height={gameSize.height} options={{ backgroundColor: 0x000000, autoDensity: true }}>
+                        <AppContext.Consumer>
+                           {(app) => (
+                              <SocketContext.Provider value={socketContext}>
+                                 <Provider store={store}>
+                                    {activePlayerId && engineState.characterMovements && (
+                                       <Container
+                                          position={[
+                                             -(charactersMovements[activePlayerId]?.location.x ?? 0) + gameSize.width / 2,
+                                             -(charactersMovements[activePlayerId]?.location.y ?? 0) + gameSize.height / 2,
+                                          ]}
+                                       >
+                                          <MapManager mapSchema={mapSchema} location={charactersMovements[activePlayerId]?.location} />
+                                          <AreasSpellsEffectsManager />
+                                          <AreasManager />
+                                          {renderSpells()}
+                                          <RenderPlayersManager />
+                                          <FloatingNumbersManager />
+                                          <BlinkSpellEffect />
+                                          <BloodPoolManager />
+                                          <CastBarsManager location={charactersMovements[activePlayerId]?.location} spellChannels={spellChannels} />
+                                          <ErrorMessages />
+                                       </Container>
+                                    )}
+                                    <NextLevelManager experienceEvents={engineState.experience.events} />
+                                 </Provider>
+                              </SocketContext.Provider>
                            )}
-                           <NextLevelManager experienceEvents={engineState.experience.events} />
-                        </Provider>
-                     )}
-                  </AppContext.Consumer>
-               </Stage>
+                        </AppContext.Consumer>
+                     </Stage>
+                  )}
+               </ReactReduxContext.Consumer>
             )}
-         </ReactReduxContext.Consumer>
+         </SocketContext.Consumer>
       </>
    );
 };

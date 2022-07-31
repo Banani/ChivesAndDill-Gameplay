@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import * as PIXI from 'pixi.js';
 import { Graphics, Sprite, Text } from '@inlet/react-pixi';
+import _ from 'lodash';
+import * as PIXI from 'pixi.js';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { BLOCK_SIZE } from '../../consts/consts';
 import { setActiveTarget } from '../../stores';
 import { GetAbsorbsValue } from './GetPlayerAbsorbs';
-import _ from 'lodash';
-import { BLOCK_SIZE } from '../../consts/consts';
 
 const Player = React.memo<{ player: any; characterViewsSettings: any; charactersMovements: any; characterPowerPoints: any }>(
    ({ player, characterViewsSettings, charactersMovements, characterPowerPoints }) => {
-
       const [timer, setTimer] = useState(0);
       const [playerSheet, setPlayerSheet] = useState({});
       const [characterStatus, setCharacterStatus] = useState('standingDown');
@@ -105,12 +104,7 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
          const barWidth = (playerAbsorb / (playerAbsorb + maxHp)) * 50;
          const healthBarWidth = (currentHp / (playerAbsorb + maxHp)) * 50 - 25;
          g.beginFill(0xe8e8e8);
-         g.drawRect(
-            charactersMovements[player.id].location.x + healthBarWidth,
-            charactersMovements[player.id].location.y - h / 1.5,
-            barWidth,
-            5
-         );
+         g.drawRect(charactersMovements[player.id].location.x + healthBarWidth, charactersMovements[player.id].location.y - h / 1.5, barWidth, 5);
          g.endFill();
       };
 
@@ -120,12 +114,7 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
          g.drawRect(charactersMovements[player.id].location.x - 25, charactersMovements[player.id].location.y - h / 1.5, 50, 5);
          g.endFill();
          g.beginFill(0x00ff00);
-         g.drawRect(
-            charactersMovements[player.id].location.x - 25,
-            charactersMovements[player.id].location.y - h / 1.5,
-            barWidth,
-            5
-         );
+         g.drawRect(charactersMovements[player.id].location.x - 25, charactersMovements[player.id].location.y - h / 1.5, barWidth, 5);
          g.endFill();
       };
 
@@ -133,12 +122,7 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
          (g) => {
             g.clear();
             g.beginFill(0x000000);
-            g.drawRect(
-               charactersMovements[player.id].location.x - 26,
-               charactersMovements[player.id].location.y - h / 1.5 - 1,
-               52,
-               7
-            );
+            g.drawRect(charactersMovements[player.id].location.x - 26, charactersMovements[player.id].location.y - h / 1.5 - 1, 52, 7);
             g.endFill();
             drawHealthBar(g);
             drawAbsorbBar(g);
@@ -181,9 +165,7 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
          </>
       ) : null;
    },
-   (old, newProps) =>
-      _.isEqual(old.characterPowerPoints, newProps.characterPowerPoints) &&
-      _.isEqual(old.charactersMovements, newProps.charactersMovements)
+   (old, newProps) => _.isEqual(old.characterPowerPoints, newProps.characterPowerPoints) && _.isEqual(old.charactersMovements, newProps.charactersMovements)
 );
 
 export default Player;

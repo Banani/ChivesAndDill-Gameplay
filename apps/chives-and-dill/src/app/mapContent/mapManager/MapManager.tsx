@@ -1,9 +1,8 @@
+import { BLOCK_SIZE, BOTTOM_UP_BLOCKS_AMOUNT, SIDE_BLOCKS_AMOUNT } from 'apps/chives-and-dill/src/consts/consts';
+import _ from 'lodash';
+import * as PIXI from 'pixi.js';
 import React, { useEffect, useState } from 'react';
 import { MapField } from './MapField';
-import * as PIXI from 'pixi.js';
-import _ from 'lodash';
-import { BLOCK_SIZE, SIDE_BLOCKS_AMOUNT, BOTTOM_UP_BLOCKS_AMOUNT } from 'apps/chives-and-dill/src/consts/consts';
-import { MapSchema } from '@bananos/types';
 
 export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y: number } }>(
    ({ mapSchema, location }) => {
