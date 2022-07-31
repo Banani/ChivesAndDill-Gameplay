@@ -1,17 +1,26 @@
 import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
+import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { CharacterDiedEvent, EngineEventHandler, PlayerMovedEvent } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { Services } from '../../../types/Services';
 import { CharacterEngineEvents, CharacterRemovedEvent } from '../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
-import { SpellEffectType, DamageEffect } from '../../SpellModule/types/SpellTypes';
-import { MonsterDiedEvent, MonsterEngineEvents, MonsterLostAggroEvent, MonsterLostTargetEvent, MonsterPulledEvent, MonsterTargetChangedEvent } from '../Events';
-import { MonsterRespawns } from '../MonsterRespawns';
+import { DamageEffect, SpellEffectType } from '../../SpellModule/types/SpellTypes';
+import { MonsterAggroEngine } from '../engines/MonsterAggroEngine';
+import {
+   MonsterEngineEvents,
+   MonsterLostAggroEvent,
+   MonsterLostPlayerCharacterEvent,
+   MonsterLostTargetEvent,
+   MonsterNoticedPlayerCharacterEvent,
+   MonsterPulledEvent,
+   MonsterTargetChangedEvent,
+} from '../Events';
 import { Monster } from '../types';
 
-interface Aggro {
+export interface Aggro {
    currentTarget: AggroTarget;
    allTargets: Record<string, AggroTarget>;
 }
@@ -23,17 +32,25 @@ interface AggroTarget {
 
 export class AggroService extends EventParser {
    monsterAggro: Record<string, Aggro> = {};
+   monsterAggroEngine: MonsterAggroEngine;
 
-   constructor() {
+   constructor(monsterAggroEngine: MonsterAggroEngine) {
       super();
+      this.monsterAggroEngine = monsterAggroEngine;
       this.eventsToHandlersMap = {
-         [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [MonsterEngineEvents.MonsterTargetChanged]: this.handleMonsterTargetChanged,
          [CharacterEngineEvents.CharacterRemoved]: this.handleCharacterRemoved,
 
          [SpellEngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
+         [MonsterEngineEvents.MonsterNoticedPlayerCharacter]: this.handleMonsterNoticedPlayerCharacter,
+         [MonsterEngineEvents.MonsterLostPlayerCharacter]: this.handleMonsterLostPlayerCharacter,
       };
+   }
+
+   init(engineEventCrator: EngineEventCrator, services) {
+      super.init(engineEventCrator);
+      this.monsterAggroEngine.init(this.engineEventCrator, services);
    }
 
    addInitialAgrro = (monster: Monster, characterId: string) => {
@@ -77,32 +94,13 @@ export class AggroService extends EventParser {
       }
    };
 
-   handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event, services }) => {
-      if (services.monsterService.getAllCharacters()[event.characterId]) {
-         return;
-      }
+   handleMonsterNoticedPlayerCharacter: EngineEventHandler<MonsterNoticedPlayerCharacterEvent> = ({ event, services }) => {
+      const monster = services.monsterService.getAllCharacters()[event.monsterCharacterId];
+      this.addInitialAgrro(monster, event.playerCharacterId);
+   };
 
-      forEach(services.monsterService.getAllCharacters(), (monster) => {
-         if (distanceBetweenTwoPoints(monster.location, event.newLocation) <= monster.sightRange && !this.monsterAggro[monster.id]) {
-            this.addInitialAgrro(monster, event.characterId);
-         }
-      });
-
-      forEach(this.monsterAggro, (monsterAggro, monsterId) => {
-         const monster = services.monsterService.getAllCharacters()[monsterId];
-
-         // BUG
-         if (!monster) {
-            return;
-         }
-
-         if (
-            monsterAggro.allTargets[event.characterId] &&
-            distanceBetweenTwoPoints(MonsterRespawns[monster.respawnId].location, event.newLocation) > monster.escapeRange
-         ) {
-            this.deleteAggro(monsterId, event.characterId);
-         }
-      });
+   handleMonsterLostPlayerCharacter: EngineEventHandler<MonsterLostPlayerCharacterEvent> = ({ event, services }) => {
+      this.deleteAggro(event.monsterCharacterId, event.playerCharacterId);
    };
 
    wasItDmgFromTheMonster = ({ event, services }: { event: ApplyTargetSpellEffectEvent; services: Services }) =>

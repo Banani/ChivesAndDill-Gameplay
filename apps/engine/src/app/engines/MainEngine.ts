@@ -57,7 +57,7 @@ export class MainEngine {
 
       setInterval(() => {
          this.slowEngines.forEach((engine) => engine.doAction());
-      }, 1000);
+      }, 250);
    }
 
    doActions() {

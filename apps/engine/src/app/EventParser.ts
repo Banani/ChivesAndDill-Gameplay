@@ -3,7 +3,7 @@ import { CharacterEngineEventsMap } from './modules/CharacterModule/Events';
 import { ChatEngineEventsMap } from './modules/ChatModule/Events';
 import { ItemEngineEventsMap } from './modules/ItemModule/Events';
 import { MonsterEngineEventsMap } from './modules/MonsterModule/Events';
-import { NpcEngineEvents, NpcEngineEventsMap } from './modules/NpcModule/Events';
+import { NpcEngineEventsMap } from './modules/NpcModule/Events';
 import { PlayerEngineEvents, PlayerEngineEventsMap, SendErrorMessageEvent } from './modules/PlayerModule/Events';
 import { QuestEngineEventsMap } from './modules/QuestModule/Events';
 import { FightingEngineEventsMap } from './modules/SpellModule/Events';

@@ -5,17 +5,11 @@ import { Classes } from '../../../types/Classes';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { CharacterEngineEvents, CreateCharacterEvent, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
 import { SpellsPerClass } from '../../SpellModule/spells';
-import {
-   CreateNewPlayerEvent,
-   CreatePlayerCharacterEvent,
-   NewPlayerCreatedEvent,
-   PlayerCharacterCreatedEvent,
-   PlayerDisconnectedEvent,
-   PlayerEngineEvents,
-} from '../Events';
+import { CreatePlayerCharacterEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
 
 export class PlayerCharacterService extends EventParser {
    increment: number = 0;
+   characters: Record<string, PlayerCharacter> = {};
 
    constructor() {
       super();
@@ -36,6 +30,7 @@ export class PlayerCharacterService extends EventParser {
 
    handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
       if (event.character.type === CharacterType.Player) {
+         this.characters[event.character.id] = event.character;
          this.engineEventCrator.asyncCeateEvent<PlayerCharacterCreatedEvent>({
             type: PlayerEngineEvents.PlayerCharacterCreated,
             playerCharacter: event.character,
@@ -69,4 +64,6 @@ export class PlayerCharacterService extends EventParser {
          ownerId,
       };
    };
+
+   getAllCharacters = () => this.characters;
 }

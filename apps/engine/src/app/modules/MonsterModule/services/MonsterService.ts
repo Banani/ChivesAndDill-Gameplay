@@ -5,8 +5,8 @@ import type { CharacterDiedEvent, EngineEventHandler, PlayerMovedEvent, PlayerSt
 import { CharacterType } from '../../../types';
 import type { CreateCharacterEvent, ResetCharacterEvent } from '../../CharacterModule/Events';
 import { CharacterEngineEvents } from '../../CharacterModule/Events';
-import type { CreateNewMonsterEvent, NewMonsterCreatedEvent, MonsterTargetChangedEvent, MonsterLostTargetEvent, MonsterLostAggroEvent } from '../Events';
-import { MonsterEngineEvents, MonsterDiedEvent } from '../Events';
+import type { CreateNewMonsterEvent, MonsterLostAggroEvent, MonsterLostTargetEvent, MonsterTargetChangedEvent, NewMonsterCreatedEvent } from '../Events';
+import { MonsterEngineEvents } from '../Events';
 import type { Monster } from '../types';
 
 export class MonsterService extends EventParser {

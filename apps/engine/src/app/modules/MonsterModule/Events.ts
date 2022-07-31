@@ -14,6 +14,8 @@ export enum MonsterEngineEvents {
    MonsterDied = 'MonsterDied',
    MonsterPulled = 'MonsterPulled',
    ScheduleMonsterAttack = 'ScheduleMonsterAttack',
+   MonsterNoticedPlayerCharacter = 'MonsterNoticedPlayerCharacter',
+   MonsterLostPlayerCharacter = 'MonsterLostPlayerCharacter',
 }
 
 export interface CreateNewMonsterEvent extends EngineEvent {
@@ -59,6 +61,17 @@ export interface MonsterLostAggroEvent extends EngineEvent {
    monsterId: string;
 }
 
+export interface MonsterNoticedPlayerCharacterEvent extends EngineEvent {
+   type: MonsterEngineEvents.MonsterNoticedPlayerCharacter;
+   playerCharacterId: string;
+   monsterCharacterId: string;
+}
+export interface MonsterLostPlayerCharacterEvent extends EngineEvent {
+   type: MonsterEngineEvents.MonsterLostPlayerCharacter;
+   playerCharacterId: string;
+   monsterCharacterId: string;
+}
+
 export interface MonsterEngineEventsMap {
    [MonsterEngineEvents.CreateNewMonster]: EngineEventHandler<CreateNewMonsterEvent>;
    [MonsterEngineEvents.NewMonsterCreated]: EngineEventHandler<NewMonsterCreatedEvent>;
@@ -69,4 +82,6 @@ export interface MonsterEngineEventsMap {
    [MonsterEngineEvents.MonsterPulled]: EngineEventHandler<MonsterPulledEvent>;
    [MonsterEngineEvents.ScheduleMonsterAttack]: EngineEventHandler<ScheduleMonsterAttackEvent>;
    [MonsterEngineEvents.MonsterLostAggro]: EngineEventHandler<MonsterLostAggroEvent>;
+   [MonsterEngineEvents.MonsterNoticedPlayerCharacter]: EngineEventHandler<MonsterNoticedPlayerCharacterEvent>;
+   [MonsterEngineEvents.MonsterLostPlayerCharacter]: EngineEventHandler<MonsterLostPlayerCharacterEvent>;
 }

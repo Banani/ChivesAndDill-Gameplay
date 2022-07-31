@@ -15,30 +15,32 @@ export const MonsterRespawns: Record<string, CharacterRespawn<MonsterTemplate>> 
    //       characterTemplate: MonsterTemplates['PigSlut'],
    //       time: 2000,
    //    },
-   //    '2': {
-   //       id: '2',
-   //       location: { x: 1350, y: 800 },
-   //       characterTemplate: MonsterTemplates['PigSlut'],
-   //       time: 2000,
-   //    },
-   //    '3': {
-   //       id: '3',
-   //       location: { x: 1400, y: 800 },
-   //       characterTemplate: MonsterTemplates['PigSlut'],
-   //       time: 2000,
-   //    },
-   //    '4': {
-   //       id: '4',
-   //       location: { x: 1450, y: 800 },
-   //       characterTemplate: MonsterTemplates['PigSlut'],
-   //       time: 2000,
-   //    },
-
-   '5': {
-      id: '5',
+   '2': {
+      id: '2',
       location: { x: 300, y: 400 },
       characterTemplate: MonsterTemplates['Orc'],
-      time: 10000,
+      time: 4000,
+      walkingType: WalkingType.None,
+   },
+   '3': {
+      id: '3',
+      location: { x: 400, y: 400 },
+      characterTemplate: MonsterTemplates['Orc'],
+      time: 5000,
+      walkingType: WalkingType.None,
+   },
+   '4': {
+      id: '4',
+      location: { x: 400, y: 500 },
+      characterTemplate: MonsterTemplates['Orc'],
+      time: 6000,
+      walkingType: WalkingType.None,
+   },
+   '5': {
+      id: '5',
+      location: { x: 300, y: 500 },
+      characterTemplate: MonsterTemplates['Orc'],
+      time: 7000,
       walkingType: WalkingType.None,
    },
    '6': {
