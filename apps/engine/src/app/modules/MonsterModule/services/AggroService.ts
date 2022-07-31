@@ -107,7 +107,7 @@ export class AggroService extends EventParser {
       services.monsterService.getAllCharacters()[event.caster.id];
 
    wasItDmgToThePlayer = ({ event, services }: { event: ApplyTargetSpellEffectEvent; services: Services }) =>
-      services.characterService.getAllCharacters()[event.target.id];
+      services.playerCharacterService.getAllCharacters()[event.target.id];
 
    handleApplySpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event, services }) => {
       if (event.effect.type !== SpellEffectType.Damage) {

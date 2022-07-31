@@ -1,4 +1,4 @@
-import { TimeEffectType, PowerStackType } from '@bananos/types';
+import { PowerStackType, TimeEffectType } from '@bananos/types';
 import { Classes } from '../../types/Classes';
 import type { Spell } from './types/SpellTypes';
 import { AreaType, SpellEffectType, SpellType } from './types/SpellTypes';
@@ -242,7 +242,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       type: SpellType.AngleBlast,
       name: 'HolyCone2',
       angle: Math.PI / 9,
-      range: 350,
+      range: 650,
       spellPowerCost: 20,
       cooldown: 0,
       image: '../assets/spritesheets/spells/paladin/lightOfDawn.jpg',
@@ -250,7 +250,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       spellEffectsOnTarget: [
          {
             type: SpellEffectType.Damage,
-            amount: 90,
+            amount: 10,
          },
       ],
       //   requiredPowerStacks: [{ type: PowerStackType.HolyPower, amount: 3 }],

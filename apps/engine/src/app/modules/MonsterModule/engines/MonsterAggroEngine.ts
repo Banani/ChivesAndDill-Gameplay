@@ -6,6 +6,8 @@ import { MonsterEngineEvents, MonsterLostPlayerCharacterEvent, MonsterNoticedPla
 import { Aggro } from '../services';
 import { Monster } from '../types';
 
+const ESCAPE_RANGE_MULTIPLAYER = 3;
+
 export class MonsterAggroEngine extends Engine {
    doAction() {
       forEach(this.services.monsterService.getAllCharacters(), (monster, id) => {
@@ -37,7 +39,7 @@ export class MonsterAggroEngine extends Engine {
       distanceBetweenTwoPoints(monster.location, playerCharacter.location) <= monster.sightRange && !monsterAggro;
 
    shouldStopChasingPlayer = ({ monster, playerCharacter, monsterAggro }: { monster: Monster; playerCharacter: PlayerCharacter; monsterAggro: Aggro }) =>
-      distanceBetweenTwoPoints(monster.location, playerCharacter.location) > monster.sightRange * 2 &&
+      distanceBetweenTwoPoints(monster.location, playerCharacter.location) > monster.sightRange * ESCAPE_RANGE_MULTIPLAYER &&
       monsterAggro &&
       monsterAggro.currentTarget.characterId === playerCharacter.id;
 }
