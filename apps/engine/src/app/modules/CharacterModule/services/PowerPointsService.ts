@@ -1,5 +1,6 @@
 import type { PowerPointsTrack } from '@bananos/types';
 import { HealthPointsSource } from '@bananos/types';
+import { clone } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
@@ -63,7 +64,7 @@ export class PowerPointsService extends EventParser {
 
    handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event, services }) => {
       if (event.character.type === CharacterType.Player) {
-         this.powerPoints[event.character.id] = classesBaseStats[event.character.class];
+         this.powerPoints[event.character.id] = clone(classesBaseStats[event.character.class]);
       }
 
       if (event.character.type === CharacterType.Monster) {
