@@ -10,6 +10,10 @@ export class MonsterAggroEngine extends Engine {
    doAction() {
       forEach(this.services.monsterService.getAllCharacters(), (monster, id) => {
          forEach(this.services.playerCharacterService.getAllCharacters(), (playerCharacter) => {
+            if (playerCharacter.isDead) {
+               return;
+            }
+
             const monsterAggro = this.services.aggroService.getMonsterAggro()[monster.id];
             // Przerwac jak cos juz pullnie potwora
             if (this.shouldAttackPlayerCharacter({ monster, playerCharacter, monsterAggro })) {

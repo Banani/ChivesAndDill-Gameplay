@@ -1,6 +1,5 @@
-import type { CharacterDirection } from '@bananos/types';
+import type { CharacterDirection, Location } from '@bananos/types';
 import type { Spell } from '../modules/SpellModule/types/SpellTypes';
-import type { Location } from '@bananos/types';
 
 export interface Character {
    type: CharacterType;
@@ -12,6 +11,7 @@ export interface Character {
    avatar: string;
    direction: CharacterDirection;
    speed: number;
+   isDead: boolean;
    isInMove: boolean;
    healthPointsRegen: number;
    spellPowerRegen: number;

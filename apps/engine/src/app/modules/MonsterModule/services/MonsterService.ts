@@ -63,6 +63,7 @@ export class MonsterService extends EventParser {
       this.monsters[id] = {
          type: CharacterType.Monster,
          id,
+         isDead: false,
          name: event.monsterRespawn.characterTemplate.name,
          location: event.monsterRespawn.location,
          sprites: event.monsterRespawn.characterTemplate.sprites,

@@ -1,11 +1,11 @@
-import { EventParser } from '../../../EventParser';
-import type { Npc } from '../types';
 import * as _ from 'lodash';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
-import { CharacterEngineEvents, CreateCharacterEvent } from '../../CharacterModule/Events';
+import { EventParser } from '../../../EventParser';
 import { CharacterType } from '../../../types';
-import { NewNpcCreatedEvent, NpcEngineEvents } from '../Events';
 import { Services } from '../../../types/Services';
+import { CharacterEngineEvents, CreateCharacterEvent } from '../../CharacterModule/Events';
+import { NewNpcCreatedEvent, NpcEngineEvents } from '../Events';
+import type { Npc } from '../types';
 
 export class NpcService extends EventParser {
    npcs: Record<string, Npc> = {};
@@ -27,6 +27,7 @@ export class NpcService extends EventParser {
             type: CharacterType.Npc,
             ...npcRespawn.characterTemplate,
             location: npcRespawn.location,
+            isDead: false,
             templateId: npcRespawn.characterTemplate.id,
             id,
          };

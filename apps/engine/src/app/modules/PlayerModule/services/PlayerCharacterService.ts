@@ -1,6 +1,7 @@
 import { CharacterDirection } from '@bananos/types';
+import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
 import { Classes } from '../../../types/Classes';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { CharacterEngineEvents, CreateCharacterEvent, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
@@ -14,6 +15,7 @@ export class PlayerCharacterService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
+         [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [PlayerEngineEvents.CreatePlayerCharacter]: this.handleCreatePlayerCharacter,
          [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
       };
@@ -35,6 +37,12 @@ export class PlayerCharacterService extends EventParser {
             type: PlayerEngineEvents.PlayerCharacterCreated,
             playerCharacter: event.character,
          });
+      }
+   };
+
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
+      if (this.characters[event.characterId]) {
+         this.characters[event.characterId].isDead = true;
       }
    };
 
