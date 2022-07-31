@@ -152,6 +152,7 @@ export class MonsterMovementEngine extends Engine {
       });
 
       const direction = this.services.pathFinderService.getNextDirection(monster.id);
+
       if (direction) {
          const xDistance = direction.x - monster.location.x;
          const yDistance = direction.y - monster.location.y;

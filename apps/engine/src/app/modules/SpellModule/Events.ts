@@ -1,18 +1,17 @@
-import { EngineEvents } from '../../EngineEvents';
-import { Character, EngineEvent, EngineEventHandler } from '../../types';
 import { Location, PowerStackType, TimeEffect, TimeEffectType } from '@bananos/types';
+import { Character, EngineEvent, EngineEventHandler } from '../../types';
 import { Vector } from '../../types/Vector';
 import { Monster } from '../MonsterModule/types';
 import {
-   SubSpell,
    AreaEffect,
-   Spell,
+   ChannelSpell,
    GuidedProjectileSpell,
    GuidedProjectileSubSpell,
    ProjectileSpell,
    ProjectileSubSpell,
+   Spell,
    SpellEffect,
-   ChannelSpell,
+   SubSpell,
 } from './types/SpellTypes';
 
 export enum SpellEngineEvents {

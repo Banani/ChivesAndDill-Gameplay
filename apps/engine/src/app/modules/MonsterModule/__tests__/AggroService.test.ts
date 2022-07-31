@@ -2,11 +2,14 @@ import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
 import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import { merge, times } from 'lodash';
-import { RecursivePartial } from '../../../types';
+import { Character, RecursivePartial } from '../../../types';
 import { CharacterRespawn, WalkingType } from '../../../types/CharacterRespawn';
 import { CharacterEngineEvents, TakeCharacterHealthPointsEvent } from '../../CharacterModule/Events';
+import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
+import { SpellEffect, SpellEffectType } from '../../SpellModule/types/SpellTypes';
 import { MonsterRespawnTemplateService } from '../dataProviders';
 import { MonsterTemplate, MonsterTemplates } from '../MonsterTemplates';
+import { Monster } from '../types';
 
 jest.mock('../dataProviders/MonsterRespawnTemplateService', () => {
    const getData = jest.fn();
@@ -143,6 +146,43 @@ describe('Aggro service', () => {
       });
    });
 
+   it('Monster should go back to his respawn when player character ran to far away', () => {
+      const startingLocation = { x: 52, y: 100 };
+      const { players, engineManager, monsterTemplates } = setupEngine({
+         monsterTemplates: { '1': { location: startingLocation, characterTemplate: { sightRange: 2, speed: 1, desiredRange: 1 } } },
+      });
+
+      engineManager.doEngineAction();
+
+      engineManager.callPlayerAction(players['1'].socketId, {
+         type: CommonClientMessages.PlayerStartMove,
+         x: -1,
+         source: 'D',
+      });
+
+      engineManager.doEngineAction();
+      engineManager.doEngineAction();
+
+      engineManager.callPlayerAction(players['1'].socketId, {
+         type: CommonClientMessages.PlayerStopMove,
+         source: 'D',
+      });
+
+      engineManager.doEngineAction();
+
+      const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(GlobalStoreModule.CHARACTER_MOVEMENTS, dataPackage, {
+         data: {
+            monster_0: {
+               direction: 1,
+               isInMove: false,
+               location: startingLocation,
+            },
+         },
+      });
+   });
+
    it('Monster should not go to character if he is in range but dead', () => {
       const { players, engineManager } = setupEngine();
 
@@ -165,6 +205,42 @@ describe('Aggro service', () => {
                isInMove: false,
                location: {
                   x: 150,
+                  y: 100,
+               },
+            },
+         },
+      });
+   });
+
+   it('Monster should start chasing when is beeing hit by player character', () => {
+      const startingLocation = { x: 100, y: 100 };
+      const { players, engineManager, monsterTemplates } = setupEngine({
+         monsterTemplates: { '1': { location: startingLocation, characterTemplate: { sightRange: 25, desiredRange: 1 } } },
+      });
+
+      engineManager.createSystemAction<ApplyTargetSpellEffectEvent>({
+         type: SpellEngineEvents.ApplyTargetSpellEffect,
+         caster: { id: players['1'].characterId } as Character,
+         target: { id: 'monster_0', location: startingLocation } as Monster,
+         effect: {
+            type: SpellEffectType.Damage,
+            amount: 10,
+         } as SpellEffect,
+      });
+
+      engineManager.doEngineAction();
+      engineManager.doEngineAction();
+      engineManager.doEngineAction();
+
+      const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(GlobalStoreModule.CHARACTER_MOVEMENTS, dataPackage, {
+         data: {
+            monster_0: {
+               direction: 2,
+               isInMove: true,
+               location: {
+                  x: 94,
                   y: 100,
                },
             },
