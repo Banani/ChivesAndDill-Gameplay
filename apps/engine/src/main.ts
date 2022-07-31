@@ -3,7 +3,7 @@ import { getPlayerModule } from './app/modules/PlayerModule';
 import { getCharacterModule } from './app/modules/CharacterModule/module';
 import * as _ from 'lodash';
 import { MainEngine } from './app/engines/MainEngine';
-import { environment } from './environments/environment.prod';
+import { environment } from './environments/environment';
 
 const hostname = environment.hostname;
 const port = 3000;
