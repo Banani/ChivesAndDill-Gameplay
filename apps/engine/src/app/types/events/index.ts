@@ -1,18 +1,15 @@
-import { CharacterDirection } from '@bananos/types';
+import { CharacterDirection, Location } from '@bananos/types';
 import { EngineEvents } from '../../EngineEvents';
+import { CharacterEngineEvents } from '../../modules/CharacterModule/Events';
+import { ChatEngineEvents } from '../../modules/ChatModule/Events';
+import { ItemEngineEvents } from '../../modules/ItemModule/Events';
 import { MonsterEngineEvents } from '../../modules/MonsterModule/Events';
-import { Monster } from '../../modules/MonsterModule/types';
+import { NpcEngineEvents } from '../../modules/NpcModule/Events';
+import { PlayerEngineEvents } from '../../modules/PlayerModule/Events';
 import { QuestEngineEvents } from '../../modules/QuestModule/Events';
 import { SpellEngineEvents } from '../../modules/SpellModule/Events';
-import { Location } from '@bananos/types';
-import { PlayerCharacter } from '../PlayerCharacter';
-import { Services } from '../Services';
-import { CharacterEngineEvents } from '../../modules/CharacterModule/Events';
-import { PlayerEngineEvents } from '../../modules/PlayerModule/Events';
-import { NpcEngineEvents } from '../../modules/NpcModule/Events';
 import { CharacterUnion } from '../CharacterUnion';
-import { ItemEngineEvents } from '../../modules/ItemModule/Events';
-import { ChatEngineEvents } from '../../modules/ChatModule/Events';
+import { Services } from '../Services';
 
 export interface EngineEvent {
    type:
@@ -44,7 +41,7 @@ export interface PlayerTriesToStartedMovementEvent extends EngineEvent {
    movement: PlayerMovement;
 }
 
-interface PlayerMovement {
+export interface PlayerMovement {
    y?: number;
    x?: number;
    source: string;

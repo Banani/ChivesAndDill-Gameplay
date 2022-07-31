@@ -1,4 +1,4 @@
-import { ExperienceGainDetails, ExperienceGainSource, HealthPointsSource, PowerPointsTrack } from '@bananos/types';
+import { ExperienceGainDetails, HealthPointsSource, PowerPointsTrack } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterUnion } from '../../types/CharacterUnion';
 import { ExperienceTrack } from './types';
@@ -77,6 +77,7 @@ export interface CharacterGotSpellPowerEvent extends EngineEvent {
 }
 
 export interface TakeCharacterHealthPointsEvent extends EngineEvent {
+   type: CharacterEngineEvents.TakeCharacterHealthPoints;
    attackerId: string | null;
    characterId: string;
    amount: number;

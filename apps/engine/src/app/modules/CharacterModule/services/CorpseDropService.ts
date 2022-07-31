@@ -2,7 +2,6 @@ import { CorpseDropTrack } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
-import { MonsterRespawns } from '../../MonsterModule/MonsterRespawns';
 import { CharacterEngineEvents, CorpseDropTrackCreatedEvent } from '../Events';
 
 export class CorpseDropService extends EventParser {
@@ -19,9 +18,10 @@ export class CorpseDropService extends EventParser {
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
       const monster = services.monsterService.getAllCharacters()[event.characterId];
+      const monsterRespawns = services.monsterRespawnTemplateService.getData();
 
       if (monster) {
-         const characterTemplate = MonsterRespawns[monster.respawnId].characterTemplate;
+         const characterTemplate = monsterRespawns[monster.respawnId].characterTemplate;
          const itemsToDrop = {};
 
          // TODO: create some Random number generator service

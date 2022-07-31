@@ -263,6 +263,18 @@ export interface CreateCharacter {
    class: any; // MOve classes
 }
 
+export interface PlayerStartMoveAction {
+   type: CommonClientMessages.PlayerStartMove;
+   y?: number;
+   x?: number;
+   source: string;
+}
+
+export interface PlayerStopMoveAction {
+   type: CommonClientMessages.PlayerStopMove;
+   source: string;
+}
+
 export type EnginePackageEvent =
    | SpellLandedEvent
    | SpellCastedEvent
@@ -270,6 +282,8 @@ export type EnginePackageEvent =
    | CharacterLostHpEvent
    | DamageAbsorbedEvent
    | PlayerCreatedEvent
+   | PlayerStartMoveAction
+   | PlayerStopMoveAction
    | LevelChangedEvent
    | ErrorMessage
    | CreateCharacter

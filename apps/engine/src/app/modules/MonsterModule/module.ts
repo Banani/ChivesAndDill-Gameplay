@@ -1,6 +1,7 @@
-import { AggroService, BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from './services';
 import { EngineModule } from '../../types/EngineModule';
-import { BossFightEngine, MonsterAttackEngine, MonsterMovementEngine, RespawnMonsterEngine, MonsterAggroEngine } from './engines';
+import { MonsterRespawnTemplateService, MonsterTemplatesService } from './dataProviders';
+import { BossFightEngine, MonsterAggroEngine, MonsterAttackEngine, MonsterMovementEngine, RespawnMonsterEngine } from './engines';
+import { AggroService, BossFightService, MonsterAttackService, MonsterMovementService, MonsterService, RespawnService } from './services';
 
 export interface MonsterModuleServices {
    aggroService: AggroService;
@@ -9,6 +10,8 @@ export interface MonsterModuleServices {
    monsterMovementService: MonsterMovementService;
    monsterService: MonsterService;
    respawnService: RespawnService;
+   monsterTemplateService: MonsterTemplatesService;
+   monsterRespawnTemplateService: MonsterRespawnTemplateService;
 }
 
 export const getMonsterModule: () => EngineModule<MonsterModuleServices> = () => {
@@ -26,6 +29,8 @@ export const getMonsterModule: () => EngineModule<MonsterModuleServices> = () =>
          monsterMovementService: new MonsterMovementService(monsterMovementEngine),
          monsterService: new MonsterService(),
          respawnService: new RespawnService(respawnMonsterEngine),
+         monsterTemplateService: new MonsterTemplatesService(),
+         monsterRespawnTemplateService: new MonsterRespawnTemplateService(),
       },
       fastEngines: [bossFightEngine, monsterAttackEngine, monsterMovementEngine],
       slowEngines: [respawnMonsterEngine, monsterAggroEngine],

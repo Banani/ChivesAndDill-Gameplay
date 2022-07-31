@@ -4,10 +4,6 @@ import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
 import { Classes } from '../../../types/Classes';
-import type { NewMonsterCreatedEvent } from '../../MonsterModule/Events';
-import { MonsterEngineEvents } from '../../MonsterModule/Events';
-import { MonsterRespawns } from '../../MonsterModule/MonsterRespawns';
-import { NpcTemplates } from '../../NpcModule/NpcTemplate';
 import type {
    AddCharacterHealthPointsEvent,
    AddCharacterSpellPowerEvent,
@@ -71,7 +67,8 @@ export class PowerPointsService extends EventParser {
       }
 
       if (event.character.type === CharacterType.Monster) {
-         const respawn = MonsterRespawns[event.character.respawnId];
+         const monsterRespawns = services.monsterRespawnTemplateService.getData();
+         const respawn = monsterRespawns[event.character.respawnId];
          this.powerPoints[event.character.id] = {
             currentHp: respawn.characterTemplate.healthPoints,
             maxHp: respawn.characterTemplate.healthPoints,

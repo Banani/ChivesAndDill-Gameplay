@@ -1,13 +1,11 @@
-import { CharacterDirection } from '@bananos/types';
+import { CharacterDirection, Location } from '@bananos/types';
 import { forEach } from 'lodash';
 import { Engine } from '../../../Engine';
 import { EngineEvents } from '../../../EngineEvents';
 import { distanceBetweenTwoPoints } from '../../../math';
 import { PlayerMovedEvent, PlayerStartedMovementEvent, PlayerStopedAllMovementVectorsEvent } from '../../../types';
-import { Location } from '@bananos/types';
-import { MonsterRespawns } from '../MonsterRespawns';
-import { Monster } from '../types';
 import { WalkingType } from '../../../types/CharacterRespawn';
+import { Monster } from '../types';
 
 interface Patrol {
    currentPoint: number;
@@ -40,7 +38,8 @@ export class MonsterMovementEngine extends Engine {
    };
 
    none = (monster: Monster) => {
-      const respawn = MonsterRespawns[monster.respawnId];
+      const monsterRespawns = this.services.monsterRespawnTemplateService.getData();
+      const respawn = monsterRespawns[monster.respawnId];
 
       if (distanceBetweenTwoPoints(monster.location, respawn.location) <= monster.speed) {
          this.eventCrator.createEvent<PlayerMovedEvent>({
@@ -76,7 +75,8 @@ export class MonsterMovementEngine extends Engine {
    };
 
    patrol = (monster: Monster) => {
-      const respawn = MonsterRespawns[monster.respawnId];
+      const monsterRespawns = this.services.monsterRespawnTemplateService.getData();
+      const respawn = monsterRespawns[monster.respawnId];
 
       if (!this.patrolTrack[monster.id]) {
          this.patrolTrack[monster.id] = { currentPoint: 0 };
@@ -120,9 +120,7 @@ export class MonsterMovementEngine extends Engine {
       });
    };
 
-   stroll(monster: Monster) {
-      const respawn = MonsterRespawns[monster.respawnId];
-   }
+   stroll(monster: Monster) {}
 
    getNewDirection(lastMovement) {
       return {
@@ -182,7 +180,8 @@ export class MonsterMovementEngine extends Engine {
          if (aggro[key]) {
             this.chasing(monster, aggro[key].currentTarget.characterId);
          } else {
-            const respawn = MonsterRespawns[monster.respawnId];
+            const monsterRespawns = this.services.monsterRespawnTemplateService.getData();
+            const respawn = monsterRespawns[monster.respawnId];
             this.walkingHandler[respawn.walkingType](monster);
          }
       });
