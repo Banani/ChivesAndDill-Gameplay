@@ -1,6 +1,7 @@
-import { CharacterDirection, ItemTemplate } from '@bananos/types';
+import type { ItemTemplate } from '@bananos/types';
+import { CharacterDirection } from '@bananos/types';
 import { ItemTemplates } from '../ItemModule/ItemTemplates';
-import { Spell } from '../SpellModule/types/SpellTypes';
+import type { Spell } from '../SpellModule/types/SpellTypes';
 
 export interface NpcTemplate {
    id: string;
@@ -45,8 +46,7 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
       id: 'KretonPL',
       name: 'KretonPL',
       sprites: 'citizen',
-      avatar:
-         'https://scontent-waw1-1.xx.fbcdn.net/v/t1.15752-9/274123245_1090909568354124_1882313636197035257_n.jpg?_nc_cat=104&ccb=1-5&_nc_sid=ae9488&_nc_ohc=va14Kb-kYbMAX-4Y7eq&_nc_ht=scontent-waw1-1.xx&oh=03_AVJ9Ou0q3jx92EhKFu7ZUD5YkMUTpVIdLOPV1IJ4jZ4BTQ&oe=623B5D67',
+      avatar: 'https://avatars.githubusercontent.com/u/5495772?v=4',
       size: 96,
       healthPoints: 100,
       spellPower: 100,

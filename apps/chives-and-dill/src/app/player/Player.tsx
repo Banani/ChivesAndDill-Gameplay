@@ -1,11 +1,13 @@
 import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import _ from 'lodash';
+import { SocketContext } from '../gameController/socketContext'
 import * as PIXI from 'pixi.js';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useContext, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { BLOCK_SIZE } from '../../consts/consts';
 import { setActiveTarget } from '../../stores';
 import { GetAbsorbsValue } from './GetPlayerAbsorbs';
+import { NpcClientMessages } from '@bananos/types';
 
 const Player = React.memo<{ player: any; characterViewsSettings: any; charactersMovements: any; characterPowerPoints: any }>(
    ({ player, characterViewsSettings, charactersMovements, characterPowerPoints }) => {
@@ -22,6 +24,9 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
       const { maxHp, currentHp } = playerPoints;
       const dispatch = useDispatch();
       const playerAbsorb = GetAbsorbsValue(player.id);
+
+      const context = useContext(SocketContext);
+      const { socket } = context;
 
       const getPlayerSheets = useCallback(() => {
          const newPlayerSheets = {
@@ -118,6 +123,21 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
          g.endFill();
       };
 
+      const handleNpcClick = () => {
+         if (player.type !== 'Npc') {
+            return;
+         }
+
+         socket?.emit(NpcClientMessages.OpenNpcConversationDialog, {
+            npcId: player.id
+         });
+      }
+
+      const handlePlayerClick = () => {
+         dispatch(setActiveTarget({ characterId: player.id }));
+         handleNpcClick();
+      }
+
       const hpBar = useCallback(
          (g) => {
             g.clear();
@@ -159,7 +179,7 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
                   texture={playerSheet[characterStatus][timer % 8]}
                   x={charactersMovements[player.id].location.x - w / 2}
                   y={charactersMovements[player.id].location.y - h / 2}
-                  pointerdown={() => dispatch(setActiveTarget({ characterId: player.id }))}
+                  pointerdown={() => handlePlayerClick()}
                />
             )}
          </>

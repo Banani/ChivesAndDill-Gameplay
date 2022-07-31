@@ -1,0 +1,25 @@
+.NpcModal {
+  position: absolute;
+  width: 346px;
+  height: 507px;
+  top: 15%;
+  left: 5%;
+  background: url('../../../assets/spritesheets/backgrounds/npcModal.png');
+  background-repeat: no-repeat;
+
+  .Avatar {
+    border-radius: 50%;
+    height: 54px;
+    width: 54px;
+    position: relative;
+    left: 5px;
+    top: 7px;
+  }
+
+  .Name {
+    color: gold;
+    position: relative;
+    left: 155px;
+    top: -43px;
+  }
+}
