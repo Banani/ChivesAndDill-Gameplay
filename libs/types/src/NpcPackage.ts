@@ -1,10 +1,11 @@
-import { ItemLocationInBag, ItemTemplate } from './ItemPackage';
+import { ItemLocationInBag } from './ItemPackage';
 
 export enum NpcClientMessages {
    OpenNpcConversationDialog = 'OpenNpcConversationDialog',
    CloseNpcConversationDialog = 'CloseNpcConversationDialog',
    BuyItemFromNpc = 'BuyItemFromNpc',
    SellItemToNpc = 'SellItemToNpc',
+   PlayerTriesToTakeQuestFromNpc = 'PlayerTriesToTakeQuestFromNpc',
 }
 
 export interface ActiveNpcConversation {
@@ -38,4 +39,10 @@ export interface SellItemToNpc {
    itemId: string;
 }
 
-export type EngineNpcAction = OpenNpcConversationDialog | CloseNpcConversationDialog | BuyItemFromNpc | SellItemToNpc;
+export interface PlayerTriesToTakeQuestFromNpc {
+   type: NpcClientMessages.PlayerTriesToTakeQuestFromNpc;
+   npcId: string;
+   questId: string;
+}
+
+export type EngineNpcAction = OpenNpcConversationDialog | CloseNpcConversationDialog | BuyItemFromNpc | SellItemToNpc | PlayerTriesToTakeQuestFromNpc;

@@ -2,6 +2,7 @@ import { EngineModule } from '../../types/EngineModule';
 import { ActiveNpcConversationNotifier, NpcQuestNotifier } from './notifiers';
 import { NpcStockNotifier } from './notifiers/NpcStockNotifier';
 import { ActiveNpcConversationService } from './services/ActiveNpcConversationService';
+import { NpcQuestService } from './services/NpcQuestService';
 import { NpcRespawnTemplateService } from './services/NpcRespawnTemplateService';
 import { NpcService } from './services/NpcService';
 import { NpcTemplateService } from './services/NpcTemplateService';
@@ -13,6 +14,7 @@ export interface NpcModuleServices {
    npcTemplateService: NpcTemplateService;
    npcRespawnTemplateService: NpcRespawnTemplateService;
    npcTradeService: NpcTradeService;
+   npcQuestService: NpcQuestService;
 }
 
 export const getNpcModule: () => EngineModule<NpcModuleServices> = () => {
@@ -24,6 +26,7 @@ export const getNpcModule: () => EngineModule<NpcModuleServices> = () => {
          npcTemplateService: new NpcTemplateService(),
          npcRespawnTemplateService: new NpcRespawnTemplateService(),
          npcTradeService: new NpcTradeService(),
+         npcQuestService: new NpcQuestService(),
       },
    };
 };

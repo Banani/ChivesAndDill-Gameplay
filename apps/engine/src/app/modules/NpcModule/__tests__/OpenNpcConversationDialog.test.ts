@@ -3,13 +3,13 @@ import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'ap
 import { CharacterRespawn, WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import { merge } from 'lodash';
-import { RecursivePartial } from '../../../../types';
-import { Quests } from '../../../QuestModule/Quests';
-import { NpcTemplate, NpcTemplates } from '../../NpcTemplate';
-import { NpcRespawnTemplateService } from '../../services/NpcRespawnTemplateService';
+import { RecursivePartial } from '../../../types';
+import { Quests } from '../../QuestModule/Quests';
+import { NpcTemplate, NpcTemplates } from '../NpcTemplate';
+import { NpcRespawnTemplateService } from '../services/NpcRespawnTemplateService';
 import _ = require('lodash');
 
-jest.mock('../../services/NpcRespawnTemplateService', () => {
+jest.mock('../services/NpcRespawnTemplateService', () => {
    const getData = jest.fn();
 
    return {
