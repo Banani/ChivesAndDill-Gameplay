@@ -20,4 +20,6 @@ export const getExperience = (state: EngineAwareState) => state.engineStateModul
 
 export const getCurrency = (state: EngineAwareState) => state.engineStateModule.currency.data;
 
-export const getCharactersMovements = (state: EngineAwareState) => state.engineStateModule.characterMovements.data
+export const getCharactersMovements = (state: EngineAwareState) => state.engineStateModule.characterMovements.data;
+
+export const getActiveConversation = (state: EngineAwareState) => state.engineStateModule.npcConversation.data;
