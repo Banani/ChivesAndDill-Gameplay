@@ -1,11 +1,11 @@
-import * as _ from 'lodash';
-import { forEach, find } from 'lodash';
+import { KillingQuestStagePartComparison } from '@bananos/types';
+import { KillingQuestStagePartStatus, QuestResetEvent } from 'libs/types/src/QuestPackage';
+import { find, forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { Character, CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { CharacterEngineEvents, CharacterLostHpEvent } from '../../CharacterModule/Events';
 import { KillingStagePartProgress, QuestEngineEvents, StagePartCompletedEvent, StartNewQuestKillingStagePartEvent } from '../Events';
-import { KillingQuestStagePartComparison, KillingQuestStagePartStatus, QuestResetEvent } from '../types';
 
 const comparators: Record<KillingQuestStagePartComparison, (character: Character, fieldName: string, value: string) => boolean> = {
    [KillingQuestStagePartComparison.equality]: (character: Character, fieldName: string, value: string) => character[fieldName] === value,

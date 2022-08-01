@@ -1,11 +1,10 @@
+import { MovementQuestStagePart } from 'libs/types/src/QuestPackage';
 import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
-import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
 import { EngineEventHandler, PlayerMovedEvent } from '../../../types';
-import { QuestEngineEvents, StartNewQuestMovementStagePartEvent, StagePartCompletedEvent } from '../Events';
-import { MovementQuestStagePart } from '../types';
+import { QuestEngineEvents, StagePartCompletedEvent, StartNewQuestMovementStagePartEvent } from '../Events';
 
 export class MovementQuestService extends EventParser {
    activeStages: Record<string, Record<string, MovementQuestStagePart>> = {};

@@ -1,11 +1,12 @@
-import type { Quest} from './types';
-import { KillingQuestStagePartComparison, QuestResetEvent, QuestType } from './types';
+import { KillingQuestStagePartComparison } from '@bananos/types';
+import { QuestSchema, QuestType } from 'libs/types/src/QuestPackage';
 
-export const Quests: Record<string, Quest> = {
+export const Quests: Record<string, QuestSchema> = {
    '1': {
       id: '1',
       name: "A Wee Bit O' Cloth",
-      description: "Player, is that you I hear rustlin' about out there? It's me, Angus Stormbrew! There are cultists everywhere, so ye best keep yer voice down. Lean in close and cover yer nose while we talk! This is the only outhouse in all o' Silithus! Trust me I spent hours lookin' all through the night. I decided to sneak in for a wee drop-off before the cultists woke up, but I've got a uhh problem... There's no cloth to... you know... See if ye can find me a wee bit o' cloth and sneak it in through the door!",
+      description:
+         "Player, is that you I hear rustlin' about out there? It's me, Angus Stormbrew! There are cultists everywhere, so ye best keep yer voice down. Lean in close and cover yer nose while we talk! This is the only outhouse in all o' Silithus! Trust me I spent hours lookin' all through the night. I decided to sneak in for a wee drop-off before the cultists woke up, but I've got a uhh problem... There's no cloth to... you know... See if ye can find me a wee bit o' cloth and sneak it in through the door!",
       stageOrder: ['1', '2'],
       stages: {
          '1': {

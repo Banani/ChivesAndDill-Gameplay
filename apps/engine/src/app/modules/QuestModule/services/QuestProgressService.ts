@@ -1,8 +1,7 @@
-import { forEach, mapValues, keyBy, filter } from 'lodash';
-import { EngineEvents } from '../../../EngineEvents';
+import { KillingQuestStagePart, MovementQuestStagePart, QuestProgress, QuestType } from 'libs/types/src/QuestPackage';
+import { filter, forEach, keyBy, mapValues } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
-import { CharacterEngineEvents, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
    NewQuestStageStartedEvent,
@@ -14,7 +13,6 @@ import {
    StartNewQuestMovementStagePartEvent,
 } from '../Events';
 import { Quests } from '../Quests';
-import { KillingQuestStagePart, MovementQuestStagePart, QuestProgress, QuestType } from '../types';
 
 export class QuestProgressService extends EventParser {
    questProgress: Record<string, Record<string, QuestProgress>> = {};

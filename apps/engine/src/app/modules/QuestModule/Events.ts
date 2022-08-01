@@ -1,5 +1,5 @@
+import { KillingQuestStagePart, MovementQuestStagePart, QuestSchema, QuestStage } from 'libs/types/src/QuestPackage';
 import { EngineEvent, EngineEventHandler } from '../../types';
-import { KillingQuestStagePart, MovementQuestStagePart, Quest, QuestStage } from './types';
 
 export enum QuestEngineEvents {
    START_NEW_QUEST_MOVEMENT_STAGE_PART = 'START_NEW_QUEST_MOVEMENT_STAGE_PART',
@@ -39,7 +39,7 @@ export interface KillingStagePartProgress extends EngineEvent {
 
 export interface QuestStartedEvent extends EngineEvent {
    characterId: string;
-   questTemplate: Quest;
+   questTemplate: QuestSchema;
 }
 
 export interface QuestCompletedEvent extends EngineEvent {

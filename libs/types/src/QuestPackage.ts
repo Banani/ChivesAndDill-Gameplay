@@ -5,7 +5,7 @@ export enum QuestType {
    KILLING,
 }
 
-export interface Quest {
+export interface QuestSchema {
    id: string;
    name: string;
    stageOrder?: string[];

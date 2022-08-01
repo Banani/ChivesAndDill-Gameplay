@@ -1,8 +1,8 @@
-import type { EngineStateAction } from './actions';
-import { EngineStateActionTypes } from './actions';
-import _, { merge, mapValues, omit, forEach, clone, pickBy } from 'lodash';
 import type { GlobalStore } from '@bananos/types';
 import { GlobalStoreModule } from '@bananos/types';
+import { clone, forEach, mapValues, merge, pickBy } from 'lodash';
+import type { EngineStateAction } from './actions';
+import { EngineStateActionTypes } from './actions';
 
 const emptyModule = {
    data: {},
@@ -35,6 +35,7 @@ const initialState: GlobalStore = {
    [GlobalStoreModule.ITEMS]: emptyModule,
    [GlobalStoreModule.NPC_CONVERSATION]: emptyModule,
    [GlobalStoreModule.NPC_STOCK]: emptyModule,
+   [GlobalStoreModule.QUEST_DEFINITION]: emptyModule,
 };
 
 const deleteRequestedFields = (data: any, pathToDelete: any) => {
