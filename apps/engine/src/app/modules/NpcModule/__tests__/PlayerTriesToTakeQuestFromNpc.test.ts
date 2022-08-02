@@ -1,5 +1,5 @@
 import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
-import { checkIfErrorWasHandled, EngineManager } from 'apps/engine/src/app/testUtilities';
+import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { CharacterRespawn, WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import { merge } from 'lodash';
@@ -50,21 +50,37 @@ const setupEngine = (npcRespawns: RecursivePartial<Record<string, CharacterRespa
 };
 
 describe('PlayerTriesToTakeQuestFromNpc action', () => {
-   //    it('Player should be able to start conversation', () => {
-   //       const { players, engineManager } = setupEngine();
+   it('Player should be able to start conversation', () => {
+      const { players, engineManager } = setupEngine();
 
-   //       let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-   //       const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
-   //       dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-   //          type: NpcClientMessages.OpenNpcConversationDialog,
-   //          npcId,
-   //       });
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.PlayerTriesToTakeQuestFromNpc,
+         npcId,
+         questId: Object.keys(NpcTemplates['Manczur'].quests)[0],
+      });
 
-   //       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
-   //          data: { playerCharacter_1: { npcId } },
-   //       });
-   //    });
+      checkIfPackageIsValid(GlobalStoreModule.QUEST_PROGRESS, dataPackage, {
+         data: {
+            '1': {
+               activeStage: '1',
+               stagesProgress: {
+                  '1': {
+                     isDone: false,
+                     type: 0,
+                  },
+                  '2': {
+                     currentAmount: 0,
+                     isDone: false,
+                     type: 0,
+                  },
+               },
+            },
+         },
+      });
+   });
 
    it('Player should get error if he tries to start take quest from npc that does not exist', () => {
       const { players, engineManager } = setupEngine();
@@ -104,12 +120,15 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
    it('Player should get error if he tries to take quest that this npc is not offering', () => {
       const { players, engineManager } = setupEngine();
 
-      let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
          type: NpcClientMessages.PlayerTriesToTakeQuestFromNpc,
-         npcId: 'some_random_npc',
+         npcId,
          questId: 'random_id',
       });
 
-      checkIfErrorWasHandled(GlobalStoreModule.NPC_QUESTS, 'That npc does not exist.', dataPackage);
+      checkIfErrorWasHandled(GlobalStoreModule.NPC_QUESTS, 'This npc does not have such quest.', dataPackage);
    });
 });

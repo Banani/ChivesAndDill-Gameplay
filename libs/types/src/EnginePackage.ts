@@ -36,6 +36,7 @@ export enum GlobalStoreModule {
    NPC_CONVERSATION = 'npcConversation',
    NPC_STOCK = 'npcStock',
    QUEST_DEFINITION = 'questDefinition',
+   QUEST_PROGRESS = 'questProgress',
    NPC_QUESTS = 'npcQuests',
 }
 
@@ -72,6 +73,7 @@ export interface EnginePackage {
    [GlobalStoreModule.NPC_STOCK]: PartialEnginePackage<NpcStock>;
    [GlobalStoreModule.QUEST_DEFINITION]: PartialEnginePackage<QuestSchema>;
    [GlobalStoreModule.NPC_QUESTS]: PartialEnginePackage<Record<string, boolean>>;
+   [GlobalStoreModule.QUEST_PROGRESS]: PartialEnginePackage<any>;
 }
 
 interface StoreModule<Data> {
@@ -107,6 +109,7 @@ export interface GlobalStore {
    [GlobalStoreModule.NPC_STOCK]: StoreModule<NpcStock>;
    [GlobalStoreModule.QUEST_DEFINITION]: StoreModule<QuestSchema>;
    [GlobalStoreModule.NPC_QUESTS]: StoreModule<Record<string, boolean>>;
+   [GlobalStoreModule.QUEST_PROGRESS]: StoreModule<any>;
 }
 
 export interface ActiveCharacterStorePart {

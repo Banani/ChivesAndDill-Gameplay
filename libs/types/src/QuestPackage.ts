@@ -65,3 +65,24 @@ export interface QuestProgress {
    stageId: string;
    stagesParts: Record<string, boolean>;
 }
+
+export interface ExternalQuestProgress {
+   activeStage: string;
+   stagesProgress: Record<string, AllExternalQuestStageProgress>;
+}
+
+interface ExternalQuestStageProgress {
+   type: QuestType;
+   isDone: boolean;
+}
+
+interface ExternalKillingQuestStageProgress extends ExternalQuestStageProgress {
+   type: QuestType.KILLING;
+   currentAmount: number;
+}
+
+interface ExternalMovementQuestStageProgress extends ExternalQuestStageProgress {
+   type: QuestType.MOVEMENT;
+}
+
+export type AllExternalQuestStageProgress = ExternalKillingQuestStageProgress | ExternalMovementQuestStageProgress;

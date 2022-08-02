@@ -25,12 +25,6 @@ export const Quests: Record<string, QuestSchema> = {
                   },
                   acceptableRange: 50,
                },
-            },
-         },
-         '2': {
-            id: '2',
-            description: 'Now it is time to fight',
-            stageParts: {
                '2': {
                   id: '2',
                   questId: '1',
@@ -40,8 +34,23 @@ export const Quests: Record<string, QuestSchema> = {
                   rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'OrcSpearman' }],
                   amount: 6,
                },
+            },
+         },
+         '2': {
+            id: '2',
+            description: 'Now it is time to fight',
+            stageParts: {
                '3': {
                   id: '3',
+                  questId: '1',
+                  stageId: '2',
+                  description: "Kill Orc Spearman's",
+                  type: QuestType.KILLING,
+                  rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'OrcSpearman' }],
+                  amount: 6,
+               },
+               '4': {
+                  id: '4',
                   questId: '1',
                   stageId: '2',
                   description: "Kill Orc's",

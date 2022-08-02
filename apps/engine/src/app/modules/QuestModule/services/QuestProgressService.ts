@@ -11,6 +11,7 @@ import {
    StagePartCompletedEvent,
    StartNewQuestKillingStagePartEvent,
    StartNewQuestMovementStagePartEvent,
+   StartQuestEvent,
 } from '../Events';
 import { Quests } from '../Quests';
 
@@ -20,6 +21,7 @@ export class QuestProgressService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
+         [QuestEngineEvents.StartQuest]: this.handleStartQuest,
          [QuestEngineEvents.STAGE_PART_COMPLETED]: this.handleStagePartCompleted,
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
       };
@@ -27,24 +29,25 @@ export class QuestProgressService extends EventParser {
 
    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
       this.questProgress[event.playerCharacter.id] = {};
+   };
 
-      forEach(Quests, (quest) => {
-         this.engineEventCrator.asyncCeateEvent<QuestStartedEvent>({
-            type: QuestEngineEvents.QUEST_STARTED,
-            questTemplate: {
-               id: quest.id,
-               name: quest.name,
-               description: quest.description,
-            },
-            characterId: event.playerCharacter.id,
-         });
+   handleStartQuest: EngineEventHandler<StartQuestEvent> = ({ event, services }) => {
+      const quest = Quests[event.questId];
+      this.engineEventCrator.asyncCeateEvent<QuestStartedEvent>({
+         type: QuestEngineEvents.QUEST_STARTED,
+         questTemplate: {
+            id: quest.id,
+            name: quest.name,
+            description: quest.description,
+         },
+         characterId: event.characterId,
+      });
 
-         const firstStageId = quest.stageOrder[0];
-         this.startAllStagesParts({
-            characterId: event.playerCharacter.id,
-            stageId: firstStageId,
-            questId: quest.id,
-         });
+      const firstStageId = quest.stageOrder[0];
+      this.startAllStagesParts({
+         characterId: event.characterId,
+         stageId: firstStageId,
+         questId: quest.id,
       });
    };
 
@@ -56,7 +59,7 @@ export class QuestProgressService extends EventParser {
       };
 
       this.engineEventCrator.asyncCeateEvent<NewQuestStageStartedEvent>({
-         type: QuestEngineEvents.NEW_QUEST_STAGE_STARTED,
+         type: QuestEngineEvents.NewQuestStageStarted,
          questId,
          characterId,
          questStage: Quests[questId].stages[stageId],

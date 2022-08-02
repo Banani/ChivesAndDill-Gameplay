@@ -11,7 +11,7 @@ export class QuestNotifier extends EventParser {
          [QuestEngineEvents.QUEST_STARTED]: this.handleQuestStarted,
          [QuestEngineEvents.QUEST_COMPLETED]: this.handleQuestCompleted,
          [QuestEngineEvents.KILLING_STAGE_PART_PROGRESS]: this.handleKillingStagePartProgress,
-         [QuestEngineEvents.NEW_QUEST_STAGE_STARTED]: this.handleNewQuestStageStarted,
+         [QuestEngineEvents.NewQuestStageStarted]: this.handleNewQuestStageStarted,
       };
    }
 
