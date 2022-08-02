@@ -1,10 +1,10 @@
-import { MovementQuestStagePart } from 'libs/types/src/QuestPackage';
+import { MovementQuestStagePart, QuestType } from 'libs/types/src/QuestPackage';
 import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
 import { EngineEventHandler, PlayerMovedEvent } from '../../../types';
-import { QuestEngineEvents, StagePartCompletedEvent, StartNewQuestMovementStagePartEvent } from '../Events';
+import { QuestEngineEvents, StagePartCompletedEvent, StartNewQuestStagePartEvent } from '../Events';
 
 export class MovementQuestService extends EventParser {
    activeStages: Record<string, Record<string, MovementQuestStagePart>> = {};
@@ -12,12 +12,16 @@ export class MovementQuestService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [QuestEngineEvents.START_NEW_QUEST_MOVEMENT_STAGE_PART]: this.handleStartNewQuestMovementStagePart,
+         [QuestEngineEvents.StartNewQuestStagePart]: this.handleStartNewQuestStagePart,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
       };
    }
 
-   handleStartNewQuestMovementStagePart: EngineEventHandler<StartNewQuestMovementStagePartEvent> = ({ event }) => {
+   handleStartNewQuestStagePart: EngineEventHandler<StartNewQuestStagePartEvent> = ({ event }) => {
+      if (event.stagePart.type !== QuestType.MOVEMENT) {
+         return;
+      }
+
       if (!this.activeStages[event.characterId]) {
          this.activeStages[event.characterId] = {};
       }
@@ -32,7 +36,7 @@ export class MovementQuestService extends EventParser {
       forEach(this.activeStages[event.characterId], (stagePart) => {
          if (distanceBetweenTwoPoints(event.newLocation, stagePart.targetLocation) <= stagePart.acceptableRange) {
             this.engineEventCrator.asyncCeateEvent<StagePartCompletedEvent>({
-               type: QuestEngineEvents.STAGE_PART_COMPLETED,
+               type: QuestEngineEvents.StagePartCompleted,
                questId: stagePart.questId,
                stageId: stagePart.stageId,
                characterId: event.characterId,

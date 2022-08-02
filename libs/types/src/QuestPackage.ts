@@ -24,7 +24,7 @@ export enum QuestResetEvent {
 export interface QuestStage {
    id: string;
    description: string;
-   stageParts: Record<string, MovementQuestStagePart | KillingQuestStagePart>;
+   stageParts: Record<string, AllQuestStagePart>;
 }
 
 export interface QuestStagePart {
@@ -35,6 +35,8 @@ export interface QuestStagePart {
    stageId: string;
    type: QuestType;
 }
+
+export type AllQuestStagePart = MovementQuestStagePart | KillingQuestStagePart;
 
 export interface MovementQuestStagePart extends QuestStagePart {
    type: QuestType.MOVEMENT;

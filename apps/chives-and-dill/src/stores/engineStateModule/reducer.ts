@@ -37,6 +37,7 @@ const initialState: GlobalStore = {
    [GlobalStoreModule.NPC_STOCK]: emptyModule,
    [GlobalStoreModule.QUEST_DEFINITION]: emptyModule,
    [GlobalStoreModule.NPC_QUESTS]: emptyModule,
+   [GlobalStoreModule.QUEST_PROGRESS]: emptyModule,
 };
 
 const deleteRequestedFields = (data: any, pathToDelete: any) => {

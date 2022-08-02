@@ -1,4 +1,4 @@
-import { KillingQuestStagePart, MovementQuestStagePart, QuestProgress, QuestType } from 'libs/types/src/QuestPackage';
+import { QuestProgress } from 'libs/types/src/QuestPackage';
 import { filter, forEach, keyBy, mapValues } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
@@ -9,8 +9,7 @@ import {
    QuestEngineEvents,
    QuestStartedEvent,
    StagePartCompletedEvent,
-   StartNewQuestKillingStagePartEvent,
-   StartNewQuestMovementStagePartEvent,
+   StartNewQuestStagePartEvent,
    StartQuestEvent,
 } from '../Events';
 import { Quests } from '../Quests';
@@ -22,7 +21,7 @@ export class QuestProgressService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [QuestEngineEvents.StartQuest]: this.handleStartQuest,
-         [QuestEngineEvents.STAGE_PART_COMPLETED]: this.handleStagePartCompleted,
+         [QuestEngineEvents.StagePartCompleted]: this.handleStagePartCompleted,
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
       };
    }
@@ -34,7 +33,7 @@ export class QuestProgressService extends EventParser {
    handleStartQuest: EngineEventHandler<StartQuestEvent> = ({ event, services }) => {
       const quest = Quests[event.questId];
       this.engineEventCrator.asyncCeateEvent<QuestStartedEvent>({
-         type: QuestEngineEvents.QUEST_STARTED,
+         type: QuestEngineEvents.QuestStarted,
          questTemplate: {
             id: quest.id,
             name: quest.name,
@@ -66,21 +65,11 @@ export class QuestProgressService extends EventParser {
       });
 
       forEach(Quests[questId].stages[stageId].stageParts, (stagePart) => {
-         if (stagePart.type === QuestType.MOVEMENT) {
-            this.engineEventCrator.asyncCeateEvent<StartNewQuestMovementStagePartEvent>({
-               type: QuestEngineEvents.START_NEW_QUEST_MOVEMENT_STAGE_PART,
-               characterId: characterId,
-               stagePart: stagePart as MovementQuestStagePart,
-            });
-         }
-
-         if (stagePart.type === QuestType.KILLING) {
-            this.engineEventCrator.asyncCeateEvent<StartNewQuestKillingStagePartEvent>({
-               type: QuestEngineEvents.START_NEW_QUEST_KILLING_STAGE_PART,
-               characterId: characterId,
-               stagePart: stagePart as KillingQuestStagePart,
-            });
-         }
+         this.engineEventCrator.asyncCeateEvent<StartNewQuestStagePartEvent>({
+            type: QuestEngineEvents.StartNewQuestStagePart,
+            characterId,
+            stagePart,
+         });
       });
    };
 
@@ -96,7 +85,7 @@ export class QuestProgressService extends EventParser {
          if (completedStageIndex === stageOrder.length - 1) {
             this.questProgress[event.characterId][event.questId].completed = true;
             this.engineEventCrator.asyncCeateEvent<QuestCompletedEvent>({
-               type: QuestEngineEvents.QUEST_COMPLETED,
+               type: QuestEngineEvents.QuestCompleted,
                questId: event.questId,
                characterId: event.characterId,
             });
