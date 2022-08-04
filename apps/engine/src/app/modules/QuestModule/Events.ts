@@ -31,7 +31,7 @@ export interface StagePartCompletedEvent extends EngineEvent {
    stagePartId: string;
 }
 
-export interface KillingStagePartProgress extends EngineEvent {
+export interface KillingStagePartProgressEvent extends EngineEvent {
    type: QuestEngineEvents.KillingStagePartProgress;
    characterId: string;
    stagePartId: string;
@@ -64,7 +64,7 @@ export interface QuestEngineEventsMap {
    [QuestEngineEvents.StartQuest]: EngineEventHandler<StartQuestEvent>;
    [QuestEngineEvents.QuestStarted]: EngineEventHandler<QuestStartedEvent>;
    [QuestEngineEvents.StagePartCompleted]: EngineEventHandler<StagePartCompletedEvent>;
-   [QuestEngineEvents.KillingStagePartProgress]: EngineEventHandler<KillingStagePartProgress>;
+   [QuestEngineEvents.KillingStagePartProgress]: EngineEventHandler<KillingStagePartProgressEvent>;
    [QuestEngineEvents.QuestCompleted]: EngineEventHandler<QuestCompletedEvent>;
    [QuestEngineEvents.NewQuestStageStarted]: EngineEventHandler<NewQuestStageStartedEvent>;
    [QuestEngineEvents.StartNewQuestStagePart]: EngineEventHandler<StartNewQuestStagePartEvent>;

@@ -1,4 +1,4 @@
-import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
+import { GlobalStoreModule, NpcClientMessages, QuestType } from '@bananos/types';
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { CharacterRespawn, WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { Classes } from 'apps/engine/src/app/types/Classes';
@@ -125,7 +125,22 @@ describe('OpenNpcConversationDialog action', () => {
                name: quest.name,
                description: quest.description,
                stageOrder: [quest.stageOrder[0]],
-               stages: { [quest.stageOrder[0]]: quest.stages[quest.stageOrder[0]] },
+               stages: {
+                  '1': {
+                     description: 'Go to Twilight Outpost',
+                     stageParts: {
+                        '1': {
+                           description: 'Go to Twilight Outpost',
+                           type: QuestType.MOVEMENT,
+                        },
+                        '2': {
+                           description: "Kill Orc Spearman's",
+                           type: QuestType.KILLING,
+                           amount: 6,
+                        },
+                     },
+                  },
+               },
             },
          },
       });

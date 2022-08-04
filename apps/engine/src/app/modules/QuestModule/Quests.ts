@@ -28,7 +28,7 @@ export const Quests: Record<string, QuestSchema> = {
                '2': {
                   id: '2',
                   questId: '1',
-                  stageId: '2',
+                  stageId: '1',
                   description: "Kill Orc Spearman's",
                   type: QuestType.KILLING,
                   rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'OrcSpearman' }],

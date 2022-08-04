@@ -1,4 +1,4 @@
-import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
+import { GlobalStoreModule, NpcClientMessages, QuestType } from '@bananos/types';
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { CharacterRespawn, WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { Classes } from 'apps/engine/src/app/types/Classes';
@@ -68,13 +68,15 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
                activeStage: '1',
                stagesProgress: {
                   '1': {
-                     isDone: false,
-                     type: 0,
-                  },
-                  '2': {
-                     currentAmount: 0,
-                     isDone: false,
-                     type: 0,
+                     '1': {
+                        isDone: false,
+                        type: QuestType.MOVEMENT,
+                     },
+                     '2': {
+                        currentAmount: 0,
+                        isDone: false,
+                        type: QuestType.KILLING,
+                     },
                   },
                },
             },

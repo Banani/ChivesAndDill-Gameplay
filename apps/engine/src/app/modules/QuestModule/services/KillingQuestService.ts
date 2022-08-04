@@ -5,7 +5,7 @@ import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { Character, CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { CharacterEngineEvents, CharacterLostHpEvent } from '../../CharacterModule/Events';
-import { KillingStagePartProgress, QuestEngineEvents, StagePartCompletedEvent, StartNewQuestStagePartEvent } from '../Events';
+import { KillingStagePartProgressEvent, QuestEngineEvents, StagePartCompletedEvent, StartNewQuestStagePartEvent } from '../Events';
 
 const comparators: Record<KillingQuestStagePartComparison, (character: Character, fieldName: string, value: string) => boolean> = {
    [KillingQuestStagePartComparison.equality]: (character: Character, fieldName: string, value: string) => character[fieldName] === value,
@@ -42,7 +42,7 @@ export class KillingQuestService extends EventParser {
 
             if (matched) {
                stagePart.currentAmount++;
-               this.engineEventCrator.asyncCeateEvent<KillingStagePartProgress>({
+               this.engineEventCrator.asyncCeateEvent<KillingStagePartProgressEvent>({
                   type: QuestEngineEvents.KillingStagePartProgress,
                   questId: stagePart.questId,
                   stageId: stagePart.stageId,
@@ -74,7 +74,7 @@ export class KillingQuestService extends EventParser {
             if (stagePart.resetConditions?.some((condition) => condition.type === QuestResetEvent.PlayerLostHp)) {
                stagePart.currentAmount = 0;
 
-               this.engineEventCrator.asyncCeateEvent<KillingStagePartProgress>({
+               this.engineEventCrator.asyncCeateEvent<KillingStagePartProgressEvent>({
                   type: QuestEngineEvents.KillingStagePartProgress,
                   questId: stagePart.questId,
                   stageId: stagePart.stageId,

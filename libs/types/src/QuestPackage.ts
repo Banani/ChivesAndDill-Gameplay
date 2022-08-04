@@ -1,8 +1,8 @@
 import { Location } from '@bananos/types';
 
 export enum QuestType {
-   MOVEMENT,
-   KILLING,
+   MOVEMENT = 'movement',
+   KILLING = 'killing',
 }
 
 export interface QuestSchema {
@@ -44,6 +44,10 @@ export interface MovementQuestStagePart extends QuestStagePart {
    acceptableRange: number;
 }
 
+export interface ExternalMovementQuestStagePart {
+   type: QuestType.MOVEMENT;
+}
+
 export interface KillingQuestStagePart extends QuestStagePart {
    type: QuestType.KILLING;
    rule: {
@@ -53,6 +57,13 @@ export interface KillingQuestStagePart extends QuestStagePart {
    }[];
    amount: number;
 }
+
+export interface ExternalKillingQuestStagePart {
+   type: QuestType.KILLING;
+   amount: number;
+}
+
+export type ExternalQuestStagePart = ExternalKillingQuestStagePart | ExternalMovementQuestStagePart;
 
 export interface KillingQuestStagePartStatus extends KillingQuestStagePart {
    currentAmount: number;
