@@ -18,6 +18,7 @@ export enum NpcEngineEvents {
    PlayerTriesToSellItemToNpc = 'PlayerTriesToSellItemToNpc',
 
    PlayerTriesToTakeQuestFromNpc = 'PlayerTriesToTakeQuestFromNpc',
+   PlayerTriesToFinalizeQuestWithNpc = 'PlayerTriesToFinalizeQuestWithNpc',
 }
 
 export interface CreateNewNpcEvent extends EngineEvent {
@@ -70,6 +71,12 @@ export interface PlayerTriesToTakeQuestFromNpcEvent extends EngineEvent {
    questId: string;
 }
 
+export interface PlayerTriesToFinalizeQuestWithNpcEvent extends EngineEvent {
+   type: NpcEngineEvents.PlayerTriesToFinalizeQuestWithNpc;
+   npcId: string;
+   questId: string;
+}
+
 export interface NpcEngineEventsMap {
    [NpcEngineEvents.CreateNewNpc]: EngineEventHandler<CreateNewNpcEvent>;
    [NpcEngineEvents.NewNpcCreated]: EngineEventHandler<NewNpcCreatedEvent>;
@@ -84,4 +91,5 @@ export interface NpcEngineEventsMap {
    [NpcEngineEvents.PlayerTriesToSellItemToNpc]: EngineEventHandler<PlayerTriesToSellItemToNpcEvent>;
 
    [NpcEngineEvents.PlayerTriesToTakeQuestFromNpc]: EngineEventHandler<PlayerTriesToTakeQuestFromNpcEvent>;
+   [NpcEngineEvents.PlayerTriesToFinalizeQuestWithNpc]: EngineEventHandler<PlayerTriesToFinalizeQuestWithNpcEvent>;
 }

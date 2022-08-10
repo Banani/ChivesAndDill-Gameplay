@@ -110,4 +110,8 @@ export class QuestProgressService extends EventParser {
          }
       }
    };
+
+   isQuestInProgress = (characterId: string, questId: string) => !!this.questProgress[characterId][questId];
+
+   isQuestDone = (characterId: string, questId: string) => this.questProgress[characterId][questId].completed;
 }

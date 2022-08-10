@@ -6,6 +6,7 @@ export enum NpcClientMessages {
    BuyItemFromNpc = 'BuyItemFromNpc',
    SellItemToNpc = 'SellItemToNpc',
    PlayerTriesToTakeQuestFromNpc = 'PlayerTriesToTakeQuestFromNpc',
+   FinalizeQuestWithNpc = 'FinalizeQuestWithNpc',
 }
 
 export interface ActiveNpcConversation {
@@ -45,4 +46,16 @@ export interface PlayerTriesToTakeQuestFromNpc {
    questId: string;
 }
 
-export type EngineNpcAction = OpenNpcConversationDialog | CloseNpcConversationDialog | BuyItemFromNpc | SellItemToNpc | PlayerTriesToTakeQuestFromNpc;
+export interface FinalizeQuestWithNpc {
+   type: NpcClientMessages.FinalizeQuestWithNpc;
+   npcId: string;
+   questId: string;
+}
+
+export type EngineNpcAction =
+   | OpenNpcConversationDialog
+   | CloseNpcConversationDialog
+   | BuyItemFromNpc
+   | SellItemToNpc
+   | PlayerTriesToTakeQuestFromNpc
+   | FinalizeQuestWithNpc;

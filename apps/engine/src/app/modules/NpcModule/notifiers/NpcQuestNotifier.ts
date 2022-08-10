@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { NpcEngineEvents, PlayerTriesToTakeQuestFromNpcEvent } from '../Events';
+import { NpcEngineEvents, PlayerTriesToFinalizeQuestWithNpcEvent, PlayerTriesToTakeQuestFromNpcEvent } from '../Events';
 
 export class NpcQuestNotifier extends Notifier<Record<string, boolean>> {
    constructor() {
@@ -25,6 +25,15 @@ export class NpcQuestNotifier extends Notifier<Record<string, boolean>> {
       currentSocket.on(NpcClientMessages.PlayerTriesToTakeQuestFromNpc, ({ npcId, questId }) => {
          this.engineEventCrator.asyncCeateEvent<PlayerTriesToTakeQuestFromNpcEvent>({
             type: NpcEngineEvents.PlayerTriesToTakeQuestFromNpc,
+            requestingCharacterId: event.playerCharacter.id,
+            npcId,
+            questId,
+         });
+      });
+
+      currentSocket.on(NpcClientMessages.FinalizeQuestWithNpc, ({ npcId, questId }) => {
+         this.engineEventCrator.asyncCeateEvent<PlayerTriesToFinalizeQuestWithNpcEvent>({
+            type: NpcEngineEvents.PlayerTriesToFinalizeQuestWithNpc,
             requestingCharacterId: event.playerCharacter.id,
             npcId,
             questId,
