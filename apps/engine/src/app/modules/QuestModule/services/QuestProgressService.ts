@@ -4,8 +4,8 @@ import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
+   AllQuestStagesCompletedEvent,
    NewQuestStageStartedEvent,
-   QuestCompletedEvent,
    QuestEngineEvents,
    QuestStartedEvent,
    StagePartCompletedEvent,
@@ -95,8 +95,8 @@ export class QuestProgressService extends EventParser {
          const completedStageIndex = stageOrder.indexOf(event.stageId);
          if (completedStageIndex === stageOrder.length - 1) {
             this.questProgress[event.characterId][event.questId].completed = true;
-            this.engineEventCrator.asyncCeateEvent<QuestCompletedEvent>({
-               type: QuestEngineEvents.QuestCompleted,
+            this.engineEventCrator.asyncCeateEvent<AllQuestStagesCompletedEvent>({
+               type: QuestEngineEvents.AllQuestStagesCompleted,
                questId: event.questId,
                characterId: event.characterId,
             });

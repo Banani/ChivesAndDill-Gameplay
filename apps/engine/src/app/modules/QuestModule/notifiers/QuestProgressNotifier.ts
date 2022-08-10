@@ -2,7 +2,14 @@ import { AllExternalQuestStageProgress, ExternalQuestProgress, GlobalStoreModule
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
-import { KillingStagePartProgressEvent, NewQuestStageStartedEvent, QuestEngineEvents, StagePartCompletedEvent } from '../Events';
+import {
+   AllQuestStagesCompletedEvent,
+   KillingStagePartProgressEvent,
+   NewQuestStageStartedEvent,
+   QuestEngineEvents,
+   QuestStartedEvent,
+   StagePartCompletedEvent,
+} from '../Events';
 
 export class QuestProgressNotifier extends Notifier<ExternalQuestProgress> {
    constructor() {
@@ -11,12 +18,33 @@ export class QuestProgressNotifier extends Notifier<ExternalQuestProgress> {
          [QuestEngineEvents.NewQuestStageStarted]: this.handleNewQuestStageStarted,
          [QuestEngineEvents.KillingStagePartProgress]: this.handleKillingStagePartProgress,
          [QuestEngineEvents.StagePartCompleted]: this.handleStagePartCompleted,
+         [QuestEngineEvents.QuestStarted]: this.handleQuestStarted,
+         [QuestEngineEvents.AllQuestStagesCompleted]: this.handleAllQuestStagesCompleted,
+         //  [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
       };
    }
 
    stageInitialTranformers: Record<QuestType, () => AllExternalQuestStageProgress> = {
       [QuestType.MOVEMENT]: () => ({ type: QuestType.MOVEMENT, isDone: false }),
       [QuestType.KILLING]: () => ({ type: QuestType.KILLING, isDone: false, currentAmount: 0 }),
+   };
+
+   handleQuestStarted: EngineEventHandler<QuestStartedEvent> = ({ event, services }) => {
+      const character = services.characterService.getCharacterById(event.characterId);
+      if (character.type != CharacterType.Player) {
+         return;
+      }
+
+      this.multicastMultipleObjectsUpdate([
+         {
+            receiverId: character.ownerId,
+            objects: {
+               [event.questTemplate.id]: {
+                  allStagesCompleted: false,
+               },
+            },
+         },
+      ]);
    };
 
    handleNewQuestStageStarted: EngineEventHandler<NewQuestStageStartedEvent> = ({ event, services }) => {
@@ -75,4 +103,38 @@ export class QuestProgressNotifier extends Notifier<ExternalQuestProgress> {
          },
       ]);
    };
+
+   handleAllQuestStagesCompleted: EngineEventHandler<AllQuestStagesCompletedEvent> = ({ event, services }) => {
+      const character = services.characterService.getCharacterById(event.characterId);
+      if (character.type != CharacterType.Player) {
+         return;
+      }
+
+      this.multicastMultipleObjectsUpdate([
+         {
+            receiverId: character.ownerId,
+            objects: {
+               [event.questId]: {
+                  allStagesCompleted: true,
+               },
+            },
+         },
+      ]);
+   };
+
+   //    handleQuestCompleted: EngineEventHandler<StagePartCompletedEvent> = ({ event, services }) => {
+   //       const character = services.characterService.getCharacterById(event.characterId);
+   //       if (character.type != CharacterType.Player) {
+   //          return;
+   //       }
+
+   //       this.multicastMultipleObjectsUpdate([
+   //          {
+   //             receiverId: character.ownerId,
+   //             objects: {
+   //                [event.questId]: {},
+   //             },
+   //          },
+   //       ]);
+   //    };
 }

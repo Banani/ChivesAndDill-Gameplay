@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { EngineModule } from '../../types/EngineModule';
-import { QuestDefinitionNotifier, QuestNotifier, QuestProgressNotifier } from './notifiers';
+import { QuestDefinitionNotifier, QuestProgressNotifier } from './notifiers';
 import { KillingQuestService, MovementQuestService, QuestProgressService, QuestTemplateService } from './services';
 
 export interface QuestModuleServices {
@@ -12,7 +12,7 @@ export interface QuestModuleServices {
 
 export const getQuestModule: () => EngineModule<QuestModuleServices> = () => {
    return {
-      notifiers: [new QuestNotifier(), new QuestDefinitionNotifier(), new QuestProgressNotifier()],
+      notifiers: [new QuestDefinitionNotifier(), new QuestProgressNotifier()],
       services: {
          killingQuestService: new KillingQuestService(),
          movementQuestService: new MovementQuestService(),

@@ -80,6 +80,7 @@ export interface QuestProgress {
 }
 
 export interface ExternalQuestProgress {
+   allStagesCompleted: boolean;
    activeStage: string;
    stagesProgress: Record<string, AllExternalQuestStageProgress>;
 }

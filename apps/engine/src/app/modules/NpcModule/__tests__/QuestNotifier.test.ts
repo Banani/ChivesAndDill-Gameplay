@@ -63,4 +63,8 @@ describe('QuestNotifier', () => {
          },
       });
    });
+
+   it('Player should not be infomred about available tests if they are already done', () => {
+      //TODO
+   });
 });

@@ -50,7 +50,7 @@ const setupEngine = (npcRespawns: RecursivePartial<Record<string, CharacterRespa
 };
 
 describe('PlayerTriesToTakeQuestFromNpc action', () => {
-   it('Player should be able to start conversation', () => {
+   it('Player should be notified about new quest when he is taking that quest', () => {
       const { players, engineManager } = setupEngine();
 
       let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -66,6 +66,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
          data: {
             '1': {
                activeStage: '1',
+               allStagesCompleted: false,
                stagesProgress: {
                   '1': {
                      '1': {

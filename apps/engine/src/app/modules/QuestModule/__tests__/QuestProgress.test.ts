@@ -114,6 +114,7 @@ describe('QuestProgress', () => {
          data: {
             '1': {
                activeStage: '1',
+               allStagesCompleted: false,
                stagesProgress: {
                   '1': {
                      '1': {
@@ -332,6 +333,67 @@ describe('QuestProgress', () => {
                            type: 'killing',
                         },
                      },
+                  },
+               },
+            },
+         },
+      });
+   });
+
+   it('Player should get notification that all stages are done when he complete all the stages', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<StartQuestEvent>({
+         type: QuestEngineEvents.StartQuest,
+         characterId: players['1'].characterId,
+         questId: '1',
+      });
+
+      engineManager.createSystemAction<PlayerMovedEvent>({
+         type: EngineEvents.PlayerMoved,
+         characterId: players['1'].characterId,
+         newCharacterDirection: CharacterDirection.DOWN,
+         newLocation: { x: 175, y: 180 },
+      });
+
+      _.times(6, () => {
+         engineManager.createSystemAction<CharacterDiedEvent>({
+            type: EngineEvents.CharacterDied,
+            characterId: '1',
+            character: { division: 'OrcSpearman' } as Monster,
+            killerId: players['1'].characterId,
+         });
+      });
+
+      _.times(6, () => {
+         engineManager.createSystemAction<CharacterDiedEvent>({
+            type: EngineEvents.CharacterDied,
+            characterId: '1',
+            character: { division: 'Orc' } as Monster,
+            killerId: players['1'].characterId,
+         });
+      });
+
+      _.times(6, () => {
+         engineManager.createSystemAction<CharacterDiedEvent>({
+            type: EngineEvents.CharacterDied,
+            characterId: '1',
+            character: { division: 'OrcSpearman' } as Monster,
+            killerId: players['1'].characterId,
+         });
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(GlobalStoreModule.QUEST_PROGRESS, dataPackage, {
+         data: {
+            '1': {
+               allStagesCompleted: true,
+               stagesProgress: {
+                  '2': {
+                     '3': { currentAmount: 6, isDone: true },
                   },
                },
             },

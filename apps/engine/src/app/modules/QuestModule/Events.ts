@@ -8,6 +8,7 @@ export enum QuestEngineEvents {
    StartNewQuestStagePart = 'StartNewQuestStagePart',
    KillingStagePartProgress = 'KillingStagePartProgress',
    StagePartCompleted = 'StagePartCompleted',
+   AllQuestStagesCompleted = 'AllQuestStagesCompleted',
    QuestCompleted = 'QuestCompleted',
 }
 
@@ -47,6 +48,12 @@ export interface QuestStartedEvent extends EngineEvent {
    questTemplate: QuestSchema;
 }
 
+export interface AllQuestStagesCompletedEvent extends EngineEvent {
+   type: QuestEngineEvents.AllQuestStagesCompleted;
+   questId: string;
+   characterId: string;
+}
+
 export interface QuestCompletedEvent extends EngineEvent {
    type: QuestEngineEvents.QuestCompleted;
    questId: string;
@@ -65,6 +72,7 @@ export interface QuestEngineEventsMap {
    [QuestEngineEvents.QuestStarted]: EngineEventHandler<QuestStartedEvent>;
    [QuestEngineEvents.StagePartCompleted]: EngineEventHandler<StagePartCompletedEvent>;
    [QuestEngineEvents.KillingStagePartProgress]: EngineEventHandler<KillingStagePartProgressEvent>;
+   [QuestEngineEvents.AllQuestStagesCompleted]: EngineEventHandler<AllQuestStagesCompletedEvent>;
    [QuestEngineEvents.QuestCompleted]: EngineEventHandler<QuestCompletedEvent>;
    [QuestEngineEvents.NewQuestStageStarted]: EngineEventHandler<NewQuestStageStartedEvent>;
    [QuestEngineEvents.StartNewQuestStagePart]: EngineEventHandler<StartNewQuestStagePartEvent>;
