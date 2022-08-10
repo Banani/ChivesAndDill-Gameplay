@@ -1,3 +1,5 @@
+import { KillingQuestStagePartComparison } from './QuestPackage';
+
 export interface Location {
    x: number;
    y: number;
@@ -54,10 +56,6 @@ interface StagePart {
    targetLocation: Location;
    description: string;
    currentProgress: number;
-}
-
-export enum KillingQuestStagePartComparison {
-   equality = 'equality',
 }
 
 export interface SpriteSheet {

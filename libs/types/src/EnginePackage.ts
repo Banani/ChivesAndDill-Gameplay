@@ -3,6 +3,7 @@ import { CharacterEvents } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
 import { CommonClientMessages } from './engineEvents';
+import { QuestSchema } from './QuestPackage';
 import type { CharacterDirection } from './shared';
 
 export enum GlobalStoreModule {
@@ -22,7 +23,6 @@ export enum GlobalStoreModule {
    PLAYER_MOVEMENT = 'playerMovement',
    AREAS = 'areas',
    MAP_SCHEMA = 'mapSchema',
-   QUESTS = 'quests',
    EXPERIENCE = 'experience',
    CURRENCY = 'currency',
    ACTIVE_LOOT = 'activeLoot',
@@ -35,6 +35,9 @@ export enum GlobalStoreModule {
    ITEMS = 'items',
    NPC_CONVERSATION = 'npcConversation',
    NPC_STOCK = 'npcStock',
+   QUEST_DEFINITION = 'questDefinition',
+   QUEST_PROGRESS = 'questProgress',
+   NPC_QUESTS = 'npcQuests',
 }
 
 export interface PartialEnginePackage<Data> {
@@ -68,6 +71,9 @@ export interface EnginePackage {
    [GlobalStoreModule.ITEMS]: PartialEnginePackage<ItemTemplate>;
    [GlobalStoreModule.NPC_CONVERSATION]: PartialEnginePackage<ActiveNpcConversation>;
    [GlobalStoreModule.NPC_STOCK]: PartialEnginePackage<NpcStock>;
+   [GlobalStoreModule.QUEST_DEFINITION]: PartialEnginePackage<QuestSchema>;
+   [GlobalStoreModule.NPC_QUESTS]: PartialEnginePackage<Record<string, boolean>>;
+   [GlobalStoreModule.QUEST_PROGRESS]: PartialEnginePackage<any>;
 }
 
 interface StoreModule<Data> {
@@ -101,6 +107,9 @@ export interface GlobalStore {
    [GlobalStoreModule.ITEMS]: StoreModule<ItemTemplate>;
    [GlobalStoreModule.NPC_CONVERSATION]: StoreModule<ActiveNpcConversation>;
    [GlobalStoreModule.NPC_STOCK]: StoreModule<NpcStock>;
+   [GlobalStoreModule.QUEST_DEFINITION]: StoreModule<QuestSchema>;
+   [GlobalStoreModule.NPC_QUESTS]: StoreModule<Record<string, boolean>>;
+   [GlobalStoreModule.QUEST_PROGRESS]: StoreModule<any>;
 }
 
 export interface ActiveCharacterStorePart {

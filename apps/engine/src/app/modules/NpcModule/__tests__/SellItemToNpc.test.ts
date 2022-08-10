@@ -2,12 +2,12 @@ import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { Classes } from 'apps/engine/src/app/types/Classes';
+import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../ItemModule/Events';
+import { NpcTemplates } from '../NpcTemplate';
+import { NpcRespawnTemplateService } from '../services/NpcRespawnTemplateService';
 import _ = require('lodash');
-import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../../ItemModule/Events';
-import { NpcTemplates } from '../../NpcTemplate';
-import { NpcRespawnTemplateService } from '../../services/NpcRespawnTemplateService';
 
-jest.mock('../../services/NpcRespawnTemplateService', () => {
+jest.mock('../services/NpcRespawnTemplateService', () => {
    const getData = jest.fn();
 
    return {

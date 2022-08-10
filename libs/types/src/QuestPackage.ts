@@ -1,11 +1,11 @@
 import { Location } from '@bananos/types';
 
 export enum QuestType {
-   MOVEMENT,
-   KILLING,
+   MOVEMENT = 'movement',
+   KILLING = 'killing',
 }
 
-export interface Quest {
+export interface QuestSchema {
    id: string;
    name: string;
    stageOrder?: string[];
@@ -24,7 +24,7 @@ export enum QuestResetEvent {
 export interface QuestStage {
    id: string;
    description: string;
-   stageParts: Record<string, MovementQuestStagePart | KillingQuestStagePart>;
+   stageParts: Record<string, AllQuestStagePart>;
 }
 
 export interface QuestStagePart {
@@ -36,10 +36,16 @@ export interface QuestStagePart {
    type: QuestType;
 }
 
+export type AllQuestStagePart = MovementQuestStagePart | KillingQuestStagePart;
+
 export interface MovementQuestStagePart extends QuestStagePart {
    type: QuestType.MOVEMENT;
    targetLocation: Location;
    acceptableRange: number;
+}
+
+export interface ExternalMovementQuestStagePart {
+   type: QuestType.MOVEMENT;
 }
 
 export interface KillingQuestStagePart extends QuestStagePart {
@@ -51,6 +57,13 @@ export interface KillingQuestStagePart extends QuestStagePart {
    }[];
    amount: number;
 }
+
+export interface ExternalKillingQuestStagePart {
+   type: QuestType.KILLING;
+   amount: number;
+}
+
+export type ExternalQuestStagePart = ExternalKillingQuestStagePart | ExternalMovementQuestStagePart;
 
 export interface KillingQuestStagePartStatus extends KillingQuestStagePart {
    currentAmount: number;
@@ -65,3 +78,24 @@ export interface QuestProgress {
    stageId: string;
    stagesParts: Record<string, boolean>;
 }
+
+export interface ExternalQuestProgress {
+   activeStage: string;
+   stagesProgress: Record<string, AllExternalQuestStageProgress>;
+}
+
+interface ExternalQuestStageProgress {
+   type: QuestType;
+   isDone: boolean;
+}
+
+interface ExternalKillingQuestStageProgress extends ExternalQuestStageProgress {
+   type: QuestType.KILLING;
+   currentAmount: number;
+}
+
+interface ExternalMovementQuestStageProgress extends ExternalQuestStageProgress {
+   type: QuestType.MOVEMENT;
+}
+
+export type AllExternalQuestStageProgress = ExternalKillingQuestStageProgress | ExternalMovementQuestStageProgress;

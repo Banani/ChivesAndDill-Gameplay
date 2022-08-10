@@ -1,11 +1,11 @@
-import * as _ from 'lodash';
-import { forEach, find } from 'lodash';
+import { KillingQuestStagePartComparison } from '@bananos/types';
+import { KillingQuestStagePartStatus, QuestResetEvent, QuestType } from 'libs/types/src/QuestPackage';
+import { find, forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { Character, CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { CharacterEngineEvents, CharacterLostHpEvent } from '../../CharacterModule/Events';
-import { KillingStagePartProgress, QuestEngineEvents, StagePartCompletedEvent, StartNewQuestKillingStagePartEvent } from '../Events';
-import { KillingQuestStagePartComparison, KillingQuestStagePartStatus, QuestResetEvent } from '../types';
+import { KillingStagePartProgressEvent, QuestEngineEvents, StagePartCompletedEvent, StartNewQuestStagePartEvent } from '../Events';
 
 const comparators: Record<KillingQuestStagePartComparison, (character: Character, fieldName: string, value: string) => boolean> = {
    [KillingQuestStagePartComparison.equality]: (character: Character, fieldName: string, value: string) => character[fieldName] === value,
@@ -17,16 +17,21 @@ export class KillingQuestService extends EventParser {
    constructor() {
       super();
       this.eventsToHandlersMap = {
-         [QuestEngineEvents.START_NEW_QUEST_KILLING_STAGE_PART]: this.handleStartNewQuestKillingStagePart,
+         [QuestEngineEvents.StartNewQuestStagePart]: this.handleStartNewQuestStagePart,
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [CharacterEngineEvents.CharacterLostHp]: this.handleCharacterLostHp,
       };
    }
 
-   handleStartNewQuestKillingStagePart: EngineEventHandler<StartNewQuestKillingStagePartEvent> = ({ event }) => {
+   handleStartNewQuestStagePart: EngineEventHandler<StartNewQuestStagePartEvent> = ({ event }) => {
+      if (event.stagePart.type !== QuestType.KILLING) {
+         return;
+      }
+
       if (!this.activeStages[event.characterId]) {
          this.activeStages[event.characterId] = {};
       }
+
       this.activeStages[event.characterId][event.stagePart.id] = { currentAmount: 0, ...event.stagePart };
    };
 
@@ -37,8 +42,8 @@ export class KillingQuestService extends EventParser {
 
             if (matched) {
                stagePart.currentAmount++;
-               this.engineEventCrator.asyncCeateEvent<KillingStagePartProgress>({
-                  type: QuestEngineEvents.KILLING_STAGE_PART_PROGRESS,
+               this.engineEventCrator.asyncCeateEvent<KillingStagePartProgressEvent>({
+                  type: QuestEngineEvents.KillingStagePartProgress,
                   questId: stagePart.questId,
                   stageId: stagePart.stageId,
                   characterId: event.killerId,
@@ -49,7 +54,7 @@ export class KillingQuestService extends EventParser {
 
                if (stagePart.currentAmount === stagePart.amount) {
                   this.engineEventCrator.asyncCeateEvent<StagePartCompletedEvent>({
-                     type: QuestEngineEvents.STAGE_PART_COMPLETED,
+                     type: QuestEngineEvents.StagePartCompleted,
                      questId: stagePart.questId,
                      stageId: stagePart.stageId,
                      characterId: event.killerId,
@@ -69,8 +74,8 @@ export class KillingQuestService extends EventParser {
             if (stagePart.resetConditions?.some((condition) => condition.type === QuestResetEvent.PlayerLostHp)) {
                stagePart.currentAmount = 0;
 
-               this.engineEventCrator.asyncCeateEvent<KillingStagePartProgress>({
-                  type: QuestEngineEvents.KILLING_STAGE_PART_PROGRESS,
+               this.engineEventCrator.asyncCeateEvent<KillingStagePartProgressEvent>({
+                  type: QuestEngineEvents.KillingStagePartProgress,
                   questId: stagePart.questId,
                   stageId: stagePart.stageId,
                   characterId: event.characterId,

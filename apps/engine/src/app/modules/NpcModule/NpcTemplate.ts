@@ -1,7 +1,8 @@
-import type { ItemTemplate } from '@bananos/types';
-import { CharacterDirection } from '@bananos/types';
+import { CharacterDirection, ItemTemplate } from '@bananos/types';
+import { QuestSchema } from 'libs/types/src/QuestPackage';
 import { ItemTemplates } from '../ItemModule/ItemTemplates';
-import type { Spell } from '../SpellModule/types/SpellTypes';
+import { Quests } from '../QuestModule/Quests';
+import { Spell } from '../SpellModule/types/SpellTypes';
 
 export interface NpcTemplate {
    id: string;
@@ -18,6 +19,7 @@ export interface NpcTemplate {
    spellPowerRegen: number;
    spells: Record<string, Spell>;
    stock?: Record<string, ItemTemplate>;
+   quests?: Record<string, QuestSchema>;
 }
 
 export const NpcTemplates: Record<string, NpcTemplate> = {
@@ -40,6 +42,9 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
          '2': ItemTemplates['2'],
          '4': ItemTemplates['4'],
          '5': ItemTemplates['5'],
+      },
+      quests: {
+         '1': Quests['1'],
       },
    },
    KretonPL: {
