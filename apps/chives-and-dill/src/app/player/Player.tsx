@@ -1,5 +1,6 @@
 import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import _ from 'lodash';
+import { CommonClientMessages } from '@bananos/types';
 import { SocketContext } from '../gameController/socketContext'
 import * as PIXI from 'pixi.js';
 import React, { useContext, useCallback, useEffect, useState } from 'react';
@@ -133,9 +134,19 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
          });
       }
 
+      const handleMonsterClick = () => {
+         if (player.type !== 'Monster') {
+            return;
+         }
+         socket?.emit(CommonClientMessages.OpenLoot, {
+            corpseId: player.id
+         });
+      }
+
       const handlePlayerClick = () => {
          dispatch(setActiveTarget({ characterId: player.id }));
          handleNpcClick();
+         handleMonsterClick();
       }
 
       const hpBar = useCallback(

@@ -2,7 +2,7 @@ import { AppContext, Container, Sprite, Stage } from '@inlet/react-pixi';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
-import { getCharactersMovements, getCurrency, getEngineState, selectActiveCharacterId, selectMapSchema, selectSpellChannels, getActiveConversation } from '../stores';
+import { getCharactersMovements, getCurrency, getEngineState, selectActiveCharacterId, selectMapSchema, selectSpellChannels, getActiveConversation, getActiveLoot } from '../stores';
 import { SocketContext } from './gameController/socketContext';
 
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
@@ -14,6 +14,7 @@ import { QuestLog } from './guiContent/quests/questLog/QuestLog';
 import { QuestsSideView } from './guiContent/quests/questSideView/QuestsSideView';
 import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
+import { LootModal } from './guiContent/lootModal/LootModal';
 import { AreasManager } from './mapContent/AreasManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
@@ -31,6 +32,7 @@ const Map = () => {
    const mapSchema = useSelector(selectMapSchema);
    const spellChannels = useSelector(selectSpellChannels);
    const charactersMovements = useSelector(getCharactersMovements);
+   const activeLoot = useSelector(getActiveLoot);
    const currency = useSelector(getCurrency);
    const activeConversation = useSelector(getActiveConversation);
    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
@@ -81,6 +83,7 @@ const Map = () => {
          {<QuestsSideView />}
          <QuestLog />
          <Chat />
+         {!_.isEmpty(activeLoot[activePlayerId]) ? <LootModal activeLoot={activeLoot[activePlayerId]} /> : null}
          {activeConversation ? <NpcModal /> : null}
          <MoneyBar currency={currency} activePlayerId={activePlayerId} />
          <ExperienceBar />
