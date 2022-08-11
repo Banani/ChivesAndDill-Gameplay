@@ -3,6 +3,7 @@ import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { CharacterType } from '../../../types';
+import { QuestCompletedEvent, QuestEngineEvents } from '../../QuestModule/Events';
 import type {
    AddExperienceEvent,
    CharacterGainExperienceEvent,
@@ -26,6 +27,7 @@ export class ExperienceService extends EventParser {
          [CharacterEngineEvents.AddExperience]: this.handleAddExperience,
 
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
+         [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
       };
    }
 
@@ -107,4 +109,16 @@ export class ExperienceService extends EventParser {
    };
 
    getExperienceTracks = () => this.experienceTracks;
+
+   handleQuestCompleted: EngineEventHandler<QuestCompletedEvent> = ({ event, services }) => {
+      const { questReward } = services.questTemplateService.getData()[event.questId];
+      this.engineEventCrator.asyncCeateEvent<AddExperienceEvent>({
+         type: CharacterEngineEvents.AddExperience,
+         characterId: event.characterId,
+         amount: questReward.experience,
+         experienceGainDetails: {
+            type: ExperienceGainSource.QuestCompleted,
+         },
+      });
+   };
 }

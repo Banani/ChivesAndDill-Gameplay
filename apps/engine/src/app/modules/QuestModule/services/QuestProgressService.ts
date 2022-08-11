@@ -32,12 +32,14 @@ export class QuestProgressService extends EventParser {
    handleStartQuest: EngineEventHandler<StartQuestEvent> = ({ event, services }) => {
       const quests = services.questTemplateService.getData();
       const quest = quests[event.questId];
+
       this.engineEventCrator.asyncCeateEvent<QuestStartedEvent>({
          type: QuestEngineEvents.QuestStarted,
          questTemplate: {
             id: quest.id,
             name: quest.name,
             description: quest.description,
+            questReward: quest.questReward,
          },
          characterId: event.characterId,
       });

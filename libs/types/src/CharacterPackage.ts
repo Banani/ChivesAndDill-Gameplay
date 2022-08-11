@@ -4,6 +4,7 @@ export enum CharacterClientEvents {
 
 export enum ExperienceGainSource {
    MonsterKill = 'MonsterKill',
+   QuestCompleted = 'QuestCompleted',
 }
 
 export interface ExperienceGainFromKillingMonster {
@@ -11,7 +12,11 @@ export interface ExperienceGainFromKillingMonster {
    monsterId: string;
 }
 
-export type ExperienceGainDetails = ExperienceGainFromKillingMonster;
+export interface ExperienceGainFromQuest {
+   type: ExperienceGainSource.QuestCompleted;
+}
+
+export type ExperienceGainDetails = ExperienceGainFromKillingMonster | ExperienceGainFromQuest;
 
 export interface ExperienceGainEvent {
    type: CharacterClientEvents.ExperienceGain;

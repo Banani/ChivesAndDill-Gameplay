@@ -61,6 +61,9 @@ export const Quests: Record<string, QuestSchema> = {
             },
          },
       },
+      questReward: {
+         experience: 120,
+      },
    },
    '2': {
       id: '2',
@@ -83,6 +86,9 @@ export const Quests: Record<string, QuestSchema> = {
                },
             },
          },
+      },
+      questReward: {
+         experience: 100,
       },
    },
 };

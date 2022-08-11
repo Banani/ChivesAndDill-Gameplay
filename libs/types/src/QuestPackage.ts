@@ -5,12 +5,17 @@ export enum QuestType {
    KILLING = 'killing',
 }
 
+export interface QuestReward {
+   experience: number;
+}
+
 export interface QuestSchema {
    id: string;
    name: string;
    stageOrder?: string[];
    description: string;
    stages?: Record<string, QuestStage>;
+   questReward: QuestReward;
 }
 
 export interface QuestResetCondition {
