@@ -70,6 +70,7 @@ export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
       _.mapValues(quests, (quest) => ({
          name: quest.name,
          description: quest.description,
+         questReward: quest.questReward,
          stageOrder: [quest.stageOrder[0]],
          stages: {
             [quest.stageOrder[0]]: {

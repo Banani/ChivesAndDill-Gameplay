@@ -124,6 +124,7 @@ describe('OpenNpcConversationDialog action', () => {
             '1': {
                name: quest.name,
                description: quest.description,
+               questReward: quest.questReward,
                stageOrder: [quest.stageOrder[0]],
                stages: {
                   '1': {
