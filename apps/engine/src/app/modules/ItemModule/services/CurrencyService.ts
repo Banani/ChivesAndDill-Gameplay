@@ -1,7 +1,8 @@
 import { EventParser } from '../../../EventParser';
 import type { EngineEventHandler } from '../../../types';
-import type { PlayerCharacterCreatedEvent} from '../../PlayerModule/Events';
+import type { PlayerCharacterCreatedEvent } from '../../PlayerModule/Events';
 import { PlayerEngineEvents } from '../../PlayerModule/Events';
+import { QuestCompletedEvent, QuestEngineEvents } from '../../QuestModule/Events';
 import type { AddCurrencyToCharacterEvent, CurrencyAmountUpdatedEvent, RemoveCurrencyFromCharacterEvent } from '../Events';
 import { ItemEngineEvents } from '../Events';
 
@@ -14,6 +15,7 @@ export class CurrencyService extends EventParser {
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handleNewPlayerCreated,
          [ItemEngineEvents.RemoveCurrencyFromCharacter]: this.handleRemoveCurrencyFromCharacter,
          [ItemEngineEvents.AddCurrencyToCharacter]: this.handleAddCurrencyToCharacter,
+         [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
       };
    }
 
@@ -48,4 +50,16 @@ export class CurrencyService extends EventParser {
    };
 
    getCharacterMoneyById = (characterId: string) => this.currencyTracks[characterId];
+
+   handleQuestCompleted: EngineEventHandler<QuestCompletedEvent> = ({ event, services }) => {
+      const { questReward } = services.questTemplateService.getData()[event.questId];
+
+      if (questReward.currency) {
+         this.engineEventCrator.asyncCeateEvent<AddCurrencyToCharacterEvent>({
+            type: ItemEngineEvents.AddCurrencyToCharacter,
+            characterId: event.characterId,
+            amount: questReward.currency,
+         });
+      }
+   };
 }

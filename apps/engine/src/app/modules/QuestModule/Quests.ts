@@ -63,6 +63,7 @@ export const Quests: Record<string, QuestSchema> = {
       },
       questReward: {
          experience: 120,
+         currency: 1649,
       },
    },
    '2': {

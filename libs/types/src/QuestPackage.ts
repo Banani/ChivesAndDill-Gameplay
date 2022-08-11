@@ -7,6 +7,7 @@ export enum QuestType {
 
 export interface QuestReward {
    experience: number;
+   currency?: number;
 }
 
 export interface QuestSchema {
