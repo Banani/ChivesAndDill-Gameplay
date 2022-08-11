@@ -1,7 +1,7 @@
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
 import { EngineEventHandler } from '../../../types';
-import { QuestEngineEvents, StartQuestEvent } from '../../QuestModule/Events';
+import { QuestCompletedEvent, QuestEngineEvents, StartQuestEvent } from '../../QuestModule/Events';
 import { NpcEngineEvents, PlayerTriesToFinalizeQuestWithNpcEvent, PlayerTriesToTakeQuestFromNpcEvent } from '../Events';
 
 export class NpcQuestService extends EventParser {
@@ -64,10 +64,10 @@ export class NpcQuestService extends EventParser {
          return;
       }
 
-      //   this.engineEventCrator.asyncCeateEvent<StartQuestEvent>({
-      //      type: QuestEngineEvents.StartQuest,
-      //      characterId: event.requestingCharacterId,
-      //      questId: event.questId,
-      //   });
+      this.engineEventCrator.asyncCeateEvent<QuestCompletedEvent>({
+         type: QuestEngineEvents.QuestCompleted,
+         characterId: event.requestingCharacterId,
+         questId: event.questId,
+      });
    };
 }

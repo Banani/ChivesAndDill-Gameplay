@@ -125,7 +125,7 @@ describe('PlayerTriesToFinalizeQuestWithNpc action', () => {
       });
 
       dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-         type: NpcClientMessages.PlayerTriesToTakeQuestFromNpc,
+         type: NpcClientMessages.TakeQuestFromNpc,
          npcId,
          questId: Object.keys(NpcTemplates['Manczur'].quests)[0],
       });

@@ -6,6 +6,7 @@ import {
    AllQuestStagesCompletedEvent,
    KillingStagePartProgressEvent,
    NewQuestStageStartedEvent,
+   QuestCompletedEvent,
    QuestEngineEvents,
    QuestStartedEvent,
    StagePartCompletedEvent,
@@ -20,7 +21,7 @@ export class QuestProgressNotifier extends Notifier<ExternalQuestProgress> {
          [QuestEngineEvents.StagePartCompleted]: this.handleStagePartCompleted,
          [QuestEngineEvents.QuestStarted]: this.handleQuestStarted,
          [QuestEngineEvents.AllQuestStagesCompleted]: this.handleAllQuestStagesCompleted,
-         //  [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
+         [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
       };
    }
 
@@ -122,19 +123,19 @@ export class QuestProgressNotifier extends Notifier<ExternalQuestProgress> {
       ]);
    };
 
-   //    handleQuestCompleted: EngineEventHandler<StagePartCompletedEvent> = ({ event, services }) => {
-   //       const character = services.characterService.getCharacterById(event.characterId);
-   //       if (character.type != CharacterType.Player) {
-   //          return;
-   //       }
+   handleQuestCompleted: EngineEventHandler<QuestCompletedEvent> = ({ event, services }) => {
+      const character = services.characterService.getCharacterById(event.characterId);
+      if (character.type != CharacterType.Player) {
+         return;
+      }
 
-   //       this.multicastMultipleObjectsUpdate([
-   //          {
-   //             receiverId: character.ownerId,
-   //             objects: {
-   //                [event.questId]: {},
-   //             },
-   //          },
-   //       ]);
-   //    };
+      this.multicastObjectsDeletion([
+         {
+            receiverId: character.ownerId,
+            objects: {
+               [event.questId]: null,
+            },
+         },
+      ]);
+   };
 }

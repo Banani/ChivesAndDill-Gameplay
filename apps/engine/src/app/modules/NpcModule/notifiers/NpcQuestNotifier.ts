@@ -22,7 +22,7 @@ export class NpcQuestNotifier extends Notifier<Record<string, boolean>> {
 
       this.multicastMultipleObjectsUpdate([{ receiverId: event.playerCharacter.ownerId, objects: questMap }]);
 
-      currentSocket.on(NpcClientMessages.PlayerTriesToTakeQuestFromNpc, ({ npcId, questId }) => {
+      currentSocket.on(NpcClientMessages.TakeQuestFromNpc, ({ npcId, questId }) => {
          this.engineEventCrator.asyncCeateEvent<PlayerTriesToTakeQuestFromNpcEvent>({
             type: NpcEngineEvents.PlayerTriesToTakeQuestFromNpc,
             requestingCharacterId: event.playerCharacter.id,

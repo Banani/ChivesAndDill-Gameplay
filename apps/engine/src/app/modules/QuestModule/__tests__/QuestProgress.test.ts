@@ -4,7 +4,7 @@ import { Classes } from 'apps/engine/src/app/types/Classes';
 import { EngineEvents } from '../../../EngineEvents';
 import { CharacterDiedEvent, PlayerMovedEvent } from '../../../types';
 import { Monster } from '../../MonsterModule/types';
-import { QuestEngineEvents, StartQuestEvent } from '../Events';
+import { QuestCompletedEvent, QuestEngineEvents, StartQuestEvent } from '../Events';
 import { QuestTemplateService } from '../services';
 import _ = require('lodash');
 
@@ -397,6 +397,32 @@ describe('QuestProgress', () => {
                   },
                },
             },
+         },
+      });
+   });
+
+   it('Player should get quest deleted when quest is completed', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.createSystemAction<StartQuestEvent>({
+         type: QuestEngineEvents.StartQuest,
+         characterId: players['1'].characterId,
+         questId: '1',
+      });
+
+      engineManager.createSystemAction<QuestCompletedEvent>({
+         type: QuestEngineEvents.QuestCompleted,
+         characterId: players['1'].characterId,
+         questId: '1',
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(GlobalStoreModule.QUEST_PROGRESS, dataPackage, {
+         toDelete: {
+            '1': null,
          },
       });
    });

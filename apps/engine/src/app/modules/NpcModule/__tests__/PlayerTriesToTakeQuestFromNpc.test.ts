@@ -57,7 +57,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
       const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
       dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-         type: NpcClientMessages.PlayerTriesToTakeQuestFromNpc,
+         type: NpcClientMessages.TakeQuestFromNpc,
          npcId,
          questId: Object.keys(NpcTemplates['Manczur'].quests)[0],
       });
@@ -89,7 +89,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
       const { players, engineManager } = setupEngine();
 
       let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-         type: NpcClientMessages.PlayerTriesToTakeQuestFromNpc,
+         type: NpcClientMessages.TakeQuestFromNpc,
          npcId: 'some_random_npc',
          questId: 'random_id',
       });
@@ -112,7 +112,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
       const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
       dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-         type: NpcClientMessages.PlayerTriesToTakeQuestFromNpc,
+         type: NpcClientMessages.TakeQuestFromNpc,
          npcId,
          questId: 'random_id',
       });
@@ -127,7 +127,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
       const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
       dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-         type: NpcClientMessages.PlayerTriesToTakeQuestFromNpc,
+         type: NpcClientMessages.TakeQuestFromNpc,
          npcId,
          questId: 'random_id',
       });
