@@ -5,9 +5,15 @@ export enum QuestType {
    KILLING = 'killing',
 }
 
+export interface QuestRewardItem {
+   itemTemplateId: string;
+   amount: number;
+}
+
 export interface QuestReward {
    experience: number;
    currency?: number;
+   items?: QuestRewardItem[];
 }
 
 export interface QuestSchema {

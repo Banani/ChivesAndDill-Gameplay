@@ -64,6 +64,10 @@ export const Quests: Record<string, QuestSchema> = {
       questReward: {
          experience: 120,
          currency: 1649,
+         items: [
+            { itemTemplateId: '1', amount: 1 },
+            { itemTemplateId: '3', amount: 5 },
+         ],
       },
    },
    '2': {

@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { Services } from '../../../types/Services';
+import { QuestCompletedEvent, QuestEngineEvents } from '../../QuestModule/Events';
 import {
    AddItemToCharacterEvent,
    BackpackItemsContainmentUpdatedEvent,
@@ -31,6 +32,8 @@ export class BackpackItemsService extends EventParser {
          [ItemEngineEvents.ItemDeleted]: this.handleItemDeleted,
          [ItemEngineEvents.PlayerTriesToMoveItemInBag]: this.handlePlayerTriesToMoveItemInBag,
          [ItemEngineEvents.PlayerTriesToSplitItemStack]: this.handlePlayerTriesToSplitItemStack,
+         [ItemEngineEvents.PlayerTriesToSplitItemStack]: this.handlePlayerTriesToSplitItemStack,
+         [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
       };
    }
 
@@ -44,6 +47,21 @@ export class BackpackItemsService extends EventParser {
       }
 
       return null;
+   };
+
+   handleQuestCompleted: EngineEventHandler<QuestCompletedEvent> = ({ event, services }) => {
+      const { questReward } = services.questTemplateService.getData()[event.questId];
+
+      if (questReward.items) {
+         _.forEach(questReward.items, (item) => {
+            this.engineEventCrator.asyncCeateEvent<GenerateItemForCharacterEvent>({
+               type: ItemEngineEvents.GenerateItemForCharacter,
+               characterId: event.characterId,
+               itemTemplateId: item.itemTemplateId,
+               amount: item.amount,
+            });
+         });
+      }
    };
 
    handleBackpackTrackCreated: EngineEventHandler<BackpackTrackCreatedEvent> = ({ event }) => {
