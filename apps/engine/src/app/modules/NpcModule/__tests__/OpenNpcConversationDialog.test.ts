@@ -4,6 +4,7 @@ import { CharacterRespawn, WalkingType } from 'apps/engine/src/app/types/Charact
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import { merge } from 'lodash';
 import { RecursivePartial } from '../../../types';
+import { QuestCompletedEvent, QuestEngineEvents } from '../../QuestModule/Events';
 import { Quests } from '../../QuestModule/Quests';
 import { NpcTemplate, NpcTemplates } from '../NpcTemplate';
 import { NpcRespawnTemplateService } from '../services/NpcRespawnTemplateService';
@@ -145,5 +146,33 @@ describe('OpenNpcConversationDialog action', () => {
             },
          },
       });
+   });
+
+   it('Player should not be get quest definition when the quest is already done', () => {
+      const quests = { '1': Quests['1'] };
+      const { players, engineManager } = setupEngine({
+         Manczur: {
+            characterTemplate: { quests, ...NpcTemplates['Manczur'] },
+         },
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      engineManager.createSystemAction<QuestCompletedEvent>({
+         type: QuestEngineEvents.QuestCompleted,
+         characterId: players['1'].characterId,
+         questId: '1',
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.OpenNpcConversationDialog,
+         npcId,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(GlobalStoreModule.QUEST_DEFINITION, dataPackage, undefined);
    });
 });

@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { ConversationWithNpcStartedEvent, NpcEngineEvents } from '../../NpcModule/Events';
-import { NewQuestStageStartedEvent, QuestEngineEvents } from '../Events';
+import { NewQuestStageStartedEvent, QuestCompletedEvent, QuestEngineEvents } from '../Events';
 
 export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
    constructor() {
@@ -12,6 +12,7 @@ export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
       this.eventsToHandlersMap = {
          [NpcEngineEvents.ConversationWithNpcStarted]: this.handleConversationWithNpcStarted,
          [QuestEngineEvents.NewQuestStageStarted]: this.handleNewQuestStageStarted,
+         [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
       };
    }
 
@@ -63,7 +64,29 @@ export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
          return;
       }
 
-      this.multicastMultipleObjectsUpdate([{ receiverId: character.ownerId, objects: this.getOnlyFirstStage(quests) }]);
+      const completedQuests = services.archivedQuestService.getCompletedQuests(event.characterId);
+
+      const filteredQuests = _.omitBy(quests, (_, questId) => completedQuests[questId]);
+
+      if (Object.keys(filteredQuests).length > 0) {
+         this.multicastMultipleObjectsUpdate([{ receiverId: character.ownerId, objects: this.getOnlyFirstStage(quests) }]);
+      }
+   };
+
+   handleQuestCompleted: EngineEventHandler<QuestCompletedEvent> = ({ event, services }) => {
+      const character = services.characterService.getCharacterById(event.characterId);
+      if (character.type != CharacterType.Player) {
+         return;
+      }
+
+      this.multicastObjectsDeletion([
+         {
+            receiverId: character.ownerId,
+            objects: {
+               [event.questId]: null,
+            },
+         },
+      ]);
    };
 
    getOnlyFirstStage = (quests: Record<string, QuestSchema>) =>

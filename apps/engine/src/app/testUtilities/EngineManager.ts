@@ -1,15 +1,15 @@
 import { ClientMessages, CommonClientMessages, EnginePackage, EnginePackageEvent } from '@bananos/types';
 import { MainEngine } from '../engines/MainEngine';
 import {
-   getPlayerModule,
    getCharacterModule,
-   getQuestModule,
-   getMonsterModule,
-   getSpellModule,
-   getMapModule,
-   getNpcModule,
-   getItemModule,
    getChatModule,
+   getItemModule,
+   getMapModule,
+   getMonsterModule,
+   getNpcModule,
+   getPlayerModule,
+   getQuestModule,
+   getSpellModule,
 } from '../modules';
 import { Classes } from '../types/Classes';
 import { EngineEvent } from '../types/events';
@@ -91,7 +91,12 @@ export class EngineManager {
       const id = this.addNewPlayer();
       this.callPlayerAction(id, { type: CommonClientMessages.CreateCharacter, ...character });
       const dataPackage = this.getLatestPlayerDataPackage(id);
-      return { socketId: id, character, characterId: dataPackage.activeCharacter.data.activeCharacterId };
+
+      return {
+         socketId: id,
+         character: dataPackage.character.data[dataPackage.activeCharacter.data.activeCharacterId],
+         characterId: dataPackage.activeCharacter.data.activeCharacterId,
+      };
    }
 
    getLatestPlayerDataPackage(playerId: string): EnginePackage {
