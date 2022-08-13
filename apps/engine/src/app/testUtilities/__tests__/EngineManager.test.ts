@@ -16,7 +16,7 @@ describe('MainEngine', () => {
       expect(_.pickBy(groupedNotifiers, (notifier) => notifier > 1)).toStrictEqual({});
    });
 
-   it.skip('Each GlobalStoreModule key should have connected notifier', () => {
+   it('Each GlobalStoreModule key should have connected notifier', () => {
       const engine = new EngineManager();
 
       const notifiers = engine.getNotifiers();
@@ -35,6 +35,6 @@ describe('MainEngine', () => {
 
       const notConnectedNotifier = _.pickBy(keys, (el) => !el);
 
-      expect(notConnectedNotifier).toBe({});
+      expect(notConnectedNotifier).toStrictEqual({});
    });
 });
