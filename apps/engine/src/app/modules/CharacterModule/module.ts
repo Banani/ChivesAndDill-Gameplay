@@ -1,5 +1,6 @@
 import { EngineModule } from '../../types/EngineModule';
 import { CharacterNotifier, ExperienceNotifier, PowerPointsNotifier } from './notifiers';
+import { CorpseDropNotifier } from './notifiers/CorpseDropNotifier';
 import { CharactersService, PowerPointsService, RegenerationService } from './services';
 import { CorpseDropService } from './services/CorpseDropService';
 import { ExperienceService } from './services/ExperienceService';
@@ -14,7 +15,7 @@ export interface CharacterModuleServices {
 
 export const getCharacterModule: () => EngineModule<CharacterModuleServices> = () => {
    return {
-      notifiers: [new CharacterNotifier(), new PowerPointsNotifier(), new ExperienceNotifier()],
+      notifiers: [new CharacterNotifier(), new PowerPointsNotifier(), new ExperienceNotifier(), new CorpseDropNotifier()],
       services: {
          characterService: new CharactersService(),
          powerPointsService: new PowerPointsService(),

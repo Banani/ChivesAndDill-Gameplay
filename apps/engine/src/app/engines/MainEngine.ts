@@ -4,6 +4,7 @@ import { Engine } from '../Engine';
 import { EngineEventCrator } from '../EngineEventsCreator';
 import { Notifier } from '../Notifier';
 import { PathFinderService, SocketConnectionService } from '../services';
+import { RandomGeneratorService } from '../services/RandomGeneratorService';
 import { SchedulerService } from '../services/SchedulerService';
 import { EngineEvent } from '../types';
 import { EngineModule } from '../types/EngineModule';
@@ -35,6 +36,7 @@ export class MainEngine {
             (module) => module.services
          ).reduce((currentServices, allServices) => merge({}, currentServices, allServices)),
          {
+            randomGeneratorService: new RandomGeneratorService(),
             pathFinderService: new PathFinderService(pathFinderEngine),
             schedulerService: new SchedulerService(schedulerEngine),
             socketConnectionService: this.socketConnectionService,

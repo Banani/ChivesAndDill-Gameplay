@@ -46,6 +46,7 @@
       "redux": "^4.0.5",
       "redux-dynamic-modules": "^5.2.3",
       "regenerator-runtime": "0.13.7",
+      "seedrandom": "^3.0.5",
       "socket.io": "^4.0.1",
       "socket.io-client": "^4.0.1",
       "tslib": "^2.0.0"

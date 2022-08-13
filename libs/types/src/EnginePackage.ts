@@ -2,7 +2,7 @@ import { ActiveNpcConversation, BackpackItemsSpot, BackpackTrack, ChatMessage, E
 import { CharacterEvents } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
-import { CommonClientMessages } from './engineEvents';
+import { CommonClientActions, CommonClientMessages } from './engineEvents';
 import { QuestSchema } from './QuestPackage';
 import type { CharacterDirection } from './shared';
 
@@ -74,6 +74,7 @@ export interface EnginePackage {
    [GlobalStoreModule.QUEST_DEFINITION]: PartialEnginePackage<QuestSchema>;
    [GlobalStoreModule.NPC_QUESTS]: PartialEnginePackage<Record<string, boolean>>;
    [GlobalStoreModule.QUEST_PROGRESS]: PartialEnginePackage<any>;
+   [GlobalStoreModule.CORPSE_DROP]: PartialEnginePackage<boolean>;
 }
 
 interface StoreModule<Data> {
@@ -110,6 +111,7 @@ export interface GlobalStore {
    [GlobalStoreModule.QUEST_DEFINITION]: StoreModule<QuestSchema>;
    [GlobalStoreModule.NPC_QUESTS]: StoreModule<Record<string, boolean>>;
    [GlobalStoreModule.QUEST_PROGRESS]: StoreModule<any>;
+   [GlobalStoreModule.CORPSE_DROP]: StoreModule<boolean>;
 }
 
 export interface ActiveCharacterStorePart {
@@ -299,7 +301,8 @@ export type EnginePackageEvent =
    | EngineChatAction
    | EngineItemMessages
    | CharacterEvents
-   | EngineNpcAction;
+   | EngineNpcAction
+   | CommonClientActions;
 
 export enum HealthPointsSource {
    Healing = 'Healing',

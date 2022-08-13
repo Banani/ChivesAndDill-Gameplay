@@ -1,8 +1,7 @@
+import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler, PlayerMovedEvent } from '../../../types';
 import { CloseLootEvent, LootClosedEvent, LootOpenedEvent, PlayerEngineEvents, PlayerTriesToOpenLootEvent } from '../Events';
-import * as _ from 'lodash';
-import { EngineEvents } from '../../../EngineEvents';
 
 export class ActiveLootService extends EventParser {
    // character_id => corpse_id

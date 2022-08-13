@@ -1,5 +1,5 @@
 import { ChatChannelClientMessages } from './ChatPackage';
-import { EngineItemMessages, ItemClientMessages } from './ItemPackage';
+import { ItemClientMessages } from './ItemPackage';
 
 export enum EngineMessages {
    Inicialization = 'Inicialization',
@@ -47,5 +47,12 @@ export enum CommonClientMessages {
    CloseLoot = 'CloseLoot',
    TakeLootItem = 'TakeLootItem',
 }
+
+export interface OpenLoot {
+   type: CommonClientMessages.OpenLoot;
+   corpseId: string;
+}
+
+export type CommonClientActions = OpenLoot;
 
 export type ClientMessages = CommonClientMessages | ChatChannelClientMessages | ItemClientMessages;

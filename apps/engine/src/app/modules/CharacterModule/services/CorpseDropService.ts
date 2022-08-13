@@ -24,13 +24,15 @@ export class CorpseDropService extends EventParser {
          const characterTemplate = monsterRespawns[monster.respawnId].characterTemplate;
          const itemsToDrop = {};
 
-         // TODO: create some Random number generator service
          characterTemplate.dropSchema
-            ?.filter((dropItem) => dropItem.dropChance >= Math.random())
+            ?.filter((dropItem) => dropItem.dropChance >= services.randomGeneratorService.generateNumber())
             .forEach((dropItem) => {
                this.increment++;
                const amountRange = dropItem.maxAmount - dropItem.minAmount;
-               itemsToDrop[this.increment] = { amount: dropItem.minAmount + Math.round(amountRange * Math.random()), item: dropItem.item };
+               itemsToDrop[this.increment] = {
+                  amount: dropItem.minAmount + Math.round(amountRange * services.randomGeneratorService.generateNumber()),
+                  item: dropItem.item,
+               };
             });
 
          if (Object.keys(itemsToDrop).length) {
