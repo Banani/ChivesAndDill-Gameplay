@@ -179,7 +179,6 @@ export enum DropItemType {
 
 export interface DropCurrency {
    type: DropItemType.CURRENCY;
-   name: string;
 }
 
 export type DropItem = DropCurrency; // OR DropObject

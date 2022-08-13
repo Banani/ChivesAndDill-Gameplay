@@ -53,6 +53,10 @@ export interface OpenLoot {
    corpseId: string;
 }
 
-export type CommonClientActions = OpenLoot;
+export interface CloseLoot {
+   type: CommonClientMessages.CloseLoot;
+}
+
+export type CommonClientActions = OpenLoot | CloseLoot;
 
 export type ClientMessages = CommonClientMessages | ChatChannelClientMessages | ItemClientMessages;

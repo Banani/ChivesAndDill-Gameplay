@@ -1,18 +1,18 @@
-import { CommonClientMessages, DropItemType, GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule } from '@bananos/types';
+import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
+import { CharacterDiedEvent, CharacterType } from 'apps/engine/src/app/types';
+import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
+import { CharacterUnion } from 'apps/engine/src/app/types/CharacterUnion';
 import { Classes } from 'apps/engine/src/app/types/Classes';
-import {} from '../../';
-import { EngineEvents } from '../../../EngineEvents';
-import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
-import { CharacterDiedEvent, CharacterType } from '../../../types';
-import { WalkingType } from '../../../types/CharacterRespawn';
-import { CharacterUnion } from '../../../types/CharacterUnion';
-import { MonsterRespawnTemplateService } from '../../MonsterModule/dataProviders';
-import { MonsterTemplates } from '../../MonsterModule/MonsterTemplates';
-import { Monster } from '../../MonsterModule/types';
+import {} from '../..';
+import { RandomGeneratorService } from '../../../../services/RandomGeneratorService';
+import { MonsterRespawnTemplateService } from '../../../MonsterModule/dataProviders';
+import { MonsterTemplates } from '../../../MonsterModule/MonsterTemplates';
+import { Monster } from '../../../MonsterModule/types';
 import _ = require('lodash');
 
-jest.mock('../../../services/RandomGeneratorService', () => {
+jest.mock('../../../../services/RandomGeneratorService', () => {
    const generateNumber = jest.fn();
 
    return {
@@ -26,7 +26,7 @@ jest.mock('../../../services/RandomGeneratorService', () => {
    };
 });
 
-jest.mock('../../MonsterModule/dataProviders/MonsterRespawnTemplateService', () => {
+jest.mock('../../../MonsterModule/dataProviders/MonsterRespawnTemplateService', () => {
    const getData = jest.fn();
 
    return {
@@ -64,9 +64,10 @@ const setupEngine = () => {
    return { engineManager, players, randomGeneratorService };
 };
 
-describe('PlayerTriesToOpenLoot', () => {
-   it('Player should be able to open corpse', () => {
-      const { engineManager, players } = setupEngine();
+describe('CorpseDrop', () => {
+   it('Player should be notified when items droped', () => {
+      const { engineManager, players, randomGeneratorService } = setupEngine();
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.5);
 
       let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
@@ -80,32 +81,11 @@ describe('PlayerTriesToOpenLoot', () => {
 
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.OpenLoot,
-         corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
-      });
-
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-      checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
-         data: {
-            playerCharacter_1: {
-               corpseId: 'monster_0',
-               items: {
-                  '1': {
-                     amount: 19,
-                     item: {
-                        type: DropItemType.CURRENCY,
-                     },
-                  },
-               },
-            },
-         },
-      });
+      checkIfPackageIsValid(GlobalStoreModule.CORPSE_DROP, dataPackage, { data: { monster_0: true } });
    });
-
-   it('active loot should be cleared when corpse is closed', () => {
-      const { engineManager, players } = setupEngine();
+   it('Player should not get notification about the loot if nothing droped', () => {
+      const { engineManager, players, randomGeneratorService } = setupEngine();
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
 
       let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
@@ -118,23 +98,7 @@ describe('PlayerTriesToOpenLoot', () => {
       });
 
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-      const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.OpenLoot,
-         corpseId,
-      });
-
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.CloseLoot,
-      });
-
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-      checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
-         toDelete: {
-            playerCharacter_1: null,
-         },
-      });
+      checkIfPackageIsValid(GlobalStoreModule.CORPSE_DROP, dataPackage, undefined);
    });
 });
