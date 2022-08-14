@@ -1,6 +1,6 @@
 import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
-import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
+import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { CharacterDiedEvent, CharacterType } from 'apps/engine/src/app/types';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { CharacterUnion } from 'apps/engine/src/app/types/CharacterUnion';
@@ -106,7 +106,7 @@ describe('PlayerTriesToPickCoinsFromNpc', () => {
       });
    });
 
-   it('Other players should also get information that this item is no longer available', () => {
+   it('Player should get error if coins are already taken', () => {
       const { engineManager, players, randomGeneratorService } = setupEngine();
       (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
@@ -128,8 +128,65 @@ describe('PlayerTriesToPickCoinsFromNpc', () => {
          corpseId,
       });
 
+      engineManager.callPlayerAction(players['1'].socketId, {
+         type: CommonClientMessages.PickCoinsFromCorpse,
+         corpseId,
+      });
+
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-      const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
+
+      checkIfErrorWasHandled(GlobalStoreModule.BACKPACK_ITEMS, 'This item is already taken.', dataPackage);
+   });
+
+   it('Player should get error if tries to pick coins from corpse that is not opened by him', () => {
+      const { engineManager, players, randomGeneratorService } = setupEngine();
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
+      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+
+      engineManager.createSystemAction<CharacterDiedEvent>({
+         type: EngineEvents.CharacterDied,
+         characterId: monster.id,
+         killerId: players['1'].characterId,
+         character: monster,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
+
+      engineManager.callPlayerAction(players['2'].socketId, {
+         type: CommonClientMessages.PickCoinsFromCorpse,
+         corpseId,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
+
+      checkIfErrorWasHandled(GlobalStoreModule.BACKPACK_ITEMS, 'You cannot take item from corpse that is not opened by you.', dataPackage);
+   });
+
+   it('Other players should also get information that this item is no longer available', () => {
+      const { engineManager, players, randomGeneratorService } = setupEngine();
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.5);
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
+      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+
+      engineManager.createSystemAction<CharacterDiedEvent>({
+         type: EngineEvents.CharacterDied,
+         characterId: monster.id,
+         killerId: players['1'].characterId,
+         character: monster,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
+
+      engineManager.callPlayerAction(players['1'].socketId, {
+         type: CommonClientMessages.OpenLoot,
+         corpseId,
+      });
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
       engineManager.callPlayerAction(players['2'].socketId, {
          type: CommonClientMessages.OpenLoot,

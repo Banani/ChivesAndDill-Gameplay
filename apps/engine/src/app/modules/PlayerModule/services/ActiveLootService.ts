@@ -65,4 +65,6 @@ export class ActiveLootService extends EventParser {
          .pickBy((loot) => loot === corpseId)
          .map((_, key) => key)
          .value();
+
+   getCharacterActiveLoot = (characterId: string) => this.activeLoots[characterId];
 }

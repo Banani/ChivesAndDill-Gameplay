@@ -82,16 +82,17 @@ export class CorpseDropService extends EventParser {
    };
 
    handlePlayerTriesToPickItemFromCorpse: EngineEventHandler<PlayerTriesToPickItemFromCorpseEvent> = ({ event, services }) => {
-      // a co jesli ten character nie ma otwartego loota?
+      const activeLoot = services.activeLootService.getCharacterActiveLoot(event.requestingCharacterId);
 
-      const corpse = this.corpsesDropTrack[event.corpseId];
-      if (!corpse) {
-         // nie ma ciala
+      if (!activeLoot) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You cannot take item from corpse that is not opened by you.');
+         return;
       }
 
-      const item = corpse.items[event.itemId];
+      const item = this.corpsesDropTrack[event.corpseId].items[event.itemId];
       if (!item) {
-         // nie ma itemu
+         this.sendErrorMessage(event.requestingCharacterId, 'This item is already taken.');
+         return;
       }
 
       delete this.corpsesDropTrack[event.corpseId].items[event.itemId];
@@ -112,16 +113,17 @@ export class CorpseDropService extends EventParser {
    };
 
    handlePlayerTriesToPickCoinsFromCorpse: EngineEventHandler<PlayerTriesToPickCoinsFromCorpseEvent> = ({ event, services }) => {
-      // a co jesli ten character nie ma otwartego loota?
+      const activeLoot = services.activeLootService.getCharacterActiveLoot(event.requestingCharacterId);
 
-      const corpse = this.corpsesDropTrack[event.corpseId];
-      if (!corpse) {
-         // nie ma ciala
+      if (!activeLoot) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You cannot take item from corpse that is not opened by you.');
+         return;
       }
 
-      const coins = corpse.coins;
+      const coins = this.corpsesDropTrack[event.corpseId].coins;
       if (!coins) {
-         // nie ma hajsu
+         this.sendErrorMessage(event.requestingCharacterId, 'This item is already taken.');
+         return;
       }
 
       delete this.corpsesDropTrack[event.corpseId].coins;
