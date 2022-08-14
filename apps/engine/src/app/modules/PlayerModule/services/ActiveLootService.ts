@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
+import { distanceBetweenTwoPoints } from '../../../math';
 import { EngineEventHandler, PlayerMovedEvent } from '../../../types';
 import { CharacterEngineEvents, CorpseDropTrackRemovedEvent } from '../../CharacterModule/Events';
 import { CloseLootEvent, LootClosedEvent, LootOpenedEvent, PlayerEngineEvents, PlayerTriesToOpenLootEvent } from '../Events';
@@ -23,6 +24,12 @@ export class ActiveLootService extends EventParser {
       const corpse = services.corpseDropService.getCorpseDropTrackById(event.corpseId);
       if (!corpse) {
          this.sendErrorMessage(event.requestingCharacterId, 'This corpse does not exist.');
+         return;
+      }
+
+      const character = services.characterService.getCharacterById(event.requestingCharacterId);
+      if (distanceBetweenTwoPoints(character.location, corpse.corpse.location) > 100) {
+         this.sendErrorMessage(event.requestingCharacterId, 'This corpse is to far away.');
          return;
       }
 

@@ -1,4 +1,4 @@
-import { CommonClientMessages, CorpseDropTrack, GlobalStoreModule } from '@bananos/types';
+import { CommonClientMessages, CorpseLoot, GlobalStoreModule } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
@@ -20,7 +20,7 @@ import {
    PlayerTriesToPickItemFromCorpseEvent,
 } from '../Events';
 
-export class ActiveLootNotifier extends Notifier<CorpseDropTrack> {
+export class ActiveLootNotifier extends Notifier<CorpseLoot> {
    constructor() {
       super({ key: GlobalStoreModule.ACTIVE_LOOT });
       this.eventsToHandlersMap = {
@@ -77,7 +77,7 @@ export class ActiveLootNotifier extends Notifier<CorpseDropTrack> {
          return;
       }
 
-      this.multicastMultipleObjectsUpdate([{ receiverId: character.ownerId, objects: { [event.corpseId]: event.corpseDropTrack } }]);
+      this.multicastMultipleObjectsUpdate([{ receiverId: character.ownerId, objects: { [event.corpseId]: event.corpseDropTrack.loot } }]);
    };
 
    handleLootClosed: EngineEventHandler<LootClosedEvent> = ({ event, services }) => {

@@ -3,6 +3,7 @@ import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { AddCurrencyToCharacterEvent, GenerateItemForCharacterEvent, ItemEngineEvents } from '../../ItemModule/Events';
+import { Monster } from '../../MonsterModule/types';
 import { PlayerEngineEvents, PlayerTriesToPickCoinsFromCorpseEvent, PlayerTriesToPickItemFromCorpseEvent } from '../../PlayerModule/Events';
 import {
    AllItemsWerePickedFromCorpseEvent,
@@ -31,17 +32,23 @@ export class CorpseDropService extends EventParser {
    }
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
-      const monster = services.monsterService.getAllCharacters()[event.characterId];
+      const monster: Monster = services.monsterService.getAllCharacters()[event.characterId];
       const monsterRespawns = services.monsterRespawnTemplateService.getData();
 
       if (monster) {
          const characterTemplate = monsterRespawns[monster.respawnId].characterTemplate;
-         const corpseDropTrack: CorpseDropTrack = {};
 
          if (!characterTemplate.dropSchema) {
             return;
          }
 
+         const corpseDropTrack: CorpseDropTrack = {
+            loot: {},
+            corpse: {
+               location: monster.location,
+               monsterTemplateId: characterTemplate.id,
+            },
+         };
          const { coins } = characterTemplate.dropSchema;
          let coinsAmount = 0;
 
@@ -51,7 +58,7 @@ export class CorpseDropService extends EventParser {
          }
 
          if (coinsAmount) {
-            corpseDropTrack.coins = coinsAmount;
+            corpseDropTrack.loot.coins = coinsAmount;
          }
 
          const itemsToDrop = {};
@@ -67,15 +74,16 @@ export class CorpseDropService extends EventParser {
             });
 
          if (Object.keys(itemsToDrop).length > 0) {
-            corpseDropTrack.items = itemsToDrop;
+            corpseDropTrack.loot.items = itemsToDrop;
          }
 
-         if (Object.keys(corpseDropTrack).length) {
+         if (Object.keys(corpseDropTrack.loot).length) {
             this.corpsesDropTrack[event.characterId] = corpseDropTrack;
 
             this.engineEventCrator.asyncCeateEvent<CorpseDropTrackCreatedEvent>({
                type: CharacterEngineEvents.CorpseDropTrackCreated,
                corpseId: event.characterId,
+               characterCorpse: corpseDropTrack.corpse,
             });
          }
       }
@@ -89,13 +97,13 @@ export class CorpseDropService extends EventParser {
          return;
       }
 
-      const item = this.corpsesDropTrack[event.corpseId].items[event.itemId];
+      const item = this.corpsesDropTrack[event.corpseId].loot.items[event.itemId];
       if (!item) {
          this.sendErrorMessage(event.requestingCharacterId, 'This item is already taken.');
          return;
       }
 
-      delete this.corpsesDropTrack[event.corpseId].items[event.itemId];
+      delete this.corpsesDropTrack[event.corpseId].loot.items[event.itemId];
 
       this.engineEventCrator.asyncCeateEvent<ItemWasPickedFromCorpseEvent>({
          type: CharacterEngineEvents.ItemWasPickedFromCorpse,
@@ -120,13 +128,13 @@ export class CorpseDropService extends EventParser {
          return;
       }
 
-      const coins = this.corpsesDropTrack[event.corpseId].coins;
+      const coins = this.corpsesDropTrack[event.corpseId].loot.coins;
       if (!coins) {
          this.sendErrorMessage(event.requestingCharacterId, 'This item is already taken.');
          return;
       }
 
-      delete this.corpsesDropTrack[event.corpseId].coins;
+      delete this.corpsesDropTrack[event.corpseId].loot.coins;
 
       this.engineEventCrator.asyncCeateEvent<CoinsWerePickedFromCorpseEvent>({
          type: CharacterEngineEvents.CoinsWerePickedFromCorpse,
@@ -141,8 +149,8 @@ export class CorpseDropService extends EventParser {
    };
 
    handleItemWasPickedFromCorpse: EngineEventHandler<ItemWasPickedFromCorpseEvent> = ({ event, services }) => {
-      if (!Object.keys(this.corpsesDropTrack[event.corpseId].items).length) {
-         delete this.corpsesDropTrack[event.corpseId].items;
+      if (!Object.keys(this.corpsesDropTrack[event.corpseId].loot.items).length) {
+         delete this.corpsesDropTrack[event.corpseId].loot.items;
 
          this.engineEventCrator.asyncCeateEvent<AllItemsWerePickedFromCorpseEvent>({
             type: CharacterEngineEvents.AllItemsWerePickedFromCorpse,
@@ -160,7 +168,7 @@ export class CorpseDropService extends EventParser {
    };
 
    clearCorpse = (corpseId: string) => {
-      if (!Object.keys(this.corpsesDropTrack[corpseId]).length) {
+      if (!Object.keys(this.corpsesDropTrack[corpseId].loot).length) {
          delete this.corpsesDropTrack[corpseId];
 
          this.engineEventCrator.asyncCeateEvent<CorpseDropTrackRemovedEvent>({

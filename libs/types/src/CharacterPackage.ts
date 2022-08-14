@@ -1,3 +1,5 @@
+import { Location } from './shared';
+
 export enum CharacterClientEvents {
    ExperienceGain = 'ExperienceGain',
 }
@@ -5,6 +7,11 @@ export enum CharacterClientEvents {
 export enum ExperienceGainSource {
    MonsterKill = 'MonsterKill',
    QuestCompleted = 'QuestCompleted',
+}
+
+export interface MonsterCorpse {
+   location: Location;
+   monsterTemplateId: string;
 }
 
 export interface ExperienceGainFromKillingMonster {

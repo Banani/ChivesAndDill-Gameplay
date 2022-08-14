@@ -1,4 +1,4 @@
-import { ExperienceGainDetails, HealthPointsSource, PowerPointsTrack } from '@bananos/types';
+import { ExperienceGainDetails, HealthPointsSource, MonsterCorpse, PowerPointsTrack } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterUnion } from '../../types/CharacterUnion';
 import { ExperienceTrack } from './types';
@@ -150,6 +150,7 @@ export interface ExperienceTrackRemovedEvent extends EngineEvent {
 export interface CorpseDropTrackCreatedEvent extends EngineEvent {
    type: CharacterEngineEvents.CorpseDropTrackCreated;
    corpseId: string;
+   characterCorpse: MonsterCorpse;
 }
 
 export interface ItemWasPickedFromCorpseEvent extends EngineEvent {

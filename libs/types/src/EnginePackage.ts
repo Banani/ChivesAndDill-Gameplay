@@ -1,5 +1,5 @@
 import { ActiveNpcConversation, BackpackItemsSpot, BackpackTrack, ChatMessage, EngineItemMessages, EngineNpcAction, ItemTemplate, NpcStock } from '.';
-import { CharacterEvents } from './CharacterPackage';
+import { CharacterEvents, MonsterCorpse } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
 import { CommonClientActions, CommonClientMessages } from './engineEvents';
@@ -58,7 +58,7 @@ export interface EnginePackage {
    [GlobalStoreModule.ACTIVE_CHARACTER]: PartialEnginePackage<string>;
    [GlobalStoreModule.AREAS]: PartialEnginePackage<number[][]>;
    [GlobalStoreModule.MAP_SCHEMA]: PartialEnginePackage<MapSchema | MapDefinition>;
-   [GlobalStoreModule.ACTIVE_LOOT]: PartialEnginePackage<CorpseDropTrack>;
+   [GlobalStoreModule.ACTIVE_LOOT]: PartialEnginePackage<CorpseLoot>;
    [GlobalStoreModule.ERROR_MESSAGES]: PartialEnginePackage<undefined>;
    [GlobalStoreModule.CHAT_CHANNEL]: PartialEnginePackage<ChatChannel>;
    [GlobalStoreModule.CHAT_MESSAGES]: PartialEnginePackage<ChatMessage>;
@@ -72,7 +72,7 @@ export interface EnginePackage {
    [GlobalStoreModule.QUEST_DEFINITION]: PartialEnginePackage<QuestSchema>;
    [GlobalStoreModule.NPC_QUESTS]: PartialEnginePackage<Record<string, boolean>>;
    [GlobalStoreModule.QUEST_PROGRESS]: PartialEnginePackage<any>;
-   [GlobalStoreModule.CORPSE_DROP]: PartialEnginePackage<boolean>;
+   [GlobalStoreModule.CORPSE_DROP]: PartialEnginePackage<MonsterCorpse>;
 }
 
 interface StoreModule<Data> {
@@ -95,7 +95,7 @@ export interface GlobalStore {
    [GlobalStoreModule.ACTIVE_CHARACTER]: StoreModule<string>;
    [GlobalStoreModule.AREAS]: StoreModule<number[][]>;
    [GlobalStoreModule.MAP_SCHEMA]: StoreModule<MapSchema | MapDefinition>;
-   [GlobalStoreModule.ACTIVE_LOOT]: StoreModule<CorpseDropTrack>;
+   [GlobalStoreModule.ACTIVE_LOOT]: StoreModule<CorpseLoot>;
    [GlobalStoreModule.ERROR_MESSAGES]: StoreModule<undefined>;
    [GlobalStoreModule.CHAT_CHANNEL]: StoreModule<ChatChannel>;
    [GlobalStoreModule.CHAT_MESSAGES]: StoreModule<ChatMessage>;
@@ -109,7 +109,7 @@ export interface GlobalStore {
    [GlobalStoreModule.QUEST_DEFINITION]: StoreModule<QuestSchema>;
    [GlobalStoreModule.NPC_QUESTS]: StoreModule<Record<string, boolean>>;
    [GlobalStoreModule.QUEST_PROGRESS]: StoreModule<any>;
-   [GlobalStoreModule.CORPSE_DROP]: StoreModule<boolean>;
+   [GlobalStoreModule.CORPSE_DROP]: StoreModule<MonsterCorpse>;
 }
 
 export interface ActiveCharacterStorePart {
@@ -176,10 +176,15 @@ export interface CorpseDroppedItemStack {
    itemTemplateId: string;
 }
 
-export type CorpseDropTrack = {
+export interface CorpseDropTrack {
+   corpse: MonsterCorpse;
+   loot: CorpseLoot;
+}
+
+export interface CorpseLoot {
    coins?: number;
    items?: Record<string, CorpseDroppedItemStack>;
-};
+}
 
 export enum EngineEventType {
    PlayerCreated = 'PlayerCreated',

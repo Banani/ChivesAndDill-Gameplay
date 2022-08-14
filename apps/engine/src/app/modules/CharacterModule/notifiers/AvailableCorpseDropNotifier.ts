@@ -1,10 +1,10 @@
-import { GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule, MonsterCorpse } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import type { EngineEventHandler } from '../../../types';
 import type { CorpseDropTrackCreatedEvent, CorpseDropTrackRemovedEvent } from '../Events';
 import { CharacterEngineEvents } from '../Events';
 
-export class AvailableCorpseDropNotifier extends Notifier<boolean> {
+export class AvailableCorpseDropNotifier extends Notifier<MonsterCorpse> {
    constructor() {
       super({ key: GlobalStoreModule.CORPSE_DROP });
       this.eventsToHandlersMap = {
@@ -15,7 +15,7 @@ export class AvailableCorpseDropNotifier extends Notifier<boolean> {
 
    handleCorpseDropTrackCreated: EngineEventHandler<CorpseDropTrackCreatedEvent> = ({ event }) => {
       this.broadcastObjectsUpdate({
-         objects: { [event.corpseId]: true },
+         objects: { [event.corpseId]: event.characterCorpse },
       });
    };
 

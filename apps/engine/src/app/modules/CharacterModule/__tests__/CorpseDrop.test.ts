@@ -45,7 +45,7 @@ const setupEngine = () => {
    (respawnService.getData as jest.Mock).mockReturnValue({
       '2': {
          id: '2',
-         location: { x: 300, y: 400 },
+         location: { x: 150, y: 100 },
          characterTemplate: MonsterTemplates['Orc'],
          time: 4000,
          walkingType: WalkingType.None,
@@ -81,7 +81,7 @@ describe('CorpseDrop', () => {
 
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      checkIfPackageIsValid(GlobalStoreModule.CORPSE_DROP, dataPackage, { data: { monster_0: true } });
+      checkIfPackageIsValid(GlobalStoreModule.CORPSE_DROP, dataPackage, { data: { monster_0: { location: monster.location, monsterTemplateId: 'Orc' } } });
    });
 
    it('Player should not get notification about the loot if nothing dropped', () => {
