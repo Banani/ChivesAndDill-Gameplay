@@ -58,7 +58,7 @@ export interface EnginePackage {
    [GlobalStoreModule.ACTIVE_CHARACTER]: PartialEnginePackage<string>;
    [GlobalStoreModule.AREAS]: PartialEnginePackage<number[][]>;
    [GlobalStoreModule.MAP_SCHEMA]: PartialEnginePackage<MapSchema | MapDefinition>;
-   [GlobalStoreModule.ACTIVE_LOOT]: PartialEnginePackage<ActiveLootTrack>;
+   [GlobalStoreModule.ACTIVE_LOOT]: PartialEnginePackage<CorpseDropTrack>;
    [GlobalStoreModule.ERROR_MESSAGES]: PartialEnginePackage<undefined>;
    [GlobalStoreModule.CHAT_CHANNEL]: PartialEnginePackage<ChatChannel>;
    [GlobalStoreModule.CHAT_MESSAGES]: PartialEnginePackage<ChatMessage>;
@@ -95,7 +95,7 @@ export interface GlobalStore {
    [GlobalStoreModule.ACTIVE_CHARACTER]: StoreModule<string>;
    [GlobalStoreModule.AREAS]: StoreModule<number[][]>;
    [GlobalStoreModule.MAP_SCHEMA]: StoreModule<MapSchema | MapDefinition>;
-   [GlobalStoreModule.ACTIVE_LOOT]: StoreModule<ActiveLootTrack>;
+   [GlobalStoreModule.ACTIVE_LOOT]: StoreModule<CorpseDropTrack>;
    [GlobalStoreModule.ERROR_MESSAGES]: StoreModule<undefined>;
    [GlobalStoreModule.CHAT_CHANNEL]: StoreModule<ChatChannel>;
    [GlobalStoreModule.CHAT_MESSAGES]: StoreModule<ChatMessage>;
@@ -173,18 +173,13 @@ export interface ExperienceExternalTrack {
 
 export interface CorpseDroppedItemStack {
    amount: number;
-   itemId: string;
+   itemTemplateId: string;
 }
 
 export type CorpseDropTrack = {
    coins?: number;
    items?: Record<string, CorpseDroppedItemStack>;
 };
-
-export interface ActiveLootTrack {
-   corpseId: string;
-   corpseDropTrack: CorpseDropTrack;
-}
 
 export enum EngineEventType {
    PlayerCreated = 'PlayerCreated',

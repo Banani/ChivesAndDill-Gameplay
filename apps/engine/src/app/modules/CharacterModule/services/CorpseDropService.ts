@@ -2,7 +2,9 @@ import { CorpseDropTrack } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
-import { CharacterEngineEvents, CorpseDropTrackCreatedEvent } from '../Events';
+import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../ItemModule/Events';
+import { PlayerEngineEvents, PlayerTriesToPickItemFromCorpseEvent } from '../../PlayerModule/Events';
+import { CharacterEngineEvents, CorpseDropTrackCreatedEvent, ItemWasPickedFromCorpseEvent } from '../Events';
 
 export class CorpseDropService extends EventParser {
    // deadCharacterId => itemId (incrementId)
@@ -13,6 +15,7 @@ export class CorpseDropService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
+         [PlayerEngineEvents.PlayerTriesToPickItemFromCorpse]: this.handlePlayerTriesToPickItemFromCorpse,
       };
    }
 
@@ -48,7 +51,7 @@ export class CorpseDropService extends EventParser {
                const amountRange = dropItem.maxAmount - dropItem.minAmount;
                itemsToDrop['corpseItemId_' + this.increment] = {
                   amount: dropItem.minAmount + Math.round(amountRange * services.randomGeneratorService.generateNumber()),
-                  itemId: dropItem.itemTempalteId,
+                  itemTemplateId: dropItem.itemTemplateId,
                };
             });
 
@@ -65,6 +68,36 @@ export class CorpseDropService extends EventParser {
             });
          }
       }
+   };
+
+   handlePlayerTriesToPickItemFromCorpse: EngineEventHandler<PlayerTriesToPickItemFromCorpseEvent> = ({ event, services }) => {
+      // a co jesli ten character nie ma otwartego loota?
+
+      const corpse = this.corpsesDropTrack[event.corpseId];
+      if (!corpse) {
+         // nie ma ciala
+      }
+
+      const item = corpse.items[event.itemId];
+      if (!item) {
+         // nie ma itemu
+      }
+
+      delete this.corpsesDropTrack[event.corpseId].items[event.itemId];
+
+      this.engineEventCrator.asyncCeateEvent<ItemWasPickedFromCorpseEvent>({
+         type: CharacterEngineEvents.ItemWasPickedFromCorpse,
+         itemId: event.itemId,
+         characterId: event.requestingCharacterId,
+         corpseId: event.corpseId,
+      });
+
+      this.engineEventCrator.asyncCeateEvent<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: event.requestingCharacterId,
+         itemTemplateId: item.itemTemplateId,
+         amount: item.amount,
+      });
    };
 
    getCorpseDropTrackById = (id: string) => this.corpsesDropTrack[id];

@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler, PlayerMovedEvent } from '../../../types';
@@ -17,7 +18,7 @@ export class ActiveLootService extends EventParser {
    }
 
    handlePlayerTriesToOpenLoot: EngineEventHandler<PlayerTriesToOpenLootEvent> = ({ event, services }) => {
-      // check distance and if it exists
+      // TODO: check distance and if it exists
       this.activeLoots[event.characterId] = event.corpseId;
       const items = services.corpseDropService.getCorpseDropTrackById(event.corpseId);
 
@@ -42,11 +43,19 @@ export class ActiveLootService extends EventParser {
    };
 
    closeLoot = (characterId: string) => {
+      const corpseId = this.activeLoots[characterId];
       delete this.activeLoots[characterId];
 
       this.engineEventCrator.asyncCeateEvent<LootClosedEvent>({
          type: PlayerEngineEvents.LootClosed,
          characterId,
+         corpseId,
       });
    };
+
+   getAllCharacterIdsWithThatCorpseOpened = (corpseId) =>
+      _.chain(this.activeLoots)
+         .pickBy((loot) => loot === corpseId)
+         .map((_, key) => key)
+         .value();
 }

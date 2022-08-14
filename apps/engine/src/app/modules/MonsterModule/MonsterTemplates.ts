@@ -8,7 +8,7 @@ export interface CoinDropSchema {
 }
 
 export interface ItemDropSchema {
-   itemTempalteId: string;
+   itemTemplateId: string;
    dropChance: number;
    maxAmount: number;
    minAmount: number;
@@ -67,13 +67,13 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
          },
          items: [
             {
-               itemTempalteId: '1',
+               itemTemplateId: '1',
                dropChance: 0.7,
                maxAmount: 1,
                minAmount: 1,
             },
             {
-               itemTempalteId: '2',
+               itemTemplateId: '2',
                dropChance: 0.5,
                maxAmount: 1,
                minAmount: 1,

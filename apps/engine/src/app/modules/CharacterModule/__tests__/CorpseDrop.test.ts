@@ -5,14 +5,14 @@ import { CharacterDiedEvent, CharacterType } from 'apps/engine/src/app/types';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { CharacterUnion } from 'apps/engine/src/app/types/CharacterUnion';
 import { Classes } from 'apps/engine/src/app/types/Classes';
-import {} from '../..';
-import { RandomGeneratorService } from '../../../../services/RandomGeneratorService';
-import { MonsterRespawnTemplateService } from '../../../MonsterModule/dataProviders';
-import { MonsterTemplates } from '../../../MonsterModule/MonsterTemplates';
-import { Monster } from '../../../MonsterModule/types';
+import {} from '..';
+import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
+import { MonsterRespawnTemplateService } from '../../MonsterModule/dataProviders';
+import { MonsterTemplates } from '../../MonsterModule/MonsterTemplates';
+import { Monster } from '../../MonsterModule/types';
 import _ = require('lodash');
 
-jest.mock('../../../MonsterModule/dataProviders/MonsterRespawnTemplateService', () => {
+jest.mock('../../MonsterModule/dataProviders/MonsterRespawnTemplateService', () => {
    const getData = jest.fn();
 
    return {
@@ -26,7 +26,7 @@ jest.mock('../../../MonsterModule/dataProviders/MonsterRespawnTemplateService', 
    };
 });
 
-jest.mock('../../../../services/RandomGeneratorService', () => {
+jest.mock('../../../services/RandomGeneratorService', () => {
    const generateNumber = jest.fn();
 
    return {
@@ -134,11 +134,11 @@ describe('CorpseDrop', () => {
                   items: {
                      corpseItemId_1: {
                         amount: 1,
-                        itemId: '1',
+                        itemTemplateId: '1',
                      },
                      corpseItemId_2: {
                         amount: 1,
-                        itemId: '2',
+                        itemTemplateId: '2',
                      },
                   },
                },

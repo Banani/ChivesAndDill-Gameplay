@@ -96,7 +96,7 @@ describe('PlayerTriesToOpenLoot', () => {
                   items: {
                      corpseItemId_1: {
                         amount: 1,
-                        itemId: '1',
+                        itemTemplateId: '1',
                      },
                   },
                },
