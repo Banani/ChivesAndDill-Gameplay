@@ -2,7 +2,13 @@ import { CommonClientMessages, CorpseDropTrack, GlobalStoreModule } from '@banan
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
-import { CharacterEngineEvents, ItemWasPickedFromCorpseEvent } from '../../CharacterModule/Events';
+import { Services } from '../../../types/Services';
+import {
+   AllItemsWerePickedFromCorpseEvent,
+   CharacterEngineEvents,
+   CoinsWerePickedFromCorpseEvent,
+   ItemWasPickedFromCorpseEvent,
+} from '../../CharacterModule/Events';
 import {
    CloseLootEvent,
    LootClosedEvent,
@@ -10,6 +16,7 @@ import {
    PlayerCharacterCreatedEvent,
    PlayerEngineEvents,
    PlayerTriesToOpenLootEvent,
+   PlayerTriesToPickCoinsFromCorpseEvent,
    PlayerTriesToPickItemFromCorpseEvent,
 } from '../Events';
 
@@ -21,6 +28,8 @@ export class ActiveLootNotifier extends Notifier<CorpseDropTrack> {
          [PlayerEngineEvents.LootOpened]: this.handleLootOpened,
          [PlayerEngineEvents.LootClosed]: this.handleLootClosed,
          [CharacterEngineEvents.ItemWasPickedFromCorpse]: this.handleItemWasPickedFromCorpse,
+         [CharacterEngineEvents.AllItemsWerePickedFromCorpse]: this.handleAllItemsWerePickedFromCorpse,
+         [CharacterEngineEvents.CoinsWerePickedFromCorpse]: this.handleCoinsWerePickedFromCorpse,
       };
    }
 
@@ -41,6 +50,14 @@ export class ActiveLootNotifier extends Notifier<CorpseDropTrack> {
             requestingCharacterId: event.playerCharacter.id,
             corpseId,
             itemId,
+         });
+      });
+
+      currentSocket.on(CommonClientMessages.PickCoinsFromCorpse, ({ corpseId }) => {
+         this.engineEventCrator.asyncCeateEvent<PlayerTriesToPickCoinsFromCorpseEvent>({
+            type: PlayerEngineEvents.PlayerTriesToPickCoinsFromCorpse,
+            requestingCharacterId: event.playerCharacter.id,
+            corpseId,
          });
       });
 
@@ -76,11 +93,7 @@ export class ActiveLootNotifier extends Notifier<CorpseDropTrack> {
    };
 
    handleItemWasPickedFromCorpse: EngineEventHandler<ItemWasPickedFromCorpseEvent> = ({ event, services }) => {
-      const characterIds = services.activeLootService.getAllCharacterIdsWithThatCorpseOpened(event.corpseId);
-      const ownerIds = characterIds
-         .map((id) => services.characterService.getCharacterById(id))
-         .filter((character) => character.type === CharacterType.Player)
-         .map((character: PlayerCharacter) => character.ownerId);
+      const ownerIds = this.getAllCorpseWatchers(services, event.corpseId);
 
       if (ownerIds.length > 0) {
          this.multicastObjectsDeletion(
@@ -90,5 +103,39 @@ export class ActiveLootNotifier extends Notifier<CorpseDropTrack> {
             }))
          );
       }
+   };
+
+   handleCoinsWerePickedFromCorpse: EngineEventHandler<CoinsWerePickedFromCorpseEvent> = ({ event, services }) => {
+      const ownerIds = this.getAllCorpseWatchers(services, event.corpseId);
+
+      if (ownerIds.length > 0) {
+         this.multicastObjectsDeletion(
+            ownerIds.map((ownerId) => ({
+               receiverId: ownerId,
+               objects: { [event.corpseId]: { coins: null } },
+            }))
+         );
+      }
+   };
+
+   handleAllItemsWerePickedFromCorpse: EngineEventHandler<AllItemsWerePickedFromCorpseEvent> = ({ event, services }) => {
+      const ownerIds = this.getAllCorpseWatchers(services, event.corpseId);
+
+      if (ownerIds.length > 0) {
+         this.multicastObjectsDeletion(
+            ownerIds.map((ownerId) => ({
+               receiverId: ownerId,
+               objects: { [event.corpseId]: { items: null } },
+            }))
+         );
+      }
+   };
+
+   getAllCorpseWatchers = (services: Services, corpseId: string) => {
+      const characterIds = services.activeLootService.getAllCharacterIdsWithThatCorpseOpened(corpseId);
+      return characterIds
+         .map((id) => services.characterService.getCharacterById(id))
+         .filter((character) => character.type === CharacterType.Player)
+         .map((character: PlayerCharacter) => character.ownerId);
    };
 }

@@ -66,10 +66,10 @@ const setupEngine = () => {
    return { engineManager, players, randomGeneratorService };
 };
 
-describe('PlayerTriesToPickItemFromNpc', () => {
-   it('Player should get item when he is picking it up', () => {
+describe('PlayerTriesToPickCoinsFromNpc', () => {
+   it('Player should get coins when he is picking it up', () => {
       const { engineManager, players, randomGeneratorService } = setupEngine();
-      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.6);
 
       let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
@@ -93,67 +93,15 @@ describe('PlayerTriesToPickItemFromNpc', () => {
       const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
 
       engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.PickItemFromCorpse,
+         type: CommonClientMessages.PickCoinsFromCorpse,
          corpseId,
-         itemId,
       });
 
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
+      checkIfPackageIsValid(GlobalStoreModule.CURRENCY, dataPackage, {
          data: {
-            playerCharacter_1: {
-               '1': {
-                  '0': {
-                     amount: 1,
-                     itemId: 'ItemInstance_0',
-                  },
-               },
-            },
-         },
-      });
-   });
-
-   it('Player should get information that this item is no longer available', () => {
-      const { engineManager, players, randomGeneratorService } = setupEngine();
-      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
-
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
-      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
-
-      engineManager.createSystemAction<CharacterDiedEvent>({
-         type: EngineEvents.CharacterDied,
-         characterId: monster.id,
-         killerId: players['1'].characterId,
-         character: monster,
-      });
-
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-      const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
-
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.OpenLoot,
-         corpseId,
-      });
-
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-      const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
-
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.PickItemFromCorpse,
-         corpseId,
-         itemId,
-      });
-
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-      checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
-         toDelete: {
-            monster_0: {
-               items: {
-                  corpseItemId_1: null,
-               },
-            },
+            playerCharacter_1: 243816,
          },
       });
    });
@@ -189,9 +137,8 @@ describe('PlayerTriesToPickItemFromNpc', () => {
       });
 
       engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.PickItemFromCorpse,
+         type: CommonClientMessages.PickCoinsFromCorpse,
          corpseId,
-         itemId,
       });
 
       dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
@@ -199,9 +146,7 @@ describe('PlayerTriesToPickItemFromNpc', () => {
       checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
          toDelete: {
             monster_0: {
-               items: {
-                  corpseItemId_1: null,
-               },
+               coins: null,
             },
          },
       });
@@ -238,61 +183,12 @@ describe('PlayerTriesToPickItemFromNpc', () => {
       });
 
       engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.PickItemFromCorpse,
+         type: CommonClientMessages.PickCoinsFromCorpse,
          corpseId,
-         itemId,
       });
 
       dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
 
       checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, undefined);
-   });
-
-   it('Players should have items deleted when all items were collected', () => {
-      const { engineManager, players, randomGeneratorService } = setupEngine();
-      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.2);
-
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
-      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
-
-      engineManager.createSystemAction<CharacterDiedEvent>({
-         type: EngineEvents.CharacterDied,
-         characterId: monster.id,
-         killerId: players['1'].characterId,
-         character: monster,
-      });
-
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-      const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
-
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.OpenLoot,
-         corpseId,
-      });
-
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-      const itemId1 = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
-      const itemId2 = Object.keys(dataPackage.activeLoot.data[corpseId].items)[1];
-
-      engineManager.callPlayerAction(players['2'].socketId, {
-         type: CommonClientMessages.OpenLoot,
-         corpseId,
-      });
-
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.PickItemFromCorpse,
-         corpseId,
-         itemId: itemId1,
-      });
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.PickItemFromCorpse,
-         corpseId,
-         itemId: itemId2,
-      });
-
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
-
-      checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, { toDelete: { monster_0: { items: null } } });
    });
 });

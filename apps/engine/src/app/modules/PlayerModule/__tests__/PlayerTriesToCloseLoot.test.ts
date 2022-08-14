@@ -1,7 +1,7 @@
 import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
 import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { Classes } from 'apps/engine/src/app/types/Classes';
-import {} from '../../';
+import {} from '../..';
 import { EngineEvents } from '../../../EngineEvents';
 import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
 import { CharacterDiedEvent, CharacterType } from '../../../types';
@@ -64,8 +64,8 @@ const setupEngine = () => {
    return { engineManager, players, randomGeneratorService };
 };
 
-describe('PlayerTriesToOpenLoot', () => {
-   it('Player should be able to open corpse', () => {
+describe('PlayerTriesToCloseLoot', () => {
+   it('active loot should be cleared when corpse is closed', () => {
       const { engineManager, players } = setupEngine();
 
       let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -79,25 +79,22 @@ describe('PlayerTriesToOpenLoot', () => {
       });
 
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
       engineManager.callPlayerAction(players['1'].socketId, {
          type: CommonClientMessages.OpenLoot,
-         corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
+         corpseId,
+      });
+
+      engineManager.callPlayerAction(players['1'].socketId, {
+         type: CommonClientMessages.CloseLoot,
       });
 
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
       checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
-         data: {
-            monster_0: {
-               coins: 19,
-               items: {
-                  corpseItemId_1: {
-                     amount: 1,
-                     itemTemplateId: '1',
-                  },
-               },
-            },
+         toDelete: {
+            monster_0: null,
          },
       });
    });

@@ -46,6 +46,7 @@ export enum CommonClientMessages {
    OpenLoot = 'OpenLoot',
    CloseLoot = 'CloseLoot',
    PickItemFromCorpse = 'PickItemFromCorpse',
+   PickCoinsFromCorpse = 'PickCoinsFromCorpse',
 }
 
 export interface OpenLoot {
@@ -58,11 +59,15 @@ export interface PickItemFromCorpse {
    corpseId: string;
    itemId: string;
 }
+export interface PickCoinsFromCorpse {
+   type: CommonClientMessages.PickCoinsFromCorpse;
+   corpseId: string;
+}
 
 export interface CloseLoot {
    type: CommonClientMessages.CloseLoot;
 }
 
-export type CommonClientActions = OpenLoot | PickItemFromCorpse | CloseLoot;
+export type CommonClientActions = OpenLoot | PickItemFromCorpse | PickCoinsFromCorpse | CloseLoot;
 
 export type ClientMessages = CommonClientMessages | ChatChannelClientMessages | ItemClientMessages;

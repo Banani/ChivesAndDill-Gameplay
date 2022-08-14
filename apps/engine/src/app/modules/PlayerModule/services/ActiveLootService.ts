@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler, PlayerMovedEvent } from '../../../types';
+import { CharacterEngineEvents, CorpseDropTrackRemovedEvent } from '../../CharacterModule/Events';
 import { CloseLootEvent, LootClosedEvent, LootOpenedEvent, PlayerEngineEvents, PlayerTriesToOpenLootEvent } from '../Events';
 
 export class ActiveLootService extends EventParser {
@@ -13,6 +14,7 @@ export class ActiveLootService extends EventParser {
       this.eventsToHandlersMap = {
          [PlayerEngineEvents.PlayerTriesToOpenLoot]: this.handlePlayerTriesToOpenLoot,
          [PlayerEngineEvents.CloseLoot]: this.handleCloseLoot,
+         [CharacterEngineEvents.CorpseDropTrackRemoved]: this.handleCorpseDropTrackRemoved,
          [EngineEvents.PlayerMoved]: this.handlePlayerMoved, // TODO: ten event powinien byc odpalany tylko dla characterow w activeLoots
       };
    }
@@ -51,6 +53,11 @@ export class ActiveLootService extends EventParser {
          characterId,
          corpseId,
       });
+   };
+
+   handleCorpseDropTrackRemoved: EngineEventHandler<CorpseDropTrackRemovedEvent> = ({ event }) => {
+      const characterIds = this.getAllCharacterIdsWithThatCorpseOpened(event.corpseId);
+      characterIds.forEach((characterId) => this.closeLoot(characterId));
    };
 
    getAllCharacterIdsWithThatCorpseOpened = (corpseId) =>

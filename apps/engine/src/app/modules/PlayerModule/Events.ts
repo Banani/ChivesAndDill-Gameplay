@@ -13,6 +13,7 @@ export enum PlayerEngineEvents {
    PlayerTriesToOpenLoot = 'PlayerTriesToOpenLoot',
    LootOpened = 'LootOpened',
    PlayerTriesToPickItemFromCorpse = 'PlayerTriesToPickItemFromCorpse',
+   PlayerTriesToPickCoinsFromCorpse = 'PlayerTriesToPickCoinsFromCorpse',
    CloseLoot = 'CloseLoot',
    LootClosed = 'LootClosed',
 
@@ -65,6 +66,11 @@ export interface PlayerTriesToPickItemFromCorpseEvent extends EngineEvent {
    itemId: string;
 }
 
+export interface PlayerTriesToPickCoinsFromCorpseEvent extends EngineEvent {
+   type: PlayerEngineEvents.PlayerTriesToPickCoinsFromCorpse;
+   corpseId: string;
+}
+
 export interface CloseLootEvent extends EngineEvent {
    type: PlayerEngineEvents.CloseLoot;
    characterId: string;
@@ -92,6 +98,7 @@ export interface PlayerEngineEventsMap {
    [PlayerEngineEvents.PlayerTriesToOpenLoot]: EngineEventHandler<PlayerTriesToOpenLootEvent>;
    [PlayerEngineEvents.LootOpened]: EngineEventHandler<LootOpenedEvent>;
    [PlayerEngineEvents.PlayerTriesToPickItemFromCorpse]: EngineEventHandler<PlayerTriesToPickItemFromCorpseEvent>;
+   [PlayerEngineEvents.PlayerTriesToPickCoinsFromCorpse]: EngineEventHandler<PlayerTriesToPickCoinsFromCorpseEvent>;
    [PlayerEngineEvents.CloseLoot]: EngineEventHandler<CloseLootEvent>;
    [PlayerEngineEvents.LootClosed]: EngineEventHandler<LootClosedEvent>;
 
