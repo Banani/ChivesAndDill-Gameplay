@@ -22,21 +22,42 @@ export class CorpseDropService extends EventParser {
 
       if (monster) {
          const characterTemplate = monsterRespawns[monster.respawnId].characterTemplate;
-         const itemsToDrop = {};
+         const corpseDropTrack: CorpseDropTrack = {};
 
-         characterTemplate.dropSchema
+         if (!characterTemplate.dropSchema) {
+            return;
+         }
+
+         const { coins } = characterTemplate.dropSchema;
+         let coinsAmount = 0;
+
+         if (coins && coins.dropChance >= services.randomGeneratorService.generateNumber()) {
+            const amountRange = coins.maxAmount - coins.minAmount;
+            coinsAmount = coins.minAmount + Math.round(amountRange * services.randomGeneratorService.generateNumber());
+         }
+
+         if (coinsAmount) {
+            corpseDropTrack.coins = coinsAmount;
+         }
+
+         const itemsToDrop = {};
+         characterTemplate.dropSchema.items
             ?.filter((dropItem) => dropItem.dropChance >= services.randomGeneratorService.generateNumber())
             .forEach((dropItem) => {
                this.increment++;
                const amountRange = dropItem.maxAmount - dropItem.minAmount;
-               itemsToDrop[this.increment] = {
+               itemsToDrop['corpseItemId_' + this.increment] = {
                   amount: dropItem.minAmount + Math.round(amountRange * services.randomGeneratorService.generateNumber()),
-                  item: dropItem.item,
+                  itemId: dropItem.itemTempalteId,
                };
             });
 
-         if (Object.keys(itemsToDrop).length) {
-            this.corpsesDropTrack[event.characterId] = itemsToDrop;
+         if (Object.keys(itemsToDrop).length > 0) {
+            corpseDropTrack.items = itemsToDrop;
+         }
+
+         if (Object.keys(corpseDropTrack).length) {
+            this.corpsesDropTrack[event.characterId] = corpseDropTrack;
 
             this.engineEventCrator.asyncCeateEvent<CorpseDropTrackCreatedEvent>({
                type: CharacterEngineEvents.CorpseDropTrackCreated,

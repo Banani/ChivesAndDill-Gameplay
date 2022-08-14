@@ -1,4 +1,4 @@
-import { CommonClientMessages, DropItemType, GlobalStoreModule } from '@bananos/types';
+import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
 import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import {} from '../../';
@@ -91,11 +91,12 @@ describe('PlayerTriesToOpenLoot', () => {
          data: {
             playerCharacter_1: {
                corpseId: 'monster_0',
-               items: {
-                  '1': {
-                     amount: 19,
-                     item: {
-                        type: DropItemType.CURRENCY,
+               corpseDropTrack: {
+                  coins: 19,
+                  items: {
+                     corpseItemId_1: {
+                        amount: 1,
+                        itemId: '1',
                      },
                   },
                },

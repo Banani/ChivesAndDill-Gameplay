@@ -1,4 +1,4 @@
-import { ActiveLootTrack, ClientMessages, CommonClientMessages, GlobalStoreModule } from '@bananos/types';
+import { ActiveLootTrack, CommonClientMessages, GlobalStoreModule } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { CloseLootEvent, LootClosedEvent, LootOpenedEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents, PlayerTriesToOpenLootEvent } from '../Events';
@@ -38,7 +38,9 @@ export class ActiveLootNotifier extends Notifier<ActiveLootTrack> {
          return;
       }
 
-      this.multicastMultipleObjectsUpdate([{ receiverId: character.ownerId, objects: { [character.id]: { corpseId: event.corpseId, items: event.items } } }]);
+      this.multicastMultipleObjectsUpdate([
+         { receiverId: character.ownerId, objects: { [character.id]: { corpseId: event.corpseId, corpseDropTrack: event.corpseDropTrack } } },
+      ]);
    };
 
    handleLootClosed: EngineEventHandler<LootClosedEvent> = ({ event, services }) => {

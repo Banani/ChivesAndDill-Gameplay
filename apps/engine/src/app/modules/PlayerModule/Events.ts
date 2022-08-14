@@ -54,7 +54,7 @@ export interface PlayerTriesToOpenLootEvent extends EngineEvent {
 export interface LootOpenedEvent extends EngineEvent {
    type: PlayerEngineEvents.LootOpened;
    characterId: string;
-   items: CorpseDropTrack;
+   corpseDropTrack: CorpseDropTrack;
    corpseId: string;
 }
 

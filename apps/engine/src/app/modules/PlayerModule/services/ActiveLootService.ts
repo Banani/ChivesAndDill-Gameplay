@@ -26,7 +26,7 @@ export class ActiveLootService extends EventParser {
             type: PlayerEngineEvents.LootOpened,
             characterId: event.characterId,
             corpseId: event.corpseId,
-            items,
+            corpseDropTrack: items,
          });
       }
    };

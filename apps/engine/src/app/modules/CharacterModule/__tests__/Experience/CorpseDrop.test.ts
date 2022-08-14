@@ -1,4 +1,4 @@
-import { GlobalStoreModule } from '@bananos/types';
+import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { CharacterDiedEvent, CharacterType } from 'apps/engine/src/app/types';
@@ -12,20 +12,6 @@ import { MonsterTemplates } from '../../../MonsterModule/MonsterTemplates';
 import { Monster } from '../../../MonsterModule/types';
 import _ = require('lodash');
 
-jest.mock('../../../../services/RandomGeneratorService', () => {
-   const generateNumber = jest.fn();
-
-   return {
-      RandomGeneratorService: function () {
-         return {
-            init: jest.fn(),
-            handleEvent: jest.fn(),
-            generateNumber,
-         };
-      },
-   };
-});
-
 jest.mock('../../../MonsterModule/dataProviders/MonsterRespawnTemplateService', () => {
    const getData = jest.fn();
 
@@ -35,6 +21,20 @@ jest.mock('../../../MonsterModule/dataProviders/MonsterRespawnTemplateService', 
             init: jest.fn(),
             handleEvent: jest.fn(),
             getData,
+         };
+      },
+   };
+});
+
+jest.mock('../../../../services/RandomGeneratorService', () => {
+   const generateNumber = jest.fn();
+
+   return {
+      RandomGeneratorService: function () {
+         return {
+            init: jest.fn(),
+            handleEvent: jest.fn(),
+            generateNumber,
          };
       },
    };
@@ -65,7 +65,7 @@ const setupEngine = () => {
 };
 
 describe('CorpseDrop', () => {
-   it('Player should be notified when items droped', () => {
+   it('Player should be notified when items dropped', () => {
       const { engineManager, players, randomGeneratorService } = setupEngine();
       (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.5);
 
@@ -83,7 +83,8 @@ describe('CorpseDrop', () => {
 
       checkIfPackageIsValid(GlobalStoreModule.CORPSE_DROP, dataPackage, { data: { monster_0: true } });
    });
-   it('Player should not get notification about the loot if nothing droped', () => {
+
+   it('Player should not get notification about the loot if nothing dropped', () => {
       const { engineManager, players, randomGeneratorService } = setupEngine();
       (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
 
@@ -100,5 +101,49 @@ describe('CorpseDrop', () => {
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
       checkIfPackageIsValid(GlobalStoreModule.CORPSE_DROP, dataPackage, undefined);
+   });
+
+   it('corpse should drop items if random number is big enough', () => {
+      const { engineManager, players, randomGeneratorService } = setupEngine();
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+
+      engineManager.createSystemAction<CharacterDiedEvent>({
+         type: EngineEvents.CharacterDied,
+         characterId: monster.id,
+         killerId: players['1'].characterId,
+         character: monster,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.callPlayerAction(players['1'].socketId, {
+         type: CommonClientMessages.OpenLoot,
+         corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               corpseId: 'monster_0',
+               corpseDropTrack: {
+                  items: {
+                     corpseItemId_1: {
+                        amount: 1,
+                        itemId: '1',
+                     },
+                     corpseItemId_2: {
+                        amount: 1,
+                        itemId: '2',
+                     },
+                  },
+               },
+            },
+         },
+      });
    });
 });

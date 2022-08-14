@@ -1,10 +1,14 @@
-import { DropItem } from '@bananos/types';
-import { items } from '../ItemModule/Items';
 import { ALL_SPELLS } from '../SpellModule/spells';
 import type { Spell } from '../SpellModule/types/SpellTypes';
 
-export interface DropSchema {
-   item: DropItem;
+export interface CoinDropSchema {
+   dropChance: number;
+   maxAmount: number;
+   minAmount: number;
+}
+
+export interface ItemDropSchema {
+   itemTempalteId: string;
    dropChance: number;
    maxAmount: number;
    minAmount: number;
@@ -27,7 +31,10 @@ export interface MonsterTemplate {
    attackFrequency: number;
    healthPointsRegen: number;
    spellPowerRegen: number;
-   dropSchema?: DropSchema[];
+   dropSchema?: {
+      coins: CoinDropSchema;
+      items?: ItemDropSchema[];
+   };
 }
 
 export const MonsterTemplates: Record<string, MonsterTemplate> = {
@@ -52,14 +59,27 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
          MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
          MonsterInstant2: ALL_SPELLS['MonsterInstant2'],
       },
-      dropSchema: [
-         {
-            item: items['money'],
+      dropSchema: {
+         coins: {
             dropChance: 0.9,
             maxAmount: 30,
             minAmount: 0,
          },
-      ],
+         items: [
+            {
+               itemTempalteId: '1',
+               dropChance: 0.7,
+               maxAmount: 1,
+               minAmount: 1,
+            },
+            {
+               itemTempalteId: '2',
+               dropChance: 0.5,
+               maxAmount: 1,
+               minAmount: 1,
+            },
+         ],
+      },
    },
    OrcSpearman: {
       id: 'OrcSpearman',
@@ -81,14 +101,13 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
          MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
          MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
       },
-      dropSchema: [
-         {
-            item: items['money'],
+      dropSchema: {
+         coins: {
             dropChance: 0.75,
             maxAmount: 30,
             minAmount: 0,
          },
-      ],
+      },
    },
    WorldDestroyer: {
       id: 'WorldDestroyer',

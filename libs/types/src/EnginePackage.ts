@@ -171,26 +171,19 @@ export interface ExperienceExternalTrack {
    toNextLevel: number;
 }
 
-export enum DropItemType {
-   CURRENCY,
-}
-
-export interface DropCurrency {
-   type: DropItemType.CURRENCY;
-}
-
-export type DropItem = DropCurrency; // OR DropObject
-
 export interface CorpseDroppedItemStack {
    amount: number;
-   item: DropItem;
+   itemId: string;
 }
 
-export type CorpseDropTrack = Record<string, CorpseDroppedItemStack>;
+export type CorpseDropTrack = {
+   coins?: number;
+   items?: Record<string, CorpseDroppedItemStack>;
+};
 
 export interface ActiveLootTrack {
    corpseId: string;
-   items: CorpseDropTrack;
+   corpseDropTrack: CorpseDropTrack;
 }
 
 export enum EngineEventType {
