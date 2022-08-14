@@ -4,7 +4,7 @@ import type { EngineEventHandler } from '../../../types';
 import type { CorpseDropTrackCreatedEvent } from '../Events';
 import { CharacterEngineEvents } from '../Events';
 
-export class CorpseDropNotifier extends Notifier<boolean> {
+export class AvailableCorpseDropNotifier extends Notifier<boolean> {
    constructor() {
       super({ key: GlobalStoreModule.CORPSE_DROP });
       this.eventsToHandlersMap = {

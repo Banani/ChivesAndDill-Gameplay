@@ -71,7 +71,7 @@ describe('PlayerTriesToPickItemFromNpc.test', () => {
       const { engineManager, players, randomGeneratorService } = setupEngine();
       (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
       engineManager.createSystemAction<CharacterDiedEvent>({
@@ -118,7 +118,7 @@ describe('PlayerTriesToPickItemFromNpc.test', () => {
       const { engineManager, players, randomGeneratorService } = setupEngine();
       (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
       engineManager.createSystemAction<CharacterDiedEvent>({

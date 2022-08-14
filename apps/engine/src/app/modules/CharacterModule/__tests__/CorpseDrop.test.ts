@@ -128,18 +128,15 @@ describe('CorpseDrop', () => {
 
       checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
          data: {
-            playerCharacter_1: {
-               corpseId: 'monster_0',
-               corpseDropTrack: {
-                  items: {
-                     corpseItemId_1: {
-                        amount: 1,
-                        itemTemplateId: '1',
-                     },
-                     corpseItemId_2: {
-                        amount: 1,
-                        itemTemplateId: '2',
-                     },
+            monster_0: {
+               items: {
+                  corpseItemId_1: {
+                     amount: 1,
+                     itemTemplateId: '1',
+                  },
+                  corpseItemId_2: {
+                     amount: 1,
+                     itemTemplateId: '2',
                   },
                },
             },

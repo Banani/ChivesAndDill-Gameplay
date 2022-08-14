@@ -89,15 +89,12 @@ describe('PlayerTriesToOpenLoot', () => {
 
       checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
          data: {
-            playerCharacter_1: {
-               corpseId: 'monster_0',
-               corpseDropTrack: {
-                  coins: 19,
-                  items: {
-                     corpseItemId_1: {
-                        amount: 1,
-                        itemTemplateId: '1',
-                     },
+            monster_0: {
+               coins: 19,
+               items: {
+                  corpseItemId_1: {
+                     amount: 1,
+                     itemTemplateId: '1',
                   },
                },
             },
@@ -134,7 +131,7 @@ describe('PlayerTriesToOpenLoot', () => {
 
       checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
          toDelete: {
-            playerCharacter_1: null,
+            monster_0: null,
          },
       });
    });
