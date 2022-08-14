@@ -20,7 +20,12 @@ export class ActiveLootService extends EventParser {
    }
 
    handlePlayerTriesToOpenLoot: EngineEventHandler<PlayerTriesToOpenLootEvent> = ({ event, services }) => {
-      // TODO: check distance and if it exists
+      const corpse = services.corpseDropService.getCorpseDropTrackById(event.corpseId);
+      if (!corpse) {
+         this.sendErrorMessage(event.requestingCharacterId, 'This corpse does not exist.');
+         return;
+      }
+
       this.activeLoots[event.characterId] = event.corpseId;
       const items = services.corpseDropService.getCorpseDropTrackById(event.corpseId);
 

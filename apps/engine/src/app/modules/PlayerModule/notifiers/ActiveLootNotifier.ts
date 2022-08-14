@@ -39,6 +39,7 @@ export class ActiveLootNotifier extends Notifier<CorpseDropTrack> {
       currentSocket.on(CommonClientMessages.OpenLoot, ({ corpseId }) => {
          this.engineEventCrator.asyncCeateEvent<PlayerTriesToOpenLootEvent>({
             type: PlayerEngineEvents.PlayerTriesToOpenLoot,
+            requestingCharacterId: event.playerCharacter.id,
             characterId: event.playerCharacter.id,
             corpseId,
          });
@@ -64,6 +65,7 @@ export class ActiveLootNotifier extends Notifier<CorpseDropTrack> {
       currentSocket.on(CommonClientMessages.CloseLoot, () => {
          this.engineEventCrator.asyncCeateEvent<CloseLootEvent>({
             type: PlayerEngineEvents.CloseLoot,
+            requestingCharacterId: event.playerCharacter.id,
             characterId: event.playerCharacter.id,
          });
       });

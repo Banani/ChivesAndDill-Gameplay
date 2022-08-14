@@ -1,5 +1,5 @@
 import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
-import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
+import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import {} from '../../';
 import { EngineEvents } from '../../../EngineEvents';
@@ -100,5 +100,18 @@ describe('PlayerTriesToOpenLoot', () => {
             },
          },
       });
+   });
+
+   it('Player should get error if tries to open corpse that does not exist', () => {
+      const { engineManager, players } = setupEngine();
+
+      engineManager.callPlayerAction(players['1'].socketId, {
+         type: CommonClientMessages.OpenLoot,
+         corpseId: 'Some_random_id',
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfErrorWasHandled(GlobalStoreModule.ACTIVE_LOOT, 'This corpse does not exist.', dataPackage);
    });
 });
