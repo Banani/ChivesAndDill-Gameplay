@@ -25,13 +25,7 @@
 
   .ContentWrapper {
     padding: 10px 40px 0 24px;
-
-    .SectionText {
-        font-size: 18px;
-    }
-
-    .SectionHeader {
-        font-size: 22px;
-    }
+    overflow-y: scroll;
+    height: 380px;
   }
 }

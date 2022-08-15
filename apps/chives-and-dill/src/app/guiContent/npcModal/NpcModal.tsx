@@ -1,36 +1,40 @@
-import _ from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-   getActiveConversation,
-   getNpcQuests,
-   getQuestDefinition,
-   selectActiveCharacterId,
-   selectCharacters,
-} from '../../../stores/engineStateModule/selectors';
+import { getActiveConversation, getQuestDefinition, selectActiveCharacterId, selectCharacters } from '../../../stores/engineStateModule/selectors';
+import { AvailableQuestNpcModal, DefaultNpcModal } from './components';
 import styles from './NpcModal.module.scss';
 
+enum NpcModalView {
+   Default,
+   AvailableQuest,
+   CompletedQuest,
+}
+
 export const NpcModal = () => {
+   const [currentModal, setCurrentModal] = useState(NpcModalView.Default);
    const activeConversation = useSelector(getActiveConversation);
    const activePlayerId = useSelector(selectActiveCharacterId);
    const players = useSelector(selectCharacters);
    const questDefinition = useSelector(getQuestDefinition);
-   const npcQuests = useSelector(getNpcQuests);
 
    const activeNpc = players[activeConversation[activePlayerId]?.npcId];
-   const activeNpcQuests = npcQuests[activeNpc?.templateId];
+
+   const [activeQuestId, setActiveQuestId] = useState(null);
 
    return activeNpc ? (
       <div className={styles.NpcModal}>
          <img className={styles.Avatar} src={activeNpc.avatar} alt={''} />
          <div className={styles.Name}>{activeNpc.name}</div>
          <div className={styles.ContentWrapper}>
-            <div className={styles.SectionText}>aaaa aaaaaa aaaaa aaaa aaaaaa aaa aaa aaaaaa aaaaa xDDD :D</div>
-            <h3 className={styles.SectionHeader}>Current Quests</h3>
-            <h3 className={styles.SectionHeader}>Available Quests</h3>
-            {_.map(activeNpcQuests, (_, questId) => (
-               <>{questDefinition[questId].name}</>
-            ))}
+            {currentModal === NpcModalView.Default && (
+               <DefaultNpcModal
+                  openQuest={(questId) => {
+                     setCurrentModal(NpcModalView.AvailableQuest);
+                     setActiveQuestId(questId);
+                  }}
+               />
+            )}
+            {currentModal === NpcModalView.AvailableQuest && <AvailableQuestNpcModal questSchema={questDefinition[activeQuestId]} />}
          </div>
       </div>
    ) : null;
