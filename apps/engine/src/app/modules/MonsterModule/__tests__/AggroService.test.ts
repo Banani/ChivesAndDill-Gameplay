@@ -46,7 +46,7 @@ const setupEngine = ({ monsterTemplates }: RecursivePartial<{ monsterTemplates: 
          '1': {
             id: '1',
             location: { x: 150, y: 100 },
-            characterTemplate: MonsterTemplates['Orc'],
+            characterTemplate: { ...MonsterTemplates['Orc'], sightRange: 300 },
             time: 4000,
             walkingType: WalkingType.None,
          },

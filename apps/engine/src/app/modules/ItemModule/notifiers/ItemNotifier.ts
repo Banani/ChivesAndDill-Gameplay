@@ -26,7 +26,7 @@ export class ItemNotifier extends Notifier<ItemTemplate> {
       });
 
       currentSocket.on(ItemClientMessages.RequestItemTemplates, ({ itemTemplateIds }) => {
-         const itemtemplates = _.chain(itemTemplateIds)
+         const itemTemplates = _.chain(itemTemplateIds)
             .map((id) => ({ id }))
             .keyBy('id')
             .mapValues(({ id }) => ItemTemplates[id])
@@ -35,7 +35,7 @@ export class ItemNotifier extends Notifier<ItemTemplate> {
          this.multicastMultipleObjectsUpdate([
             {
                receiverId: event.playerCharacter.ownerId,
-               objects: { [event.playerCharacter.id]: itemtemplates },
+               objects: itemTemplates,
             },
          ]);
       });

@@ -29,3 +29,5 @@ export const getActiveLoot = (state: EngineAwareState) => state.engineStateModul
 export const getNpcQuests = (state: EngineAwareState) => state.engineStateModule.npcQuests.data;
 
 export const getQuestDefinition = (state: EngineAwareState) => state.engineStateModule.questDefinition.data;
+
+export const getItemTemplate = (state: EngineAwareState) => state.engineStateModule.items.data;

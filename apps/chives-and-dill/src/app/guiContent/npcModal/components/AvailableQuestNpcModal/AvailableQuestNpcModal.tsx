@@ -1,5 +1,6 @@
 import { QuestSchema } from '@bananos/types';
 import React, { FunctionComponent } from 'react';
+import { useItemTemplateProvider } from '../../../../../hooks';
 import styles from './AvailableQuestNpcModal.module.scss';
 
 interface AvailableQuestNpcModalProps {
@@ -7,6 +8,9 @@ interface AvailableQuestNpcModalProps {
 }
 
 export const AvailableQuestNpcModal: FunctionComponent<AvailableQuestNpcModalProps> = ({ questSchema }) => {
+   const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: questSchema.questReward.items?.map((item) => item.itemTemplateId) ?? [] });
+   // Tylko one przez chwile beda undefined, zaladuja sie dopiero po chwili
+
    const items = questSchema.questReward.items.map((item) => {
       <div className={styles.ItemsContainer}>
          <div className={styles.Item}></div>

@@ -24,20 +24,18 @@ describe('Items', () => {
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
          data: {
-            playerCharacter_1: {
-               '1': {
-                  id: '1',
-                  image: 'https://www.tibiaitens.com.br/image/cache/catalog/espadas/mercenary-swordtibia-605-500x500.png',
-                  name: 'Mercenary sword',
-                  value: 1000,
-               },
-               '3': {
-                  id: '3',
-                  image: 'https://static.wikia.nocookie.net/wowpedia/images/7/78/Inv_misc_fish_24.png/revision/latest?cb=20061020052345',
-                  name: 'Mackerel',
-                  stack: 20,
-                  value: 95,
-               },
+            '1': {
+               id: '1',
+               image: 'https://www.tibiaitens.com.br/image/cache/catalog/espadas/mercenary-swordtibia-605-500x500.png',
+               name: 'Mercenary sword',
+               value: 1000,
+            },
+            '3': {
+               id: '3',
+               image: 'https://static.wikia.nocookie.net/wowpedia/images/7/78/Inv_misc_fish_24.png/revision/latest?cb=20061020052345',
+               name: 'Mackerel',
+               stack: 20,
+               value: 95,
             },
          },
       });
@@ -53,9 +51,7 @@ describe('Items', () => {
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
          data: {
-            playerCharacter_1: {
-               [RANDOM_ID]: undefined,
-            },
+            [RANDOM_ID]: undefined,
          },
       });
    });
