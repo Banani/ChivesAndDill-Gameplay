@@ -16,7 +16,7 @@ export const ItemTemplates: Record<string, ItemTemplate> = {
    '3': {
       id: '3',
       name: 'Mackerel',
-      image: 'https://static.wikia.nocookie.net/wowpedia/images/7/78/Inv_misc_fish_24.png/revision/latest?cb=20061020052345',
+      image: 'https://static.wikia.nocookie.net/wowpedia/images/7/78/Inv_misc_fish_24.png',
       stack: 20,
       value: 95,
    },
