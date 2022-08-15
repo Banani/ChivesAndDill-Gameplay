@@ -1,77 +1,68 @@
-import React, { useEffect, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getEngineState } from '../../stores';
+import { EngineEventType, ErrorMessage, Location } from '@bananos/types';
 import { Text } from '@inlet/react-pixi';
-import * as PIXI from 'pixi.js';
 import { chain, filter, map } from 'lodash';
-import { selectCharacters, selectActiveCharacterId, getCharactersMovements } from '../../stores';
-import { EngineEventType, ErrorMessage } from '@bananos/types';
+import * as PIXI from 'pixi.js';
+import React, { useEffect, useState } from 'react';
 
-export const ErrorMessages = () => {
-   const engineState = useSelector(getEngineState);
-   const characters = useSelector(selectCharacters);
-   const activePlayerId = useSelector(selectActiveCharacterId);
-   const characterMovements = useSelector(getCharactersMovements);
-   const [activeShapes, setActiveShapes] = useState([]);
-   const activePlayer = characters[activePlayerId];
-   const [messageLocation, setMessageLocation] = useState({ x: 0, y: 0 });
+export const ErrorMessages = React.memo(
+   ({ errorMessages, location }: { errorMessages: ErrorMessage[]; location: Location }) => {
+      const [activeShapes, setActiveShapes] = useState([]);
+      const [messageLocation, setMessageLocation] = useState({ x: 0, y: 0 });
 
-   useEffect(() => {
-      setMessageLocation({
-         x: characterMovements[activePlayerId].location.x - activePlayer.size,
-         y: characterMovements[activePlayerId].location.y - activePlayer.size - window.innerHeight / 5,
-      });
-   }, [activePlayer, activePlayerId, characterMovements]);
+      useEffect(() => {
+         setMessageLocation({
+            x: location.x,
+            y: location.y - window.innerHeight / 4,
+         });
+      }, [location]);
 
-   useEffect(() => {
-      const interval = setInterval(() => {
-         setActiveShapes((prev) => filter(prev, (shape) => Date.now() - shape.creationTime < 2000));
-      }, 20);
+      useEffect(() => {
+         setActiveShapes((prev) => [
+            ...chain(errorMessages)
+               .filter((event) => event.type === EngineEventType.ErrorMessage)
+               .map((event: ErrorMessage) => ({
+                  id: Date.now(),
+                  event: {
+                     type: event.type,
+                     message: event.message,
+                  },
+               }))
+               .forEach((message) => {
+                  setTimeout(() => {
+                     setActiveShapes((prev) => filter(prev, (currentMessage) => message.id !== currentMessage.id));
+                  }, 2000);
+               })
+               .value(),
+            ...prev,
+         ]);
+      }, [errorMessages]);
 
-      return () => clearInterval(interval);
-   }, []);
+      useEffect(() => {
+         if (activeShapes.length > 3) {
+            setActiveShapes(activeShapes.slice(0, 3));
+         }
+      }, [activeShapes]);
 
-   useEffect(() => {
-      setActiveShapes((prev) => [
-         ...prev,
-         ...chain(engineState.errorMessages.events)
-            .filter((event) => event.type === EngineEventType.ErrorMessage)
-            .map((event: ErrorMessage) => ({
-               creationTime: Date.now(),
-               event: {
-                  type: event.type,
-                  message: event.message,
-               },
-            }))
-            .value(),
-      ]);
-   }, [engineState.errorMessages.events]);
-
-   useEffect(() => {
-      if (activeShapes.length > 3) {
-         setActiveShapes(activeShapes.shift());
-      }
-   }, [activeShapes]);
-
-   const getErrorMessages = useCallback(
-      () =>
-         map(activeShapes, ({ event }, i) => (
-            <Text
-               text={event.message}
-               x={messageLocation.x}
-               y={messageLocation.y}
-               style={
-                  new PIXI.TextStyle({
-                     fontSize: 40,
-                     fill: '#8f0303',
-                     stroke: '#000000',
-                     strokeThickness: 2,
-                  })
-               }
-            />
-         )),
-      [engineState.characterPowerPoints]
-   );
-
-   return <>{getErrorMessages()}</>;
-};
+      return (
+         <>
+            {map(activeShapes, ({ event }, i) => (
+               <Text
+                  anchor={[0.5, 0]}
+                  text={event.message}
+                  x={messageLocation.x}
+                  y={messageLocation.y + i * 22}
+                  style={
+                     new PIXI.TextStyle({
+                        fontSize: 22,
+                        fill: '#8f0303',
+                        stroke: '#000000',
+                        strokeThickness: 2,
+                     })
+                  }
+               />
+            ))}
+         </>
+      );
+   },
+   (oldProps, newProps) => oldProps.errorMessages.length === newProps.errorMessages.length
+);

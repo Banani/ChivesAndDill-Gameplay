@@ -2,19 +2,29 @@ import { AppContext, Container, Sprite, Stage } from '@inlet/react-pixi';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
-import { getCharactersMovements, getCurrency, getEngineState, selectActiveCharacterId, selectMapSchema, selectSpellChannels, getActiveConversation, getActiveLoot } from '../stores';
+import {
+   getActiveConversation,
+   getActiveLoot,
+   getCharactersMovements,
+   getCurrency,
+   getEngineState,
+   selectActiveCharacterId,
+   selectMapSchema,
+   selectSpellChannels,
+} from '../stores';
 import { SocketContext } from './gameController/socketContext';
 
+import { ErrorMessage } from '@bananos/types';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
 import { Chat } from './guiContent/chat/Chat';
 import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
+import { LootModal } from './guiContent/lootModal/LootModal';
 import { MoneyBar } from './guiContent/moneyBar/MoneyBar';
+import { NpcModal } from './guiContent/npcModal/NpcModal';
 import { QuestLog } from './guiContent/quests/questLog/QuestLog';
 import { QuestsSideView } from './guiContent/quests/questSideView/QuestsSideView';
 import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
-import { NpcModal } from './guiContent/npcModal/NpcModal';
-import { LootModal } from './guiContent/lootModal/LootModal';
 import { AreasManager } from './mapContent/AreasManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
@@ -112,7 +122,10 @@ const Map = () => {
                                           <BlinkSpellEffect />
                                           <BloodPoolManager />
                                           <CastBarsManager location={charactersMovements[activePlayerId]?.location} spellChannels={spellChannels} />
-                                          <ErrorMessages />
+                                          <ErrorMessages
+                                             location={charactersMovements[activePlayerId]?.location}
+                                             errorMessages={engineState.errorMessages.events as ErrorMessage[]}
+                                          />
                                        </Container>
                                     )}
                                     <NextLevelManager experienceEvents={engineState.experience.events} />
