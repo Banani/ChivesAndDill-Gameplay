@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import styles from './MoneyBar.module.scss';
 import copperImage from './images/copper.png';
-import silverImage from './images/silver.png';
 import goldImage from './images/gold.png';
-import { useSelector } from 'react-redux';
-import { selectActiveCharacterId } from '../../../stores';
+import silverImage from './images/silver.png';
+import styles from './MoneyBar.module.scss';
 
 export const MoneyBar = ({ currency }) => {
-   const activePlayerId = useSelector(selectActiveCharacterId);
-
    const [coins, updateCoins] = useState({
       gold: {
          amount: null,
@@ -48,7 +44,7 @@ export const MoneyBar = ({ currency }) => {
             amount: copperAmount,
          },
       }));
-   }, [activePlayerId, currency]);
+   }, [currency]);
 
    const renderCoin = (type) => (
       <div className={styles.MoneyTypeContainer}>

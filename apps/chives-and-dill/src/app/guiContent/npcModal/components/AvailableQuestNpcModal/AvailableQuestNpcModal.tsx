@@ -1,4 +1,5 @@
-import type { QuestSchema } from '@bananos/types';
+import { AllQuestStagePart, KillingQuestStagePart, MovementQuestStagePart, QuestSchema, QuestType } from '@bananos/types';
+import { map } from 'lodash';
 import type { FunctionComponent } from 'react';
 import React from 'react';
 import { useItemTemplateProvider } from '../../../../../hooks';
@@ -9,6 +10,11 @@ interface AvailableQuestNpcModalProps {
    questSchema: QuestSchema;
 }
 
+const questStagePartTransformers: Record<QuestType, (questStagePart: AllQuestStagePart) => JSX.Element> = {
+   [QuestType.MOVEMENT]: (questStagePart: MovementQuestStagePart) => <>Go to {questStagePart.locationName}</>,
+   [QuestType.KILLING]: (questStagePart: KillingQuestStagePart) => <>Not supported yet.</>,
+};
+
 export const AvailableQuestNpcModal: FunctionComponent<AvailableQuestNpcModalProps> = ({ questSchema }) => {
    const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: questSchema.questReward.items?.map((item) => item.itemTemplateId) ?? [] });
 
@@ -17,7 +23,7 @@ export const AvailableQuestNpcModal: FunctionComponent<AvailableQuestNpcModalPro
       if (itemData) {
          return (
             <div className={styles.Item}>
-               <img src={itemData.image} className={styles.ItemImage} alt=''></img>
+               <img src={itemData.image} className={styles.ItemImage} alt=""></img>
                <div className={styles.Stack}>{itemData.stack}</div>
                <div className={styles.RewardText}>{itemData.name}</div>
             </div>
@@ -30,10 +36,14 @@ export const AvailableQuestNpcModal: FunctionComponent<AvailableQuestNpcModalPro
          <h3 className={styles.SectionHeader}>{questSchema.name}</h3>
          <div className={styles.SectionText}>{questSchema.description}</div>
          <h3 className={styles.SectionHeader}>Quests Objectives</h3>
-         <div className={styles.SectionText}>Kill 6 Young Nightsabers</div>
+         {map(questSchema.stages[questSchema.stageOrder[0]].stageParts, (stagePart) => (
+            <div className={styles.SectionText}>{questStagePartTransformers[stagePart.type](stagePart)}</div>
+         ))}
+
          <h3 className={styles.SectionHeader}>Rewards</h3>
          <div className={styles.ItemsContainer}>{items}</div>
-         <div className={styles.MoneyReward}>You will also receive:
+         <div className={styles.MoneyReward}>
+            You will also receive:
             <MoneyBar currency={questSchema.questReward.currency} />
          </div>
          <div className={styles.ExperienceReward}>
