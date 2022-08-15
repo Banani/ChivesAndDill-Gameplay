@@ -22,4 +22,16 @@
     left: 155px;
     top: -43px;
   }
+
+  .ContentWrapper {
+    padding: 10px 40px 0 24px;
+
+    .SectionText {
+        font-size: 18px;
+    }
+
+    .SectionHeader {
+        font-size: 22px;
+    }
+  }
 }

@@ -25,3 +25,7 @@ export const getCharactersMovements = (state: EngineAwareState) => state.engineS
 export const getActiveConversation = (state: EngineAwareState) => state.engineStateModule.npcConversation.data;
 
 export const getActiveLoot = (state: EngineAwareState) => state.engineStateModule.activeLoot.data;
+
+export const getNpcQuests = (state: EngineAwareState) => state.engineStateModule.npcQuests.data;
+
+export const getQuestDefinition = (state: EngineAwareState) => state.engineStateModule.questDefinition.data;

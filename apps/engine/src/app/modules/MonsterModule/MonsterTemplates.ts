@@ -48,7 +48,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       spellPower: 100,
       speed: 2,
       division: 'Orc',
-      sightRange: 300,
+      sightRange: 1,
       desiredRange: 50,
       escapeRange: 2000,
       attackFrequency: 1500,
