@@ -6,7 +6,6 @@ import {
    getActiveConversation,
    getActiveLoot,
    getCharactersMovements,
-   getCurrency,
    getEngineState,
    getQuestDefinition,
    selectActiveCharacterId,
@@ -16,13 +15,12 @@ import {
 } from '../stores';
 import { SocketContext } from './gameController/socketContext';
 
-import { ErrorMessage } from '@bananos/types';
+import type { ErrorMessage } from '@bananos/types';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
 import { Chat } from './guiContent/chat/Chat';
 import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
 import { LootModal } from './guiContent/lootModal/LootModal';
-import { MoneyBar } from './guiContent/moneyBar/MoneyBar';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
 import { QuestLog } from './guiContent/quests/questLog/QuestLog';
 import { QuestsSideView } from './guiContent/quests/questSideView/QuestsSideView';
@@ -45,7 +43,6 @@ const Map = () => {
    const spellChannels = useSelector(selectSpellChannels);
    const charactersMovements = useSelector(getCharactersMovements);
    const activeLoot = useSelector(getActiveLoot);
-   const currency = useSelector(getCurrency);
    const activeConversation = useSelector(getActiveConversation);
 
    const players = useSelector(selectCharacters);
@@ -102,7 +99,6 @@ const Map = () => {
          <Chat />
          {!_.isEmpty(activeLoot[activePlayerId]) ? <LootModal activeLoot={activeLoot[activePlayerId]} /> : null}
          {activeNpc ? <NpcModal questDefinition={questDefinition} activeNpc={activeNpc} /> : null}
-         <MoneyBar currency={currency} activePlayerId={activePlayerId} />
          <ExperienceBar />
          <SocketContext.Consumer>
             {(socketContext) => (

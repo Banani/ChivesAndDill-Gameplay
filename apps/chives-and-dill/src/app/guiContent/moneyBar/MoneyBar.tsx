@@ -3,8 +3,12 @@ import styles from './MoneyBar.module.scss';
 import copperImage from './images/copper.png';
 import silverImage from './images/silver.png';
 import goldImage from './images/gold.png';
+import { useSelector } from 'react-redux';
+import { selectActiveCharacterId } from '../../../stores';
 
-export const MoneyBar = ({ currency, activePlayerId }) => {
+export const MoneyBar = ({ currency }) => {
+   const activePlayerId = useSelector(selectActiveCharacterId);
+
    const [coins, updateCoins] = useState({
       gold: {
          amount: null,
@@ -24,9 +28,9 @@ export const MoneyBar = ({ currency, activePlayerId }) => {
    });
 
    useEffect(() => {
-      const goldAmount = Math.floor(currency[activePlayerId] / 10000);
-      const silverAmount = Math.floor((currency[activePlayerId] % 10000) / 100);
-      const copperAmount = currency[activePlayerId] % 100;
+      const goldAmount = Math.floor(currency / 10000);
+      const silverAmount = Math.floor((currency % 10000) / 100);
+      const copperAmount = currency % 100;
 
       updateCoins((prevState) => ({
          ...prevState,
@@ -46,18 +50,16 @@ export const MoneyBar = ({ currency, activePlayerId }) => {
       }));
    }, [activePlayerId, currency]);
 
-   const renderCoin = (type) => {
-      return (
-         <div className={styles.MoneyTypeContainer}>
-            {type.amount !== null ? (
-               <>
-                  <div className={styles.MoneyAmount}>{type.amount}</div>
-                  <img className={styles.MoneyType} src={type.image} alt={''} />
-               </>
-            ) : null}
-         </div>
-      );
-   };
+   const renderCoin = (type) => (
+      <div className={styles.MoneyTypeContainer}>
+         {type.amount !== null ? (
+            <>
+               <div className={styles.MoneyAmount}>{type.amount}</div>
+               <img className={styles.MoneyType} src={type.image} alt={''} />
+            </>
+         ) : null}
+      </div>
+   );
 
    return (
       <div className={styles.MoneyBar}>

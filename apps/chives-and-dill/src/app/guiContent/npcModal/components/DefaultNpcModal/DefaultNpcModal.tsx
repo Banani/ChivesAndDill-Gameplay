@@ -1,6 +1,7 @@
 import { getActiveConversation, getNpcQuests, getQuestDefinition, selectActiveCharacterId, selectCharacters } from 'apps/chives-and-dill/src/stores';
 import _ from 'lodash';
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './DefaultNpcModal.module.scss';
 
@@ -24,7 +25,7 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
          <h3 className={styles.SectionHeader}>Current Quests</h3>
          <h3 className={styles.SectionHeader}>Available Quests</h3>
          {_.map(activeNpcQuests, (_, questId) => (
-            <div
+            <div className={styles.questName}
                onClick={() => {
                   openQuest(questId);
                }}

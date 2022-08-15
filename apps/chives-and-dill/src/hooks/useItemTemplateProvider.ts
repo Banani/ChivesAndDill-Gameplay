@@ -11,8 +11,8 @@ interface ItemTemplateProviderProps {
 export const useItemTemplateProvider = ({ itemTemplateIds }: ItemTemplateProviderProps) => {
    const itemTemplates = useSelector(getItemTemplate);
    const context = useContext(ItemsApiContext);
-   const [wasRequested, setWasRequested] = useState(false);
    const { requestItemTemplates } = context;
+   const [wasRequested, setWasRequested] = useState(false);
 
    useEffect(() => {
       if (wasRequested) {
