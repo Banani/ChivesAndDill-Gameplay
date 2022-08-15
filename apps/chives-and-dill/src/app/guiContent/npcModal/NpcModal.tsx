@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getActiveConversation, getQuestDefinition, selectActiveCharacterId, selectCharacters } from '../../../stores/engineStateModule/selectors';
+import { QuestSchema } from '@bananos/types';
+import React, { FunctionComponent, useState } from 'react';
 import { AvailableQuestNpcModal, DefaultNpcModal } from './components';
 import styles from './NpcModal.module.scss';
 
@@ -10,32 +9,33 @@ enum NpcModalView {
    CompletedQuest,
 }
 
-export const NpcModal = () => {
-   const [currentModal, setCurrentModal] = useState(NpcModalView.Default);
-   const activeConversation = useSelector(getActiveConversation);
-   const activePlayerId = useSelector(selectActiveCharacterId);
-   const players = useSelector(selectCharacters);
-   const questDefinition = useSelector(getQuestDefinition);
+export interface NpcModalProps {
+   activeNpc: any; // TODO: poprawic
+   questDefinition: Record<string, QuestSchema>;
+}
 
-   const activeNpc = players[activeConversation[activePlayerId]?.npcId];
+export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
+   ({ activeNpc, questDefinition }) => {
+      const [currentModal, setCurrentModal] = useState(NpcModalView.Default);
+      const [activeQuestId, setActiveQuestId] = useState(null);
 
-   const [activeQuestId, setActiveQuestId] = useState(null);
-
-   return activeNpc ? (
-      <div className={styles.NpcModal}>
-         <img className={styles.Avatar} src={activeNpc.avatar} alt={''} />
-         <div className={styles.Name}>{activeNpc.name}</div>
-         <div className={styles.ContentWrapper}>
-            {currentModal === NpcModalView.Default && (
-               <DefaultNpcModal
-                  openQuest={(questId) => {
-                     setCurrentModal(NpcModalView.AvailableQuest);
-                     setActiveQuestId(questId);
-                  }}
-               />
-            )}
-            {currentModal === NpcModalView.AvailableQuest && <AvailableQuestNpcModal questSchema={questDefinition[activeQuestId]} />}
+      return (
+         <div className={styles.NpcModal}>
+            <img className={styles.Avatar} src={activeNpc.avatar} alt={''} />
+            <div className={styles.Name}>{activeNpc.name}</div>
+            <div className={styles.ContentWrapper}>
+               {currentModal === NpcModalView.Default && (
+                  <DefaultNpcModal
+                     openQuest={(questId) => {
+                        setCurrentModal(NpcModalView.AvailableQuest);
+                        setActiveQuestId(questId);
+                     }}
+                  />
+               )}
+               {currentModal === NpcModalView.AvailableQuest && <AvailableQuestNpcModal questSchema={questDefinition[activeQuestId]} />}
+            </div>
          </div>
-      </div>
-   ) : null;
-};
+      );
+   },
+   (oldProps, newProps) => oldProps.activeNpc.id === newProps.activeNpc.id
+);

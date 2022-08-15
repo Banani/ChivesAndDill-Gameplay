@@ -8,7 +8,9 @@ import {
    getCharactersMovements,
    getCurrency,
    getEngineState,
+   getQuestDefinition,
    selectActiveCharacterId,
+   selectCharacters,
    selectMapSchema,
    selectSpellChannels,
 } from '../stores';
@@ -45,6 +47,11 @@ const Map = () => {
    const activeLoot = useSelector(getActiveLoot);
    const currency = useSelector(getCurrency);
    const activeConversation = useSelector(getActiveConversation);
+
+   const players = useSelector(selectCharacters);
+   const questDefinition = useSelector(getQuestDefinition);
+
+   const activeNpc = players[activeConversation[activePlayerId]?.npcId];
    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
 
    const renderSpells = useCallback(
@@ -94,7 +101,7 @@ const Map = () => {
          <QuestLog />
          <Chat />
          {!_.isEmpty(activeLoot[activePlayerId]) ? <LootModal activeLoot={activeLoot[activePlayerId]} /> : null}
-         {activeConversation ? <NpcModal /> : null}
+         {activeNpc ? <NpcModal questDefinition={questDefinition} activeNpc={activeNpc} /> : null}
          <MoneyBar currency={currency} activePlayerId={activePlayerId} />
          <ExperienceBar />
          <SocketContext.Consumer>
