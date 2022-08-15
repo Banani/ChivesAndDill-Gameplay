@@ -41,7 +41,6 @@ export interface QuestStage {
 
 export interface QuestStagePart {
    id: string;
-   description: string;
    resetConditions?: QuestResetCondition[];
    questId: string;
    stageId: string;
@@ -52,6 +51,7 @@ export type AllQuestStagePart = MovementQuestStagePart | KillingQuestStagePart;
 
 export interface MovementQuestStagePart extends QuestStagePart {
    type: QuestType.MOVEMENT;
+   locationName: string;
    targetLocation: Location;
    acceptableRange: number;
 }
@@ -62,6 +62,7 @@ export interface ExternalMovementQuestStagePart {
 
 export interface KillingQuestStagePart extends QuestStagePart {
    type: QuestType.KILLING;
+   monsterName: string;
    rule: {
       fieldName: string;
       comparison: KillingQuestStagePartComparison;

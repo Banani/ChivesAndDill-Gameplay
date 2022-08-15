@@ -17,11 +17,11 @@ export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
    }
 
    stageTranformers: Record<QuestType, (questStagePart: AllQuestStagePart) => ExternalQuestStagePart> = {
-      [QuestType.MOVEMENT]: (questStagePart: MovementQuestStagePart) => ({ type: QuestType.MOVEMENT, description: questStagePart.description }),
+      [QuestType.MOVEMENT]: (questStagePart: MovementQuestStagePart) => ({ type: QuestType.MOVEMENT, locationName: questStagePart.locationName }),
       [QuestType.KILLING]: (questStagePart: KillingQuestStagePart) => ({
          type: QuestType.KILLING,
          amount: questStagePart.amount,
-         description: questStagePart.description,
+         monsterName: questStagePart.monsterName,
       }),
    };
 

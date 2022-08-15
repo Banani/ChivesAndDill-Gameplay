@@ -264,12 +264,12 @@ describe('QuestProgress', () => {
                      stageParts: {
                         '3': {
                            amount: 6,
-                           description: "Kill Orc Spearman's",
+                           monsterName: 'Orc Spearmen',
                            type: 'killing',
                         },
                         '4': {
                            amount: 12,
-                           description: "Kill Orc's",
+                           monsterName: 'Orcs',
                            type: 'killing',
                         },
                      },

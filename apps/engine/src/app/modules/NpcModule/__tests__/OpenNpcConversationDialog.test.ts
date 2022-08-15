@@ -132,11 +132,11 @@ describe('OpenNpcConversationDialog action', () => {
                      description: 'Go to Twilight Outpost',
                      stageParts: {
                         '1': {
-                           description: 'Go to Twilight Outpost',
+                           locationName: 'Twilight Outpost',
                            type: QuestType.MOVEMENT,
                         },
                         '2': {
-                           description: "Kill Orc Spearman's",
+                           monsterName: 'Orc Spearmen',
                            type: QuestType.KILLING,
                            amount: 6,
                         },
