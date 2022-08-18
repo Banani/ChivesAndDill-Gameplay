@@ -2,9 +2,9 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import type { IModuleStore } from 'redux-dynamic-modules-core';
 import { createStore } from 'redux-dynamic-modules-core';
-import { ItemsApi } from '../contexts/ItemsApi';
+import { EngineApi } from '../contexts/EngineApi';
 import { PackageContextProvider } from '../contexts/packageContext';
-import { PlayersModule, QuestsModule, SpellsModule } from '../stores';
+import { PlayersModule, SpellsModule } from '../stores';
 import { Game } from './game';
 import SocketCommunicator from './gameController/socketCommunicator';
 
@@ -14,7 +14,6 @@ const store: IModuleStore<any> = createStore(
       extensions: [],
    },
    PlayersModule,
-   QuestsModule,
    SpellsModule
 );
 
@@ -23,9 +22,9 @@ export default function App() {
       <PackageContextProvider>
          <Provider store={store}>
             <SocketCommunicator>
-               <ItemsApi>
+               <EngineApi>
                   <Game />
-               </ItemsApi>
+               </EngineApi>
             </SocketCommunicator>
          </Provider>
       </PackageContextProvider>

@@ -1,9 +1,8 @@
-import { GlobalStoreModule, NpcClientMessages, QuestType } from '@bananos/types';
+import { GlobalStoreModule, NpcClientMessages, QuestType, RecursivePartial } from '@bananos/types';
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { CharacterRespawn, WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import { merge } from 'lodash';
-import { RecursivePartial } from '../../../types';
 import { QuestCompletedEvent, QuestEngineEvents } from '../../QuestModule/Events';
 import { Quests } from '../../QuestModule/Quests';
 import { NpcTemplate, NpcTemplates } from '../NpcTemplate';

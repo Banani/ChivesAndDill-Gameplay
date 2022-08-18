@@ -1,8 +1,8 @@
-import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
+import { CommonClientMessages, GlobalStoreModule, RecursivePartial } from '@bananos/types';
 import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import { merge, times } from 'lodash';
-import { Character, RecursivePartial } from '../../../types';
+import { Character } from '../../../types';
 import { CharacterRespawn, WalkingType } from '../../../types/CharacterRespawn';
 import { CharacterEngineEvents, TakeCharacterHealthPointsEvent } from '../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';

@@ -12,6 +12,7 @@ export const useEnginePackageProvider = () => {
       spellChannels: packageContext.backendStore.spellChannels?.data,
       itemTemplates: packageContext.backendStore.items?.data ?? {},
       questDefinition: packageContext.backendStore.questDefinition?.data,
+      questProgress: packageContext.backendStore.questProgress?.data,
       npcQuests: packageContext.backendStore.npcQuests?.data,
       activeLoot: packageContext.backendStore.activeLoot?.data,
       activeConversation: packageContext.backendStore.npcConversation?.data,

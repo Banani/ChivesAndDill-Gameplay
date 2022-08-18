@@ -1,10 +1,10 @@
-import { CommonClientMessages, GlobalStoreModule, Location } from '@bananos/types';
+import { CommonClientMessages, GlobalStoreModule, Location, RecursivePartial } from '@bananos/types';
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import {} from '../../';
 import { EngineEvents } from '../../../EngineEvents';
 import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
-import { CharacterDiedEvent, CharacterType, RecursivePartial } from '../../../types';
+import { CharacterDiedEvent, CharacterType } from '../../../types';
 import { WalkingType } from '../../../types/CharacterRespawn';
 import { CharacterUnion } from '../../../types/CharacterUnion';
 import { MonsterRespawnTemplateService } from '../../MonsterModule/dataProviders';

@@ -103,12 +103,12 @@ interface ExternalQuestStageProgress {
    isDone: boolean;
 }
 
-interface ExternalKillingQuestStageProgress extends ExternalQuestStageProgress {
+export interface ExternalKillingQuestStageProgress extends ExternalQuestStageProgress {
    type: QuestType.KILLING;
    currentAmount: number;
 }
 
-interface ExternalMovementQuestStageProgress extends ExternalQuestStageProgress {
+export interface ExternalMovementQuestStageProgress extends ExternalQuestStageProgress {
    type: QuestType.MOVEMENT;
 }
 

@@ -4,7 +4,7 @@
     height: 650px;
     top: 15%;
     left: 5%;
-    background: url("../../../../assets/spritesheets/backgrounds/qlog.png");
+    background: url("../../../../../assets/spritesheets/backgrounds/qlog.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     display: flex;
@@ -23,21 +23,21 @@
         flex-direction: column;
 
         .QuestTitle{
-          color:rgb(224, 224, 224);
+          color:#6b6b6b;
           font-size: 18px;
           padding: 5px 20px;
           cursor: pointer;
 
           &:hover {
-            color:rgb(200, 200, 200);
+            color:#7b7b7b;
           }
         }
 
         .ActiveTitle {
-          color: rgb(255, 0, 0);
+          color: #ffc700;
 
           &:hover {
-            color:rgb(177, 0, 0);
+            color:#ffd700;
           }
         }
       }

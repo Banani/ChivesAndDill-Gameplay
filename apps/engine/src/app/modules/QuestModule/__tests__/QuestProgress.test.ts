@@ -257,7 +257,7 @@ describe('QuestProgress', () => {
       checkIfPackageIsValid(GlobalStoreModule.QUEST_DEFINITION, dataPackage, {
          data: {
             '1': {
-               stageOrder: ['1'],
+               stageOrder: ['1', '2'],
                stages: {
                   '2': {
                      description: 'Now it is time to fight',

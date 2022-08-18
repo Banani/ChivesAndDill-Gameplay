@@ -45,6 +45,7 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
       },
       quests: {
          '1': Quests['1'],
+         '2': Quests['2'],
       },
    },
    KretonPL: {

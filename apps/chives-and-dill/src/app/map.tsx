@@ -13,8 +13,7 @@ import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
 import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
 import { LootModal } from './guiContent/lootModal/LootModal';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
-import { QuestLog } from './guiContent/quests/questLog/QuestLog';
-import { QuestsSideView } from './guiContent/quests/questSideView/QuestsSideView';
+import { QuestManager } from './guiContent/quests';
 import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
 import { AreasManager } from './mapContent/AreasManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
@@ -40,6 +39,7 @@ const Map = () => {
       projectileMovements,
       experienceEvents,
       errorMessagesEvents,
+      questProgress,
    } = useEnginePackageProvider();
 
    const activeNpc = characters[activeConversation?.[activeCharacterId]?.npcId];
@@ -88,8 +88,7 @@ const Map = () => {
          {activeCharacterId ? <SpellsBar /> : null}
          {activeCharacterId ? <ActivePlayerTimeEffects playerId={activeCharacterId} /> : null}
          <CharacterFrames />
-         {<QuestsSideView />}
-         <QuestLog />
+         <QuestManager />
          <Chat />
          {!_.isEmpty(activeLoot?.[activeCharacterId]) ? <LootModal activeLoot={activeLoot[activeCharacterId]} /> : null}
          {activeNpc ? <NpcModal questDefinition={questDefinition} activeNpc={activeNpc} /> : null}

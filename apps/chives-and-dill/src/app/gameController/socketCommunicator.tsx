@@ -1,4 +1,4 @@
-import { EngineMessages, FightingEngineMessages, QuestEngineMessages } from '@bananos/types';
+import { EngineMessages, FightingEngineMessages } from '@bananos/types';
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
@@ -15,10 +15,6 @@ import {
    deletePlayer,
    initializePlayers,
    initializeSpells,
-   killingStagePartProgress,
-   newQuestStageStarted,
-   questCompleted,
-   questStarted,
    updateCharacterHp,
    updateCharacterSpellPower,
 } from '../../stores';
@@ -98,24 +94,7 @@ const SocketCommunicator = ({ children }) => {
             dispatch(addActiveSpellCast({ event }));
          });
 
-         context.socket.on(QuestEngineMessages.QuestStarted, ({ questTemplate, characterId }) => {
-            dispatch(questStarted({ questTemplate, characterId }));
-         });
-
-         context.socket.on(QuestEngineMessages.QuestCompleted, ({ questId, characterId }) => {
-            dispatch(questCompleted({ questId, characterId }));
-         });
-
-         context.socket.on(QuestEngineMessages.NewQuestStageStarted, ({ questId, characterId, questStage }) => {
-            dispatch(newQuestStageStarted({ questId, characterId, questStage } as any));
-         });
-
-         context.socket.on(QuestEngineMessages.KillingStagePartProgress, ({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }) => {
-            dispatch(killingStagePartProgress({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }));
-         });
-
          context.socket.on(EngineMessages.Package, (enginePackage) => {
-            // dispatch(newPackage(enginePackage));
             packageContext.updatePackage(enginePackage);
          });
       }

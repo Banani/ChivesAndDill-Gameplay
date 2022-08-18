@@ -1,5 +1,6 @@
 import { QuestSchema } from '@bananos/types';
-import React, { FunctionComponent, useState } from 'react';
+import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
+import React, { FunctionComponent, useCallback, useContext, useState } from 'react';
 import { AvailableQuestNpcModal, DefaultNpcModal } from './components';
 import styles from './NpcModal.module.scss';
 
@@ -18,6 +19,11 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
    ({ activeNpc, questDefinition }) => {
       const [currentModal, setCurrentModal] = useState(NpcModalView.Default);
       const [activeQuestId, setActiveQuestId] = useState(null);
+      const context = useContext(EngineApiContext);
+
+      const acceptQuest = useCallback(() => {
+         context.takeQuestFromNpc({ npcId: activeNpc.id, questId: activeQuestId });
+      }, [activeNpc.id, activeQuestId]);
 
       return (
          <div className={styles.NpcModal}>
@@ -32,7 +38,9 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
                      }}
                   />
                )}
-               {currentModal === NpcModalView.AvailableQuest && <AvailableQuestNpcModal questSchema={questDefinition[activeQuestId]} />}
+               {currentModal === NpcModalView.AvailableQuest && (
+                  <AvailableQuestNpcModal acceptQuest={acceptQuest} questSchema={questDefinition[activeQuestId]} />
+               )}
             </div>
          </div>
       );

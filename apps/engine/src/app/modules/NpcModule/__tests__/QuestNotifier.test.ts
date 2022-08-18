@@ -1,9 +1,8 @@
-import { GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule, RecursivePartial } from '@bananos/types';
 import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { CharacterRespawn, WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import { merge } from 'lodash';
-import { RecursivePartial } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import { QuestCompletedEvent, QuestEngineEvents } from '../../QuestModule/Events';

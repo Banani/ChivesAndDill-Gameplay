@@ -1,0 +1,39 @@
+.ItemsContainer {
+    display: flex;
+    margin-bottom: 10px;
+    .Item {
+        width: 50%;
+        height: 50px;
+        display: flex;
+
+        .ItemImage {
+            width: 50px;
+            height: 50px;
+        }
+
+        .RewardText {
+            color: #ededed;
+            display: flex;
+            align-items: center;
+        }
+
+        .Stack {
+            position: relative;
+            left: -18px;
+            top: 33px;
+        }
+    }
+}
+
+.MoneyReward {
+    display: flex;
+}
+
+.ExperienceReward {
+    display: flex;
+
+    .ExperienceAmount {
+        color: #ededed;
+        margin-left: 10px;
+    }
+}

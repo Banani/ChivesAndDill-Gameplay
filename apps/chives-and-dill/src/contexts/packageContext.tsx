@@ -29,10 +29,7 @@ export const customMerge = (data: any, pathToUpdate: any) => {
          }
 
          if (Array.isArray(pathToUpdate[key])) {
-            if (!Array.isArray(data[key])) {
-               data[key] = [];
-            }
-            data[key] = (data[key] as []).concat(toUpdate);
+            data[key] = toUpdate;
          } else {
             customMerge(data[key], pathToUpdate[key]);
          }
@@ -73,15 +70,6 @@ export const PackageContextProvider: FunctionComponent = ({ children }) => {
             pickBy(payload, (module) => module.data),
             (module, moduleName) => customMerge(newState[moduleName].data, module.data)
          );
-
-         //  newState = merge(
-         //     {},
-         //     newState,
-         //     mapValues(
-         //        pickBy(payload, (module) => module.data),
-         //        (module) => ({ data: module.data })
-         //     )
-         //  );
 
          forEach(
             pickBy(payload, (module) => module.toDelete),

@@ -39,7 +39,7 @@ export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
             receiverId: character.ownerId,
             objects: {
                [quest.id]: {
-                  stageOrder: quest.stageOrder.splice(0, stageIndex),
+                  stageOrder: quest.stageOrder.slice(0, stageIndex + 1),
                   stages: {
                      [event.questStage.id]: {
                         description: event.questStage.description,

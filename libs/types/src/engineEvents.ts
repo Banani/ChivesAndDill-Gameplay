@@ -16,7 +16,7 @@ export enum EngineMessages {
    Package = 'Package', // READY
 }
 
-export enum QuestEngineMessages {
+export enum QuestEngineMessages { //TODO: Mozliwe ze to juz do wywalenia
    QuestStarted = 'QuestStarted',
    QuestCompleted = 'QuestCompleted',
    KillingStagePartProgress = 'KillingStagePartProgress',

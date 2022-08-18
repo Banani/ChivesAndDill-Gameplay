@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { ItemsApiContext } from '../contexts/ItemsApi';
+import { EngineApiContext } from '../contexts/EngineApi';
 import { useEnginePackageProvider } from './useEnginePackageProvider';
 
 interface ItemTemplateProviderProps {
@@ -9,9 +9,8 @@ interface ItemTemplateProviderProps {
 
 export const useItemTemplateProvider = ({ itemTemplateIds }: ItemTemplateProviderProps) => {
    const { itemTemplates } = useEnginePackageProvider();
-   console.log(itemTemplates);
 
-   const context = useContext(ItemsApiContext);
+   const context = useContext(EngineApiContext);
    const { requestItemTemplates } = context;
    const [wasRequested, setWasRequested] = useState(false);
 
