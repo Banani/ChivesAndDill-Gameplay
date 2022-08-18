@@ -1,14 +1,13 @@
+import { Location } from '@bananos/types';
 import { Stage } from '@inlet/react-pixi';
-import _ from 'lodash';
+import _, { range } from 'lodash';
 import * as PIXI from 'pixi.js';
-import { range } from 'lodash';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { MapSprite } from './mapSprite/mapSprite';
-import { BLOCK_SIZE } from '../../consts';
 import { Texture } from 'pixi.js';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { BLOCK_SIZE } from '../../consts';
 import { PackageContext } from '../../contexts/packageContext';
 import { MapEditorContext } from '../contexts/mapEditorContextProvider';
-import { Location } from '@bananos/types';
+import { MapSprite } from './mapSprite/mapSprite';
 import { Rectangle } from './shape/shape';
 
 import styles from './map.module.scss';
@@ -26,7 +25,7 @@ export const Map = () => {
          const baseTexture = PIXI.BaseTexture.from('../../../assets/' + mapElement.spriteSheet);
          output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.x * BLOCK_SIZE + 1, mapElement.y * BLOCK_SIZE + 1, 30, 30));
       });
-      console.log(output);
+
       setTexturesMap(output);
    }, [packageContext?.backendStore?.sprites?.data]);
 

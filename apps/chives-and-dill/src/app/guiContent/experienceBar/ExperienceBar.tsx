@@ -1,13 +1,11 @@
+import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { getExperience, selectActiveCharacterId } from '../../../stores';
 import styles from './ExperienceBar.module.scss';
 
 export const ExperienceBar = () => {
-   const activePlayerId = useSelector(selectActiveCharacterId);
-   const experience = useSelector(getExperience);
+   const { activeCharacterId, experience } = useEnginePackageProvider();
 
-   const { experienceAmount, toNextLevel } = experience[activePlayerId];
+   const { experienceAmount, toNextLevel } = experience[activeCharacterId];
 
    const levelProgress = (experienceAmount / toNextLevel) * 100;
 

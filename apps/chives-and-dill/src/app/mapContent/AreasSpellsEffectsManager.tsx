@@ -1,24 +1,22 @@
-import React, { useCallback } from "react";
-import { useSelector } from "react-redux";
-import { getEngineState } from "../../stores";
-import _ from "lodash";
-import { Graphics } from "@inlet/react-pixi";
+import { Graphics } from '@inlet/react-pixi';
+import _ from 'lodash';
+import React, { useCallback } from 'react';
+import { useEnginePackageProvider } from '../../hooks';
 
 export const AreasSpellsEffectsManager = () => {
-  const engineState = useSelector(getEngineState);
-  const areaSpellsEffects = engineState.areaTimeEffects.data;
+   const { areaTimeEffects } = useEnginePackageProvider();
 
-  const drawAreasSpellsEffects = useCallback(
-    (g) => {
-      g.clear();
-      _.map(areaSpellsEffects, (areaSpellEffect: any, index) => {
-        g.beginFill(0x333333);
-        g.drawCircle(areaSpellEffect.location.x, areaSpellEffect.location.y, areaSpellEffect.radius);
-        g.endFill();
-      });
-    },
-    [areaSpellsEffects]
-  );
+   const drawAreasSpellsEffects = useCallback(
+      (g) => {
+         g.clear();
+         _.map(areaTimeEffects, (areaSpellEffect: any, index) => {
+            g.beginFill(0x333333);
+            g.drawCircle(areaSpellEffect.location.x, areaSpellEffect.location.y, areaSpellEffect.radius);
+            g.endFill();
+         });
+      },
+      [areaTimeEffects]
+   );
 
-  return <Graphics draw={drawAreasSpellsEffects} />
-}
+   return <Graphics draw={drawAreasSpellsEffects} />;
+};

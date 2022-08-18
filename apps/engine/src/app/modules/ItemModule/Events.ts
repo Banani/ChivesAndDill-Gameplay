@@ -1,5 +1,5 @@
-import { BackpackItemsSpot, BackpackTrack, ItemInstance, ItemLocationInBag } from '@bananos/types';
-import { EngineEvent, EngineEventHandler, RecursivePartial } from '../../types';
+import { BackpackItemsSpot, BackpackTrack, ItemInstance, ItemLocationInBag, RecursivePartial } from '@bananos/types';
+import { EngineEvent, EngineEventHandler } from '../../types';
 
 export enum ItemEngineEvents {
    CurrencyAmountUpdated = 'CurrencyAmountUpdated',

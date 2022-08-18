@@ -1,24 +1,15 @@
-import { AppContext, Container, Sprite, Stage } from '@inlet/react-pixi';
+import { Container, Sprite, Stage } from '@inlet/react-pixi';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Provider, ReactReduxContext, useSelector } from 'react-redux';
-import {
-   getActiveConversation,
-   getActiveLoot,
-   getCharactersMovements,
-   getEngineState,
-   getQuestDefinition,
-   selectActiveCharacterId,
-   selectCharacters,
-   selectMapSchema,
-   selectSpellChannels,
-} from '../stores';
+import { Provider, ReactReduxContext } from 'react-redux';
 import { SocketContext } from './gameController/socketContext';
 
-import type { ErrorMessage } from '@bananos/types';
+import { ErrorMessage } from '@bananos/types';
+import { Chat } from '@mui/icons-material';
+import { PackageContext } from '../contexts/packageContext';
+import { useEnginePackageProvider } from '../hooks';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
-import { Chat } from './guiContent/chat/Chat';
 import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
 import { LootModal } from './guiContent/lootModal/LootModal';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
@@ -32,28 +23,31 @@ import { BloodPoolManager } from './mapContent/BloodPoolsManager';
 import { CastBarsManager } from './mapContent/CastBarsManager';
 import { ErrorMessages } from './mapContent/ErrorMessages';
 import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
-import { MapManager } from './mapContent/mapManager/MapManager';
+import { MapWrapper } from './mapContent/mapManager/MapWrapper';
 import { NextLevelManager } from './mapContent/NextLevelManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 
 const Map = () => {
-   const activePlayerId = useSelector(selectActiveCharacterId);
-   const engineState = useSelector(getEngineState);
-   const mapSchema = useSelector(selectMapSchema);
-   const spellChannels = useSelector(selectSpellChannels);
-   const charactersMovements = useSelector(getCharactersMovements);
-   const activeLoot = useSelector(getActiveLoot);
-   const activeConversation = useSelector(getActiveConversation);
+   const {
+      activeCharacterId,
+      mapSchema,
+      spellChannels,
+      characterMovements,
+      activeLoot,
+      activeConversation,
+      characters,
+      questDefinition,
+      projectileMovements,
+      experienceEvents,
+      errorMessagesEvents,
+   } = useEnginePackageProvider();
 
-   const players = useSelector(selectCharacters);
-   const questDefinition = useSelector(getQuestDefinition);
-
-   const activeNpc = players[activeConversation[activePlayerId]?.npcId];
+   const activeNpc = characters[activeConversation?.[activeCharacterId]?.npcId];
    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
 
    const renderSpells = useCallback(
       () =>
-         _.map(engineState.projectileMovements.data, (spell, i) => (
+         _.map(projectileMovements, (spell, i) => (
             <Sprite
                rotation={spell.angle + 1.5}
                scale={2}
@@ -63,7 +57,7 @@ const Map = () => {
                y={spell.location.y}
             ></Sprite>
          )),
-      [engineState.projectileMovements]
+      [projectileMovements]
    );
 
    const resizeGame = () => {
@@ -91,56 +85,58 @@ const Map = () => {
 
    return (
       <>
-         {activePlayerId ? <SpellsBar /> : null}
-         {activePlayerId ? <ActivePlayerTimeEffects playerId={activePlayerId} /> : null}
+         {activeCharacterId ? <SpellsBar /> : null}
+         {activeCharacterId ? <ActivePlayerTimeEffects playerId={activeCharacterId} /> : null}
          <CharacterFrames />
          {<QuestsSideView />}
          <QuestLog />
          <Chat />
-         {!_.isEmpty(activeLoot[activePlayerId]) ? <LootModal activeLoot={activeLoot[activePlayerId]} /> : null}
+         {!_.isEmpty(activeLoot?.[activeCharacterId]) ? <LootModal activeLoot={activeLoot[activeCharacterId]} /> : null}
          {activeNpc ? <NpcModal questDefinition={questDefinition} activeNpc={activeNpc} /> : null}
          <ExperienceBar />
-         <SocketContext.Consumer>
-            {(socketContext) => (
-               <ReactReduxContext.Consumer>
-                  {({ store }) => (
-                     <Stage width={gameSize.width} height={gameSize.height} options={{ backgroundColor: 0x000000, autoDensity: true }}>
-                        <AppContext.Consumer>
-                           {(app) => (
-                              <SocketContext.Provider value={socketContext}>
-                                 <Provider store={store}>
-                                    {activePlayerId && engineState.characterMovements && (
-                                       <Container
-                                          position={[
-                                             -(charactersMovements[activePlayerId]?.location.x ?? 0) + gameSize.width / 2,
-                                             -(charactersMovements[activePlayerId]?.location.y ?? 0) + gameSize.height / 2,
-                                          ]}
-                                       >
-                                          <MapManager mapSchema={mapSchema} location={charactersMovements[activePlayerId]?.location} />
-                                          <AreasSpellsEffectsManager />
-                                          <AreasManager />
-                                          {renderSpells()}
-                                          <RenderPlayersManager />
-                                          <FloatingNumbersManager />
-                                          <BlinkSpellEffect />
-                                          <BloodPoolManager />
-                                          <CastBarsManager location={charactersMovements[activePlayerId]?.location} spellChannels={spellChannels} />
-                                          <ErrorMessages
-                                             location={charactersMovements[activePlayerId]?.location}
-                                             errorMessages={engineState.errorMessages.events as ErrorMessage[]}
-                                          />
-                                       </Container>
-                                    )}
-                                    <NextLevelManager experienceEvents={engineState.experience.events} />
-                                 </Provider>
-                              </SocketContext.Provider>
-                           )}
-                        </AppContext.Consumer>
-                     </Stage>
+         <PackageContext.Consumer>
+            {(packageContext) => (
+               <SocketContext.Consumer>
+                  {(socketContext) => (
+                     <ReactReduxContext.Consumer>
+                        {({ store }) => (
+                           <Stage width={gameSize.width} height={gameSize.height} options={{ backgroundColor: 0x000000, autoDensity: true }}>
+                              <PackageContext.Provider value={packageContext}>
+                                 <SocketContext.Provider value={socketContext}>
+                                    <Provider store={store}>
+                                       {activeCharacterId && characterMovements && (
+                                          <Container
+                                             position={[
+                                                -(characterMovements[activeCharacterId]?.location.x ?? 0) + gameSize.width / 2,
+                                                -(characterMovements[activeCharacterId]?.location.y ?? 0) + gameSize.height / 2,
+                                             ]}
+                                          >
+                                             <MapWrapper />
+                                             <AreasSpellsEffectsManager />
+                                             <AreasManager />
+                                             {renderSpells()}
+                                             <RenderPlayersManager />
+                                             <FloatingNumbersManager />
+                                             <BlinkSpellEffect />
+                                             <BloodPoolManager />
+                                             <CastBarsManager location={characterMovements[activeCharacterId]?.location} spellChannels={spellChannels} />
+                                             <ErrorMessages
+                                                location={characterMovements[activeCharacterId]?.location}
+                                                errorMessages={errorMessagesEvents as ErrorMessage[]}
+                                             />
+                                          </Container>
+                                       )}
+                                       <NextLevelManager experienceEvents={experienceEvents} />
+                                    </Provider>
+                                 </SocketContext.Provider>
+                              </PackageContext.Provider>
+                           </Stage>
+                        )}
+                     </ReactReduxContext.Consumer>
                   )}
-               </ReactReduxContext.Consumer>
+               </SocketContext.Consumer>
             )}
-         </SocketContext.Consumer>
+         </PackageContext.Consumer>
       </>
    );
 };

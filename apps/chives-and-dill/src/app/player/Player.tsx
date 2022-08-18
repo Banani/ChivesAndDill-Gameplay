@@ -1,21 +1,19 @@
+import { CommonClientMessages, NpcClientMessages } from '@bananos/types';
 import { Graphics, Sprite, Text } from '@inlet/react-pixi';
 import _ from 'lodash';
-import { CommonClientMessages } from '@bananos/types';
-import { SocketContext } from '../gameController/socketContext'
 import * as PIXI from 'pixi.js';
-import React, { useContext, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { BLOCK_SIZE } from '../../consts/consts';
 import { setActiveTarget } from '../../stores';
+import { SocketContext } from '../gameController/socketContext';
 import { GetAbsorbsValue } from './GetPlayerAbsorbs';
-import { NpcClientMessages } from '@bananos/types';
 
 const Player = React.memo<{ player: any; characterViewsSettings: any; charactersMovements: any; characterPowerPoints: any }>(
    ({ player, characterViewsSettings, charactersMovements, characterPowerPoints }) => {
       const [timer, setTimer] = useState(0);
       const [playerSheet, setPlayerSheet] = useState({});
       const [characterStatus, setCharacterStatus] = useState('standingDown');
-      const [isCharacterMoving, setIsCharacterMoving] = useState(false);
 
       const sheet = PIXI.BaseTexture.from(`../assets${characterViewsSettings[player.sprites].image}`);
       const playerSprite = characterViewsSettings[player.sprites];
@@ -51,7 +49,7 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
       }, [sheet, w, h, playerSprite]);
 
       const getDirection = (direction) => {
-         if (!isCharacterMoving) {
+         if (!charactersMovements[player.id].isInMove) {
             if (direction === 0) {
                setCharacterStatus('standingUp');
             }
@@ -98,13 +96,7 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
          if (charactersMovements[player.id]) {
             getDirection(charactersMovements[player.id].direction);
          }
-      }, [charactersMovements, currentHp, isCharacterMoving, getDirection]);
-
-      useEffect(() => {
-         if (charactersMovements[player.id]) {
-            setIsCharacterMoving(charactersMovements[player.id].isInMove);
-         }
-      }, [charactersMovements, player.id]);
+      }, [charactersMovements, currentHp, charactersMovements[player.id].isInMove, getDirection]);
 
       const drawAbsorbBar = (g) => {
          const barWidth = (playerAbsorb / (playerAbsorb + maxHp)) * 50;
@@ -130,36 +122,33 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
          }
 
          socket?.emit(NpcClientMessages.OpenNpcConversationDialog, {
-            npcId: player.id
+            npcId: player.id,
          });
-      }
+      };
 
       const handleMonsterClick = () => {
          if (player.type !== 'Monster') {
             return;
          }
          socket?.emit(CommonClientMessages.OpenLoot, {
-            corpseId: player.id
+            corpseId: player.id,
          });
-      }
+      };
 
       const handlePlayerClick = () => {
          dispatch(setActiveTarget({ characterId: player.id }));
          handleNpcClick();
          handleMonsterClick();
-      }
+      };
 
-      const hpBar = useCallback(
-         (g) => {
-            g.clear();
-            g.beginFill(0x000000);
-            g.drawRect(charactersMovements[player.id].location.x - 26, charactersMovements[player.id].location.y - h / 1.5 - 1, 52, 7);
-            g.endFill();
-            drawHealthBar(g);
-            drawAbsorbBar(g);
-         },
-         [charactersMovements, player, h]
-      );
+      const hpBar = (g) => {
+         g.clear();
+         g.beginFill(0x000000);
+         g.drawRect(charactersMovements[player.id].location.x - 26, charactersMovements[player.id].location.y - h / 1.5 - 1, 52, 7);
+         g.endFill();
+         drawHealthBar(g);
+         drawAbsorbBar(g);
+      };
 
       return charactersMovements[player.id] ? (
          <>

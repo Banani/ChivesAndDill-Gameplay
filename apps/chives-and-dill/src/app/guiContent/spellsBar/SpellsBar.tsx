@@ -1,22 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react';
-import styles from './SpellsBar.module.scss';
-import { useSelector } from 'react-redux';
-import { selectCharacters, selectActiveCharacterId } from '../../../stores';
+import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
+import React, { useContext, useEffect, useState } from 'react';
 import { GameControllerContext } from '../../gameController/gameControllerContext';
+import styles from './SpellsBar.module.scss';
 
 export const SpellsBar = () => {
+   const { characters, activeCharacterId } = useEnginePackageProvider();
    const context = useContext(GameControllerContext);
-   const characters = useSelector(selectCharacters);
-   const activePlayerId = useSelector(selectActiveCharacterId);
-   const spells = characters[activePlayerId].spells;
+   const spells = characters[activeCharacterId].spells;
 
    const [spellsOnCooldown, setSpellOnCooldown] = useState([]);
    const [clickedSpell, setClickedSpell] = useState('');
 
    let renderSpells;
 
-   let keyBinds = _.map(characters[activePlayerId].spells, (spell) => spell.name);
+   let keyBinds = _.map(characters[activeCharacterId].spells, (spell) => spell.name);
    keyBinds = keyBinds.reduce((prev, current, index) => {
       prev[index + 1] = current;
       return prev;

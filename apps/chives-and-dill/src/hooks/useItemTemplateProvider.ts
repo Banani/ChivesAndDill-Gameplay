@@ -1,15 +1,16 @@
 import _ from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { ItemsApiContext } from '../contexts/ItemsApi';
-import { getItemTemplate } from '../stores';
+import { useEnginePackageProvider } from './useEnginePackageProvider';
 
 interface ItemTemplateProviderProps {
    itemTemplateIds: string[];
 }
 
 export const useItemTemplateProvider = ({ itemTemplateIds }: ItemTemplateProviderProps) => {
-   const itemTemplates = useSelector(getItemTemplate);
+   const { itemTemplates } = useEnginePackageProvider();
+   console.log(itemTemplates);
+
    const context = useContext(ItemsApiContext);
    const { requestItemTemplates } = context;
    const [wasRequested, setWasRequested] = useState(false);

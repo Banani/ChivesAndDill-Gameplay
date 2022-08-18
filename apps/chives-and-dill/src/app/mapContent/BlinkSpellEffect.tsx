@@ -1,15 +1,13 @@
-import { filter, forEach, map } from 'lodash';
-import { Graphics } from '@inlet/react-pixi';
-import React, { useEffect, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getEngineState } from '../../stores';
-import { BlinkSpellDefinitions } from './BlinkSpellDefinitions';
 import type { SpellLandedEvent } from '@bananos/types';
 import { EngineEventType } from '@bananos/types';
+import { Graphics } from '@inlet/react-pixi';
+import { filter, forEach, map } from 'lodash';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useEnginePackageProvider } from '../../hooks';
+import { BlinkSpellDefinitions } from './BlinkSpellDefinitions';
 
 export const BlinkSpellEffect = () => {
-   const engineState = useSelector(getEngineState);
-   const events = engineState.spells.events;
+   const { spellEvents } = useEnginePackageProvider();
    const [activeShapes, setActiveShapes] = useState([]);
 
    const angleBlastDrawer = (g, spellLandedEvent) => {
@@ -42,8 +40,8 @@ export const BlinkSpellEffect = () => {
    }, []);
 
    useEffect(() => {
-      setActiveShapes((prev) => [...prev, ...map(events, (event) => ({ creationTime: Date.now(), event }))]);
-   }, [events]);
+      setActiveShapes((prev) => [...prev, ...map(spellEvents, (event) => ({ creationTime: Date.now(), event }))]);
+   }, [spellEvents]);
 
    const drawSpellEffect = useCallback(
       (g) => {
@@ -60,7 +58,7 @@ export const BlinkSpellEffect = () => {
             }
          });
       },
-      [events]
+      [spellEvents]
    );
 
    return <Graphics draw={drawSpellEffect} />;

@@ -6,3 +6,4 @@ export * from './ItemPackage';
 export * from './NpcPackage';
 export * from './QuestPackage';
 export * from './shared';
+export * from './utilityTypes';

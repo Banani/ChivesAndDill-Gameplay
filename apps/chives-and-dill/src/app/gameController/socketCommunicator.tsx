@@ -1,32 +1,34 @@
 import { EngineMessages, FightingEngineMessages, QuestEngineMessages } from '@bananos/types';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
+import { PackageContext } from '../../contexts/packageContext';
 import { environment } from '../../environments/environment';
 import {
-   initializePlayers,
-   initializeSpells,
+   addActiveSpellCast,
    addPlayer,
-   deletePlayer,
-   updateCharacterHp,
-   characterDied,
-   updateCharacterSpellPower,
+   addSpellLanded,
    areaSpellEffectCreated,
    areaSpellEffectRemoved,
-   addActiveSpellCast,
+   characterDied,
    deleteActiveSpellCast,
-   addSpellLanded,
-   questStarted,
-   questCompleted,
+   deletePlayer,
+   initializePlayers,
+   initializeSpells,
    killingStagePartProgress,
    newQuestStageStarted,
-   newPackage,
+   questCompleted,
+   questStarted,
+   updateCharacterHp,
+   updateCharacterSpellPower,
 } from '../../stores';
 import { SocketContext } from './socketContext';
 
 const SocketCommunicator = ({ children }) => {
    const [context, setContext] = useState<any>({});
    const dispatch = useDispatch();
+   const packageContext = useContext(PackageContext);
+
    useEffect(() => {
       const URL = environment.engineUrl;
       setContext({
@@ -112,8 +114,9 @@ const SocketCommunicator = ({ children }) => {
             dispatch(killingStagePartProgress({ questId, stageId, characterId, stagePartId, currentProgress, targetAmount }));
          });
 
-         context.socket.on(EngineMessages.Package, (event) => {
-            dispatch(newPackage(event));
+         context.socket.on(EngineMessages.Package, (enginePackage) => {
+            // dispatch(newPackage(enginePackage));
+            packageContext.updatePackage(enginePackage);
          });
       }
    }, [context]);

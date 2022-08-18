@@ -1,18 +1,16 @@
+import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
 import React from 'react';
+import styles from './CharacterFrames.module.scss';
 import { PlayerIcon } from './playerIcon/PlayerIcon';
 import { TargetIcon } from './targetIcon/TargetIcon';
-import { selectActiveCharacterId } from '../../../stores';
-import { useSelector } from 'react-redux';
-import styles from './CharacterFrames.module.scss';
 
 export const CharacterFrames = () => {
-
-   const activePlayerId = useSelector(selectActiveCharacterId);
+   const { activeCharacterId } = useEnginePackageProvider();
 
    return (
       <div className={styles.CharacterFrames}>
-         {activePlayerId ? <PlayerIcon playerId={activePlayerId}></PlayerIcon> : null}
+         {activeCharacterId ? <PlayerIcon playerId={activeCharacterId}></PlayerIcon> : null}
          <TargetIcon />
       </div>
-   )
+   );
 };

@@ -1,25 +1,39 @@
+import _ from 'lodash';
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { useEnginePackageProvider } from '../../hooks';
+import { selectCharacterViewsSettings } from '../../stores';
 import Player from '../player/Player';
-import { selectCharacterViewsSettings, selectActiveCharacterId, selectCharacters, getCharactersMovements, selectCharacterPowerPointsEvents } from '../../stores';
-import _ from 'lodash';
 
 export const RenderPlayersManager = () => {
-   const players = useSelector(selectCharacters);
-   const activePlayerId = useSelector(selectActiveCharacterId);
+   const { activeCharacterId, characters, characterMovements, characterPowerPoints } = useEnginePackageProvider();
    const characterViewsSettings = useSelector(selectCharacterViewsSettings);
-   const charactersMovements = useSelector(getCharactersMovements);
-   const characterPowerPoints = useSelector(selectCharacterPowerPointsEvents);
 
    const renderPlayers = useCallback(
-      () => _.map(_.omit(players, [activePlayerId ?? 0]), (player, i) => <Player key={i} player={player} characterViewsSettings={characterViewsSettings} charactersMovements={charactersMovements} characterPowerPoints={characterPowerPoints} />),
-      [players, characterViewsSettings, activePlayerId, charactersMovements, characterPowerPoints]
+      () =>
+         _.map(_.omit(characters, [activeCharacterId ?? 0]), (player, i) => (
+            <Player
+               key={i}
+               player={player}
+               characterViewsSettings={characterViewsSettings}
+               charactersMovements={characterMovements}
+               characterPowerPoints={characterPowerPoints}
+            />
+         )),
+      [characters, characterViewsSettings, activeCharacterId, characterMovements, characterPowerPoints]
    );
 
    return (
       <>
          {renderPlayers()}
-         {players[activePlayerId] ? <Player charactersMovements={charactersMovements} player={players[activePlayerId]} characterViewsSettings={characterViewsSettings} characterPowerPoints={characterPowerPoints} /> : null}
+         {characters[activeCharacterId] ? (
+            <Player
+               charactersMovements={characterMovements}
+               player={characters[activeCharacterId]}
+               characterViewsSettings={characterViewsSettings}
+               characterPowerPoints={characterPowerPoints}
+            />
+         ) : null}
       </>
    );
 };

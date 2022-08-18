@@ -1,22 +1,18 @@
+import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { GetAbsorbsValue } from '../../../player/GetPlayerAbsorbs';
 import styles from './PlayerIcon.module.scss';
-import { getEngineState, selectCharacters, getExperience } from '../../../../stores';
-import { GetAbsorbsValue } from "../../../player/GetPlayerAbsorbs";
 
 export const PlayerIcon = ({ playerId }) => {
+   const { experience, characters, characterPowerPoints, powerStacks } = useEnginePackageProvider();
 
-   const engineState = useSelector(getEngineState);
-   const players = useSelector(selectCharacters);
-   const experience = useSelector(getExperience);
-
-   const player = players[playerId];
+   const player = characters[playerId];
    const { name, avatar } = player;
    const playerAbsorb = GetAbsorbsValue(playerId);
    const [absorbBarWidth, setAbsorbBarWidth] = useState(0);
 
-   const playerPoints = engineState.characterPowerPoints.data[playerId];
-   const powerStacks = engineState.powerStacks.data[playerId]?.HolyPower;
+   const playerPoints = characterPowerPoints[playerId];
+   const HolyPower = powerStacks?.[playerId]?.HolyPower;
 
    useEffect(() => {
       if (!playerPoints) {
@@ -34,8 +30,8 @@ export const PlayerIcon = ({ playerId }) => {
       if (!amount) {
          return;
       }
-      return Array.from(Array(amount).keys()).map((i) => <div className={styles.powerStackCircle} />)
-   }
+      return Array.from(Array(amount).keys()).map((i) => <div className={styles.powerStackCircle} />);
+   };
 
    const { maxHp, currentHp, currentSpellPower, maxSpellPower } = playerPoints;
 
@@ -58,12 +54,9 @@ export const PlayerIcon = ({ playerId }) => {
                      <div className={styles.manaColor} style={{ width: currentSpellPower >= 0 ? (currentSpellPower / maxSpellPower) * 100 + '%' : '0' }}></div>
                   </div>
                </div>
-               <div className={styles.powerStacks}>
-                  {renderPowerStacks("HolyPower", powerStacks)}
-               </div>
+               <div className={styles.powerStacks}>{renderPowerStacks('HolyPower', HolyPower)}</div>
             </div>
          </div>
-
       </div>
    );
 };

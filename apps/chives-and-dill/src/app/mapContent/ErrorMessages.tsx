@@ -64,5 +64,5 @@ export const ErrorMessages = React.memo(
          </>
       );
    },
-   (oldProps, newProps) => oldProps.errorMessages.length === newProps.errorMessages.length
+   (oldProps, newProps) => oldProps.errorMessages?.length === newProps.errorMessages?.length
 );

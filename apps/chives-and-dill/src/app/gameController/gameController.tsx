@@ -1,21 +1,17 @@
 import { CommonClientMessages } from '@bananos/types';
+import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
+import { useEnginePackageProvider } from '../../hooks';
 import { SocketContext } from '../gameController/socketContext';
 import { GameControllerContext } from './gameControllerContext';
-import { useSelector } from 'react-redux';
-import { selectActiveCharacterId, selectCharacters, getEngineState } from '../../stores';
-import _ from 'lodash';
 
 const GameController = ({ children }) => {
+   const { activeCharacterId, characters, characterMovements } = useEnginePackageProvider();
    const context = useContext(SocketContext);
    const [gameControllerContext, setGameControllerContext] = useState<any>({});
    const { socket } = context;
    const [keysState, setKeysState] = useState<Record<string, boolean>>({});
    const [mousePosition, setMousePosition] = useState({ x: null, y: null });
-
-   const characters = useSelector(selectCharacters);
-   const activePlayerId = useSelector(selectActiveCharacterId);
-   const engineState = useSelector(getEngineState);
 
    let gameWidth = window.innerWidth;
    let gameHeight = window.innerHeight;
@@ -73,7 +69,7 @@ const GameController = ({ children }) => {
 
       const key = event.key.toLowerCase();
 
-      let keyBinds = _.map(characters[activePlayerId].spells, (spell) => spell.name);
+      let keyBinds = _.map(characters[activeCharacterId].spells, (spell) => spell.name);
       keyBinds = keyBinds.reduce((prev, current, index) => {
          prev[index + 1] = current;
          return prev;
@@ -82,8 +78,8 @@ const GameController = ({ children }) => {
       if (keyBinds[key]) {
          socket?.emit(CommonClientMessages.PerformBasicAttack, {
             directionLocation: {
-               x: engineState.characterMovements.data[activePlayerId].location.x + mousePosition.x - gameWidth / 2,
-               y: engineState.characterMovements.data[activePlayerId].location.y + mousePosition.y - gameHeight / 2,
+               x: characterMovements[activeCharacterId].location.x + mousePosition.x - gameWidth / 2,
+               y: characterMovements[activeCharacterId].location.y + mousePosition.y - gameHeight / 2,
             },
             spellName: keyBinds[key],
          });

@@ -3,30 +3,31 @@ import { Provider } from 'react-redux';
 import type { IModuleStore } from 'redux-dynamic-modules-core';
 import { createStore } from 'redux-dynamic-modules-core';
 import { ItemsApi } from '../contexts/ItemsApi';
-import { EngineStateModule, PlayersModule, QuestsModule, SpellsModule } from '../stores';
-import { EngineAwareState } from '../stores/engineStateModule/types';
+import { PackageContextProvider } from '../contexts/packageContext';
+import { PlayersModule, QuestsModule, SpellsModule } from '../stores';
 import { Game } from './game';
 import SocketCommunicator from './gameController/socketCommunicator';
 
-const store: IModuleStore<EngineAwareState> = createStore(
+const store: IModuleStore<any> = createStore(
    {
       initialState: {},
       extensions: [],
    },
    PlayersModule,
    QuestsModule,
-   SpellsModule,
-   EngineStateModule
+   SpellsModule
 );
 
 export default function App() {
    return (
-      <Provider store={store}>
-         <SocketCommunicator>
-            <ItemsApi>
-               <Game />
-            </ItemsApi>
-         </SocketCommunicator>
-      </Provider>
+      <PackageContextProvider>
+         <Provider store={store}>
+            <SocketCommunicator>
+               <ItemsApi>
+                  <Game />
+               </ItemsApi>
+            </SocketCommunicator>
+         </Provider>
+      </PackageContextProvider>
    );
 }

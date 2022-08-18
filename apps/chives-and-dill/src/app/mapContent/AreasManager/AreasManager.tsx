@@ -1,15 +1,15 @@
+import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { map } from 'lodash';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { selectAreas } from '../../../stores';
-import { Obstacle } from './Obstacle';
 import { Border } from './Border';
+import { Obstacle } from './Obstacle';
 
 export const AreasManager = () => {
-   const areas = useSelector(selectAreas);
+   const { areas } = useEnginePackageProvider();
 
    return (
       <>
-         {areas.map((area) => (
+         {map(areas, (area) => (
             <Obstacle coords={area} />
          ))}
          <Border />

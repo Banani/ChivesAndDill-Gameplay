@@ -1,13 +1,12 @@
-import React, { useEffect, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getEngineState } from '../../stores';
-import { Text } from '@inlet/react-pixi';
-import * as PIXI from 'pixi.js';
-import { filter, map, forEach, chain } from 'lodash';
 import { CharacterClientEvents, DamageAbsorbedEvent, EngineEventType, ExperienceGainEvent, HealthPointsSource } from '@bananos/types';
+import { Text } from '@inlet/react-pixi';
+import { chain, filter, forEach, map } from 'lodash';
+import * as PIXI from 'pixi.js';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useEnginePackageProvider } from '../../hooks';
 
 export const FloatingNumbersManager = () => {
-   const engineState = useSelector(getEngineState);
+   const { characterPowerPointsEvents, absorbShieldEvents, experienceEvents, characterPowerPoints, characterMovements } = useEnginePackageProvider();
    const [activeShapes, setActiveShapes] = useState([]);
 
    useEffect(() => {
@@ -21,17 +20,17 @@ export const FloatingNumbersManager = () => {
    useEffect(() => {
       setActiveShapes((prev) => [
          ...prev,
-         ...chain(engineState.characterPowerPoints.events)
+         ...chain(characterPowerPointsEvents)
             .filter((event) => event.type === EngineEventType.CharacterGotHp && event.source !== HealthPointsSource.Regeneration)
             .map((event) => ({ creationTime: Date.now(), y: 3.5, x: randomNumber(1.5, -1.5), event }))
             .value(),
       ]);
-   }, [engineState.characterPowerPoints.events]);
+   }, [characterPowerPointsEvents]);
 
    useEffect(() => {
       setActiveShapes((prev) => [
          ...prev,
-         ...chain(engineState.absorbShields.events)
+         ...chain(absorbShieldEvents)
             .filter((event) => event.type === EngineEventType.DamageAbsorbed)
             .map((event: DamageAbsorbedEvent) => ({
                creationTime: Date.now(),
@@ -45,12 +44,12 @@ export const FloatingNumbersManager = () => {
             }))
             .value(),
       ]);
-   }, [engineState.absorbShields.events]);
+   }, [absorbShieldEvents]);
 
    useEffect(() => {
       setActiveShapes((prev) => [
          ...prev,
-         ...chain(engineState.experience.events)
+         ...chain(experienceEvents)
             .filter((event) => event.type === CharacterClientEvents.ExperienceGain)
             .map((event: ExperienceGainEvent) => {
                return {
@@ -66,7 +65,7 @@ export const FloatingNumbersManager = () => {
             })
             .value(),
       ]);
-   }, [engineState.experience.events]);
+   }, [experienceEvents]);
 
    useEffect(() => {
       const interval = setInterval(() => {
@@ -75,7 +74,7 @@ export const FloatingNumbersManager = () => {
          });
       }, 16);
       return () => clearInterval(interval);
-   }, [engineState.characterPowerPoints.events]);
+   }, [characterPowerPointsEvents]);
 
    const getColorOfEvent = (type) => {
       switch (type) {
@@ -95,7 +94,7 @@ export const FloatingNumbersManager = () => {
    const getLostHp = useCallback(
       () =>
          map(activeShapes, ({ event, y, x }, i) => {
-            const location = engineState.characterMovements.data[event.characterId].location;
+            const location = characterMovements[event.characterId].location;
             return (
                <Text
                   text={event.amount}
@@ -111,7 +110,7 @@ export const FloatingNumbersManager = () => {
                />
             );
          }),
-      [engineState.characterPowerPoints]
+      [characterPowerPoints]
    );
 
    return <>{getLostHp()}</>;

@@ -1,17 +1,16 @@
 import React from 'react';
+import { useEnginePackageProvider } from '../hooks';
 import GameController from './gameController/gameController';
 import { ClassesModal } from './guiContent/classesModal/classesModal';
 import Map from './map';
-import { useSelector } from 'react-redux';
-import { selectActiveCharacterId } from '../stores';
 
 export function Game() {
-   const activeCharacterId = useSelector(selectActiveCharacterId);
+   const { activeCharacterId } = useEnginePackageProvider();
 
    return (
       <>
-         {activeCharacterId === null && <ClassesModal />}
-         {activeCharacterId !== null && (
+         {!activeCharacterId && <ClassesModal />}
+         {activeCharacterId && (
             <GameController>
                <Map />
             </GameController>
