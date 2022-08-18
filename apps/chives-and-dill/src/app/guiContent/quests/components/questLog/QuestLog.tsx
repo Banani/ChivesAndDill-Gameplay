@@ -18,18 +18,6 @@ export const QuestLog = () => {
       </div>
    ));
 
-   //    const questDetails = () => (
-   //       <div key={selectedQuestId}>
-   //          <div className={styles.QuestDesc}>
-   //             <div className={styles.activeQuestTitle}> {questDefinition[selectedQuestId].name} </div>
-   //             {/* <div className={styles.activeQuestDesc}>{quest.questStage?.description}</div> */}
-   //             {/* {questsStagesInfo(quest.questStage)} */}
-   //             {/* <div className={styles.activeQuestTitle}>{quest.questStage ? 'Description' : null}</div> */}
-   //             <div className={styles.activeQuestDesc}> {questDefinition[selectedQuestId].description}</div>
-   //          </div>
-   //       </div>
-   //    );
-
    return selectedQuestId ? (
       <div className={styles.QuestLog}>
          <div className={styles.QuestList}>{renderQuests ? renderQuests : null}</div>
