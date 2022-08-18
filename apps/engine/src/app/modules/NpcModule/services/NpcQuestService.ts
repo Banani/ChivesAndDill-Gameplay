@@ -32,7 +32,6 @@ export class NpcQuestService extends EventParser {
          return;
       }
 
-      // TODO: napisac test
       if (services.questProgressService.isQuestInProgress(event.requestingCharacterId, event.questId)) {
          this.sendErrorMessage(event.requestingCharacterId, 'You already have that quest.');
          return;

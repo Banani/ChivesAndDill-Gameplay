@@ -133,4 +133,25 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
 
       checkIfErrorWasHandled(GlobalStoreModule.NPC_QUESTS, 'This npc does not have such quest.', dataPackage);
    });
+
+   it('Player should get error when tries to take the same quest second time', () => {
+      const { players, engineManager } = setupEngine();
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.TakeQuestFromNpc,
+         npcId,
+         questId: Object.keys(NpcTemplates['Manczur'].quests)[0],
+      });
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: NpcClientMessages.TakeQuestFromNpc,
+         npcId,
+         questId: Object.keys(NpcTemplates['Manczur'].quests)[0],
+      });
+
+      checkIfErrorWasHandled(GlobalStoreModule.NPC_QUESTS, 'You already have that quest.', dataPackage);
+   });
 });
