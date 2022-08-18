@@ -1,21 +1,16 @@
 import type { EnginePackageEvent } from '@bananos/types';
 import { EngineEventType } from '@bananos/types';
-import { Graphics, Text, useApp } from '@inlet/react-pixi';
+import { Graphics, Text } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useEnginePackageProvider } from '../../hooks';
+import { useEnginePackageProvider, useMessageCenter } from '../../hooks';
 
 export const NextLevelManager = React.memo<{ experienceEvents: EnginePackageEvent[] }>(
    ({ experienceEvents }) => {
       const [characterLevel, setCharacterLevel] = useState(0);
       const [characterId, setCharacterId] = useState('');
-      const [messageLocation, setMessageLocation] = useState({ x: 300, y: 300 });
       const { activeCharacterId } = useEnginePackageProvider();
-      const app = useApp();
-
-      useEffect(() => {
-         setMessageLocation({ x: app.view.width / 2, y: app.view.height / 4 });
-      }, [app.stage.width, app.stage.height]);
+      const { messageLocation } = useMessageCenter();
 
       useEffect(() => {
          experienceEvents.forEach((event) => {

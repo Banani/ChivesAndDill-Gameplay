@@ -1,20 +1,14 @@
-import { EngineEventType, ErrorMessage, Location } from '@bananos/types';
+import { EngineEventType, ErrorMessage } from '@bananos/types';
 import { Text } from '@inlet/react-pixi';
 import { chain, filter, map } from 'lodash';
 import * as PIXI from 'pixi.js';
 import React, { useEffect, useState } from 'react';
+import { useMessageCenter } from '../../hooks';
 
 export const ErrorMessages = React.memo(
-   ({ errorMessages, location }: { errorMessages: ErrorMessage[]; location: Location }) => {
+   ({ errorMessages }: { errorMessages: ErrorMessage[] }) => {
       const [activeShapes, setActiveShapes] = useState([]);
-      const [messageLocation, setMessageLocation] = useState({ x: 0, y: 0 });
-
-      useEffect(() => {
-         setMessageLocation({
-            x: location.x,
-            y: location.y - window.innerHeight / 4,
-         });
-      }, [location]);
+      const { messageLocation } = useMessageCenter();
 
       useEffect(() => {
          setActiveShapes((prev) => [

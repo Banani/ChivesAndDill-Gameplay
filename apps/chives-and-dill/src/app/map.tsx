@@ -120,13 +120,10 @@ const Map = () => {
                                              <BlinkSpellEffect />
                                              <BloodPoolManager />
                                              <CastBarsManager location={characterMovements[activeCharacterId]?.location} spellChannels={spellChannels} />
-                                             <ErrorMessages
-                                                location={characterMovements[activeCharacterId]?.location}
-                                                errorMessages={errorMessagesEvents as ErrorMessage[]}
-                                             />
                                           </Container>
                                        )}
                                        <NextLevelManager experienceEvents={experienceEvents} />
+                                       <ErrorMessages errorMessages={errorMessagesEvents as ErrorMessage[]} />
                                     </Provider>
                                  </SocketContext.Provider>
                               </PackageContext.Provider>
