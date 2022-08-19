@@ -2,13 +2,13 @@ import { ChatChannel } from '@bananos/types';
 import { find } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
-import { PlayerEngineEvents, SendErrorMessageEvent } from '../../PlayerModule/Events';
 import {
    AddPlayerCharacterToChatEvent,
-   ChatChannelOwnerChangedEvent,
+   ChangeChatChannelOwnerEvent,
    CharacterAddedToChatEvent,
    ChatChannelCreatedEvent,
    ChatChannelDeletedEvent,
+   ChatChannelOwnerChangedEvent,
    ChatEngineEvents,
    CreateChatChannelEvent,
    DeleteChatChannelEvent,
@@ -16,7 +16,6 @@ import {
    PlayerCharacterRemovedFromChatChannelEvent,
    PlayerLeftChatChannelEvent,
    RemovePlayerCharacterFromChatChannelEvent,
-   ChangeChatChannelOwnerEvent,
 } from '../Events';
 
 export class ChatChannelService extends EventParser {

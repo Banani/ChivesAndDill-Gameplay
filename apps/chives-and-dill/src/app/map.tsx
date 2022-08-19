@@ -5,11 +5,11 @@ import { Provider, ReactReduxContext } from 'react-redux';
 import { SocketContext } from './gameController/socketContext';
 
 import { ErrorMessage } from '@bananos/types';
-import { Chat } from '@mui/icons-material';
 import { PackageContext } from '../contexts/packageContext';
 import { useEnginePackageProvider } from '../hooks';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
+import { ChatManager } from './guiContent/chat/ChatManager';
 import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
 import { LootModal } from './guiContent/lootModal/LootModal';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
@@ -89,7 +89,7 @@ const Map = () => {
          {activeCharacterId ? <ActivePlayerTimeEffects playerId={activeCharacterId} /> : null}
          <CharacterFrames />
          <QuestManager />
-         <Chat />
+         <ChatManager />
          {!_.isEmpty(activeLoot?.[activeCharacterId]) ? <LootModal activeLoot={activeLoot[activeCharacterId]} /> : null}
          {activeNpc ? <NpcModal questDefinition={questDefinition} activeNpc={activeNpc} /> : null}
          <ExperienceBar />
