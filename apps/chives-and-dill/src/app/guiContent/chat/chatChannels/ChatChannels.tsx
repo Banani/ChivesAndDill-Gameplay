@@ -25,22 +25,40 @@ export const ChatChannels = () => {
             <div className={styles.contentHolder}>
                <div className={styles.objectList}>
                   {map(chatChannels, (chatChannel) => (
-                     <div onClick={() => setSelectedChannelId(chatChannel.id)}>{chatChannel.name}</div>
+                     <button className={styles.channelName} onClick={() => setSelectedChannelId(chatChannel.id)}>
+                        {chatChannel.name}
+                     </button>
                   ))}
                </div>
                <div className={styles.objectList}>
-                  {selectedChannelId && map(chatChannels[selectedChannelId].membersIds, (_, memberId) => <>{characters[memberId].name}</>)}
+                  {selectedChannelId &&
+                     map(chatChannels[selectedChannelId].membersIds, (_, memberId) => (
+                        <>
+                           <img className={styles.crown} src="https://cdn-icons-png.flaticon.com/512/91/91188.png?w=360" />
+                           {characters[memberId].name}
+                        </>
+                     ))}
                </div>
             </div>
             <div className={styles.actionHolder}>
                {selectedChannelId && chatChannels[selectedChannelId].characterOwnerId === activeCharacterId && (
                   <>
-                     <button onClick={() => setActiveModal(ActiveModal.AddMember)}>Add Member</button>
-                     <button onClick={() => setActiveModal(ActiveModal.DeleteChatChannel)}>Delete Channel</button>
+                     <button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.AddMember)}>
+                        Add Member
+                     </button>
+                     <button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.DeleteChatChannel)}>
+                        Delete Channel
+                     </button>
                   </>
                )}
-               {selectedChannelId && <button onClick={() => setActiveModal(ActiveModal.LeaveChatChannel)}>Leave Channel</button>}
-               <button onClick={() => setActiveModal(ActiveModal.CreateChannel)}>Create Channel</button>
+               {selectedChannelId && (
+                  <button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.LeaveChatChannel)}>
+                     Leave Channel
+                  </button>
+               )}
+               <button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.CreateChannel)}>
+                  Create Channel
+               </button>
             </div>
          </div>
 

@@ -5,7 +5,7 @@ import { Provider, ReactReduxContext } from 'react-redux';
 import { SocketContext } from './gameController/socketContext';
 
 import { ErrorMessage } from '@bananos/types';
-import { PackageContext } from '../contexts/packageContext';
+import { PackageContext } from '../contexts/PackageContext';
 import { useEnginePackageProvider } from '../hooks';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
@@ -29,7 +29,6 @@ import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 const Map = () => {
    const {
       activeCharacterId,
-      mapSchema,
       spellChannels,
       characterMovements,
       activeLoot,
@@ -39,7 +38,6 @@ const Map = () => {
       projectileMovements,
       experienceEvents,
       errorMessagesEvents,
-      questProgress,
    } = useEnginePackageProvider();
 
    const activeNpc = characters[activeConversation?.[activeCharacterId]?.npcId];

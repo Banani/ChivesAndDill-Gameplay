@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import styles from './InputDialog.module.scss';
 
 interface InputDialogProps {
@@ -10,11 +11,25 @@ interface InputDialogProps {
 
 export const InputDialog: FunctionComponent<InputDialogProps> = ({ isVisible, mainAction, cancel, message }) => {
    const [inputValue, setInputValue] = useState('');
+   const keyBoardContext = useContext(KeyBoardContext);
 
    useEffect(() => {
       if (!isVisible) {
          setInputValue('');
       }
+   }, [isVisible]);
+
+   useEffect(() => {
+      if (isVisible) {
+         keyBoardContext.addKeyHandler({
+            id: 'InputDialog',
+            matchRegex: 'Escape',
+            handler: cancel,
+         });
+      } else {
+         keyBoardContext.removeKeyHandler('InputDialog');
+      }
+      return () => keyBoardContext.removeKeyHandler('InputDialog');
    }, [isVisible]);
 
    return (

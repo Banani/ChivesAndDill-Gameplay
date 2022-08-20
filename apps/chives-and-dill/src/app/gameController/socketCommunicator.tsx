@@ -2,7 +2,7 @@ import { EngineMessages, FightingEngineMessages } from '@bananos/types';
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
-import { PackageContext } from '../../contexts/packageContext';
+import { PackageContext } from '../../contexts/PackageContext';
 import { environment } from '../../environments/environment';
 import {
    addActiveSpellCast,

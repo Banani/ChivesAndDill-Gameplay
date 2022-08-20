@@ -3,7 +3,8 @@ import { Provider } from 'react-redux';
 import type { IModuleStore } from 'redux-dynamic-modules-core';
 import { createStore } from 'redux-dynamic-modules-core';
 import { EngineApi } from '../contexts/EngineApi';
-import { PackageContextProvider } from '../contexts/packageContext';
+import { KeyBoardContextProvider } from '../contexts/KeyBoardContext';
+import { PackageContextProvider } from '../contexts/PackageContext';
 import { PlayersModule, SpellsModule } from '../stores';
 import { Game } from './game';
 import SocketCommunicator from './gameController/socketCommunicator';
@@ -22,9 +23,11 @@ export default function App() {
       <PackageContextProvider>
          <Provider store={store}>
             <SocketCommunicator>
-               <EngineApi>
-                  <Game />
-               </EngineApi>
+               <KeyBoardContextProvider>
+                  <EngineApi>
+                     <Game />
+                  </EngineApi>
+               </KeyBoardContextProvider>
             </SocketCommunicator>
          </Provider>
       </PackageContextProvider>

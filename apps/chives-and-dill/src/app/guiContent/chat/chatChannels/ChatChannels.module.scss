@@ -11,6 +11,17 @@
     display: flex;
     flex-direction: column;
 
+    .channelName {
+        padding: 10px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            color: gold;
+        }
+    }
+
     .contentHolder {
         display: flex;
         flex: 1;
@@ -18,6 +29,11 @@
         .objectList {
             flex: 1;
             padding: 30px;
+
+            .crown {
+                height: 16px;
+                margin-right: 8px;
+            }
         }
     }
 
@@ -25,5 +41,9 @@
         display: flex;
         padding: 20px;
         justify-content: flex-end;
+
+        .actionButton {
+            margin-left: 5px;
+        }
     }
 }
