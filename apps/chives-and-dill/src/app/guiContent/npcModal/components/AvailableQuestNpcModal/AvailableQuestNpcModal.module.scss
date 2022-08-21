@@ -1,11 +1,15 @@
 .ContentWrapper {
     padding: 10px 40px 0 25px;   
-    height: 420px;
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
 
     .QuestDefinitionHolder {
         overflow-y: scroll;
-        height: 397px;
-    
+        flex: 1;
+        margin-bottom: 8px;
+        padding-bottom: 20px;
     }
 
     .ActionBar {

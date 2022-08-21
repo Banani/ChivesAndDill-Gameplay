@@ -37,8 +37,10 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
 
       return (
          <div className={styles.NpcModal}>
-            <img className={styles.Avatar} src={activeNpc.avatar} alt={''} />
-            <div className={styles.Name}>{activeNpc.name}</div>
+            <div>
+               <img className={styles.Avatar} src={activeNpc.avatar} alt={''} />
+               <div className={styles.Name}>{activeNpc.name}</div>
+            </div>
             {currentModal === NpcModalView.Default && (
                <DefaultNpcModal
                   openQuest={(questId) => {

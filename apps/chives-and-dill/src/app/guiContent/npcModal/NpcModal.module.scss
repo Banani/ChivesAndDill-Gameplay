@@ -6,6 +6,8 @@
   left: 5%;
   background: url('../../../assets/spritesheets/backgrounds/npcModal.png');
   background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
 
   .Avatar {
     border-radius: 50%;

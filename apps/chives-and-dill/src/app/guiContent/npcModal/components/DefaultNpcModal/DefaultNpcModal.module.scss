@@ -1,6 +1,8 @@
 .ContentWrapper {
     padding: 10px 40px 0 24px;   
-    height: 420px;
+    overflow: scroll;
+    flex: 1;
+    margin-bottom: 30px;
 
     .questName {
         cursor: pointer;
