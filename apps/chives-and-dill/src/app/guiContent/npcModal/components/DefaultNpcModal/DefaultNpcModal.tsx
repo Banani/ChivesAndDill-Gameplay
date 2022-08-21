@@ -1,7 +1,8 @@
+import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
+import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
-import type { FunctionComponent } from 'react';
-import React from 'react';
+import React, { FunctionComponent, useContext, useEffect } from 'react';
 import styles from './DefaultNpcModal.module.scss';
 
 interface DefaultNpcModalProps {
@@ -13,6 +14,21 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
 
    const activeNpc = characters[activeConversation[activeCharacterId]?.npcId];
    const activeNpcQuests = npcQuests[activeNpc?.templateId];
+
+   const keyBoardContext = useContext(KeyBoardContext);
+   const engineApiContext = useContext(EngineApiContext);
+
+   useEffect(() => {
+      keyBoardContext.addKeyHandler({
+         id: 'DefaultNpcModalEscape',
+         matchRegex: 'Escape',
+         keydown: engineApiContext.closeNpcConversationDialog,
+      });
+
+      return () => {
+         keyBoardContext.removeKeyHandler('AvailableQuestNpcModalEscape');
+      };
+   }, []);
 
    const questItem = (questId) => {
       return (

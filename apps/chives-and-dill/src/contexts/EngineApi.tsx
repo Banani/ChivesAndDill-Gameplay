@@ -10,6 +10,7 @@ interface EngineApiMethods {
    invitePlayerCharacterToChatChannel: ({ chatChannelId, characterName }) => void;
    leaveChatChannel: ({ chatChannelId }) => void;
    deleteChatChannel: ({ chatChannelId }) => void;
+   closeNpcConversationDialog: () => void;
 }
 
 export const EngineApiContext = React.createContext<EngineApiMethods>(null);
@@ -49,6 +50,9 @@ export const EngineApi = ({ children }) => {
             },
             deleteChatChannel: ({ chatChannelId }) => {
                socket?.emit(ChatChannelClientMessages.DeleteChatChannel, { chatChannelId });
+            },
+            closeNpcConversationDialog: () => {
+               socket?.emit(NpcClientMessages.CloseNpcConversationDialog);
             },
          }}
       >
