@@ -11,6 +11,12 @@ export interface ChatMessage {
    authorId: string;
    message: string;
    chatChannelId: string;
+   channelType: ChannelType;
+}
+
+export enum ChannelType {
+   Custom = 'Custom',
+   Range = 'Range',
 }
 
 export enum ChatChannelClientMessages {
@@ -60,6 +66,7 @@ export interface SendChatMessage {
    type: ChatChannelClientMessages.SendChatMessage;
    chatChannelId: string;
    message: string;
+   channelType: ChannelType;
 }
 
 export type EngineChatAction =

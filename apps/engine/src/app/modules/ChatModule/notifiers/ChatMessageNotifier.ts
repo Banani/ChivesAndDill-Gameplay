@@ -1,12 +1,14 @@
-import { ChatChannel, ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
+import { ChannelType, ChatChannelClientMessages, ChatMessage, GlobalStoreModule } from '@bananos/types';
 import { keyBy, map, mapValues, pickBy } from 'lodash';
+import { distanceBetweenTwoPoints } from '../../../math';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import { ChatEngineEvents, ChatMessagesDeletedEvent, ChatMessageSentEvent, SendChatMessageEvent } from '../Events';
+import { RangeChannels } from '../RangeChannels';
 
-export class ChatMessageNotifier extends Notifier<ChatChannel> {
+export class ChatMessageNotifier extends Notifier<ChatMessage> {
    constructor() {
       super({ key: GlobalStoreModule.CHAT_MESSAGES });
       this.eventsToHandlersMap = {
@@ -19,22 +21,35 @@ export class ChatMessageNotifier extends Notifier<ChatChannel> {
    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
       const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-      currentSocket.on(ChatChannelClientMessages.SendChatMessage, ({ chatChannelId, message }) => {
+      currentSocket.on(ChatChannelClientMessages.SendChatMessage, ({ chatChannelId, message, channelType }) => {
          this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
             type: ChatEngineEvents.SendChatMessage,
             requestingCharacterId: event.playerCharacter.id,
             chatChannelId,
+            channelType,
             message,
          });
       });
    };
 
    handleChatMessageSent: EngineEventHandler<ChatMessageSentEvent> = ({ event, services }) => {
-      const chatChannel = services.chatChannelService.getChatChannelById(event.chatMessage.chatChannelId);
-      const chatMembers = pickBy(services.characterService.getAllCharacters(), (character) => chatChannel.membersIds[character.id]) as Record<
-         string,
-         PlayerCharacter
-      >;
+      let chatMembers: Record<string, PlayerCharacter> = {};
+      if (event.chatMessage.channelType === ChannelType.Custom) {
+         const chatChannel = services.chatChannelService.getChatChannelById(event.chatMessage.chatChannelId);
+         chatMembers = pickBy(services.characterService.getAllCharacters(), (character) => chatChannel.membersIds[character.id]) as Record<
+            string,
+            PlayerCharacter
+         >;
+      } else if (event.chatMessage.channelType === ChannelType.Range) {
+         const allCharacters = services.characterService.getAllCharacters();
+         chatMembers = pickBy(
+            services.characterService.getAllCharacters(),
+            (character) =>
+               character.type === CharacterType.Player &&
+               distanceBetweenTwoPoints(character.location, allCharacters[event.chatMessage.authorId].location) <
+                  RangeChannels[event.chatMessage.chatChannelId].range
+         ) as Record<string, PlayerCharacter>;
+      }
 
       this.multicastMultipleObjectsUpdate(
          map(chatMembers, (receiverCharacter) => ({

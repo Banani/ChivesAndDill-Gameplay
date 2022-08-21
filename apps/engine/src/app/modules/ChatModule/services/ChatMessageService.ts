@@ -1,15 +1,8 @@
-import { ChatMessage } from '@bananos/types';
+import { ChannelType, ChatMessage } from '@bananos/types';
 import { now, pickBy } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
-import {
-   ChatEngineEvents,
-   SendChatMessageEvent,
-   ChatMessageSentEvent,
-   DeleteChatChannelEvent,
-   ChatMessagesDeletedEvent,
-   ChatChannelDeletedEvent,
-} from '../Events';
+import { ChatChannelDeletedEvent, ChatEngineEvents, ChatMessagesDeletedEvent, ChatMessageSentEvent, SendChatMessageEvent } from '../Events';
 
 export class ChatMessageService extends EventParser {
    private messages: Record<string, ChatMessage> = {};
@@ -24,6 +17,10 @@ export class ChatMessageService extends EventParser {
    }
 
    handleSendChatMessage: EngineEventHandler<SendChatMessageEvent> = ({ event, services }) => {
+      if (event.channelType !== ChannelType.Custom) {
+         return;
+      }
+
       const chatChannel = services.chatChannelService.getChatChannelById(event.chatChannelId);
 
       if (!chatChannel) {
@@ -37,7 +34,14 @@ export class ChatMessageService extends EventParser {
       }
 
       const id = `chatMessage_${this.increment++}`;
-      this.messages[id] = { id, message: event.message, authorId: event.requestingCharacterId, time: now(), chatChannelId: event.chatChannelId };
+      this.messages[id] = {
+         id,
+         message: event.message,
+         authorId: event.requestingCharacterId,
+         time: now(),
+         chatChannelId: event.chatChannelId,
+         channelType: ChannelType.Custom,
+      };
 
       this.engineEventCrator.asyncCeateEvent<ChatMessageSentEvent>({
          type: ChatEngineEvents.ChatMessageSent,

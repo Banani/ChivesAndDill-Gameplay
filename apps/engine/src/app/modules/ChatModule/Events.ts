@@ -1,4 +1,4 @@
-import { ChatChannel, ChatMessage } from '@bananos/types';
+import { ChannelType, ChatChannel, ChatMessage } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 
 export enum ChatEngineEvents {
@@ -98,6 +98,7 @@ export interface SendChatMessageEvent extends EngineEvent {
    type: ChatEngineEvents.SendChatMessage;
    chatChannelId: string;
    message: string;
+   channelType: ChannelType;
 }
 
 export interface ChatMessageSentEvent extends EngineEvent {
