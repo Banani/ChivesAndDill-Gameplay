@@ -21,18 +21,16 @@ const store: IModuleStore<any> = createStore(
 
 export default function App() {
    return (
-      <PackageContextProvider>
-         <Provider store={store}>
-            <SocketCommunicator>
-               <KeyBoardContextProvider>
-                  <ModalsManagerContextProvider>
+      <KeyBoardContextProvider>
+         <PackageContextProvider>
+            <Provider store={store}>
+               <SocketCommunicator>
                      <EngineApi>
                         <Game />
                      </EngineApi>
-                  </ModalsManagerContextProvider>
-               </KeyBoardContextProvider>
-            </SocketCommunicator>
-         </Provider>
-      </PackageContextProvider>
+               </SocketCommunicator>
+            </Provider>
+         </PackageContextProvider>
+      </KeyBoardContextProvider>
    );
 }

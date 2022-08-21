@@ -17,13 +17,13 @@ export const ConfirmationDialog: FunctionComponent<ConfirmationDialogProps> = ({
          keyBoardContext.addKeyHandler({
             id: 'ConfirmationDialogEscape',
             matchRegex: 'Escape',
-            handler: cancel,
+            keydown: cancel,
          });
 
          keyBoardContext.addKeyHandler({
             id: 'ConfirmationDialogEnter',
             matchRegex: 'Enter',
-            handler: accept,
+            keydown: accept,
          });
       } else {
          keyBoardContext.removeKeyHandler('ConfirmationDialogEscape');

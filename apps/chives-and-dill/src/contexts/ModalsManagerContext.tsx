@@ -20,12 +20,12 @@ export const ModalsManagerContextProvider = ({ children }) => {
       keyBoardContext.addKeyHandler({
          id: 'ModalsManagerEscape',
          matchRegex: 'Escape',
-         handler: () => setActiveGlobalModal(null),
+         keydown: () => setActiveGlobalModal(null),
       });
       keyBoardContext.addKeyHandler({
          id: 'ModalsManagerO',
          matchRegex: 'o',
-         handler: () => setActiveGlobalModal(GlobalModal.ChatChannelModal),
+         keydown: () => setActiveGlobalModal(GlobalModal.ChatChannelModal),
       });
 
       return () => keyBoardContext.removeKeyHandler('ModalsManagerEscape');

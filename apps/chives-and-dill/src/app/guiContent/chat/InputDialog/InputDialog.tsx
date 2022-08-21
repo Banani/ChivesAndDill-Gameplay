@@ -24,7 +24,7 @@ export const InputDialog: FunctionComponent<InputDialogProps> = ({ isVisible, ma
          keyBoardContext.addKeyHandler({
             id: 'InputDialog',
             matchRegex: 'Escape',
-            handler: cancel,
+            keydown: cancel,
          });
       } else {
          keyBoardContext.removeKeyHandler('InputDialog');
@@ -40,6 +40,8 @@ export const InputDialog: FunctionComponent<InputDialogProps> = ({ isVisible, ma
                   <label>{message}</label>
                   <input
                      className={styles.input}
+                     onFocus={() => keyBoardContext.addKeyHandler({ id: "InputDialogBlockAll", matchRegex: ".*"})}
+                     onBlur={() => keyBoardContext.removeKeyHandler("InputDialogBlockAll")}
                      value={inputValue}
                      maxLength={20}
                      onChange={(e) => {

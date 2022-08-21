@@ -3,6 +3,7 @@ import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
 import { map } from 'lodash';
 import React, { useContext, useState } from 'react';
 import { ConfirmationDialog } from '../ConfirmationDialog';
+import { ChannelNumeratorContext } from '../contexts';
 import { InputDialog } from '../InputDialog';
 import styles from './ChatChannels.module.scss';
 
@@ -16,7 +17,8 @@ enum ActiveModal {
 export const ChatChannels = () => {
    const [activeModal, setActiveModal] = useState<ActiveModal>(null);
    const { chatChannels, characters, activeCharacterId } = useEnginePackageProvider();
-   const context = useContext(EngineApiContext);
+   const engineApiContext = useContext(EngineApiContext);
+   const channelNumeratorContext = useContext(ChannelNumeratorContext);
    const [selectedChannelId, setSelectedChannelId] = useState(null);
 
    return (
@@ -24,10 +26,10 @@ export const ChatChannels = () => {
          <div className={styles.chatChannels}>
             <div className={styles.contentHolder}>
                <div className={styles.objectList}>
-                  {map(chatChannels, (chatChannel) => (
+                  {map(channelNumeratorContext.channelNumerations, (chatChannelId, chatNumber) => (
                      <div>
-                        <button className={`${styles.channelName} ${styles.listElement}`} onClick={() => setSelectedChannelId(chatChannel.id)}>
-                           {chatChannel.name}
+                        <button className={`${styles.channelName} ${styles.listElement}`} onClick={() => setSelectedChannelId(chatChannelId)}>
+                           {`${chatNumber}. ${chatChannels[chatChannelId].name}`}
                         </button>
                      </div>
                   ))}
@@ -70,7 +72,7 @@ export const ChatChannels = () => {
             cancel={() => setActiveModal(null)}
             message={'Create Channel'}
             mainAction={(chatChannelName) => {
-               context.createChatChannel({ chatChannelName });
+               engineApiContext.createChatChannel({ chatChannelName });
                setActiveModal(null);
             }}
          />
@@ -80,7 +82,7 @@ export const ChatChannels = () => {
             cancel={() => setActiveModal(null)}
             message={`Who would you like to invite to ${chatChannels?.[selectedChannelId]?.name}`}
             mainAction={(characterName) => {
-               context.invitePlayerCharacterToChatChannel({ chatChannelId: selectedChannelId, characterName });
+               engineApiContext.invitePlayerCharacterToChatChannel({ chatChannelId: selectedChannelId, characterName });
                setActiveModal(null);
             }}
          />
@@ -92,7 +94,7 @@ export const ChatChannels = () => {
             accept={() => {
                setSelectedChannelId(null);
                setActiveModal(null);
-               context.leaveChatChannel({ chatChannelId: selectedChannelId });
+               engineApiContext.leaveChatChannel({ chatChannelId: selectedChannelId });
             }}
          />
 
@@ -103,7 +105,7 @@ export const ChatChannels = () => {
             accept={() => {
                setSelectedChannelId(null);
                setActiveModal(null);
-               context.deleteChatChannel({ chatChannelId: selectedChannelId });
+               engineApiContext.deleteChatChannel({ chatChannelId: selectedChannelId });
             }}
          />
       </>

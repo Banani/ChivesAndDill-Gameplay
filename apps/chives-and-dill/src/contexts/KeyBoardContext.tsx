@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 interface KeyBoardHandler {
    id: string;
    matchRegex: string;
-   handler: (key: string) => void;
+   keydown?: (key: string) => void;
+   keyup?: (key: string) => void;
 }
 
 interface KeyBoardContextMethods {
@@ -18,13 +19,23 @@ export const KeyBoardContextProvider = ({ children }) => {
    const [handlers, setHandlers] = useState<KeyBoardHandler[]>([]);
 
    useEffect(() => {
-      const handler = (e) => {
+      const keyDownHandler = (e) => {
          const matchedHandler = find(handlers, (handler) => e.key.match(handler.matchRegex)) as KeyBoardHandler;
-         matchedHandler?.handler(e.key);
+         matchedHandler?.keydown?.(e.key);
+      };
+      
+      const keyUpHandler = (e) => {
+         const matchedHandler = find(handlers, (handler) => e.key.match(handler.matchRegex)) as KeyBoardHandler;
+         matchedHandler?.keyup?.(e.key);
       };
 
-      document.addEventListener('keydown', handler);
-      return () => document.removeEventListener('keydown', handler);
+      document.addEventListener('keyup', keyUpHandler);
+      document.addEventListener('keydown', keyDownHandler);
+
+      return () => {
+         document.removeEventListener('keyup', keyUpHandler);
+         document.removeEventListener('keydown', keyDownHandler);
+      }
    }, [handlers]);
 
    return (
