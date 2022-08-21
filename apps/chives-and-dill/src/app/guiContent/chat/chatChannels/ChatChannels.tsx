@@ -25,17 +25,20 @@ export const ChatChannels = () => {
             <div className={styles.contentHolder}>
                <div className={styles.objectList}>
                   {map(chatChannels, (chatChannel) => (
-                     <button className={styles.channelName} onClick={() => setSelectedChannelId(chatChannel.id)}>
-                        {chatChannel.name}
-                     </button>
+                     <div>
+                        <button className={`${styles.channelName} ${styles.listElement}`} onClick={() => setSelectedChannelId(chatChannel.id)}>
+                           {chatChannel.name}
+                        </button>
+                     </div>
                   ))}
                </div>
                <div className={styles.objectList}>
                   {selectedChannelId &&
                      map(chatChannels[selectedChannelId].membersIds, (_, memberId) => (
                         <>
-                           <img className={styles.crown} src="https://cdn-icons-png.flaticon.com/512/91/91188.png?w=360" />
-                           {characters[memberId].name}
+                           <div className={styles.listElement}>
+                              <img className={styles.crown} src="https://cdn-icons-png.flaticon.com/512/91/91188.png?w=360" /> {characters[memberId].name}
+                           </div>
                         </>
                      ))}
                </div>

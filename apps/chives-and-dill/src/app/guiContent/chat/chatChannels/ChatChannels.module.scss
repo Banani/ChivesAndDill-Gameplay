@@ -29,6 +29,15 @@
         .objectList {
             flex: 1;
             padding: 30px;
+            max-width: 50%;
+            box-sizing: border-box;
+
+            .listElement {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100%;
+            }
 
             .crown {
                 height: 16px;
