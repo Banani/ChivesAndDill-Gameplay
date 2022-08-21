@@ -23,19 +23,44 @@
     width: 100%;
     height: 250px;
     background-color: rgba(0, 0, 0, 0.2);
-  }
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
 
-  .chatInput {
-    width: 100%;
-    padding: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    border: none;
-    padding: 5px;
-    box-sizing: border-box;
-    color: white;
-
-    &:focus {
-      outline: none;
+    .message {
+        display: flex;
+        color: white;
     }
   }
+
+  .messageHolder {
+    display: flex;
+    border: 2px solid grey;
+    align-items: center;
+    padding: 0px 8px;
+
+    &.active {
+        border: 2px solid white;
+    }
+
+    .channelName {
+        color: white;
+    }
+
+    .chatInput {
+        flex: 1;
+        padding: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        border: none;
+        padding: 5px;
+        box-sizing: border-box;
+        color: white;
+    
+        &:focus {
+          outline: none;
+        }
+      }
+  }
+
+  
 }

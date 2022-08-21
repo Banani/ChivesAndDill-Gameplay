@@ -61,7 +61,7 @@ export class PlayerCharacterService extends EventParser {
          sprites: 'citizen',
          avatar: '../../../../assets/spritesheets/avatars/dogAvatar.PNG',
          isInMove: false,
-         speed: 4,
+         speed: 24, //4
          healthPointsRegen: 5,
          spellPowerRegen: 5,
          size: 96,

@@ -23,7 +23,7 @@ export const KeyBoardContextProvider = ({ children }) => {
          const matchedHandler = find(handlers, (handler) => e.key.match(handler.matchRegex)) as KeyBoardHandler;
          matchedHandler?.keydown?.(e.key);
       };
-      
+
       const keyUpHandler = (e) => {
          const matchedHandler = find(handlers, (handler) => e.key.match(handler.matchRegex)) as KeyBoardHandler;
          matchedHandler?.keyup?.(e.key);
@@ -35,7 +35,7 @@ export const KeyBoardContextProvider = ({ children }) => {
       return () => {
          document.removeEventListener('keyup', keyUpHandler);
          document.removeEventListener('keydown', keyDownHandler);
-      }
+      };
    }, [handlers]);
 
    return (

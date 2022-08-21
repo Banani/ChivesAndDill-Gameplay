@@ -28,8 +28,13 @@ export const InputDialog: FunctionComponent<InputDialogProps> = ({ isVisible, ma
          });
       } else {
          keyBoardContext.removeKeyHandler('InputDialog');
+         keyBoardContext.removeKeyHandler('InputDialogBlockAll');
       }
-      return () => keyBoardContext.removeKeyHandler('InputDialog');
+
+      return () => {
+         keyBoardContext.removeKeyHandler('InputDialog');
+         keyBoardContext.removeKeyHandler('InputDialogBlockAll');
+      };
    }, [isVisible]);
 
    return (
@@ -40,8 +45,8 @@ export const InputDialog: FunctionComponent<InputDialogProps> = ({ isVisible, ma
                   <label>{message}</label>
                   <input
                      className={styles.input}
-                     onFocus={() => keyBoardContext.addKeyHandler({ id: "InputDialogBlockAll", matchRegex: ".*"})}
-                     onBlur={() => keyBoardContext.removeKeyHandler("InputDialogBlockAll")}
+                     onFocus={() => keyBoardContext.addKeyHandler({ id: 'InputDialogBlockAll', matchRegex: '.*' })}
+                     onBlur={() => keyBoardContext.removeKeyHandler('InputDialogBlockAll')}
                      value={inputValue}
                      maxLength={20}
                      onChange={(e) => {

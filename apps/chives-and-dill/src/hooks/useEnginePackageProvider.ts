@@ -32,5 +32,6 @@ export const useEnginePackageProvider = () => {
       timeEffects: packageContext.backendStore.timeEffects?.data,
       powerStacks: packageContext.backendStore.powerStacks?.data,
       chatChannels: packageContext.backendStore.chatChannel?.data,
+      chatMessages: packageContext.backendStore.chatMessages?.data,
    };
 };
