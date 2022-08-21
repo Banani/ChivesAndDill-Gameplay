@@ -1,26 +1,41 @@
 .ItemsContainer {
     display: flex;
     margin-bottom: 10px;
+    max-width: 100%;
+    flex-wrap: wrap;
+
     .Item {
-        width: 50%;
+        width: 48%;
         height: 50px;
         display: flex;
+        border: 1px solid black;
+        background: #00000080;
+        border-radius: 4px;
+        margin-bottom: 2px;
+
+        &:nth-child(odd) {
+            margin-right: 2px;
+        }
 
         .ItemImage {
             width: 50px;
             height: 50px;
+            border-right: 1px solid black;
         }
 
         .RewardText {
-            color: #ededed;
+            color: white;
             display: flex;
             align-items: center;
+            text-shadow: 1px 1px black;
+            text-align: center;
         }
 
         .Stack {
             position: relative;
             left: -18px;
             top: 33px;
+            color: white;
         }
     }
 }
@@ -33,7 +48,7 @@
     display: flex;
 
     .ExperienceAmount {
-        color: #ededed;
+        color: white;
         margin-left: 10px;
     }
 }

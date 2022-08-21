@@ -5,6 +5,7 @@ import { SocketContext } from '../app/gameController/socketContext';
 interface EngineApiMethods {
    requestItemTemplates: (itemTemplateIds: string[]) => void;
    takeQuestFromNpc: ({ npcId, questId }) => void;
+   finalizeQuestWithNpc: ({ npcId, questId }) => void;
    createChatChannel: ({ chatChannelName }) => void;
    invitePlayerCharacterToChatChannel: ({ chatChannelId, characterName }) => void;
    leaveChatChannel: ({ chatChannelId }) => void;
@@ -27,6 +28,12 @@ export const EngineApi = ({ children }) => {
             },
             takeQuestFromNpc: ({ npcId, questId }) => {
                socket?.emit(NpcClientMessages.TakeQuestFromNpc, {
+                  npcId,
+                  questId,
+               });
+            },
+            finalizeQuestWithNpc: ({ npcId, questId }) => {
+               socket?.emit(NpcClientMessages.FinalizeQuestWithNpc, {
                   npcId,
                   questId,
                });

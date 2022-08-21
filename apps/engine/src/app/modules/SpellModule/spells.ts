@@ -39,6 +39,10 @@ export const ALL_SPELLS: Record<string, Spell> = {
             activationFrequency: 1000,
             spellEffects: [{ type: SpellEffectType.Heal, amount: 20 }],
          },
+         {
+            type: SpellEffectType.Damage,
+            amount: 200,
+         },
       ],
    },
    Fireball: {

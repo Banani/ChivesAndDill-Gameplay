@@ -1,35 +1,38 @@
 import { QuestSchema } from '@bananos/types';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
 import React, { FunctionComponent, useContext, useEffect } from 'react';
+import { Button } from '../../../components/button/Button';
 import { QuestDescription } from '../../../quests/components';
-import { Button } from './../../../components/button/Button';
-import styles from './AvailableQuestNpcModal.module.scss';
+import styles from './CompleteQuestNpcModal.module.scss';
 
-interface AvailableQuestNpcModalProps {
+interface CompleteQuestNpcModalProps {
    questSchema: QuestSchema;
-   acceptQuest: () => void;
    close: () => void;
+   questId: string;
+   completeQuest: () => void;
 }
 
-export const AvailableQuestNpcModal: FunctionComponent<AvailableQuestNpcModalProps> = ({ questSchema, acceptQuest, close }) => {
+export const CompleteQuestNpcModal: FunctionComponent<CompleteQuestNpcModalProps> = ({ close, questSchema, questId, completeQuest }) => {
    const keyBoardContext = useContext(KeyBoardContext);
+   const { questProgress } = useEnginePackageProvider();
 
    useEffect(() => {
       keyBoardContext.addKeyHandler({
-         id: 'AvailableQuestNpcModalEscape',
+         id: 'CompleteQuestNpcModalEscape',
          matchRegex: 'Escape',
          keydown: close,
       });
 
       keyBoardContext.addKeyHandler({
-         id: 'AvailableQuestNpcModalEnter',
+         id: 'CompleteQuestNpcModalEnter',
          matchRegex: 'Enter',
-         keydown: acceptQuest,
+         keydown: () => {},
       });
 
       return () => {
-         keyBoardContext.removeKeyHandler('AvailableQuestNpcModalEscape');
-         keyBoardContext.removeKeyHandler('AvailableQuestNpcModalEnter');
+         keyBoardContext.removeKeyHandler('CompleteQuestNpcModalEscape');
+         keyBoardContext.removeKeyHandler('CompleteQuestNpcModalEnter');
       };
    }, []);
 
@@ -39,7 +42,9 @@ export const AvailableQuestNpcModal: FunctionComponent<AvailableQuestNpcModalPro
             <QuestDescription questSchema={questSchema} />
          </div>
          <div className={styles.ActionBar}>
-            <Button onClick={acceptQuest}>Accept</Button>
+            <Button onClick={completeQuest} disabled={!questProgress?.[questId].allStagesCompleted}>
+               Complete Quest
+            </Button>
          </div>
       </div>
    );

@@ -1,12 +1,17 @@
-.questName {
-    cursor: pointer;
-}
+.ContentWrapper {
+    padding: 10px 40px 0 24px;   
+    height: 420px;
 
-.SectionText {
-    font-size: 18px;
-}
+    .questName {
+        cursor: pointer;
+    }
 
-.SectionHeader {
-    font-size: 22px;
+    .SectionText {
+        font-size: 18px;
+    }
+
+    .SectionHeader {
+        font-size: 22px;
+    }
 }
   

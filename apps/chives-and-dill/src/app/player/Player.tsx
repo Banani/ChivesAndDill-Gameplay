@@ -8,6 +8,7 @@ import { BLOCK_SIZE } from '../../consts/consts';
 import { setActiveTarget } from '../../stores';
 import { SocketContext } from '../gameController/socketContext';
 import { GetAbsorbsValue } from './GetPlayerAbsorbs';
+import { NpcQuestNotifier } from './NpcQuestNotifier';
 
 const Player = React.memo<{ player: any; characterViewsSettings: any; charactersMovements: any; characterPowerPoints: any }>(
    ({ player, characterViewsSettings, charactersMovements, characterPowerPoints }) => {
@@ -152,6 +153,7 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
 
       return charactersMovements[player.id] ? (
          <>
+            <NpcQuestNotifier location={charactersMovements[player.id].location} player={player} />
             {currentHp <= 0 ? null : (
                <>
                   <Text
