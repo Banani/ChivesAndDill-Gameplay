@@ -10,6 +10,7 @@ export const Chat = () => {
    const { chatChannels, chatMessages, characters } = useEnginePackageProvider();
    const [activeChannelId, setActiveChannelId] = useState(null);
    const messageInput = useRef(null);
+   const lastMessage = useRef(null);
    const [message, setMessage] = useState('');
    const keyBoardContext = useContext(KeyBoardContext);
    const channelNumeratorContext = useContext(ChannelNumeratorContext);
@@ -65,21 +66,30 @@ export const Chat = () => {
 
    useEffect(() => {
       if (lastKeyDown === 'Enter') {
-         engineApiContext.sendChatMessage({ message, chatChannelId: activeChannelId });
+         if (message !== '') {
+            engineApiContext.sendChatMessage({ message, chatChannelId: activeChannelId });
+         }
          messageInput.current.blur();
       }
    }, [lastKeyDown, activeChannelId]);
+
+   useEffect(() => {
+      lastMessage.current.scrollIntoView();
+   }, [chatMessages]);
 
    return (
       <div className={styles.chatContainer}>
          <div className={styles.channelsContainer}>{mapChannels}</div>
          <div className={styles.chatContent}>
-            {map(chatMessages, (message) => (
-               <div className={styles.message}>
-                  {`[${channelNumeratorContext.getNumberById(activeChannelId)}. ${chatChannels[message.chatChannelId].name}]
+            <div className={styles.messagesHolder}>
+               {map(chatMessages, (message) => (
+                  <div className={styles.message}>
+                     {`[${channelNumeratorContext.getNumberById(activeChannelId)}. ${chatChannels[message.chatChannelId].name}]
                   [${characters[message.authorId].name}]: ${message.message}`}
-               </div>
-            ))}
+                  </div>
+               ))}
+               <div ref={lastMessage}></div>
+            </div>
          </div>
          <div className={`${styles.messageHolder} ${document.activeElement === messageInput.current ? styles.active : ''}`}>
             {document.activeElement === messageInput.current && <div className={styles.channelName}>{currentChannel}</div>}

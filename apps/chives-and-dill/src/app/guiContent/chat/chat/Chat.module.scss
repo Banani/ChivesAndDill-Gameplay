@@ -20,16 +20,21 @@
   }
 
   .chatContent {
-    width: 100%;
+    overflow: hidden;
     height: 250px;
     background-color: rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
 
-    .message {
-        display: flex;
-        color: white;
+    .messagesHolder {
+        overflow-y: scroll;
+
+        .message {
+            display: flex;
+            color: white;
+            word-break: break-word;
+        }
     }
   }
 
