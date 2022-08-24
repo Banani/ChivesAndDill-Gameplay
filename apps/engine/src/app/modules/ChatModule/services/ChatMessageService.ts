@@ -1,11 +1,11 @@
-import { ChannelType, ChatMessage } from '@bananos/types';
+import { ChannelChatMessage, ChannelType } from '@bananos/types';
 import { now, pickBy } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { ChatChannelDeletedEvent, ChatEngineEvents, ChatMessagesDeletedEvent, ChatMessageSentEvent, SendChatMessageEvent } from '../Events';
 
 export class ChatMessageService extends EventParser {
-   private messages: Record<string, ChatMessage> = {};
+   private messages: Record<string, ChannelChatMessage> = {};
    private increment = 0;
 
    constructor() {

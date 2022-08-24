@@ -1,6 +1,4 @@
 import type { Location } from '@bananos/types';
-import { MonsterTemplate } from '../modules/MonsterModule/MonsterTemplates';
-import { NpcTemplate } from '../modules/NpcModule/NpcTemplate';
 
 export enum WalkingType {
    None,

@@ -1,3 +1,4 @@
+import { QuotesEvents } from '@bananos/types';
 import { ALL_SPELLS } from '../SpellModule/spells';
 import type { Spell } from '../SpellModule/types/SpellTypes';
 
@@ -35,6 +36,7 @@ export interface MonsterTemplate {
       coins: CoinDropSchema;
       items?: ItemDropSchema[];
    };
+   quotesEvents?: QuotesEvents;
 }
 
 export const MonsterTemplates: Record<string, MonsterTemplate> = {
@@ -79,6 +81,12 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
                minAmount: 1,
             },
          ],
+      },
+      quotesEvents: {
+         onDying: {
+            chance: 0.5,
+            quotes: ['Tylko nie to...', 'Umarłem :(', 'Agrrrr...'],
+         },
       },
    },
    OrcSpearman: {

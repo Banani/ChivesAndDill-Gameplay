@@ -1,5 +1,17 @@
 import { Location } from './shared';
 
+export interface QuotesEvents {
+   standard?: QuoteHandler;
+   onKilling?: QuoteHandler;
+   onDying?: QuoteHandler;
+   onPulling?: QuoteHandler;
+}
+
+export interface QuoteHandler {
+   chance: number;
+   quotes: string[];
+}
+
 export enum CharacterClientEvents {
    ExperienceGain = 'ExperienceGain',
 }

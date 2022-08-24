@@ -94,9 +94,11 @@ export interface ChatChannelOwnerChangedEvent extends EngineEvent {
    newOwnerId: string;
 }
 
+// TODO: to powinien byc message object, i jeden wymaga characterId, a drugi chatChannelId, zaleznie od channelType
 export interface SendChatMessageEvent extends EngineEvent {
    type: ChatEngineEvents.SendChatMessage;
-   chatChannelId: string;
+   characterId?: string;
+   chatChannelId?: string;
    message: string;
    channelType: ChannelType;
 }

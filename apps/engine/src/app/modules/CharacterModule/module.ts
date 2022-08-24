@@ -4,6 +4,7 @@ import { AvailableCorpseDropNotifier } from './notifiers/AvailableCorpseDropNoti
 import { CharactersService, PowerPointsService, RegenerationService } from './services';
 import { CorpseDropService } from './services/CorpseDropService';
 import { ExperienceService } from './services/ExperienceService';
+import { QuotesService } from './services/QuotesService';
 
 export interface CharacterModuleServices {
    characterService: CharactersService;
@@ -11,6 +12,7 @@ export interface CharacterModuleServices {
    regenerationService: RegenerationService;
    experienceService: ExperienceService;
    corpseDropService: CorpseDropService;
+   quotesService: QuotesService;
 }
 
 export const getCharacterModule: () => EngineModule<CharacterModuleServices> = () => {
@@ -22,6 +24,7 @@ export const getCharacterModule: () => EngineModule<CharacterModuleServices> = (
          regenerationService: new RegenerationService(),
          experienceService: new ExperienceService(),
          corpseDropService: new CorpseDropService(),
+         quotesService: new QuotesService(),
       },
    };
 };

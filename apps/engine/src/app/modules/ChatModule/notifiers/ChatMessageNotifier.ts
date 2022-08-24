@@ -1,4 +1,4 @@
-import { ChannelType, ChatChannelClientMessages, ChatMessage, GlobalStoreModule } from '@bananos/types';
+import { ChannelType, ChatChannelClientMessages, ChatMessage, GlobalStoreModule, RangeChatMessage } from '@bananos/types';
 import { keyBy, map, mapValues, pickBy } from 'lodash';
 import { distanceBetweenTwoPoints } from '../../../math';
 import { Notifier } from '../../../Notifier';
@@ -40,14 +40,19 @@ export class ChatMessageNotifier extends Notifier<ChatMessage> {
             string,
             PlayerCharacter
          >;
+      } else if (event.chatMessage.channelType === ChannelType.Quotes) {
+         chatMembers = pickBy(services.characterService.getAllCharacters(), (character) => character.type === CharacterType.Player) as Record<
+            string,
+            PlayerCharacter
+         >;
       } else if (event.chatMessage.channelType === ChannelType.Range) {
+         const chatMessage: RangeChatMessage = event.chatMessage;
          const allCharacters = services.characterService.getAllCharacters();
          chatMembers = pickBy(
             services.characterService.getAllCharacters(),
             (character) =>
                character.type === CharacterType.Player &&
-               distanceBetweenTwoPoints(character.location, allCharacters[event.chatMessage.authorId].location) <
-                  RangeChannels[event.chatMessage.chatChannelId].range
+               distanceBetweenTwoPoints(character.location, allCharacters[chatMessage.authorId].location) < RangeChannels[chatMessage.chatChannelId].range
          ) as Record<string, PlayerCharacter>;
       }
 

@@ -5,18 +5,34 @@ export interface ChatChannel {
    membersIds: Record<string, boolean>;
 }
 
-export interface ChatMessage {
+export interface CommonChatMessage {
    id: string;
    time: number;
    authorId: string;
    message: string;
-   chatChannelId: string;
    channelType: ChannelType;
 }
+
+export interface QuoteChatMessage extends CommonChatMessage {
+   channelType: ChannelType.Quotes;
+}
+
+export interface RangeChatMessage extends CommonChatMessage {
+   channelType: ChannelType.Range;
+   chatChannelId: string;
+}
+
+export interface ChannelChatMessage extends CommonChatMessage {
+   channelType: ChannelType.Custom;
+   chatChannelId: string;
+}
+
+export type ChatMessage = ChannelChatMessage | RangeChatMessage | QuoteChatMessage;
 
 export enum ChannelType {
    Custom = 'Custom',
    Range = 'Range',
+   Quotes = 'Quotes',
 }
 
 export enum ChatChannelClientMessages {

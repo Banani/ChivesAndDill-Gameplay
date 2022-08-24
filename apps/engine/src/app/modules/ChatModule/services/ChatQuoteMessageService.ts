@@ -1,12 +1,11 @@
-import { ChannelType, RangeChatMessage } from '@bananos/types';
+import { ChannelType, QuoteChatMessage } from '@bananos/types';
 import { now } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { ChatEngineEvents, ChatMessageSentEvent, SendChatMessageEvent } from '../Events';
-import { RangeChannels } from '../RangeChannels';
 
-export class ChatRangeMessageService extends EventParser {
-   private messages: Record<string, RangeChatMessage> = {};
+export class ChatQuoteMessageService extends EventParser {
+   private messages: Record<string, QuoteChatMessage> = {};
    private increment = 0;
 
    constructor() {
@@ -17,23 +16,17 @@ export class ChatRangeMessageService extends EventParser {
    }
 
    handleSendChatMessage: EngineEventHandler<SendChatMessageEvent> = ({ event, services }) => {
-      if (event.channelType !== ChannelType.Range) {
+      if (event.channelType !== ChannelType.Quotes) {
          return;
       }
 
-      if (!RangeChannels[event.chatChannelId]) {
-         this.sendErrorMessage(event.requestingCharacterId, 'Chat channel type does not exist.');
-         return;
-      }
-
-      const id = `chatRangeMessage_${this.increment++}`;
+      const id = `chatQuoteMessage_${this.increment++}`;
       this.messages[id] = {
          id,
          message: event.message,
-         authorId: event.requestingCharacterId,
+         authorId: event.characterId,
          time: now(),
-         chatChannelId: event.chatChannelId,
-         channelType: ChannelType.Range,
+         channelType: ChannelType.Quotes,
       };
 
       this.engineEventCrator.asyncCeateEvent<ChatMessageSentEvent>({

@@ -3,11 +3,13 @@ import { ChatChannelNotifier } from './notifiers/ChatChannelNotifier';
 import { ChatMessageNotifier } from './notifiers/ChatMessageNotifier';
 import { ChatChannelService, ChatRangeMessageService } from './services';
 import { ChatMessageService } from './services/ChatMessageService';
+import { ChatQuoteMessageService } from './services/ChatQuoteMessageService';
 
 export interface ChatModuleServices {
    chatChannelService: ChatChannelService;
    chatMessageService: ChatMessageService;
    chatRangeMessageService: ChatRangeMessageService;
+   chatQuoteMessageService: ChatQuoteMessageService;
 }
 
 export const getChatModule: () => EngineModule<ChatModuleServices> = () => {
@@ -17,6 +19,7 @@ export const getChatModule: () => EngineModule<ChatModuleServices> = () => {
          chatChannelService: new ChatChannelService(),
          chatMessageService: new ChatMessageService(),
          chatRangeMessageService: new ChatRangeMessageService(),
+         chatQuoteMessageService: new ChatQuoteMessageService(),
       },
    };
 };
