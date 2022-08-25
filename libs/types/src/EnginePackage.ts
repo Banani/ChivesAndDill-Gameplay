@@ -78,6 +78,8 @@ export interface EnginePackage {
 interface StoreModule<Data> {
    data: Record<string, Data>;
    events: EnginePackageEvent[];
+   lastUpdateTime: number;
+   recentData: Record<string, Data>;
 }
 
 export interface GlobalStore {

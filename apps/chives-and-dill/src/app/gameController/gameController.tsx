@@ -1,22 +1,24 @@
-import { CommonClientMessages } from '@bananos/types';
+import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
 import _ from 'lodash';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { KeyBoardContext } from '../../contexts/KeyBoardContext';
-import { useEnginePackageProvider } from '../../hooks';
+import { useEngineModuleReader } from '../../hooks';
 import { SocketContext } from '../gameController/socketContext';
 import { GameControllerContext } from './gameControllerContext';
 
 const keyMovementMap = {
-   w: {y: -1},
-   a: {x: -1},
-   s: {y: 1},
-   d: {x: 1}
-}
+   w: { y: -1 },
+   a: { x: -1 },
+   s: { y: 1 },
+   d: { x: 1 },
+};
 
 const GameController = ({ children }) => {
-   const { activeCharacterId, characters, characterMovements } = useEnginePackageProvider();
+   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
+   const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+   const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
    const keyBoardContext = useContext(KeyBoardContext);
-   
+
    const context = useContext(SocketContext);
    const { socket } = context;
    const [mousePosition, setMousePosition] = useState({ x: null, y: null });
@@ -35,7 +37,7 @@ const GameController = ({ children }) => {
       keyBoardContext.addKeyHandler({
          id: 'gameControllerWASD',
          matchRegex: '[wasd]',
-         keydown: (key) => socket?.emit(CommonClientMessages.PlayerStartMove, {source: key, ...keyMovementMap[key]}),
+         keydown: (key) => socket?.emit(CommonClientMessages.PlayerStartMove, { source: key, ...keyMovementMap[key] }),
          keyup: (key) => socket?.emit(CommonClientMessages.PlayerStopMove, { source: key }),
       });
 

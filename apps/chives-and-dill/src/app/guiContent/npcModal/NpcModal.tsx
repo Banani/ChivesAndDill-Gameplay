@@ -1,6 +1,6 @@
-import { QuestSchema } from '@bananos/types';
+import { GlobalStoreModule, QuestSchema } from '@bananos/types';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { FunctionComponent, useCallback, useContext, useState } from 'react';
 import { AvailableQuestNpcModal, CompleteQuestNpcModal, DefaultNpcModal } from './components';
 import styles from './NpcModal.module.scss';
@@ -18,7 +18,7 @@ export interface NpcModalProps {
 
 export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
    ({ activeNpc, questDefinition }) => {
-      const { questProgress } = useEnginePackageProvider();
+      const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
       const [currentModal, setCurrentModal] = useState(NpcModalView.Default);
       const [activeQuestId, setActiveQuestId] = useState(null);
       const context = useContext(EngineApiContext);

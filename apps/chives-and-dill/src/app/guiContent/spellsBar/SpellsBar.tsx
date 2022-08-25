@@ -1,11 +1,13 @@
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { GlobalStoreModule } from '@bananos/types';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { GameControllerContext } from '../../gameController/gameControllerContext';
 import styles from './SpellsBar.module.scss';
 
 export const SpellsBar = () => {
-   const { characters, activeCharacterId } = useEnginePackageProvider();
+   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
+   const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
    const context = useContext(GameControllerContext);
    const spells = characters[activeCharacterId].spells;
 

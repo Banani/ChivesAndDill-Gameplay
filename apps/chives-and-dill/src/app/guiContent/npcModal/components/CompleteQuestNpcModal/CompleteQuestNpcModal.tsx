@@ -1,6 +1,6 @@
-import { QuestSchema } from '@bananos/types';
+import { GlobalStoreModule, QuestSchema } from '@bananos/types';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { FunctionComponent, useContext, useEffect } from 'react';
 import { Button } from '../../../components/button/Button';
 import { QuestDescription } from '../../../quests/components';
@@ -15,7 +15,7 @@ interface CompleteQuestNpcModalProps {
 
 export const CompleteQuestNpcModal: FunctionComponent<CompleteQuestNpcModalProps> = ({ close, questSchema, questId, completeQuest }) => {
    const keyBoardContext = useContext(KeyBoardContext);
-   const { questProgress } = useEnginePackageProvider();
+   const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.NPC_CONVERSATION);
 
    useEffect(() => {
       keyBoardContext.addKeyHandler({

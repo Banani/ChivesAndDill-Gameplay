@@ -1,10 +1,13 @@
+import { GlobalStoreModule } from '@bananos/types';
 import { Sprite } from '@inlet/react-pixi';
 import { filter, map } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useEnginePackageProvider } from '../../hooks';
+import { useEngineModuleReader } from '../../hooks';
 
 export const BloodPoolManager = () => {
-   const { characterPowerPointsEvents, characterPowerPoints, characterMovements } = useEnginePackageProvider();
+   const { events: characterPowerPointsEvents } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
+   const { data: characterPowerPoints } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
+   const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
    const [activeShapes, setActiveShapes] = useState([]);
 
    useEffect(() => {

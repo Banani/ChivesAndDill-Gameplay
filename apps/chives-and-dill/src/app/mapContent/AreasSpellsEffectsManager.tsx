@@ -1,10 +1,11 @@
+import { GlobalStoreModule } from '@bananos/types';
 import { Graphics } from '@inlet/react-pixi';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
-import { useEnginePackageProvider } from '../../hooks';
+import { useEngineModuleReader } from '../../hooks';
 
 export const AreasSpellsEffectsManager = () => {
-   const { areaTimeEffects } = useEnginePackageProvider();
+   const { data: areaTimeEffects } = useEngineModuleReader(GlobalStoreModule.SPELLS);
 
    const drawAreasSpellsEffects = useCallback(
       (g) => {

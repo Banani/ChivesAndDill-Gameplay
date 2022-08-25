@@ -1,10 +1,12 @@
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { GlobalStoreModule } from '@bananos/types';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React from 'react';
 import styles from './TimeEffectsBar.module.scss';
 
 export const TimeEffectsbar = ({ playerId }) => {
-   const { timeEffects, absorbShields } = useEnginePackageProvider();
+   const { data: timeEffects } = useEngineModuleReader(GlobalStoreModule.TIME_EFFECTS);
+   const { data: absorbShields } = useEngineModuleReader(GlobalStoreModule.ABSORB_SHIELDS);
 
    const debuffs = _.map(timeEffects, (debuff, i) => {
       if (debuff.targetId === playerId) {

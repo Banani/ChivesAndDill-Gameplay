@@ -1,12 +1,16 @@
-import { CharacterClientEvents, DamageAbsorbedEvent, EngineEventType, ExperienceGainEvent, HealthPointsSource } from '@bananos/types';
+import { CharacterClientEvents, DamageAbsorbedEvent, EngineEventType, ExperienceGainEvent, GlobalStoreModule, HealthPointsSource } from '@bananos/types';
 import { Text } from '@inlet/react-pixi';
 import { chain, filter, forEach, map } from 'lodash';
 import * as PIXI from 'pixi.js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useEnginePackageProvider } from '../../hooks';
+import { useEngineModuleReader } from '../../hooks';
 
 export const FloatingNumbersManager = () => {
-   const { characterPowerPointsEvents, absorbShieldEvents, experienceEvents, characterPowerPoints, characterMovements } = useEnginePackageProvider();
+   const { events: characterPowerPointsEvents } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
+   const { events: absorbShieldEvents } = useEngineModuleReader(GlobalStoreModule.ABSORB_SHIELDS);
+   const { events: experienceEvents } = useEngineModuleReader(GlobalStoreModule.EXPERIENCE);
+   const { data: characterPowerPoints } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
+   const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
    const [activeShapes, setActiveShapes] = useState([]);
 
    useEffect(() => {

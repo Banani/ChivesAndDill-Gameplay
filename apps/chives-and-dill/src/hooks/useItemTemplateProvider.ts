@@ -1,14 +1,15 @@
+import { GlobalStoreModule } from '@bananos/types';
 import _ from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { EngineApiContext } from '../contexts/EngineApi';
-import { useEnginePackageProvider } from './useEnginePackageProvider';
+import { useEngineModuleReader } from './useEngineModuleReader';
 
 interface ItemTemplateProviderProps {
    itemTemplateIds: string[];
 }
 
 export const useItemTemplateProvider = ({ itemTemplateIds }: ItemTemplateProviderProps) => {
-   const { itemTemplates } = useEnginePackageProvider();
+   const { data: itemTemplates } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
 
    const context = useContext(EngineApiContext);
    const { requestItemTemplates } = context;

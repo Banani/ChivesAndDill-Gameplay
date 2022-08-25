@@ -1,5 +1,6 @@
+import { GlobalStoreModule } from '@bananos/types';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { map } from 'lodash';
 import React, { useContext, useState } from 'react';
 import { ConfirmationDialog } from '../ConfirmationDialog';
@@ -16,7 +17,9 @@ enum ActiveModal {
 
 export const ChatChannels = () => {
    const [activeModal, setActiveModal] = useState<ActiveModal>(null);
-   const { chatChannels, characters, activeCharacterId } = useEnginePackageProvider();
+   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
+   const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+   const { data: chatChannels } = useEngineModuleReader(GlobalStoreModule.CHAT_CHANNEL);
    const engineApiContext = useContext(EngineApiContext);
    const channelNumeratorContext = useContext(ChannelNumeratorContext);
    const [selectedChannelId, setSelectedChannelId] = useState(null);

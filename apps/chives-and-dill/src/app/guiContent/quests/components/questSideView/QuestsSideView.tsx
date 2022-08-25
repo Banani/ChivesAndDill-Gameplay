@@ -1,4 +1,5 @@
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { GlobalStoreModule } from '@bananos/types';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useContext, useState } from 'react';
 import { SelectedQuestProviderContext } from '../../contexts/SelectedQuestProvider';
@@ -7,7 +8,8 @@ import styles from './QuestsSideView.module.scss';
 
 export const QuestsSideView = () => {
    const { setSelectedQuestId } = useContext(SelectedQuestProviderContext);
-   const { questDefinition, questProgress } = useEnginePackageProvider();
+   const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
+   const { data: questDefinition } = useEngineModuleReader(GlobalStoreModule.QUEST_DEFINITION);
 
    const [showQuestsView, updateShowQuestsView] = useState(true);
 

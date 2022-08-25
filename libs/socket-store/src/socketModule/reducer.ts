@@ -1,11 +1,13 @@
+import { clone, forEach, mapValues, merge, pickBy } from 'lodash';
 import type { EngineStateAction } from './actions';
 import { EngineStateActionTypes } from './actions';
-import { merge, mapValues, omit, forEach, clone, pickBy } from 'lodash';
 import { Module } from './types';
 
 const emptyModule: Module = {
    data: {},
    events: [],
+   lastUpdateTime: 0,
+   recentData: {},
 };
 
 const initialState = {};

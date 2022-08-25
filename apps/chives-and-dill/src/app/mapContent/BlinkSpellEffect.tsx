@@ -1,13 +1,12 @@
-import type { SpellLandedEvent } from '@bananos/types';
-import { EngineEventType } from '@bananos/types';
+import { EngineEventType, GlobalStoreModule, SpellLandedEvent } from '@bananos/types';
 import { Graphics } from '@inlet/react-pixi';
 import { filter, forEach, map } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useEnginePackageProvider } from '../../hooks';
+import { useEngineModuleReader } from '../../hooks';
 import { BlinkSpellDefinitions } from './BlinkSpellDefinitions';
 
 export const BlinkSpellEffect = () => {
-   const { spellEvents } = useEnginePackageProvider();
+   const { events: spellEvents } = useEngineModuleReader(GlobalStoreModule.SPELLS);
    const [activeShapes, setActiveShapes] = useState([]);
 
    const angleBlastDrawer = (g, spellLandedEvent) => {

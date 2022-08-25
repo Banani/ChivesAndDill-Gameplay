@@ -94,11 +94,12 @@ const SocketCommunicator = ({ children }) => {
             dispatch(addActiveSpellCast({ event }));
          });
 
+         context.socket.off(EngineMessages.Package);
          context.socket.on(EngineMessages.Package, (enginePackage) => {
             packageContext.updatePackage(enginePackage);
          });
       }
-   }, [context]);
+   }, [context, packageContext.updatePackage]);
 
    return <SocketContext.Provider value={context}>{children}</SocketContext.Provider>;
 };

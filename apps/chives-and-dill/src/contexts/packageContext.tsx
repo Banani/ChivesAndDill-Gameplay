@@ -1,14 +1,45 @@
 import { Module } from '@bananos/socket-store';
-import { GlobalStore, RecursivePartial } from '@bananos/types';
-import { forEach, pickBy } from 'lodash';
+import { GlobalStore, GlobalStoreModule, PartialEnginePackage, RecursivePartial } from '@bananos/types';
+import { forEach, mapValues, now } from 'lodash';
 import React, { FunctionComponent, useState } from 'react';
 
 interface PackageContextReturns {
    updatePackage: (enginePackage: RecursivePartial<GlobalStore>) => void;
-   backendStore: GlobalStore;
 }
 
 export const PackageContext = React.createContext<PackageContextReturns>(null);
+
+export const EngineContexts: Record<GlobalStoreModule, React.Context<any>> = {
+   [GlobalStoreModule.CHARACTER_MOVEMENTS]: React.createContext<GlobalStore[GlobalStoreModule.CHARACTER_MOVEMENTS]>(null),
+   [GlobalStoreModule.PROJECTILE_MOVEMENTS]: React.createContext<GlobalStore[GlobalStoreModule.PROJECTILE_MOVEMENTS]>(null),
+   [GlobalStoreModule.SPELL_CHANNELS]: React.createContext<GlobalStore[GlobalStoreModule.SPELL_CHANNELS]>(null),
+   [GlobalStoreModule.CHARACTER_POWER_POINTS]: React.createContext<GlobalStore[GlobalStoreModule.CHARACTER_POWER_POINTS]>(null),
+   [GlobalStoreModule.TIME_EFFECTS]: React.createContext<GlobalStore[GlobalStoreModule.TIME_EFFECTS]>(null),
+   [GlobalStoreModule.AREA_TIME_EFFECTS]: React.createContext<GlobalStore[GlobalStoreModule.AREA_TIME_EFFECTS]>(null),
+   [GlobalStoreModule.SPELLS]: React.createContext<GlobalStore[GlobalStoreModule.SPELLS]>(null),
+   [GlobalStoreModule.POWER_STACKS]: React.createContext<GlobalStore[GlobalStoreModule.POWER_STACKS]>(null),
+   [GlobalStoreModule.ABSORB_SHIELDS]: React.createContext<GlobalStore[GlobalStoreModule.ABSORB_SHIELDS]>(null),
+   [GlobalStoreModule.PLAYER]: React.createContext<GlobalStore[GlobalStoreModule.PLAYER]>(null),
+   [GlobalStoreModule.CHARACTER]: React.createContext<GlobalStore[GlobalStoreModule.CHARACTER]>(null),
+   [GlobalStoreModule.ACTIVE_CHARACTER]: React.createContext<GlobalStore[GlobalStoreModule.ACTIVE_CHARACTER]>(null),
+   [GlobalStoreModule.AREAS]: React.createContext<GlobalStore[GlobalStoreModule.AREAS]>(null),
+   [GlobalStoreModule.MAP_SCHEMA]: React.createContext<GlobalStore[GlobalStoreModule.MAP_SCHEMA]>(null),
+   [GlobalStoreModule.ACTIVE_LOOT]: React.createContext<GlobalStore[GlobalStoreModule.ACTIVE_LOOT]>(null),
+   [GlobalStoreModule.ERROR_MESSAGES]: React.createContext<GlobalStore[GlobalStoreModule.ERROR_MESSAGES]>(null),
+   [GlobalStoreModule.CHAT_CHANNEL]: React.createContext<GlobalStore[GlobalStoreModule.CHAT_CHANNEL]>(null),
+   [GlobalStoreModule.CHAT_MESSAGES]: React.createContext<GlobalStore[GlobalStoreModule.CHAT_MESSAGES]>(null),
+   [GlobalStoreModule.EXPERIENCE]: React.createContext<GlobalStore[GlobalStoreModule.EXPERIENCE]>(null),
+   [GlobalStoreModule.CURRENCY]: React.createContext<GlobalStore[GlobalStoreModule.CURRENCY]>(null),
+   [GlobalStoreModule.BACKPACK_SCHEMA]: React.createContext<GlobalStore[GlobalStoreModule.BACKPACK_SCHEMA]>(null),
+   [GlobalStoreModule.BACKPACK_ITEMS]: React.createContext<GlobalStore[GlobalStoreModule.BACKPACK_ITEMS]>(null),
+   [GlobalStoreModule.ITEMS]: React.createContext<GlobalStore[GlobalStoreModule.ITEMS]>(null),
+   [GlobalStoreModule.NPC_CONVERSATION]: React.createContext<GlobalStore[GlobalStoreModule.NPC_CONVERSATION]>(null),
+   [GlobalStoreModule.NPC_STOCK]: React.createContext<GlobalStore[GlobalStoreModule.NPC_STOCK]>(null),
+   [GlobalStoreModule.QUEST_DEFINITION]: React.createContext<GlobalStore[GlobalStoreModule.QUEST_DEFINITION]>(null),
+   [GlobalStoreModule.NPC_QUESTS]: React.createContext<GlobalStore[GlobalStoreModule.NPC_QUESTS]>(null),
+   [GlobalStoreModule.QUEST_PROGRESS]: React.createContext<GlobalStore[GlobalStoreModule.QUEST_PROGRESS]>(null),
+   [GlobalStoreModule.CORPSE_DROP]: React.createContext<GlobalStore[GlobalStoreModule.CORPSE_DROP]>(null),
+};
 
 const deleteRequestedFields = (data: any, pathToDelete: any) => {
    forEach(pathToDelete, (toDelete, key) => {
@@ -41,55 +72,55 @@ export const customMerge = (data: any, pathToUpdate: any) => {
 };
 
 export const PackageContextProvider: FunctionComponent = ({ children }) => {
-   const [backendStore, setBackendStore] = useState({});
+   const states = mapValues(EngineContexts, (_, key: GlobalStoreModule) => {
+      const [state, setState] = useState({
+         data: {},
+         events: [],
+         lastUpdateTime: 0,
+         recentData: {},
+      });
+      return { state, setState };
+   });
 
    const updatePackage = (payload: any) => {
-      setBackendStore((prev) => {
+      forEach(payload, (module: PartialEnginePackage<any>, moduleName: string) => {
+         let events = [];
+
+         if (module.events) {
+            events = module.events;
+         }
+
          let newState: Record<string, Module> = {};
-         // TODO: split modules into multiple states
-         customMerge(newState, prev);
+         // copy object
+         customMerge(newState, states[moduleName].state.data);
 
-         forEach(newState, (module: Module) => {
-            module.events = [];
+         customMerge(newState, module.data);
+         deleteRequestedFields(newState, module.toDelete);
+
+         states[moduleName].setState({
+            events,
+            data: newState,
+            lastUpdateTime: now(),
+            recentData: module.data,
          });
-
-         forEach(payload, (module: Module, moduleName: string) => {
-            if (!newState[moduleName]) {
-               newState[moduleName] = {
-                  data: {},
-                  events: [],
-               };
-            }
-
-            if (module.events) {
-               newState[moduleName].events = module.events;
-            }
-         });
-
-         forEach(
-            pickBy(payload, (module) => module.data),
-            (module, moduleName) => customMerge(newState[moduleName].data, module.data)
-         );
-
-         forEach(
-            pickBy(payload, (module) => module.toDelete),
-            (module, moduleName) => deleteRequestedFields(newState[moduleName].data, module.toDelete)
-         );
-
-         return newState;
       });
    };
+
+   let output = <>{children}</>;
+
+   forEach(EngineContexts, (Context, key: GlobalStoreModule) => {
+      output = <Context.Provider value={states[key].state}>{output}</Context.Provider>;
+   });
 
    return (
       <PackageContext.Provider
          value={
             {
                updatePackage,
-               backendStore,
             } as PackageContextReturns
          }
       >
-         {children}
+         {output}
       </PackageContext.Provider>
    );
 };

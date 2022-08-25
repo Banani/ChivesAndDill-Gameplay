@@ -1,7 +1,7 @@
-import { ChannelType, ChatMessage } from '@bananos/types';
+import { ChannelChatMessage, ChannelType, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage } from '@bananos/types';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { map } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ChannelNumeratorContext } from '../contexts';
@@ -32,7 +32,9 @@ const RangeChannelInputTest = {
 };
 
 export const Chat = () => {
-   const { chatChannels, chatMessages, characters } = useEnginePackageProvider();
+   const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+   const { data: chatChannels } = useEngineModuleReader(GlobalStoreModule.CHAT_CHANNEL);
+   const { data: chatMessages } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
 
    const keyBoardContext = useContext(KeyBoardContext);
    const channelNumeratorContext = useContext(ChannelNumeratorContext);
@@ -49,10 +51,11 @@ export const Chat = () => {
 
    const mapChannels = modes.map((channel) => <div className={styles.channel}>{channel}</div>);
 
-   const MessageMappers = {
-      [ChannelType.Range]: (message: ChatMessage) =>
+   const MessageMappers: Record<ChannelType, (message: ChatMessage) => string> = {
+      [ChannelType.Range]: (message: RangeChatMessage) =>
          `[${characters[message.authorId].name}] ${RangeChannelsMessageMapper[message.chatChannelId]} ${message.message}`,
-      [ChannelType.Custom]: (message: ChatMessage) =>
+      [ChannelType.Quotes]: (message: QuoteChatMessage) => `[${characters[message.authorId].name}]: ${message.message}`,
+      [ChannelType.Custom]: (message: ChannelChatMessage) =>
          `[${channelNumeratorContext.getNumberById(activeChannel.id)}. ${chatChannels[message.chatChannelId].name}]
             [${characters[message.authorId].name}]: ${message.message}`,
    };

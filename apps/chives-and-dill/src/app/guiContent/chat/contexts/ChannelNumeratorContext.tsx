@@ -1,4 +1,5 @@
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { GlobalStoreModule } from '@bananos/types';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { find, findKey, forEach, pickBy } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -10,7 +11,7 @@ interface ChannelNumeratorContextMethods {
 export const ChannelNumeratorContext = React.createContext<ChannelNumeratorContextMethods>(null);
 
 export const ChannelNumeratorContextProvider = ({ children }) => {
-   const { chatChannels } = useEnginePackageProvider();
+   const { data: chatChannels } = useEngineModuleReader(GlobalStoreModule.CHAT_CHANNEL);
    const [channelNumerations, setChannelNumerations] = useState<Record<string, string>>({});
 
    useEffect(() => {

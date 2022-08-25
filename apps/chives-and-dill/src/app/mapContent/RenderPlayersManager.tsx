@@ -1,12 +1,16 @@
+import { GlobalStoreModule } from '@bananos/types';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { useEnginePackageProvider } from '../../hooks';
+import { useEngineModuleReader } from '../../hooks';
 import { selectCharacterViewsSettings } from '../../stores';
 import Player from '../player/Player';
 
 export const RenderPlayersManager = () => {
-   const { activeCharacterId, characters, characterMovements, characterPowerPoints } = useEnginePackageProvider();
+   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
+   const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+   const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
+   const { data: characterPowerPoints } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
    const characterViewsSettings = useSelector(selectCharacterViewsSettings);
 
    const renderPlayers = useCallback(

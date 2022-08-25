@@ -1,9 +1,10 @@
+import { GlobalStoreModule } from '@bananos/types';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { useEnginePackageProvider } from '../../hooks';
+import { useEngineModuleReader } from '../../hooks';
 
 export const GetAbsorbsValue = (playerId) => {
-   const { absorbShields } = useEnginePackageProvider();
+   const { data: absorbShields } = useEngineModuleReader(GlobalStoreModule.ABSORB_SHIELDS);
 
    const [activeShields, setActiveShields] = useState(0);
    const [absorbSpells, setAbsorbSpells] = useState([]);

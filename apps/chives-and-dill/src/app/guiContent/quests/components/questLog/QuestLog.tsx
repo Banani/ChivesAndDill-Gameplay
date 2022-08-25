@@ -1,4 +1,5 @@
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { GlobalStoreModule } from '@bananos/types';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useContext } from 'react';
 import { SelectedQuestProviderContext } from '../../contexts/SelectedQuestProvider';
@@ -7,8 +8,9 @@ import { QuestDescription } from '../questDescription';
 import styles from './QuestLog.module.scss';
 
 export const QuestLog = () => {
-   const { questProgress, questDefinition } = useEnginePackageProvider();
    const { selectedQuestId, setSelectedQuestId } = useContext(SelectedQuestProviderContext);
+   const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
+   const { data: questDefinition } = useEngineModuleReader(GlobalStoreModule.QUEST_DEFINITION);
 
    const renderQuests = _.map(questProgress, (quest, questId) => (
       <div key={questId}>

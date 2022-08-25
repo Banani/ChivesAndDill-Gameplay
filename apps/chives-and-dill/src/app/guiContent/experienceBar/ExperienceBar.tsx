@@ -1,9 +1,11 @@
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { GlobalStoreModule } from '@bananos/types';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React from 'react';
 import styles from './ExperienceBar.module.scss';
 
 export const ExperienceBar = () => {
-   const { activeCharacterId, experience } = useEnginePackageProvider();
+   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
+   const { data: experience } = useEngineModuleReader(GlobalStoreModule.EXPERIENCE);
 
    const { experienceAmount, toNextLevel } = experience[activeCharacterId];
 

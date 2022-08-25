@@ -1,15 +1,14 @@
-import type { EnginePackageEvent } from '@bananos/types';
-import { EngineEventType } from '@bananos/types';
+import { EngineEventType, EnginePackageEvent, GlobalStoreModule } from '@bananos/types';
 import { Graphics, Text } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useEnginePackageProvider, useMessageCenter } from '../../hooks';
+import { useEngineModuleReader, useMessageCenter } from '../../hooks';
 
 export const NextLevelManager = React.memo<{ experienceEvents: EnginePackageEvent[] }>(
    ({ experienceEvents }) => {
       const [characterLevel, setCharacterLevel] = useState(0);
       const [characterId, setCharacterId] = useState('');
-      const { activeCharacterId } = useEnginePackageProvider();
+      const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
       const { messageLocation } = useMessageCenter();
 
       useEffect(() => {

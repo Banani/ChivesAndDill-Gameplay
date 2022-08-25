@@ -1,12 +1,12 @@
 import { Container, Sprite, Stage } from '@inlet/react-pixi';
-import _ from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import _, { forEach, mapValues } from 'lodash';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Provider, ReactReduxContext } from 'react-redux';
 import { SocketContext } from './gameController/socketContext';
 
-import { ErrorMessage } from '@bananos/types';
-import { PackageContext } from '../contexts/PackageContext';
-import { useEnginePackageProvider } from '../hooks';
+import { ErrorMessage, GlobalStoreModule, QuestSchema } from '@bananos/types';
+import { EngineContexts, PackageContext } from '../contexts/PackageContext';
+import { useEngineModuleReader } from '../hooks';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
 import { ChatManager } from './guiContent/chat/ChatManager';
@@ -27,21 +27,29 @@ import { NextLevelManager } from './mapContent/NextLevelManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 
 const Map = () => {
-   const {
-      activeCharacterId,
-      spellChannels,
-      characterMovements,
-      activeLoot,
-      activeConversation,
-      characters,
-      questDefinition,
-      projectileMovements,
-      experienceEvents,
-      errorMessagesEvents,
-   } = useEnginePackageProvider();
+   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
+   const { data: spellChannels } = useEngineModuleReader(GlobalStoreModule.SPELL_CHANNELS);
+   const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
+   const { data: activeLoot } = useEngineModuleReader(GlobalStoreModule.ACTIVE_LOOT);
+   const { data: activeConversation } = useEngineModuleReader(GlobalStoreModule.NPC_CONVERSATION);
+   const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+   const { data: questDefinition } = useEngineModuleReader(GlobalStoreModule.QUEST_DEFINITION);
+   const { data: projectileMovements } = useEngineModuleReader(GlobalStoreModule.PROJECTILE_MOVEMENTS);
+
+   //PEEPEEPOOPOO jak dasz recent, to wyswietla sie tylko najnowsze
+   const { recentData: chatMessages } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
+   const { events: experienceEvents } = useEngineModuleReader(GlobalStoreModule.EXPERIENCE);
+   const { events: errorMessagesEvents } = useEngineModuleReader(GlobalStoreModule.ERROR_MESSAGES);
+
+   const contexts = mapValues(EngineContexts, (context) => useContext(context));
 
    const activeNpc = characters[activeConversation?.[activeCharacterId]?.npcId];
    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
+
+   useEffect(() => {
+      // PEEPEEPOOPOO
+      console.log(chatMessages);
+   }, [chatMessages]);
 
    const renderSpells = useCallback(
       () =>
@@ -89,7 +97,7 @@ const Map = () => {
          <QuestManager />
          <ChatManager />
          {!_.isEmpty(activeLoot?.[activeCharacterId]) ? <LootModal activeLoot={activeLoot[activeCharacterId]} /> : null}
-         {activeNpc ? <NpcModal questDefinition={questDefinition} activeNpc={activeNpc} /> : null}
+         {activeNpc ? <NpcModal questDefinition={questDefinition as Record<string, QuestSchema>} activeNpc={activeNpc} /> : null}
          <ExperienceBar />
          <PackageContext.Consumer>
             {(packageContext) => (
@@ -101,26 +109,28 @@ const Map = () => {
                               <PackageContext.Provider value={packageContext}>
                                  <SocketContext.Provider value={socketContext}>
                                     <Provider store={store}>
-                                       {activeCharacterId && characterMovements && (
-                                          <Container
-                                             position={[
-                                                -(characterMovements[activeCharacterId]?.location.x ?? 0) + gameSize.width / 2,
-                                                -(characterMovements[activeCharacterId]?.location.y ?? 0) + gameSize.height / 2,
-                                             ]}
-                                          >
-                                             <MapWrapper />
-                                             <AreasSpellsEffectsManager />
-                                             <AreasManager />
-                                             {renderSpells()}
-                                             <RenderPlayersManager />
-                                             <FloatingNumbersManager />
-                                             <BlinkSpellEffect />
-                                             <BloodPoolManager />
-                                             <CastBarsManager location={characterMovements[activeCharacterId]?.location} spellChannels={spellChannels} />
-                                          </Container>
-                                       )}
-                                       <NextLevelManager experienceEvents={experienceEvents} />
-                                       <ErrorMessages errorMessages={errorMessagesEvents as ErrorMessage[]} />
+                                       <ContextProvider contexts={contexts}>
+                                          {activeCharacterId && characterMovements && (
+                                             <Container
+                                                position={[
+                                                   -(characterMovements[activeCharacterId]?.location.x ?? 0) + gameSize.width / 2,
+                                                   -(characterMovements[activeCharacterId]?.location.y ?? 0) + gameSize.height / 2,
+                                                ]}
+                                             >
+                                                <MapWrapper />
+                                                <AreasSpellsEffectsManager />
+                                                <AreasManager />
+                                                {renderSpells()}
+                                                <RenderPlayersManager />
+                                                <FloatingNumbersManager />
+                                                <BlinkSpellEffect />
+                                                <BloodPoolManager />
+                                                <CastBarsManager location={characterMovements[activeCharacterId]?.location} spellChannels={spellChannels} />
+                                             </Container>
+                                          )}
+                                          <NextLevelManager experienceEvents={experienceEvents} />
+                                          <ErrorMessages errorMessages={errorMessagesEvents as ErrorMessage[]} />
+                                       </ContextProvider>
                                     </Provider>
                                  </SocketContext.Provider>
                               </PackageContext.Provider>
@@ -136,3 +146,14 @@ const Map = () => {
 };
 
 export default Map;
+
+const ContextProvider = ({ children, contexts }) => {
+   let output = children;
+
+   forEach(contexts, (context, key) => {
+      const Context = EngineContexts[key];
+      output = <Context.Provider value={context}>{output}</Context.Provider>;
+   });
+
+   return output;
+};

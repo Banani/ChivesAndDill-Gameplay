@@ -1,10 +1,14 @@
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { GlobalStoreModule } from '@bananos/types';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { useEffect, useState } from 'react';
 import { GetAbsorbsValue } from '../../../player/GetPlayerAbsorbs';
 import styles from './PlayerIcon.module.scss';
 
 export const PlayerIcon = ({ playerId }) => {
-   const { experience, characters, characterPowerPoints, powerStacks } = useEnginePackageProvider();
+   const { data: experience } = useEngineModuleReader(GlobalStoreModule.EXPERIENCE);
+   const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+   const { data: characterPowerPoints } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
+   const { data: powerStacks } = useEngineModuleReader(GlobalStoreModule.POWER_STACKS);
 
    const player = characters[playerId];
    const { name, avatar } = player;

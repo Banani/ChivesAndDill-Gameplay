@@ -1,6 +1,7 @@
+import { GlobalStoreModule } from '@bananos/types';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
-import { useEnginePackageProvider } from 'apps/chives-and-dill/src/hooks';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { FunctionComponent, useContext, useEffect } from 'react';
 import styles from './DefaultNpcModal.module.scss';
@@ -10,7 +11,12 @@ interface DefaultNpcModalProps {
 }
 
 export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQuest }) => {
-   const { activeCharacterId, activeConversation, characters, questDefinition, npcQuests, questProgress } = useEnginePackageProvider();
+   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
+   const { data: activeConversation } = useEngineModuleReader(GlobalStoreModule.NPC_CONVERSATION);
+   const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+   const { data: questDefinition } = useEngineModuleReader(GlobalStoreModule.QUEST_DEFINITION);
+   const { data: npcQuests } = useEngineModuleReader(GlobalStoreModule.NPC_QUESTS);
+   const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
 
    const activeNpc = characters[activeConversation[activeCharacterId]?.npcId];
    const activeNpcQuests = npcQuests[activeNpc?.templateId];
