@@ -33,6 +33,8 @@ export enum CharacterEngineEvents {
    CoinsWerePickedFromCorpse = 'CoinsWerePickedFromCorpse',
    AllItemsWerePickedFromCorpse = 'AllItemsWerePickedFromCorpse',
    CorpseDropTrackRemoved = 'CorpseDropTrackRemoved',
+
+   SendQuoteMessage = 'SendQuoteMessage',
 }
 
 export interface CreateCharacterEvent extends EngineEvent {
@@ -174,6 +176,11 @@ export interface CorpseDropTrackRemovedEvent extends EngineEvent {
    type: CharacterEngineEvents.CorpseDropTrackRemoved;
    corpseId: string;
 }
+export interface SendQuoteMessageEvent extends EngineEvent {
+   type: CharacterEngineEvents.SendQuoteMessage;
+   characterId: string;
+   message: string;
+}
 
 export interface CharacterEngineEventsMap {
    [CharacterEngineEvents.CreateCharacter]: EngineEventHandler<any>;
@@ -205,4 +212,6 @@ export interface CharacterEngineEventsMap {
    [CharacterEngineEvents.CoinsWerePickedFromCorpse]: EngineEventHandler<CoinsWerePickedFromCorpseEvent>;
    [CharacterEngineEvents.AllItemsWerePickedFromCorpse]: EngineEventHandler<AllItemsWerePickedFromCorpseEvent>;
    [CharacterEngineEvents.CorpseDropTrackRemoved]: EngineEventHandler<CorpseDropTrackRemovedEvent>;
+
+   [CharacterEngineEvents.SendQuoteMessage]: EngineEventHandler<SendQuoteMessageEvent>;
 }

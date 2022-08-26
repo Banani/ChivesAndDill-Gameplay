@@ -1,24 +1,46 @@
 import { ChannelType } from '@bananos/types';
 import { now } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
+import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
 import { ChatEngineEvents, SendChatMessageEvent } from '../../ChatModule/Events';
 import { MonsterEngineEvents, MonsterPulledEvent } from '../../MonsterModule/Events';
 import { Monster } from '../../MonsterModule/types';
+import { RandomQuoteEngine } from '../engines/RandomQuoteEngine';
+import { CharacterEngineEvents, SendQuoteMessageEvent } from '../Events';
 
 export class QuotesService extends EventParser {
    // characterId => last call
    quotesTimeStamps: Record<string, number> = {};
    QUOTE_COOLDOWN = 5000;
+   randomQuoteEngine: RandomQuoteEngine;
 
-   constructor() {
+   constructor(randomQuoteEngine: RandomQuoteEngine) {
       super();
+      this.randomQuoteEngine = randomQuoteEngine;
       this.eventsToHandlersMap = {
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [MonsterEngineEvents.MonsterPulled]: this.handleMonsterPulled,
+         [CharacterEngineEvents.SendQuoteMessage]: this.handleSendQuoteMessage,
       };
    }
+
+   init(engineEventCrator: EngineEventCrator, services) {
+      super.init(engineEventCrator);
+      this.randomQuoteEngine.init(this.engineEventCrator, services);
+   }
+
+   handleSendQuoteMessage: EngineEventHandler<SendQuoteMessageEvent> = ({ event, services }) => {
+      this.quotesTimeStamps[event.characterId] = now();
+
+      this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
+         type: ChatEngineEvents.SendChatMessage,
+         characterId: event.characterId,
+         message: event.message,
+         channelType: ChannelType.Quotes,
+      });
+   };
 
    handleMonsterPulled: EngineEventHandler<MonsterPulledEvent> = ({ event, services }) => {
       const respawn = services.monsterRespawnTemplateService.getData()[event.monster.respawnId];
@@ -90,4 +112,6 @@ export class QuotesService extends EventParser {
          channelType: ChannelType.Quotes,
       });
    };
+
+   canNpcSayQuote = (characterId: string) => (this.quotesTimeStamps[characterId] ?? 0) + this.QUOTE_COOLDOWN < now();
 }

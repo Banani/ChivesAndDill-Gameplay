@@ -95,6 +95,22 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
             chance: 0.5,
             quotes: ['Pfff... ledwie go uderzyłem', 'Ale jestem potezny, o moj boze, a jakie mam miesnie? Po prostu kox'],
          },
+         standard: {
+            chance: 0.05,
+            quotes: [
+               'Zjadłbym zupe pomidorową Kamila, była super',
+               'Mikolajowi dzisiaj smierdziały stopki, też to czuliście?',
+               'gul, gul',
+               'Pscółka dzisiaj jakas zła chodzi',
+               'Czasem czuje jakby moje miejsce bylo gdzies indziej',
+               'Ciekawe co robi Jasiu',
+               'Bał cziki, bał, bał',
+               'Tak miły mówi mi',
+               'Gdzie jest Mikołaj, telewizor mi nie działa',
+               'Trzeba zamykać drzwi na klucz, bo złodziej przyjdzie',
+               'A co ten ksiądz wymyślił? Daj spokoj...',
+            ],
+         },
       },
    },
    OrcSpearman: {

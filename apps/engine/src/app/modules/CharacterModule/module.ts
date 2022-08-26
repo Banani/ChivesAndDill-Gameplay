@@ -1,4 +1,5 @@
 import { EngineModule } from '../../types/EngineModule';
+import { RandomQuoteEngine } from './engines/RandomQuoteEngine';
 import { CharacterNotifier, ExperienceNotifier, PowerPointsNotifier } from './notifiers';
 import { AvailableCorpseDropNotifier } from './notifiers/AvailableCorpseDropNotifier';
 import { CharactersService, PowerPointsService, RegenerationService } from './services';
@@ -16,6 +17,7 @@ export interface CharacterModuleServices {
 }
 
 export const getCharacterModule: () => EngineModule<CharacterModuleServices> = () => {
+   const randomQuoteEngine = new RandomQuoteEngine();
    return {
       notifiers: [new CharacterNotifier(), new PowerPointsNotifier(), new ExperienceNotifier(), new AvailableCorpseDropNotifier()],
       services: {
@@ -24,7 +26,8 @@ export const getCharacterModule: () => EngineModule<CharacterModuleServices> = (
          regenerationService: new RegenerationService(),
          experienceService: new ExperienceService(),
          corpseDropService: new CorpseDropService(),
-         quotesService: new QuotesService(),
+         quotesService: new QuotesService(randomQuoteEngine),
       },
+      slowEngines: [randomQuoteEngine],
    };
 };
