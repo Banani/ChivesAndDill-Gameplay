@@ -1,8 +1,10 @@
 import { ChannelType } from '@bananos/types';
+import { now } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
 import { ChatEngineEvents, SendChatMessageEvent } from '../../ChatModule/Events';
+import { MonsterEngineEvents, MonsterPulledEvent } from '../../MonsterModule/Events';
 
 export class QuotesService extends EventParser {
    // characterId => last call
@@ -13,8 +15,36 @@ export class QuotesService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [EngineEvents.CharacterDied]: this.handleCharacterDied,
+         [MonsterEngineEvents.MonsterPulled]: this.handleMonsterPulled,
       };
    }
+
+   handleMonsterPulled: EngineEventHandler<MonsterPulledEvent> = ({ event, services }) => {
+      const respawn = services.monsterRespawnTemplateService.getData()[event.monster.respawnId];
+      const template = services.monsterTemplateService.getData()[respawn.characterTemplate.id];
+      const onPulling = template.quotesEvents?.onPulling;
+
+      if (this.quotesTimeStamps[event.monster.id] > now() - this.QUOTE_COOLDOWN) {
+         return;
+      }
+
+      if (!onPulling) {
+         return;
+      }
+
+      if (services.randomGeneratorService.generateNumber() < onPulling.chance) {
+         return;
+      }
+
+      this.quotesTimeStamps[event.monster.id] = now();
+
+      this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
+         type: ChatEngineEvents.SendChatMessage,
+         characterId: event.monster.id,
+         message: onPulling.quotes[Math.floor(services.randomGeneratorService.generateNumber() * onPulling.quotes.length)],
+         channelType: ChannelType.Quotes,
+      });
+   };
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
       if (event.character.type !== CharacterType.Monster) {
@@ -25,9 +55,9 @@ export class QuotesService extends EventParser {
       const template = services.monsterTemplateService.getData()[respawn.characterTemplate.id];
       const onDyingQuotes = template.quotesEvents?.onDying;
 
-      //   if (this.quotesTimeStamps[event.characterId] > now() - this.QUOTE_COOLDOWN) {
-      //      return;
-      //   }
+      if (this.quotesTimeStamps[event.characterId] > now() - this.QUOTE_COOLDOWN) {
+         return;
+      }
 
       if (!onDyingQuotes) {
          return;
@@ -37,7 +67,7 @@ export class QuotesService extends EventParser {
          return;
       }
 
-      //   this.quotesTimeStamps[event.characterId] = now();
+      this.quotesTimeStamps[event.characterId] = now();
 
       this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
          type: ChatEngineEvents.SendChatMessage,

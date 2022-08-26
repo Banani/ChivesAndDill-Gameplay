@@ -2,14 +2,16 @@ import { CommonClientMessages, GlobalStoreModule, RecursivePartial } from '@bana
 import { checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 import { merge, times } from 'lodash';
-import { Character } from '../../../types';
+import { Character, CharacterType } from '../../../types';
 import { CharacterRespawn, WalkingType } from '../../../types/CharacterRespawn';
+import { CharacterUnion } from '../../../types/CharacterUnion';
 import { CharacterEngineEvents, TakeCharacterHealthPointsEvent } from '../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
 import { SpellEffect, SpellEffectType } from '../../SpellModule/types/SpellTypes';
 import { MonsterRespawnTemplateService } from '../dataProviders';
 import { MonsterTemplate, MonsterTemplates } from '../MonsterTemplates';
 import { Monster } from '../types';
+import _ = require('lodash');
 
 jest.mock('../dataProviders/MonsterRespawnTemplateService', () => {
    const getData = jest.fn();
@@ -217,11 +219,13 @@ describe('Aggro service', () => {
       const { players, engineManager, monsterTemplates } = setupEngine({
          monsterTemplates: { '1': { location: startingLocation, characterTemplate: { sightRange: 25, desiredRange: 1 } } },
       });
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
       engineManager.createSystemAction<ApplyTargetSpellEffectEvent>({
          type: SpellEngineEvents.ApplyTargetSpellEffect,
          caster: { id: players['1'].characterId } as Character,
-         target: { id: 'monster_0', location: startingLocation } as Monster,
+         target: monster,
          effect: {
             type: SpellEffectType.Damage,
             amount: 10,
@@ -232,7 +236,7 @@ describe('Aggro service', () => {
       engineManager.doEngineAction();
       engineManager.doEngineAction();
 
-      const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
       checkIfPackageIsValid(GlobalStoreModule.CHARACTER_MOVEMENTS, dataPackage, {
          data: {

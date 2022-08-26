@@ -87,6 +87,10 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
             chance: 0.5,
             quotes: ['Tylko nie to...', 'Umarłem :(', 'Agrrrr...'],
          },
+         onPulling: {
+            chance: 0.5,
+            quotes: ['Zgniotę Cie jak truskaweczke', 'Zabicie Cie, to bedzie bułeczka z masełkiem'],
+         },
       },
    },
    OrcSpearman: {
