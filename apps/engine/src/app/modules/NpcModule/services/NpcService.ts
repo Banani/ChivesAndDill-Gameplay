@@ -28,6 +28,7 @@ export class NpcService extends EventParser {
             ...npcRespawn.characterTemplate,
             location: npcRespawn.location,
             isDead: false,
+            respawnId: npcRespawn.id,
             templateId: npcRespawn.characterTemplate.id,
             id,
          };

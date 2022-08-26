@@ -1,4 +1,4 @@
-import { CharacterDirection, ItemTemplate } from '@bananos/types';
+import { CharacterDirection, ItemTemplate, QuotesEvents } from '@bananos/types';
 import { QuestSchema } from 'libs/types/src/QuestPackage';
 import { ItemTemplates } from '../ItemModule/ItemTemplates';
 import { Quests } from '../QuestModule/Quests';
@@ -20,6 +20,7 @@ export interface NpcTemplate {
    spells: Record<string, Spell>;
    stock?: Record<string, ItemTemplate>;
    quests?: Record<string, QuestSchema>;
+   quotesEvents?: QuotesEvents;
 }
 
 export const NpcTemplates: Record<string, NpcTemplate> = {
@@ -46,6 +47,28 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
       quests: {
          '1': Quests['1'],
          '2': Quests['2'],
+      },
+      quotesEvents: {
+         onDying: {
+            chance: 0.5,
+            quotes: ['Powiedz moim dzieciom ze je kochalem', 'Umieram, ale przynajmniej miałem okazje zobaczyc Mikolaja nago'],
+         },
+         standard: {
+            chance: 0.2,
+            quotes: [
+               'Kiedyś to było, a teraz to nie ma',
+               'A ta Zośka co zrobiła? Kto to widział',
+               'Znowu pogoda pod psem',
+               'Mikołaj to jest jednak równy chłop',
+               'Uciekaj, słabeuszu',
+               'Prawdziwa siła',
+               'Niezrównana potęga',
+               'Mój cel jest jasny',
+               'Nie pokazuj pleców, ani nie odkrywaj szyi',
+               'Siła nade wszystko”',
+               'Nie toleruję tchórzostwa',
+            ],
+         },
       },
    },
    KretonPL: {
