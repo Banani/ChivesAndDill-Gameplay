@@ -80,6 +80,7 @@ const setupEngine = ({ respawnServiceProps }: RecursivePartial<CharacterQuotesPr
 
    const players = {
       '1': engineManager.preparePlayerWithCharacter({ name: 'character_1', class: Classes.Tank }),
+      '2': engineManager.preparePlayerWithCharacter({ name: 'character_2', class: Classes.Tank }),
    };
 
    return { engineManager, players, randomGeneratorService, currentTime };
@@ -291,6 +292,35 @@ describe('CharacterQuotes', () => {
                id: 'chatQuoteMessage_1',
                message: 'Agrrrr...',
                time: newCurrentTime,
+            },
+         },
+      });
+   });
+
+   it('Monster should say a quote if killed a player', () => {
+      const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.9);
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
+      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+
+      engineManager.createSystemAction<CharacterDiedEvent>({
+         type: EngineEvents.CharacterDied,
+         characterId: players['1'].characterId,
+         killerId: monster.id,
+         character: players['1'].character,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
+
+      checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, {
+         data: {
+            chatQuoteMessage_0: {
+               authorId: 'monster_0',
+               channelType: 'Quotes',
+               id: 'chatQuoteMessage_0',
+               message: 'Ale jestem potezny, o moj boze, a jakie mam miesnie? Po prostu kox',
+               time: currentTime,
             },
          },
       });

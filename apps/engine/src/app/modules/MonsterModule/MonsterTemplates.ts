@@ -50,7 +50,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       spellPower: 100,
       speed: 2,
       division: 'Orc',
-      sightRange: 1,
+      sightRange: 200,
       desiredRange: 50,
       escapeRange: 2000,
       attackFrequency: 1500,
@@ -90,6 +90,10 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
          onPulling: {
             chance: 0.5,
             quotes: ['Zgniotę Cie jak truskaweczke', 'Zabicie Cie, to bedzie bułeczka z masełkiem'],
+         },
+         onKilling: {
+            chance: 0.5,
+            quotes: ['Pfff... ledwie go uderzyłem', 'Ale jestem potezny, o moj boze, a jakie mam miesnie? Po prostu kox'],
          },
       },
    },

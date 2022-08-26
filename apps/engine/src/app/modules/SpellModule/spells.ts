@@ -331,7 +331,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       spellEffectsOnTarget: [
          {
             type: SpellEffectType.Damage,
-            amount: 10,
+            amount: 200,
          },
       ],
    },

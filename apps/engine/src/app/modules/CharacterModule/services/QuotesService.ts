@@ -5,6 +5,7 @@ import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
 import { ChatEngineEvents, SendChatMessageEvent } from '../../ChatModule/Events';
 import { MonsterEngineEvents, MonsterPulledEvent } from '../../MonsterModule/Events';
+import { Monster } from '../../MonsterModule/types';
 
 export class QuotesService extends EventParser {
    // characterId => last call
@@ -46,31 +47,46 @@ export class QuotesService extends EventParser {
    };
 
    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
-      if (event.character.type !== CharacterType.Monster) {
+      let quotesType;
+      let characterId;
+      let monster = event.character;
+
+      if (event.character.type === CharacterType.Monster) {
+         characterId = event.character.id;
+         quotesType = 'onDying';
+      } else if (event.character.type === CharacterType.Player) {
+         characterId = event.killerId;
+         quotesType = 'onKilling';
+         monster = services.characterService.getCharacterById(characterId) as Monster;
+      } else {
          return;
       }
 
-      const respawn = services.monsterRespawnTemplateService.getData()[event.character.respawnId];
-      const onDyingQuotes = respawn.characterTemplate.quotesEvents?.onDying;
-
-      if (this.quotesTimeStamps[event.characterId] > now() - this.QUOTE_COOLDOWN) {
+      if (monster.type !== CharacterType.Monster) {
          return;
       }
 
-      if (!onDyingQuotes) {
+      const respawn = services.monsterRespawnTemplateService.getData()[monster.respawnId];
+      const quotes = respawn.characterTemplate.quotesEvents?.[quotesType];
+
+      if (this.quotesTimeStamps[characterId] > now() - this.QUOTE_COOLDOWN) {
          return;
       }
 
-      if (services.randomGeneratorService.generateNumber() < onDyingQuotes.chance) {
+      if (!quotes) {
          return;
       }
 
-      this.quotesTimeStamps[event.characterId] = now();
+      if (services.randomGeneratorService.generateNumber() < quotes.chance) {
+         return;
+      }
+
+      this.quotesTimeStamps[characterId] = now();
 
       this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
          type: ChatEngineEvents.SendChatMessage,
-         characterId: event.characterId,
-         message: onDyingQuotes.quotes[Math.floor(services.randomGeneratorService.generateNumber() * onDyingQuotes.quotes.length)],
+         characterId,
+         message: quotes.quotes[Math.floor(services.randomGeneratorService.generateNumber() * quotes.quotes.length)],
          channelType: ChannelType.Quotes,
       });
    };
