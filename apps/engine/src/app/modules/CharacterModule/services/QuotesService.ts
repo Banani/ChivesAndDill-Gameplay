@@ -54,7 +54,7 @@ export class QuotesService extends EventParser {
          return;
       }
 
-      if (services.randomGeneratorService.generateNumber() < onPulling.chance) {
+      if (services.randomGeneratorService.generateNumber() > onPulling.chance) {
          return;
       }
 
@@ -99,7 +99,7 @@ export class QuotesService extends EventParser {
          return;
       }
 
-      if (services.randomGeneratorService.generateNumber() < quotes.chance) {
+      if (services.randomGeneratorService.generateNumber() > quotes.chance) {
          return;
       }
 

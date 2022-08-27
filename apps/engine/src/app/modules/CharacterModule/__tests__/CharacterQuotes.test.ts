@@ -33,6 +33,20 @@ jest.mock('../../MonsterModule/dataProviders/MonsterRespawnTemplateService', () 
    };
 });
 
+jest.mock('../../NpcModule/services/NpcRespawnTemplateService', () => {
+   const getData = jest.fn();
+
+   return {
+      NpcRespawnTemplateService: function () {
+         return {
+            init: jest.fn(),
+            handleEvent: jest.fn(),
+            getData,
+         };
+      },
+   };
+});
+
 jest.mock('../../../services/RandomGeneratorService', () => {
    const generateNumber = jest.fn();
 
@@ -60,7 +74,7 @@ const setupEngine = ({ respawnServiceProps }: RecursivePartial<CharacterQuotesPr
          {
             '2': {
                id: '2',
-               location: { x: 150, y: 100 },
+               location: { x: 250, y: 200 },
                characterTemplate: MonsterTemplates['Orc'],
                time: 4000,
                walkingType: WalkingType.None,
@@ -74,7 +88,7 @@ const setupEngine = ({ respawnServiceProps }: RecursivePartial<CharacterQuotesPr
    (now as jest.Mock).mockReturnValue(currentTime);
 
    const randomGeneratorService = new RandomGeneratorService();
-   (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.64);
+   (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
 
    const engineManager = new EngineManager();
 
@@ -87,13 +101,15 @@ const setupEngine = ({ respawnServiceProps }: RecursivePartial<CharacterQuotesPr
 };
 
 describe('CharacterQuotes', () => {
-   it('Monster should say a quote when dying, if random number is high enough', () => {
+   it('Monster should say a quote when dying, if random number is low enough', () => {
       const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
-      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.7);
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
+      const newCurrentTime = '992221';
+      (now as jest.Mock).mockReturnValue(newCurrentTime);
       engineManager.createSystemAction<CharacterDiedEvent>({
          type: EngineEvents.CharacterDied,
          characterId: monster.id,
@@ -109,19 +125,22 @@ describe('CharacterQuotes', () => {
                authorId: 'monster_0',
                channelType: 'Quotes',
                id: 'chatQuoteMessage_0',
-               message: 'Agrrrr...',
-               time: currentTime,
+               message: 'Tylko nie to...',
+               time: newCurrentTime,
             },
          },
       });
    });
 
-   it('Monster should not say anything when dying, if random number is not high enough', () => {
+   it('Monster should not say anything when dying, if random number is not low enough', () => {
       const { engineManager, players, randomGeneratorService } = setupEngine();
-      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.3);
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.7);
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+
+      const newCurrentTime = '992221';
+      (now as jest.Mock).mockReturnValue(newCurrentTime);
 
       engineManager.createSystemAction<CharacterDiedEvent>({
          type: EngineEvents.CharacterDied,
@@ -147,9 +166,11 @@ describe('CharacterQuotes', () => {
       });
       (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.8);
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
+      const newCurrentTime = '992221';
+      (now as jest.Mock).mockReturnValue(newCurrentTime);
       engineManager.createSystemAction<CharacterDiedEvent>({
          type: EngineEvents.CharacterDied,
          characterId: monster.id,
@@ -162,11 +183,11 @@ describe('CharacterQuotes', () => {
       checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, undefined);
    });
 
-   it('Monster should say a quote when starting fight, if random number is high enough', () => {
+   it('Monster should say a quote when starting fight, if random number is low enough', () => {
       const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
-      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.7);
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
       engineManager.createSystemAction<MonsterPulledEvent>({
@@ -183,7 +204,7 @@ describe('CharacterQuotes', () => {
                authorId: 'monster_0',
                channelType: 'Quotes',
                id: 'chatQuoteMessage_0',
-               message: 'Zabicie Cie, to bedzie bułeczka z masełkiem',
+               message: 'Zgniotę Cie jak truskaweczke',
                time: currentTime,
             },
          },
@@ -202,7 +223,7 @@ describe('CharacterQuotes', () => {
       });
       (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.8);
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
       engineManager.createSystemAction<MonsterPulledEvent>({
@@ -217,10 +238,10 @@ describe('CharacterQuotes', () => {
    });
 
    it('Monster should not say a quote when starting fight, if random number is not high enough', () => {
-      const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
-      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.2);
+      const { engineManager, players, randomGeneratorService } = setupEngine();
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
       engineManager.createSystemAction<MonsterPulledEvent>({
@@ -235,10 +256,10 @@ describe('CharacterQuotes', () => {
    });
 
    it('Monster should not say a quote to often', () => {
-      const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
+      const { engineManager, players, randomGeneratorService } = setupEngine();
       (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.9);
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
       engineManager.createSystemAction<MonsterPulledEvent>({
@@ -261,11 +282,11 @@ describe('CharacterQuotes', () => {
 
    it('Monster should say a quote if the number is high enough and enough time passed', () => {
       const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
-      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.9);
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
       engineManager.createSystemAction<MonsterPulledEvent>({
          type: MonsterEngineEvents.MonsterPulled,
          targetId: players['1'].characterId,
@@ -290,7 +311,7 @@ describe('CharacterQuotes', () => {
                authorId: 'monster_0',
                channelType: 'Quotes',
                id: 'chatQuoteMessage_1',
-               message: 'Agrrrr...',
+               message: 'Tylko nie to...',
                time: newCurrentTime,
             },
          },
@@ -299,11 +320,13 @@ describe('CharacterQuotes', () => {
 
    it('Monster should say a quote if killed a player', () => {
       const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
-      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.9);
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
       let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
       const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
+      const newCurrentTime = '992221';
+      (now as jest.Mock).mockReturnValue(newCurrentTime);
       engineManager.createSystemAction<CharacterDiedEvent>({
          type: EngineEvents.CharacterDied,
          characterId: players['1'].characterId,
@@ -319,10 +342,48 @@ describe('CharacterQuotes', () => {
                authorId: 'monster_0',
                channelType: 'Quotes',
                id: 'chatQuoteMessage_0',
-               message: 'Ale jestem potezny, o moj boze, a jakie mam miesnie? Po prostu kox',
+               message: 'Pfff... ledwie go uderzyłem',
+               time: newCurrentTime,
+            },
+         },
+      });
+   });
+
+   it('Monster should say a quote if he is just standing', () => {
+      const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
+      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+
+      engineManager.doEngineAction();
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
+
+      checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, {
+         data: {
+            chatQuoteMessage_0: {
+               authorId: 'monster_0',
+               channelType: 'Quotes',
+               id: 'chatQuoteMessage_0',
+               message: 'Zjadłbym zupe pomidorową Kamila, była super',
                time: currentTime,
             },
          },
       });
+   });
+
+   it('Monster should not say a quote if he is just standing and to random number is to high', () => {
+      const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
+      (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
+      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+
+      engineManager.doEngineAction();
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
+
+      checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, undefined);
    });
 });

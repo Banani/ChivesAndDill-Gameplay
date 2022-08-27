@@ -63,8 +63,9 @@ const setupEngine = ({ monsterTemplates }: RecursivePartial<{ monsterTemplates: 
    const players = {
       '1': engineManager.preparePlayerWithCharacter({ name: 'character_1', class: Classes.Tank }),
    };
+   let initialDataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-   return { engineManager, players, monsterTemplates: calculatedMonsterTemplates };
+   return { engineManager, players, monsterTemplates: calculatedMonsterTemplates, initialDataPackage };
 };
 
 describe('Aggro service', () => {
@@ -186,11 +187,13 @@ describe('Aggro service', () => {
    });
 
    it('Monster should not go to character if he is in range but dead', () => {
-      const { players, engineManager } = setupEngine();
+      const { players, engineManager, initialDataPackage } = setupEngine();
+
+      const monster: Monster = _.find(initialDataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
       engineManager.createSystemAction<TakeCharacterHealthPointsEvent>({
          type: CharacterEngineEvents.TakeCharacterHealthPoints,
-         attackerId: '1',
+         attackerId: monster.id,
          characterId: players['1'].characterId,
          amount: 1000,
       });
