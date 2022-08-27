@@ -14,16 +14,16 @@ export const QuestsSideView = () => {
    const [showQuestsView, updateShowQuestsView] = useState(true);
 
    const renderQuests = _.map(questProgress, (currentQuestProgress, questId) => {
-      const questStage = questDefinition[questId].stages[currentQuestProgress.activeStage];
+      const questStage = questDefinition[questId]?.stages[currentQuestProgress.activeStage];
 
       return (
          <div key={questId}>
             <div className={styles.questTitle} onClick={() => setSelectedQuestId(questId)}>
                {currentQuestProgress.allStagesCompleted ? '? ' : ''}
-               {questDefinition[questId].name}
+               {questDefinition[questId]?.name}
             </div>
             <div className={styles.questDesc}>
-               {_.map(questStage.stageParts, (stagePart, stagePartId) => (
+               {_.map(questStage?.stageParts, (stagePart, stagePartId) => (
                   <div className={currentQuestProgress.stagesProgress[currentQuestProgress.activeStage][stagePartId].isDone ? styles.stagePartDone : ''}>
                      <QuestStagePart
                         questStagePart={stagePart}

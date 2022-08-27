@@ -15,7 +15,7 @@ export const QuestLog = () => {
    const renderQuests = _.map(questProgress, (quest, questId) => (
       <div key={questId}>
          <div className={`${styles.QuestTitle} ${questId === selectedQuestId ? styles.ActiveTitle : ''}`} onClick={() => setSelectedQuestId(questId)}>
-            {questDefinition[questId].name}
+            {questDefinition[questId]?.name}
          </div>
       </div>
    ));

@@ -1,7 +1,10 @@
-import { GlobalStoreModule, QuestSchema } from '@bananos/types';
+import type { QuestSchema } from '@bananos/types';
+import { GlobalStoreModule } from '@bananos/types';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
-import React, { FunctionComponent, useCallback, useContext, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
+import { Button } from '../components/button/Button';
 import { AvailableQuestNpcModal, CompleteQuestNpcModal, DefaultNpcModal } from './components';
 import styles from './NpcModal.module.scss';
 
@@ -27,19 +30,28 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
          context.takeQuestFromNpc({ npcId: activeNpc.id, questId: activeQuestId });
          setCurrentModal(NpcModalView.Default);
          setActiveQuestId(null);
-      }, [activeNpc.id, activeQuestId]);
+      }, [activeNpc.id, activeQuestId, context]);
 
       const completeQuest = useCallback(() => {
          context.finalizeQuestWithNpc({ npcId: activeNpc.id, questId: activeQuestId });
          setCurrentModal(NpcModalView.Default);
          setActiveQuestId(null);
-      }, [activeNpc.id, activeQuestId]);
+      }, [activeNpc.id, activeQuestId, context]);
+
+      const closeButtonHandler = () => {
+         if (currentModal !== NpcModalView.Default) {
+            setCurrentModal(NpcModalView.Default);
+         } else {
+            context.closeNpcConversationDialog();
+         }
+      }
 
       return (
          <div className={styles.NpcModal}>
-            <div>
+            <div className={styles.ModalHeader}>
                <img className={styles.Avatar} src={activeNpc.avatar} alt={''} />
                <div className={styles.Name}>{activeNpc.name}</div>
+               <Button onClick={closeButtonHandler}>X</Button>
             </div>
             {currentModal === NpcModalView.Default && (
                <DefaultNpcModal

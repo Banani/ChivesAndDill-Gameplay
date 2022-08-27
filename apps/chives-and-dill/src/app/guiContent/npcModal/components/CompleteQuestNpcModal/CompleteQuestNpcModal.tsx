@@ -1,7 +1,9 @@
-import { GlobalStoreModule, QuestSchema } from '@bananos/types';
+import type { QuestSchema } from '@bananos/types';
+import { GlobalStoreModule } from '@bananos/types';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
-import React, { FunctionComponent, useContext, useEffect } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button } from '../../../components/button/Button';
 import { QuestDescription } from '../../../quests/components';
 import styles from './CompleteQuestNpcModal.module.scss';
@@ -15,7 +17,7 @@ interface CompleteQuestNpcModalProps {
 
 export const CompleteQuestNpcModal: FunctionComponent<CompleteQuestNpcModalProps> = ({ close, questSchema, questId, completeQuest }) => {
    const keyBoardContext = useContext(KeyBoardContext);
-   const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.NPC_CONVERSATION);
+   const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
 
    useEffect(() => {
       keyBoardContext.addKeyHandler({
@@ -27,7 +29,7 @@ export const CompleteQuestNpcModal: FunctionComponent<CompleteQuestNpcModalProps
       keyBoardContext.addKeyHandler({
          id: 'CompleteQuestNpcModalEnter',
          matchRegex: 'Enter',
-         keydown: () => {},
+         keydown: () => { },
       });
 
       return () => {
@@ -42,7 +44,7 @@ export const CompleteQuestNpcModal: FunctionComponent<CompleteQuestNpcModalProps
             <QuestDescription questSchema={questSchema} />
          </div>
          <div className={styles.ActionBar}>
-            <Button onClick={completeQuest} disabled={!questProgress?.[questId].allStagesCompleted}>
+            <Button onClick={completeQuest} disabled={!questProgress?.[questId]?.allStagesCompleted}>
                Complete Quest
             </Button>
          </div>

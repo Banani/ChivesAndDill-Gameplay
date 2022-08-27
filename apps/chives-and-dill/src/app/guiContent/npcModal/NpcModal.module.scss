@@ -9,19 +9,24 @@
   display: flex;
   flex-direction: column;
 
-  .Avatar {
-    border-radius: 50%;
-    height: 54px;
-    width: 54px;
-    position: relative;
-    left: 5px;
-    top: 7px;
-  }
+  .ModalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  .Name {
-    color: gold;
-    position: relative;
-    left: 155px;
-    top: -43px;
+    .Avatar {
+      border-radius: 50%;
+      height: 56px;
+      width: 56px;
+      position: relative;
+      top: 6px;
+      left: 4px;
+    }
+  
+    .Name {
+      color: gold;
+      position: relative;
+      top: -4px;
+    }
   }
 }

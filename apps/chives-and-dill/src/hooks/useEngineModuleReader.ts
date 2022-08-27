@@ -1,4 +1,4 @@
-import { GlobalStore, GlobalStoreModule } from '@bananos/types';
+import type { GlobalStore, GlobalStoreModule } from '@bananos/types';
 import { useContext } from 'react';
 import { EngineContexts } from '../contexts/PackageContext';
 

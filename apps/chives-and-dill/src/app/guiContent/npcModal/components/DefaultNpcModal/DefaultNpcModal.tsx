@@ -3,7 +3,8 @@ import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
-import React, { FunctionComponent, useContext, useEffect } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styles from './DefaultNpcModal.module.scss';
 
 interface DefaultNpcModalProps {
@@ -36,18 +37,16 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
       };
    }, []);
 
-   const questItem = (questId) => {
-      return (
-         <div
-            className={styles.questName}
-            onClick={() => {
-               openQuest(questId);
-            }}
-         >
-            {questDefinition[questId]?.name}
-         </div>
-      );
-   };
+   const questItem = (questId) => (
+      <div
+         className={styles.questName}
+         onClick={() => {
+            openQuest(questId);
+         }}
+      >
+         {questDefinition[questId]?.name}
+      </div>
+   );
 
    return activeNpc ? (
       <div className={styles.ContentWrapper}>

@@ -97,7 +97,7 @@ export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
          stageOrder: [quest.stageOrder[0]],
          stages: {
             [quest.stageOrder[0]]: {
-               description: quest.stages[quest.stageOrder[0]].description,
+               description: quest?.stages[quest.stageOrder[0]].description,
                stageParts: _.mapValues(quest.stages[quest.stageOrder[0]].stageParts, (stagePart) => this.stageTranformers[stagePart.type](stagePart)),
             },
          },

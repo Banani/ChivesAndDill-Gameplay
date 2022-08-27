@@ -1,14 +1,14 @@
 import * as _ from 'lodash';
 import { merge } from 'lodash';
-import { Engine } from '../Engine';
+import type { Engine } from '../Engine';
 import { EngineEventCrator } from '../EngineEventsCreator';
-import { Notifier } from '../Notifier';
+import type { Notifier } from '../Notifier';
 import { PathFinderService, SocketConnectionService } from '../services';
 import { RandomGeneratorService } from '../services/RandomGeneratorService';
 import { SchedulerService } from '../services/SchedulerService';
-import { EngineEvent } from '../types';
-import { EngineModule } from '../types/EngineModule';
-import { Services } from '../types/Services';
+import type { EngineEvent } from '../types';
+import type { EngineModule } from '../types/EngineModule';
+import type { Services } from '../types/Services';
 import { PathFinderEngine } from './PathFinderEngine';
 import { SchedulerEngine } from './SchedulerEngine';
 

@@ -4,7 +4,8 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Provider, ReactReduxContext } from 'react-redux';
 import { SocketContext } from './gameController/socketContext';
 
-import { ErrorMessage, GlobalStoreModule, QuestSchema } from '@bananos/types';
+import type { ErrorMessage, QuestSchema } from '@bananos/types';
+import { GlobalStoreModule } from '@bananos/types';
 import { EngineContexts, PackageContext } from '../contexts/PackageContext';
 import { useEngineModuleReader } from '../hooks';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
@@ -48,7 +49,7 @@ const Map = () => {
 
    useEffect(() => {
       // PEEPEEPOOPOO
-      console.log(chatMessages);
+      //console.log(chatMessages);
    }, [chatMessages]);
 
    const renderSpells = useCallback(
