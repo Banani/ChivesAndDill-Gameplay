@@ -310,7 +310,7 @@ export const ALL_SPELLS: Record<string, Spell> = {
       range: 1000,
       spellPowerCost: 10,
       speed: 40,
-      cooldown: 2000,
+      cooldown: 200,
       image: '../assets/spritesheets/spells/mage/fireball.jpg',
       description: 'Inflicts 20 Fire damage to an enemy and causes them to burn for 8 sec.',
       spellEffectsOnTarget: [
