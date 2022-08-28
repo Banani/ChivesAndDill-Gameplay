@@ -56,7 +56,6 @@ export class GuidedProjectilesService extends EventParser {
          .map((_, key) => key)
          .value();
 
-      console.log(this.guidedProjectilesTracks, event.characterId, projectileIds);
       this.removeProjectiles(projectileIds);
    };
 
