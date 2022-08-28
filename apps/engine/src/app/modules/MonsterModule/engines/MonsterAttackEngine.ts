@@ -2,7 +2,7 @@ import { filter, forEach } from 'lodash';
 import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints, isSegementCrossingWithAnyWall } from '../../../math';
 import { Character } from '../../../types';
-import { PlayerCastSpellEvent, SpellEngineEvents, PlayerTriesToCastASpellEvent } from '../../SpellModule/Events';
+import { PlayerCastSpellEvent, PlayerTriesToCastASpellEvent, SpellEngineEvents } from '../../SpellModule/Events';
 import { Spell } from '../../SpellModule/types/SpellTypes';
 import { Monster } from '../types';
 
@@ -38,15 +38,19 @@ export class MonsterAttackEngine extends Engine {
 
    doAction() {
       forEach(this.services.aggroService.getMonsterAggro(), (aggro, monsterId) => {
-         // BUG
+         // TODO: Cover by tests, aggroService is giving all the aggros, first monster is killing the player, so the second
+         // aggro might be deleted. That is why it is undefined
+         // same for target
          if (!aggro) {
             return;
          }
 
          const character = this.services.characterService.getCharacterById(aggro.currentTarget.characterId);
          const monster = this.services.monsterService.getAllCharacters()[monsterId];
+         if (!character) {
+            return;
+         }
 
-         // BUG
          if (!monster || !this.isTargetInSight(monster, character)) {
             return;
          }
