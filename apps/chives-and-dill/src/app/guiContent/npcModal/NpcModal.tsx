@@ -44,14 +44,16 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
          } else {
             context.closeNpcConversationDialog();
          }
-      }
+      };
 
       return (
          <div className={styles.NpcModal}>
             <div className={styles.ModalHeader}>
                <img className={styles.Avatar} src={activeNpc.avatar} alt={''} />
                <div className={styles.Name}>{activeNpc.name}</div>
-               <Button onClick={closeButtonHandler}>X</Button>
+               <Button className={styles.closeButton} onClick={closeButtonHandler}>
+                  X
+               </Button>
             </div>
             {currentModal === NpcModalView.Default && (
                <DefaultNpcModal
