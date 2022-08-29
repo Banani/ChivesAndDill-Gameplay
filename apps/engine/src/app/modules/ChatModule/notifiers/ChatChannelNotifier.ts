@@ -1,15 +1,16 @@
-import { ChangeChatChannelOwner, ChatChannel, ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
+import { ChatChannel, ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
 import { map, pickBy } from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
-import { NewPlayerCreatedEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
+import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
    AddPlayerCharacterToChatEvent,
-   ChatChannelOwnerChangedEvent,
+   ChangeChatChannelOwnerEvent,
    CharacterAddedToChatEvent,
    ChatChannelCreatedEvent,
    ChatChannelDeletedEvent,
+   ChatChannelOwnerChangedEvent,
    ChatEngineEvents,
    CreateChatChannelEvent,
    DeleteChatChannelEvent,
@@ -17,7 +18,6 @@ import {
    PlayerCharacterRemovedFromChatChannelEvent,
    PlayerLeftChatChannelEvent,
    RemovePlayerCharacterFromChatChannelEvent,
-   ChangeChatChannelOwnerEvent,
 } from '../Events';
 
 export class ChatChannelNotifier extends Notifier<ChatChannel> {
@@ -29,7 +29,7 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
          [ChatEngineEvents.CharacterAddedToChat]: this.handleCharacterAddedToChat,
          [ChatEngineEvents.PlayerCharacterRemovedFromChatChannel]: this.handlePlayerCharacterRemovedFromChatChannel,
-         [ChatEngineEvents.PlayerLeftChatChannel]: this.handlePlayerLeftCharChannel,
+         [ChatEngineEvents.PlayerLeftChatChannel]: this.handlePlayerLeftChatChannel,
          [ChatEngineEvents.ChatChannelOwnerChanged]: this.handleChangeChatChannelOwner,
       };
    }
@@ -54,6 +54,13 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
          map(event.chatChannel.membersIds, (_, memberId) => ({
             receiverId: characters[memberId].ownerId,
             objects: { [event.chatChannelId]: null },
+         }))
+      );
+
+      this.multicastObjectsDeletion(
+         map(event.chatChannel.membersIds, (_, memberId) => ({
+            receiverId: characters[memberId].ownerId,
+            objects: { [event.chatChannel.id]: { membersIds: { [memberId]: null } } },
          }))
       );
    };
@@ -147,11 +154,9 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
             objects: { [event.chatChannel.id]: { membersIds: { [event.characterId]: null } } },
          }))
       );
-
-      this.multicastObjectsDeletion([{ receiverId: characters[event.characterId].ownerId, objects: { [event.chatChannel.id]: null } }]);
    };
 
-   handlePlayerLeftCharChannel: EngineEventHandler<PlayerLeftChatChannelEvent> = ({ event, services }) => {
+   handlePlayerLeftChatChannel: EngineEventHandler<PlayerLeftChatChannelEvent> = ({ event, services }) => {
       const characters = pickBy(services.characterService.getAllCharacters(), (character) => character.type === CharacterType.Player) as Record<
          string,
          PlayerCharacter
@@ -164,7 +169,9 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
          }))
       );
 
-      this.multicastObjectsDeletion([{ receiverId: characters[event.characterId].ownerId, objects: { [event.chatChannel.id]: null } }]);
+      this.multicastObjectsDeletion([
+         { receiverId: characters[event.characterId].ownerId, objects: { [event.chatChannel.id]: { membersIds: { [event.characterId]: null } } } },
+      ]);
    };
 
    handleChangeChatChannelOwner: EngineEventHandler<ChatChannelOwnerChangedEvent> = ({ event, services }) => {

@@ -77,7 +77,7 @@ const GameController = ({ children }) => {
    }, []);
 
    return (
-      <GameControllerContext.Provider value={{}}>
+      <GameControllerContext.Provider value={{ mousePosition }}>
          <div onKeyDown={(event) => keyPressHandler(event)} tabIndex={0}>
             {children}
          </div>

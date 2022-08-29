@@ -82,26 +82,4 @@ describe('Chat channel - remove player character from channel action', () => {
 
       checkIfErrorWasHandled(GlobalStoreModule.CHAT_CHANNEL, 'This character is not a member.', dataPackage);
    });
-
-   it('channel related data should be delete from kicked out character', () => {
-      const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
-
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
-         chatChannelId: recentlyCreatedChatChannelId,
-         characterName: players['2'].character.name,
-      });
-
-      let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-         type: ChatChannelClientMessages.RemovePlayerCharacterFromChatChannel,
-         characterId: players['2'].characterId,
-         chatChannelId: recentlyCreatedChatChannelId,
-      });
-
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
-
-      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
-         toDelete: { '1': null },
-      });
-   });
 });

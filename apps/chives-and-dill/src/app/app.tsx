@@ -2,9 +2,10 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import type { IModuleStore } from 'redux-dynamic-modules-core';
 import { createStore } from 'redux-dynamic-modules-core';
+import { ContextMenu } from '../components';
 import { EngineApi } from '../contexts/EngineApi';
 import { KeyBoardContextProvider } from '../contexts/KeyBoardContext';
-import { ModalsManagerContextProvider } from '../contexts/ModalsManagerContext';
+import { MenuContextProvider } from '../contexts/MenuContext';
 import { PackageContextProvider } from '../contexts/PackageContext';
 import { PlayersModule, SpellsModule } from '../stores';
 import { Game } from './game';
@@ -25,9 +26,14 @@ export default function App() {
          <PackageContextProvider>
             <Provider store={store}>
                <SocketCommunicator>
-                     <EngineApi>
-                        <Game />
-                     </EngineApi>
+                  <MenuContextProvider>
+                     <>
+                        <ContextMenu />
+                        <EngineApi>
+                           <Game />
+                        </EngineApi>
+                     </>
+                  </MenuContextProvider>
                </SocketCommunicator>
             </Provider>
          </PackageContextProvider>

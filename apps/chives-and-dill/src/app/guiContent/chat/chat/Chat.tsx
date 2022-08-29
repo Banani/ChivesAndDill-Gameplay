@@ -1,6 +1,7 @@
 import { ChannelChatMessage, ChannelType, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage } from '@bananos/types';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { map } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -39,6 +40,7 @@ export const Chat = () => {
    const keyBoardContext = useContext(KeyBoardContext);
    const channelNumeratorContext = useContext(ChannelNumeratorContext);
    const engineApiContext = useContext(EngineApiContext);
+   const menuContext = useContext(MenuContext);
 
    const [activeChannel, setActiveChannel] = useState<CurrentChannel>({ id: 'say', channelType: ChannelType.Range });
    const [message, setMessage] = useState('');
@@ -51,13 +53,29 @@ export const Chat = () => {
 
    const mapChannels = modes.map((channel) => <div className={styles.channel}>{channel}</div>);
 
-   const MessageMappers: Record<ChannelType, (message: ChatMessage) => string> = {
-      [ChannelType.Range]: (message: RangeChatMessage) =>
-         `[${characters[message.authorId].name}] ${RangeChannelsMessageMapper[message.chatChannelId]} ${message.message}`,
-      [ChannelType.Quotes]: (message: QuoteChatMessage) => `[${characters[message.authorId].name}]: ${message.message}`,
-      [ChannelType.Custom]: (message: ChannelChatMessage) =>
-         `[${channelNumeratorContext.getNumberById(activeChannel.id)}. ${chatChannels[message.chatChannelId].name}]
-            [${characters[message.authorId].name}]: ${message.message}`,
+   const MessageMappers: Record<ChannelType, (message: ChatMessage) => JSX.Element> = {
+      [ChannelType.Range]: (message: RangeChatMessage) => (
+         <>{`[${characters[message.authorId].name}] ${RangeChannelsMessageMapper[message.chatChannelId]} ${message.message}`}</>
+      ),
+      [ChannelType.Quotes]: (message: QuoteChatMessage) => <div>{`[${characters[message.authorId].name}]: ${message.message}`}</div>,
+      [ChannelType.Custom]: (message: ChannelChatMessage) => (
+         <>
+            <span
+               onContextMenu={(e) => {
+                  e.preventDefault();
+                  menuContext.setActions([
+                     {
+                        label: 'Leave Channel',
+                        action: () => engineApiContext.leaveChatChannel({ chatChannelId: message.chatChannelId }),
+                     },
+                  ]);
+               }}
+            >
+               {`[${channelNumeratorContext.getNumberById(activeChannel.id)}. ${chatChannels[message.chatChannelId].name}]`}
+            </span>
+            {`[${characters[message.authorId].name}]: ${message.message}`}
+         </>
+      ),
    };
 
    const currentChannelInputText = useMemo(() => {
