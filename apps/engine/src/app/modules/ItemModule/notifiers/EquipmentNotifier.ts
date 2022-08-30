@@ -2,13 +2,14 @@ import { EquipmentTrack, GlobalStoreModule, ItemClientMessages } from '@bananos/
 import { Notifier } from '../../../Notifier';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { EquipmentTrackCreatedEvent, ItemEngineEvents, PlayerTriesToEquipItemEvent } from '../Events';
+import { EquipmentTrackCreatedEvent, ItemEngineEvents, ItemEquippedEvent, PlayerTriesToEquipItemEvent } from '../Events';
 
 export class EquipmentNotifier extends Notifier<EquipmentTrack> {
    constructor() {
       super({ key: GlobalStoreModule.EQUIPMENT });
       this.eventsToHandlersMap = {
          [ItemEngineEvents.EquipmentTrackCreated]: this.handleEquipmentTrackCreated,
+         [ItemEngineEvents.ItemEquipped]: this.handleItemEquipped,
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
       };
    }
@@ -25,17 +26,23 @@ export class EquipmentNotifier extends Notifier<EquipmentTrack> {
       });
    };
 
+   handleItemEquipped: EngineEventHandler<ItemEquippedEvent> = ({ event, services }) => {
+      const player = services.characterService.getCharacterById(event.characterId);
+      if (player.type !== CharacterType.Player) {
+         return;
+      }
+
+      this.broadcastObjectsUpdate({ objects: { [event.characterId]: { [event.slot]: event.itemInstanceId } } });
+   };
+
    handleEquipmentTrackCreated: EngineEventHandler<EquipmentTrackCreatedEvent> = ({ event, services }) => {
       const player = services.characterService.getCharacterById(event.characterId);
       if (player.type !== CharacterType.Player) {
          return;
       }
 
-      this.multicastMultipleObjectsUpdate([
-         {
-            receiverId: player.ownerId,
-            objects: { [event.characterId]: event.equipmentTrack },
-         },
-      ]);
+      this.broadcastObjectsUpdate({
+         objects: { [event.characterId]: event.equipmentTrack },
+      });
    };
 }

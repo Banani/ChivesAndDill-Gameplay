@@ -1,4 +1,5 @@
 import { EngineModule } from '../../types/EngineModule';
+import { ItemTemplateService } from './dataProviders';
 import { BackpackItemsNotifier } from './notifiers/BackpackItemsNotifier';
 import { BackpackNotifier } from './notifiers/BackpackNotifier';
 import { CurrencyNotifier } from './notifiers/CurrencyNotifier';
@@ -16,6 +17,7 @@ export interface ItemModuleServices {
    backpackItemsService: BackpackItemsService;
    itemService: ItemService;
    equipmentService: EquipmentService;
+   itemTemplateService: ItemTemplateService;
 }
 
 export const getItemModule: () => EngineModule<ItemModuleServices> = () => {
@@ -27,6 +29,7 @@ export const getItemModule: () => EngineModule<ItemModuleServices> = () => {
          backpackItemsService: new BackpackItemsService(),
          itemService: new ItemService(),
          equipmentService: new EquipmentService(),
+         itemTemplateService: new ItemTemplateService(),
       },
    };
 };

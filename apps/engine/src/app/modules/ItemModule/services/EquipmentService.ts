@@ -1,8 +1,26 @@
-import { EquipmentTrack } from '@bananos/types';
+import { EquipmentSlot, EquipmentTrack, ItemTemplateType, PossibleEquipmentPlaces } from '@bananos/types';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { EquipmentTrackCreatedEvent, ItemEngineEvents, PlayerTriesToEquipItemEvent } from '../Events';
+import { EquipmentTrackCreatedEvent, ItemEngineEvents, ItemEquippedEvent, PlayerTriesToEquipItemEvent } from '../Events';
+
+const EquipmentSpotMap: Record<EquipmentSlot, PossibleEquipmentPlaces | PossibleEquipmentPlaces[]> = {
+   [EquipmentSlot.Head]: 'head',
+   [EquipmentSlot.Neck]: 'neck',
+   [EquipmentSlot.Shoulder]: 'shoulder',
+   [EquipmentSlot.Back]: 'back',
+   [EquipmentSlot.Chest]: 'chest',
+   [EquipmentSlot.Shirt]: 'shirt',
+   [EquipmentSlot.Tabard]: 'tabard',
+   [EquipmentSlot.Wrist]: 'wrist',
+
+   [EquipmentSlot.Hands]: 'hands',
+   [EquipmentSlot.Waist]: 'waist',
+   [EquipmentSlot.Legs]: 'legs',
+   [EquipmentSlot.Feet]: 'feet',
+   [EquipmentSlot.Finger]: ['finger1', 'finger2'],
+   [EquipmentSlot.Trinket]: ['trinket1', 'trinket2'],
+};
 
 export class EquipmentService extends EventParser {
    // id usera => backpack spot => amount of spaces
@@ -22,6 +40,27 @@ export class EquipmentService extends EventParser {
          this.sendErrorMessage(event.requestingCharacterId, 'Item does not exist.');
          return;
       }
+
+      const itemTemplate = services.itemTemplateService.getData()[item.itemTemplateId];
+
+      if (itemTemplate.type !== ItemTemplateType.Equipment) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You cannot equip that.');
+         return;
+      }
+
+      let targetSlot = EquipmentSpotMap[itemTemplate.slot];
+      if (Array.isArray(targetSlot)) {
+         targetSlot = targetSlot[0];
+      }
+
+      this.equipment[event.requestingCharacterId][targetSlot] = item.itemId;
+
+      this.engineEventCrator.asyncCeateEvent<ItemEquippedEvent>({
+         type: ItemEngineEvents.ItemEquipped,
+         characterId: event.requestingCharacterId,
+         slot: targetSlot,
+         itemInstanceId: item.itemId,
+      });
    };
 
    handleNewPlayerCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event }) => {

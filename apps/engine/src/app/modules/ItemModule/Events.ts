@@ -1,4 +1,4 @@
-import { BackpackItemsSpot, BackpackTrack, EquipmentTrack, ItemInstance, ItemLocationInBag, RecursivePartial } from '@bananos/types';
+import { BackpackItemsSpot, BackpackTrack, EquipmentTrack, ItemInstance, ItemLocationInBag, PossibleEquipmentPlaces, RecursivePartial } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 
 export enum ItemEngineEvents {
@@ -11,6 +11,7 @@ export enum ItemEngineEvents {
 
    EquipmentTrackCreated = 'EquipmentTrackCreated',
    PlayerTriesToEquipItem = 'PlayerTriesToEquipItem',
+   ItemEquipped = 'ItemEquiped',
 
    GenerateItemForCharacter = 'GenerateItemForCharacter',
    AddItemToCharacter = 'AddItemToCharacter',
@@ -133,6 +134,13 @@ export interface PlayerTriesToEquipItemEvent extends EngineEvent {
    itemInstanceId: string;
 }
 
+export interface ItemEquippedEvent extends EngineEvent {
+   type: ItemEngineEvents.ItemEquipped;
+   itemInstanceId: string;
+   characterId: string;
+   slot: PossibleEquipmentPlaces;
+}
+
 export interface ItemEngineEventsMap {
    [ItemEngineEvents.CurrencyAmountUpdated]: EngineEventHandler<CurrencyAmountUpdatedEvent>;
    [ItemEngineEvents.RemoveCurrencyFromCharacter]: EngineEventHandler<RemoveCurrencyFromCharacterEvent>;
@@ -140,6 +148,7 @@ export interface ItemEngineEventsMap {
 
    [ItemEngineEvents.EquipmentTrackCreated]: EngineEventHandler<EquipmentTrackCreatedEvent>;
    [ItemEngineEvents.PlayerTriesToEquipItem]: EngineEventHandler<PlayerTriesToEquipItemEvent>;
+   [ItemEngineEvents.ItemEquipped]: EngineEventHandler<ItemEquippedEvent>;
 
    [ItemEngineEvents.BackpackTrackCreated]: EngineEventHandler<BackpackTrackCreatedEvent>;
    [ItemEngineEvents.BackpackItemsContainmentUpdated]: EngineEventHandler<BackpackItemsContainmentUpdatedEvent>;

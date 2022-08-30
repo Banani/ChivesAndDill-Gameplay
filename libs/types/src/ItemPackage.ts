@@ -22,6 +22,8 @@ export interface EquipmentTrack {
    offHand: string | null;
 }
 
+export type PossibleEquipmentPlaces = keyof EquipmentTrack;
+
 export enum EquipmentSlot {
    Head = 'head',
    Neck = 'neck',

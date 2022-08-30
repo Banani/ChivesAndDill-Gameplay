@@ -49,11 +49,34 @@ describe('Equipment', () => {
       });
    });
 
-   it('Other players should not get information about not their equipment', () => {
+   it('Other players should also be informed about not their equipment', () => {
       const { players, engineManager } = setupEngine();
       const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, undefined);
+      checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
+         data: {
+            playerCharacter_3: {
+               back: null,
+               chest: null,
+               feet: null,
+               finger1: null,
+               finger2: null,
+               hands: null,
+               head: null,
+               legs: null,
+               mainHand: null,
+               neck: null,
+               offHand: null,
+               shirt: null,
+               shoulder: null,
+               tabard: null,
+               trinket1: null,
+               trinket2: null,
+               waist: null,
+               wrist: null,
+            },
+         },
+      });
    });
 
    it('Player should get error if tries to equip item that he does not have', () => {
@@ -80,5 +103,45 @@ describe('Equipment', () => {
       dataPackage = engineManager.callPlayerAction(players['2'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
 
       checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'Item does not exist.', dataPackage);
+   });
+
+   it('Player should get error if tries to equip item that cannot be equiped', () => {
+      const { players, engineManager } = setupEngine();
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '3',
+         amount: 1,
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+
+      checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'You cannot equip that.', dataPackage);
+   });
+
+   it('Player should be notified when equips the item', () => {
+      const { players, engineManager } = setupEngine();
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '6',
+         amount: 1,
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+
+      checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
+         data: {
+            playerCharacter_1: { chest: 'ItemInstance_0' },
+         },
+      });
    });
 });
