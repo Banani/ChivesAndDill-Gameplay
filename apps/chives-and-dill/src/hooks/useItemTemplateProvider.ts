@@ -9,7 +9,7 @@ interface ItemTemplateProviderProps {
 }
 
 export const useItemTemplateProvider = ({ itemTemplateIds }: ItemTemplateProviderProps) => {
-   const { data: itemTemplates } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
+   const { data: itemTemplates } = useEngineModuleReader(GlobalStoreModule.ITEMS);
 
    const context = useContext(EngineApiContext);
    const { requestItemTemplates } = context;
