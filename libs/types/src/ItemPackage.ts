@@ -94,6 +94,7 @@ export enum ItemClientMessages {
    RequestItemTemplates = 'RequestItemTemplates',
 
    EquipItem = 'EquipItem',
+   StripItem = 'StripItem',
 }
 
 export interface DeleteItem {
@@ -124,4 +125,9 @@ export interface EquipItem {
    itemInstanceId: string;
 }
 
-export type EngineItemMessages = DeleteItem | MoveItemInBag | SplitItemStackInBag | RequestItemTemplates | EquipItem;
+export interface StripItem {
+   type: ItemClientMessages.StripItem;
+   itemInstanceId: string;
+}
+
+export type EngineItemMessages = DeleteItem | MoveItemInBag | SplitItemStackInBag | RequestItemTemplates | EquipItem | StripItem;

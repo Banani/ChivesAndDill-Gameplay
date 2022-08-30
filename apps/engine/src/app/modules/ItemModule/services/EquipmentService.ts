@@ -1,8 +1,16 @@
 import { EquipmentSlot, EquipmentTrack, ItemTemplateType, PossibleEquipmentPlaces } from '@bananos/types';
+import { findKey } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { EquipmentTrackCreatedEvent, ItemEngineEvents, ItemEquippedEvent, PlayerTriesToEquipItemEvent } from '../Events';
+import {
+   EquipmentTrackCreatedEvent,
+   ItemEngineEvents,
+   ItemEquippedEvent,
+   ItemStrippedEvent,
+   PlayerTriesToEquipItemEvent,
+   PlayerTriesToStripItemEvent,
+} from '../Events';
 
 const EquipmentSpotMap: Record<EquipmentSlot, PossibleEquipmentPlaces | PossibleEquipmentPlaces[]> = {
    [EquipmentSlot.Head]: 'head',
@@ -31,6 +39,7 @@ export class EquipmentService extends EventParser {
       this.eventsToHandlersMap = {
          [PlayerEngineEvents.PlayerCharacterCreated]: this.handleNewPlayerCreated,
          [ItemEngineEvents.PlayerTriesToEquipItem]: this.handlePlayerTriesToEquipItem,
+         [ItemEngineEvents.PlayerTriesToStripItem]: this.handlePlayerTriesToStripItem,
       };
    }
 
@@ -53,12 +62,39 @@ export class EquipmentService extends EventParser {
          targetSlot = targetSlot[0];
       }
 
+      // TODO: wywalic z plecaka
+      // TODO: Co jesli miejsce jest zajete
       this.equipment[event.requestingCharacterId][targetSlot] = item.itemId;
 
       this.engineEventCrator.asyncCeateEvent<ItemEquippedEvent>({
          type: ItemEngineEvents.ItemEquipped,
          characterId: event.requestingCharacterId,
          slot: targetSlot,
+         itemInstanceId: item.itemId,
+      });
+   };
+
+   handlePlayerTriesToStripItem: EngineEventHandler<PlayerTriesToStripItemEvent> = ({ event, services }) => {
+      const item = services.itemService.getItemById(event.itemInstanceId);
+      if (!item || item.ownerId !== event.requestingCharacterId) {
+         this.sendErrorMessage(event.requestingCharacterId, 'Item does not exist.');
+         return;
+      }
+
+      const slot = findKey(this.equipment[event.requestingCharacterId], (itemId) => itemId === event.itemInstanceId);
+
+      if (!slot) {
+         this.sendErrorMessage(event.requestingCharacterId, 'You do not wear that.');
+         return;
+      }
+
+      // TODO: Dodac do plecaka
+      this.equipment[event.requestingCharacterId][slot] = null;
+
+      this.engineEventCrator.asyncCeateEvent<ItemStrippedEvent>({
+         type: ItemEngineEvents.ItemStripped,
+         characterId: event.requestingCharacterId,
+         slot: slot as PossibleEquipmentPlaces,
          itemInstanceId: item.itemId,
       });
    };

@@ -144,4 +144,71 @@ describe('Equipment', () => {
          },
       });
    });
+
+   it('Player should get error if tries to strip item that does not exist', () => {
+      const { players, engineManager } = setupEngine();
+
+      const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.StripItem, itemInstanceId: 'SOME_RANDOM_ID' });
+
+      checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'Item does not exist.', dataPackage);
+   });
+
+   it('Player should get error if tries to strip item that does not belong to him', () => {
+      const { players, engineManager } = setupEngine();
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '6',
+         amount: 1,
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['2'].socketId, { type: ItemClientMessages.StripItem, itemInstanceId: itemId });
+
+      checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'Item does not exist.', dataPackage);
+   });
+
+   it('Player should get error if tries to strip item that he does not wear', () => {
+      const { players, engineManager } = setupEngine();
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '6',
+         amount: 1,
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.StripItem, itemInstanceId: itemId });
+
+      checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'You do not wear that.', dataPackage);
+   });
+
+   it('Player should be notified when strips the item', () => {
+      const { players, engineManager } = setupEngine();
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '6',
+         amount: 1,
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.StripItem, itemInstanceId: itemId });
+
+      checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
+         toDelete: {
+            playerCharacter_1: { chest: null },
+         },
+      });
+   });
 });

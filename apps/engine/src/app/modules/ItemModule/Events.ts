@@ -12,6 +12,8 @@ export enum ItemEngineEvents {
    EquipmentTrackCreated = 'EquipmentTrackCreated',
    PlayerTriesToEquipItem = 'PlayerTriesToEquipItem',
    ItemEquipped = 'ItemEquiped',
+   PlayerTriesToStripItem = 'PlayerTriesToStripItem',
+   ItemStripped = 'ItemStripped',
 
    GenerateItemForCharacter = 'GenerateItemForCharacter',
    AddItemToCharacter = 'AddItemToCharacter',
@@ -141,6 +143,18 @@ export interface ItemEquippedEvent extends EngineEvent {
    slot: PossibleEquipmentPlaces;
 }
 
+export interface PlayerTriesToStripItemEvent extends EngineEvent {
+   type: ItemEngineEvents.PlayerTriesToStripItem;
+   itemInstanceId: string;
+}
+
+export interface ItemStrippedEvent extends EngineEvent {
+   type: ItemEngineEvents.ItemStripped;
+   itemInstanceId: string;
+   characterId: string;
+   slot: PossibleEquipmentPlaces;
+}
+
 export interface ItemEngineEventsMap {
    [ItemEngineEvents.CurrencyAmountUpdated]: EngineEventHandler<CurrencyAmountUpdatedEvent>;
    [ItemEngineEvents.RemoveCurrencyFromCharacter]: EngineEventHandler<RemoveCurrencyFromCharacterEvent>;
@@ -149,6 +163,8 @@ export interface ItemEngineEventsMap {
    [ItemEngineEvents.EquipmentTrackCreated]: EngineEventHandler<EquipmentTrackCreatedEvent>;
    [ItemEngineEvents.PlayerTriesToEquipItem]: EngineEventHandler<PlayerTriesToEquipItemEvent>;
    [ItemEngineEvents.ItemEquipped]: EngineEventHandler<ItemEquippedEvent>;
+   [ItemEngineEvents.PlayerTriesToStripItem]: EngineEventHandler<PlayerTriesToStripItemEvent>;
+   [ItemEngineEvents.ItemStripped]: EngineEventHandler<ItemStrippedEvent>;
 
    [ItemEngineEvents.BackpackTrackCreated]: EngineEventHandler<BackpackTrackCreatedEvent>;
    [ItemEngineEvents.BackpackItemsContainmentUpdated]: EngineEventHandler<BackpackItemsContainmentUpdatedEvent>;
