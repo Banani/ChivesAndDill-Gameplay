@@ -1,5 +1,6 @@
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import React, { FunctionComponent, useContext, useEffect } from 'react';
+import { Button } from '../../components/button/Button';
 import styles from './ConfirmationDialog.module.scss';
 
 interface ConfirmationDialogProps {
@@ -40,16 +41,16 @@ export const ConfirmationDialog: FunctionComponent<ConfirmationDialogProps> = ({
       isVisible && (
          <div className={styles.dialog}>
             <div className={styles.section}>
-               <div>{message}</div>
+               <div className={styles.message}>{message}</div>
             </div>
 
             <div className={styles.actionBar}>
-               <button className={styles.actionButton} onClick={accept}>
+               <Button className={styles.actionButton} onClick={accept}>
                   Okay
-               </button>
-               <button className={styles.actionButton} onClick={cancel}>
+               </Button>
+               <Button className={styles.actionButton} onClick={cancel}>
                   Cancel
-               </button>
+               </Button>
             </div>
          </div>
       )

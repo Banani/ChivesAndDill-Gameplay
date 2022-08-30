@@ -3,22 +3,34 @@
     position: absolute;
     top: 250px;
     left: 1200px;
-    background: grey;
 
     padding: 20px;
-    border: 1px solid white;
     width: 200px;
     display: flex;
     flex-direction: column;
 
+    background: rgba(0,0,0,0.6);
+    border: 2px solid rgba(240,240,240,1);
+    border-radius: 3px;
+
     .input {
         flex: 1;
+        border: 1px solid rgba(240,240,240,1);
+        background: rgba(0,0,0,0.9);
+        color: #eee;
     }
 
     .section {
-        margin: 10px 0;
+        margin-bottom: 16px;
         display: flex;
         flex-direction: column;
+
+        .label {
+            color: gold;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
     }
 
     .actionBar {

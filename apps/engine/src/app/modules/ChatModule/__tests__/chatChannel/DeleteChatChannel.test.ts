@@ -1,4 +1,4 @@
-import { ChatChannelClientMessages, EngineEventType, GlobalStoreModule } from '@bananos/types';
+import { ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from '../../../../testUtilities';
 import { Classes } from '../../../../types/Classes';
 
@@ -33,7 +33,13 @@ describe('Chat channel delete action', () => {
       });
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
-         toDelete: { '1': null },
+         toDelete: {
+            '1': {
+               membersIds: {
+                  playerCharacter_1: null,
+               },
+            },
+         },
       });
    });
 
@@ -53,7 +59,13 @@ describe('Chat channel delete action', () => {
       dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
-         toDelete: { '1': null },
+         toDelete: {
+            '1': {
+               membersIds: {
+                  playerCharacter_2: null,
+               },
+            },
+         },
       });
    });
 

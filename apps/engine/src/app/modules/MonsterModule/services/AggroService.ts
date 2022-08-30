@@ -3,7 +3,7 @@ import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
 import { Services } from '../../../types/Services';
 import { CharacterEngineEvents, CharacterRemovedEvent } from '../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
@@ -109,8 +109,15 @@ export class AggroService extends EventParser {
    wasItDmgToThePlayer = ({ event, services }: { event: ApplyTargetSpellEffectEvent; services: Services }) =>
       services.playerCharacterService.getAllCharacters()[event.target.id];
 
+   wasItDmgToMonster = ({ event, services }: { event: ApplyTargetSpellEffectEvent; services: Services }) =>
+      services.characterService.getAllCharacters()[event.target.id].type === CharacterType.Monster;
+
    handleApplySpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event, services }) => {
       if (event.effect.type !== SpellEffectType.Damage) {
+         return;
+      }
+
+      if (!this.wasItDmgToMonster({ event, services })) {
          return;
       }
 

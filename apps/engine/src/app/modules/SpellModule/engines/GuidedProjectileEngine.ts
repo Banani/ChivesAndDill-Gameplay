@@ -1,7 +1,7 @@
+import { Location } from '@bananos/types';
 import { forEach } from 'lodash';
 import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { Location } from '@bananos/types';
 import { ProjectileMovedEvent, RemoveProjectileEvent, SpellEngineEvents, SpellLandedEvent, SpellReachedTargetEvent } from '../Events';
 
 export class GuidedProjectileEngine extends Engine {
@@ -17,7 +17,12 @@ export class GuidedProjectileEngine extends Engine {
 
    doAction() {
       forEach(this.services.guidedProjectilesService.getAllGuidedProjectiles(), (projectile, projectileId) => {
-         const allCharacters = { ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() };
+         // TODO: Cover by test case when two projectiles are created one of them kills the target, and second one will be deleted
+         if (!projectile) {
+            return;
+         }
+
+         const allCharacters = this.services.characterService.getAllCharacters();
          const target = allCharacters[projectile.targetId];
          const directionLocation = target?.location ?? projectile.directionLocation;
 
@@ -39,7 +44,7 @@ export class GuidedProjectileEngine extends Engine {
             this.eventCrator.createEvent<SpellLandedEvent>({
                type: SpellEngineEvents.SpellLanded,
                spell: projectile.spell,
-               caster: { ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }[projectile.casterId],
+               caster: projectile.caster,
                location: directionLocation,
             });
 
@@ -47,7 +52,7 @@ export class GuidedProjectileEngine extends Engine {
                this.eventCrator.createEvent<SpellReachedTargetEvent>({
                   type: SpellEngineEvents.SpellReachedTarget,
                   spell: projectile.spell,
-                  caster: { ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }[projectile.casterId],
+                  caster: projectile.caster,
                   target,
                });
             }

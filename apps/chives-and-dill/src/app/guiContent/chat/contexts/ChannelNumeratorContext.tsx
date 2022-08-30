@@ -1,6 +1,6 @@
 import { GlobalStoreModule } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
-import { find, findKey, forEach, pickBy } from 'lodash';
+import _, { find, findKey, pickBy } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 
 interface ChannelNumeratorContextMethods {
@@ -11,15 +11,20 @@ interface ChannelNumeratorContextMethods {
 export const ChannelNumeratorContext = React.createContext<ChannelNumeratorContextMethods>(null);
 
 export const ChannelNumeratorContextProvider = ({ children }) => {
+   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
    const { data: chatChannels } = useEngineModuleReader(GlobalStoreModule.CHAT_CHANNEL);
    const [channelNumerations, setChannelNumerations] = useState<Record<string, string>>({});
 
    useEffect(() => {
-      const filteredChannel = pickBy(channelNumerations, (channelId) => chatChannels?.[channelId]);
+      const filteredChannel = pickBy(channelNumerations, (channelId) => chatChannels?.[channelId] && chatChannels[channelId].membersIds[activeCharacterId]);
       let i = 1;
 
-      forEach(chatChannels, (_, channelId) => {
+      _.forEach(chatChannels, (channel, channelId) => {
          if (find(filteredChannel, (alreadyExistingChannelId) => alreadyExistingChannelId === channelId)) {
+            return;
+         }
+
+         if (!channel.membersIds[activeCharacterId]) {
             return;
          }
 
@@ -31,8 +36,7 @@ export const ChannelNumeratorContextProvider = ({ children }) => {
       });
 
       setChannelNumerations(filteredChannel);
-      //TODO: Last module update zrobic
-   }, [Object.keys(chatChannels ?? {}).length]);
+   }, [chatChannels]);
 
    const getNumberById = useCallback(
       (channelId: string) => findKey(channelNumerations, (currentChannelId, number) => currentChannelId === channelId),

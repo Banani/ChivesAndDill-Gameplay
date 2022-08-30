@@ -8,6 +8,10 @@ export class RandomQuoteEngine extends Engine {
       const characters = this.services.characterService.getAllCharacters();
 
       forEach(characters, (character) => {
+         if (!character) {
+            return;
+         }
+
          if (character.type === CharacterType.Player) {
             return;
          }

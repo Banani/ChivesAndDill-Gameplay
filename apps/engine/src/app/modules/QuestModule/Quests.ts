@@ -1,5 +1,5 @@
 import { KillingQuestStagePartComparison } from '@bananos/types';
-import type { QuestSchema} from 'libs/types/src/QuestPackage';
+import type { QuestSchema } from 'libs/types/src/QuestPackage';
 import { QuestType } from 'libs/types/src/QuestPackage';
 
 export const Quests: Record<string, QuestSchema> = {
@@ -33,7 +33,7 @@ export const Quests: Record<string, QuestSchema> = {
                   monsterName: 'Orc Spearmen',
                   type: QuestType.KILLING,
                   rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'OrcSpearman' }],
-                  amount: 1,
+                  amount: 6,
                },
             },
          },
@@ -48,7 +48,7 @@ export const Quests: Record<string, QuestSchema> = {
                   monsterName: 'Orc Spearmen',
                   type: QuestType.KILLING,
                   rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'OrcSpearman' }],
-                  amount: 1,
+                  amount: 6,
                },
                '4': {
                   id: '4',
@@ -57,7 +57,7 @@ export const Quests: Record<string, QuestSchema> = {
                   monsterName: 'Orcs',
                   type: QuestType.KILLING,
                   rule: [{ comparison: KillingQuestStagePartComparison.equality, fieldName: 'division', value: 'Orc' }],
-                  amount: 1,
+                  amount: 12,
                },
             },
          },

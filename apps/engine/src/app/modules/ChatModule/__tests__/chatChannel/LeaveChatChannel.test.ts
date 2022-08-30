@@ -1,4 +1,4 @@
-import { GlobalStoreModule, ChatChannelClientMessages } from '@bananos/types';
+import { ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
 import { Classes } from 'apps/engine/src/app/types/Classes';
 
@@ -40,7 +40,13 @@ describe('Leave chat channel action', () => {
       });
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
-         toDelete: { '1': null },
+         toDelete: {
+            '1': {
+               membersIds: {
+                  playerCharacter_2: null,
+               },
+            },
+         },
       });
    });
 

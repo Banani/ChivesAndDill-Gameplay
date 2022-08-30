@@ -1,8 +1,10 @@
 import { GlobalStoreModule } from '@bananos/types';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
+import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { map } from 'lodash';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button } from '../../components/button/Button';
 import { ConfirmationDialog } from '../ConfirmationDialog';
 import { ChannelNumeratorContext } from '../contexts';
 import { InputDialog } from '../InputDialog';
@@ -16,13 +18,22 @@ enum ActiveModal {
 }
 
 export const ChatChannels = () => {
-   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
    const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
    const { data: chatChannels } = useEngineModuleReader(GlobalStoreModule.CHAT_CHANNEL);
+
    const engineApiContext = useContext(EngineApiContext);
    const channelNumeratorContext = useContext(ChannelNumeratorContext);
+   const menuContext = useContext(MenuContext);
+
+   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
    const [selectedChannelId, setSelectedChannelId] = useState(null);
+
+   useEffect(() => {
+      if (selectedChannelId && !chatChannels[selectedChannelId].membersIds[activeCharacterId]) {
+         setSelectedChannelId(null);
+      }
+   }, [chatChannels, activeCharacterId, selectedChannelId]);
 
    return (
       <>
@@ -30,43 +41,71 @@ export const ChatChannels = () => {
             <div className={styles.contentHolder}>
                <div className={styles.objectList}>
                   {map(channelNumeratorContext.channelNumerations, (chatChannelId, chatNumber) => (
-                     <div>
+                     <div key={chatChannelId}>
                         <button className={`${styles.channelName} ${styles.listElement}`} onClick={() => setSelectedChannelId(chatChannelId)}>
                            {`${chatNumber}. ${chatChannels[chatChannelId].name}`}
                         </button>
                      </div>
                   ))}
                </div>
+
                <div className={styles.objectList}>
                   {selectedChannelId &&
                      map(chatChannels[selectedChannelId].membersIds, (_, memberId) => (
-                        <>
-                           <div className={styles.listElement}>
-                              <img className={styles.crown} src="https://cdn-icons-png.flaticon.com/512/91/91188.png?w=360" /> {characters[memberId].name}
-                           </div>
-                        </>
+                        <div
+                           key={selectedChannelId + '_' + memberId}
+                           className={styles.listElement}
+                           onContextMenu={(e) => {
+                              e.preventDefault();
+                              if (activeCharacterId === memberId) {
+                                 menuContext.setActions([
+                                    {
+                                       label: 'Leave Channel',
+                                       action: () => engineApiContext.leaveChatChannel({ chatChannelId: selectedChannelId }),
+                                    },
+                                 ]);
+                              } else if (chatChannels[selectedChannelId].characterOwnerId === activeCharacterId) {
+                                 menuContext.setActions([
+                                    {
+                                       label: 'Promote to owner',
+                                       action: () => engineApiContext.changeChatChannelOwner({ chatChannelId: selectedChannelId, newOwnerId: memberId }),
+                                    },
+                                    {
+                                       label: 'Kick from channel',
+                                       action: () =>
+                                          engineApiContext.removePlayerCharacterFromChatChannel({ chatChannelId: selectedChannelId, characterId: memberId }),
+                                    },
+                                 ]);
+                              }
+                           }}
+                        >
+                           {chatChannels[selectedChannelId].characterOwnerId === memberId && (
+                              <img className={styles.crown} src="https://cdn-icons-png.flaticon.com/512/91/91188.png?w=360" />
+                           )}
+                           <div className={styles.memberName}>{characters[memberId].name}</div>
+                        </div>
                      ))}
                </div>
             </div>
             <div className={styles.actionHolder}>
                {selectedChannelId && chatChannels[selectedChannelId].characterOwnerId === activeCharacterId && (
                   <>
-                     <button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.AddMember)}>
+                     <Button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.AddMember)}>
                         Add Member
-                     </button>
-                     <button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.DeleteChatChannel)}>
+                     </Button>
+                     <Button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.DeleteChatChannel)}>
                         Delete Channel
-                     </button>
+                     </Button>
                   </>
                )}
                {selectedChannelId && (
-                  <button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.LeaveChatChannel)}>
+                  <Button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.LeaveChatChannel)}>
                      Leave Channel
-                  </button>
+                  </Button>
                )}
-               <button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.CreateChannel)}>
+               <Button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.CreateChannel)}>
                   Create Channel
-               </button>
+               </Button>
             </div>
          </div>
 

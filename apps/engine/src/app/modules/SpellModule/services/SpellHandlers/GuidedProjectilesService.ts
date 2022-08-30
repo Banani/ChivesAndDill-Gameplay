@@ -1,12 +1,12 @@
+import { Location } from '@bananos/types';
+import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
-import { EngineEventHandler } from 'apps/engine/src/app/types';
-import { Location } from '@bananos/types';
-import { omit } from 'lodash';
+import { CharacterDiedEvent, EngineEventHandler } from 'apps/engine/src/app/types';
+import { CharacterUnion } from 'apps/engine/src/app/types/CharacterUnion';
+import { chain, omit } from 'lodash';
 import { GuidedProjectileEngine } from '../../engines/GuidedProjectileEngine';
 import {
-   SubSpellCastedEvent,
-   SpellEngineEvents,
    PlayerCastedSpellEvent,
    PlayerCastSpellEvent,
    PlayerCastSubSpellEvent,
@@ -14,11 +14,13 @@ import {
    ProjectileMovedEvent,
    ProjectileRemovedEvent,
    RemoveProjectileEvent,
+   SpellEngineEvents,
+   SubSpellCastedEvent,
 } from '../../Events';
-import { GuidedProjectileSubSpell, GuidedProjectileSpell, SpellType } from '../../types/SpellTypes';
+import { GuidedProjectileSpell, GuidedProjectileSubSpell, SpellType } from '../../types/SpellTypes';
 
 interface GuidedProjectileTrack {
-   casterId: string;
+   caster: CharacterUnion;
    spell: GuidedProjectileSubSpell | GuidedProjectileSpell;
    directionLocation: Location;
    targetId: string;
@@ -35,6 +37,7 @@ export class GuidedProjectilesService extends EventParser {
       super();
       this.guidedProjectileEngine = guidedProjectileEngine;
       this.eventsToHandlersMap = {
+         [EngineEvents.CharacterDied]: this.handleCharacterDied,
          [SpellEngineEvents.PlayerCastSpell]: this.handlePlayerCastSpell,
          [SpellEngineEvents.ProjectileMoved]: this.handleProjectileMoved,
          [SpellEngineEvents.RemoveProjectile]: this.handleRemoveProjectile,
@@ -46,6 +49,15 @@ export class GuidedProjectilesService extends EventParser {
       super.init(engineEventCrator);
       this.guidedProjectileEngine.init(engineEventCrator, services);
    }
+
+   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
+      const projectileIds = chain(this.guidedProjectilesTracks)
+         .pickBy((track) => track.targetId === event.characterId)
+         .map((_, key) => key)
+         .value();
+
+      this.removeProjectiles(projectileIds);
+   };
 
    handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
       if (event.spell.type === SpellType.GuidedProjectile) {
@@ -63,7 +75,7 @@ export class GuidedProjectilesService extends EventParser {
          this.increment++;
          const projectileId = 'guided_projectile_' + this.increment;
          this.guidedProjectilesTracks[projectileId] = {
-            casterId: event.casterId,
+            caster: allCharacters[event.casterId],
             spell: event.spell,
             directionLocation: event.directionLocation as Location,
             targetId: castTargetId,
@@ -97,7 +109,7 @@ export class GuidedProjectilesService extends EventParser {
          this.increment++;
          const projectileId = 'guided_projectile_' + this.increment;
          this.guidedProjectilesTracks[projectileId] = {
-            casterId: event.casterId,
+            caster: casterCharacter,
             spell: event.spell,
             directionLocation: event.directionLocation as Location,
             targetId: event.targetId,
@@ -131,13 +143,19 @@ export class GuidedProjectilesService extends EventParser {
 
    handleRemoveProjectile: EngineEventHandler<RemoveProjectileEvent> = ({ event }) => {
       if (this.guidedProjectilesTracks[event.projectileId]) {
-         delete this.guidedProjectilesTracks[event.projectileId];
+         this.removeProjectiles([event.projectileId]);
+      }
+   };
+
+   removeProjectiles = (projectileIds: string[]) => {
+      projectileIds.forEach((projectileId) => {
+         delete this.guidedProjectilesTracks[projectileId];
 
          this.engineEventCrator.asyncCeateEvent<ProjectileRemovedEvent>({
             type: SpellEngineEvents.ProjectileRemoved,
-            projectileId: event.projectileId,
+            projectileId: projectileId,
          });
-      }
+      });
    };
 
    getAllGuidedProjectiles = () => this.guidedProjectilesTracks;

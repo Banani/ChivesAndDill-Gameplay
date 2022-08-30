@@ -11,6 +11,8 @@ interface EngineApiMethods {
    leaveChatChannel: ({ chatChannelId }) => void;
    deleteChatChannel: ({ chatChannelId }) => void;
    closeNpcConversationDialog: () => void;
+   removePlayerCharacterFromChatChannel: ({ chatChannelId, characterId }) => void;
+   changeChatChannelOwner: ({ chatChannelId, newOwnerId }) => void;
    sendChatMessage: ({ chatChannelId, message, channelType }) => void;
 }
 
@@ -40,6 +42,7 @@ export const EngineApi = ({ children }) => {
                   questId,
                });
             },
+
             createChatChannel: ({ chatChannelName }) => {
                socket?.emit(ChatChannelClientMessages.CreateChatChannel, { chatChannelName });
             },
@@ -55,6 +58,13 @@ export const EngineApi = ({ children }) => {
             sendChatMessage: ({ chatChannelId, message, channelType }) => {
                socket?.emit(ChatChannelClientMessages.SendChatMessage, { chatChannelId, message, channelType });
             },
+            removePlayerCharacterFromChatChannel: ({ chatChannelId, characterId }) => {
+               socket?.emit(ChatChannelClientMessages.RemovePlayerCharacterFromChatChannel, { chatChannelId, characterId });
+            },
+            changeChatChannelOwner: ({ chatChannelId, newOwnerId }) => {
+               socket?.emit(ChatChannelClientMessages.ChangeChatChannelOwner, { chatChannelId, newOwnerId });
+            },
+
             closeNpcConversationDialog: () => {
                socket?.emit(NpcClientMessages.CloseNpcConversationDialog);
             },
