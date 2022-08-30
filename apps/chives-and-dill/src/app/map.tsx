@@ -25,6 +25,7 @@ import { ErrorMessages } from './mapContent/ErrorMessages';
 import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
 import { MapWrapper } from './mapContent/mapManager/MapWrapper';
 import { NextLevelManager } from './mapContent/NextLevelManager';
+import { DialogsManager } from './mapContent/DialogsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 
 const Map = () => {
@@ -37,8 +38,6 @@ const Map = () => {
    const { data: questDefinition } = useEngineModuleReader(GlobalStoreModule.QUEST_DEFINITION);
    const { data: projectileMovements } = useEngineModuleReader(GlobalStoreModule.PROJECTILE_MOVEMENTS);
 
-   //PEEPEEPOOPOO jak dasz recent, to wyswietla sie tylko najnowsze
-   const { recentData: chatMessages } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
    const { events: experienceEvents } = useEngineModuleReader(GlobalStoreModule.EXPERIENCE);
    const { events: errorMessagesEvents } = useEngineModuleReader(GlobalStoreModule.ERROR_MESSAGES);
 
@@ -46,11 +45,6 @@ const Map = () => {
 
    const activeNpc = characters[activeConversation?.[activeCharacterId]?.npcId];
    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
-
-   useEffect(() => {
-      // PEEPEEPOOPOO
-      //console.log(chatMessages);
-   }, [chatMessages]);
 
    const renderSpells = useCallback(
       () =>
@@ -126,6 +120,7 @@ const Map = () => {
                                                 <FloatingNumbersManager />
                                                 <BlinkSpellEffect />
                                                 <BloodPoolManager />
+                                                <DialogsManager />
                                                 <CastBarsManager location={characterMovements[activeCharacterId]?.location} spellChannels={spellChannels} />
                                              </Container>
                                           )}
