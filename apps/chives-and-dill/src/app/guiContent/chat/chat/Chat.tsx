@@ -83,7 +83,7 @@ export const Chat = () => {
                   ]);
                }}
             >
-               {`[${channelNumeratorContext.getNumberById(activeChannel.id)}. ${chatChannels[message.chatChannelId].name}]`}
+               {`[${channelNumeratorContext.getNumberById(message.chatChannelId)}. ${chatChannels[message.chatChannelId].name}]`}
             </span>
             {characterName(characters[message.authorId])}
             {`: ${message.message}`}

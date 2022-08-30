@@ -43,7 +43,7 @@ export const InputDialog: FunctionComponent<InputDialogProps> = ({ isVisible, ma
          <form onSubmit={() => mainAction(inputValue)}>
             <div className={styles.dialog}>
                <div className={styles.section}>
-                  <label>{message}</label>
+                  <label className={styles.label}>{message}</label>
                   <input
                      className={styles.input}
                      onFocus={() => keyBoardContext.addKeyHandler({ id: 'InputDialogBlockAll', matchRegex: '.*' })}

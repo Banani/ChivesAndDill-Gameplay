@@ -41,7 +41,7 @@ export const ConfirmationDialog: FunctionComponent<ConfirmationDialogProps> = ({
       isVisible && (
          <div className={styles.dialog}>
             <div className={styles.section}>
-               <div>{message}</div>
+               <div className={styles.message}>{message}</div>
             </div>
 
             <div className={styles.actionBar}>
