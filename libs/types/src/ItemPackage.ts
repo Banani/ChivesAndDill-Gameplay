@@ -1,3 +1,45 @@
+// place => itemInstanceId
+export interface EquipmentTrack {
+   head: string | null;
+   neck: string | null;
+   shoulder: string | null;
+   back: string | null;
+   chest: string | null;
+   shirt: string | null;
+   tabard: string | null;
+   wrist: string | null;
+
+   hands: string | null;
+   waist: string | null;
+   legs: string | null;
+   feet: string | null;
+   finger1: string | null;
+   finger2: string | null;
+   trinket1: string | null;
+   trinket2: string | null;
+
+   mainHand: string | null;
+   offHand: string | null;
+}
+
+export enum EquipmentSlot {
+   Head = 'head',
+   Neck = 'neck',
+   Shoulder = 'shoulder',
+   Back = 'back',
+   Chest = 'chest',
+   Shirt = 'shirt',
+   Tabard = 'tabard',
+   Wrist = 'wrist',
+
+   Hands = 'hands',
+   Waist = 'waist',
+   Legs = 'legs',
+   Feet = 'feet',
+   Finger = 'finger',
+   Trinket = 'trinket',
+}
+
 export interface BackpackTrack {
    '1': number | null;
    '2': number | null;
@@ -11,13 +53,30 @@ export interface ItemInstance {
    amount: number;
 }
 
-export interface ItemTemplate {
+export enum ItemTemplateType {
+   Equipment,
+   Generic,
+}
+
+export interface BaseItemTemplate {
+   type: ItemTemplateType;
    id: string;
    name: string;
    image: string;
    stack?: number;
    value: number;
 }
+
+export interface EquipmentItemTemplate extends BaseItemTemplate {
+   type: ItemTemplateType.Equipment;
+   slot: EquipmentSlot;
+}
+
+export interface GenericItemTemplate extends BaseItemTemplate {
+   type: ItemTemplateType.Generic;
+}
+
+export type ItemTemplate = GenericItemTemplate | EquipmentItemTemplate;
 
 export interface ItemLocationInBag {
    backpack: string;
@@ -31,6 +90,8 @@ export enum ItemClientMessages {
    MoveItemInBag = 'MoveItemInBag',
    SplitItemStackInBag = 'SplitItemStackInBag',
    RequestItemTemplates = 'RequestItemTemplates',
+
+   EquipItem = 'EquipItem',
 }
 
 export interface DeleteItem {
@@ -56,4 +117,9 @@ export interface RequestItemTemplates {
    itemTemplateIds: string[];
 }
 
-export type EngineItemMessages = DeleteItem | MoveItemInBag | SplitItemStackInBag | RequestItemTemplates;
+export interface EquipItem {
+   type: ItemClientMessages.EquipItem;
+   itemInstanceId: string;
+}
+
+export type EngineItemMessages = DeleteItem | MoveItemInBag | SplitItemStackInBag | RequestItemTemplates | EquipItem;

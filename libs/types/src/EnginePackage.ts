@@ -28,6 +28,7 @@ export enum GlobalStoreModule {
    ERROR_MESSAGES = 'errorMessages',
    CHAT_CHANNEL = 'chatChannel',
    CHAT_MESSAGES = 'chatMessages',
+   EQUIPMENT = 'Equipment',
    BACKPACK_SCHEMA = 'backpackSchema',
    BACKPACK_ITEMS = 'backpackItems',
    ITEMS = 'items',
