@@ -1,5 +1,6 @@
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
+import { Button } from '../../components/button/Button';
 import styles from './InputDialog.module.scss';
 
 interface InputDialogProps {
@@ -57,10 +58,10 @@ export const InputDialog: FunctionComponent<InputDialogProps> = ({ isVisible, ma
                </div>
 
                <div className={styles.actionBar}>
-                  <button className={styles.actionButton}>Okay</button>
-                  <button className={styles.actionButton} onClick={cancel}>
+                  <Button className={styles.actionButton}>Okay</Button>
+                  <Button className={styles.actionButton} onClick={cancel}>
                      Cancel
-                  </button>
+                  </Button>
                </div>
             </div>
          </form>

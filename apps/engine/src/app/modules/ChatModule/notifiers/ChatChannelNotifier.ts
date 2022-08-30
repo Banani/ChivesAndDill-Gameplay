@@ -154,6 +154,10 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
             objects: { [event.chatChannel.id]: { membersIds: { [event.characterId]: null } } },
          }))
       );
+
+      this.multicastObjectsDeletion([
+         { receiverId: characters[event.characterId].ownerId, objects: { [event.chatChannel.id]: { membersIds: { [event.characterId]: null } } } },
+      ]);
    };
 
    handlePlayerLeftChatChannel: EngineEventHandler<PlayerLeftChatChannelEvent> = ({ event, services }) => {

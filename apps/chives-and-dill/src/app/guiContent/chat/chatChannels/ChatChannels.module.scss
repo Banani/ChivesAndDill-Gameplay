@@ -25,24 +25,37 @@
     .contentHolder {
         display: flex;
         flex: 1;
+        max-height: 100%;
+        overflow: hidden;
 
         .objectList {
             flex: 1;
-            padding: 30px;
+            margin: 30px;
             max-width: 50%;
             box-sizing: border-box;
+            overflow-y: scroll;
 
             .listElement {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
                 max-width: 100%;
+                display: flex;
+
+                .crown {
+                    height: 16px;
+                    margin-right: 8px;
+                }
+
+                .memberName {
+                    margin-left: 24px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .crown + .memberName {
+                    margin-left: 0;
+                }
             }
 
-            .crown {
-                height: 16px;
-                margin-right: 8px;
-            }
         }
     }
 
