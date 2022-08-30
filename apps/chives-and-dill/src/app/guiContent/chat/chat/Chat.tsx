@@ -3,8 +3,10 @@ import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
+import { setActiveTarget } from 'apps/chives-and-dill/src/stores';
 import { map } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { ChannelNumeratorContext } from '../contexts';
 import styles from './Chat.module.scss';
 
@@ -41,6 +43,7 @@ export const Chat = () => {
    const channelNumeratorContext = useContext(ChannelNumeratorContext);
    const engineApiContext = useContext(EngineApiContext);
    const menuContext = useContext(MenuContext);
+   const dispatch = useDispatch();
 
    const [activeChannel, setActiveChannel] = useState<CurrentChannel>({ id: 'say', channelType: ChannelType.Range });
    const [message, setMessage] = useState('');
@@ -53,11 +56,20 @@ export const Chat = () => {
 
    const mapChannels = modes.map((channel) => <div className={styles.channel}>{channel}</div>);
 
+   const characterName = (character) => <span onClick={() => dispatch(setActiveTarget({ characterId: character.id }))}>[{character.name}]</span>;
+
    const MessageMappers: Record<ChannelType, (message: ChatMessage) => JSX.Element> = {
       [ChannelType.Range]: (message: RangeChatMessage) => (
-         <>{`[${characters[message.authorId].name}] ${RangeChannelsMessageMapper[message.chatChannelId]} ${message.message}`}</>
+         <>
+            {characterName(characters[message.authorId])}&nbsp;{`${RangeChannelsMessageMapper[message.chatChannelId]} ${message.message}`}
+         </>
       ),
-      [ChannelType.Quotes]: (message: QuoteChatMessage) => <div>{`[${characters[message.authorId].name}]: ${message.message}`}</div>,
+      [ChannelType.Quotes]: (message: QuoteChatMessage) => (
+         <div>
+            {characterName(characters[message.authorId])}
+            {`: ${message.message}`}
+         </div>
+      ),
       [ChannelType.Custom]: (message: ChannelChatMessage) => (
          <>
             <span
@@ -73,7 +85,8 @@ export const Chat = () => {
             >
                {`[${channelNumeratorContext.getNumberById(activeChannel.id)}. ${chatChannels[message.chatChannelId].name}]`}
             </span>
-            {`[${characters[message.authorId].name}]: ${message.message}`}
+            {characterName(characters[message.authorId])}
+            {`: ${message.message}`}
          </>
       ),
    };
