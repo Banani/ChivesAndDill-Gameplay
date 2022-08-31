@@ -1,4 +1,4 @@
-import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
+import { EquipmentSlot, GlobalStoreModule, ItemClientMessages, ItemTemplateType } from '@bananos/types';
 import { checkIfPackageIsValid, EngineManager } from '../../../../testUtilities';
 import { Classes } from '../../../../types/Classes';
 
@@ -29,6 +29,8 @@ describe('Items', () => {
                image: 'https://www.tibiaitens.com.br/image/cache/catalog/espadas/mercenary-swordtibia-605-500x500.png',
                name: 'Mercenary sword',
                value: 1000,
+               type: ItemTemplateType.Equipment,
+               slot: EquipmentSlot.Feet,
             },
             '3': {
                id: '3',
@@ -36,6 +38,7 @@ describe('Items', () => {
                name: 'Mackerel',
                stack: 20,
                value: 95,
+               type: ItemTemplateType.Generic,
             },
          },
       });

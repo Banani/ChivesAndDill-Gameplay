@@ -62,7 +62,6 @@ export class EquipmentService extends EventParser {
          targetSlot = targetSlot[0];
       }
 
-      // TODO: wywalic z plecaka
       // TODO: Co jesli miejsce jest zajete
       this.equipment[event.requestingCharacterId][targetSlot] = item.itemId;
 
@@ -88,7 +87,6 @@ export class EquipmentService extends EventParser {
          return;
       }
 
-      // TODO: Dodac do plecaka
       this.equipment[event.requestingCharacterId][slot] = null;
 
       this.engineEventCrator.asyncCeateEvent<ItemStrippedEvent>({
@@ -96,6 +94,7 @@ export class EquipmentService extends EventParser {
          characterId: event.requestingCharacterId,
          slot: slot as PossibleEquipmentPlaces,
          itemInstanceId: item.itemId,
+         desiredLocation: event.desiredLocation,
       });
    };
 

@@ -33,10 +33,11 @@ export class EquipmentNotifier extends Notifier<EquipmentTrack> {
          });
       });
 
-      currentSocket.on(ItemClientMessages.StripItem, ({ itemInstanceId }) => {
+      currentSocket.on(ItemClientMessages.StripItem, ({ itemInstanceId, desiredLocation }) => {
          this.engineEventCrator.asyncCeateEvent<PlayerTriesToStripItemEvent>({
             type: ItemEngineEvents.PlayerTriesToStripItem,
             requestingCharacterId: event.playerCharacter.id,
+            desiredLocation,
             itemInstanceId,
          });
       });

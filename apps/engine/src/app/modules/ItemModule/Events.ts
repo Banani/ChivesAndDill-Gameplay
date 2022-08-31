@@ -16,7 +16,7 @@ export enum ItemEngineEvents {
    ItemStripped = 'ItemStripped',
 
    GenerateItemForCharacter = 'GenerateItemForCharacter',
-   AddItemToCharacter = 'AddItemToCharacter',
+   AddItemToCharacterInventory = 'AddItemToCharacterInventory',
    ItemAddedToCharacter = 'ItemAddedToCharacter',
 
    PlayerTriesToDeleteItem = 'PlayerTriesToDeleteItem',
@@ -73,8 +73,8 @@ export interface GenerateItemForCharacterEvent extends EngineEvent {
    desiredLocation?: ItemLocationInBag;
 }
 
-export interface AddItemToCharacterEvent extends EngineEvent {
-   type: ItemEngineEvents.AddItemToCharacter;
+export interface AddItemToCharacterInventoryEvent extends EngineEvent {
+   type: ItemEngineEvents.AddItemToCharacterInventory;
    characterId: string;
    itemId: string;
    amount: number;
@@ -146,12 +146,14 @@ export interface ItemEquippedEvent extends EngineEvent {
 export interface PlayerTriesToStripItemEvent extends EngineEvent {
    type: ItemEngineEvents.PlayerTriesToStripItem;
    itemInstanceId: string;
+   desiredLocation?: ItemLocationInBag;
 }
 
 export interface ItemStrippedEvent extends EngineEvent {
    type: ItemEngineEvents.ItemStripped;
    itemInstanceId: string;
    characterId: string;
+   desiredLocation?: ItemLocationInBag;
    slot: PossibleEquipmentPlaces;
 }
 
@@ -170,7 +172,7 @@ export interface ItemEngineEventsMap {
    [ItemEngineEvents.BackpackItemsContainmentUpdated]: EngineEventHandler<BackpackItemsContainmentUpdatedEvent>;
 
    [ItemEngineEvents.GenerateItemForCharacter]: EngineEventHandler<GenerateItemForCharacterEvent>;
-   [ItemEngineEvents.AddItemToCharacter]: EngineEventHandler<AddItemToCharacterEvent>;
+   [ItemEngineEvents.AddItemToCharacterInventory]: EngineEventHandler<AddItemToCharacterInventoryEvent>;
    [ItemEngineEvents.ItemAddedToCharacter]: EngineEventHandler<ItemAddedToCharacterEvent>;
    [ItemEngineEvents.PlayerTriesToDeleteItem]: EngineEventHandler<PlayerTriesToDeleteItemEvent>;
    [ItemEngineEvents.ItemDeleted]: EngineEventHandler<ItemDeletedEvent>;

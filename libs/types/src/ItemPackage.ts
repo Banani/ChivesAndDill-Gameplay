@@ -128,6 +128,7 @@ export interface EquipItem {
 export interface StripItem {
    type: ItemClientMessages.StripItem;
    itemInstanceId: string;
+   desiredLocation?: ItemLocationInBag;
 }
 
 export type EngineItemMessages = DeleteItem | MoveItemInBag | SplitItemStackInBag | RequestItemTemplates | EquipItem | StripItem;

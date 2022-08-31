@@ -145,6 +145,28 @@ describe('Equipment', () => {
       });
    });
 
+   it('Player should have item removed from bag when he equips it', () => {
+      const { players, engineManager } = setupEngine();
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '6',
+         amount: 1,
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+
+      checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
+         toDelete: {
+            1: { '0': null },
+         },
+      });
+   });
+
    it('Player should get error if tries to strip item that does not exist', () => {
       const { players, engineManager } = setupEngine();
 
@@ -208,6 +230,76 @@ describe('Equipment', () => {
       checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
          toDelete: {
             playerCharacter_1: { chest: null },
+         },
+      });
+   });
+
+   it('Player should get item in backpack when strips the item with desired locaion', () => {
+      const { players, engineManager } = setupEngine();
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '6',
+         amount: 1,
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.StripItem,
+         itemInstanceId: itemId,
+         desiredLocation: {
+            backpack: '1',
+            spot: '3',
+         },
+      });
+
+      checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               '1': {
+                  '3': {
+                     amount: 1,
+                     itemId: 'ItemInstance_0',
+                  },
+               },
+            },
+         },
+      });
+   });
+
+   it('Player should get item in backpack when strips the item without desired location', () => {
+      const { players, engineManager } = setupEngine();
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '6',
+         amount: 1,
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+         type: ItemClientMessages.StripItem,
+         itemInstanceId: itemId,
+      });
+
+      checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               '1': {
+                  '0': {
+                     amount: 1,
+                     itemId: 'ItemInstance_0',
+                  },
+               },
+            },
          },
       });
    });
