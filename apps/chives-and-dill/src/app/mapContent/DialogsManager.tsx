@@ -20,18 +20,21 @@ export const DialogsManager = () => {
    }, []);
 
    useEffect(() => {
-      setActiveShapes((prev) => [...prev, ...map(chatMessages, (event) => ({ creationTime: Date.now(), event }))]);
+      setActiveShapes((prev) => [
+         ...prev,
+         ...map(chatMessages, (event) => ({ creationTime: Date.now(), event, location: charactersMovements[event.authorId].location })),
+      ]);
    }, [chatMessages]);
 
    return (
       <>
-         {map(activeShapes, ({ event }, i) => (
+         {map(activeShapes, ({ event, location }, i) => (
             <>
                <Text
                   anchor={[0.5, 0]}
                   text={characters[event.authorId].name + ':'}
-                  x={charactersMovements[event.authorId].location.x}
-                  y={charactersMovements[event.authorId].location.y - characters[event.authorId].size / 1.5 - 20}
+                  x={location.x}
+                  y={location.y - characters[event.authorId].size / 1.5 - 20}
                   style={
                      new PIXI.TextStyle({
                         fontSize: 18,
@@ -47,8 +50,8 @@ export const DialogsManager = () => {
                <Text
                   anchor={[0.5, 0]}
                   text={event.message}
-                  x={charactersMovements[event.authorId].location.x}
-                  y={charactersMovements[event.authorId].location.y - characters[event.authorId].size / 1.5}
+                  x={location.x}
+                  y={location.y - characters[event.authorId].size / 1.5}
                   style={
                      new PIXI.TextStyle({
                         fontSize: 18,
