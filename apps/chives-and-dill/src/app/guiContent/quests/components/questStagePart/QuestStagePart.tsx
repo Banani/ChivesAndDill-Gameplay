@@ -10,7 +10,7 @@ import React, { FunctionComponent } from 'react';
 
 const questStagePartTransformers: Record<QuestType, (questStagePart: AllQuestStagePart) => JSX.Element> = {
    [QuestType.MOVEMENT]: (questStagePart: MovementQuestStagePart) => <>Go to {questStagePart.locationName}</>,
-   [QuestType.KILLING]: (questStagePart: KillingQuestStagePart) => <>Not supported yet</>,
+   [QuestType.KILLING]: (questStagePart: KillingQuestStagePart) => <>Kill {questStagePart.amount} {questStagePart.monsterName} </>,
 };
 
 const questStagePartProgressTransformers: Record<
