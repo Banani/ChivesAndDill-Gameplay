@@ -1,7 +1,8 @@
-import { QuestSchema } from '@bananos/types';
+import type { QuestSchema } from '@bananos/types';
 import { useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
 import { map } from 'lodash';
-import React, { FunctionComponent, useMemo } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useMemo } from 'react';
 import { MoneyBar } from '../../../moneyBar/MoneyBar';
 import { QuestStagePart } from '../questStagePart';
 

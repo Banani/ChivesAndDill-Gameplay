@@ -1,7 +1,7 @@
 import { Container, Sprite, Stage } from '@inlet/react-pixi';
 import _, { forEach, mapValues } from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Provider, ReactReduxContext } from 'react-redux';
+import { Provider, ReactReduxContext, useSelector } from 'react-redux';
 import { SocketContext } from './gameController/socketContext';
 
 import type { ErrorMessage, QuestSchema } from '@bananos/types';
@@ -27,6 +27,7 @@ import { MapWrapper } from './mapContent/mapManager/MapWrapper';
 import { NextLevelManager } from './mapContent/NextLevelManager';
 import { DialogsManager } from './mapContent/DialogsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
+import { selectActiveTargetId } from '../stores';
 
 const Map = () => {
    const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
@@ -45,6 +46,8 @@ const Map = () => {
 
    const activeNpc = characters[activeConversation?.[activeCharacterId]?.npcId];
    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
+
+   const activeTargetId = useSelector(selectActiveTargetId);
 
    const renderSpells = useCallback(
       () =>
@@ -91,7 +94,7 @@ const Map = () => {
          <CharacterFrames />
          <QuestManager />
          <ChatManager />
-         {!_.isEmpty(activeLoot?.[activeCharacterId]) ? <LootModal activeLoot={activeLoot[activeCharacterId]} /> : null}
+         {!_.isEmpty(activeLoot?.[activeTargetId]) ? <LootModal activeLoot={activeLoot[activeTargetId]} /> : null}
          {activeNpc ? <NpcModal questDefinition={questDefinition as Record<string, QuestSchema>} activeNpc={activeNpc} /> : null}
          <ExperienceBar />
          <PackageContext.Consumer>

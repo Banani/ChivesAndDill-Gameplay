@@ -1,4 +1,4 @@
-import { QuotesEvents } from '@bananos/types';
+import type { QuotesEvents } from '@bananos/types';
 import { ALL_SPELLS } from '../SpellModule/spells';
 import type { Spell } from '../SpellModule/types/SpellTypes';
 
@@ -50,7 +50,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
       spellPower: 100,
       speed: 2,
       division: 'Orc',
-      sightRange: 200,
+      sightRange: 1,
       desiredRange: 50,
       escapeRange: 2000,
       attackFrequency: 1500,
