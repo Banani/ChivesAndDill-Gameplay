@@ -54,6 +54,13 @@ const setupEngine = (setupProps: RecursivePartial<SetupProps> = {}) => {
          time: 4000,
          walkingType: WalkingType.None,
       },
+      '3': {
+         id: '3',
+         location: setupProps.monsterLocation ?? { x: 350, y: 400 },
+         characterTemplate: MonsterTemplates['Orc'],
+         time: 4000,
+         walkingType: WalkingType.None,
+      },
    });
 
    const randomGeneratorService = new RandomGeneratorService();
@@ -142,5 +149,59 @@ describe('PlayerTriesToOpenLoot', () => {
       dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
       checkIfErrorWasHandled(GlobalStoreModule.ACTIVE_LOOT, 'This corpse is to far away.', dataPackage);
+   });
+
+   it('Player should have current loot closed it tries to open another one', () => {
+      const { engineManager, players } = setupEngine({ monsterLocation: { x: 150, y: 100 } });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const monster: Monster[] = _.filter(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+
+      engineManager.createSystemAction<CharacterDiedEvent>({
+         type: EngineEvents.CharacterDied,
+         characterId: monster[0].id,
+         killerId: players['1'].characterId,
+         character: monster[0],
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.callPlayerAction(players['1'].socketId, {
+         type: CommonClientMessages.OpenLoot,
+         corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
+      });
+
+      engineManager.createSystemAction<CharacterDiedEvent>({
+         type: EngineEvents.CharacterDied,
+         characterId: monster[1].id,
+         killerId: players['1'].characterId,
+         character: monster[1],
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      engineManager.callPlayerAction(players['1'].socketId, {
+         type: CommonClientMessages.OpenLoot,
+         corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+      checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
+         data: {
+            monster_1: {
+               coins: 19,
+               items: {
+                  corpseItemId_2: {
+                     amount: 1,
+                     itemTemplateId: '1',
+                  },
+               },
+            },
+         },
+         toDelete: {
+            monster_0: null,
+         },
+      });
    });
 });

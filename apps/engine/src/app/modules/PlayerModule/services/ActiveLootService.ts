@@ -33,6 +33,10 @@ export class ActiveLootService extends EventParser {
          return;
       }
 
+      if (this.activeLoots[event.characterId]) {
+         this.closeLoot(event.characterId);
+      }
+
       this.activeLoots[event.characterId] = event.corpseId;
       const items = services.corpseDropService.getCorpseDropTrackById(event.corpseId);
 
