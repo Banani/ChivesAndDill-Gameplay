@@ -5,7 +5,7 @@ import { EngineEventHandler } from '../../../types';
 import { Services } from '../../../types/Services';
 import { QuestCompletedEvent, QuestEngineEvents } from '../../QuestModule/Events';
 import {
-   AddItemToCharacterEvent,
+   AddItemToCharacterInventoryEvent,
    BackpackItemsContainmentUpdatedEvent,
    BackpackTrackCreatedEvent,
    DeleteItemEvent,
@@ -13,8 +13,10 @@ import {
    ItemAddedToCharacterEvent,
    ItemDeletedEvent,
    ItemEngineEvents,
+   ItemEquippedEvent,
    ItemRemovedFromBagEvent,
    ItemsMovedInBagEvent,
+   ItemStrippedEvent,
    PlayerTriesToMoveItemInBagEvent,
    PlayerTriesToSplitItemStackEvent,
 } from '../Events';
@@ -28,8 +30,10 @@ export class BackpackItemsService extends EventParser {
       super();
       this.eventsToHandlersMap = {
          [ItemEngineEvents.BackpackTrackCreated]: this.handleBackpackTrackCreated,
-         [ItemEngineEvents.AddItemToCharacter]: this.handleAddItemToCharacter,
+         [ItemEngineEvents.AddItemToCharacterInventory]: this.handleAddItemToCharacter,
+         [ItemEngineEvents.ItemStripped]: this.handleItemStripped,
          [ItemEngineEvents.ItemDeleted]: this.handleItemDeleted,
+         [ItemEngineEvents.ItemEquipped]: this.handleItemEquipped,
          [ItemEngineEvents.PlayerTriesToMoveItemInBag]: this.handlePlayerTriesToMoveItemInBag,
          [ItemEngineEvents.PlayerTriesToSplitItemStack]: this.handlePlayerTriesToSplitItemStack,
          [ItemEngineEvents.PlayerTriesToSplitItemStack]: this.handlePlayerTriesToSplitItemStack,
@@ -138,22 +142,41 @@ export class BackpackItemsService extends EventParser {
       return itemsWithTheSameTemplate;
    };
 
-   handleAddItemToCharacter: EngineEventHandler<AddItemToCharacterEvent> = ({ event, services }) => {
-      const { itemTemplateId } = services.itemService.getItemById(event.itemId);
-      if (!this.canAddThanManyItems(event.characterId, itemTemplateId, event.amount, services)) {
-         this.sendErrorMessage(event.characterId, 'Your backpack is full.');
+   handleItemStripped: EngineEventHandler<ItemStrippedEvent> = ({ event, services }) => {
+      this.placeItemInBackpack({ eventData: { ...event, itemId: event.itemInstanceId, amount: 1 }, services });
+   };
+
+   handleAddItemToCharacter: EngineEventHandler<AddItemToCharacterInventoryEvent> = ({ event, services }) => {
+      this.placeItemInBackpack({ eventData: event, services });
+   };
+
+   placeItemInBackpack = ({
+      eventData,
+      services,
+   }: {
+      eventData: {
+         characterId: string;
+         itemId: string;
+         amount: number;
+         desiredLocation?: ItemLocationInBag;
+      };
+      services: Services;
+   }) => {
+      const { itemTemplateId } = services.itemService.getItemById(eventData.itemId);
+      if (!this.canAddThanManyItems(eventData.characterId, itemTemplateId, eventData.amount, services)) {
+         this.sendErrorMessage(eventData.characterId, 'Your backpack is full.');
          return;
       }
 
       let location: ItemLocationInBag;
-      const characterItems = this.itemsPositions[event.characterId];
-      let amountToAdd = event.amount;
+      const characterItems = this.itemsPositions[eventData.characterId];
+      let amountToAdd = eventData.amount;
 
-      if (event.desiredLocation && !characterItems[event.desiredLocation.backpack][event.desiredLocation.spot]) {
-         location = event.desiredLocation;
+      if (eventData.desiredLocation && !characterItems[eventData.desiredLocation.backpack][eventData.desiredLocation.spot]) {
+         location = eventData.desiredLocation;
       } else {
-         const itemsWithTheSameTemplate = this.findItemOfTheSameTemplateId(event.characterId, event.itemId, services);
-         const stackSize = ItemTemplates[services.itemService.getItemById(event.itemId).itemTemplateId].stack ?? 1;
+         const itemsWithTheSameTemplate = this.findItemOfTheSameTemplateId(eventData.characterId, eventData.itemId, services);
+         const stackSize = ItemTemplates[services.itemService.getItemById(eventData.itemId).itemTemplateId].stack ?? 1;
          const newItemPositions = {};
 
          _.forEach(itemsWithTheSameTemplate, ({ backpack, spot }) => {
@@ -173,17 +196,17 @@ export class BackpackItemsService extends EventParser {
          if (Object.keys(newItemPositions).length > 0) {
             this.engineEventCrator.asyncCeateEvent<BackpackItemsContainmentUpdatedEvent>({
                type: ItemEngineEvents.BackpackItemsContainmentUpdated,
-               characterId: event.characterId,
+               characterId: eventData.characterId,
                backpackItemsContainment: newItemPositions,
             });
          }
 
          if (amountToAdd > 0) {
-            location = this.findNextFreeSpot(event.characterId, services);
+            location = this.findNextFreeSpot(eventData.characterId, services);
          } else {
             this.engineEventCrator.asyncCeateEvent<DeleteItemEvent>({
                type: ItemEngineEvents.DeleteItem,
-               itemId: event.itemId,
+               itemId: eventData.itemId,
             });
          }
       }
@@ -191,32 +214,40 @@ export class BackpackItemsService extends EventParser {
       if (location) {
          characterItems[location.backpack][location.spot] = {
             amount: amountToAdd,
-            itemId: event.itemId,
+            itemId: eventData.itemId,
          };
 
          this.engineEventCrator.asyncCeateEvent<ItemAddedToCharacterEvent>({
             type: ItemEngineEvents.ItemAddedToCharacter,
-            characterId: event.characterId,
+            characterId: eventData.characterId,
             amount: amountToAdd,
-            itemId: event.itemId,
+            itemId: eventData.itemId,
             position: location,
          });
       }
    };
 
    handleItemDeleted: EngineEventHandler<ItemDeletedEvent> = ({ event }) => {
-      const { backpack, spot } = this.findItemLocationInBag(event.lastCharacterOwnerId, event.itemId);
+      this.removeFromBag(event.lastCharacterOwnerId, event.itemId);
+   };
+
+   handleItemEquipped: EngineEventHandler<ItemEquippedEvent> = ({ event }) => {
+      this.removeFromBag(event.characterId, event.itemInstanceId);
+   };
+
+   removeFromBag = (lastCharacterOwnerId: string, itemId: string) => {
+      const { backpack, spot } = this.findItemLocationInBag(lastCharacterOwnerId, itemId);
 
       if (!backpack) {
          return;
       }
 
-      delete this.itemsPositions[event.lastCharacterOwnerId][backpack][spot];
+      delete this.itemsPositions[lastCharacterOwnerId][backpack][spot];
 
       this.engineEventCrator.asyncCeateEvent<ItemRemovedFromBagEvent>({
          type: ItemEngineEvents.ItemRemovedFromBag,
-         ownerId: event.lastCharacterOwnerId,
-         itemId: event.itemId,
+         ownerId: lastCharacterOwnerId,
+         itemId: itemId,
          position: { backpack, spot },
       });
    };

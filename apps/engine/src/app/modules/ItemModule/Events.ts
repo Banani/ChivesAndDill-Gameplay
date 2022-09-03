@@ -1,4 +1,4 @@
-import { BackpackItemsSpot, BackpackTrack, ItemInstance, ItemLocationInBag, RecursivePartial } from '@bananos/types';
+import { BackpackItemsSpot, BackpackTrack, EquipmentTrack, ItemInstance, ItemLocationInBag, PossibleEquipmentPlaces, RecursivePartial } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 
 export enum ItemEngineEvents {
@@ -7,11 +7,16 @@ export enum ItemEngineEvents {
    AddCurrencyToCharacter = 'AddCurrencyToCharacter',
 
    BackpackTrackCreated = 'BackpackTrackCreated',
-
    BackpackItemsContainmentUpdated = 'BackpackItemsContainmentUpdated',
 
+   EquipmentTrackCreated = 'EquipmentTrackCreated',
+   PlayerTriesToEquipItem = 'PlayerTriesToEquipItem',
+   ItemEquipped = 'ItemEquiped',
+   PlayerTriesToStripItem = 'PlayerTriesToStripItem',
+   ItemStripped = 'ItemStripped',
+
    GenerateItemForCharacter = 'GenerateItemForCharacter',
-   AddItemToCharacter = 'AddItemToCharacter',
+   AddItemToCharacterInventory = 'AddItemToCharacterInventory',
    ItemAddedToCharacter = 'ItemAddedToCharacter',
 
    PlayerTriesToDeleteItem = 'PlayerTriesToDeleteItem',
@@ -21,7 +26,6 @@ export enum ItemEngineEvents {
 
    PlayerTriesToMoveItemInBag = 'PlayerTriesToMoveItemInBag',
    ItemsMovedInBag = 'ItemsMovedInBag',
-
    PlayerTriesToSplitItemStack = 'PlayerTriesToSplitItemStack',
 }
 
@@ -55,6 +59,12 @@ export interface BackpackItemsContainmentUpdatedEvent extends EngineEvent {
    backpackItemsContainment: RecursivePartial<BackpackItemsSpot>;
 }
 
+export interface EquipmentTrackCreatedEvent extends EngineEvent {
+   type: ItemEngineEvents.EquipmentTrackCreated;
+   characterId: string;
+   equipmentTrack: EquipmentTrack;
+}
+
 export interface GenerateItemForCharacterEvent extends EngineEvent {
    type: ItemEngineEvents.GenerateItemForCharacter;
    characterId: string;
@@ -63,8 +73,8 @@ export interface GenerateItemForCharacterEvent extends EngineEvent {
    desiredLocation?: ItemLocationInBag;
 }
 
-export interface AddItemToCharacterEvent extends EngineEvent {
-   type: ItemEngineEvents.AddItemToCharacter;
+export interface AddItemToCharacterInventoryEvent extends EngineEvent {
+   type: ItemEngineEvents.AddItemToCharacterInventory;
    characterId: string;
    itemId: string;
    amount: number;
@@ -121,14 +131,48 @@ export interface DeleteItemEvent extends EngineEvent {
    itemId: string;
 }
 
+export interface PlayerTriesToEquipItemEvent extends EngineEvent {
+   type: ItemEngineEvents.PlayerTriesToEquipItem;
+   itemInstanceId: string;
+}
+
+export interface ItemEquippedEvent extends EngineEvent {
+   type: ItemEngineEvents.ItemEquipped;
+   itemInstanceId: string;
+   characterId: string;
+   slot: PossibleEquipmentPlaces;
+}
+
+export interface PlayerTriesToStripItemEvent extends EngineEvent {
+   type: ItemEngineEvents.PlayerTriesToStripItem;
+   itemInstanceId: string;
+   desiredLocation?: ItemLocationInBag;
+}
+
+export interface ItemStrippedEvent extends EngineEvent {
+   type: ItemEngineEvents.ItemStripped;
+   itemInstanceId: string;
+   characterId: string;
+   desiredLocation?: ItemLocationInBag;
+   slot: PossibleEquipmentPlaces;
+}
+
 export interface ItemEngineEventsMap {
    [ItemEngineEvents.CurrencyAmountUpdated]: EngineEventHandler<CurrencyAmountUpdatedEvent>;
    [ItemEngineEvents.RemoveCurrencyFromCharacter]: EngineEventHandler<RemoveCurrencyFromCharacterEvent>;
    [ItemEngineEvents.AddCurrencyToCharacter]: EngineEventHandler<AddCurrencyToCharacterEvent>;
+
+   [ItemEngineEvents.EquipmentTrackCreated]: EngineEventHandler<EquipmentTrackCreatedEvent>;
+   [ItemEngineEvents.PlayerTriesToEquipItem]: EngineEventHandler<PlayerTriesToEquipItemEvent>;
+   [ItemEngineEvents.ItemEquipped]: EngineEventHandler<ItemEquippedEvent>;
+   [ItemEngineEvents.PlayerTriesToStripItem]: EngineEventHandler<PlayerTriesToStripItemEvent>;
+   [ItemEngineEvents.ItemStripped]: EngineEventHandler<ItemStrippedEvent>;
+
    [ItemEngineEvents.BackpackTrackCreated]: EngineEventHandler<BackpackTrackCreatedEvent>;
    [ItemEngineEvents.BackpackItemsContainmentUpdated]: EngineEventHandler<BackpackItemsContainmentUpdatedEvent>;
+
    [ItemEngineEvents.GenerateItemForCharacter]: EngineEventHandler<GenerateItemForCharacterEvent>;
-   [ItemEngineEvents.AddItemToCharacter]: EngineEventHandler<AddItemToCharacterEvent>;
+   [ItemEngineEvents.AddItemToCharacterInventory]: EngineEventHandler<AddItemToCharacterInventoryEvent>;
    [ItemEngineEvents.ItemAddedToCharacter]: EngineEventHandler<ItemAddedToCharacterEvent>;
    [ItemEngineEvents.PlayerTriesToDeleteItem]: EngineEventHandler<PlayerTriesToDeleteItemEvent>;
    [ItemEngineEvents.ItemDeleted]: EngineEventHandler<ItemDeletedEvent>;

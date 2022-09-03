@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { AddItemToCharacterEvent, BackpackTrackCreatedEvent, CurrencyAmountUpdatedEvent, ItemAddedToCharacterEvent, ItemEngineEvents } from '../Events';
+import { BackpackTrackCreatedEvent, ItemEngineEvents } from '../Events';
 
 export class BackpackService extends EventParser {
    // id usera => backpack spot => amount of spaces

@@ -1,7 +1,7 @@
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import {
-   AddItemToCharacterEvent,
+   AddItemToCharacterInventoryEvent,
    DeleteItemEvent,
    GenerateItemForCharacterEvent,
    ItemDeletedEvent,
@@ -42,8 +42,8 @@ export class ItemService extends EventParser {
             amount = amountToGenerate % stackSize;
          }
 
-         this.engineEventCrator.asyncCeateEvent<AddItemToCharacterEvent>({
-            type: ItemEngineEvents.AddItemToCharacter,
+         this.engineEventCrator.asyncCeateEvent<AddItemToCharacterInventoryEvent>({
+            type: ItemEngineEvents.AddItemToCharacterInventory,
             characterId: event.characterId,
             desiredLocation: event.desiredLocation,
             itemId,

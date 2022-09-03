@@ -1,14 +1,14 @@
+import { GlobalStoreModule } from '@bananos/types';
 import { Text } from '@inlet/react-pixi';
 import { filter, map } from 'lodash';
 import * as PIXI from 'pixi.js';
 import React, { useEffect, useState } from 'react';
 import { useEngineModuleReader } from '../../hooks';
-import { GlobalStoreModule } from '@bananos/types';
 
 export const DialogsManager = () => {
-
    const [activeShapes, setActiveShapes] = useState([]);
    const { recentData: chatMessages } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
+   const { data: charactersMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
 
    useEffect(() => {
@@ -20,18 +20,21 @@ export const DialogsManager = () => {
    }, []);
 
    useEffect(() => {
-      setActiveShapes((prev) => [...prev, ...map(chatMessages, (event) => ({ creationTime: Date.now(), event }))]);
+      setActiveShapes((prev) => [
+         ...prev,
+         ...map(chatMessages, (event) => ({ creationTime: Date.now(), event, location: charactersMovements[event.authorId].location })),
+      ]);
    }, [chatMessages]);
 
    return (
       <>
-         {map(activeShapes, ({ event }, i) => (
+         {map(activeShapes, ({ event, location }, i) => (
             <>
                <Text
                   anchor={[0.5, 0]}
                   text={characters[event.authorId].name + ':'}
-                  x={characters[event.authorId].location.x}
-                  y={characters[event.authorId].location.y - (characters[event.authorId].size / 1.5) - 20}
+                  x={location.x}
+                  y={location.y - characters[event.authorId].size / 1.5 - 20}
                   style={
                      new PIXI.TextStyle({
                         fontSize: 18,
@@ -47,8 +50,8 @@ export const DialogsManager = () => {
                <Text
                   anchor={[0.5, 0]}
                   text={event.message}
-                  x={characters[event.authorId].location.x}
-                  y={characters[event.authorId].location.y - characters[event.authorId].size / 1.5}
+                  x={location.x}
+                  y={location.y - characters[event.authorId].size / 1.5}
                   style={
                      new PIXI.TextStyle({
                         fontSize: 18,
@@ -65,4 +68,4 @@ export const DialogsManager = () => {
          ))}
       </>
    );
-}
+};

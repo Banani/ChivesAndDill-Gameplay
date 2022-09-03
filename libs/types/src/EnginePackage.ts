@@ -1,4 +1,14 @@
-import { ActiveNpcConversation, BackpackItemsSpot, BackpackTrack, ChatMessage, EngineItemMessages, EngineNpcAction, ItemTemplate, NpcStock } from '.';
+import {
+   ActiveNpcConversation,
+   BackpackItemsSpot,
+   BackpackTrack,
+   ChatMessage,
+   EngineItemMessages,
+   EngineNpcAction,
+   EquipmentTrack,
+   ItemTemplate,
+   NpcStock,
+} from '.';
 import { CharacterEvents, MonsterCorpse } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
@@ -28,6 +38,7 @@ export enum GlobalStoreModule {
    ERROR_MESSAGES = 'errorMessages',
    CHAT_CHANNEL = 'chatChannel',
    CHAT_MESSAGES = 'chatMessages',
+   EQUIPMENT = 'Equipment',
    BACKPACK_SCHEMA = 'backpackSchema',
    BACKPACK_ITEMS = 'backpackItems',
    ITEMS = 'items',
@@ -73,6 +84,7 @@ export interface EnginePackage {
    [GlobalStoreModule.NPC_QUESTS]: PartialEnginePackage<Record<string, boolean>>;
    [GlobalStoreModule.QUEST_PROGRESS]: PartialEnginePackage<ExternalQuestProgress>;
    [GlobalStoreModule.CORPSE_DROP]: PartialEnginePackage<MonsterCorpse>;
+   [GlobalStoreModule.EQUIPMENT]: PartialEnginePackage<EquipmentTrack>;
 }
 
 interface StoreModule<Data> {
@@ -112,6 +124,7 @@ export interface GlobalStore {
    [GlobalStoreModule.NPC_QUESTS]: StoreModule<Record<string, boolean>>;
    [GlobalStoreModule.QUEST_PROGRESS]: StoreModule<ExternalQuestProgress>;
    [GlobalStoreModule.CORPSE_DROP]: StoreModule<MonsterCorpse>;
+   [GlobalStoreModule.EQUIPMENT]: StoreModule<EquipmentTrack>;
 }
 
 export interface ActiveCharacterStorePart {
