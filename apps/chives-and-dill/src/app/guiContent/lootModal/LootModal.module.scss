@@ -4,4 +4,53 @@
   width: 258px;
   background: url('../../../assets/spritesheets/backgrounds/lootmodal.png');
   z-index: 99;
+
+  .ItemsContainer {
+    display: flex;
+    margin-bottom: 10px;
+    max-width: 100%;
+    width: 100%;
+    flex-wrap: wrap;
+    position: absolute;
+    top: 112px;
+    left: 28px;
+
+    .Item {
+        width: 82%;
+        height: 50px;
+        display: flex;
+        border: 1px solid rgb(83, 83, 83);
+        background: #29292980;
+        border-radius: 4px;
+        margin-bottom: 4px;
+
+        &:nth-child(odd) {
+            margin-right: 2px;
+        }
+
+        .ItemImage {
+            width: 50px;
+            height: 50px;
+            border-right: 1px solid rgb(83, 83, 83);
+            border-radius: 4px;
+        }
+
+        .RewardText {
+            color: white;
+            display: flex;
+            align-items: center;
+            text-shadow: 1px 1px black;
+            text-align: center;
+            margin-left: 5px;
+        }
+
+        .Stack {
+            position: relative;
+            left: -18px;
+            top: 33px;
+            color: white;
+        }
+    }
+  }
+
 }
