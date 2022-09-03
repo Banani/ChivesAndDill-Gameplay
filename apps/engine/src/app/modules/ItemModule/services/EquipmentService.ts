@@ -62,7 +62,7 @@ export class EquipmentService extends EventParser {
          targetSlot = targetSlot[0];
       }
 
-      // TODO: Co jesli miejsce jest zajete
+      const itemOnThatSpot = this.equipment[event.requestingCharacterId][targetSlot];
       this.equipment[event.requestingCharacterId][targetSlot] = item.itemId;
 
       this.engineEventCrator.asyncCeateEvent<ItemEquippedEvent>({
@@ -71,6 +71,16 @@ export class EquipmentService extends EventParser {
          slot: targetSlot,
          itemInstanceId: item.itemId,
       });
+
+      if (itemOnThatSpot) {
+         this.engineEventCrator.asyncCeateEvent<ItemStrippedEvent>({
+            type: ItemEngineEvents.ItemStripped,
+            characterId: event.requestingCharacterId,
+            slot: targetSlot,
+            itemInstanceId: itemOnThatSpot,
+            desiredLocation: services.backpackItemsService.findItemLocationInBag(event.requestingCharacterId, item.itemId),
+         });
+      }
    };
 
    handlePlayerTriesToStripItem: EngineEventHandler<PlayerTriesToStripItemEvent> = ({ event, services }) => {

@@ -167,6 +167,44 @@ describe('Equipment', () => {
       });
    });
 
+   it('Player should have item replaced if something else is already taking that spot', () => {
+      const { players, engineManager } = setupEngine();
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '6',
+         amount: 1,
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId1 = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '6',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId2 = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId1 });
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId2 });
+
+      checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
+         data: {
+            playerCharacter_1: { chest: itemId2 },
+         },
+      });
+      checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
+         data: {
+            playerCharacter_1: { '1': { '1': { amount: 1, itemId: itemId1 } } },
+         },
+      });
+   });
+
    it('Player should get error if tries to strip item that does not exist', () => {
       const { players, engineManager } = setupEngine();
 
