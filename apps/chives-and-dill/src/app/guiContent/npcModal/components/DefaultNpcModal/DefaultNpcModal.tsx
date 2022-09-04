@@ -48,19 +48,27 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
       </div>
    );
 
+   const currentQuests = (
+      _.chain(activeNpcQuests)
+         .pickBy((_, questId) => questProgress?.[questId])
+         .map((_, questId) => questItem(questId))
+         .value()
+   );
+
+   const availableQuests = (
+      _.chain(activeNpcQuests)
+         .pickBy((_, questId) => !questProgress?.[questId])
+         .map((_, questId) => questItem(questId))
+         .value()
+   );
+
    return activeNpc ? (
       <div className={styles.ContentWrapper}>
          <div className={styles.SectionText}>aaaa aaaaaa aaaaa aaaa aaaaaa aaa aaa aaaaaa aaaaa xDDD :D</div>
-         <h3 className={styles.SectionHeader}>Current Quests</h3>
-         {_.chain(activeNpcQuests)
-            .pickBy((_, questId) => questProgress?.[questId])
-            .map((_, questId) => questItem(questId))
-            .value()}
-         <h3 className={styles.SectionHeader}>Available Quests</h3>
-         {_.chain(activeNpcQuests)
-            .pickBy((_, questId) => !questProgress?.[questId])
-            .map((_, questId) => questItem(questId))
-            .value()}
+         {currentQuests.length > 0 ? <h3 className={styles.SectionHeader}>Current Quests</h3> : null}
+         {currentQuests}
+         {availableQuests.length > 0 ? <h3 className={styles.SectionHeader}>Available  Quests</h3> : null}
+         {availableQuests}
       </div>
    ) : null;
 };
