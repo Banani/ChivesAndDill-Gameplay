@@ -59,7 +59,16 @@ export class EquipmentService extends EventParser {
 
       let targetSlot = EquipmentSpotMap[itemTemplate.slot];
       if (Array.isArray(targetSlot)) {
-         targetSlot = targetSlot[0];
+         for (let i in targetSlot) {
+            if (!this.equipment[event.requestingCharacterId][targetSlot[i]]) {
+               targetSlot = targetSlot[i] as PossibleEquipmentPlaces;
+               break;
+            }
+         }
+
+         if (Array.isArray(targetSlot)) {
+            targetSlot = targetSlot[0];
+         }
       }
 
       const itemOnThatSpot = this.equipment[event.requestingCharacterId][targetSlot];
