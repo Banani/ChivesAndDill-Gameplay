@@ -72,8 +72,10 @@ describe('SellItemToNpc action', () => {
 
       checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
          toDelete: {
-            '1': {
-               '0': null,
+            [players['1'].characterId]: {
+               '1': {
+                  '0': null,
+               },
             },
          },
       });

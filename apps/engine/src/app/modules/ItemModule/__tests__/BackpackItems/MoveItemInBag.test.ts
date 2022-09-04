@@ -1,8 +1,8 @@
 import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
-import _ = require('lodash');
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from '../../../../testUtilities';
 import { Classes } from '../../../../types/Classes';
 import { GenerateItemForCharacterEvent, ItemEngineEvents, PlayerTriesToSplitItemStackEvent } from '../../Events';
+import _ = require('lodash');
 
 const CURRENT_MODULE = GlobalStoreModule.BACKPACK_ITEMS;
 
@@ -44,15 +44,19 @@ describe('MoveItemInBag', () => {
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
          data: {
-            '1': {
-               '2': {
-                  amount: 1,
-                  itemId: 'ItemInstance_0',
+            [players['1'].characterId]: {
+               '1': {
+                  '2': {
+                     amount: 1,
+                     itemId: 'ItemInstance_0',
+                  },
                },
             },
          },
          toDelete: {
-            '1': { '0': null },
+            [players['1'].characterId]: {
+               '1': { '0': null },
+            },
          },
       });
    });
@@ -140,14 +144,16 @@ describe('MoveItemInBag', () => {
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
          data: {
-            '1': {
-               '0': {
-                  amount: 1,
-                  itemId: 'ItemInstance_1',
-               },
+            [players['1'].characterId]: {
                '1': {
-                  amount: 1,
-                  itemId: 'ItemInstance_0',
+                  '0': {
+                     amount: 1,
+                     itemId: 'ItemInstance_1',
+                  },
+                  '1': {
+                     amount: 1,
+                     itemId: 'ItemInstance_0',
+                  },
                },
             },
          },
@@ -190,15 +196,19 @@ describe('MoveItemInBag', () => {
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
          data: {
-            '1': {
-               '0': {
-                  amount: 11,
-                  itemId: 'ItemInstance_0',
+            [players['1'].characterId]: {
+               '1': {
+                  '0': {
+                     amount: 11,
+                     itemId: 'ItemInstance_0',
+                  },
                },
             },
          },
          toDelete: {
-            '1': { '1': null },
+            [players['1'].characterId]: {
+               '1': { '1': null },
+            },
          },
       });
    });
@@ -234,14 +244,16 @@ describe('MoveItemInBag', () => {
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
          data: {
-            '1': {
-               '0': {
-                  amount: 20,
-                  itemId: 'ItemInstance_0',
-               },
+            [players['1'].characterId]: {
                '1': {
-                  amount: 8,
-                  itemId: 'ItemInstance_1',
+                  '0': {
+                     amount: 20,
+                     itemId: 'ItemInstance_0',
+                  },
+                  '1': {
+                     amount: 8,
+                     itemId: 'ItemInstance_1',
+                  },
                },
             },
          },
@@ -277,14 +289,16 @@ describe('MoveItemInBag', () => {
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
          data: {
-            '1': {
-               '0': {
-                  amount: 1,
-                  itemId: 'ItemInstance_0',
-               },
+            [players['1'].characterId]: {
                '1': {
-                  amount: 1,
-                  itemId: 'ItemInstance_1',
+                  '0': {
+                     amount: 1,
+                     itemId: 'ItemInstance_0',
+                  },
+                  '1': {
+                     amount: 1,
+                     itemId: 'ItemInstance_1',
+                  },
                },
             },
          },
