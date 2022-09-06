@@ -1,13 +1,14 @@
 .chatChannels {
     box-sizing: content-box;
     border: 1px solid #dddddd;
-    width: 800px;
-    height: 600px;
-
+    width: 600px;
+    height: 548px;
+    background:url("../../../../assets/spritesheets/backgrounds/chatChannels.PNG");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
     position: absolute;
     top: 200px;
     left: 200px;
-    background: grey;
     display: flex;
     flex-direction: column;
 
@@ -30,7 +31,7 @@
 
         .objectList {
             flex: 1;
-            margin: 30px;
+            margin: 30px 20px 5px 30px;
             max-width: 50%;
             box-sizing: border-box;
             overflow-y: scroll;
@@ -61,7 +62,7 @@
 
     .actionHolder {
         display: flex;
-        padding: 20px;
+        padding: 7.5px;
         justify-content: flex-end;
 
         .actionButton {
