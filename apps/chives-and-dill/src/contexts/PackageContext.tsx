@@ -40,6 +40,7 @@ export const EngineContexts: Record<GlobalStoreModule, React.Context<any>> = {
    [GlobalStoreModule.QUEST_PROGRESS]: React.createContext<GlobalStore[GlobalStoreModule.QUEST_PROGRESS]>(null),
    [GlobalStoreModule.CORPSE_DROP]: React.createContext<GlobalStore[GlobalStoreModule.CORPSE_DROP]>(null),
    [GlobalStoreModule.EQUIPMENT]: React.createContext<GlobalStore[GlobalStoreModule.EQUIPMENT]>(null),
+   [GlobalStoreModule.ATTRIBUTES]: React.createContext<GlobalStore[GlobalStoreModule.ATTRIBUTES]>(null),
 };
 
 const deleteRequestedFields = (data: any, pathToDelete: any) => {

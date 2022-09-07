@@ -1,5 +1,14 @@
 import { Location } from './shared';
 
+export interface Attributes {
+   armor: number;
+   stamina: number;
+   agility: number;
+   intelect: number;
+   strength: number;
+   spirit: number;
+}
+
 export interface QuotesEvents {
    standard?: QuoteHandler;
    onKilling?: QuoteHandler;
