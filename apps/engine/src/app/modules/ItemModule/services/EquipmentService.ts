@@ -147,4 +147,6 @@ export class EquipmentService extends EventParser {
          equipmentTrack: this.equipment[event.playerCharacter.id],
       });
    };
+
+   getCharacterEquipment = (characterId) => this.equipment[characterId];
 }
