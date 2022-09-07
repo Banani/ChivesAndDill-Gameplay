@@ -145,4 +145,46 @@ describe('Attributes', () => {
          },
       });
    });
+
+   it('Attributes should not be recalculated when item is stripped', () => {
+      const { players, engineManager } = setupEngine();
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '7',
+         amount: 1,
+      });
+
+      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId1 = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId1 });
+
+      engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+         type: ItemEngineEvents.GenerateItemForCharacter,
+         characterId: players['1'].characterId,
+         itemTemplateId: '8',
+         amount: 1,
+      });
+
+      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+      const itemId2 = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
+
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId2 });
+      dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.StripItem, itemInstanceId: itemId1 });
+
+      checkIfPackageIsValid(GlobalStoreModule.ATTRIBUTES, dataPackage, {
+         data: {
+            playerCharacter_1: {
+               agility: 2,
+               armor: 0,
+               intelect: 0,
+               spirit: 0,
+               stamina: 1,
+               strength: 0,
+            },
+         },
+      });
+   });
 });

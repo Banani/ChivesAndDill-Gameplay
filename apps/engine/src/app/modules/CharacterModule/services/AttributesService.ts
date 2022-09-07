@@ -2,7 +2,8 @@ import { Attributes, EquipmentItemTemplate } from '@bananos/types';
 import { forEach } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import type { EngineEventHandler } from '../../../types';
-import { ItemEngineEvents, ItemEquippedEvent } from '../../ItemModule/Events';
+import { Services } from '../../../types/Services';
+import { ItemEngineEvents, ItemEquippedEvent, ItemStrippedEvent } from '../../ItemModule/Events';
 import { AttributesUpdatedEvent, CharacterEngineEvents, NewCharacterCreatedEvent } from '../Events';
 
 export class AttributesService extends EventParser {
@@ -13,6 +14,7 @@ export class AttributesService extends EventParser {
       this.eventsToHandlersMap = {
          [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
          [ItemEngineEvents.ItemEquipped]: this.handleItemEquipped,
+         [ItemEngineEvents.ItemStripped]: this.handleItemStripped,
       };
    }
 
@@ -33,7 +35,15 @@ export class AttributesService extends EventParser {
       });
    };
 
+   handleItemStripped: EngineEventHandler<ItemStrippedEvent> = ({ event, services }) => {
+      this.recalculateAttributes(event.characterId, services);
+   };
+
    handleItemEquipped: EngineEventHandler<ItemEquippedEvent> = ({ event, services }) => {
+      this.recalculateAttributes(event.characterId, services);
+   };
+
+   recalculateAttributes = (characterId: string, services: Services) => {
       const attributes = {
          armor: 0,
          stamina: 0,
@@ -43,7 +53,7 @@ export class AttributesService extends EventParser {
          spirit: 0,
       };
 
-      const equipment = services.equipmentService.getCharacterEquipment(event.characterId);
+      const equipment = services.equipmentService.getCharacterEquipment(characterId);
 
       forEach(equipment, (itemId) => {
          if (itemId) {
@@ -58,12 +68,12 @@ export class AttributesService extends EventParser {
          }
       });
 
-      this.stats[event.characterId] = attributes;
+      this.stats[characterId] = attributes;
 
       this.engineEventCrator.asyncCeateEvent<AttributesUpdatedEvent>({
          type: CharacterEngineEvents.AttributesUpdated,
-         characterId: event.characterId,
-         attributes: this.stats[event.characterId],
+         characterId: characterId,
+         attributes: this.stats[characterId],
       });
    };
 }
