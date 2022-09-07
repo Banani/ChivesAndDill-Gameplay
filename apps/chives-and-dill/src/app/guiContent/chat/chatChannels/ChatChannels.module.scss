@@ -1,6 +1,5 @@
 .chatChannels {
     box-sizing: content-box;
-    border: 1px solid #dddddd;
     width: 600px;
     height: 548px;
     background:url("../../../../assets/spritesheets/backgrounds/chatChannels.PNG");
@@ -12,15 +11,14 @@
     display: flex;
     flex-direction: column;
 
+
     .channelName {
         padding: 10px;
         background: transparent;
         border: none;
         cursor: pointer;
 
-        &:hover {
-            color: gold;
-        }
+        
     }
 
     .contentHolder {
@@ -30,17 +28,26 @@
         overflow: hidden;
 
         .objectList {
-            flex: 1;
-            margin: 30px 20px 5px 30px;
+            margin: 40px 20px 5px 30px;
             max-width: 50%;
             box-sizing: border-box;
             overflow-y: scroll;
 
+            &.channelList {
+                flex: 6;
+            }
+            
+            &.memberList {
+                flex: 8;
+            }
+
             .listElement {
                 max-width: 100%;
                 display: flex;
+                color: white;
 
                 .crown {
+                    color: gold;
                     height: 16px;
                     margin-right: 8px;
                 }
@@ -54,6 +61,10 @@
 
                 .crown + .memberName {
                     margin-left: 0;
+                }
+                
+                &:hover {
+                    color: gold;
                 }
             }
 
