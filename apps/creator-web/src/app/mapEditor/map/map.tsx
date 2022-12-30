@@ -1,6 +1,6 @@
 import { Location } from '@bananos/types';
 import { Stage } from '@inlet/react-pixi';
-import _, { range } from 'lodash';
+import _, { map, range } from 'lodash';
 import * as PIXI from 'pixi.js';
 import { Texture } from 'pixi.js';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -69,7 +69,7 @@ export const Map = () => {
                range(0, 100)
                   .filter((y) => !!packageContext.backendStore.map.data[`${x}:${y}`])
                   .map((y) =>
-                     packageContext.backendStore.map.data[`${x}:${y}`].map((spriteId: string, i: string) => (
+                     map(packageContext.backendStore.map.data[`${x}:${y}`], (spriteId: string, i: string) => (
                         <MapSprite key={`${x}:${y}:${i}`} location={{ x, y }} texture={texturesMap[spriteId]} />
                      ))
                   )
