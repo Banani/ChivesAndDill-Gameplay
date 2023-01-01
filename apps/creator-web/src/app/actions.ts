@@ -1,0 +1,3 @@
+export enum ACTIONS {
+   UPDATE_MAP_FIELD = 'UPDATE_MAP_FIELD',
+}

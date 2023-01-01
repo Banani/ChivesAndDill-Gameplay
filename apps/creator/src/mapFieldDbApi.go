@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"strconv"
 
@@ -10,6 +11,15 @@ import (
 
 type MapFieldDbApi struct {
 	application *Application
+}
+
+func (m *MapFieldDbApi) saveMapField(mapField MapField) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("mapFields")
+
+	document := bson.D{{"x", mapField.X}, {"y", mapField.Y}, {"_id", strconv.Itoa(mapField.X) + ":" + strconv.Itoa(mapField.Y)}, {"spriteId", mapField.SpriteId}}
+
+	collection.InsertOne(context.TODO(), document)
 }
 
 func (m *MapFieldDbApi) getSprites() map[string]Sprite {
@@ -43,11 +53,31 @@ func (m *MapFieldDbApi) getSprites() map[string]Sprite {
 }
 
 func (m *MapFieldDbApi) getMapFields() map[string]MapField {
-	mapFields := make(map[string]MapField)
-	mapFields["2:0"] = MapField{Id: "ObjectID(\"62d2f43587803a92bd861ca3\")"}
-	mapFields["2:5"] = MapField{Id: "ObjectID(\"62d2f43587803a92bd861ca3\")"}
-	mapFields["7:3"] = MapField{Id: "ObjectID(\"62d2f43587803a92bd861ca3\")"}
-	mapFields["8:2"] = MapField{Id: "ObjectID(\"62d2f43587803a92bd861ca3\")"}
 
-	return mapFields
+	dbClient := m.application.dbClient
+	mapFieldsCollection := dbClient.db.Collection("mapFields")
+
+	cursor, err := mapFieldsCollection.Find(dbClient.ctx, bson.M{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var mapFields []bson.M
+	if err = cursor.All(dbClient.ctx, &mapFields); err != nil {
+		log.Fatal(err)
+	}
+
+	mapFieldsMap := make(map[string]MapField)
+	for _, mapField := range mapFields {
+		x, _ := mapField["x"].(int)
+		y, _ := mapField["y"].(int)
+
+		mapFieldsMap[mapField["_id"].(string)] = MapField{
+			X:        x,
+			Y:        y,
+			SpriteId: mapField["spriteId"].(string),
+		}
+	}
+
+	return mapFieldsMap
 }

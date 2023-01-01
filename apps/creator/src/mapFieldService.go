@@ -1,6 +1,9 @@
 package main
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"strconv"
+)
 
 type Sprite struct {
 	X           int    `json:"x"`
@@ -10,15 +13,16 @@ type Sprite struct {
 }
 
 type MapField struct {
-	Id string `json:"id"`
+	SpriteId string `json:"spriteId"`
+	X        int    `json:"x"`
+	Y        int    `json:"y"`
 }
 
 type MapFieldsService struct {
-	application *Application
-	mapFields   map[string]MapField
-	sprites     map[string]Sprite
-	update      chan Sprite
-	updated     chan Sprite
+	application     *Application
+	mapFields       map[string]MapField
+	sprites         map[string]Sprite
+	mapFieldUpdated chan UpdateMapFieldAction
 }
 
 func (s *MapFieldsService) init() {
@@ -28,34 +32,44 @@ func (s *MapFieldsService) init() {
 	s.sprites = api.getSprites()
 }
 
-func (m *MapFieldsService) handleNewConnection() {
+func (service *MapFieldsService) handleNewConnection() {
 	mapFieldPackage := make(map[string]EnginePackageStringArray)
 	serializedMapField := make(map[string]string)
-	for key, mapField := range m.mapFields {
+	for key, mapField := range service.mapFields {
 		jsonSprite, _ := json.Marshal(mapField)
 		serializedMapField[key] = string(jsonSprite)
 	}
 	mapFieldPackage["map"] = EnginePackageStringArray{Data: serializedMapField}
 
-	m.application.writter.stream <- mapFieldPackage
+	service.application.writter.stream <- mapFieldPackage
 
 	spritesPackage := make(map[string]EnginePackageStringArray)
 	serializedSpriteMap := make(map[string]string)
-	for key, sprite := range m.sprites {
+	for key, sprite := range service.sprites {
 		jsonSprite, _ := json.Marshal(sprite)
 		serializedSpriteMap[key] = string(jsonSprite)
 	}
 	spritesPackage["sprites"] = EnginePackageStringArray{Data: serializedSpriteMap}
 
-	m.application.writter.stream <- spritesPackage
+	service.application.writter.stream <- spritesPackage
 }
 
 func (service *MapFieldsService) serve() {
-	// for {
-	// 	select {
-	// 	case updateMapField := <-service.update:
-	// 		service.mapFields[strconv.Itoa(updateMapField.X)+":"+strconv.Itoa(updateMapField.Y)] = []string{updateMapField.SpriteId}
-	// 		service.updated <- updateMapField
-	// 	}
-	// }
+	for {
+		select {
+		case updateMapFieldAction := <-service.mapFieldUpdated:
+			position := strconv.Itoa(updateMapFieldAction.X) + ":" + strconv.Itoa(updateMapFieldAction.Y)
+			service.mapFields[position] = MapField{SpriteId: updateMapFieldAction.SpriteId, X: updateMapFieldAction.X, Y: updateMapFieldAction.Y}
+
+			mapFieldPackage := make(map[string]EnginePackageStringArray)
+			serializedMapField := make(map[string]string)
+			jsonSprite, _ := json.Marshal(service.mapFields[position])
+			serializedMapField[position] = string(jsonSprite)
+			mapFieldPackage["map"] = EnginePackageStringArray{Data: serializedMapField}
+
+			api := MapFieldDbApi{application: service.application}
+			api.saveMapField(service.mapFields[position])
+			service.application.writter.stream <- mapFieldPackage
+		}
+	}
 }
