@@ -20,7 +20,11 @@ func main() {
 	dbClient.startConnection()
 	defer dbClient.closeConnection()
 
-	writter := &Writter{stream: make(chan map[string]EnginePackageStringArray)}
+	writter := &Writter{
+		stream:            make(chan map[string]EnginePackageStringArray),
+		connections:       make(map[*websocket.Conn]bool),
+		removeConnections: make(chan *websocket.Conn),
+	}
 	reader := &Reader{}
 
 	application := &Application{dbClient: &dbClient, writter: writter}
@@ -42,15 +46,8 @@ func main() {
 			return
 		}
 
-		// Moze oni oboje nie powinni trzymac polaczenia, moze jakis osobny serwis na to?
-		// I niech tez serwis zamknie tez stare polaczenia
-
-		// defer func() {
-		// 	u.conn.Close()
-		// }()
-
-		writter.addConnection(*conn)
-		reader.addConnection(*conn)
+		writter.addConnection(conn)
+		reader.addConnection(conn)
 
 		// loop po wszystkich serwisach?
 		application.services.mapFieldService.handleNewConnection()

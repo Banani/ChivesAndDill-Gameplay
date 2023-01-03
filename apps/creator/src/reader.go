@@ -8,7 +8,6 @@ import (
 )
 
 type Reader struct {
-	connections []websocket.Conn
 	application *Application
 }
 
@@ -27,14 +26,20 @@ type UpdateMapFieldAction struct {
 	SpriteId   string `json:"spriteId"`
 }
 
-func (w *Reader) addConnection(conn websocket.Conn) {
-	w.connections = append(w.connections, conn)
-
+func (w *Reader) addConnection(conn *websocket.Conn) {
 	go (func() {
+		defer func() {
+			conn.Close()
+		}()
+
 		for {
 			_, message, err := conn.ReadMessage()
 			if err != nil {
-				log.Printf("Error: %v", err)
+				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+					log.Printf("error: %v", err)
+				}
+				w.application.writter.removeConnections <- conn
+				break
 			}
 			var action Action
 			json.Unmarshal(message, &action)
