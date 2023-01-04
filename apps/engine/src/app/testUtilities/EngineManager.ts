@@ -14,6 +14,13 @@ import {
 import { Classes } from '../types/Classes';
 import { EngineEvent } from '../types/events';
 
+jest.mock('../modules/MapModule/db', () => ({
+   MapDbApi: jest.fn().mockImplementation(() => ({
+      fetchMapDefinition: jest.fn().mockReturnValue(Promise.resolve({ data: {} })),
+      fetchMapSchema: jest.fn().mockReturnValue(Promise.resolve({ data: {} })),
+   })),
+}));
+
 export class EngineManager {
    private mainEngine: MainEngine;
    private ioHandler = {};
