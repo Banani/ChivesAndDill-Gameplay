@@ -22,6 +22,13 @@ func (m *MapFieldDbApi) saveMapField(mapField MapField) {
 	collection.InsertOne(context.TODO(), document)
 }
 
+func (m *MapFieldDbApi) deleteMapField(id string) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("mapFields")
+
+	collection.DeleteOne(context.TODO(), bson.M{"_id": id})
+}
+
 func (m *MapFieldDbApi) getSprites() map[string]Sprite {
 	dbClient := m.application.dbClient
 	spritesCollection := dbClient.db.Collection("sprites")

@@ -17,5 +17,6 @@ type EnginePackage struct {
 }
 
 type EnginePackageStringArray struct {
-	Data map[string]string `json:"data"`
+	Data     map[string]string      `json:"data"`
+	ToDelete map[string]interface{} `json:"toDelete"`
 }

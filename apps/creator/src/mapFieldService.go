@@ -23,6 +23,7 @@ type MapFieldsService struct {
 	mapFields       map[string]MapField
 	sprites         map[string]Sprite
 	mapFieldUpdated chan UpdateMapFieldAction
+	mapFieldDeleted chan DeleteMapFieldAction
 }
 
 func (s *MapFieldsService) init() {
@@ -70,6 +71,20 @@ func (service *MapFieldsService) serve() {
 			api := MapFieldDbApi{application: service.application}
 			api.saveMapField(service.mapFields[position])
 			service.application.writter.stream <- mapFieldPackage
+
+		case deleteMapFieldAction := <-service.mapFieldDeleted:
+			position := strconv.Itoa(deleteMapFieldAction.X) + ":" + strconv.Itoa(deleteMapFieldAction.Y)
+			delete(service.mapFields, position)
+
+			mapFieldPackage := make(map[string]EnginePackageStringArray)
+			serializedMapField := make(map[string]interface{})
+			serializedMapField[position] = nil
+			mapFieldPackage["map"] = EnginePackageStringArray{ToDelete: serializedMapField}
+
+			api := MapFieldDbApi{application: service.application}
+			api.deleteMapField(position)
+			service.application.writter.stream <- mapFieldPackage
+
 		}
 	}
 }

@@ -13,6 +13,7 @@ type Reader struct {
 
 const (
 	updateMapField = "UPDATE_MAP_FIELD"
+	deleteMapField = "DELETE_MAP_FIELD"
 )
 
 type Action struct {
@@ -24,6 +25,12 @@ type UpdateMapFieldAction struct {
 	X          int    `json:"x"`
 	Y          int    `json:"y"`
 	SpriteId   string `json:"spriteId"`
+}
+
+type DeleteMapFieldAction struct {
+	ActionType string `json:"actionType"`
+	X          int    `json:"x"`
+	Y          int    `json:"y"`
 }
 
 func (w *Reader) addConnection(conn *websocket.Conn) {
@@ -48,6 +55,12 @@ func (w *Reader) addConnection(conn *websocket.Conn) {
 				var updateMapFieldAction UpdateMapFieldAction
 				json.Unmarshal(message, &updateMapFieldAction)
 				w.application.services.mapFieldService.mapFieldUpdated <- updateMapFieldAction
+			}
+
+			if action.ActionType == deleteMapField {
+				var deleteMapFieldAction DeleteMapFieldAction
+				json.Unmarshal(message, &deleteMapFieldAction)
+				w.application.services.mapFieldService.mapFieldDeleted <- deleteMapFieldAction
 			}
 		}
 	})()

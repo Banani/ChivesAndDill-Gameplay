@@ -31,7 +31,7 @@ func main() {
 	writter.application = application
 	reader.application = application
 
-	mapFieldsService := MapFieldsService{application: application, mapFieldUpdated: make(chan UpdateMapFieldAction)}
+	mapFieldsService := MapFieldsService{application: application, mapFieldUpdated: make(chan UpdateMapFieldAction), mapFieldDeleted: make(chan DeleteMapFieldAction)}
 	mapFieldsService.init()
 	go mapFieldsService.serve()
 

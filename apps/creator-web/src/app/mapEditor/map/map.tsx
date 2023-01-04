@@ -6,7 +6,7 @@ import { Texture } from 'pixi.js';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { BLOCK_SIZE } from '../../consts';
 import { PackageContext } from '../../contexts/packageContext';
-import { MapEditorContext } from '../contexts/mapEditorContextProvider';
+import { MapActionsList, MapEditorContext } from '../contexts/mapEditorContextProvider';
 import { MapSprite } from './mapSprite/mapSprite';
 import { Rectangle } from './shape/shape';
 
@@ -17,6 +17,30 @@ export const Map = () => {
    const [mousePosition, setMousePosition] = useState<Location | null>(null);
    const packageContext = useContext(PackageContext);
    const mapEditorContext = useContext(MapEditorContext);
+
+   const actionModes: Partial<Record<MapActionsList, any>> = {
+      [MapActionsList.Edit]: {
+         onClick: (e: any) => {
+            if (mapEditorContext?.activeSprite) {
+               mapEditorContext.updateMapField({
+                  x: Math.floor(e.nativeEvent.offsetX / 32),
+                  y: Math.floor(e.nativeEvent.offsetY / 32),
+                  spriteId: mapEditorContext.activeSprite,
+               });
+            } else {
+               console.log('Nie wybrano sprite');
+            }
+         },
+      },
+      [MapActionsList.Delete]: {
+         onClick: (e: any) => {
+            mapEditorContext.deleteMapField({
+               x: Math.floor(e.nativeEvent.offsetX / 32),
+               y: Math.floor(e.nativeEvent.offsetY / 32),
+            });
+         },
+      },
+   };
 
    useEffect(() => {
       const output: Record<string, Texture> = {};
@@ -31,14 +55,8 @@ export const Map = () => {
 
    const mapClick = useCallback(
       (e) => {
-         if (mapEditorContext.activeSprite) {
-            mapEditorContext.updateMapField({
-               x: Math.floor(e.nativeEvent.offsetX / 32),
-               y: Math.floor(e.nativeEvent.offsetY / 32),
-               spriteId: mapEditorContext.activeSprite,
-            });
-         } else {
-            console.log('Nie wybrano sprite');
+         if (mapEditorContext && actionModes[mapEditorContext.currentMapAction] && actionModes[mapEditorContext.currentMapAction].onClick) {
+            actionModes[mapEditorContext.currentMapAction].onClick(e);
          }
       },
       [mapEditorContext]
@@ -72,7 +90,7 @@ export const Map = () => {
                      <MapSprite key={`${x}:${y}`} location={{ x, y }} texture={texturesMap[packageContext.backendStore.map.data[`${x}:${y}`].spriteId]} />
                   ))
             )}
-            {mousePosition && mapEditorContext.activeSprite && (
+            {mousePosition && mapEditorContext?.activeSprite && mapEditorContext.currentMapAction === MapActionsList.Edit && (
                <>
                   <Rectangle
                      color={'33aa33'}
@@ -82,6 +100,16 @@ export const Map = () => {
                   <MapSprite
                      texture={texturesMap[mapEditorContext.activeSprite]}
                      location={{ x: Math.floor(mousePosition?.x / 32), y: Math.floor(mousePosition?.y / 32) }}
+                  />
+               </>
+            )}
+
+            {mousePosition && mapEditorContext.currentMapAction === MapActionsList.Delete && (
+               <>
+                  <Rectangle
+                     color={'aa3333'}
+                     location={{ x: mousePosition?.x - (mousePosition?.x % 32) - 2, y: mousePosition?.y - (mousePosition?.y % 32) - 2 }}
+                     size={{ width: 36, height: 36 }}
                   />
                </>
             )}
