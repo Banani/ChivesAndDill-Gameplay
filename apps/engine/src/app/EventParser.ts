@@ -2,6 +2,7 @@ import { EngineEventCrator } from './EngineEventsCreator';
 import { CharacterEngineEventsMap } from './modules/CharacterModule/Events';
 import { ChatEngineEventsMap } from './modules/ChatModule/Events';
 import { ItemEngineEventsMap } from './modules/ItemModule/Events';
+import { MapEventsMap } from './modules/MapModule/Events';
 import { MonsterEngineEventsMap } from './modules/MonsterModule/Events';
 import { NpcEngineEventsMap } from './modules/NpcModule/Events';
 import { PlayerEngineEvents, PlayerEngineEventsMap, SendErrorMessageEvent } from './modules/PlayerModule/Events';
@@ -21,7 +22,8 @@ export abstract class EventParser {
          PlayerEngineEventsMap &
          ItemEngineEventsMap &
          ChatEngineEventsMap &
-         NpcEngineEventsMap
+         NpcEngineEventsMap &
+         MapEventsMap
    > = {};
 
    init(engineEventCrator: EngineEventCrator, services?: Services) {

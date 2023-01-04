@@ -17,4 +17,5 @@ testem.log
 Thumbs.db
 
 database.yml
+database.ts
 tmp

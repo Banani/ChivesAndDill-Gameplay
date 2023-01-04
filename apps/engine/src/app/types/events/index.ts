@@ -3,6 +3,7 @@ import { EngineEvents } from '../../EngineEvents';
 import { CharacterEngineEvents } from '../../modules/CharacterModule/Events';
 import { ChatEngineEvents } from '../../modules/ChatModule/Events';
 import { ItemEngineEvents } from '../../modules/ItemModule/Events';
+import { MapEvents } from '../../modules/MapModule/Events';
 import { MonsterEngineEvents } from '../../modules/MonsterModule/Events';
 import { NpcEngineEvents } from '../../modules/NpcModule/Events';
 import { PlayerEngineEvents } from '../../modules/PlayerModule/Events';
@@ -21,7 +22,8 @@ export interface EngineEvent {
       | PlayerEngineEvents
       | NpcEngineEvents
       | ItemEngineEvents
-      | ChatEngineEvents;
+      | ChatEngineEvents
+      | MapEvents;
 
    requestingCharacterId?: string;
 }

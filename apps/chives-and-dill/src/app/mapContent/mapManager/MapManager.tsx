@@ -17,7 +17,7 @@ export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y:
          });
 
          setTexturesMap(output);
-      }, []);
+      }, [mapSchema.mapSchema]);
 
       if (!Object.keys(texturesMap).length) {
          return <></>;

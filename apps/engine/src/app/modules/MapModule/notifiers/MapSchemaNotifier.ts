@@ -1,25 +1,23 @@
 import { GlobalStoreModule, MapDefinition, MapSchema } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
-import type { EngineEventHandler } from '../../../types';
-import { NewPlayerCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { mapDefinition } from '../mapDefinition';
-import { mapSchema } from '../mapSchema';
+import { EngineEventHandler } from '../../../types';
+import { MapEvents, MapUpdatedEvent } from '../Events';
 
 export class MapSchemaNotifier extends Notifier<MapDefinition | MapSchema> {
    constructor() {
       super({ key: GlobalStoreModule.MAP_SCHEMA });
       this.eventsToHandlersMap = {
-         [PlayerEngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
+         [MapEvents.MapUpdated]: this.handleMapUpdated,
       };
    }
 
-   handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event }) => {
+   handleMapUpdated: EngineEventHandler<MapUpdatedEvent> = ({ event, services }) => {
       this.multicastMultipleObjectsUpdate([
          {
             receiverId: event.playerId,
             objects: {
-               mapSchema,
-               mapDefinition,
+               mapSchema: event.mapSchema,
+               mapDefinition: event.mapDefinition,
             },
          },
       ]);
