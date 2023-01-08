@@ -16,6 +16,11 @@ export enum BrushSize {
    Big = 'Big',
 }
 
+interface Vector {
+   x: number;
+   y: number;
+}
+
 interface MapEditorContextProps {
    updateMapField: (val: { x: number; y: number; brushSize: number; spriteId: string }) => void;
    activeSprite: any;
@@ -25,6 +30,8 @@ interface MapEditorContextProps {
    deleteMapField: (val: { x: number; y: number; brushSize: number }) => void;
    brushSize: BrushSize;
    setBrushSize: (brushSize: BrushSize) => void;
+   translation: Vector;
+   setTranslation: (v: Vector) => void;
 }
 
 export const MapEditorContextProvider = ({ children }: any) => {
@@ -32,6 +39,7 @@ export const MapEditorContextProvider = ({ children }: any) => {
    const [activeSprite, setActiveSprite] = useState<null>();
    const [currentMapAction, setCurrentMapAction] = useState(MapActionsList.Edit);
    const [brushSize, setBrushSize] = useState(BrushSize.Small);
+   const [translation, setTranslation] = useState<Vector>({ x: 0, y: 0 });
 
    const updateMapField = useCallback(
       ({ x, y, spriteId, brushSize }) => {
@@ -49,7 +57,18 @@ export const MapEditorContextProvider = ({ children }: any) => {
 
    return (
       <MapEditorContext.Provider
-         value={{ updateMapField, activeSprite, setActiveSprite, currentMapAction, setCurrentMapAction, deleteMapField, brushSize, setBrushSize }}
+         value={{
+            updateMapField,
+            activeSprite,
+            setActiveSprite,
+            currentMapAction,
+            setCurrentMapAction,
+            deleteMapField,
+            brushSize,
+            setBrushSize,
+            translation,
+            setTranslation,
+         }}
       >
          {children}
       </MapEditorContext.Provider>
