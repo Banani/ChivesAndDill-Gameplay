@@ -59,30 +59,49 @@ func (service *MapFieldsService) serve() {
 	for {
 		select {
 		case updateMapFieldAction := <-service.mapFieldUpdated:
-			position := strconv.Itoa(updateMapFieldAction.X) + ":" + strconv.Itoa(updateMapFieldAction.Y)
-			service.mapFields[position] = MapField{SpriteId: updateMapFieldAction.SpriteId, X: updateMapFieldAction.X, Y: updateMapFieldAction.Y}
-
 			mapFieldPackage := make(map[string]EnginePackageStringArray)
 			serializedMapField := make(map[string]string)
-			jsonSprite, _ := json.Marshal(service.mapFields[position])
-			serializedMapField[position] = string(jsonSprite)
+
+			offset := (updateMapFieldAction.BrushSize - 1) / 2
+			toSave := make([]MapField, updateMapFieldAction.BrushSize*updateMapFieldAction.BrushSize)
+			counter := 0
+
+			for x := -offset; x < offset+1; x++ {
+				for y := -offset; y < offset+1; y++ {
+					position := strconv.Itoa(updateMapFieldAction.X+x) + ":" + strconv.Itoa(updateMapFieldAction.Y+y)
+					service.mapFields[position] = MapField{SpriteId: updateMapFieldAction.SpriteId, X: updateMapFieldAction.X + x, Y: updateMapFieldAction.Y + y}
+
+					toSave[counter] = service.mapFields[position]
+					counter++
+					jsonSprite, _ := json.Marshal(service.mapFields[position])
+					serializedMapField[position] = string(jsonSprite)
+				}
+			}
+
 			mapFieldPackage["map"] = EnginePackageStringArray{Data: serializedMapField}
 
 			api := MapFieldDbApi{application: service.application}
-			api.saveMapField(service.mapFields[position])
+			api.saveMapField(toSave)
 			service.application.writter.stream <- mapFieldPackage
 
 		case deleteMapFieldAction := <-service.mapFieldDeleted:
-			position := strconv.Itoa(deleteMapFieldAction.X) + ":" + strconv.Itoa(deleteMapFieldAction.Y)
-			delete(service.mapFields, position)
-
 			mapFieldPackage := make(map[string]EnginePackageStringArray)
 			serializedMapField := make(map[string]interface{})
-			serializedMapField[position] = nil
+
+			offset := (deleteMapFieldAction.BrushSize - 1) / 2
+
+			for x := -offset; x < offset+1; x++ {
+				for y := -offset; y < offset+1; y++ {
+					position := strconv.Itoa(x+deleteMapFieldAction.X) + ":" + strconv.Itoa(y+deleteMapFieldAction.Y)
+					delete(service.mapFields, position)
+					serializedMapField[position] = nil
+				}
+			}
+
 			mapFieldPackage["map"] = EnginePackageStringArray{ToDelete: serializedMapField}
 
 			api := MapFieldDbApi{application: service.application}
-			api.deleteMapField(position)
+			api.deleteMapField(serializedMapField)
 			service.application.writter.stream <- mapFieldPackage
 
 		}

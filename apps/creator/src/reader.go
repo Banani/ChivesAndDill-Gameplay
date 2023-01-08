@@ -22,6 +22,7 @@ type Action struct {
 
 type UpdateMapFieldAction struct {
 	ActionType string `json:"actionType"`
+	BrushSize  int    `json:brushSize`
 	X          int    `json:"x"`
 	Y          int    `json:"y"`
 	SpriteId   string `json:"spriteId"`
@@ -29,6 +30,7 @@ type UpdateMapFieldAction struct {
 
 type DeleteMapFieldAction struct {
 	ActionType string `json:"actionType"`
+	BrushSize  int    `json:brushSize`
 	X          int    `json:"x"`
 	Y          int    `json:"y"`
 }

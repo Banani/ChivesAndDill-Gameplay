@@ -1,28 +1,36 @@
 import { Location } from '@bananos/types';
 import { Stage } from '@inlet/react-pixi';
-import _, { range } from 'lodash';
+import _, { range, throttle } from 'lodash';
 import * as PIXI from 'pixi.js';
 import { Texture } from 'pixi.js';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { BLOCK_SIZE } from '../../consts';
 import { PackageContext } from '../../contexts/packageContext';
-import { MapActionsList, MapEditorContext } from '../contexts/mapEditorContextProvider';
+import { BrushSize, MapActionsList, MapEditorContext } from '../contexts/mapEditorContextProvider';
 import { MapSprite } from './mapSprite/mapSprite';
 import { Rectangle } from './shape/shape';
 
 import styles from './map.module.scss';
+
+const BrushSizeToPlatesAmount = {
+   [BrushSize.Small]: 1,
+   [BrushSize.Medium]: 3,
+   [BrushSize.Big]: 9,
+};
 
 export const Map = () => {
    const [texturesMap, setTexturesMap] = useState<Record<string, Texture>>({});
    const [mousePosition, setMousePosition] = useState<Location | null>(null);
    const packageContext = useContext(PackageContext);
    const mapEditorContext = useContext(MapEditorContext);
+   const [stage, setStage] = useState<null | HTMLDivElement>(null);
 
    const actionModes: Partial<Record<MapActionsList, any>> = {
       [MapActionsList.Edit]: {
          onClick: (e: any) => {
             if (mapEditorContext?.activeSprite) {
                mapEditorContext.updateMapField({
+                  brushSize: BrushSizeToPlatesAmount[mapEditorContext.brushSize],
                   x: Math.floor(e.nativeEvent.offsetX / 32),
                   y: Math.floor(e.nativeEvent.offsetY / 32),
                   spriteId: mapEditorContext.activeSprite,
@@ -35,6 +43,7 @@ export const Map = () => {
       [MapActionsList.Delete]: {
          onClick: (e: any) => {
             mapEditorContext.deleteMapField({
+               brushSize: BrushSizeToPlatesAmount[mapEditorContext.brushSize],
                x: Math.floor(e.nativeEvent.offsetX / 32),
                y: Math.floor(e.nativeEvent.offsetY / 32),
             });
@@ -62,23 +71,27 @@ export const Map = () => {
       [mapEditorContext]
    );
 
+   const onMouseMove = throttle((e) => {
+      setMousePosition({
+         x: e.nativeEvent.offsetX,
+         y: e.nativeEvent.offsetY,
+      });
+   }, 100);
+
    if (!Object.keys(texturesMap).length || !packageContext?.backendStore?.map) {
       return <></>;
    }
 
+   const offset = (BrushSizeToPlatesAmount[mapEditorContext.brushSize] - 1) / 2;
+
    return (
-      <div className={styles['stage']}>
+      <div className={styles['stage']} ref={(newRef) => setStage(newRef)}>
          <Stage
-            width={900}
-            height={600}
+            width={stage?.clientWidth ?? 900}
+            height={(stage?.clientHeight ?? 600) - 10}
             options={{ backgroundColor: 0x000000, autoDensity: true }}
             onClick={mapClick}
-            onMouseMove={(e) => {
-               setMousePosition({
-                  x: e.nativeEvent.offsetX,
-                  y: e.nativeEvent.offsetY,
-               });
-            }}
+            onMouseMove={onMouseMove}
             onMouseLeave={() => {
                setMousePosition(null);
             }}
@@ -94,13 +107,28 @@ export const Map = () => {
                <>
                   <Rectangle
                      color={'33aa33'}
-                     location={{ x: mousePosition?.x - (mousePosition?.x % 32) - 2, y: mousePosition?.y - (mousePosition?.y % 32) - 2 }}
-                     size={{ width: 36, height: 36 }}
+                     location={{
+                        x: mousePosition?.x - (mousePosition?.x % 32) - ((BrushSizeToPlatesAmount[mapEditorContext.brushSize] - 1) / 2) * 32 - 3,
+                        y: mousePosition?.y - (mousePosition?.y % 32) - ((BrushSizeToPlatesAmount[mapEditorContext.brushSize] - 1) / 2) * 32 - 3,
+                     }}
+                     size={{
+                        width: BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6,
+                        height: BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6,
+                     }}
                   />
-                  <MapSprite
-                     texture={texturesMap[mapEditorContext.activeSprite]}
-                     location={{ x: Math.floor(mousePosition?.x / 32), y: Math.floor(mousePosition?.y / 32) }}
-                  />
+
+                  {range(-offset, offset + 1).map((x) => {
+                     {
+                        return range(-offset, offset + 1).map((y) => {
+                           return (
+                              <MapSprite
+                                 texture={texturesMap[mapEditorContext.activeSprite]}
+                                 location={{ x: Math.floor(mousePosition?.x / 32) + x, y: Math.floor(mousePosition?.y / 32) + y }}
+                              />
+                           );
+                        });
+                     }
+                  })}
                </>
             )}
 
@@ -108,8 +136,14 @@ export const Map = () => {
                <>
                   <Rectangle
                      color={'aa3333'}
-                     location={{ x: mousePosition?.x - (mousePosition?.x % 32) - 2, y: mousePosition?.y - (mousePosition?.y % 32) - 2 }}
-                     size={{ width: 36, height: 36 }}
+                     location={{
+                        x: mousePosition?.x - (mousePosition?.x % 32) - ((BrushSizeToPlatesAmount[mapEditorContext.brushSize] - 1) / 2) * 32 - 3,
+                        y: mousePosition?.y - (mousePosition?.y % 32) - ((BrushSizeToPlatesAmount[mapEditorContext.brushSize] - 1) / 2) * 32 - 3,
+                     }}
+                     size={{
+                        width: BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6,
+                        height: BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6,
+                     }}
                   />
                </>
             )}

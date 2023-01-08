@@ -13,20 +13,38 @@ type MapFieldDbApi struct {
 	application *Application
 }
 
-func (m *MapFieldDbApi) saveMapField(mapField MapField) {
+func (m *MapFieldDbApi) saveMapField(mapFields []MapField) {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("mapFields")
 
-	document := bson.D{{"x", mapField.X}, {"y", mapField.Y}, {"_id", strconv.Itoa(mapField.X) + ":" + strconv.Itoa(mapField.Y)}, {"spriteId", mapField.SpriteId}}
+	toDelete := make([]string, len(mapFields))
+	toSave := make([]interface{}, len(mapFields))
+	counter := 0
 
-	collection.InsertOne(context.TODO(), document)
+	for _, field := range mapFields {
+		toSave[counter] = bson.D{{"spriteId", field.SpriteId}, {"x", field.X}, {"y", field.Y}, {"_id", strconv.Itoa(field.X) + ":" + strconv.Itoa(field.Y)}}
+		toDelete[counter] = strconv.Itoa(field.X) + ":" + strconv.Itoa(field.Y)
+		counter++
+	}
+
+	collection.DeleteMany(context.TODO(), bson.M{"_id": bson.M{"$in": toDelete}})
+	_, err := collection.InsertMany(context.TODO(), toSave)
+
+	log.Print(err)
 }
 
-func (m *MapFieldDbApi) deleteMapField(id string) {
+func (m *MapFieldDbApi) deleteMapField(idsMap map[string]interface{}) {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("mapFields")
+	ids := make([]string, len(idsMap))
+	counter := 0
 
-	collection.DeleteOne(context.TODO(), bson.M{"_id": id})
+	for key := range idsMap {
+		ids[counter] = key
+		counter++
+	}
+
+	collection.DeleteMany(context.TODO(), bson.M{"_id": bson.M{"$in": ids}})
 }
 
 func (m *MapFieldDbApi) getSprites() map[string]Sprite {
