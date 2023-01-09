@@ -1,8 +1,8 @@
 import { Location } from '@bananos/types';
-import { Container, Stage } from '@inlet/react-pixi';
+import { Container, Stage, Text } from '@inlet/react-pixi';
 import _, { range, throttle } from 'lodash';
 import * as PIXI from 'pixi.js';
-import { Texture } from 'pixi.js';
+import { TextStyle, Texture } from 'pixi.js';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { BLOCK_SIZE } from '../../consts';
 import { PackageContext } from '../../contexts/packageContext';
@@ -145,6 +145,18 @@ export const Map = () => {
                            width: BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6,
                            height: BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6,
                         }}
+                     />
+                     <Text
+                        text={mouseCenterSpritePosition.x + ':' + mouseCenterSpritePosition.y}
+                        x={mouseCenterSpritePosition.x * 32 + BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6}
+                        y={mouseCenterSpritePosition.y * 32 - 18}
+                        style={
+                           new TextStyle({
+                              align: 'center',
+                              fontSize: 10,
+                              fill: '#ff3030',
+                           })
+                        }
                      />
 
                      {range(-offset, offset + 1).map((x) => {
