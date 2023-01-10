@@ -27,7 +27,6 @@ import { MapWrapper } from './mapContent/mapManager/MapWrapper';
 import { NextLevelManager } from './mapContent/NextLevelManager';
 import { DialogsManager } from './mapContent/DialogsManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
-import { selectActiveTargetId } from '../stores';
 
 const Map = () => {
    const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
@@ -46,8 +45,6 @@ const Map = () => {
 
    const activeNpc = characters[activeConversation?.[activeCharacterId]?.npcId];
    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
-
-   const activeTargetId = useSelector(selectActiveTargetId);
 
    const renderSpells = useCallback(
       () =>
@@ -94,7 +91,9 @@ const Map = () => {
          <CharacterFrames />
          <QuestManager />
          <ChatManager />
-         {!_.isEmpty(activeLoot?.[activeTargetId]) ? <LootModal activeLoot={activeLoot[activeTargetId]} /> : null}
+         {!_.isEmpty(activeLoot[Object.keys(activeLoot ?? {})?.[0]]) ? <LootModal
+            monsterId={Object.keys(activeLoot ?? {})?.[0]}
+            activeLoot={activeLoot[Object.keys(activeLoot ?? {})?.[0]]} /> : null}
          {activeNpc ? <NpcModal questDefinition={questDefinition as Record<string, QuestSchema>} activeNpc={activeNpc} /> : null}
          <ExperienceBar />
          <PackageContext.Consumer>

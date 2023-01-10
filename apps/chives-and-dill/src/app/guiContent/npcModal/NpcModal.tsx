@@ -52,7 +52,7 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
                <img className={styles.Avatar} src={activeNpc.avatar} alt={''} />
                <div className={styles.Name}>{activeNpc.name}</div>
                <Button className={styles.closeButton} onClick={closeButtonHandler}>
-                  X
+                 X
                </Button>
             </div>
             {currentModal === NpcModalView.Default && (

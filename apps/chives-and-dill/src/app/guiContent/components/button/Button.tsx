@@ -1,4 +1,5 @@
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import styles from './Button.module.scss';
 
 interface ButtonProps {
@@ -7,10 +8,8 @@ interface ButtonProps {
    className?: string;
 }
 
-export const Button: FunctionComponent<ButtonProps> = ({ className, onClick, children, disabled = false }) => {
-   return (
-      <button className={styles.Button + ' ' + className} onClick={onClick} disabled={disabled}>
-         {children}
-      </button>
-   );
-};
+export const Button: FunctionComponent<ButtonProps> = ({ className, onClick, children, disabled = false }) => (
+   <button className={styles.Button + ' ' + className} onClick={onClick} disabled={disabled}>
+      {children}
+   </button>
+);

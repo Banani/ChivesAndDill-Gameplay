@@ -1,17 +1,20 @@
-import { CorpseDropTrack } from '@bananos/types';
+import type { CorpseDropTrack } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
-import { AddCurrencyToCharacterEvent, GenerateItemForCharacterEvent, ItemEngineEvents } from '../../ItemModule/Events';
-import { Monster } from '../../MonsterModule/types';
-import { PlayerEngineEvents, PlayerTriesToPickCoinsFromCorpseEvent, PlayerTriesToPickItemFromCorpseEvent } from '../../PlayerModule/Events';
-import {
+import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
+import type { AddCurrencyToCharacterEvent, GenerateItemForCharacterEvent} from '../../ItemModule/Events';
+import { ItemEngineEvents } from '../../ItemModule/Events';
+import type { Monster } from '../../MonsterModule/types';
+import type { PlayerTriesToPickCoinsFromCorpseEvent, PlayerTriesToPickItemFromCorpseEvent } from '../../PlayerModule/Events';
+import { PlayerEngineEvents } from '../../PlayerModule/Events';
+import type {
    AllItemsWerePickedFromCorpseEvent,
-   CharacterEngineEvents,
    CoinsWerePickedFromCorpseEvent,
    CorpseDropTrackCreatedEvent,
    CorpseDropTrackRemovedEvent,
-   ItemWasPickedFromCorpseEvent,
+   ItemWasPickedFromCorpseEvent} from '../Events';
+import {
+   CharacterEngineEvents
 } from '../Events';
 
 export class CorpseDropService extends EventParser {
@@ -96,7 +99,7 @@ export class CorpseDropService extends EventParser {
          this.sendErrorMessage(event.requestingCharacterId, 'You cannot take item from corpse that is not opened by you.');
          return;
       }
-
+      console.log(this.corpsesDropTrack);
       const item = this.corpsesDropTrack[event.corpseId].loot.items[event.itemId];
       if (!item) {
          this.sendErrorMessage(event.requestingCharacterId, 'This item is already taken.');
