@@ -39,7 +39,7 @@ export const ChatChannels = () => {
       <>
          <div className={styles.chatChannels}>
             <div className={styles.contentHolder}>
-               <div className={styles.objectList}>
+               <div className={styles.objectList + ' ' + styles.channelList}>
                   {map(channelNumeratorContext.channelNumerations, (chatChannelId, chatNumber) => (
                      <div key={chatChannelId}>
                         <button className={`${styles.channelName} ${styles.listElement}`} onClick={() => setSelectedChannelId(chatChannelId)}>
@@ -49,7 +49,7 @@ export const ChatChannels = () => {
                   ))}
                </div>
 
-               <div className={styles.objectList}>
+               <div className={styles.objectList + ' ' + styles.memberList}>
                   {selectedChannelId &&
                      map(chatChannels[selectedChannelId].membersIds, (_, memberId) => (
                         <div

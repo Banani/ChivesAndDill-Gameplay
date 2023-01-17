@@ -9,7 +9,7 @@ import {
    ItemTemplate,
    NpcStock,
 } from '.';
-import { CharacterEvents, MonsterCorpse } from './CharacterPackage';
+import { Attributes, CharacterEvents, MonsterCorpse } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
 import { CommonClientActions, CommonClientMessages } from './engineEvents';
@@ -47,6 +47,7 @@ export enum GlobalStoreModule {
    QUEST_DEFINITION = 'questDefinition',
    QUEST_PROGRESS = 'questProgress',
    NPC_QUESTS = 'npcQuests',
+   ATTRIBUTES = 'attributes',
 }
 
 export interface PartialEnginePackage<Data> {
@@ -85,6 +86,7 @@ export interface EnginePackage {
    [GlobalStoreModule.QUEST_PROGRESS]: PartialEnginePackage<ExternalQuestProgress>;
    [GlobalStoreModule.CORPSE_DROP]: PartialEnginePackage<MonsterCorpse>;
    [GlobalStoreModule.EQUIPMENT]: PartialEnginePackage<EquipmentTrack>;
+   [GlobalStoreModule.ATTRIBUTES]: PartialEnginePackage<Attributes>;
 }
 
 interface StoreModule<Data> {
@@ -125,6 +127,7 @@ export interface GlobalStore {
    [GlobalStoreModule.QUEST_PROGRESS]: StoreModule<ExternalQuestProgress>;
    [GlobalStoreModule.CORPSE_DROP]: StoreModule<MonsterCorpse>;
    [GlobalStoreModule.EQUIPMENT]: StoreModule<EquipmentTrack>;
+   [GlobalStoreModule.ATTRIBUTES]: StoreModule<Attributes>;
 }
 
 export interface ActiveCharacterStorePart {

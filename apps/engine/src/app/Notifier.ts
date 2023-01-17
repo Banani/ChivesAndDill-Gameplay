@@ -1,5 +1,5 @@
 import { EnginePackageEvent, GlobalStoreModule, RecursivePartial } from '@bananos/types';
-import { merge } from 'lodash';
+import { forEach, merge } from 'lodash';
 import { EventParser } from './EventParser';
 
 export interface ModulePackage<T> {
@@ -65,6 +65,15 @@ export abstract class Notifier<T = never> extends EventParser {
 
    getMulticast = () => {
       const tempMulticast = this.multicast;
+
+      forEach(tempMulticast.messages, (dataPackage, receiver) => {
+         forEach(dataPackage, (dataPackage, updateType) => {
+            if (Object.keys(tempMulticast.messages[receiver][updateType]).length === 0) {
+               delete tempMulticast.messages[receiver][updateType];
+            }
+         });
+      });
+
       this.multicast = this.getEmptyPackage();
       return tempMulticast;
    };
@@ -73,8 +82,27 @@ export abstract class Notifier<T = never> extends EventParser {
       this.events = this.events.concat(events);
    };
 
+   private recursiveRemoveKeys = (toBeCleared, pattern) => {
+      forEach(toBeCleared, (toDelete, key) => {
+         if (pattern[key]) {
+            if (toDelete === null) {
+               delete toBeCleared[key];
+            } else {
+               this.recursiveRemoveKeys(toBeCleared[key], pattern[key]);
+
+               if (Object.keys(toBeCleared[key]).length === 0) {
+                  delete toBeCleared[key];
+               }
+            }
+         }
+      });
+   };
+
    protected broadcastObjectsUpdate = ({ objects }: { objects: Record<string, Partial<T> | T> }) => {
       this.dataToSend = merge({}, this.dataToSend, objects);
+
+      // When some data are assigned again, the revert deletion
+      this.recursiveRemoveKeys(this.objectsToDelete, objects);
    };
 
    protected broadcastObjectsDeletion = ({ objects }: { objects: Record<string, Partial<T> | T> }) => {
@@ -88,26 +116,28 @@ export abstract class Notifier<T = never> extends EventParser {
    protected multicastMultipleObjectsUpdate = (dataUpdatePackages: { receiverId: string; objects: Record<string, RecursivePartial<T> | T> }[]) => {
       dataUpdatePackages.forEach((dataUpdatePackage) => {
          if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
-            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey };
+            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey, data: {}, toDelete: {}, events: [] };
          }
 
          this.multicast.messages[dataUpdatePackage.receiverId].data = merge(
             {},
-            this.multicast.messages[dataUpdatePackage.receiverId].data ?? {},
+            this.multicast.messages[dataUpdatePackage.receiverId].data,
             dataUpdatePackage.objects
          );
+
+         this.recursiveRemoveKeys(this.multicast.messages[dataUpdatePackage.receiverId].toDelete, dataUpdatePackage.objects);
       });
    };
 
    protected multicastObjectsDeletion = (dataUpdatePackages: { receiverId: string; objects: Record<string, Partial<T> | T> }[]) => {
       dataUpdatePackages.forEach((dataUpdatePackage) => {
          if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
-            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey };
+            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey, data: {}, toDelete: {}, events: [] };
          }
 
          this.multicast.messages[dataUpdatePackage.receiverId].toDelete = merge(
             {},
-            this.multicast.messages[dataUpdatePackage.receiverId].toDelete ?? {},
+            this.multicast.messages[dataUpdatePackage.receiverId].toDelete,
             dataUpdatePackage.objects
          );
       });
@@ -116,9 +146,9 @@ export abstract class Notifier<T = never> extends EventParser {
    protected multicastEvents = (dataUpdatePackages: { receiverId: string; events: EnginePackageEvent[] }[]) => {
       dataUpdatePackages.forEach((dataUpdatePackage) => {
          if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
-            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey };
+            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey, data: {}, toDelete: {}, events: [] };
          }
-         this.multicast.messages[dataUpdatePackage.receiverId].events = (this.multicast.messages[dataUpdatePackage.receiverId].events ?? []).concat(
+         this.multicast.messages[dataUpdatePackage.receiverId].events = this.multicast.messages[dataUpdatePackage.receiverId].events.concat(
             dataUpdatePackage.events
          );
       });

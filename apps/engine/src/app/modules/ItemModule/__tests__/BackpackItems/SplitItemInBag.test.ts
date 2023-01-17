@@ -1,8 +1,8 @@
 import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
-import _ = require('lodash');
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from '../../../../testUtilities';
 import { Classes } from '../../../../types/Classes';
 import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../Events';
+import _ = require('lodash');
 
 const CURRENT_MODULE = GlobalStoreModule.BACKPACK_ITEMS;
 
@@ -118,16 +118,20 @@ describe('SplitItemInBag', () => {
 
       checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
          data: {
-            '1': {
+            [players['1'].characterId]: {
                '1': {
-                  itemId: 'ItemInstance_0',
-                  amount: 20,
+                  '1': {
+                     itemId: 'ItemInstance_0',
+                     amount: 20,
+                  },
                },
             },
          },
          toDelete: {
-            '1': {
-               '0': null,
+            [players['1'].characterId]: {
+               '1': {
+                  '0': null,
+               },
             },
          },
       });

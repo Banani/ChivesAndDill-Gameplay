@@ -94,7 +94,7 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
       this.multicastObjectsDeletion([
          {
             receiverId: player.ownerId,
-            objects: { [event.position.backpack]: { [event.position.spot]: null } },
+            objects: { [player.id]: { [event.position.backpack]: { [event.position.spot]: null } } },
          },
       ]);
    };
@@ -134,7 +134,7 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
          this.multicastObjectsDeletion([
             {
                receiverId: player.ownerId,
-               objects: toDelete,
+               objects: { [player.id]: toDelete },
             },
          ]);
       }
@@ -142,7 +142,7 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
       this.multicastMultipleObjectsUpdate([
          {
             receiverId: player.ownerId,
-            objects: toUpdate,
+            objects: { [player.id]: toUpdate },
          },
       ]);
    };

@@ -1,6 +1,6 @@
 import { Module } from '@bananos/socket-store';
-import { forEach, clone, merge, mapValues, pickBy } from 'lodash';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import { clone, forEach, mapValues, merge, pickBy } from 'lodash';
+import React, { FunctionComponent, useState } from 'react';
 
 export const PackageContext = React.createContext<any>(null);
 
@@ -17,6 +17,8 @@ const deleteRequestedFields = (data: any, pathToDelete: any) => {
 const emptyModule: Module = {
    data: {},
    events: [],
+   lastUpdateTime: 0,
+   recentData: {},
 };
 
 export const PackageContextProvider: FunctionComponent = ({ children }) => {
@@ -30,6 +32,8 @@ export const PackageContextProvider: FunctionComponent = ({ children }) => {
             module.events = [];
          });
 
+         let deserializedData: Record<string, any> = {};
+
          forEach(payload, (module: Module, moduleName: string) => {
             if (!newState[moduleName]) {
                newState[moduleName] = emptyModule;
@@ -38,15 +42,14 @@ export const PackageContextProvider: FunctionComponent = ({ children }) => {
             if (module.events) {
                newState[moduleName].events = module.events;
             }
+
+            deserializedData[moduleName] = mapValues(payload[moduleName].data, (dataRow) => JSON.parse(dataRow));
          });
 
          newState = merge(
             {},
             newState,
-            mapValues(
-               pickBy(payload, (module) => module.data),
-               (module) => ({ data: module.data })
-            )
+            mapValues(deserializedData, (module) => ({ data: module }))
          );
 
          forEach(

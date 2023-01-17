@@ -1,4 +1,4 @@
-import { ExperienceGainDetails, HealthPointsSource, MonsterCorpse, PowerPointsTrack } from '@bananos/types';
+import { Attributes, ExperienceGainDetails, HealthPointsSource, MonsterCorpse, PowerPointsTrack } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterUnion } from '../../types/CharacterUnion';
 import { ExperienceTrack } from './types';
@@ -35,6 +35,7 @@ export enum CharacterEngineEvents {
    CorpseDropTrackRemoved = 'CorpseDropTrackRemoved',
 
    SendQuoteMessage = 'SendQuoteMessage',
+   AttributesUpdated = 'AttributesUpdated',
 }
 
 export interface CreateCharacterEvent extends EngineEvent {
@@ -176,10 +177,17 @@ export interface CorpseDropTrackRemovedEvent extends EngineEvent {
    type: CharacterEngineEvents.CorpseDropTrackRemoved;
    corpseId: string;
 }
+
 export interface SendQuoteMessageEvent extends EngineEvent {
    type: CharacterEngineEvents.SendQuoteMessage;
    characterId: string;
    message: string;
+}
+
+export interface AttributesUpdatedEvent extends EngineEvent {
+   type: CharacterEngineEvents.AttributesUpdated;
+   characterId: string;
+   attributes: Attributes;
 }
 
 export interface CharacterEngineEventsMap {
@@ -214,4 +222,6 @@ export interface CharacterEngineEventsMap {
    [CharacterEngineEvents.CorpseDropTrackRemoved]: EngineEventHandler<CorpseDropTrackRemovedEvent>;
 
    [CharacterEngineEvents.SendQuoteMessage]: EngineEventHandler<SendQuoteMessageEvent>;
+
+   [CharacterEngineEvents.AttributesUpdated]: EngineEventHandler<AttributesUpdatedEvent>;
 }

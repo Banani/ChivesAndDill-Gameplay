@@ -1,8 +1,8 @@
 import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
-import _ = require('lodash');
 import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from '../../../../testUtilities';
 import { Classes } from '../../../../types/Classes';
 import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../Events';
+import _ = require('lodash');
 
 const CURRENT_MODULE = GlobalStoreModule.BACKPACK_ITEMS;
 
@@ -35,7 +35,7 @@ describe('DeleteItem', () => {
 
       dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.Deleteitem, itemId });
 
-      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, { toDelete: { '1': { '0': null } } });
+      checkIfPackageIsValid(CURRENT_MODULE, dataPackage, { toDelete: { [players['1'].characterId]: { '1': { '0': null } } } });
    });
 
    it('Player should get error when tries to delete item that does not exist', () => {

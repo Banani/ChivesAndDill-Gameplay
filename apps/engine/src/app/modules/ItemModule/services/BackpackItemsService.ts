@@ -143,7 +143,7 @@ export class BackpackItemsService extends EventParser {
    };
 
    handleItemStripped: EngineEventHandler<ItemStrippedEvent> = ({ event, services }) => {
-      this.placeItemInBackpack({ eventData: { ...event, itemId: event.itemInstanceId, amount: 1 }, services });
+      this.placeItemInBackpack({ eventData: { ...event, itemId: event.itemInstanceId, amount: 1, forceDesiredLocation: true }, services });
    };
 
    handleAddItemToCharacter: EngineEventHandler<AddItemToCharacterInventoryEvent> = ({ event, services }) => {
@@ -158,6 +158,7 @@ export class BackpackItemsService extends EventParser {
          characterId: string;
          itemId: string;
          amount: number;
+         forceDesiredLocation?: boolean;
          desiredLocation?: ItemLocationInBag;
       };
       services: Services;
@@ -172,8 +173,21 @@ export class BackpackItemsService extends EventParser {
       const characterItems = this.itemsPositions[eventData.characterId];
       let amountToAdd = eventData.amount;
 
-      if (eventData.desiredLocation && !characterItems[eventData.desiredLocation.backpack][eventData.desiredLocation.spot]) {
+      if (
+         eventData.desiredLocation &&
+         (eventData.forceDesiredLocation || !characterItems[eventData.desiredLocation.backpack][eventData.desiredLocation.spot])
+      ) {
          location = eventData.desiredLocation;
+         const itemOnTargetLocation = this.getItemFromSpot(eventData.characterId, location);
+
+         if (characterItems[eventData.desiredLocation.backpack][eventData.desiredLocation.spot]) {
+            this.engineEventCrator.asyncCeateEvent<ItemRemovedFromBagEvent>({
+               type: ItemEngineEvents.ItemRemovedFromBag,
+               ownerId: eventData.characterId,
+               itemId: itemOnTargetLocation.itemId,
+               position: location,
+            });
+         }
       } else {
          const itemsWithTheSameTemplate = this.findItemOfTheSameTemplateId(eventData.characterId, eventData.itemId, services);
          const stackSize = ItemTemplates[services.itemService.getItemById(eventData.itemId).itemTemplateId].stack ?? 1;

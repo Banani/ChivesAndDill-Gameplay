@@ -72,6 +72,12 @@ export interface BaseItemTemplate {
 export interface EquipmentItemTemplate extends BaseItemTemplate {
    type: ItemTemplateType.Equipment;
    slot: EquipmentSlot;
+   armor?: number;
+   stamina?: number;
+   agility?: number;
+   intelect?: number;
+   strength?: number;
+   spirit?: number;
 }
 
 export interface GenericItemTemplate extends BaseItemTemplate {

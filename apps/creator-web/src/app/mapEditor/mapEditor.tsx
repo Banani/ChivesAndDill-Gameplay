@@ -1,12 +1,13 @@
-import { IconButton, ImageList, ImageListItem, ImageListItemBar, Paper, Toolbar } from '@mui/material';
+import { Paper, Toolbar } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import { MapEditorContextProvider } from './contexts/mapEditorContextProvider';
 
 import { Map } from './map/map';
+import { MapActions } from './mapActions';
+import { SpritePanel } from './spritePanel/spritePanel';
 
 import styles from './mapEditor.module.scss';
-import { SpritePanel } from './spritePanel/spritePanel';
 
 export const MapEditor = () => {
    return (
@@ -20,6 +21,9 @@ export const MapEditor = () => {
          </AppBar>
          <div className={styles['app-view']}>
             <SpritePanel />
+
+            <MapActions />
+
             <Paper className={styles['map-editor']}>
                <Map />
             </Paper>

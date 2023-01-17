@@ -59,18 +59,20 @@ export class EquipmentService extends EventParser {
 
       let targetSlot = EquipmentSpotMap[itemTemplate.slot];
       if (Array.isArray(targetSlot)) {
-         targetSlot = targetSlot[0];
+         for (let i in targetSlot) {
+            if (!this.equipment[event.requestingCharacterId][targetSlot[i]]) {
+               targetSlot = targetSlot[i] as PossibleEquipmentPlaces;
+               break;
+            }
+         }
+
+         if (Array.isArray(targetSlot)) {
+            targetSlot = targetSlot[0];
+         }
       }
 
       const itemOnThatSpot = this.equipment[event.requestingCharacterId][targetSlot];
       this.equipment[event.requestingCharacterId][targetSlot] = item.itemId;
-
-      this.engineEventCrator.asyncCeateEvent<ItemEquippedEvent>({
-         type: ItemEngineEvents.ItemEquipped,
-         characterId: event.requestingCharacterId,
-         slot: targetSlot,
-         itemInstanceId: item.itemId,
-      });
 
       if (itemOnThatSpot) {
          this.engineEventCrator.asyncCeateEvent<ItemStrippedEvent>({
@@ -81,6 +83,13 @@ export class EquipmentService extends EventParser {
             desiredLocation: services.backpackItemsService.findItemLocationInBag(event.requestingCharacterId, item.itemId),
          });
       }
+
+      this.engineEventCrator.asyncCeateEvent<ItemEquippedEvent>({
+         type: ItemEngineEvents.ItemEquipped,
+         characterId: event.requestingCharacterId,
+         slot: targetSlot,
+         itemInstanceId: item.itemId,
+      });
    };
 
    handlePlayerTriesToStripItem: EngineEventHandler<PlayerTriesToStripItemEvent> = ({ event, services }) => {
@@ -138,4 +147,6 @@ export class EquipmentService extends EventParser {
          equipmentTrack: this.equipment[event.playerCharacter.id],
       });
    };
+
+   getCharacterEquipment = (characterId) => this.equipment[characterId];
 }

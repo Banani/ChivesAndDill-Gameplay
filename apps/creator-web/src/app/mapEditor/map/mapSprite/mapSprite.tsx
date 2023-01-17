@@ -1,6 +1,5 @@
 import { Sprite } from '@inlet/react-pixi';
 import { Location } from 'libs/types/src/common/Location';
-import React from 'react';
 import { FunctionComponent } from 'react';
 import { BLOCK_SIZE } from '../../../consts';
 

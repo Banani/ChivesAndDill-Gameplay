@@ -9,6 +9,7 @@ require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/gomodule/redigo v1.8.4 // indirect
 	github.com/googollee/go-socket.io v1.6.2 // indirect
+	github.com/gookit/config v1.1.0
 	github.com/gookit/config/v2 v2.1.2 // indirect
 	github.com/gookit/goutil v0.5.2 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
