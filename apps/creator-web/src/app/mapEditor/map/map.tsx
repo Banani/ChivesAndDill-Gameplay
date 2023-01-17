@@ -180,7 +180,6 @@ export const Map = () => {
                         }
                      />
 
-                     {console.log(mapEditorContext.activeSprite, 999, texturesMap)}
                      {range(-offset, offset + 1).map((x) => {
                         {
                            return range(-offset, offset + 1).map((y) => {

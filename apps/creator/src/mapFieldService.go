@@ -14,8 +14,8 @@ type Sprite struct {
 
 type MapField struct {
 	SpriteId string `json:"spriteId"`
-	X        int    `json:"x"`
-	Y        int    `json:"y"`
+	X        int32  `json:"x"`
+	Y        int32  `json:"y"`
 }
 
 type MapFieldsService struct {
@@ -50,8 +50,10 @@ func (service *MapFieldsService) handleNewConnection() {
 		jsonSprite, _ := json.Marshal(sprite)
 		serializedSpriteMap[key] = string(jsonSprite)
 	}
+
 	spritesPackage["sprites"] = EnginePackageStringArray{Data: serializedSpriteMap}
 
+	// TO idzie do kazdego usera :o
 	service.application.writter.stream <- spritesPackage
 }
 
@@ -69,7 +71,7 @@ func (service *MapFieldsService) serve() {
 			for x := -offset; x < offset+1; x++ {
 				for y := -offset; y < offset+1; y++ {
 					position := strconv.Itoa(updateMapFieldAction.X+x) + ":" + strconv.Itoa(updateMapFieldAction.Y+y)
-					service.mapFields[position] = MapField{SpriteId: updateMapFieldAction.SpriteId, X: updateMapFieldAction.X + x, Y: updateMapFieldAction.Y + y}
+					service.mapFields[position] = MapField{SpriteId: updateMapFieldAction.SpriteId, X: int32(updateMapFieldAction.X + x), Y: int32(updateMapFieldAction.Y + y)}
 
 					toSave[counter] = service.mapFields[position]
 					counter++

@@ -1,8 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { SocketCommunicator, PackageContext } from './contexts';
-import { PackageContextProvider } from './contexts/packageContext';
+import { KeyBoardContextProvider, PackageContextProvider, SocketCommunicator } from './contexts';
 import { MapEditor } from './mapEditor/mapEditor';
 
 const darkTheme = createTheme({
@@ -16,14 +15,16 @@ const darkTheme = createTheme({
 
 export function App() {
    return (
-      <PackageContextProvider>
-         <SocketCommunicator>
-            <ThemeProvider theme={darkTheme}>
-               <CssBaseline />
-               <MapEditor />
-            </ThemeProvider>
-         </SocketCommunicator>
-      </PackageContextProvider>
+      <KeyBoardContextProvider>
+         <PackageContextProvider>
+            <SocketCommunicator>
+               <ThemeProvider theme={darkTheme}>
+                  <CssBaseline />
+                  <MapEditor />
+               </ThemeProvider>
+            </SocketCommunicator>
+         </PackageContextProvider>
+      </KeyBoardContextProvider>
    );
 }
 

@@ -3,13 +3,13 @@ import { useCallback, useMemo, useState } from 'react';
 export const usePagination = ({ pageSize, itemsAmount }: { pageSize: number; itemsAmount: number }) => {
    const [start, setStart] = useState(0);
 
-   const nextPage = () => {
+   const nextPage = useCallback(() => {
       setStart((prev) => Math.min(itemsAmount, prev + pageSize));
-   };
+   }, [pageSize, itemsAmount]);
 
-   const prevPage = () => {
+   const prevPage = useCallback(() => {
       setStart((prev) => Math.max(0, prev - pageSize));
-   };
+   }, [pageSize]);
 
    const allPagesCount = useMemo(() => Math.ceil(itemsAmount / pageSize), [itemsAmount, pageSize]);
 
