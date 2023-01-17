@@ -70,12 +70,33 @@ export const Map = () => {
    useEffect(() => {
       const output: Record<string, Texture> = {};
 
+      const loader = new PIXI.Loader();
+      loader.pre((resource, next) => {
+         resource.loadType = PIXI.LoaderResource.LOAD_TYPE.XHR;
+         next();
+      });
       _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
-         const baseTexture = PIXI.BaseTexture.from('../../../assets/' + mapElement.spriteSheet);
-         output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.x * BLOCK_SIZE + 1, mapElement.y * BLOCK_SIZE + 1, 30, 30));
+         const path = mapElement.spriteSheet.indexOf('https') === -1 ? '../../../assets/' + mapElement.spriteSheet : mapElement.spriteSheet;
+
+         if (!loader.resources[mapElement.spriteSheet]) {
+            loader.add({
+               name: mapElement.spriteSheet,
+               url: path,
+               crossOrigin: 'no-cors',
+               loadType: PIXI.LoaderResource.LOAD_TYPE.XHR,
+            });
+         }
       });
 
-      setTexturesMap(output);
+      loader.load((loader, resources) => {
+         _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
+            const baseTexture = resources[mapElement.spriteSheet]?.texture?.baseTexture;
+            if (baseTexture) {
+               output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.x * BLOCK_SIZE + 1, mapElement.y * BLOCK_SIZE + 1, 30, 30));
+            }
+         });
+         setTexturesMap(output);
+      });
    }, [packageContext?.backendStore?.sprites?.data]);
 
    const mapClick = useCallback(
@@ -159,6 +180,7 @@ export const Map = () => {
                         }
                      />
 
+                     {console.log(mapEditorContext.activeSprite, 999, texturesMap)}
                      {range(-offset, offset + 1).map((x) => {
                         {
                            return range(-offset, offset + 1).map((y) => {
