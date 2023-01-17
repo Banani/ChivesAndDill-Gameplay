@@ -64,7 +64,15 @@ export const Map = () => {
             },
          },
       }),
-      [mapEditorContext?.activeSprite, mapEditorContext.brushSize, isMouseDown, previousTranslation, lastMouseDownPosition, mapEditorContext.translation]
+      [
+         mapEditorContext?.activeSprite,
+         mapEditorContext.brushSize,
+         isMouseDown,
+         previousTranslation,
+         lastMouseDownPosition,
+         mapEditorContext.translation,
+         mapEditorContext.deleteMapField,
+      ]
    );
 
    useEffect(() => {
