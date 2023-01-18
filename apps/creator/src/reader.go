@@ -12,8 +12,9 @@ type Reader struct {
 }
 
 const (
-	updateMapField = "UPDATE_MAP_FIELD"
-	deleteMapField = "DELETE_MAP_FIELD"
+	updateMapField    = "UPDATE_MAP_FIELD"
+	deleteMapField    = "DELETE_MAP_FIELD"
+	createNpcTemplate = "CREATE_NPC_TEMPLATE"
 )
 
 type Action struct {
@@ -33,6 +34,11 @@ type DeleteMapFieldAction struct {
 	BrushSize  int    `json:brushSize`
 	X          int    `json:"x"`
 	Y          int    `json:"y"`
+}
+
+type CreateNpcTemplateAction struct {
+	ActionType  string      `json:"actionType"`
+	NpcTemplate NpcTemplate `json:"npcTemplate"`
 }
 
 func (w *Reader) addConnection(conn *websocket.Conn) {
@@ -63,6 +69,12 @@ func (w *Reader) addConnection(conn *websocket.Conn) {
 				var deleteMapFieldAction DeleteMapFieldAction
 				json.Unmarshal(message, &deleteMapFieldAction)
 				w.application.services.mapFieldService.mapFieldDeleted <- deleteMapFieldAction
+			}
+
+			if action.ActionType == createNpcTemplate {
+				var createNpcTemplateAction CreateNpcTemplateAction
+				json.Unmarshal(message, &createNpcTemplateAction)
+				w.application.services.npcTemplateService.createNpcTemplate <- createNpcTemplateAction
 			}
 		}
 	})()

@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { ACTIONS } from '../../actions';
 import { SocketContext } from '../../contexts';
+import { NpcTemplate } from '../../dialogs';
 
 export const MapEditorContext = React.createContext<MapEditorContextProps>({} as MapEditorContextProps);
 
@@ -32,6 +33,7 @@ interface MapEditorContextProps {
    setBrushSize: (brushSize: BrushSize) => void;
    translation: Vector;
    setTranslation: (v: Vector) => void;
+   createNpcTemplate: (npcTemplate: NpcTemplate) => void;
 }
 
 export const MapEditorContextProvider = ({ children }: any) => {
@@ -55,6 +57,13 @@ export const MapEditorContextProvider = ({ children }: any) => {
       [socket]
    );
 
+   const createNpcTemplate = useCallback(
+      (npcTemplate: NpcTemplate) => {
+         socket.send(JSON.stringify({ actionType: ACTIONS.CREATE_NPC_TEMPLATE, npcTemplate }));
+      },
+      [socket]
+   );
+
    return (
       <MapEditorContext.Provider
          value={{
@@ -68,6 +77,8 @@ export const MapEditorContextProvider = ({ children }: any) => {
             setBrushSize,
             translation,
             setTranslation,
+
+            createNpcTemplate,
          }}
       >
          {children}

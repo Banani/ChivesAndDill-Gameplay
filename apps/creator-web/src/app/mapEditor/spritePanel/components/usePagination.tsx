@@ -4,7 +4,7 @@ export const usePagination = ({ pageSize, itemsAmount }: { pageSize: number; ite
    const [start, setStart] = useState(0);
 
    const nextPage = useCallback(() => {
-      setStart((prev) => Math.min(itemsAmount, prev + pageSize));
+      setStart((prev) => Math.min(Math.floor(itemsAmount / pageSize) * pageSize, prev + pageSize));
    }, [pageSize, itemsAmount]);
 
    const prevPage = useCallback(() => {
@@ -15,7 +15,7 @@ export const usePagination = ({ pageSize, itemsAmount }: { pageSize: number; ite
 
    const setCurrentPage = useCallback(
       (page: number) => {
-         if (page < 1) {
+         if (page < 2) {
             setStart(0);
          } else if (page > allPagesCount) {
             setStart((allPagesCount - 1) * pageSize);

@@ -9,7 +9,8 @@ type Application struct {
 }
 
 type Services struct {
-	mapFieldService *MapFieldsService
+	mapFieldService    *MapFieldsService
+	npcTemplateService *NpcTemplateService
 }
 
 type EnginePackage struct {

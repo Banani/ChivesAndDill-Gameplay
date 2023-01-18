@@ -8,13 +8,25 @@ import { usePagination } from './usePagination';
 import { KeyBoardContext } from '../../../contexts';
 import styles from './pagination.module.scss';
 
-export const Pagination = ({ itemsAmount, setRange }: { itemsAmount: number; setRange: (range: { start: number; end: number }) => void }) => {
+export const Pagination = ({
+   itemsAmount,
+   setRange,
+   reset,
+}: {
+   itemsAmount: number;
+   setRange: (range: { start: number; end: number }) => void;
+   reset?: number;
+}) => {
    const keyBoardContext = useContext(KeyBoardContext);
 
    const { start, end, prevPage, nextPage, page, allPagesCount, setCurrentPage } = usePagination({
       pageSize: 20,
       itemsAmount,
    });
+
+   useEffect(() => {
+      setCurrentPage(1);
+   }, [reset]);
 
    useEffect(() => {
       setRange({ start, end });

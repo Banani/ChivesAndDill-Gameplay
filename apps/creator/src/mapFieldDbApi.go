@@ -22,8 +22,8 @@ func (m *MapFieldDbApi) saveMapField(mapFields []MapField) {
 	counter := 0
 
 	for _, field := range mapFields {
-		toSave[counter] = bson.D{{"spriteId", field.SpriteId}, {"x", field.X}, {"y", field.Y}, {"_id", strconv.Itoa(field.X) + ":" + strconv.Itoa(field.Y)}}
-		toDelete[counter] = strconv.Itoa(field.X) + ":" + strconv.Itoa(field.Y)
+		toSave[counter] = bson.D{{"spriteId", field.SpriteId}, {"x", field.X}, {"y", field.Y}, {"_id", strconv.Itoa(int(field.X)) + ":" + strconv.Itoa(int(field.Y))}}
+		toDelete[counter] = strconv.Itoa(int(field.X)) + ":" + strconv.Itoa(int(field.Y))
 		counter++
 	}
 
@@ -94,8 +94,8 @@ func (m *MapFieldDbApi) getMapFields() map[string]MapField {
 
 	mapFieldsMap := make(map[string]MapField)
 	for _, mapField := range mapFields {
-		x, _ := mapField["x"].(int)
-		y, _ := mapField["y"].(int)
+		x, _ := mapField["x"].(int32)
+		y, _ := mapField["y"].(int32)
 
 		mapFieldsMap[mapField["_id"].(string)] = MapField{
 			X:        x,
