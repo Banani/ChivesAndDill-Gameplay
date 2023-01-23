@@ -6,7 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { DialogContext, Dialogs } from '../contexts/dialogContext';
-import { MapEditorContext } from '../mapEditor/contexts/mapEditorContextProvider';
+import { NpcContext } from '../views/npcPanel/NpcContextProvider';
 
 export interface NpcTemplate {
    id: string;
@@ -30,7 +30,7 @@ const DefaultNpcTemplate = {
 
 export const NpcTemplateDialog = () => {
    const { activeDialog, setActiveDialog } = useContext(DialogContext);
-   const { createNpcTemplate } = useContext(MapEditorContext);
+   const { createNpcTemplate } = useContext(NpcContext);
    const [npcTempate, setNpcTemplate] = useState<NpcTemplate>(Object.assign({}, DefaultNpcTemplate));
 
    useEffect(() => {

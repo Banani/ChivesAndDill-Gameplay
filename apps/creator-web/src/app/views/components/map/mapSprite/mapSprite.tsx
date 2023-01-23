@@ -1,7 +1,7 @@
 import { Sprite } from '@inlet/react-pixi';
 import { Location } from 'libs/types/src/common/Location';
 import { FunctionComponent } from 'react';
-import { BLOCK_SIZE } from '../../../consts';
+import { BLOCK_SIZE } from '../../../../consts';
 
 interface MapSpriteProps {
    location: Location;

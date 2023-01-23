@@ -8,7 +8,7 @@ import PanToolIcon from '@mui/icons-material/PanTool';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { useContext, useEffect, useState } from 'react';
-import { KeyBoardContext } from '../../contexts';
+import { KeyBoardContext } from '../../../contexts';
 import { BrushSize, MapActionsList, MapEditorContext } from '../contexts/mapEditorContextProvider';
 
 import styles from './mapActions.module.scss';

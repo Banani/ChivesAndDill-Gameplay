@@ -44,6 +44,7 @@
       "react": "17.0.1",
       "react-dom": "17.0.1",
       "react-redux": "^7.2.3",
+      "react-router-dom": "^6.7.0",
       "redux": "^4.0.5",
       "redux-dynamic-modules": "^5.2.3",
       "regenerator-runtime": "0.13.7",

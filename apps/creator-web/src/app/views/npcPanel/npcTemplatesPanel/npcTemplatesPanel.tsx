@@ -7,11 +7,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
 import classNames from 'classnames';
-import { PackageContext } from '../../contexts';
-import { DialogContext, Dialogs } from '../../contexts/dialogContext';
-import { NpcTemplate } from '../../dialogs';
-import { Pagination } from '../spritePanel/components';
+import { PackageContext } from '../../../contexts';
+import { DialogContext, Dialogs } from '../../../contexts/dialogContext';
+import { NpcTemplate } from '../../../dialogs';
+import { Pagination } from '../../components';
+import { NpcContext } from '../NpcContextProvider';
 import styles from './npcTemplatesPanel.module.scss';
+
 export const NpcTemplatesPanel = () => {
    const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
    const [paginationReset, setPaginationReset] = useState(0);
@@ -22,6 +24,7 @@ export const NpcTemplatesPanel = () => {
    const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ? packageContext?.backendStore?.npcTemplates?.data : {};
 
    const { setActiveDialog } = useContext(DialogContext);
+   const { activeNpcTemplate, setActiveNpcTemplate } = useContext(NpcContext);
 
    return (
       <div className={styles['control-panel']}>
@@ -53,8 +56,9 @@ export const NpcTemplatesPanel = () => {
                         <div
                            className={classNames({
                               [styles['imageHolder']]: true,
-                              [styles['active']]: false,
+                              [styles['active']]: activeNpcTemplate === npcTemplate.id,
                            })}
+                           onClick={() => setActiveNpcTemplate(npcTemplate.id)}
                         ></div>
                         <ImageListItemBar
                            title={npcTemplate.name}

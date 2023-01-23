@@ -1,7 +1,7 @@
 import { IconButton, ImageList, ImageListItem, ImageListItemBar } from '@mui/material';
 import { map } from 'lodash';
 import { useContext, useState } from 'react';
-import { PackageContext } from '../../contexts';
+import { PackageContext } from '../../../contexts';
 
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -9,7 +9,7 @@ import { MapEditorContext } from '../contexts/mapEditorContextProvider';
 import styles from './spritePanel.module.scss';
 
 import classNames from 'classnames';
-import { Pagination } from './components';
+import { Pagination } from '../../components';
 
 export const SpritePanel = () => {
    const packageContext = useContext(PackageContext);
