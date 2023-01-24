@@ -6,13 +6,40 @@ import { Button } from '../components/button/Button';
 import { SocketContext } from '../../gameController/socketContext';
 import styles from "./LootModal.module.scss";
 import { CalculateCurrenty } from '../moneyBar/CalculateCurrency';
+import { usePagination } from '../../../../../creator-web/src/app/mapEditor/spritePanel/components/usePagination';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+
+interface Item {
+  amount: number,
+  itemTemplateId: string,
+}
 
 export const LootModal = ({ activeLoot, monsterId }) => {
   const [mousePosition, setMousePosition] = useState({ x: null, y: null });
   const coinsTemplate = CalculateCurrenty(activeLoot.coins) as any;
+  const [itemsAmount, updateItemsAmount] = useState(0);
+  const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
 
   const context = useContext(SocketContext);
   const { socket } = context;
+
+  const { start, end, prevPage, nextPage, page, allPagesCount } = usePagination({
+    pageSize: 2,
+    itemsAmount,
+  });
+
+  useEffect(() => {
+    setPaginationRange({ start, end });
+  }, [start, end]);
+
+  useEffect(() => {
+    if (activeLoot.coins) {
+      updateItemsAmount(1 + _.size(activeLoot.items));
+    } else {
+      updateItemsAmount(_.size(activeLoot.items));
+    }
+  }, [activeLoot.items, activeLoot.coins]);
 
   const updateMousePosition = useCallback(
     (e) => {
@@ -82,9 +109,19 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     }
   };
 
+  const activeItems = () => {
+    if (_.size(activeLoot.items) + _.size(activeLoot.coins) > 3) {
+      return Object.keys(activeLoot.items).slice(paginationRange.start, paginationRange.end).reduce((result, key) => {
+        result[key] = activeLoot.items[key];
+        return result;
+      }, {});
+    };
+    return activeLoot.items;
+  }
+
   const items = useMemo(
-    () =>
-      _.map(activeLoot.items, (item, itemId) => {
+    () => {
+      const results = _.map(activeItems(), (item: Item, itemId) => {
         const itemData = itemTemplates[item.itemTemplateId];
         if (itemData) {
           return (
@@ -92,17 +129,18 @@ export const LootModal = ({ activeLoot, monsterId }) => {
               <img src={itemData.image} className={styles.ItemImage} alt=""></img>
               <div className={styles.Stack}>{itemData.stack}</div>
               <div className={styles.RewardText}>{itemData.name}</div>
-            </div >
+            </div>
           )
         }
-      }),
-    [activeLoot.items, itemTemplates]
+      });
+
+      return results;
+    }, [activeLoot.items, itemTemplates, activeItems]
   );
 
   return (
     mousePosition.x !== null ?
       <div>
-
         <div className={styles.LootModal} style={{ top: `${mousePosition.y}px`, left: `${mousePosition.x}px` }}>
           <div className={styles.LootModalButton}>
             <Button className={styles.closeButton} onClick={() => {
@@ -112,6 +150,17 @@ export const LootModal = ({ activeLoot, monsterId }) => {
             </Button>
           </div>
           {items && <div className={styles.ItemsContainer}>{coins()}{items}</div>}
+          <div className={styles.PaginationContainer}>
+            {page !== 1 ?
+              <div className={styles.PaginationSide}>
+                <button className={styles.PaginationButton} onClick={prevPage}><ArrowUpwardIcon /></button>
+                <div className={styles.PaginationText}>Prev</div>
+              </div> : null}
+            {page !== allPagesCount ? <div className={`${styles.PaginationSide} ${styles.RightPaginationSide}`}>
+              <div className={styles.PaginationText}>Next</div>
+              <button className={styles.PaginationButton} onClick={nextPage}><ArrowDownwardIcon /></button>
+            </div> : null}
+          </div>
         </div>
       </div> : null
   )

@@ -70,13 +70,49 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
          items: [
             {
                itemTemplateId: '1',
-               dropChance: 0.7,
+               dropChance: 1,
                maxAmount: 1,
                minAmount: 1,
             },
             {
                itemTemplateId: '2',
-               dropChance: 0.5,
+               dropChance: 1,
+               maxAmount: 1,
+               minAmount: 1,
+            },
+            {
+               itemTemplateId: '3',
+               dropChance: 1,
+               maxAmount: 1,
+               minAmount: 1,
+            },
+            {
+               itemTemplateId: '4',
+               dropChance: 1,
+               maxAmount: 1,
+               minAmount: 1,
+            },
+            {
+               itemTemplateId: '5',
+               dropChance: 1,
+               maxAmount: 1,
+               minAmount: 1,
+            },
+            {
+               itemTemplateId: '6',
+               dropChance: 1,
+               maxAmount: 1,
+               minAmount: 1,
+            },
+            {
+               itemTemplateId: '7',
+               dropChance: 0.7,
+               maxAmount: 1,
+               minAmount: 1,
+            },
+            {
+               itemTemplateId: '8',
+               dropChance: 0.7,
                maxAmount: 1,
                minAmount: 1,
             },
