@@ -9,9 +9,11 @@ import styles from './DefaultNpcModal.module.scss';
 
 interface DefaultNpcModalProps {
    openQuest: (questId: string) => void;
+   setCurrentModal: any;
+   NpcModalView: any;
 }
 
-export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQuest }) => {
+export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQuest, setCurrentModal, NpcModalView }) => {
    const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
    const { data: activeConversation } = useEngineModuleReader(GlobalStoreModule.NPC_CONVERSATION);
    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
@@ -64,7 +66,8 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
 
    return activeNpc ? (
       <div className={styles.ContentWrapper}>
-         <div className={styles.SectionText}>aaaa aaaaaa aaaaa aaaa aaaaaa aaa aaa aaaaaa aaaaa xDDD :D</div>
+         <div className={styles.SectionText}>Cześć!</div>
+         {activeNpc.stock ? <div onClick={() => setCurrentModal(NpcModalView.Trade)}>Show me your wares.</div> : null}
          {currentQuests.length > 0 ? <h3 className={styles.SectionHeader}>Current Quests</h3> : null}
          {currentQuests}
          {availableQuests.length > 0 ? <h3 className={styles.SectionHeader}>Available Quests</h3> : null}
