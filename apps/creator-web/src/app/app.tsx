@@ -11,6 +11,9 @@ import { MapEditor, NpcContextProvider, NpcPanel } from './views';
 import { MapContextProvider } from './views/components/map/MapContextProvider';
 import { MapEditorContextProvider } from './views/mapEditor/contexts/mapEditorContextProvider';
 
+import classNames from 'classnames';
+import styles from './app.module.scss';
+
 const darkTheme = createTheme({
    palette: {
       mode: 'light',
@@ -46,15 +49,22 @@ export function App() {
 
                               <AppBar position="static">
                                  <Toolbar>
-                                    <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+                                    <Typography mr={6} component="h1" variant="h5" color="inherit" noWrap>
                                        Creator
                                     </Typography>
 
-                                    <Typography component="h3" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                                       <a href={'/'}>Map</a>
+                                    <Typography component="h3" variant="h6" color="inherit" noWrap>
+                                       <a className={classNames({ [styles['link']]: true, [styles['active']]: window.location.pathname === '/' })} href={'/'}>
+                                          Map
+                                       </a>
                                     </Typography>
-                                    <Typography component="h3" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                                       <a href={'/npc'}>NPC</a>
+                                    <Typography component="h3" variant="h6" color="inherit" noWrap>
+                                       <a
+                                          className={classNames({ [styles['link']]: true, [styles['active']]: window.location.pathname === '/npc' })}
+                                          href={'/npc'}
+                                       >
+                                          Npc
+                                       </a>
                                     </Typography>
                                  </Toolbar>
                               </AppBar>

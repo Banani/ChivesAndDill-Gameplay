@@ -6,12 +6,14 @@ import { NpcTemplate } from '../../dialogs';
 export const NpcContext = React.createContext<NpcContextProps>({} as NpcContextProps);
 
 export enum NpcActionsList {
+   Adding = 'Adding',
    Translate = 'Translate',
 }
 
 interface NpcContextProps {
    createNpcTemplate: (npcTemplate: NpcTemplate) => void;
    activeNpcTemplate: any;
+   addNpc: (val: { npcTemplateId: string; x: number; y: number }) => void;
    setActiveNpcTemplate: (npcTemplateId: string) => void;
    currentNpcAction: NpcActionsList;
    setCurrentNpcAction: any;
@@ -29,11 +31,19 @@ export const NpcContextProvider = ({ children }: any) => {
       [socket]
    );
 
+   const addNpc = useCallback(
+      ({ npcTemplateId, x, y }) => {
+         socket.send(JSON.stringify({ actionType: ACTIONS.ADD_NPC, npcTemplateId, x, y }));
+      },
+      [socket]
+   );
+
    return (
       <NpcContext.Provider
          value={{
             activeNpcTemplate,
             setActiveNpcTemplate,
+            addNpc,
             currentNpcAction,
             setCurrentNpcAction,
             createNpcTemplate,

@@ -30,7 +30,7 @@ func (m *NpcTemplateDbApi) saveNpcTemplate(npcTemplate NpcTemplate) string {
 	return record.InsertedID.(primitive.ObjectID).String()
 }
 
-func (m *NpcTemplateDbApi) getNpcTemplates() map[string]NpcTemplate {
+func (m *NpcTemplateDbApi) getNpcTemplates() (map[string]NpcTemplate, map[string]Npc) {
 
 	dbClient := m.application.dbClient
 	npcTemplatesCollection := dbClient.db.Collection("npcTemplates")
@@ -46,6 +46,7 @@ func (m *NpcTemplateDbApi) getNpcTemplates() map[string]NpcTemplate {
 	}
 
 	npcTemplatesMap := make(map[string]NpcTemplate)
+	npcsMap := make(map[string]Npc)
 	for _, npcTemplate := range npcTemplates {
 		name, _ := npcTemplate["name"].(string)
 		healthPoints, _ := npcTemplate["healthPoints"].(int32)
@@ -53,10 +54,10 @@ func (m *NpcTemplateDbApi) getNpcTemplates() map[string]NpcTemplate {
 		spellPower, _ := npcTemplate["spellPower"].(int32)
 		spellPowerRegeneration, _ := npcTemplate["spellPowerRegeneration"].(int32)
 		movementSpeed, _ := npcTemplate["movementSpeed"].(int32)
-		id := npcTemplate["_id"].(primitive.ObjectID).String()
+		npcTemplateId := npcTemplate["_id"].(primitive.ObjectID).Hex()
 
-		npcTemplatesMap[id] = NpcTemplate{
-			Id:                       id,
+		npcTemplatesMap[npcTemplateId] = NpcTemplate{
+			Id:                       npcTemplateId,
 			Name:                     name,
 			HealthPoints:             healthPoints,
 			HealthPointsRegeneration: healthPointsRegeneration,
@@ -64,7 +65,47 @@ func (m *NpcTemplateDbApi) getNpcTemplates() map[string]NpcTemplate {
 			SpellPowerRegeneration:   spellPowerRegeneration,
 			MovementSpeed:            movementSpeed,
 		}
+
+		if npcTemplate["npcRespawns"] != nil {
+			for _, npc := range npcTemplate["npcRespawns"].(primitive.A) {
+				convertedNpc := npc.(primitive.M)
+				location := convertedNpc["location"].(primitive.M)
+
+				npcsMap[convertedNpc["_id"].(string)] = Npc{
+					Id: convertedNpc["_id"].(string),
+					Location: Location{
+						X: location["x"].(int32),
+						Y: location["y"].(int32),
+					},
+					NpcTemplateId: npcTemplateId,
+					Time:          convertedNpc["time"].(int32),
+					WalkingType:   convertedNpc["walkingType"].(string),
+				}
+			}
+		}
+
 	}
 
-	return npcTemplatesMap
+	return npcTemplatesMap, npcsMap
+}
+
+func (m *NpcTemplateDbApi) addNpc(npc Npc) string {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("npcTemplates")
+
+	objectId, _ := primitive.ObjectIDFromHex(npc.NpcTemplateId)
+
+	filter := bson.M{"_id": objectId}
+	toSave := bson.M{"$push": bson.M{"npcRespawns": bson.M{
+		"_id":         npc.Id,
+		"location":    bson.M{"x": npc.Location.X, "y": npc.Location.Y},
+		"time":        npc.Time,
+		"walkingType": npc.WalkingType,
+	}}}
+
+	// Remove npcs on that spot
+	collection.UpdateMany(context.TODO(), bson.M{}, bson.M{"$pull": bson.M{"npcRespawns": bson.M{"_id": npc.Id}}})
+	collection.UpdateOne(context.TODO(), filter, toSave)
+
+	return "test" //record.InsertedID.(primitive.ObjectID).String()
 }

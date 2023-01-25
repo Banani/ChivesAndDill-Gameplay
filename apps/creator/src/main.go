@@ -60,7 +60,7 @@ func main() {
 	mapFieldsService.init()
 	go mapFieldsService.serve()
 
-	npcTemplateService := NpcTemplateService{application: application, createNpcTemplate: make(chan CreateNpcTemplateAction)}
+	npcTemplateService := NpcTemplateService{application: application, createNpcTemplate: make(chan CreateNpcTemplateAction), addNpc: make(chan AddNpcAction)}
 	npcTemplateService.init()
 	go npcTemplateService.serve()
 

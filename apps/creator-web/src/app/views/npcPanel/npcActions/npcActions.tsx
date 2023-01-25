@@ -1,3 +1,4 @@
+import AddIcon from '@mui/icons-material/Add';
 import PanToolIcon from '@mui/icons-material/PanTool';
 
 import Button from '@mui/material/Button';
@@ -32,13 +33,13 @@ export const NpcActions = () => {
          },
       });
 
-      //   keyBoardContext.addKeyHandler({
-      //      id: 'delete',
-      //      matchRegex: 'd',
-      //      keydown: () => {
-      //         setCurrentMapAction(NpcActions.Delete);
-      //      },
-      //   });
+      keyBoardContext.addKeyHandler({
+         id: 'adding',
+         matchRegex: 'a',
+         keydown: () => {
+            setCurrentNpcAction(NpcActionsList.Adding);
+         },
+      });
 
       //   keyBoardContext.addKeyHandler({
       //      id: 'edit',
@@ -51,21 +52,23 @@ export const NpcActions = () => {
       return () => {
          keyBoardContext.removeKeyHandler('translation');
          keyBoardContext.removeKeyHandler('delete');
-         keyBoardContext.removeKeyHandler('edit');
+         keyBoardContext.removeKeyHandler('adding');
       };
    }, [currentNpcAction, prevState, isTranslationKeyDown]);
 
    return (
       <div className={styles['mapActionList']}>
-         {/* <Tooltip title="Edit (E)" placement="right">
-            <Button
-               onClick={() => setCurrentMapAction(MapActionsList.Edit)}
-               variant={currentMapAction === MapActionsList.Edit ? 'contained' : 'outlined'}
-               className={styles['button']}
-            >
-               <ModeEditIcon />
-            </Button>
-         </Tooltip> */}
+         {
+            <Tooltip title="Adding (A)" placement="right">
+               <Button
+                  onClick={() => setCurrentNpcAction(NpcActionsList.Adding)}
+                  variant={currentNpcAction === NpcActionsList.Adding ? 'contained' : 'outlined'}
+                  className={styles['button']}
+               >
+                  <AddIcon />
+               </Button>
+            </Tooltip>
+         }
          <Tooltip title="Translation (T)" placement="right">
             <Button
                onClick={() => setCurrentNpcAction(NpcActionsList.Translate)}

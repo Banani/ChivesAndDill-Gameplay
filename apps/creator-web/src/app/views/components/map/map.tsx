@@ -7,6 +7,8 @@ import { BLOCK_SIZE } from '../../../consts';
 import { PackageContext } from '../../../contexts/packageContext';
 import { MapSprite } from './mapSprite/mapSprite';
 
+import { Text } from '@inlet/react-pixi';
+import { TextStyle } from 'pixi.js';
 import styles from './map.module.scss';
 import { MapContext } from './MapContextProvider';
 
@@ -51,7 +53,16 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
          }
       });
 
+      loader.add({
+         name: 'citizen',
+         url: 'assets/citizen.png',
+      });
+
       loader.load((loader, resources) => {
+         const citizen = resources['citizen']?.texture?.baseTexture;
+         if (citizen) {
+            output['citizen'] = new PIXI.Texture(citizen, new PIXI.Rectangle(0, 0, 60, 60));
+         }
          _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
             const baseTexture = resources[mapElement.spriteSheet]?.texture?.baseTexture;
             if (baseTexture) {
@@ -91,7 +102,7 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
       }
    }, []);
 
-   if (!Object.keys(texturesMap).length || !packageContext?.backendStore?.map) {
+   if (!Object.keys(texturesMap).length || !packageContext?.backendStore?.map || !packageContext.backendStore.npcs) {
       return <></>;
    }
 
@@ -112,9 +123,37 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
             onMouseLeave={onMouseLeave}
          >
             <Container position={[translation.x, translation.y]}>
-               {_.map(packageContext.backendStore.map.data, ({ x, y, spriteId }, key) => {
-                  return <MapSprite key={key} location={{ x, y }} texture={texturesMap[spriteId]} />;
-               })}
+               {_.chain(packageContext.backendStore.map.data)
+                  .filter(({ spriteId }) => texturesMap[spriteId])
+                  .map(({ x, y, spriteId }, key) => {
+                     return <MapSprite key={key} location={{ x, y }} texture={texturesMap[spriteId]} />;
+                  })
+                  .value()}
+
+               {_.chain(packageContext.backendStore.npcs.data)
+                  .filter(() => texturesMap['citizen'])
+                  .map(({ location, npcTemplateId }, key) => {
+                     return (
+                        <>
+                           <Text
+                              text={packageContext.backendStore.npcTemplates.data[npcTemplateId].name}
+                              x={location.x * BLOCK_SIZE + BLOCK_SIZE / 2}
+                              y={location.y * BLOCK_SIZE - 12}
+                              anchor={0.5}
+                              style={
+                                 new TextStyle({
+                                    align: 'center',
+                                    fontFamily: 'Segoe UI',
+                                    fontSize: 14,
+                                    fill: '#ff6030',
+                                 })
+                              }
+                           />
+                           <MapSprite key={key} location={location} texture={texturesMap['citizen']} />
+                        </>
+                     );
+                  })
+                  .value()}
 
                {children}
             </Container>

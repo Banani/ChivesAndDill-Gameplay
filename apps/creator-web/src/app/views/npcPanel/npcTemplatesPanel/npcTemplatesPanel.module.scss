@@ -13,8 +13,8 @@
     box-sizing: border-box;
     border: 6px solid #CCC;
     
-    .image {
-        width: calc(384px * 3);
+    .image { 
+        width: 96px;
     }
 
     &.active {

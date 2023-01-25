@@ -1,0 +1,13 @@
+.link {
+    text-decoration: none;
+    margin-right: 18px;
+    color: white;
+
+    &:hover {
+        color: gold;
+    }
+
+    &.active {
+        color: gold;
+    }
+}

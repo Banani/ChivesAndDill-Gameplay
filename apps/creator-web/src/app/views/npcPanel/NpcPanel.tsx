@@ -2,7 +2,7 @@ import { Text } from '@inlet/react-pixi';
 import { Paper } from '@mui/material';
 import { TextStyle } from 'pixi.js';
 import { useContext, useMemo } from 'react';
-import { MapContext } from '../components';
+import { MapContext, MapSprite, Rectangle } from '../components';
 
 import { Map } from '../components';
 import { NpcActions } from './npcActions';
@@ -26,24 +26,23 @@ export const NpcPanel = () => {
       translation,
       setTranslation,
    } = useContext(MapContext);
-   const { currentNpcAction } = useContext(NpcContext);
+   const { currentNpcAction, activeNpcTemplate, addNpc } = useContext(NpcContext);
 
    const actionModes: Partial<Record<string, any>> = useMemo(
       () => ({
-         //  [MapActionsList.Edit]: {
-         //     onClick: (e: any) => {
-         //        if (mapEditorContext?.activeSprite) {
-         //           mapEditorContext.updateMapField({
-         //              brushSize: BrushSizeToPlatesAmount[mapEditorContext.brushSize],
-         //              x: Math.floor((e.nativeEvent.offsetX - mapEditorContext.translation.x) / 32),
-         //              y: Math.floor((e.nativeEvent.offsetY - mapEditorContext.translation.y) / 32),
-         //              spriteId: mapEditorContext.activeSprite,
-         //           });
-         //        } else {
-         //           console.log('Nie wybrano sprite');
-         //        }
-         //     },
-         //  },
+         [NpcActionsList.Adding]: {
+            onClick: (e: any) => {
+               if (activeNpcTemplate) {
+                  addNpc({
+                     x: Math.floor((e.nativeEvent.offsetX - translation.x) / 32),
+                     y: Math.floor((e.nativeEvent.offsetY - translation.y) / 32),
+                     npcTemplateId: activeNpcTemplate,
+                  });
+               } else {
+                  console.log('Nie wybrano sprite');
+               }
+            },
+         },
          [NpcActionsList.Translate]: {
             onMouseMove: (e: any) => {
                if (isMouseDown) {
@@ -68,7 +67,9 @@ export const NpcPanel = () => {
          //  mapEditorContext?.activeSprite,
          //  mapEditorContext.brushSize,
          isMouseDown,
-         //  previousTranslation,
+         activeNpcTemplate,
+         addNpc,
+         translation,
          //  lastMouseDownPosition,
          //  mapEditorContext.translation,
          //  mapEditorContext.deleteMapField,
@@ -101,7 +102,7 @@ export const NpcPanel = () => {
                      }
                   />
 
-                  {/* {mousePosition && mapEditorContext?.activeSprite && mapEditorContext.currentMapAction === MapActionsList.Edit && (
+                  {mousePosition && !!activeNpcTemplate && currentNpcAction === NpcActionsList.Adding && (
                      <>
                         <Rectangle
                            color={'33aa33'}
@@ -110,30 +111,22 @@ export const NpcPanel = () => {
                               y: mouseCenterSpritePosition.y * 32 - 3,
                            }}
                            size={{
-                              width: BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6,
-                              height: BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6,
+                              width: 32 + 6,
+                              height: 32 + 6,
                            }}
                         />
 
-                        {range(-offset, offset + 1).map((x) => {
-                           {
-                              return range(-offset, offset + 1).map((y) => {
-                                 return (
-                                    <MapSprite
-                                       texture={texturesMap[mapEditorContext.activeSprite]}
-                                       location={{
-                                          x: Math.floor((mousePosition?.x - mapEditorContext.translation.x) / 32) + x,
-                                          y: Math.floor((mousePosition?.y - mapEditorContext.translation.y) / 32) + y,
-                                       }}
-                                    />
-                                 );
-                              });
-                           }
-                        })}
+                        <MapSprite
+                           texture={texturesMap['citizen']}
+                           location={{
+                              x: Math.floor((mousePosition?.x - translation.x) / 32),
+                              y: Math.floor((mousePosition?.y - translation.y) / 32),
+                           }}
+                        />
                      </>
                   )}
 
-                  {mousePosition && mapEditorContext.currentMapAction === MapActionsList.Delete && (
+                  {/* {mousePosition && mapEditorContext.currentMapAction === MapActionsList.Delete && (
                      <>
                         <Rectangle
                            color={'aa3333'}
@@ -147,7 +140,7 @@ export const NpcPanel = () => {
                            }}
                         />
                      </>
-                  )} */}
+                  )}  */}
                </Map>
             </Paper>
          </div>

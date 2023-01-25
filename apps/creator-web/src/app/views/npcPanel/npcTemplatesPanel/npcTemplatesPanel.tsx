@@ -59,7 +59,9 @@ export const NpcTemplatesPanel = () => {
                               [styles['active']]: activeNpcTemplate === npcTemplate.id,
                            })}
                            onClick={() => setActiveNpcTemplate(npcTemplate.id)}
-                        ></div>
+                        >
+                           <img className={styles['image']} src={'assets/citizen.png'} />
+                        </div>
                         <ImageListItemBar
                            title={npcTemplate.name}
                            actionIcon={
