@@ -1,6 +1,7 @@
 import { GlobalStoreModule } from '@bananos/types';
 import type { QuestSchema } from '@bananos/types';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import type { FunctionComponent } from 'react';
 import React, { useContext, useEffect } from 'react';
 import styles from './TradeNpcModal.module.scss';
@@ -17,6 +18,7 @@ export const TradeNpcModal: FunctionComponent<TradeNpcModalProps> = ({ close }) 
    const { data: activeConversation } = useEngineModuleReader(GlobalStoreModule.NPC_CONVERSATION);
    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
 
+   const engineApiContext = useContext(EngineApiContext);
    const keyBoardContext = useContext(KeyBoardContext);
    const activeNpc = characters[activeConversation[activeCharacterId]?.npcId];
    const activePlayer = characters[activeCharacterId];
@@ -25,7 +27,7 @@ export const TradeNpcModal: FunctionComponent<TradeNpcModalProps> = ({ close }) 
       keyBoardContext.addKeyHandler({
          id: 'TradeNpcModalEscape',
          matchRegex: 'Escape',
-         keydown: close,
+         keydown: engineApiContext.closeNpcConversationDialog,
       });
 
       return () => {

@@ -40,7 +40,7 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
       }, [activeNpc.id, activeQuestId, context]);
 
       const closeButtonHandler = () => {
-         if (currentModal !== NpcModalView.Default) {
+         if (currentModal !== NpcModalView.Default && currentModal !== NpcModalView.Trade) {
             setCurrentModal(NpcModalView.Default);
          } else {
             context.closeNpcConversationDialog();
