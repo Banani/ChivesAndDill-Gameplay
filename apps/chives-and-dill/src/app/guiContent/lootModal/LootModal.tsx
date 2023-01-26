@@ -25,7 +25,7 @@ export const LootModal = ({ activeLoot, monsterId }) => {
   const { socket } = context;
 
   const { start, end, prevPage, nextPage, page, allPagesCount } = usePagination({
-    pageSize: 2,
+    pageSize: 3,
     itemsAmount,
   });
 
@@ -109,34 +109,32 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     }
   };
 
+  // 1. zmapowac do jsx itemy.
+  // 2. dodac coiny do tablicy z itemami
+  // 3. slice
+
   const activeItems = () => {
-    if (_.size(activeLoot.items) + _.size(activeLoot.coins) > 3) {
-      return Object.keys(activeLoot.items).slice(paginationRange.start, paginationRange.end).reduce((result, key) => {
-        result[key] = activeLoot.items[key];
-        return result;
-      }, {});
-    };
-    return activeLoot.items;
-  }
 
-  const items = useMemo(
-    () => {
-      const results = _.map(activeItems(), (item: Item, itemId) => {
-        const itemData = itemTemplates[item.itemTemplateId];
-        if (itemData) {
-          return (
-            < div className={styles.Item} onClick={() => handleItemClick(monsterId, itemId)}>
-              <img src={itemData.image} className={styles.ItemImage} alt=""></img>
-              <div className={styles.Stack}>{itemData.stack}</div>
-              <div className={styles.RewardText}>{itemData.name}</div>
-            </div>
-          )
-        }
-      });
+    let items = _.map(activeLoot.items, (key, id) => {
+      const item = activeLoot.items[id];
+      const itemData = itemTemplates[item.itemTemplateId];
+      return (
+        < div className={styles.Item} onClick={() => handleItemClick(monsterId, item)}>
+          <img src={itemData.image} className={styles.ItemImage} alt=""></img>
+          <div className={styles.Stack}>{itemData.stack}</div>
+          <div className={styles.RewardText}>{itemData.name}</div>
+        </div>
+      )
+    });
 
-      return results;
-    }, [activeLoot.items, itemTemplates, activeItems]
-  );
+    items = [coins(), ...items];
+
+    if (itemsAmount > 3) {
+      return Object.entries(items).slice(paginationRange.start, paginationRange.end).map(entry => entry[1]);
+    } else {
+      return items;
+    }
+  };
 
   return (
     mousePosition.x !== null ?
@@ -149,7 +147,7 @@ export const LootModal = ({ activeLoot, monsterId }) => {
               X
             </Button>
           </div>
-          {items && <div className={styles.ItemsContainer}>{coins()}{items}</div>}
+          {activeItems() && <div className={styles.ItemsContainer}>{activeItems()}</div>}
           <div className={styles.PaginationContainer}>
             {page !== 1 ?
               <div className={styles.PaginationSide}>
