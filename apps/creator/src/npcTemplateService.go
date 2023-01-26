@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"strconv"
 )
 
@@ -44,48 +43,24 @@ func (s *NpcTemplateService) init() {
 }
 
 func (service *NpcTemplateService) handleNewConnection() {
-	npcTemplatePackage := make(map[string]EnginePackageStringArray)
-
-	serializedNpcTemplateMap := make(map[string]string)
-	for key, npcTemplate := range service.npcTemplates {
-		jsonSprite, _ := json.Marshal(npcTemplate)
-		serializedNpcTemplateMap[key] = string(jsonSprite)
-	}
-	npcTemplatePackage["npcTemplates"] = EnginePackageStringArray{Data: serializedNpcTemplateMap}
-
-	serializedNpcsMap := make(map[string]string)
-	for key, npc := range service.npcs {
-		jsonSprite, _ := json.Marshal(npc)
-		serializedNpcsMap[key] = string(jsonSprite)
-	}
-	npcTemplatePackage["npcs"] = EnginePackageStringArray{Data: serializedNpcsMap}
-
 	// TO idzie do kazdego usera :o
-	service.application.writter.stream <- npcTemplatePackage
+	service.application.writter.stream <- prepareUpdatePayload("npcTemplates", service.npcTemplates)
+	service.application.writter.stream <- prepareUpdatePayload("npcs", service.npcs)
 }
 
 func (service *NpcTemplateService) serve() {
 	for {
 		select {
 		case npcTemplateCreateAction := <-service.createNpcTemplate:
-			api := NpcTemplateDbApi{application: service.application}
-			id := api.saveNpcTemplate(npcTemplateCreateAction.NpcTemplate)
-
-			npcTemplatePackage := make(map[string]EnginePackageStringArray)
-			serializedNpcTemplate := make(map[string]string)
-
 			npcTemplate := npcTemplateCreateAction.NpcTemplate
-			npcTemplate.Id = id
 
-			jsonNpcTemplate, _ := json.Marshal(npcTemplate)
-			serializedNpcTemplate[id] = string(jsonNpcTemplate)
+			api := NpcTemplateDbApi{application: service.application}
+			npcTemplate.Id = api.saveNpcTemplate(npcTemplateCreateAction.NpcTemplate)
 
-			npcTemplatePackage["npcTemplates"] = EnginePackageStringArray{Data: serializedNpcTemplate}
-			service.npcTemplates[id] = npcTemplate
-			service.application.writter.stream <- npcTemplatePackage
+			service.npcTemplates[npcTemplate.Id] = npcTemplate
+			service.application.writter.stream <- prepareUpdatePayload("npcTemplates", map[string]NpcTemplate{npcTemplate.Id: npcTemplate})
 
 		case addNpcAction := <-service.addNpc:
-			api := NpcTemplateDbApi{application: service.application}
 			npc := Npc{
 				Id:            strconv.Itoa(addNpcAction.X) + ":" + strconv.Itoa(addNpcAction.Y),
 				NpcTemplateId: addNpcAction.NpcTemplateId,
@@ -97,31 +72,18 @@ func (service *NpcTemplateService) serve() {
 				WalkingType: "None",
 			}
 
-			npcsPackage := make(map[string]EnginePackageStringArray)
-			serializedNpcs := make(map[string]string)
-
-			jsonNpc, _ := json.Marshal(npc)
-			serializedNpcs[npc.Id] = string(jsonNpc)
-
-			npcsPackage["npcs"] = EnginePackageStringArray{Data: serializedNpcs}
+			api := NpcTemplateDbApi{application: service.application}
+			api.addNpc(npc)
 
 			service.npcs[npc.Id] = npc
-			api.addNpc(npc)
-			service.application.writter.stream <- npcsPackage
+			service.application.writter.stream <- prepareUpdatePayload("npcTemplates", map[string]Npc{npc.Id: npc})
 
 		case deleteNpcAction := <-service.deleteNpc:
 			api := NpcTemplateDbApi{application: service.application}
-
-			npcsPackage := make(map[string]EnginePackageStringArray)
-			serializedNpcs := make(map[string]interface{})
-
-			serializedNpcs[deleteNpcAction.NpcId] = nil
-
-			npcsPackage["npcs"] = EnginePackageStringArray{ToDelete: serializedNpcs}
+			api.deleteNpc(deleteNpcAction.NpcId)
 
 			delete(service.npcs, deleteNpcAction.NpcId)
-			api.deleteNpc(deleteNpcAction.NpcId)
-			service.application.writter.stream <- npcsPackage
+			service.application.writter.stream <- prepareDeletePayload("npcs", []string{deleteNpcAction.NpcId})
 		}
 	}
 }

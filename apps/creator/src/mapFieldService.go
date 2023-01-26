@@ -34,27 +34,9 @@ func (s *MapFieldsService) init() {
 }
 
 func (service *MapFieldsService) handleNewConnection() {
-	mapFieldPackage := make(map[string]EnginePackageStringArray)
-	serializedMapField := make(map[string]string)
-	for key, mapField := range service.mapFields {
-		jsonSprite, _ := json.Marshal(mapField)
-		serializedMapField[key] = string(jsonSprite)
-	}
-	mapFieldPackage["map"] = EnginePackageStringArray{Data: serializedMapField}
-
-	service.application.writter.stream <- mapFieldPackage
-
-	spritesPackage := make(map[string]EnginePackageStringArray)
-	serializedSpriteMap := make(map[string]string)
-	for key, sprite := range service.sprites {
-		jsonSprite, _ := json.Marshal(sprite)
-		serializedSpriteMap[key] = string(jsonSprite)
-	}
-
-	spritesPackage["sprites"] = EnginePackageStringArray{Data: serializedSpriteMap}
-
 	// TO idzie do kazdego usera :o
-	service.application.writter.stream <- spritesPackage
+	service.application.writter.stream <- prepareUpdatePayload("map", service.mapFields)
+	service.application.writter.stream <- prepareUpdatePayload("sprites", service.sprites)
 }
 
 func (service *MapFieldsService) serve() {
