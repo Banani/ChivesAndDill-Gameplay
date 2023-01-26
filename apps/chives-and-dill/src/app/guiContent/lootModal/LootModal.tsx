@@ -109,10 +109,6 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     }
   };
 
-  // 1. zmapowac do jsx itemy.
-  // 2. dodac coiny do tablicy z itemami
-  // 3. slice
-
   const activeItems = () => {
 
     let items = _.map(activeLoot.items, (key, id) => {
