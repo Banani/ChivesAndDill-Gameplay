@@ -12,21 +12,8 @@ import { NpcActionsList, NpcContext } from './NpcContextProvider';
 import { NpcTemplatesPanel } from './npcTemplatesPanel';
 
 export const NpcPanel = () => {
-   const {
-      isMouseDown,
-      setIsMouseDown,
-      mousePosition,
-      setMousePosition,
-      lastMouseDownPosition,
-      setLastMouseDownPosition,
-      previousTranslation,
-      setPreviousTranslation,
-      texturesMap,
-      setTexturesMap,
-      translation,
-      setTranslation,
-   } = useContext(MapContext);
-   const { currentNpcAction, activeNpcTemplate, addNpc } = useContext(NpcContext);
+   const { isMouseDown, mousePosition, lastMouseDownPosition, previousTranslation, texturesMap, translation, setTranslation } = useContext(MapContext);
+   const { currentNpcAction, activeNpcTemplate, addNpc, deleteNpc } = useContext(NpcContext);
 
    const actionModes: Partial<Record<string, any>> = useMemo(
       () => ({
@@ -53,27 +40,13 @@ export const NpcPanel = () => {
                }
             },
          },
-         //  [MapActionsList.Delete]: {
-         //     onClick: (e: any) => {
-         //        mapEditorContext.deleteMapField({
-         //           brushSize: BrushSizeToPlatesAmount[mapEditorContext.brushSize],
-         //           x: Math.floor((e.nativeEvent.offsetX - mapEditorContext.translation.x) / 32),
-         //           y: Math.floor((e.nativeEvent.offsetY - mapEditorContext.translation.y) / 32),
-         //        });
-         //     },
-         //  },
+         [NpcActionsList.Delete]: {
+            onClick: (e: any) => {
+               deleteNpc(Math.floor((e.nativeEvent.offsetX - translation.x) / 32) + ':' + Math.floor((e.nativeEvent.offsetY - translation.y) / 32));
+            },
+         },
       }),
-      [
-         //  mapEditorContext?.activeSprite,
-         //  mapEditorContext.brushSize,
-         isMouseDown,
-         activeNpcTemplate,
-         addNpc,
-         translation,
-         //  lastMouseDownPosition,
-         //  mapEditorContext.translation,
-         //  mapEditorContext.deleteMapField,
-      ]
+      [isMouseDown, activeNpcTemplate, addNpc, translation, deleteNpc]
    );
 
    const mouseCenterSpritePosition = {
@@ -126,7 +99,7 @@ export const NpcPanel = () => {
                      </>
                   )}
 
-                  {/* {mousePosition && mapEditorContext.currentMapAction === MapActionsList.Delete && (
+                  {mousePosition && currentNpcAction === NpcActionsList.Delete && (
                      <>
                         <Rectangle
                            color={'aa3333'}
@@ -135,12 +108,12 @@ export const NpcPanel = () => {
                               y: mouseCenterSpritePosition.y * 32 - 3,
                            }}
                            size={{
-                              width: BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6,
-                              height: BrushSizeToPlatesAmount[mapEditorContext.brushSize] * 32 + 6,
+                              width: 32 + 6,
+                              height: 32 + 6,
                            }}
                         />
                      </>
-                  )}  */}
+                  )}
                </Map>
             </Paper>
          </div>

@@ -56,11 +56,20 @@ func main() {
 	writter.application = application
 	reader.application = application
 
-	mapFieldsService := MapFieldsService{application: application, mapFieldUpdated: make(chan UpdateMapFieldAction), mapFieldDeleted: make(chan DeleteMapFieldAction)}
+	mapFieldsService := MapFieldsService{
+		application:     application,
+		mapFieldUpdated: make(chan UpdateMapFieldAction),
+		mapFieldDeleted: make(chan DeleteMapFieldAction)}
+
 	mapFieldsService.init()
 	go mapFieldsService.serve()
 
-	npcTemplateService := NpcTemplateService{application: application, createNpcTemplate: make(chan CreateNpcTemplateAction), addNpc: make(chan AddNpcAction)}
+	npcTemplateService := NpcTemplateService{
+		application:       application,
+		createNpcTemplate: make(chan CreateNpcTemplateAction),
+		addNpc:            make(chan AddNpcAction),
+		deleteNpc:         make(chan DeleteNpcAction)}
+
 	npcTemplateService.init()
 	go npcTemplateService.serve()
 

@@ -34,6 +34,7 @@ type NpcTemplateService struct {
 	npcs              map[string]Npc
 	createNpcTemplate chan CreateNpcTemplateAction
 	addNpc            chan AddNpcAction
+	deleteNpc         chan DeleteNpcAction
 }
 
 func (s *NpcTemplateService) init() {
@@ -106,6 +107,20 @@ func (service *NpcTemplateService) serve() {
 
 			service.npcs[npc.Id] = npc
 			api.addNpc(npc)
+			service.application.writter.stream <- npcsPackage
+
+		case deleteNpcAction := <-service.deleteNpc:
+			api := NpcTemplateDbApi{application: service.application}
+
+			npcsPackage := make(map[string]EnginePackageStringArray)
+			serializedNpcs := make(map[string]interface{})
+
+			serializedNpcs[deleteNpcAction.NpcId] = nil
+
+			npcsPackage["npcs"] = EnginePackageStringArray{ToDelete: serializedNpcs}
+
+			delete(service.npcs, deleteNpcAction.NpcId)
+			api.deleteNpc(deleteNpcAction.NpcId)
 			service.application.writter.stream <- npcsPackage
 		}
 	}

@@ -1,6 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import PanToolIcon from '@mui/icons-material/PanTool';
 
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { useContext, useEffect, useState } from 'react';
@@ -13,7 +14,7 @@ export const NpcActions = () => {
    const { currentNpcAction, setCurrentNpcAction } = useContext(NpcContext);
    const keyBoardContext = useContext(KeyBoardContext);
 
-   const [prevState, setPrevState] = useState(NpcActionsList.Translate);
+   const [prevState, setPrevState] = useState(NpcActionsList.Adding);
    const [isTranslationKeyDown, setTranslationKeyDown] = useState(false);
 
    useEffect(() => {
@@ -41,13 +42,13 @@ export const NpcActions = () => {
          },
       });
 
-      //   keyBoardContext.addKeyHandler({
-      //      id: 'edit',
-      //      matchRegex: 'e',
-      //      keydown: () => {
-      //         setCurrentMapAction(NpcActions.Edit);
-      //      },
-      //   });
+      keyBoardContext.addKeyHandler({
+         id: 'delete',
+         matchRegex: 'd',
+         keydown: () => {
+            setCurrentNpcAction(NpcActionsList.Delete);
+         },
+      });
 
       return () => {
          keyBoardContext.removeKeyHandler('translation');
@@ -78,15 +79,17 @@ export const NpcActions = () => {
                <PanToolIcon />
             </Button>
          </Tooltip>
-         {/* <Tooltip title="Delete (D)" placement="right">
-            <Button
-               onClick={() => setCurrentMapAction(MapActionsList.Delete)}
-               variant={currentMapAction === MapActionsList.Delete ? 'contained' : 'outlined'}
-               className={styles['button']}
-            >
-               <DeleteForeverIcon />
-            </Button>
-         </Tooltip> */}
+         {
+            <Tooltip title="Delete (D)" placement="right">
+               <Button
+                  onClick={() => setCurrentNpcAction(NpcActionsList.Delete)}
+                  variant={currentNpcAction === NpcActionsList.Delete ? 'contained' : 'outlined'}
+                  className={styles['button']}
+               >
+                  <DeleteForeverIcon />
+               </Button>
+            </Tooltip>
+         }
       </div>
    );
 };

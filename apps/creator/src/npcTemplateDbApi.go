@@ -109,3 +109,10 @@ func (m *NpcTemplateDbApi) addNpc(npc Npc) string {
 
 	return "test" //record.InsertedID.(primitive.ObjectID).String()
 }
+
+func (m *NpcTemplateDbApi) deleteNpc(npcId string) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("npcTemplates")
+
+	collection.UpdateMany(context.TODO(), bson.M{}, bson.M{"$pull": bson.M{"npcRespawns": bson.M{"_id": npcId}}})
+}

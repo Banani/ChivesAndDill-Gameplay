@@ -8,6 +8,7 @@ export const NpcContext = React.createContext<NpcContextProps>({} as NpcContextP
 export enum NpcActionsList {
    Adding = 'Adding',
    Translate = 'Translate',
+   Delete = 'Delete',
 }
 
 interface NpcContextProps {
@@ -15,6 +16,7 @@ interface NpcContextProps {
    activeNpcTemplate: any;
    addNpc: (val: { npcTemplateId: string; x: number; y: number }) => void;
    setActiveNpcTemplate: (npcTemplateId: string) => void;
+   deleteNpc: (npcId: string) => void;
    currentNpcAction: NpcActionsList;
    setCurrentNpcAction: any;
 }
@@ -22,7 +24,7 @@ interface NpcContextProps {
 export const NpcContextProvider = ({ children }: any) => {
    const { socket } = useContext(SocketContext);
    const [activeNpcTemplate, setActiveNpcTemplate] = useState('');
-   const [currentNpcAction, setCurrentNpcAction] = useState(NpcActionsList.Translate);
+   const [currentNpcAction, setCurrentNpcAction] = useState(NpcActionsList.Adding);
 
    const createNpcTemplate = useCallback(
       (npcTemplate: NpcTemplate) => {
@@ -37,6 +39,13 @@ export const NpcContextProvider = ({ children }: any) => {
       },
       [socket]
    );
+   const deleteNpc = useCallback(
+      (npcId) => {
+         console.log(npcId);
+         socket.send(JSON.stringify({ actionType: ACTIONS.DELETE_NPC, npcId }));
+      },
+      [socket]
+   );
 
    return (
       <NpcContext.Provider
@@ -47,6 +56,7 @@ export const NpcContextProvider = ({ children }: any) => {
             currentNpcAction,
             setCurrentNpcAction,
             createNpcTemplate,
+            deleteNpc,
          }}
       >
          {children}
