@@ -12,11 +12,12 @@ type Reader struct {
 }
 
 const (
-	updateMapField    = "UPDATE_MAP_FIELD"
-	deleteMapField    = "DELETE_MAP_FIELD"
-	createNpcTemplate = "CREATE_NPC_TEMPLATE"
-	addNpc            = "ADD_NPC"
-	deleteNpc         = "DELETE_NPC"
+	updateMapField     = "UPDATE_MAP_FIELD"
+	deleteMapField     = "DELETE_MAP_FIELD"
+	createNpcTemplate  = "CREATE_NPC_TEMPLATE"
+	addNpc             = "ADD_NPC"
+	deleteNpc          = "DELETE_NPC"
+	createItemTemplate = "CREATE_ITEM_TEMPLATE"
 )
 
 type Action struct {
@@ -50,7 +51,13 @@ type AddNpcAction struct {
 }
 
 type DeleteNpcAction struct {
-	NpcId string `json:"npcId"`
+	ActionType string `json:"actionType"`
+	NpcId      string `json:"npcId"`
+}
+
+type CreateItemTemplateAction struct {
+	ActionType   string `json:"actionType"`
+	ItemTemplate ItemTemplate
 }
 
 func (w *Reader) addConnection(conn *websocket.Conn) {
@@ -99,6 +106,18 @@ func (w *Reader) addConnection(conn *websocket.Conn) {
 				var deleteNpcAction DeleteNpcAction
 				json.Unmarshal(message, &deleteNpcAction)
 				w.application.services.npcTemplateService.deleteNpc <- deleteNpcAction
+			}
+
+			if action.ActionType == deleteNpc {
+				var deleteNpcAction DeleteNpcAction
+				json.Unmarshal(message, &deleteNpcAction)
+				w.application.services.npcTemplateService.deleteNpc <- deleteNpcAction
+			}
+
+			if action.ActionType == createItemTemplate {
+				var createItemTemplateAction CreateItemTemplateAction
+				json.Unmarshal(message, &createItemTemplateAction)
+				w.application.services.itemsService.createItemTemplate <- createItemTemplateAction
 			}
 		}
 	})()

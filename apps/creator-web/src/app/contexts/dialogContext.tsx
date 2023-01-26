@@ -4,6 +4,7 @@ export const DialogContext = React.createContext<any>(null);
 
 export enum Dialogs {
    NpcTemplateDialogs = 'NpcTemplateDialogs',
+   ItemDialog = 'ItemDialog',
 }
 
 export const DialogProvider = ({ children }: any) => {

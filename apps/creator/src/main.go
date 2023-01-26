@@ -73,7 +73,14 @@ func main() {
 	npcTemplateService.init()
 	go npcTemplateService.serve()
 
-	application.services = Services{mapFieldService: &mapFieldsService, npcTemplateService: &npcTemplateService}
+	itemsService := ItemsService{
+		application:        application,
+		createItemTemplate: make(chan CreateItemTemplateAction)}
+
+	itemsService.init()
+	go itemsService.serve()
+
+	application.services = Services{mapFieldService: &mapFieldsService, npcTemplateService: &npcTemplateService, itemsService: &itemsService}
 
 	go writter.handleMessages()
 
@@ -90,6 +97,7 @@ func main() {
 		// loop po wszystkich serwisach?
 		application.services.mapFieldService.handleNewConnection()
 		application.services.npcTemplateService.handleNewConnection()
+		application.services.itemsService.handleNewConnection()
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))

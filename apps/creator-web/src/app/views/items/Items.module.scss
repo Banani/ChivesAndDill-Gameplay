@@ -1,0 +1,44 @@
+.map-editor {
+    flex: 1;
+    margin: 20px;
+    padding: 20px
+}
+
+.list {
+    display:flex;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.list-item {
+    border: 1px solid #404040;
+    width: 120px;
+    height: 120px;
+    border-radius: 3px;
+    position: relative;
+    margin-left: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+
+    &:hover {
+        background: #eee;
+    }
+
+    .image-preview {
+        max-width: 100%;
+    }
+
+    .bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 24px;
+        background-color: #000000b0;
+        color: #cccccc;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding-left: 4px;
+    }
+}

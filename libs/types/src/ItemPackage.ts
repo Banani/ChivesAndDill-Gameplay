@@ -56,8 +56,8 @@ export interface ItemInstance {
 }
 
 export enum ItemTemplateType {
-   Equipment,
-   Generic,
+   Equipment = 'equipment',
+   Generic = 'generic',
 }
 
 export interface BaseItemTemplate {
