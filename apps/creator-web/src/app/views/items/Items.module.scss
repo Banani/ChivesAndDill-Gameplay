@@ -1,7 +1,14 @@
 .map-editor {
     flex: 1;
     margin: 20px;
-    padding: 20px
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-holder {
+
+    flex: 1;
 }
 
 .list {
@@ -41,4 +48,8 @@
         text-overflow: ellipsis;
         padding-left: 4px;
     }
+}
+
+.pagination-holder {
+    width: 400px;
 }
