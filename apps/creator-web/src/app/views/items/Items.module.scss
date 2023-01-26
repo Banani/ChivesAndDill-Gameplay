@@ -6,8 +6,18 @@
     flex-direction: column;
 }
 
-.list-holder {
+.manage-panel {
+    display: flex;
+    margin: 0 10px;
+    width: 400px;
+    align-items: center;
 
+    .add-item-template-button {
+        margin-left: 20px;
+    }
+}
+
+.list-holder {
     flex: 1;
 }
 
