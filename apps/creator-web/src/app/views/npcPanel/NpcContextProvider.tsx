@@ -1,7 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { ACTIONS } from '../../actions';
 import { SocketContext } from '../../contexts';
-import { NpcTemplate } from '../../dialogs';
 
 export const NpcContext = React.createContext<NpcContextProps>({} as NpcContextProps);
 
@@ -11,11 +10,21 @@ export enum NpcActionsList {
    Delete = 'Delete',
 }
 
+export interface NpcTemplate {
+   id: string;
+   name: string;
+   healthPoints: number;
+   healthPointsRegeneration: number;
+   spellPower: number;
+   spellPowerRegeneration: number;
+   movementSpeed: number;
+}
+
 interface NpcContextProps {
    createNpcTemplate: (npcTemplate: NpcTemplate) => void;
-   activeNpcTemplate: any;
+   activeNpcTemplate: NpcTemplate;
    addNpc: (val: { npcTemplateId: string; x: number; y: number }) => void;
-   setActiveNpcTemplate: (npcTemplateId: string) => void;
+   setActiveNpcTemplate: React.Dispatch<React.SetStateAction<NpcTemplate>>;
    deleteNpc: (npcId: string) => void;
    currentNpcAction: NpcActionsList;
    setCurrentNpcAction: any;
@@ -23,7 +32,7 @@ interface NpcContextProps {
 
 export const NpcContextProvider = ({ children }: any) => {
    const { socket } = useContext(SocketContext);
-   const [activeNpcTemplate, setActiveNpcTemplate] = useState('');
+   const [activeNpcTemplate, setActiveNpcTemplate] = useState<NpcTemplate>({} as NpcTemplate);
    const [currentNpcAction, setCurrentNpcAction] = useState(NpcActionsList.Adding);
 
    const createNpcTemplate = useCallback(
@@ -41,7 +50,6 @@ export const NpcContextProvider = ({ children }: any) => {
    );
    const deleteNpc = useCallback(
       (npcId) => {
-         console.log(npcId);
          socket.send(JSON.stringify({ actionType: ACTIONS.DELETE_NPC, npcId }));
       },
       [socket]

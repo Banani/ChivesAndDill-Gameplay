@@ -59,7 +59,8 @@ func main() {
 	mapFieldsService := MapFieldsService{
 		application:     application,
 		mapFieldUpdated: make(chan UpdateMapFieldAction),
-		mapFieldDeleted: make(chan DeleteMapFieldAction)}
+		mapFieldDeleted: make(chan DeleteMapFieldAction),
+	}
 
 	mapFieldsService.init()
 	go mapFieldsService.serve()
@@ -68,14 +69,18 @@ func main() {
 		application:       application,
 		createNpcTemplate: make(chan CreateNpcTemplateAction),
 		addNpc:            make(chan AddNpcAction),
-		deleteNpc:         make(chan DeleteNpcAction)}
+		deleteNpc:         make(chan DeleteNpcAction),
+	}
 
 	npcTemplateService.init()
 	go npcTemplateService.serve()
 
 	itemsService := ItemsService{
 		application:        application,
-		createItemTemplate: make(chan CreateItemTemplateAction)}
+		createItemTemplate: make(chan CreateItemTemplateAction),
+		deleteItemTemplate: make(chan DeleteItemTemplateAction),
+		updateItemTemplate: make(chan UpdateItemTemplateAction),
+	}
 
 	itemsService.init()
 	go itemsService.serve()

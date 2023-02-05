@@ -23,7 +23,7 @@ export const NpcPanel = () => {
                   addNpc({
                      x: Math.floor((e.nativeEvent.offsetX - translation.x) / 32),
                      y: Math.floor((e.nativeEvent.offsetY - translation.y) / 32),
-                     npcTemplateId: activeNpcTemplate,
+                     npcTemplateId: activeNpcTemplate.id,
                   });
                } else {
                   console.log('Nie wybrano sprite');

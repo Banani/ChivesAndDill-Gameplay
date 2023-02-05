@@ -1,5 +1,5 @@
 import { ItemTemplateDialog } from './ItemTemplateDialog';
-import { NpcTemplateDialog } from './NpcTemplateDialog';
+import { NpcTemplateDialog } from './npcTemplateDialog';
 
 export const AllDialogs = () => {
    return (

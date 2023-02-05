@@ -5,13 +5,14 @@ import (
 )
 
 type NpcTemplate struct {
-	Id                       string `json:"id"`
-	Name                     string `json:"name"`
-	HealthPoints             int32  `json:"healthPoints"`
-	HealthPointsRegeneration int32  `json:"healthPointsRegeneration"`
-	SpellPower               int32  `json:"spellPower"`
-	SpellPowerRegeneration   int32  `json:"spellPowerRegeneration"`
-	MovementSpeed            int32  `json:"movementSpeed"`
+	Id                       string          `json:"id"`
+	Name                     string          `json:"name"`
+	HealthPoints             int32           `json:"healthPoints"`
+	HealthPointsRegeneration int32           `json:"healthPointsRegeneration"`
+	SpellPower               int32           `json:"spellPower"`
+	SpellPowerRegeneration   int32           `json:"spellPowerRegeneration"`
+	MovementSpeed            int32           `json:"movementSpeed"`
+	Stock                    map[string]bool `json:"stock"`
 }
 
 type Location struct {

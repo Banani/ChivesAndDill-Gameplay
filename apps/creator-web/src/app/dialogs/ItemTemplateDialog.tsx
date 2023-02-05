@@ -28,14 +28,18 @@ const DefaultItem = {
 
 export const ItemTemplateDialog = () => {
    const { activeDialog, setActiveDialog } = useContext(DialogContext);
-   const { createItemTemplate } = useContext(ItemsContext);
+   const { createItemTemplate, updateItemTemplate, activeItemTemplate } = useContext(ItemsContext);
    const [itemTemplate, setItemTemplate] = useState<ItemTemplate>(Object.assign({}, DefaultItem) as GenericItemTemplate);
 
    useEffect(() => {
-      if (activeDialog === Dialogs.ItemDialog) {
+      if (activeDialog === Dialogs.ItemDialog && activeItemTemplate === null) {
          setItemTemplate(Object.assign({}, DefaultItem) as GenericItemTemplate);
       }
-   }, [activeDialog === Dialogs.ItemDialog]);
+
+      if (activeDialog === Dialogs.ItemDialog && activeItemTemplate !== null) {
+         setItemTemplate(activeItemTemplate);
+      }
+   }, [activeDialog === Dialogs.ItemDialog, activeItemTemplate]);
 
    const changeValue = useCallback(
       (prop: string, value: string | number) => {
@@ -43,6 +47,15 @@ export const ItemTemplateDialog = () => {
       },
       [itemTemplate]
    );
+
+   const confirmAction = useCallback(() => {
+      if (activeItemTemplate === null) {
+         createItemTemplate(itemTemplate);
+      } else {
+         updateItemTemplate(itemTemplate);
+      }
+      setActiveDialog(null);
+   }, [itemTemplate, activeItemTemplate]);
 
    return (
       <Dialog open={activeDialog === Dialogs.ItemDialog} onClose={() => setActiveDialog(null)}>
@@ -152,14 +165,8 @@ export const ItemTemplateDialog = () => {
             ) : null}
          </DialogContent>
          <DialogActions>
-            <Button
-               onClick={() => {
-                  setActiveDialog(null);
-                  createItemTemplate(itemTemplate);
-               }}
-               variant="contained"
-            >
-               Create
+            <Button onClick={confirmAction} variant="contained">
+               {activeItemTemplate ? 'Update' : 'Create'}
             </Button>
             <Button onClick={() => setActiveDialog(null)} variant="outlined">
                Cancel

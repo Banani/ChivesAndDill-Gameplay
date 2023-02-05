@@ -9,9 +9,8 @@ import TextField from '@mui/material/TextField';
 import classNames from 'classnames';
 import { PackageContext } from '../../../contexts';
 import { DialogContext, Dialogs } from '../../../contexts/dialogContext';
-import { NpcTemplate } from '../../../dialogs';
 import { Pagination } from '../../components';
-import { NpcContext } from '../NpcContextProvider';
+import { NpcContext, NpcTemplate } from '../NpcContextProvider';
 import styles from './npcTemplatesPanel.module.scss';
 
 export const NpcTemplatesPanel = () => {
@@ -56,9 +55,9 @@ export const NpcTemplatesPanel = () => {
                         <div
                            className={classNames({
                               [styles['imageHolder']]: true,
-                              [styles['active']]: activeNpcTemplate === npcTemplate.id,
+                              [styles['active']]: activeNpcTemplate.id === npcTemplate.id,
                            })}
-                           onClick={() => setActiveNpcTemplate(npcTemplate.id)}
+                           onClick={() => setActiveNpcTemplate(npcTemplate)}
                         >
                            <img className={styles['image']} src={'assets/citizen.png'} />
                         </div>

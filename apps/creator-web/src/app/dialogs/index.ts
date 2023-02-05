@@ -1,2 +1,3 @@
 export * from './AllDialogs';
-export * from './NpcTemplateDialog';
+export * from './DeleteConfirmationDialog';
+export * from './npcTemplateDialog';

@@ -36,6 +36,29 @@ func (m *ItemsDbApi) saveItemTemplate(itemTemplate ItemTemplate) string {
 	return record.InsertedID.(primitive.ObjectID).Hex()
 }
 
+func (m *ItemsDbApi) updateItemTemplate(itemTemplate ItemTemplate) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("itemTemplates")
+
+	toSave := bson.D{{"$set", bson.D{
+		{"name", itemTemplate.Name},
+		{"type", itemTemplate.Type},
+		{"value", itemTemplate.Value},
+		{"stack", itemTemplate.Stack},
+		{"image", itemTemplate.Image},
+		{"slot", itemTemplate.Slot},
+		{"armor", itemTemplate.Armor},
+		{"strength", itemTemplate.Strength},
+		{"stamina", itemTemplate.Stamina},
+		{"agility", itemTemplate.Agility},
+		{"intelect", itemTemplate.Intelect},
+		{"spirit", itemTemplate.Spirit},
+	}}}
+
+	objectId, _ := primitive.ObjectIDFromHex(itemTemplate.Id)
+	collection.UpdateOne(context.TODO(), bson.M{"_id": objectId}, toSave)
+}
+
 func (m *ItemsDbApi) getItemTemplates() map[string]ItemTemplate {
 	dbClient := m.application.dbClient
 	itemTemplatesCollection := dbClient.db.Collection("itemTemplates")
@@ -71,4 +94,12 @@ func (m *ItemsDbApi) getItemTemplates() map[string]ItemTemplate {
 	}
 
 	return itemTemplatesMap
+}
+
+func (m *ItemsDbApi) deleteItemTemplate(itemTemplateId string) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("itemTemplates")
+
+	objectId, _ := primitive.ObjectIDFromHex(itemTemplateId)
+	collection.DeleteMany(context.TODO(), bson.M{"_id": bson.M{"$in": []primitive.ObjectID{objectId}}})
 }

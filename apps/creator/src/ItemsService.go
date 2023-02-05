@@ -20,6 +20,8 @@ type ItemsService struct {
 	application        *Application
 	itemTemplates      map[string]ItemTemplate
 	createItemTemplate chan CreateItemTemplateAction
+	deleteItemTemplate chan DeleteItemTemplateAction
+	updateItemTemplate chan UpdateItemTemplateAction
 }
 
 func (s *ItemsService) init() {
@@ -41,6 +43,22 @@ func (service *ItemsService) serve() {
 
 			api := ItemsDbApi{application: service.application}
 			itemTemplate.Id = api.saveItemTemplate(itemTemplate)
+
+			service.itemTemplates[itemTemplate.Id] = itemTemplate
+			service.application.writter.stream <- prepareUpdatePayload("itemTemplates", map[string]ItemTemplate{itemTemplate.Id: itemTemplate})
+
+		case deleteItemTemplateAction := <-service.deleteItemTemplate:
+			api := ItemsDbApi{application: service.application}
+			api.deleteItemTemplate(deleteItemTemplateAction.ItemTemplateId)
+
+			delete(service.itemTemplates, deleteItemTemplateAction.ItemTemplateId)
+			service.application.writter.stream <- prepareDeletePayload("itemTemplates", []string{deleteItemTemplateAction.ItemTemplateId})
+
+		case itemTemplateUpdateAction := <-service.updateItemTemplate:
+			itemTemplate := itemTemplateUpdateAction.ItemTemplate
+
+			api := ItemsDbApi{application: service.application}
+			api.updateItemTemplate(itemTemplate)
 
 			service.itemTemplates[itemTemplate.Id] = itemTemplate
 			service.application.writter.stream <- prepareUpdatePayload("itemTemplates", map[string]ItemTemplate{itemTemplate.Id: itemTemplate})

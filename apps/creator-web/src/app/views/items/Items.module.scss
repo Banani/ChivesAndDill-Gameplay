@@ -52,11 +52,25 @@
         right: 0;
         height: 24px;
         background-color: #000000b0;
-        color: #cccccc;
+        color: #ddd;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         padding-left: 4px;
+    }
+
+    .delete-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #000000b0;
+        height: 24px;
+        border-radius: 2px;
+        color: #ddd;
+
+        &:hover {
+            color: #eee;
+        }
     }
 }
 

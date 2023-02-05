@@ -23,6 +23,7 @@ func (m *NpcTemplateDbApi) saveNpcTemplate(npcTemplate NpcTemplate) string {
 		{"spellPower", npcTemplate.SpellPower},
 		{"spellPowerRegeneration", npcTemplate.SpellPowerRegeneration},
 		{"movementSpeed", npcTemplate.MovementSpeed},
+		{"stock", npcTemplate.Stock},
 	}
 
 	record, _ := collection.InsertOne(context.TODO(), toSave)
@@ -54,6 +55,7 @@ func (m *NpcTemplateDbApi) getNpcTemplates() (map[string]NpcTemplate, map[string
 		spellPower, _ := npcTemplate["spellPower"].(int32)
 		spellPowerRegeneration, _ := npcTemplate["spellPowerRegeneration"].(int32)
 		movementSpeed, _ := npcTemplate["movementSpeed"].(int32)
+		stock, _ := npcTemplate["stock"].(map[string]bool)
 		npcTemplateId := npcTemplate["_id"].(primitive.ObjectID).Hex()
 
 		npcTemplatesMap[npcTemplateId] = NpcTemplate{
@@ -64,6 +66,7 @@ func (m *NpcTemplateDbApi) getNpcTemplates() (map[string]NpcTemplate, map[string
 			SpellPower:               spellPower,
 			SpellPowerRegeneration:   spellPowerRegeneration,
 			MovementSpeed:            movementSpeed,
+			Stock:                    stock,
 		}
 
 		if npcTemplate["npcRespawns"] != nil {
