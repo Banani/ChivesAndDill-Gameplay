@@ -55,7 +55,6 @@ func (m *NpcTemplateDbApi) getNpcTemplates() (map[string]NpcTemplate, map[string
 		spellPower, _ := npcTemplate["spellPower"].(int32)
 		spellPowerRegeneration, _ := npcTemplate["spellPowerRegeneration"].(int32)
 		movementSpeed, _ := npcTemplate["movementSpeed"].(int32)
-		stock, _ := npcTemplate["stock"].(map[string]bool)
 		npcTemplateId := npcTemplate["_id"].(primitive.ObjectID).Hex()
 
 		npcTemplatesMap[npcTemplateId] = NpcTemplate{
@@ -66,7 +65,13 @@ func (m *NpcTemplateDbApi) getNpcTemplates() (map[string]NpcTemplate, map[string
 			SpellPower:               spellPower,
 			SpellPowerRegeneration:   spellPowerRegeneration,
 			MovementSpeed:            movementSpeed,
-			Stock:                    stock,
+			Stock:                    make(map[string]bool),
+		}
+
+		if npcTemplate["stock"] != nil {
+			for key, stockItem := range npcTemplate["stock"].(primitive.M) {
+				npcTemplatesMap[npcTemplateId].Stock[key] = stockItem.(bool)
+			}
 		}
 
 		if npcTemplate["npcRespawns"] != nil {

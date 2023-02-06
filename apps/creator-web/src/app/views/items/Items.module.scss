@@ -45,6 +45,12 @@
         max-width: 100%;
     }
 
+    .preview-box {
+        position: absolute;
+        top: 1px;
+        left: 1px;
+    }
+
     .bar {
         position: absolute;
         bottom: 0;

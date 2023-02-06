@@ -5,6 +5,7 @@ import { Button, Paper } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import _ from 'lodash';
 import { useContext, useState } from 'react';
+import { Circle } from '../../components';
 import { PackageContext } from '../../contexts';
 import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { DeleteConfirmationDialog } from '../../dialogs';
@@ -23,6 +24,7 @@ export const Items = () => {
 
    const [itemsToDelete, setItemsToDelete] = useState<ItemTemplate[]>([]);
 
+   const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ? packageContext?.backendStore?.npcTemplates?.data : {};
    const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ? packageContext?.backendStore?.itemTemplates?.data : {};
 
    return (
@@ -70,28 +72,32 @@ export const Items = () => {
                      Object.values<ItemTemplate>(itemTemplates)
                         .filter((itemTemplate: ItemTemplate) => itemTemplate.name.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1)
                         .slice(paginationRange.start, paginationRange.end),
-                     (itemTemplate) => (
-                        <div
-                           key={itemTemplate.id}
-                           className={styles['list-item']}
-                           onClick={() => {
-                              setActiveDialog(Dialogs.ItemDialog);
-                              setActiveItemTemplate(itemTemplate);
-                           }}
-                        >
-                           <img className={styles['image-preview']} src={itemTemplate.image} />
-                           <div className={styles['bar']}>{itemTemplate.name}</div>
+                     (itemTemplate) => {
+                        const npcsSellingThatItem = _.filter(npcTemplates, (npc) => npc.stock?.[itemTemplate.id]).length;
+                        return (
                            <div
-                              className={styles['delete-icon']}
-                              onClick={(e) => {
-                                 e.stopPropagation();
-                                 setItemsToDelete([itemTemplate]);
+                              key={itemTemplate.id}
+                              className={styles['list-item']}
+                              onClick={() => {
+                                 setActiveDialog(Dialogs.ItemDialog);
+                                 setActiveItemTemplate(itemTemplate);
                               }}
                            >
-                              <DeleteForeverIcon />
+                              <div className={styles['preview-box']}>{npcsSellingThatItem > 0 ? <Circle number={npcsSellingThatItem} /> : null}</div>
+                              <img className={styles['image-preview']} src={itemTemplate.image} />
+                              <div className={styles['bar']}>{itemTemplate.name}</div>
+                              <div
+                                 className={styles['delete-icon']}
+                                 onClick={(e) => {
+                                    e.stopPropagation();
+                                    setItemsToDelete([itemTemplate]);
+                                 }}
+                              >
+                                 <DeleteForeverIcon />
+                              </div>
                            </div>
-                        </div>
-                     )
+                        );
+                     }
                   )}
                </div>
             </div>
