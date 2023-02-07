@@ -13,6 +13,7 @@ type NpcTemplate struct {
 	SpellPowerRegeneration   int32           `json:"spellPowerRegeneration"`
 	MovementSpeed            int32           `json:"movementSpeed"`
 	Stock                    map[string]bool `json:"stock"`
+	Quests                   map[string]bool `json:"quests"`
 }
 
 type Location struct {

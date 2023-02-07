@@ -1,6 +1,13 @@
 package main
 
-import "encoding/json"
+import (
+	"context"
+	"encoding/json"
+	"log"
+	"reflect"
+
+	"go.mongodb.org/mongo-driver/bson"
+)
 
 func prepareUpdatePayload[T any](moduleName string, items map[string]T) map[string]EnginePackageStringArray {
 	updatePackage := make(map[string]EnginePackageStringArray)
@@ -25,4 +32,29 @@ func prepareDeletePayload(moduleName string, itemIds []string) map[string]Engine
 
 	updatePackage[moduleName] = EnginePackageStringArray{ToDelete: serializedModule}
 	return updatePackage
+}
+
+func getAllItemsFromDb[T any](dbClient *DBClient, collectionName string) map[string]T {
+	collection := dbClient.db.Collection(collectionName)
+
+	cursor, err := collection.Find(dbClient.ctx, bson.M{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	outputMap := make(map[string]T)
+
+	for cursor.Next(context.TODO()) {
+		entity := MongodbEntity{}
+		cursor.Decode(&entity)
+		id := entity.ID.Hex()
+
+		var decoded T
+		cursor.Decode(&decoded)
+
+		reflect.ValueOf(&decoded).Elem().FieldByName("Id").Set(reflect.ValueOf(id))
+		outputMap[id] = decoded
+	}
+
+	return outputMap
 }

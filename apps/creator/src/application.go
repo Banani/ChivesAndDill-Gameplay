@@ -12,6 +12,7 @@ type Services struct {
 	mapFieldService    *MapFieldsService
 	npcTemplateService *NpcTemplateService
 	itemsService       *ItemsService
+	questsService      *QuestsService
 }
 
 type EnginePackage struct {

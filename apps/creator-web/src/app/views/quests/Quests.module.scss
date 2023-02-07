@@ -1,0 +1,86 @@
+.map-editor {
+    flex: 1;
+    margin: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.manage-panel {
+    display: flex;
+    margin: 0 10px;
+    width: 400px;
+    align-items: center;
+
+    .add-button {
+        margin-left: 20px;
+    }
+}
+
+.list-holder {
+    margin-top: 12px;
+    display: flex;
+    // BUG - powinno byc liczone automatycznie
+    height: 1100px;
+}
+
+.item-image-preview {
+    height: 31px;
+}
+
+// .list-item {
+//     border: 1px solid #404040;
+//     width: 120px;
+//     height: 120px;
+//     border-radius: 3px;
+//     position: relative;
+//     margin-left: 10px;
+//     margin-top: 10px;
+//     cursor: pointer;
+
+//     &:hover {
+//         background: #eee;
+//     }
+
+//     .image-preview {
+//         max-width: 100%;
+//     }
+
+//     .preview-box {
+//         position: absolute;
+//         top: 1px;
+//         left: 1px;
+//     }
+
+//     .bar {
+//         position: absolute;
+//         bottom: 0;
+//         left: 0;
+//         right: 0;
+//         height: 24px;
+//         background-color: #000000b0;
+//         color: #ddd;
+//         overflow: hidden;
+//         white-space: nowrap;
+//         text-overflow: ellipsis;
+//         padding-left: 4px;
+//     }
+
+//     .delete-icon {
+//         position: absolute;
+//         top: 0;
+//         right: 0;
+//         background-color: #000000b0;
+//         height: 24px;
+//         border-radius: 2px;
+//         color: #ddd;
+
+//         &:hover {
+//             color: #eee;
+//         }
+//     }
+// }
+
+.pagination-holder {
+    width: 400px;
+}

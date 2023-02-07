@@ -24,6 +24,7 @@ func (m *NpcTemplateDbApi) saveNpcTemplate(npcTemplate NpcTemplate) string {
 		{"spellPowerRegeneration", npcTemplate.SpellPowerRegeneration},
 		{"movementSpeed", npcTemplate.MovementSpeed},
 		{"stock", npcTemplate.Stock},
+		{"quests", npcTemplate.Quests},
 	}
 
 	record, _ := collection.InsertOne(context.TODO(), toSave)
@@ -66,11 +67,18 @@ func (m *NpcTemplateDbApi) getNpcTemplates() (map[string]NpcTemplate, map[string
 			SpellPowerRegeneration:   spellPowerRegeneration,
 			MovementSpeed:            movementSpeed,
 			Stock:                    make(map[string]bool),
+			Quests:                   make(map[string]bool),
 		}
 
 		if npcTemplate["stock"] != nil {
 			for key, stockItem := range npcTemplate["stock"].(primitive.M) {
 				npcTemplatesMap[npcTemplateId].Stock[key] = stockItem.(bool)
+			}
+		}
+
+		if npcTemplate["quests"] != nil {
+			for key, questItem := range npcTemplate["quests"].(primitive.M) {
+				npcTemplatesMap[npcTemplateId].Quests[key] = questItem.(bool)
 			}
 		}
 

@@ -20,6 +20,8 @@ const (
 	createItemTemplate = "CREATE_ITEM_TEMPLATE"
 	deleteItemTemplate = "DELETE_ITEM_TEMPLATE"
 	updateItemTemplate = "UPDATE_ITEM_TEMPLATE"
+	createQuest        = "CREATE_QUEST"
+	deleteQuest        = "DELETE_QUEST"
 )
 
 type Action struct {
@@ -70,6 +72,16 @@ type DeleteItemTemplateAction struct {
 type UpdateItemTemplateAction struct {
 	ActionType   string       `json:"actionType"`
 	ItemTemplate ItemTemplate `json:"itemTemplate"`
+}
+
+type CreateQuestAction struct {
+	ActionType  string      `json:"actionType"`
+	QuestSchema QuestSchema `json:"questSchema"`
+}
+
+type DeleteQuestAction struct {
+	ActionType string `json:"actionType"`
+	QuestId    string `json:"questId"`
 }
 
 func (w *Reader) addConnection(conn *websocket.Conn) {
@@ -142,6 +154,18 @@ func (w *Reader) addConnection(conn *websocket.Conn) {
 				var updateItemTemplateAction UpdateItemTemplateAction
 				json.Unmarshal(message, &updateItemTemplateAction)
 				w.application.services.itemsService.updateItemTemplate <- updateItemTemplateAction
+			}
+
+			if action.ActionType == createQuest {
+				var createQuestAction CreateQuestAction
+				json.Unmarshal(message, &createQuestAction)
+				w.application.services.questsService.createQuest <- createQuestAction
+			}
+
+			if action.ActionType == deleteQuest {
+				var deleteQuestAction DeleteQuestAction
+				json.Unmarshal(message, &deleteQuestAction)
+				w.application.services.questsService.deleteQuest <- deleteQuestAction
 			}
 		}
 	})()

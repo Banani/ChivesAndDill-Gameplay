@@ -85,7 +85,21 @@ func main() {
 	itemsService.init()
 	go itemsService.serve()
 
-	application.services = Services{mapFieldService: &mapFieldsService, npcTemplateService: &npcTemplateService, itemsService: &itemsService}
+	questsService := QuestsService{
+		application: application,
+		createQuest: make(chan CreateQuestAction),
+		deleteQuest: make(chan DeleteQuestAction),
+	}
+
+	questsService.init()
+	go questsService.serve()
+
+	application.services = Services{
+		mapFieldService:    &mapFieldsService,
+		npcTemplateService: &npcTemplateService,
+		itemsService:       &itemsService,
+		questsService:      &questsService,
+	}
 
 	go writter.handleMessages()
 
@@ -103,6 +117,7 @@ func main() {
 		application.services.mapFieldService.handleNewConnection()
 		application.services.npcTemplateService.handleNewConnection()
 		application.services.itemsService.handleNewConnection()
+		application.services.questsService.handleNewConnection()
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
