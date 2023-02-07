@@ -4,9 +4,18 @@
     justify-content: center;
     width: 20px;
     height: 20px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.npc {
     color: #eee;
     background: #272e;
     border: 1px solid #eee;
-    border-radius: 20px;
-    font-size: 13px;
+}
+
+.quest {
+    color: #332600;
+    background: #FFBF00e0;
+    border: 1px solid #332600;
 }
