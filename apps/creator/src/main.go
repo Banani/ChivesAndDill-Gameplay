@@ -58,8 +58,7 @@ func main() {
 
 	mapFieldsService := MapFieldsService{
 		application:     application,
-		mapFieldUpdated: make(chan UpdateMapFieldAction),
-		mapFieldDeleted: make(chan DeleteMapFieldAction),
+		actionStream: make(chan TypedAction),
 	}
 
 	mapFieldsService.init()
@@ -67,9 +66,7 @@ func main() {
 
 	npcTemplateService := NpcTemplateService{
 		application:       application,
-		createNpcTemplate: make(chan CreateNpcTemplateAction),
-		addNpc:            make(chan AddNpcAction),
-		deleteNpc:         make(chan DeleteNpcAction),
+		actionStream: make(chan TypedAction),
 	}
 
 	npcTemplateService.init()
@@ -77,9 +74,7 @@ func main() {
 
 	itemsService := ItemsService{
 		application:        application,
-		createItemTemplate: make(chan CreateItemTemplateAction),
-		deleteItemTemplate: make(chan DeleteItemTemplateAction),
-		updateItemTemplate: make(chan UpdateItemTemplateAction),
+		actionStream: make(chan TypedAction),
 	}
 
 	itemsService.init()
@@ -87,8 +82,7 @@ func main() {
 
 	questsService := QuestsService{
 		application: application,
-		createQuest: make(chan CreateQuestAction),
-		deleteQuest: make(chan DeleteQuestAction),
+		actionStream: make(chan TypedAction),
 	}
 
 	questsService.init()

@@ -21,6 +21,7 @@ export const Quests = () => {
 
     const questSchemas = packageContext?.backendStore?.questSchemas?.data ?? {};
     const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
+    const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ?? {};
 
     return (
         <>
@@ -95,6 +96,16 @@ export const Quests = () => {
                                         {_.map(params.row.questReward.items, item =>
                                             <img src={itemTemplates[item.itemTemplateId].image} className={styles['item-image-preview']} />
                                         )}
+                                    </>
+                                },
+                            },
+                            {
+                                field: 'npcs_amount',
+                                headerName: 'Assigned to NPCs',
+                                flex: 1,
+                                renderCell: (params: GridRenderCellParams<QuestSchema>) => {
+                                    return <>
+                                        {_.filter(npcTemplates, npcTemplate => npcTemplate.quests[params.row.id]).length}
                                     </>
                                 },
                             },

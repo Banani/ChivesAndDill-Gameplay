@@ -1,5 +1,7 @@
 package main
 
+import "encoding/json"
+
 type QuestRewardItem struct {
 	ItemTemplateId string `json:"itemTemplateId"`
 	Amount         int64  `json:"amount"`
@@ -19,10 +21,9 @@ type QuestSchema struct {
 }
 
 type QuestsService struct {
-	application *Application
-	quests      map[string]QuestSchema
-	createQuest chan CreateQuestAction
-	deleteQuest chan DeleteQuestAction
+	application  *Application
+	quests       map[string]QuestSchema
+	actionStream chan TypedAction
 }
 
 func (s *QuestsService) init() {
@@ -38,8 +39,12 @@ func (service *QuestsService) handleNewConnection() {
 
 func (service *QuestsService) serve() {
 	for {
-		select {
-		case createQuestAction := <-service.createQuest:
+		action := <-service.actionStream
+
+		if action.ActionType == createQuest {
+			var createQuestAction CreateQuestAction
+			json.Unmarshal(action.Body, &createQuestAction)
+
 			questSchema := createQuestAction.QuestSchema
 
 			api := QuestsDbApi{application: service.application}
@@ -47,8 +52,12 @@ func (service *QuestsService) serve() {
 
 			service.quests[questSchema.Id] = questSchema
 			service.application.writter.stream <- prepareUpdatePayload("questSchemas", map[string]QuestSchema{questSchema.Id: questSchema})
+		}
 
-		case deleteQuestAction := <-service.deleteQuest:
+		if action.ActionType == deleteQuest {
+			var deleteQuestAction DeleteQuestAction
+			json.Unmarshal(action.Body, &deleteQuestAction)
+
 			api := QuestsDbApi{application: service.application}
 			api.deleteQuest(deleteQuestAction.QuestId)
 

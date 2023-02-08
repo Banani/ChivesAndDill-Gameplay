@@ -12,6 +12,7 @@ export const NpcQuests = () => {
     const packageContext = useContext(PackageContext);
     const questSchemas = packageContext?.backendStore?.questSchemas?.data ?? {};
     const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
+    const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ?? {};
     const { setActiveNpcTemplate } = useContext(NpcContext);
 
     const columns: GridColDef[] = [
@@ -30,6 +31,17 @@ export const NpcQuests = () => {
             flex: 1,
             renderCell: (params: GridRenderCellParams<QuestSchema>) => {
                 return params.row.questReward.currency;
+            },
+        },
+
+        {
+            field: 'npcs_amount',
+            headerName: 'Assigned to NPCs',
+            flex: 1,
+            renderCell: (params: GridRenderCellParams<QuestSchema>) => {
+                return <>
+                    {_.filter(npcTemplates, npcTemplate => npcTemplate.quests[params.row.id]).length}
+                </>
             },
         },
         {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"strconv"
+	"encoding/json"
 )
 
 type NpcTemplate struct {
@@ -33,9 +34,8 @@ type NpcTemplateService struct {
 	application       *Application
 	npcTemplates      map[string]NpcTemplate
 	npcs              map[string]Npc
-	createNpcTemplate chan CreateNpcTemplateAction
-	addNpc            chan AddNpcAction
-	deleteNpc         chan DeleteNpcAction
+
+	actionStream chan TypedAction
 }
 
 func (s *NpcTemplateService) init() {
@@ -52,17 +52,25 @@ func (service *NpcTemplateService) handleNewConnection() {
 
 func (service *NpcTemplateService) serve() {
 	for {
-		select {
-		case npcTemplateCreateAction := <-service.createNpcTemplate:
-			npcTemplate := npcTemplateCreateAction.NpcTemplate
+		action := <-service.actionStream
+
+		if action.ActionType == createNpcTemplate {
+			var createNpcTemplateAction CreateNpcTemplateAction
+			json.Unmarshal(action.Body, &createNpcTemplateAction)
+
+			npcTemplate := createNpcTemplateAction.NpcTemplate
 
 			api := NpcTemplateDbApi{application: service.application}
-			npcTemplate.Id = api.saveNpcTemplate(npcTemplateCreateAction.NpcTemplate)
+			npcTemplate.Id = api.saveNpcTemplate(createNpcTemplateAction.NpcTemplate)
 
 			service.npcTemplates[npcTemplate.Id] = npcTemplate
 			service.application.writter.stream <- prepareUpdatePayload("npcTemplates", map[string]NpcTemplate{npcTemplate.Id: npcTemplate})
+		}
 
-		case addNpcAction := <-service.addNpc:
+		if action.ActionType == addNpc {
+			var addNpcAction AddNpcAction
+			json.Unmarshal(action.Body, &addNpcAction)
+
 			npc := Npc{
 				Id:            strconv.Itoa(addNpcAction.X) + ":" + strconv.Itoa(addNpcAction.Y),
 				NpcTemplateId: addNpcAction.NpcTemplateId,
@@ -79,8 +87,12 @@ func (service *NpcTemplateService) serve() {
 
 			service.npcs[npc.Id] = npc
 			service.application.writter.stream <- prepareUpdatePayload("npcTemplates", map[string]Npc{npc.Id: npc})
+		}
 
-		case deleteNpcAction := <-service.deleteNpc:
+		if action.ActionType == deleteNpc {
+			var deleteNpcAction DeleteNpcAction
+			json.Unmarshal(action.Body, &deleteNpcAction)
+
 			api := NpcTemplateDbApi{application: service.application}
 			api.deleteNpc(deleteNpcAction.NpcId)
 

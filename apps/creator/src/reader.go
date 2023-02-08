@@ -84,6 +84,11 @@ type DeleteQuestAction struct {
 	QuestId    string `json:"questId"`
 }
 
+type TypedAction struct {
+	ActionType string
+	Body       []byte
+}
+
 func (w *Reader) addConnection(conn *websocket.Conn) {
 	go (func() {
 		defer func() {
@@ -102,71 +107,15 @@ func (w *Reader) addConnection(conn *websocket.Conn) {
 			var action Action
 			json.Unmarshal(message, &action)
 
-			if action.ActionType == updateMapField {
-				var updateMapFieldAction UpdateMapFieldAction
-				json.Unmarshal(message, &updateMapFieldAction)
-				w.application.services.mapFieldService.mapFieldUpdated <- updateMapFieldAction
+			typedAction := TypedAction{
+				ActionType: action.ActionType,
+				Body:       message,
 			}
 
-			if action.ActionType == deleteMapField {
-				var deleteMapFieldAction DeleteMapFieldAction
-				json.Unmarshal(message, &deleteMapFieldAction)
-				w.application.services.mapFieldService.mapFieldDeleted <- deleteMapFieldAction
-			}
-
-			if action.ActionType == createNpcTemplate {
-				var createNpcTemplateAction CreateNpcTemplateAction
-				json.Unmarshal(message, &createNpcTemplateAction)
-				w.application.services.npcTemplateService.createNpcTemplate <- createNpcTemplateAction
-			}
-
-			if action.ActionType == addNpc {
-				var addNpcAction AddNpcAction
-				json.Unmarshal(message, &addNpcAction)
-				w.application.services.npcTemplateService.addNpc <- addNpcAction
-			}
-
-			if action.ActionType == deleteNpc {
-				var deleteNpcAction DeleteNpcAction
-				json.Unmarshal(message, &deleteNpcAction)
-				w.application.services.npcTemplateService.deleteNpc <- deleteNpcAction
-			}
-
-			if action.ActionType == deleteNpc {
-				var deleteNpcAction DeleteNpcAction
-				json.Unmarshal(message, &deleteNpcAction)
-				w.application.services.npcTemplateService.deleteNpc <- deleteNpcAction
-			}
-
-			if action.ActionType == createItemTemplate {
-				var createItemTemplateAction CreateItemTemplateAction
-				json.Unmarshal(message, &createItemTemplateAction)
-				w.application.services.itemsService.createItemTemplate <- createItemTemplateAction
-			}
-
-			if action.ActionType == deleteItemTemplate {
-				var deleteItemTemplateAction DeleteItemTemplateAction
-				json.Unmarshal(message, &deleteItemTemplateAction)
-				w.application.services.itemsService.deleteItemTemplate <- deleteItemTemplateAction
-			}
-
-			if action.ActionType == updateItemTemplate {
-				var updateItemTemplateAction UpdateItemTemplateAction
-				json.Unmarshal(message, &updateItemTemplateAction)
-				w.application.services.itemsService.updateItemTemplate <- updateItemTemplateAction
-			}
-
-			if action.ActionType == createQuest {
-				var createQuestAction CreateQuestAction
-				json.Unmarshal(message, &createQuestAction)
-				w.application.services.questsService.createQuest <- createQuestAction
-			}
-
-			if action.ActionType == deleteQuest {
-				var deleteQuestAction DeleteQuestAction
-				json.Unmarshal(message, &deleteQuestAction)
-				w.application.services.questsService.deleteQuest <- deleteQuestAction
-			}
+			w.application.services.questsService.actionStream <- typedAction
+			w.application.services.npcTemplateService.actionStream <- typedAction
+			w.application.services.itemsService.actionStream <- typedAction
+			w.application.services.mapFieldService.actionStream <- typedAction
 		}
 	})()
 }

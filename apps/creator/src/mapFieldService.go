@@ -24,6 +24,7 @@ type MapFieldsService struct {
 	sprites         map[string]Sprite
 	mapFieldUpdated chan UpdateMapFieldAction
 	mapFieldDeleted chan DeleteMapFieldAction
+	actionStream chan TypedAction
 }
 
 func (s *MapFieldsService) init() {
@@ -41,8 +42,12 @@ func (service *MapFieldsService) handleNewConnection() {
 
 func (service *MapFieldsService) serve() {
 	for {
-		select {
-		case updateMapFieldAction := <-service.mapFieldUpdated:
+		action := <-service.actionStream
+
+		if action.ActionType == updateMapField {
+			var updateMapFieldAction UpdateMapFieldAction
+			json.Unmarshal(action.Body, &updateMapFieldAction)
+
 			mapFieldPackage := make(map[string]EnginePackageStringArray)
 			serializedMapField := make(map[string]string)
 
@@ -67,8 +72,12 @@ func (service *MapFieldsService) serve() {
 			api := MapFieldDbApi{application: service.application}
 			api.saveMapField(toSave)
 			service.application.writter.stream <- mapFieldPackage
+		}
+		
+		if action.ActionType == deleteMapField {
+			var deleteMapFieldAction DeleteMapFieldAction
+			json.Unmarshal(action.Body, &deleteMapFieldAction)
 
-		case deleteMapFieldAction := <-service.mapFieldDeleted:
 			mapFieldPackage := make(map[string]EnginePackageStringArray)
 			serializedMapField := make(map[string]interface{})
 
@@ -87,7 +96,6 @@ func (service *MapFieldsService) serve() {
 			api := MapFieldDbApi{application: service.application}
 			api.deleteMapField(serializedMapField)
 			service.application.writter.stream <- mapFieldPackage
-
 		}
 	}
 }

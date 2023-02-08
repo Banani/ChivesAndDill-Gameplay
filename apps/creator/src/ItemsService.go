@@ -1,5 +1,7 @@
 package main
 
+import "encoding/json"
+
 type ItemTemplate struct {
 	Type     string `json:"type"`
 	Id       string `json:"id"`
@@ -19,9 +21,8 @@ type ItemTemplate struct {
 type ItemsService struct {
 	application        *Application
 	itemTemplates      map[string]ItemTemplate
-	createItemTemplate chan CreateItemTemplateAction
-	deleteItemTemplate chan DeleteItemTemplateAction
-	updateItemTemplate chan UpdateItemTemplateAction
+
+	actionStream chan TypedAction
 }
 
 func (s *ItemsService) init() {
@@ -37,25 +38,38 @@ func (service *ItemsService) handleNewConnection() {
 
 func (service *ItemsService) serve() {
 	for {
-		select {
-		case itemTemplateCreateAction := <-service.createItemTemplate:
-			itemTemplate := itemTemplateCreateAction.ItemTemplate
+		action := <-service.actionStream
+
+		if action.ActionType == createItemTemplate {
+			var createItemTemplateAction CreateItemTemplateAction
+			json.Unmarshal(action.Body, &createItemTemplateAction)
+
+			itemTemplate := createItemTemplateAction.ItemTemplate
 
 			api := ItemsDbApi{application: service.application}
 			itemTemplate.Id = api.saveItemTemplate(itemTemplate)
 
 			service.itemTemplates[itemTemplate.Id] = itemTemplate
 			service.application.writter.stream <- prepareUpdatePayload("itemTemplates", map[string]ItemTemplate{itemTemplate.Id: itemTemplate})
+		}
 
-		case deleteItemTemplateAction := <-service.deleteItemTemplate:
+		if action.ActionType == deleteItemTemplate {
+			var deleteItemTemplateAction DeleteItemTemplateAction
+			json.Unmarshal(action.Body, &deleteItemTemplateAction)
+
 			api := ItemsDbApi{application: service.application}
 			api.deleteItemTemplate(deleteItemTemplateAction.ItemTemplateId)
 
 			delete(service.itemTemplates, deleteItemTemplateAction.ItemTemplateId)
 			service.application.writter.stream <- prepareDeletePayload("itemTemplates", []string{deleteItemTemplateAction.ItemTemplateId})
 
-		case itemTemplateUpdateAction := <-service.updateItemTemplate:
-			itemTemplate := itemTemplateUpdateAction.ItemTemplate
+		}
+
+		if action.ActionType == updateItemTemplate {
+			var updateItemTemplateAction UpdateItemTemplateAction
+			json.Unmarshal(action.Body, &updateItemTemplateAction)
+
+			itemTemplate := updateItemTemplateAction.ItemTemplate
 
 			api := ItemsDbApi{application: service.application}
 			api.updateItemTemplate(itemTemplate)
