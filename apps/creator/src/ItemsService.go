@@ -25,6 +25,10 @@ type ItemsService struct {
 	actionStream chan TypedAction
 }
 
+func (s *ItemsService) processAction(action TypedAction) {
+	s.actionStream <- action
+}
+
 func (s *ItemsService) init() {
 	api := ItemsDbApi{application: s.application}
 

@@ -38,6 +38,10 @@ type NpcTemplateService struct {
 	actionStream chan TypedAction
 }
 
+func (s *NpcTemplateService) processAction(action TypedAction) {
+	s.actionStream <- action
+}
+
 func (s *NpcTemplateService) init() {
 	api := NpcTemplateDbApi{application: s.application}
 

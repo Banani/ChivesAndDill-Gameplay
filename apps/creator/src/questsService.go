@@ -26,6 +26,10 @@ type QuestsService struct {
 	actionStream chan TypedAction
 }
 
+func (s *QuestsService) processAction(action TypedAction) {
+	s.actionStream <- action
+}
+
 func (s *QuestsService) init() {
 	api := QuestsDbApi{application: s.application}
 

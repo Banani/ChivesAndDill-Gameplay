@@ -3,16 +3,16 @@ package main
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type Application struct {
-	services Services
+	services map[string]Service
 	dbClient *DBClient
 	writter  *Writter
 }
 
-type Services struct {
-	mapFieldService    *MapFieldsService
-	npcTemplateService *NpcTemplateService
-	itemsService       *ItemsService
-	questsService      *QuestsService
+type Service interface {
+	init()
+	handleNewConnection()
+	serve()
+	processAction(action TypedAction)
 }
 
 type EnginePackage struct {

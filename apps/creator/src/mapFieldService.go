@@ -27,6 +27,10 @@ type MapFieldsService struct {
 	actionStream chan TypedAction
 }
 
+func (s *MapFieldsService) processAction(action TypedAction) {
+	s.actionStream <- action
+}
+
 func (s *MapFieldsService) init() {
 	api := MapFieldDbApi{application: s.application}
 

@@ -56,45 +56,29 @@ func main() {
 	writter.application = application
 	reader.application = application
 
-	mapFieldsService := MapFieldsService{
-		application:     application,
-		actionStream: make(chan TypedAction),
+	application.services = map[string]Service{
+		"mapFieldService":	&MapFieldsService{
+			application: application,
+			actionStream: make(chan TypedAction),
+		},
+		"npcTemplateService":	&NpcTemplateService{
+			application: application,
+			actionStream: make(chan TypedAction),
+		},
+		"itemsService": &ItemsService{
+			application: application,
+			actionStream: make(chan TypedAction),
+		},
+		"questsService": &QuestsService{
+			application: application,
+			actionStream: make(chan TypedAction),
+		},
 	}
 
-	mapFieldsService.init()
-	go mapFieldsService.serve()
-
-	npcTemplateService := NpcTemplateService{
-		application:       application,
-		actionStream: make(chan TypedAction),
+	for _, service := range application.services {
+		service.init()
+		go service.serve()
 	}
-
-	npcTemplateService.init()
-	go npcTemplateService.serve()
-
-	itemsService := ItemsService{
-		application:        application,
-		actionStream: make(chan TypedAction),
-	}
-
-	itemsService.init()
-	go itemsService.serve()
-
-	questsService := QuestsService{
-		application: application,
-		actionStream: make(chan TypedAction),
-	}
-
-	questsService.init()
-	go questsService.serve()
-
-	application.services = Services{
-		mapFieldService:    &mapFieldsService,
-		npcTemplateService: &npcTemplateService,
-		itemsService:       &itemsService,
-		questsService:      &questsService,
-	}
-
 	go writter.handleMessages()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -107,11 +91,10 @@ func main() {
 		writter.addConnection(conn)
 		reader.addConnection(conn)
 
-		// loop po wszystkich serwisach?
-		application.services.mapFieldService.handleNewConnection()
-		application.services.npcTemplateService.handleNewConnection()
-		application.services.itemsService.handleNewConnection()
-		application.services.questsService.handleNewConnection()
+		for _, service := range application.services {
+			// Tutaj mozna wyslac to nowe polaczenie
+			service.handleNewConnection()
+		}
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
