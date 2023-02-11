@@ -3,10 +3,10 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { useContext } from 'react';
 import { AssignmentPanel } from '../../components/assignmentPanel';
+import { ItemPreview } from '../../components/itemPreview';
 import { PackageContext } from '../../contexts';
 import { NpcContext, NpcTemplate } from '../../views';
 
-import styles from "./NpcQuests.module.scss";
 
 export const NpcQuests = () => {
     const packageContext = useContext(PackageContext);
@@ -51,7 +51,7 @@ export const NpcQuests = () => {
             renderCell: (params: GridRenderCellParams<QuestSchema>) => {
                 return <>
                     {_.map(params.row.questReward.items, item =>
-                        <img src={itemTemplates[item.itemTemplateId].image} className={styles['item-image-preview']} />
+                        <ItemPreview itemTemplate={itemTemplates[item.itemTemplateId]} />
                     )}
                 </>
             },

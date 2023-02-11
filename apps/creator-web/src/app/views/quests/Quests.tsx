@@ -5,6 +5,7 @@ import { Button, Paper } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridRenderCellParams } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { useContext, useState } from 'react';
+import { ItemPreview } from '../../components/itemPreview';
 import { PackageContext } from '../../contexts';
 import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { DeleteConfirmationDialog } from '../../dialogs';
@@ -94,7 +95,7 @@ export const Quests = () => {
                                 renderCell: (params: GridRenderCellParams<QuestSchema>) => {
                                     return <>
                                         {_.map(params.row.questReward.items, item =>
-                                            <img src={itemTemplates[item.itemTemplateId].image} className={styles['item-image-preview']} />
+                                            <ItemPreview itemTemplate={itemTemplates[item.itemTemplateId]} />
                                         )}
                                     </>
                                 },
