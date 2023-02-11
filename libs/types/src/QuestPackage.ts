@@ -13,7 +13,7 @@ export interface QuestRewardItem {
 export interface QuestReward {
    experience: number;
    currency?: number;
-   items?: QuestRewardItem[];
+   items?: Record<string, QuestRewardItem>;
 }
 
 export interface QuestSchema {

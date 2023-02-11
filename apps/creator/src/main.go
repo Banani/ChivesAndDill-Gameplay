@@ -57,20 +57,20 @@ func main() {
 	reader.application = application
 
 	application.services = map[string]Service{
-		"mapFieldService":	&MapFieldsService{
-			application: application,
+		"mapFieldService": &MapFieldsService{
+			application:  application,
 			actionStream: make(chan TypedAction),
 		},
-		"npcTemplateService":	&NpcTemplateService{
-			application: application,
+		"npcTemplateService": &NpcTemplateService{
+			application:  application,
 			actionStream: make(chan TypedAction),
 		},
 		"itemsService": &ItemsService{
-			application: application,
+			application:  application,
 			actionStream: make(chan TypedAction),
 		},
 		"questsService": &QuestsService{
-			application: application,
+			application:  application,
 			actionStream: make(chan TypedAction),
 		},
 	}

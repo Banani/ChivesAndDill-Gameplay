@@ -6,6 +6,7 @@ export enum CircleType {
     npc = 'npc',
     monster = 'monster',
     quest = 'quest',
+    item = 'item',
 }
 
 interface CircleProps {

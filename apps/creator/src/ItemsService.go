@@ -19,8 +19,8 @@ type ItemTemplate struct {
 }
 
 type ItemsService struct {
-	application        *Application
-	itemTemplates      map[string]ItemTemplate
+	application   *Application
+	itemTemplates map[string]ItemTemplate
 
 	actionStream chan TypedAction
 }
@@ -57,17 +57,17 @@ func (service *ItemsService) serve() {
 			service.application.writter.stream <- prepareUpdatePayload("itemTemplates", map[string]ItemTemplate{itemTemplate.Id: itemTemplate})
 		}
 
-		if action.ActionType == deleteItemTemplate {
-			var deleteItemTemplateAction DeleteItemTemplateAction
-			json.Unmarshal(action.Body, &deleteItemTemplateAction)
-
-			api := ItemsDbApi{application: service.application}
-			api.deleteItemTemplate(deleteItemTemplateAction.ItemTemplateId)
-
-			delete(service.itemTemplates, deleteItemTemplateAction.ItemTemplateId)
-			service.application.writter.stream <- prepareDeletePayload("itemTemplates", []string{deleteItemTemplateAction.ItemTemplateId})
-
-		}
+		//if action.ActionType == deleteItemTemplate {
+		//	var deleteItemTemplateAction DeleteItemTemplateAction
+		//	json.Unmarshal(action.Body, &deleteItemTemplateAction)
+		//
+		//	api := ItemsDbApi{application: service.application}
+		//	api.deleteItemTemplate(deleteItemTemplateAction.ItemTemplateId)
+		//
+		//	delete(service.itemTemplates, deleteItemTemplateAction.ItemTemplateId)
+		//	service.application.writter.stream <- prepareDeletePayload("itemTemplates", []string{deleteItemTemplateAction.ItemTemplateId})
+		//
+		//}
 
 		if action.ActionType == updateItemTemplate {
 			var updateItemTemplateAction UpdateItemTemplateAction

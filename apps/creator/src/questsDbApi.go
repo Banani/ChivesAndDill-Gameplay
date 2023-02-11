@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -40,4 +39,11 @@ func (m *QuestsDbApi) deleteQuest(questId string) {
 
 	objectId, _ := primitive.ObjectIDFromHex(questId)
 	collection.DeleteMany(context.TODO(), bson.M{"_id": bson.M{"$in": []primitive.ObjectID{objectId}}})
+}
+
+func (m *QuestsDbApi) deleteItemsInQuestReward(itemId string) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("questSchemas")
+
+	collection.UpdateMany(context.TODO(), bson.M{}, bson.M{"$unset": bson.M{"questReward.items." + itemId: ""}})
 }

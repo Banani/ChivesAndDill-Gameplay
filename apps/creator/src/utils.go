@@ -34,6 +34,18 @@ func prepareDeletePayload(moduleName string, itemIds []string) map[string]Engine
 	return updatePackage
 }
 
+func prepareDeletePayload2[T any](moduleName string, items map[string]T) map[string]EnginePackageStringArray {
+	updatePackage := make(map[string]EnginePackageStringArray)
+	serializedModule := make(map[string]interface{})
+
+	for key, _ := range items {
+		serializedModule[key] = nil
+	}
+
+	updatePackage[moduleName] = EnginePackageStringArray{ToDelete: serializedModule}
+	return updatePackage
+}
+
 func getAllItemsFromDb[T any](dbClient *DBClient, collectionName string) map[string]T {
 	collection := dbClient.db.Collection(collectionName)
 

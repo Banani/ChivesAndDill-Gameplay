@@ -1,6 +1,8 @@
 package main
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type QuestRewardItem struct {
 	ItemTemplateId string `json:"itemTemplateId"`
@@ -8,9 +10,9 @@ type QuestRewardItem struct {
 }
 
 type QuestReward struct {
-	Experience int64             `json:"experience"`
-	Currency   int64             `json:"currency"`
-	Items      []QuestRewardItem `json:"items"`
+	Experience int64                      `json:"experience"`
+	Currency   int64                      `json:"currency"`
+	Items      map[string]QuestRewardItem `json:"items"`
 }
 
 type QuestSchema struct {
@@ -67,6 +69,26 @@ func (service *QuestsService) serve() {
 
 			delete(service.quests, deleteQuestAction.QuestId)
 			service.application.writter.stream <- prepareDeletePayload("questSchemas", []string{deleteQuestAction.QuestId})
+		}
+
+		if action.ActionType == deleteItemTemplate {
+			var deleteItemTemplate DeleteItemTemplateAction
+			json.Unmarshal(action.Body, &deleteItemTemplate)
+
+			api := QuestsDbApi{application: service.application}
+			api.deleteItemsInQuestReward(deleteItemTemplate.ItemTemplateId)
+			questSchemas := make(map[string]QuestSchema)
+
+			for questId, quest := range service.quests {
+				if _, ok := quest.QuestReward.Items[deleteItemTemplate.ItemTemplateId]; ok {
+					delete(quest.QuestReward.Items, deleteItemTemplate.ItemTemplateId)
+					questSchemas[questId] = quest
+				}
+			}
+
+			// Polaczyc to w jeden payload
+			service.application.writter.stream <- prepareDeletePayload2("questSchemas", questSchemas)
+			service.application.writter.stream <- prepareUpdatePayload("questSchemas", questSchemas)
 		}
 	}
 }

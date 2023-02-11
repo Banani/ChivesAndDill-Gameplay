@@ -1,8 +1,8 @@
 package main
 
 import (
-	"strconv"
 	"encoding/json"
+	"strconv"
 )
 
 type NpcTemplate struct {
@@ -31,9 +31,9 @@ type Npc struct {
 }
 
 type NpcTemplateService struct {
-	application       *Application
-	npcTemplates      map[string]NpcTemplate
-	npcs              map[string]Npc
+	application  *Application
+	npcTemplates map[string]NpcTemplate
+	npcs         map[string]Npc
 
 	actionStream chan TypedAction
 }
@@ -90,7 +90,7 @@ func (service *NpcTemplateService) serve() {
 			api.addNpc(npc)
 
 			service.npcs[npc.Id] = npc
-			service.application.writter.stream <- prepareUpdatePayload("npcTemplates", map[string]Npc{npc.Id: npc})
+			service.application.writter.stream <- prepareUpdatePayload("npcs", map[string]Npc{npc.Id: npc})
 		}
 
 		if action.ActionType == deleteNpc {

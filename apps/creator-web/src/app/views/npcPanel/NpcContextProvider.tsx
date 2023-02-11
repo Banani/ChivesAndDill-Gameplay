@@ -10,6 +10,14 @@ export enum NpcActionsList {
     Delete = 'Delete',
 }
 
+// JUZ TAKI JEST W engine, Ale dziala na referenecjach a nie template id, trzbea zmienic
+export interface CharacterRespawn {
+    location: Location;
+    time: number;
+    id: string;
+    walkingType: string;
+}
+
 export interface NpcTemplate {
     id: string;
     name: string;
@@ -20,6 +28,7 @@ export interface NpcTemplate {
     movementSpeed: number;
     stock: Record<string, boolean>;
     quests: Record<string, boolean>;
+    npcRespawns: CharacterRespawn[];
 }
 
 interface NpcContextProps {

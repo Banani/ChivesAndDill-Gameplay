@@ -9,65 +9,67 @@ import { KeyBoardContext } from '../../../contexts';
 import styles from './pagination.module.scss';
 
 export const Pagination = ({
-   itemsAmount,
-   setRange,
-   reset,
+    itemsAmount,
+    setRange,
+    reset,
+    pageSize
 }: {
-   itemsAmount: number;
-   setRange: (range: { start: number; end: number }) => void;
-   reset?: number;
+    itemsAmount: number;
+    setRange: (range: { start: number; end: number }) => void;
+    reset?: number;
+    pageSize?: number;
 }) => {
-   const keyBoardContext = useContext(KeyBoardContext);
+    const keyBoardContext = useContext(KeyBoardContext);
 
-   const { start, end, prevPage, nextPage, page, allPagesCount, setCurrentPage } = usePagination({
-      pageSize: 20,
-      itemsAmount,
-   });
+    const { start, end, prevPage, nextPage, page, allPagesCount, setCurrentPage } = usePagination({
+        pageSize: pageSize ?? 20,
+        itemsAmount,
+    });
 
-   useEffect(() => {
-      setCurrentPage(1);
-   }, [reset]);
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [reset]);
 
-   useEffect(() => {
-      setRange({ start, end });
-   }, [start, end]);
+    useEffect(() => {
+        setRange({ start, end });
+    }, [start, end]);
 
-   useEffect(() => {
-      keyBoardContext.addKeyHandler({
-         id: 'paginationLeft',
-         matchRegex: 'ArrowLeft',
-         keydown: prevPage,
-      });
+    useEffect(() => {
+        keyBoardContext.addKeyHandler({
+            id: 'paginationLeft',
+            matchRegex: 'ArrowLeft',
+            keydown: prevPage,
+        });
 
-      keyBoardContext.addKeyHandler({
-         id: 'paginationRight',
-         matchRegex: 'ArrowRight',
-         keydown: nextPage,
-      });
+        keyBoardContext.addKeyHandler({
+            id: 'paginationRight',
+            matchRegex: 'ArrowRight',
+            keydown: nextPage,
+        });
 
-      return () => {
-         keyBoardContext.removeKeyHandler('paginationLeft');
-         keyBoardContext.removeKeyHandler('paginationRight');
-      };
-   }, [prevPage, nextPage]);
+        return () => {
+            keyBoardContext.removeKeyHandler('paginationLeft');
+            keyBoardContext.removeKeyHandler('paginationRight');
+        };
+    }, [prevPage, nextPage]);
 
-   return (
-      <div className={styles['pagination']}>
-         <Button onClick={prevPage} variant="outlined">
-            <ArrowBackIcon />
-         </Button>
-         <Input
-            className={styles['paginationButton']}
-            type="number"
-            value={page}
-            onChange={(e) => {
-               setCurrentPage(e.target.value === '' ? 1 : parseInt(e.target.value));
-            }}
-         />
-         <div className={styles['paginationTextHolder']}>of {allPagesCount}</div>
-         <Button onClick={nextPage} variant="outlined">
-            <ArrowForwardIcon />
-         </Button>
-      </div>
-   );
+    return (
+        <div className={styles['pagination']}>
+            <Button onClick={prevPage} variant="outlined">
+                <ArrowBackIcon />
+            </Button>
+            <Input
+                className={styles['paginationButton']}
+                type="number"
+                value={page}
+                onChange={(e) => {
+                    setCurrentPage(e.target.value === '' ? 1 : parseInt(e.target.value));
+                }}
+            />
+            <div className={styles['paginationTextHolder']}>of {allPagesCount}</div>
+            <Button onClick={nextPage} variant="outlined">
+                <ArrowForwardIcon />
+            </Button>
+        </div>
+    );
 };

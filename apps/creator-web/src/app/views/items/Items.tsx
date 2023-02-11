@@ -1,11 +1,11 @@
-import { ItemTemplate, QuestRewardItem } from '@bananos/types';
+import { ItemTemplate } from '@bananos/types';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Button, Paper } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import _ from 'lodash';
 import { useContext, useState } from 'react';
-import { Circle, CircleType } from '../../components';
+import { Circle, CircleBox, CircleType } from '../../components';
 import { PackageContext } from '../../contexts';
 import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { DeleteConfirmationDialog } from '../../dialogs';
@@ -76,7 +76,7 @@ export const Items = () => {
                             (itemTemplate) => {
                                 const npcsSellingThatItem = _.filter(npcTemplates, (npc) => npc.stock?.[itemTemplate.id]).length;
                                 const rewardsInQuests = _.filter(questSchemas, (quest) =>
-                                    quest.questReward.items.find((reward: QuestRewardItem) => reward.itemTemplateId == itemTemplate.id)).length;
+                                    quest.questReward.items[itemTemplate.id]).length;
 
                                 return (
                                     <div
@@ -87,10 +87,10 @@ export const Items = () => {
                                             setActiveItemTemplate(itemTemplate);
                                         }}
                                     >
-                                        <div className={styles['preview-box']}>
+                                        <CircleBox>
                                             {npcsSellingThatItem > 0 ? <Circle type={CircleType.npc} number={npcsSellingThatItem} /> : null}
                                             {rewardsInQuests > 0 ? <Circle type={CircleType.quest} number={rewardsInQuests} /> : null}
-                                        </div>
+                                        </CircleBox>
                                         <img className={styles['image-preview']} src={itemTemplate.image} />
                                         <div className={styles['bar']}>{itemTemplate.name}</div>
                                         <div

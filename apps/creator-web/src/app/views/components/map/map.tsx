@@ -13,151 +13,151 @@ import styles from './map.module.scss';
 import { MapContext } from './MapContextProvider';
 
 type MapActionStates = Record<
-   string,
-   {
-      onClick?: (e: any) => void;
-      onMouseMove?: (e: any) => void;
-      onMouseLeave?: (e: any) => void;
-   }
+    string,
+    {
+        onClick?: (e: any) => void;
+        onMouseMove?: (e: any) => void;
+        onMouseLeave?: (e: any) => void;
+    }
 >;
 
 interface MapProps {
-   mapActionStates: MapActionStates;
-   state: string;
+    mapActionStates: MapActionStates;
+    state: string;
 }
 
 export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, children }) => {
-   const packageContext = useContext(PackageContext);
-   const { setIsMouseDown, setMousePosition, setLastMouseDownPosition, setPreviousTranslation, texturesMap, setTexturesMap, translation } =
-      useContext(MapContext);
-   const [stage, setStage] = useState<null | HTMLDivElement>(null);
+    const packageContext = useContext(PackageContext);
+    const { setIsMouseDown, setMousePosition, setLastMouseDownPosition, setPreviousTranslation, texturesMap, setTexturesMap, translation } =
+        useContext(MapContext);
+    const [stage, setStage] = useState<null | HTMLDivElement>(null);
 
-   useEffect(() => {
-      const output: Record<string, Texture> = {};
+    useEffect(() => {
+        const output: Record<string, Texture> = {};
 
-      const loader = new PIXI.Loader();
-      loader.pre((resource, next) => {
-         resource.loadType = PIXI.LoaderResource.LOAD_TYPE.XHR;
-         next();
-      });
-      _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
-         const path = mapElement.spriteSheet.indexOf('https') === -1 ? '../../../assets/' + mapElement.spriteSheet : mapElement.spriteSheet;
+        const loader = new PIXI.Loader();
+        loader.pre((resource, next) => {
+            resource.loadType = PIXI.LoaderResource.LOAD_TYPE.XHR;
+            next();
+        });
+        _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
+            const path = mapElement.spriteSheet.indexOf('https') === -1 ? '../../../assets/' + mapElement.spriteSheet : mapElement.spriteSheet;
 
-         if (!loader.resources[mapElement.spriteSheet]) {
-            loader.add({
-               name: mapElement.spriteSheet,
-               url: path,
-               crossOrigin: 'no-cors',
-               loadType: PIXI.LoaderResource.LOAD_TYPE.XHR,
-            });
-         }
-      });
-
-      loader.add({
-         name: 'citizen',
-         url: 'assets/citizen.png',
-      });
-
-      loader.load((loader, resources) => {
-         const citizen = resources['citizen']?.texture?.baseTexture;
-         if (citizen) {
-            output['citizen'] = new PIXI.Texture(citizen, new PIXI.Rectangle(0, 0, 60, 60));
-         }
-         _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
-            const baseTexture = resources[mapElement.spriteSheet]?.texture?.baseTexture;
-            if (baseTexture) {
-               output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.x * BLOCK_SIZE + 1, mapElement.y * BLOCK_SIZE + 1, 30, 30));
+            if (!loader.resources[mapElement.spriteSheet]) {
+                loader.add({
+                    name: mapElement.spriteSheet,
+                    url: path,
+                    crossOrigin: 'no-cors',
+                    loadType: PIXI.LoaderResource.LOAD_TYPE.XHR,
+                });
             }
-         });
-         setTexturesMap(output);
-      });
-   }, [packageContext?.backendStore?.sprites?.data]);
+        });
 
-   const mapClick = useCallback(
-      (e) => {
-         if (mapActionStates[state]) {
-            mapActionStates[state].onClick?.(e);
-         }
-      },
-      [state, mapActionStates]
-   );
+        loader.add({
+            name: 'citizen',
+            url: 'assets/citizen.png',
+        });
 
-   const onMouseMove = useCallback(
-      throttle((e) => {
-         setMousePosition({
-            x: e.nativeEvent.offsetX,
-            y: e.nativeEvent.offsetY,
-         });
-         if (mapActionStates[state]) {
-            mapActionStates[state].onMouseMove?.(e);
-         }
-      }, 25),
-      [state, mapActionStates]
-   );
+        loader.load((loader, resources) => {
+            const citizen = resources['citizen']?.texture?.baseTexture;
+            if (citizen) {
+                output['citizen'] = new PIXI.Texture(citizen, new PIXI.Rectangle(0, 0, 60, 60));
+            }
+            _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
+                const baseTexture = resources[mapElement.spriteSheet]?.texture?.baseTexture;
+                if (baseTexture) {
+                    output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.x * BLOCK_SIZE + 1, mapElement.y * BLOCK_SIZE + 1, 30, 30));
+                }
+            });
+            setTexturesMap(output);
+        });
+    }, [packageContext?.backendStore?.sprites?.data]);
 
-   const onMouseLeave = useCallback((e) => {
-      setMousePosition(null);
-      if (mapActionStates[state]) {
-         mapActionStates[state].onMouseLeave?.(e);
-      }
-   }, []);
+    const mapClick = useCallback(
+        (e) => {
+            if (mapActionStates[state]) {
+                mapActionStates[state].onClick?.(e);
+            }
+        },
+        [state, mapActionStates]
+    );
 
-   if (!Object.keys(texturesMap).length || !packageContext?.backendStore?.map || !packageContext.backendStore.npcs) {
-      return <></>;
-   }
+    const onMouseMove = useCallback(
+        throttle((e) => {
+            setMousePosition({
+                x: e.nativeEvent.offsetX,
+                y: e.nativeEvent.offsetY,
+            });
+            if (mapActionStates[state]) {
+                mapActionStates[state].onMouseMove?.(e);
+            }
+        }, 25),
+        [state, mapActionStates]
+    );
 
-   return (
-      <div className={styles['stage']} ref={(newRef) => setStage(newRef)}>
-         <Stage
-            width={stage?.clientWidth ?? 900}
-            height={(stage?.clientHeight ?? 600) - 10}
-            options={{ backgroundColor: 0x000000, autoDensity: true }}
-            onClick={mapClick}
-            onMouseDown={(e) => {
-               setLastMouseDownPosition({ x: e.clientX, y: e.clientY });
-               setPreviousTranslation(translation);
-               setIsMouseDown(true);
-            }}
-            onMouseUp={() => setIsMouseDown(false)}
-            onMouseMove={onMouseMove}
-            onMouseLeave={onMouseLeave}
-         >
-            <Container position={[translation.x, translation.y]}>
-               {_.chain(packageContext.backendStore.map.data)
-                  .filter(({ spriteId }) => texturesMap[spriteId])
-                  .map(({ x, y, spriteId }, key) => {
-                     return <MapSprite key={key} location={{ x, y }} texture={texturesMap[spriteId]} />;
-                  })
-                  .value()}
+    const onMouseLeave = useCallback((e) => {
+        setMousePosition(null);
+        if (mapActionStates[state]) {
+            mapActionStates[state].onMouseLeave?.(e);
+        }
+    }, []);
 
-               {_.chain(packageContext.backendStore.npcs.data)
-                  .filter(() => texturesMap['citizen'])
-                  .map(({ location, npcTemplateId }, key) => {
-                     return (
-                        <>
-                           <Text
-                              text={packageContext.backendStore.npcTemplates.data[npcTemplateId].name}
-                              x={location.x * BLOCK_SIZE + BLOCK_SIZE / 2}
-                              y={location.y * BLOCK_SIZE - 12}
-                              anchor={0.5}
-                              style={
-                                 new TextStyle({
-                                    align: 'center',
-                                    fontFamily: 'Segoe UI',
-                                    fontSize: 14,
-                                    fill: '#ff6030',
-                                 })
-                              }
-                           />
-                           <MapSprite key={key} location={location} texture={texturesMap['citizen']} />
-                        </>
-                     );
-                  })
-                  .value()}
+    if (!Object.keys(texturesMap).length || !packageContext?.backendStore?.map || !packageContext.backendStore.npcs) {
+        return <></>;
+    }
 
-               {children}
-            </Container>
-         </Stage>
-      </div>
-   );
+    return (
+        <div className={styles['stage']} ref={(newRef) => setStage(newRef)}>
+            <Stage
+                width={stage?.clientWidth ?? 900}
+                height={(stage?.clientHeight ?? 600) - 10}
+                options={{ backgroundColor: 0x000000, autoDensity: true }}
+                onClick={mapClick}
+                onMouseDown={(e) => {
+                    setLastMouseDownPosition({ x: e.clientX, y: e.clientY });
+                    setPreviousTranslation(translation);
+                    setIsMouseDown(true);
+                }}
+                onMouseUp={() => setIsMouseDown(false)}
+                onMouseMove={onMouseMove}
+                onMouseLeave={onMouseLeave}
+            >
+                <Container position={[translation.x, translation.y]}>
+                    {_.chain(packageContext.backendStore.map.data)
+                        .filter(({ spriteId }) => texturesMap[spriteId])
+                        .map(({ x, y, spriteId }, key) => {
+                            return <MapSprite key={key} location={{ x, y }} texture={texturesMap[spriteId]} />;
+                        })
+                        .value()}
+
+                    {_.chain(packageContext.backendStore.npcs.data)
+                        .filter(() => texturesMap['citizen'])
+                        .map(({ location, npcTemplateId }, key) => {
+                            return (
+                                <>
+                                    <Text
+                                        text={packageContext.backendStore.npcTemplates.data[npcTemplateId]?.name ?? ""}
+                                        x={location.x * BLOCK_SIZE + BLOCK_SIZE / 2}
+                                        y={location.y * BLOCK_SIZE - 12}
+                                        anchor={0.5}
+                                        style={
+                                            new TextStyle({
+                                                align: 'center',
+                                                fontFamily: 'Segoe UI',
+                                                fontSize: 14,
+                                                fill: '#ff6030',
+                                            })
+                                        }
+                                    />
+                                    <MapSprite key={key} location={location} texture={texturesMap['citizen']} />
+                                </>
+                            );
+                        })
+                        .value()}
+
+                    {children}
+                </Container>
+            </Stage>
+        </div>
+    );
 };

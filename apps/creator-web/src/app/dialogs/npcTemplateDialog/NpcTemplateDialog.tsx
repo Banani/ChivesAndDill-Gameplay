@@ -28,7 +28,8 @@ const DefaultNpcTemplate = {
     spellPowerRegeneration: 5,
     movementSpeed: 8,
     stock: {},
-    quests: {}
+    quests: {},
+    npcRespawns: []
 };
 
 export const NpcTemplateDialog = () => {
