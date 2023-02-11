@@ -4,12 +4,14 @@ import { useContext, useState } from 'react';
 
 
 import AddIcon from '@mui/icons-material/Add';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import TextField from '@mui/material/TextField';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { Circle, CircleBox, CircleType } from '../../../components';
 import { PackageContext } from '../../../contexts';
 import { DialogContext, Dialogs } from '../../../contexts/dialogContext';
+import { DeleteConfirmationDialog } from '../../../dialogs';
 import { Pagination } from '../../components';
 import { NpcContext, NpcTemplate } from '../NpcContextProvider';
 import styles from './npcTemplatesPanel.module.scss';
@@ -17,6 +19,7 @@ import styles from './npcTemplatesPanel.module.scss';
 export const NpcTemplatesPanel = () => {
     const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
     const [paginationReset, setPaginationReset] = useState(0);
+    const [npcTemplatesToDelete, setNpcTemplatesToDelete] = useState<NpcTemplate[]>([]);
 
     const [searchFilter, setSearchFilter] = useState('');
 
@@ -26,10 +29,20 @@ export const NpcTemplatesPanel = () => {
     const npcs = packageContext?.backendStore?.npcs?.data ?? {}
 
     const { setActiveDialog } = useContext(DialogContext);
-    const { activeNpcTemplate, setActiveNpcTemplate } = useContext(NpcContext);
+    const { activeNpcTemplate, setActiveNpcTemplate, deleteNpcTemplate } = useContext(NpcContext);
 
     return (
         <div className={styles['control-panel']}>
+            <DeleteConfirmationDialog
+                itemsToDelete={npcTemplatesToDelete.map((npcTemplate) => npcTemplate.name)}
+                cancelAction={() => setNpcTemplatesToDelete([])}
+                confirmAction={() => {
+                    if (npcTemplatesToDelete.length > 0) {
+                        deleteNpcTemplate(npcTemplatesToDelete[0]?.id);
+                        setNpcTemplatesToDelete([]);
+                    }
+                }}
+            />
             <Button variant="outlined" onClick={() => setActiveDialog(Dialogs.NpcTemplateDialogs)}>
                 <AddIcon />
             </Button>
@@ -74,6 +87,15 @@ export const NpcTemplatesPanel = () => {
                                         {questsAmount > 0 ? <Circle type={CircleType.quest} number={questsAmount} /> : null}
                                         {stockSize > 0 ? <Circle type={CircleType.item} number={stockSize} /> : null}
                                     </CircleBox>
+                                    <div
+                                        className={styles['delete-icon']}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setNpcTemplatesToDelete([npcTemplate]);
+                                        }}
+                                    >
+                                        <DeleteForeverIcon />
+                                    </div>
                                 </div>
                             )
                         }

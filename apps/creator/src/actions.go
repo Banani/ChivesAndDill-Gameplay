@@ -4,6 +4,7 @@ const (
 	updateMapField     = "UPDATE_MAP_FIELD"
 	deleteMapField     = "DELETE_MAP_FIELD"
 	createNpcTemplate  = "CREATE_NPC_TEMPLATE"
+	deleteNpcTemplate  = "DELETE_NPC_TEMPLATE"
 	addNpc             = "ADD_NPC"
 	deleteNpc          = "DELETE_NPC"
 	createItemTemplate = "CREATE_ITEM_TEMPLATE"
@@ -35,6 +36,11 @@ type DeleteMapFieldAction struct {
 type CreateNpcTemplateAction struct {
 	ActionType  string      `json:"actionType"`
 	NpcTemplate NpcTemplate `json:"npcTemplate"`
+}
+
+type DeleteNpcTemplateAction struct {
+	ActionType    string `json:"actionType"`
+	NpcTemplateId string `json:"npcTemplateId"`
 }
 
 type AddNpcAction struct {

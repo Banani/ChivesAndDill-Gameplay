@@ -105,6 +105,14 @@ func (m *NpcTemplateDbApi) getNpcTemplates() (map[string]NpcTemplate, map[string
 	return npcTemplatesMap, npcsMap
 }
 
+func (m *NpcTemplateDbApi) deleteNpcTemplate(npcTemplateId string) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("npcTemplates")
+
+	objectId, _ := primitive.ObjectIDFromHex(npcTemplateId)
+	collection.DeleteMany(context.TODO(), bson.M{"_id": bson.M{"$in": []primitive.ObjectID{objectId}}})
+}
+
 func (m *NpcTemplateDbApi) addNpc(npc Npc) string {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("npcTemplates")
