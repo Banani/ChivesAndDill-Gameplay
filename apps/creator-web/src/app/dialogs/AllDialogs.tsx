@@ -1,13 +1,13 @@
 import { ItemTemplateDialog } from './ItemTemplateDialog';
 import { NpcTemplateDialog } from './npcTemplateDialog';
-import { QuestDialog } from './QuestDialog';
+import { QuestDialog } from './questDialog';
 
 export const AllDialogs = () => {
-   return (
-      <>
-         <NpcTemplateDialog />
-         <ItemTemplateDialog />
-         <QuestDialog />
-      </>
-   );
+    return (
+        <>
+            <NpcTemplateDialog />
+            <ItemTemplateDialog />
+            <QuestDialog />
+        </>
+    );
 };

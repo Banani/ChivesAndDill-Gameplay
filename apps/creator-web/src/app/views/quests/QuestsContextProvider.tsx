@@ -7,7 +7,7 @@ export const QuestsContext = React.createContext<QuestsContextProps>({} as Quest
 
 interface QuestsContextProps {
     activeQuest: QuestSchema | null;
-    setActiveQuest: (questSchema: QuestSchema) => void;
+    setActiveQuest: React.Dispatch<React.SetStateAction<QuestSchema | null>>;
     createQuest: (questSchema: QuestSchema) => void;
     deleteQuest: (id: string) => void;
 }

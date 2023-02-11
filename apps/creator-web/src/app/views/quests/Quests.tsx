@@ -66,6 +66,7 @@ export const Quests = () => {
                     <DataGrid
                         disableSelectionOnClick
                         rows={_.map(questSchemas, quest => quest)}
+                        getRowId={(row) => row.id}
                         columns={[
                             {
                                 field: 'name',
@@ -95,7 +96,7 @@ export const Quests = () => {
                                 renderCell: (params: GridRenderCellParams<QuestSchema>) => {
                                     return <>
                                         {_.map(params.row.questReward.items, item =>
-                                            <ItemPreview itemTemplate={itemTemplates[item.itemTemplateId]} />
+                                            <ItemPreview key={item.itemTemplateId} itemTemplate={itemTemplates[item.itemTemplateId]} />
                                         )}
                                     </>
                                 },

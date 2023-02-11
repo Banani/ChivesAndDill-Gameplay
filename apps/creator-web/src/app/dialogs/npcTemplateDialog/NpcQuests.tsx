@@ -1,7 +1,7 @@
 import { QuestSchema } from '@bananos/types';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import _ from 'lodash';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AssignmentPanel } from '../../components/assignmentPanel';
 import { ItemPreview } from '../../components/itemPreview';
 import { PackageContext } from '../../contexts';
@@ -13,7 +13,15 @@ export const NpcQuests = () => {
     const questSchemas = packageContext?.backendStore?.questSchemas?.data ?? {};
     const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
     const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ?? {};
+    const [localQuestSchemas, setLocalQuestsSchemas] = useState<Record<string, QuestSchema>>({});
     const { setActiveNpcTemplate } = useContext(NpcContext);
+
+    useEffect(() => {
+        setActiveNpcTemplate((prev: NpcTemplate) => ({
+            ...prev,
+            quests: _.mapValues(localQuestSchemas, () => true),
+        }));
+    }, [localQuestSchemas]);
 
     const columns: GridColDef[] = [
         { field: 'name', headerName: 'Name', flex: 1 },
@@ -62,15 +70,9 @@ export const NpcQuests = () => {
         <AssignmentPanel
             allItems={questSchemas}
             allItemsColumnDefinition={columns}
+            selectedItems={localQuestSchemas}
             selectedItemsColumnDefinition={columns}
-            selectionChanged={(selectionModel) => {
-                setActiveNpcTemplate((prev: NpcTemplate) => ({
-                    ...prev,
-                    quests: _.chain(selectionModel)
-                        .keyBy()
-                        .mapValues(() => true)
-                        .value(),
-                }));
-            }} />
+            updateSelectedItems={setLocalQuestsSchemas}
+        />
     );
 };
