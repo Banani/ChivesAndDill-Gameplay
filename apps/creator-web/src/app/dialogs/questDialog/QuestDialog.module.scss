@@ -9,5 +9,22 @@
 }
 
 .substage-wrapper {
-    margin-left: 20px;
+    margin-left: 32px;
+}
+
+.substage-panel {
+    margin-left: 16px;
+}
+
+.element-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.creation-button-holder {
+    margin-top: 12px;
+}
+
+.line {
+    border: 1px solid rgba(0, 0, 0, 0.5);
 }

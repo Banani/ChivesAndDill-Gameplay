@@ -1,6 +1,6 @@
 import { MovementQuestStagePart, QuestSchema, QuestStage, QuestType } from '@bananos/types';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { Box, FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material';
+import { Box, FormControl, IconButton, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,6 +13,8 @@ import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { QuestsContext } from '../../views/quests/QuestsContextProvider';
 import { QuestRewards } from './QuestRewards';
 
+import classnames from 'classnames';
+import { Label } from '../../components';
 import { QuestConditions } from './QuestConditions';
 import styles from "./QuestDialog.module.scss";
 
@@ -36,7 +38,7 @@ const DefaultStage: QuestStage = {
     id: "",
     description: '',
     stageParts: {
-        '1': _.clone(DefaultSubstage)
+        '2': _.cloneDeep(DefaultSubstage)
     }
 }
 
@@ -45,7 +47,7 @@ const DefaultQuest: QuestSchema = {
     name: '',
     description: '',
     stages: {
-        '1': _.clone(DefaultStage)
+        '1': _.cloneDeep(DefaultStage)
     },
     questReward: {
         experience: 0,
@@ -59,6 +61,7 @@ const DefaultQuest: QuestSchema = {
 export const QuestDialog = () => {
     const { activeDialog, setActiveDialog } = useContext(DialogContext);
     const { activeQuest, createQuest, setActiveQuest } = useContext(QuestsContext);
+    const [idCounter, setIdCounter] = useState(10);
 
     const [activeTab, setActiveTab] = useState<QuestDialogTabs>(QuestDialogTabs.Default);
 
@@ -109,8 +112,9 @@ export const QuestDialog = () => {
             return;
         }
 
-        setActiveQuest({ ...activeQuest, stages: { ...activeQuest.stages, [Object.keys(activeQuest.stages ?? {}).length + 1]: _.clone(DefaultStage) } });
-    }, [activeQuest]);
+        setActiveQuest({ ...activeQuest, stages: { ...activeQuest.stages, [idCounter]: _.cloneDeep(DefaultStage) } });
+        setIdCounter(prev => prev + 1);
+    }, [activeQuest, idCounter]);
 
     const removeStage = useCallback((stageId: string) => {
         if (!activeQuest) {
@@ -122,15 +126,16 @@ export const QuestDialog = () => {
 
 
     const addSubstage = useCallback((stageId: string) => {
-        const newQuest = _.clone(activeQuest);
+        const newQuest = _.cloneDeep(activeQuest);
         if (!newQuest || !newQuest.stages) {
             return;
         }
 
-        newQuest.stages[stageId].stageParts[Object.keys(newQuest.stages?.[stageId].stageParts ?? {}).length + 1] = _.clone(DefaultSubstage)
+        newQuest.stages[stageId].stageParts[idCounter] = _.cloneDeep(DefaultSubstage)
 
         setActiveQuest(newQuest);
-    }, [activeQuest]);
+        setIdCounter(prev => prev + 1);
+    }, [activeQuest, idCounter]);
 
     const removeSubstage = useCallback((stageId: string, substageId: string) => {
         if (!activeQuest || !activeQuest.stages) {
@@ -150,6 +155,9 @@ export const QuestDialog = () => {
     if (!activeQuest) {
         return null;
     }
+
+    let stageNumber = 1;
+    let substageNumber = 1;
 
     return (
         <Dialog open={activeDialog === Dialogs.QuestDialog} onClose={() => setActiveDialog(null)} maxWidth="xl">
@@ -175,16 +183,15 @@ export const QuestDialog = () => {
                     />
                     {_.map(activeQuest.stages ?? {}, (stages, stageKey: string) => {
                         return <>
-                            <div>Stage: {stageKey}
-                                <Button
+                            <div className={styles['element-header']}>
+                                <Label>Stage: {stageNumber++}</Label>
+                                <IconButton
                                     onClick={() => removeStage(stageKey)}
-                                    variant='outlined'
-                                    className={styles['button']}
                                 >
                                     <DeleteForeverIcon />
-                                </Button>
+                                </IconButton>
                             </div>
-                            <hr />
+                            <hr className={styles['line']} />
                             <TextField
                                 value={activeQuest.stages?.[stageKey].description}
                                 onChange={(e) => changeValue(`stages.${stageKey}.description`, e.target.value)}
@@ -194,20 +201,21 @@ export const QuestDialog = () => {
                                 multiline
                                 variant="standard"
                             />
-                            <div className={styles['substage-wrapper']}>
-                                {_.map(stages.stageParts ?? {}, (stagePart, substageKey) => {
-                                    return <>
-                                        <div>Substage: {substageKey}
-                                            <Button
+                            {_.map(stages.stageParts ?? {}, (stagePart, substageKey) => {
+                                return <>
+                                    <div className={styles['substage-panel']}>
+                                        <div className={styles['element-header']}>
+                                            <Label>Substage: {substageNumber++}</Label>
+                                            <IconButton
                                                 onClick={() => removeSubstage(stageKey, substageKey)}
-                                                variant='outlined'
-                                                className={styles['button']}
                                             >
                                                 <DeleteForeverIcon />
-                                            </Button>
+                                            </IconButton >
                                         </div>
-                                        <hr />
-                                        <FormControl fullWidth>
+                                        <hr className={styles['line']} />
+                                    </div>
+                                    <div className={styles['substage-wrapper']}>
+                                        <FormControl fullWidth margin="dense">
                                             <InputLabel id={"substage-type-" + substageKey}>Substage Type</InputLabel>
                                             <Select
                                                 labelId={"substage-type-" + substageKey}
@@ -258,13 +266,17 @@ export const QuestDialog = () => {
                                                 variant="standard"
                                             /></> : null
                                         }
-                                    </>
-                                })}
+                                    </div>
+                                </>
+                            })}
+                            <div className={classnames({ [styles['creation-button-holder']]: true, [styles['substage-panel']]: true })}>
                                 <Button variant="outlined" onClick={() => addSubstage(stageKey)}>Add Substage</Button>
                             </div>
                         </>
                     })}
-                    <Button variant="outlined" onClick={addStage}>Add Stage</Button>
+                    <div className={styles['creation-button-holder']}>
+                        <Button variant="outlined" onClick={addStage}>Add Stage</Button>
+                    </div>
                 </div>
                 <div role="tabpanel" hidden={activeTab !== QuestDialogTabs.Reward} aria-labelledby={QuestDialogTabs.Reward}>
                     <QuestRewards />
@@ -281,6 +293,6 @@ export const QuestDialog = () => {
                     Cancel
                 </Button>
             </DialogActions>
-        </Dialog>
+        </Dialog >
     );
 };

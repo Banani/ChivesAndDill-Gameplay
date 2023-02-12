@@ -1,11 +1,11 @@
 import { TextField } from "@mui/material";
 import _ from "lodash";
 import { useCallback, useContext, useEffect, useState } from "react";
+import { Label } from "../../components";
 import { AssignmentPanel } from "../../components/assignmentPanel";
 import { PackageContext } from "../../contexts";
 import { QuestsContext } from "../../views/quests/QuestsContextProvider";
 
-import styles from "./QuestConditions.module.scss";
 
 export const QuestConditions = () => {
     const packageContext = useContext(PackageContext);
@@ -54,7 +54,7 @@ export const QuestConditions = () => {
             fullWidth
             variant="standard"
         />
-        <div className={styles['label']}>Required quests completed:</div>
+        <Label>Required quests completed:</Label>
         <AssignmentPanel
             allItems={questSchemas}
             allItemsColumnDefinition={columns}
