@@ -22,6 +22,9 @@ func (m *QuestsDbApi) saveQuest(questSchema QuestSchema) string {
 		{"name", questSchema.Name},
 		{"description", questSchema.Description},
 		{"questReward", questSchema.QuestReward},
+		{"stages", questSchema.Stages},
+		{"requiredQuests", questSchema.RequiredQuests},
+		{"requiredLevel", questSchema.RequiredLevel},
 	}
 
 	record, _ := collection.InsertOne(context.TODO(), toSave)

@@ -102,6 +102,20 @@ export const Quests = () => {
                                 },
                             },
                             {
+                                field: 'stages',
+                                headerName: 'Stages',
+                                flex: 1,
+                                renderCell: (params: GridRenderCellParams<QuestSchema>) =>
+                                    Object.keys(params.row.stages ?? {}).length,
+                            },
+                            {
+                                field: 'substages',
+                                headerName: 'Substages',
+                                flex: 1,
+                                renderCell: (params: GridRenderCellParams<QuestSchema>) =>
+                                    _.sum(_.map(params.row.stages ?? {}, stage => Object.keys(stage.stageParts ?? {}).length))
+                            },
+                            {
                                 field: 'npcs_amount',
                                 headerName: 'Assigned to NPCs',
                                 flex: 1,
@@ -110,6 +124,11 @@ export const Quests = () => {
                                         {_.filter(npcTemplates, npcTemplate => npcTemplate.quests[params.row.id]).length}
                                     </>
                                 },
+                            },
+                            {
+                                field: 'requiredLevel',
+                                headerName: 'Required level',
+                                flex: 1,
                             },
                             {
                                 field: 'actions',

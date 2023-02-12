@@ -23,6 +23,8 @@ export interface QuestSchema {
    description: string;
    stages?: Record<string, QuestStage>;
    questReward: QuestReward;
+   requiredQuests?: Record<string, boolean>;
+   requiredLevel?: number; 
 }
 
 export interface QuestResetCondition {

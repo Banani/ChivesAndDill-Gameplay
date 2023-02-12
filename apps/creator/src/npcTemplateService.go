@@ -92,6 +92,27 @@ func (service *NpcTemplateService) serve() {
 			service.application.writter.stream <- prepareDeletePayload("npcs", npcTemplatesToDelete)
 		}
 
+		if action.ActionType == deleteQuest {
+			var deleteQuestAction DeleteQuestAction
+			json.Unmarshal(action.Body, &deleteQuestAction)
+
+			api := NpcTemplateDbApi{application: service.application}
+			api.removeQuestFromNpc(deleteQuestAction.QuestId)
+
+			npcTemplates := make(map[string]NpcTemplate)
+
+			for npcTemplateId, npcTemplate := range service.npcTemplates {
+				if _, ok := npcTemplate.Quests[deleteQuestAction.QuestId]; ok {
+					delete(npcTemplate.Quests, deleteQuestAction.QuestId)
+					npcTemplates[npcTemplateId] = npcTemplate
+				}
+			}
+
+			// Polaczyc to w jeden payload
+			service.application.writter.stream <- prepareDeletePayload2("npcTemplates", npcTemplates)
+			service.application.writter.stream <- prepareUpdatePayload("npcTemplates", npcTemplates)
+		}
+
 		if action.ActionType == addNpc {
 			var addNpcAction AddNpcAction
 			json.Unmarshal(action.Body, &addNpcAction)

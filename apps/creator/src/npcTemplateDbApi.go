@@ -29,7 +29,7 @@ func (m *NpcTemplateDbApi) saveNpcTemplate(npcTemplate NpcTemplate) string {
 
 	record, _ := collection.InsertOne(context.TODO(), toSave)
 
-	return record.InsertedID.(primitive.ObjectID).String()
+	return record.InsertedID.(primitive.ObjectID).Hex()
 }
 
 func (m *NpcTemplateDbApi) getNpcTemplates() (map[string]NpcTemplate, map[string]Npc) {
@@ -111,6 +111,13 @@ func (m *NpcTemplateDbApi) deleteNpcTemplate(npcTemplateId string) {
 
 	objectId, _ := primitive.ObjectIDFromHex(npcTemplateId)
 	collection.DeleteMany(context.TODO(), bson.M{"_id": bson.M{"$in": []primitive.ObjectID{objectId}}})
+}
+
+func (m *NpcTemplateDbApi) removeQuestFromNpc(questId string) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("npcTemplates")
+
+	collection.UpdateMany(context.TODO(), bson.M{}, bson.M{"$unset": bson.M{"quests." + questId: ""}})
 }
 
 func (m *NpcTemplateDbApi) addNpc(npc Npc) string {

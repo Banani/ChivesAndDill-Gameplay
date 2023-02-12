@@ -16,10 +16,26 @@ type QuestReward struct {
 }
 
 type QuestSchema struct {
-	Id          string      `json:"id"`
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	QuestReward QuestReward `json:"questReward"`
+	Id             string                `json:"id"`
+	Name           string                `json:"name"`
+	Description    string                `json:"description"`
+	QuestReward    QuestReward           `json:"questReward"`
+	Stages         map[string]QuestStage `json:"stages"`
+	RequiredLevel  int64                 `json:"requiredLevel"`
+	RequiredQuests map[string]string     `json:"requiredQuests"`
+}
+
+type QuestStage struct {
+	Id          string                    `json:"id"`
+	Description string                    `json:"description"`
+	StageParts  map[string]QuestStagePart `json:"stageParts"`
+}
+
+type QuestStagePart struct {
+	Type            string   `json:"type"`
+	LocationName    string   `json:"locationName"`
+	TargetLocation  Location `json:"targetLocation"`
+	AcceptableRange int64    `json:"acceptableRange"`
 }
 
 type QuestsService struct {
