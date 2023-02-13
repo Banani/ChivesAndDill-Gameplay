@@ -11,12 +11,12 @@ import _ from 'lodash';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { QuestsContext } from '../../views/quests/QuestsContextProvider';
-import { QuestRewards } from './QuestRewards';
 
 import classnames from 'classnames';
 import { Label } from '../../components';
 import { QuestConditions } from './QuestConditions';
 import styles from "./QuestDialog.module.scss";
+import { QuestRewards } from './QuestRewards';
 
 enum QuestDialogTabs {
     Default = 'Default',
@@ -160,9 +160,9 @@ export const QuestDialog = () => {
     let substageNumber = 1;
 
     return (
-        <Dialog open={activeDialog === Dialogs.QuestDialog} onClose={() => setActiveDialog(null)} maxWidth="xl">
+        <Dialog open={activeDialog === Dialogs.QuestDialog} onClose={() => setActiveDialog(null)} maxWidth="xl" className={styles['dialog']}>
             <DialogTitle>Create Quest</DialogTitle>
-            <DialogContent className={styles['dialog']}>
+            <DialogContent className={styles['dialog-content']}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={activeTab} onChange={changeActiveTab} aria-label="basic tabs example">
                         <Tab label="Details" aria-controls={QuestDialogTabs.Default} value={QuestDialogTabs.Default} />
@@ -182,8 +182,8 @@ export const QuestDialog = () => {
                         variant="standard"
                     />
                     {_.map(activeQuest.stages ?? {}, (stages, stageKey: string) => {
-                        return <>
-                            <div className={styles['element-header']}>
+                        return <div key={stageKey}>
+                            <div className={styles['element-header']} key={stageKey}>
                                 <Label>Stage: {stageNumber++}</Label>
                                 <IconButton
                                     onClick={() => removeStage(stageKey)}
@@ -202,7 +202,7 @@ export const QuestDialog = () => {
                                 variant="standard"
                             />
                             {_.map(stages.stageParts ?? {}, (stagePart, substageKey) => {
-                                return <>
+                                return <div key={substageKey}>
                                     <div className={styles['substage-panel']}>
                                         <div className={styles['element-header']}>
                                             <Label>Substage: {substageNumber++}</Label>
@@ -267,22 +267,22 @@ export const QuestDialog = () => {
                                             /></> : null
                                         }
                                     </div>
-                                </>
+                                </div>
                             })}
                             <div className={classnames({ [styles['creation-button-holder']]: true, [styles['substage-panel']]: true })}>
                                 <Button variant="outlined" onClick={() => addSubstage(stageKey)}>Add Substage</Button>
                             </div>
-                        </>
+                        </div>
                     })}
                     <div className={styles['creation-button-holder']}>
                         <Button variant="outlined" onClick={addStage}>Add Stage</Button>
                     </div>
                 </div>
                 <div role="tabpanel" hidden={activeTab !== QuestDialogTabs.Reward} aria-labelledby={QuestDialogTabs.Reward}>
-                    <QuestRewards />
+                    {activeTab === QuestDialogTabs.Reward ? <QuestRewards /> : null}
                 </div>
                 <div role="tabpanel" hidden={activeTab !== QuestDialogTabs.Conditions} aria-labelledby={QuestDialogTabs.Conditions}>
-                    <QuestConditions />
+                    {activeTab === QuestDialogTabs.Conditions ? <QuestConditions /> : null}
                 </div>
             </DialogContent>
             <DialogActions>

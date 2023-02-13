@@ -18,7 +18,6 @@ export const Quests = () => {
     const packageContext = useContext(PackageContext);
     const { deleteQuest } = useContext(QuestsContext);
     const [questsToDelete, setQuestsToDelete] = useState<QuestSchema[]>([]);
-    //    const [searchFilter, setSearchFilter] = useState('');
 
     const questSchemas = packageContext?.backendStore?.questSchemas?.data ?? {};
     const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
@@ -38,19 +37,6 @@ export const Quests = () => {
             />
             <Paper className={styles['map-editor']}>
                 <div className={styles['manage-panel']}>
-                    {/* <TextField
-                  value={searchFilter}
-                  onChange={(e) => {
-                     setSearchFilter(e.target.value);
-                     setPaginationReset((prev) => prev + 1);
-                  }}
-                  margin="dense"
-                  label="Search by name"
-                  fullWidth
-                  variant="standard"
-                  type="text"
-               /> */}
-
                     <Button
                         className={styles['add-button']}
                         variant="outlined"
@@ -148,7 +134,7 @@ export const Quests = () => {
                                 ,
                             }
                         ]}
-                        pageSize={28}
+                        autoPageSize
                         density="compact"
                     />
 

@@ -11,12 +11,12 @@ interface ItemPreviewProps {
 const templateMap: RecursivePartial<Record<ItemTemplateType, any>> = {
     [ItemTemplateType.Equipment]: (itemTemplate: EquipmentItemTemplate) => {
         return (<>
-            {itemTemplate.armor ? ["armor: ", itemTemplate.armor, < br />] : null}
-            {itemTemplate.stamina ? ["stamina: ", itemTemplate.stamina, < br />] : null}
-            {itemTemplate.strength ? ["strength: ", itemTemplate.strength, < br />] : null}
-            {itemTemplate.agility ? ["agility: ", itemTemplate.agility, < br />] : null}
-            {itemTemplate.intelect ? ["intelect: ", itemTemplate.intelect, < br />] : null}
-            {itemTemplate.spirit ? ["spirit: ", itemTemplate.spirit, < br />] : null}
+            {itemTemplate.armor ? <>Armor: {itemTemplate.armor}<br /></> : null}
+            {itemTemplate.stamina ? <>Stamina: {itemTemplate.stamina}<br /></> : null}
+            {itemTemplate.strength ? <>Strength: {itemTemplate.strength}<br /></> : null}
+            {itemTemplate.agility ? <>Agility: {itemTemplate.agility}<br /></> : null}
+            {itemTemplate.intelect ? <>Intelect: {itemTemplate.intelect}<br /></> : null}
+            {itemTemplate.spirit ? <>Spirit: {itemTemplate.spirit}<br /></> : null}
         </>)
     }
 }

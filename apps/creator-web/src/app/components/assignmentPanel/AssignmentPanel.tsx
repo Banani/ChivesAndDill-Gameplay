@@ -71,7 +71,6 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
         [selectionModel]
     );
 
-
     return (
         <div className={styles['panel-wrapper']}>
             <div className={styles['table-wrapper']}>
@@ -85,6 +84,7 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
                     pageSize={15}
                     checkboxSelection
                     density="compact"
+                    autoPageSize
                 />
             </div>
             <div className={styles['table-wrapper']}>
@@ -95,6 +95,7 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
                     columns={selectedColumns}
                     pageSize={15}
                     density="compact"
+                    autoPageSize
                     processRowUpdate={(newRow) => {
                         updateSelectedItems(_.mapValues(selectedItems, (item => {
                             if (item[idField ?? ""] === newRow.id) {
