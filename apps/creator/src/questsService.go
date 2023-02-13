@@ -32,10 +32,19 @@ type QuestStage struct {
 }
 
 type QuestStagePart struct {
-	Type            string   `json:"type"`
-	LocationName    string   `json:"locationName"`
-	TargetLocation  Location `json:"targetLocation"`
-	AcceptableRange int64    `json:"acceptableRange"`
+	Type            string                       `json:"type"`
+	LocationName    string                       `json:"locationName,omitempty" bson:"locationName,omitempty"`
+	TargetLocation  *Location                    `json:"targetLocation,omitempty" bson:"targetLocation,omitempty"`
+	AcceptableRange int64                        `json:"acceptableRange,omitempty" bson:"acceptableRange,omitempty"`
+	MonsterName     string                       `json:"monsterName,omitempty" bson:"monsterName,omitempty"`
+	Rule            *[]KillingQuestStagePartRule `json:"rule,omitempty" bson:"rule,omitempty"`
+	Amount          int64                        `json:"amount,omitempty" bson:"amount,omitempty"`
+}
+
+type KillingQuestStagePartRule struct {
+	FieldName  string `json:"fieldName"`
+	Comparison string `json:"comparison"`
+	Value      string `json:"value"`
 }
 
 type QuestsService struct {

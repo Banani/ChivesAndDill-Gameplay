@@ -1,4 +1,4 @@
-import { MovementQuestStagePart, QuestSchema, QuestStage, QuestType } from '@bananos/types';
+import { AllQuestStagePart, KillingQuestStagePart, KillingQuestStagePartComparison, MovementQuestStagePart, QuestSchema, QuestStage, QuestType } from '@bananos/types';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Box, FormControl, IconButton, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -7,16 +7,37 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import _ from 'lodash';
+import _, { forEach } from 'lodash';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { QuestsContext } from '../../views/quests/QuestsContextProvider';
 
 import classnames from 'classnames';
 import { Label } from '../../components';
+import { PackageContext } from '../../contexts';
 import { QuestConditions } from './QuestConditions';
 import styles from "./QuestDialog.module.scss";
 import { QuestRewards } from './QuestRewards';
+
+export const customMerge = (data: any, pathToUpdate: any) => {
+    forEach(pathToUpdate, (toUpdate, key) => {
+        if (typeof toUpdate === 'object' && toUpdate !== null) {
+            // to jest po to jesli obiekt zmieni typ, najpierw bedzie liczba, potem nagle obiektem
+            if (typeof data[key] !== 'object' || data[key] === null) {
+                data[key] = {};
+            }
+
+            if (Array.isArray(pathToUpdate[key])) {
+                data[key] = toUpdate;
+            } else {
+                customMerge(data[key], pathToUpdate[key]);
+            }
+        } else {
+            data[key] = toUpdate;
+        }
+    });
+    return data;
+};
 
 enum QuestDialogTabs {
     Default = 'Default',
@@ -24,7 +45,7 @@ enum QuestDialogTabs {
     Conditions = 'Conditions',
 }
 
-const DefaultSubstage: MovementQuestStagePart = {
+const DefaultMovementSubstage: MovementQuestStagePart = {
     id: "",
     questId: "",
     stageId: "",
@@ -34,11 +55,30 @@ const DefaultSubstage: MovementQuestStagePart = {
     acceptableRange: 200
 }
 
+const DefaultKillingSubstage: KillingQuestStagePart = {
+    id: "",
+    questId: "",
+    stageId: "",
+    type: QuestType.KILLING,
+    monsterName: "",
+    rule: [{
+        fieldName: "characterTemplateId",
+        comparison: KillingQuestStagePartComparison.equality,
+        value: ""
+    }],
+    amount: 0
+}
+
+const substagesMap: Record<QuestType, AllQuestStagePart> = {
+    [QuestType.MOVEMENT]: DefaultMovementSubstage,
+    [QuestType.KILLING]: DefaultKillingSubstage
+}
+
 const DefaultStage: QuestStage = {
     id: "",
     description: '',
     stageParts: {
-        '2': _.cloneDeep(DefaultSubstage)
+        '2': _.cloneDeep(DefaultMovementSubstage)
     }
 }
 
@@ -62,6 +102,9 @@ export const QuestDialog = () => {
     const { activeDialog, setActiveDialog } = useContext(DialogContext);
     const { activeQuest, createQuest, setActiveQuest } = useContext(QuestsContext);
     const [idCounter, setIdCounter] = useState(10);
+
+    const packageContext = useContext(PackageContext);
+    const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ?? {};
 
     const [activeTab, setActiveTab] = useState<QuestDialogTabs>(QuestDialogTabs.Default);
 
@@ -93,7 +136,10 @@ export const QuestDialog = () => {
             }
             nested[path[path.length - 1]] = value;
 
-            setActiveQuest(_.merge({}, activeQuest, toUpdate));
+            let output = {};
+            customMerge(output, activeQuest);
+            customMerge(output, toUpdate);
+            setActiveQuest(output as QuestSchema);
         },
         [activeQuest]
     );
@@ -131,7 +177,7 @@ export const QuestDialog = () => {
             return;
         }
 
-        newQuest.stages[stageId].stageParts[idCounter] = _.cloneDeep(DefaultSubstage)
+        newQuest.stages[stageId].stageParts[idCounter] = _.cloneDeep(DefaultMovementSubstage)
 
         setActiveQuest(newQuest);
         setIdCounter(prev => prev + 1);
@@ -221,12 +267,19 @@ export const QuestDialog = () => {
                                                 labelId={"substage-type-" + substageKey}
                                                 value={stagePart.type}
                                                 label="Substage Type"
-                                                onChange={(e) => changeValue(`stages.${stageKey}.stageParts.${substageKey}.type`, e.target.value)}
+                                                onChange={(e) => {
+                                                    const currentQuest = _.cloneDeep(activeQuest);
+                                                    if (!currentQuest.stages) {
+                                                        return;
+                                                    }
+
+                                                    currentQuest.stages[stageKey].stageParts[substageKey] = _.cloneDeep(substagesMap[e.target.value as QuestType]);
+                                                    setActiveQuest(currentQuest);
+                                                }}
                                             >
                                                 <MenuItem value={QuestType.MOVEMENT}>Go to place</MenuItem>
                                                 <MenuItem value={QuestType.KILLING}>Kill monster</MenuItem>
                                             </Select>
-
                                         </FormControl>
 
                                         {activeQuest.stages?.[stageKey].stageParts[substageKey].type === QuestType.MOVEMENT ? <>
@@ -240,7 +293,7 @@ export const QuestDialog = () => {
                                             />
                                             <TextField
                                                 value={(activeQuest.stages?.[stageKey].stageParts[substageKey] as MovementQuestStagePart).acceptableRange}
-                                                onChange={(e) => changeValue(`stages.${stageKey}.stageParts.${substageKey}.acceptableRange`, e.target.value)}
+                                                onChange={(e) => changeValue(`stages.${stageKey}.stageParts.${substageKey}.acceptableRange`, parseInt(e.target.value))}
                                                 margin="dense"
                                                 label="Acceptable range"
                                                 fullWidth
@@ -249,7 +302,7 @@ export const QuestDialog = () => {
                                             />
                                             <TextField
                                                 value={(activeQuest.stages?.[stageKey].stageParts[substageKey] as MovementQuestStagePart).targetLocation.x}
-                                                onChange={(e) => changeValue(`stages.${stageKey}.stageParts.${substageKey}.targetLocation.x`, e.target.value)}
+                                                onChange={(e) => changeValue(`stages.${stageKey}.stageParts.${substageKey}.targetLocation.x`, parseInt(e.target.value))}
                                                 margin="dense"
                                                 label="Location: X"
                                                 fullWidth
@@ -258,9 +311,46 @@ export const QuestDialog = () => {
                                             />
                                             <TextField
                                                 value={(activeQuest.stages?.[stageKey].stageParts[substageKey] as MovementQuestStagePart).targetLocation.y}
-                                                onChange={(e) => changeValue(`stages.${stageKey}.stageParts.${substageKey}.targetLocation.y`, e.target.value)}
+                                                onChange={(e) => changeValue(`stages.${stageKey}.stageParts.${substageKey}.targetLocation.y`, parseInt(e.target.value))}
                                                 margin="dense"
                                                 label="Location: Y"
+                                                fullWidth
+                                                type="number"
+                                                variant="standard"
+                                            /></> : null
+                                        }
+
+                                        {activeQuest.stages?.[stageKey].stageParts[substageKey].type === QuestType.KILLING ? <>
+                                            <FormControl fullWidth margin="dense">
+                                                <InputLabel id={"monster-selector-" + substageKey}>Monster</InputLabel>
+                                                <Select
+                                                    labelId={"monster-selector-" + substageKey}
+                                                    value={(activeQuest.stages?.[stageKey].stageParts[substageKey] as KillingQuestStagePart).rule[0].value}
+                                                    label="Monster"
+                                                    onChange={(e) => {
+                                                        changeValue(`stages.${stageKey}.stageParts.${substageKey}.rule.0.value`, e.target.value)
+                                                        changeValue(`stages.${stageKey}.stageParts.${substageKey}.monsterName`, npcTemplates[e.target.value].name)
+                                                    }}
+                                                >
+                                                    {_.map(npcTemplates, npcTemplate => (
+                                                        <MenuItem key={npcTemplate.id} value={npcTemplate.id}>{npcTemplate.name}</MenuItem>
+                                                    ))}
+
+                                                </Select>
+                                            </FormControl>
+                                            <TextField
+                                                value={(activeQuest.stages?.[stageKey].stageParts[substageKey] as KillingQuestStagePart).monsterName}
+                                                onChange={(e) => changeValue(`stages.${stageKey}.stageParts.${substageKey}.monsterName`, e.target.value)}
+                                                margin="dense"
+                                                label="Monster name"
+                                                fullWidth
+                                                variant="standard"
+                                            />
+                                            <TextField
+                                                value={(activeQuest.stages?.[stageKey].stageParts[substageKey] as KillingQuestStagePart).amount}
+                                                onChange={(e) => changeValue(`stages.${stageKey}.stageParts.${substageKey}.amount`, parseInt(e.target.value))}
+                                                margin="dense"
+                                                label="Amount"
                                                 fullWidth
                                                 type="number"
                                                 variant="standard"
