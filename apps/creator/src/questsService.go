@@ -85,6 +85,20 @@ func (service *QuestsService) serve() {
 			service.application.writter.stream <- prepareUpdatePayload("questSchemas", map[string]QuestSchema{questSchema.Id: questSchema})
 		}
 
+		if action.ActionType == updateQuest {
+			var updateQuestAction UpdateQuestAction
+			json.Unmarshal(action.Body, &updateQuestAction)
+
+			questSchema := updateQuestAction.QuestSchema
+
+			api := QuestsDbApi{application: service.application}
+			api.updateQuest(questSchema)
+
+			service.quests[questSchema.Id] = questSchema
+			service.application.writter.stream <- prepareDeletePayload2("questSchemas", map[string]QuestSchema{questSchema.Id: questSchema})
+			service.application.writter.stream <- prepareUpdatePayload("questSchemas", map[string]QuestSchema{questSchema.Id: questSchema})
+		}
+
 		if action.ActionType == deleteQuest {
 			var deleteQuestAction DeleteQuestAction
 			json.Unmarshal(action.Body, &deleteQuestAction)

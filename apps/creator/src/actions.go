@@ -11,6 +11,7 @@ const (
 	deleteItemTemplate = "DELETE_ITEM_TEMPLATE"
 	updateItemTemplate = "UPDATE_ITEM_TEMPLATE"
 	createQuest        = "CREATE_QUEST"
+	updateQuest        = "UPDATE_QUEST"
 	deleteQuest        = "DELETE_QUEST"
 )
 
@@ -70,6 +71,11 @@ type UpdateItemTemplateAction struct {
 }
 
 type CreateQuestAction struct {
+	ActionType  string      `json:"actionType"`
+	QuestSchema QuestSchema `json:"questSchema"`
+}
+
+type UpdateQuestAction struct {
 	ActionType  string      `json:"actionType"`
 	QuestSchema QuestSchema `json:"questSchema"`
 }

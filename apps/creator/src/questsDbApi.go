@@ -32,6 +32,23 @@ func (m *QuestsDbApi) saveQuest(questSchema QuestSchema) string {
 	return record.InsertedID.(primitive.ObjectID).String()
 }
 
+func (m *QuestsDbApi) updateQuest(questSchema QuestSchema) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("questSchemas")
+
+	toSave := bson.D{{"$set", bson.D{
+		{"name", questSchema.Name},
+		{"description", questSchema.Description},
+		{"questReward", questSchema.QuestReward},
+		{"stages", questSchema.Stages},
+		{"requiredQuests", questSchema.RequiredQuests},
+		{"requiredLevel", questSchema.RequiredLevel},
+	}}}
+
+	objectId, _ := primitive.ObjectIDFromHex(questSchema.Id)
+	collection.UpdateOne(context.TODO(), bson.M{"_id": objectId}, toSave)
+}
+
 func (m *QuestsDbApi) getQuests() map[string]QuestSchema {
 	return getAllItemsFromDb[QuestSchema](m.application.dbClient, "questSchemas")
 }

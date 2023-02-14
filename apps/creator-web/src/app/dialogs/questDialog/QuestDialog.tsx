@@ -100,7 +100,7 @@ const DefaultQuest: QuestSchema = {
 
 export const QuestDialog = () => {
     const { activeDialog, setActiveDialog } = useContext(DialogContext);
-    const { activeQuest, createQuest, setActiveQuest } = useContext(QuestsContext);
+    const { activeQuest, createQuest, setActiveQuest, updateQuest } = useContext(QuestsContext);
     const [idCounter, setIdCounter] = useState(10);
 
     const packageContext = useContext(PackageContext);
@@ -146,7 +146,7 @@ export const QuestDialog = () => {
 
     const confirmAction = useCallback(() => {
         if (activeQuest?.id) {
-            //    updateItemTemplate(itemTemplate);
+            updateQuest(activeQuest);
         } else {
             createQuest(activeQuest as QuestSchema);
         }

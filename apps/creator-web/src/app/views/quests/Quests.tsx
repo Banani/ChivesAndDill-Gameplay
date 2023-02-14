@@ -1,6 +1,7 @@
 import { QuestSchema } from '@bananos/types';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { Button, Paper } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridRenderCellParams } from '@mui/x-data-grid';
 import _ from 'lodash';
@@ -16,7 +17,7 @@ import { QuestsContext } from './QuestsContextProvider';
 export const Quests = () => {
     const { setActiveDialog } = useContext(DialogContext);
     const packageContext = useContext(PackageContext);
-    const { deleteQuest } = useContext(QuestsContext);
+    const { deleteQuest, setActiveQuest } = useContext(QuestsContext);
     const [questsToDelete, setQuestsToDelete] = useState<QuestSchema[]>([]);
 
     const questSchemas = packageContext?.backendStore?.questSchemas?.data ?? {};
@@ -123,6 +124,14 @@ export const Quests = () => {
                                 width: 80,
                                 getActions: ({ row }) =>
                                     [
+                                        <GridActionsCellItem
+                                            label="Edit"
+                                            icon={<ModeEditIcon />}
+                                            onClick={() => {
+                                                setActiveDialog(Dialogs.QuestDialog);
+                                                setActiveQuest(row)
+                                            }}
+                                        />,
                                         <GridActionsCellItem
                                             label="Delete"
                                             icon={<DeleteIcon />}

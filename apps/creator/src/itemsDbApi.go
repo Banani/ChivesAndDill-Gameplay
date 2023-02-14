@@ -18,6 +18,7 @@ func (m *ItemsDbApi) saveItemTemplate(itemTemplate ItemTemplate) string {
 
 	toSave := bson.D{
 		{"name", itemTemplate.Name},
+		{"description", itemTemplate.Description},
 		{"type", itemTemplate.Type},
 		{"value", itemTemplate.Value},
 		{"stack", itemTemplate.Stack},
@@ -42,6 +43,7 @@ func (m *ItemsDbApi) updateItemTemplate(itemTemplate ItemTemplate) {
 
 	toSave := bson.D{{"$set", bson.D{
 		{"name", itemTemplate.Name},
+		{"description", itemTemplate.Description},
 		{"type", itemTemplate.Type},
 		{"value", itemTemplate.Value},
 		{"stack", itemTemplate.Stack},
@@ -76,20 +78,26 @@ func (m *ItemsDbApi) getItemTemplates() map[string]ItemTemplate {
 	itemTemplatesMap := make(map[string]ItemTemplate)
 	for _, itemTemplate := range itemTemplates {
 		id := itemTemplate["_id"].(primitive.ObjectID).Hex()
+		description := ""
+		if itemTemplate["description"] != nil {
+			description = itemTemplate["description"].(string)
+		}
+
 		itemTemplatesMap[id] = ItemTemplate{
-			Id:       id,
-			Type:     itemTemplate["type"].(string),
-			Name:     itemTemplate["name"].(string),
-			Image:    itemTemplate["image"].(string),
-			Stack:    itemTemplate["stack"].(int32),
-			Value:    itemTemplate["value"].(int32),
-			Slot:     itemTemplate["slot"].(string),
-			Armor:    itemTemplate["armor"].(int32),
-			Stamina:  itemTemplate["stamina"].(int32),
-			Agility:  itemTemplate["agility"].(int32),
-			Intelect: itemTemplate["intelect"].(int32),
-			Strength: itemTemplate["strength"].(int32),
-			Spirit:   itemTemplate["spirit"].(int32),
+			Id:          id,
+			Type:        itemTemplate["type"].(string),
+			Name:        itemTemplate["name"].(string),
+			Description: description,
+			Image:       itemTemplate["image"].(string),
+			Stack:       itemTemplate["stack"].(int32),
+			Value:       itemTemplate["value"].(int32),
+			Slot:        itemTemplate["slot"].(string),
+			Armor:       itemTemplate["armor"].(int32),
+			Stamina:     itemTemplate["stamina"].(int32),
+			Agility:     itemTemplate["agility"].(int32),
+			Intelect:    itemTemplate["intelect"].(int32),
+			Strength:    itemTemplate["strength"].(int32),
+			Spirit:      itemTemplate["spirit"].(int32),
 		}
 	}
 

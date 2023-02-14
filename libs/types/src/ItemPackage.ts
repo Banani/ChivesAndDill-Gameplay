@@ -64,6 +64,7 @@ export interface BaseItemTemplate {
    type: ItemTemplateType;
    id: string;
    name: string;
+   description?: string;
    image: string;
    stack?: number;
    value: number;

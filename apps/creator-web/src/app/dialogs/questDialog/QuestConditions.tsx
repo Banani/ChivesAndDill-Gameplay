@@ -1,3 +1,4 @@
+import { QuestSchema } from "@bananos/types";
 import { TextField } from "@mui/material";
 import _ from "lodash";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -56,7 +57,7 @@ export const QuestConditions = () => {
         />
         <Label>Required quests completed:</Label>
         <AssignmentPanel
-            allItems={questSchemas}
+            allItems={_.pickBy(questSchemas, (questSchema: QuestSchema) => questSchema.id !== activeQuest?.id)}
             allItemsColumnDefinition={columns}
             selectedItems={requiredQuests}
             selectedItemsColumnDefinition={columns}

@@ -9,6 +9,7 @@ interface QuestsContextProps {
     activeQuest: QuestSchema | null;
     setActiveQuest: React.Dispatch<React.SetStateAction<QuestSchema | null>>;
     createQuest: (questSchema: QuestSchema) => void;
+    updateQuest: (questSchema: QuestSchema) => void;
     deleteQuest: (id: string) => void;
 }
 
@@ -22,6 +23,14 @@ export const QuestsContextProvider = ({ children }: any) => {
         },
         [socket]
     );
+
+    const updateQuest = useCallback(
+        (questSchema: QuestSchema) => {
+            socket.send(JSON.stringify({ actionType: ACTIONS.UPDATE_QUEST, questSchema }));
+        },
+        [socket]
+    );
+
     const deleteQuest = useCallback(
         (questId: string) => {
             socket.send(JSON.stringify({ actionType: ACTIONS.DELETE_QUEST, questId }));
@@ -29,5 +38,5 @@ export const QuestsContextProvider = ({ children }: any) => {
         [socket]
     );
 
-    return <QuestsContext.Provider value={{ activeQuest, setActiveQuest, createQuest, deleteQuest }}>{children}</QuestsContext.Provider>;
+    return <QuestsContext.Provider value={{ activeQuest, setActiveQuest, createQuest, deleteQuest, updateQuest }}>{children}</QuestsContext.Provider>;
 };
