@@ -33,10 +33,11 @@ export interface NpcTemplate {
 
 interface NpcContextProps {
     createNpcTemplate: (npcTemplate: NpcTemplate) => void;
+    updateNpcTemplate: (npcTemplate: NpcTemplate) => void;
     deleteNpcTemplate: (npcTemplateId: string) => void;
-    activeNpcTemplate: NpcTemplate;
+    activeNpcTemplate: NpcTemplate | null;
     addNpc: (val: { npcTemplateId: string; x: number; y: number }) => void;
-    setActiveNpcTemplate: React.Dispatch<React.SetStateAction<NpcTemplate>>;
+    setActiveNpcTemplate: React.Dispatch<React.SetStateAction<NpcTemplate | null>>;
     deleteNpc: (npcId: string) => void;
     currentNpcAction: NpcActionsList;
     setCurrentNpcAction: any;
@@ -44,12 +45,19 @@ interface NpcContextProps {
 
 export const NpcContextProvider = ({ children }: any) => {
     const { socket } = useContext(SocketContext);
-    const [activeNpcTemplate, setActiveNpcTemplate] = useState<NpcTemplate>({} as NpcTemplate);
+    const [activeNpcTemplate, setActiveNpcTemplate] = useState<NpcTemplate | null>(null);
     const [currentNpcAction, setCurrentNpcAction] = useState(NpcActionsList.Adding);
 
     const createNpcTemplate = useCallback(
         (npcTemplate: NpcTemplate) => {
             socket.send(JSON.stringify({ actionType: ACTIONS.CREATE_NPC_TEMPLATE, npcTemplate }));
+        },
+        [socket]
+    );
+
+    const updateNpcTemplate = useCallback(
+        (npcTemplate: NpcTemplate) => {
+            socket.send(JSON.stringify({ actionType: ACTIONS.UPDATE_NPC_TEMPLATE, npcTemplate }));
         },
         [socket]
     );
@@ -84,6 +92,7 @@ export const NpcContextProvider = ({ children }: any) => {
                 currentNpcAction,
                 setCurrentNpcAction,
                 createNpcTemplate,
+                updateNpcTemplate,
                 deleteNpcTemplate,
                 deleteNpc,
             }}

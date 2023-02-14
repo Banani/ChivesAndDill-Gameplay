@@ -71,6 +71,20 @@ func (service *NpcTemplateService) serve() {
 			service.application.writter.stream <- prepareUpdatePayload("npcTemplates", map[string]NpcTemplate{npcTemplate.Id: npcTemplate})
 		}
 
+		if action.ActionType == updateNpcTemplate {
+			var updateNpcTemplateAction UpdateNpcTemplateAction
+			json.Unmarshal(action.Body, &updateNpcTemplateAction)
+
+			npcTemplate := updateNpcTemplateAction.NpcTemplate
+
+			api := NpcTemplateDbApi{application: service.application}
+			api.updateNpcTemplate(updateNpcTemplateAction.NpcTemplate)
+
+			service.npcTemplates[npcTemplate.Id] = npcTemplate
+			service.application.writter.stream <- prepareDeletePayload2("npcTemplates", map[string]NpcTemplate{npcTemplate.Id: npcTemplate})
+			service.application.writter.stream <- prepareUpdatePayload("npcTemplates", map[string]NpcTemplate{npcTemplate.Id: npcTemplate})
+		}
+
 		if action.ActionType == deleteNpcTemplate {
 			var deleteNpcTemplateAction DeleteNpcTemplateAction
 			json.Unmarshal(action.Body, &deleteNpcTemplateAction)

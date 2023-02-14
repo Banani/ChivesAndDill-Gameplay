@@ -1,11 +1,12 @@
 import { QuestRewardItem } from "@bananos/types";
 import { TextField } from "@mui/material";
-import { GridRenderCellParams } from "@mui/x-data-grid";
+import { GridRenderCellParams, GridSelectionModel } from "@mui/x-data-grid";
 import _ from "lodash";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { AssignmentPanel } from "../../components/assignmentPanel";
 import { ItemPreview } from "../../components/itemPreview";
 import { PackageContext } from "../../contexts";
+import { DialogContext, Dialogs } from "../../contexts/dialogContext";
 import { QuestsContext } from "../../views/quests/QuestsContextProvider";
 
 export const QuestRewards = () => {
@@ -13,6 +14,14 @@ export const QuestRewards = () => {
     const { activeQuest, setActiveQuest } = useContext(QuestsContext);
     const [rewardItems, setRewardItems] = useState<Record<string, QuestRewardItem>>({});
     const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
+    const { activeDialog } = useContext(DialogContext);
+    const [initSelectionModel, setInitSelectionModel] = useState<GridSelectionModel>([]);
+
+    useEffect(() => {
+        if (activeDialog === Dialogs.QuestDialog && activeQuest !== null) {
+            setInitSelectionModel(_.map(activeQuest.questReward.items, (_, itemId) => itemId))
+        }
+    }, [activeDialog === Dialogs.QuestDialog])
 
     useEffect(() => {
         if (activeQuest) {
@@ -102,5 +111,6 @@ export const QuestRewards = () => {
             idField={'itemTemplateId'}
             updateSelectedItems={setRewardItems}
             getInitialRow={(id) => ({ itemTemplateId: id, amount: 1 })}
+            initSelectionModel={initSelectionModel}
         /></>)
 }

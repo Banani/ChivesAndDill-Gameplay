@@ -1,10 +1,11 @@
 import { QuestSchema } from '@bananos/types';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams, GridSelectionModel } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { AssignmentPanel } from '../../components/assignmentPanel';
 import { ItemPreview } from '../../components/itemPreview';
 import { PackageContext } from '../../contexts';
+import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { NpcContext, NpcTemplate } from '../../views';
 
 
@@ -14,13 +15,21 @@ export const NpcQuests = () => {
     const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
     const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ?? {};
     const [localQuestSchemas, setLocalQuestsSchemas] = useState<Record<string, QuestSchema>>({});
-    const { setActiveNpcTemplate } = useContext(NpcContext);
+    const { activeDialog } = useContext(DialogContext);
+    const { activeNpcTemplate, setActiveNpcTemplate } = useContext(NpcContext);
+    const [initSelectionModel, setInitSelectionModel] = useState<GridSelectionModel>([]);
 
     useEffect(() => {
-        setActiveNpcTemplate((prev: NpcTemplate) => ({
-            ...prev,
+        if (activeDialog === Dialogs.NpcTemplateDialogs && activeNpcTemplate !== null) {
+            setInitSelectionModel(_.map(activeNpcTemplate.quests, (_, questId) => questId))
+        }
+    }, [activeDialog === Dialogs.NpcTemplateDialogs])
+
+    useEffect(() => {
+        setActiveNpcTemplate(prev => ({
+            ...(prev ?? {}),
             quests: _.mapValues(localQuestSchemas, () => true),
-        }));
+        }) as NpcTemplate);
     }, [localQuestSchemas]);
 
     const columns: GridColDef[] = [
@@ -73,6 +82,7 @@ export const NpcQuests = () => {
             selectedItems={localQuestSchemas}
             selectedItemsColumnDefinition={columns}
             updateSelectedItems={setLocalQuestsSchemas}
+            initSelectionModel={initSelectionModel}
         />
     );
 };

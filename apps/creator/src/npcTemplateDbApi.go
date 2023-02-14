@@ -32,6 +32,25 @@ func (m *NpcTemplateDbApi) saveNpcTemplate(npcTemplate NpcTemplate) string {
 	return record.InsertedID.(primitive.ObjectID).Hex()
 }
 
+func (m *NpcTemplateDbApi) updateNpcTemplate(npcTemplate NpcTemplate) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("npcTemplates")
+
+	toSave := bson.D{
+		{"name", npcTemplate.Name},
+		{"healthPoints", npcTemplate.HealthPoints},
+		{"healthPointsRegeneration", npcTemplate.HealthPointsRegeneration},
+		{"spellPower", npcTemplate.SpellPower},
+		{"spellPowerRegeneration", npcTemplate.SpellPowerRegeneration},
+		{"movementSpeed", npcTemplate.MovementSpeed},
+		{"stock", npcTemplate.Stock},
+		{"quests", npcTemplate.Quests},
+	}
+
+	objectId, _ := primitive.ObjectIDFromHex(npcTemplate.Id)
+	collection.UpdateOne(context.TODO(), bson.M{"_id": objectId}, toSave)
+}
+
 func (m *NpcTemplateDbApi) getNpcTemplates() (map[string]NpcTemplate, map[string]Npc) {
 
 	dbClient := m.application.dbClient

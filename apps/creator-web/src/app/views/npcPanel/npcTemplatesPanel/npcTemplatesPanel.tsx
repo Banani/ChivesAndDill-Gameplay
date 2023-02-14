@@ -5,6 +5,7 @@ import { useContext, useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import TextField from '@mui/material/TextField';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -33,7 +34,7 @@ export const NpcTemplatesPanel = () => {
 
     return (
         <div className={styles['control-panel']}>
-            <DeleteConfirmationDialog
+            {<DeleteConfirmationDialog
                 itemsToDelete={npcTemplatesToDelete.map((npcTemplate) => npcTemplate.name)}
                 cancelAction={() => setNpcTemplatesToDelete([])}
                 confirmAction={() => {
@@ -42,7 +43,7 @@ export const NpcTemplatesPanel = () => {
                         setNpcTemplatesToDelete([]);
                     }
                 }}
-            />
+            />}
             <Button variant="outlined" onClick={() => setActiveDialog(Dialogs.NpcTemplateDialogs)}>
                 <AddIcon />
             </Button>
@@ -76,7 +77,7 @@ export const NpcTemplatesPanel = () => {
                                     key={npcTemplate.id}
                                     className={classNames({
                                         [styles['imageHolder']]: true,
-                                        [styles['active']]: activeNpcTemplate.id === npcTemplate.id,
+                                        [styles['active']]: activeNpcTemplate?.id === npcTemplate.id,
                                     })}
                                     onClick={() => setActiveNpcTemplate(npcTemplate)}
                                 >
@@ -87,14 +88,26 @@ export const NpcTemplatesPanel = () => {
                                         {questsAmount > 0 ? <Circle type={CircleType.quest} number={questsAmount} /> : null}
                                         {stockSize > 0 ? <Circle type={CircleType.item} number={stockSize} /> : null}
                                     </CircleBox>
-                                    <div
-                                        className={styles['delete-icon']}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setNpcTemplatesToDelete([npcTemplate]);
-                                        }}
-                                    >
-                                        <DeleteForeverIcon />
+                                    <div className={styles['action-holder']}>
+                                        <div
+                                            className={styles['action-icon']}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setNpcTemplatesToDelete([npcTemplate]);
+                                            }}
+                                        >
+                                            <DeleteForeverIcon />
+                                        </div>
+                                        <div
+                                            className={styles['action-icon']}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setActiveNpcTemplate(npcTemplate)
+                                                setActiveDialog(Dialogs.NpcTemplateDialogs)
+                                            }}
+                                        >
+                                            <ModeEditIcon />
+                                        </div>
                                     </div>
                                 </div>
                             )

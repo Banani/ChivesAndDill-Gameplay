@@ -37,20 +37,29 @@
         padding-left: 4px;
     }
 
-    .delete-icon {
-        cursor: pointer;
+    .action-holder {
         position: absolute;
         top: 0;
         right: 0;
-        background-color: #000000b0;
-        height: 24px;
-        border-radius: 2px;
-        color: #ddd;
 
-        &:hover {
-            color: #eee;
+        .action-icon {
+            cursor: pointer;
+            background-color: #000000b0;
+            height: 24px;
+            border-radius: 2px;
+            color: #ddd;
+
+            &:hover {
+                color: #eee;
+            }
+        }
+
+        *+* {
+            margin-top: 2px;
         }
     }
+
+
 }
 
 .list-wrapper {

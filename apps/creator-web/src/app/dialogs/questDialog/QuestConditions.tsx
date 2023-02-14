@@ -1,10 +1,12 @@
 import { QuestSchema } from "@bananos/types";
 import { TextField } from "@mui/material";
+import { GridSelectionModel } from "@mui/x-data-grid";
 import _ from "lodash";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Label } from "../../components";
 import { AssignmentPanel } from "../../components/assignmentPanel";
 import { PackageContext } from "../../contexts";
+import { DialogContext, Dialogs } from "../../contexts/dialogContext";
 import { QuestsContext } from "../../views/quests/QuestsContextProvider";
 
 
@@ -13,6 +15,14 @@ export const QuestConditions = () => {
     const { activeQuest, setActiveQuest } = useContext(QuestsContext);
     const [requiredQuests, setRequiredQuests] = useState<Record<string, string>>({});
     const questSchemas = packageContext?.backendStore?.questSchemas?.data ?? {};
+    const { activeDialog } = useContext(DialogContext);
+    const [initSelectionModel, setInitSelectionModel] = useState<GridSelectionModel>([]);
+
+    useEffect(() => {
+        if (activeDialog === Dialogs.QuestDialog && activeQuest !== null) {
+            setInitSelectionModel(_.map(activeQuest.requiredQuests, (_, questId) => questId))
+        }
+    }, [activeDialog === Dialogs.QuestDialog])
 
     useEffect(() => {
         if (activeQuest) {
@@ -62,5 +72,6 @@ export const QuestConditions = () => {
             selectedItems={requiredQuests}
             selectedItemsColumnDefinition={columns}
             updateSelectedItems={setRequiredQuests}
+            initSelectionModel={initSelectionModel}
         /></>)
 }

@@ -34,7 +34,7 @@ const DefaultNpcTemplate = {
 
 export const NpcTemplateDialog = () => {
     const { activeDialog, setActiveDialog } = useContext(DialogContext);
-    const { createNpcTemplate, setActiveNpcTemplate, activeNpcTemplate } = useContext(NpcContext);
+    const { createNpcTemplate, setActiveNpcTemplate, activeNpcTemplate, updateNpcTemplate } = useContext(NpcContext);
 
     const [activeTab, setActiveTab] = useState<NpcTemplateDialogTabs>(NpcTemplateDialogTabs.Default);
 
@@ -43,17 +43,44 @@ export const NpcTemplateDialog = () => {
     };
 
     useEffect(() => {
-        if (activeDialog === Dialogs.NpcTemplateDialogs) {
+        if (activeDialog === Dialogs.NpcTemplateDialogs && !activeNpcTemplate?.id) {
             setActiveNpcTemplate(Object.assign({}, DefaultNpcTemplate));
         }
-    }, [activeDialog === Dialogs.NpcTemplateDialogs]);
+    }, [activeDialog === Dialogs.NpcTemplateDialogs, activeNpcTemplate?.id]);
+
+    useEffect(() => {
+        if (activeDialog !== Dialogs.NpcTemplateDialogs) {
+            setActiveNpcTemplate(null);
+        }
+    }, [activeDialog !== Dialogs.NpcTemplateDialogs]);
 
     const changeValue = useCallback(
         (prop: string, value: string | number) => {
+            if (!activeNpcTemplate) {
+                return;
+            }
+
             setActiveNpcTemplate({ ...activeNpcTemplate, [prop]: value });
         },
         [activeNpcTemplate]
     );
+
+    const confirmAction = useCallback(() => {
+        if (!activeNpcTemplate) {
+            return;
+        }
+
+        if (activeNpcTemplate.id) {
+            updateNpcTemplate(activeNpcTemplate);
+        } else {
+            createNpcTemplate(activeNpcTemplate);
+        }
+        setActiveDialog(null);
+    }, [activeNpcTemplate]);
+
+    if (!activeNpcTemplate) {
+        return null;
+    }
 
     return (
         <Dialog open={activeDialog === Dialogs.NpcTemplateDialogs} onClose={() => setActiveDialog(null)} maxWidth="xl">
@@ -131,18 +158,15 @@ export const NpcTemplateDialog = () => {
             </DialogContent>
             <DialogActions>
                 <Button
-                    onClick={() => {
-                        setActiveDialog(null);
-                        createNpcTemplate(activeNpcTemplate);
-                    }}
+                    onClick={confirmAction}
                     variant="contained"
                 >
-                    Create
+                    {activeNpcTemplate.id ? 'Update' : 'Create'}
                 </Button>
                 <Button onClick={() => setActiveDialog(null)} variant="outlined">
                     Cancel
                 </Button>
             </DialogActions>
-        </Dialog>
+        </Dialog >
     );
 };

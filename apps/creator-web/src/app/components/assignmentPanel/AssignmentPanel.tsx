@@ -16,6 +16,7 @@ interface AssignmentPanelProps {
     updateSelectedItems: React.Dispatch<React.SetStateAction<any>>;
     getInitialRow?: (selectedId: string) => any;
     idField?: string;
+    initSelectionModel?: GridSelectionModel;
 }
 
 export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
@@ -27,7 +28,8 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
     mapItemForSave,
     getInitialRow,
     updateSelectedItems,
-    idField
+    idField,
+    initSelectionModel
 }) => {
     const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
 
@@ -49,6 +51,12 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
         updateSelectedItems(currentItemsReward)
 
     }, [selectionModel])
+
+    useEffect(() => {
+        if (initSelectionModel) {
+            setSelectionModel(initSelectionModel)
+        }
+    }, [initSelectionModel]);
 
     const selectedColumns: GridColumns = useMemo(
         () => selectedItemsColumnDefinition.concat([
