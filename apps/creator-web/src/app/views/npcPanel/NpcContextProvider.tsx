@@ -41,6 +41,7 @@ interface NpcContextProps {
     addNpc: (val: { npcTemplateId: string; x: number; y: number }) => void;
     setActiveNpcTemplate: React.Dispatch<React.SetStateAction<NpcTemplate | null>>;
     deleteNpc: (npcId: string) => void;
+    updateNpc: (npc: any) => void;
     currentNpcAction: NpcActionsList;
     setCurrentNpcAction: any;
     highlightedNpcId: string | null;
@@ -105,6 +106,13 @@ export const NpcContextProvider = ({ children }: any) => {
         [socket]
     );
 
+    const updateNpc = useCallback(
+        (npc: any) => {
+            socket.send(JSON.stringify({ actionType: ACTIONS.UPDATE_NPC, npc }));
+        },
+        [socket]
+    );
+
     return (
         <NpcContext.Provider
             value={{
@@ -117,6 +125,7 @@ export const NpcContextProvider = ({ children }: any) => {
                 updateNpcTemplate,
                 deleteNpcTemplate,
                 deleteNpc,
+                updateNpc,
                 highlightedNpcId,
                 setHighlightedNpcId
             }}

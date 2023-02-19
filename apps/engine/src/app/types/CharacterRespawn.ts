@@ -1,9 +1,9 @@
 import type { Location } from '@bananos/types';
 
 export enum WalkingType {
-   None,
-   Stroll,
-   Patrol,
+   None = "None",
+   Stroll = "Stroll",
+   Patrol = "Patrol",
 }
 
 export interface CharacterRespawn<T> {

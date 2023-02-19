@@ -7,6 +7,7 @@ const (
 	updateNpcTemplate  = "UPDATE_NPC_TEMPLATE"
 	deleteNpcTemplate  = "DELETE_NPC_TEMPLATE"
 	addNpc             = "ADD_NPC"
+	updateNpc          = "UPDATE_NPC"
 	deleteNpc          = "DELETE_NPC"
 	createItemTemplate = "CREATE_ITEM_TEMPLATE"
 	deleteItemTemplate = "DELETE_ITEM_TEMPLATE"
@@ -54,6 +55,11 @@ type AddNpcAction struct {
 	X             int    `json:"x"`
 	Y             int    `json:"y"`
 	NpcTemplateId string `json:"npcTemplateId"`
+}
+
+type UpdateNpcAction struct {
+	ActionType string `json:"actionType"`
+	Npc        Npc    `json:"npc"`
 }
 
 type DeleteNpcAction struct {

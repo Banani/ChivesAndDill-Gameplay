@@ -10,7 +10,19 @@
     }
 
     .npc-edit-panel {
+        display: flex;
         flex: 1;
         margin-top: 10px;
+        flex-direction: column;
+        padding: 8px;
+
+        .form-holder {
+            flex: 1;
+        }
+
+        .button-holder {
+            display: flex;
+            justify-content: flex-end;
+        }
     }
 }

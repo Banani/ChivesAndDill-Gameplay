@@ -36,7 +36,7 @@ func (m *NpcTemplateDbApi) saveNpcTemplate(npcTemplate NpcTemplate) string {
 func (m *NpcTemplateDbApi) updateNpcTemplate(npcTemplate NpcTemplate) {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("npcTemplates")
-	
+
 	toSave := bson.D{{"$set", bson.D{
 		{"name", npcTemplate.Name},
 		{"healthPoints", npcTemplate.HealthPoints},
@@ -167,6 +167,24 @@ func (m *NpcTemplateDbApi) addNpc(npc Npc) string {
 	collection.UpdateOne(context.TODO(), filter, toSave)
 
 	return "test" //record.InsertedID.(primitive.ObjectID).String()
+}
+
+func (m *NpcTemplateDbApi) updateNpc(npc Npc) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("npcTemplates")
+
+	objectId, _ := primitive.ObjectIDFromHex(npc.NpcTemplateId)
+	collection.UpdateMany(context.TODO(),
+		bson.M{
+			"_id":             objectId,
+			"npcRespawns._id": npc.Id,
+		},
+		bson.M{
+			"$set": bson.M{
+				"npcRespawns.$.time":        npc.Time,
+				"npcRespawns.$.walkingType": npc.WalkingType,
+			},
+		})
 }
 
 func (m *NpcTemplateDbApi) deleteNpc(npcId string) {

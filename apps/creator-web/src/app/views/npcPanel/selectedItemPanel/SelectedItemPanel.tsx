@@ -1,6 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
-import { TextField } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridRenderCellParams } from "@mui/x-data-grid";
 import _ from 'lodash';
 import { useContext, useState } from "react";
@@ -10,9 +10,16 @@ import { MapContext } from '../../components';
 import { NpcContext } from "../NpcContextProvider";
 import styles from "./SelectedItemPanel.module.scss";
 
+// TODO: Przeniesc do bananos
+export enum WalkingType {
+    None = "None",
+    Stroll = "Stroll",
+    Patrol = "Patrol",
+}
+
 export const SelectedItemPanel = () => {
     const packageContext = useContext(PackageContext);
-    const { activeNpcTemplate, setHighlightedNpcId, deleteNpc } = useContext(NpcContext);
+    const { activeNpcTemplate, setHighlightedNpcId, deleteNpc, updateNpc } = useContext(NpcContext);
     const { centerAt } = useContext(MapContext);
     // NPC type
     const [activeNpc, setActiveNpc] = useState<null | any>(null);
@@ -50,7 +57,7 @@ export const SelectedItemPanel = () => {
                 }, {
                     field: 'walkingType',
                     headerName: 'Walking type',
-                    flex: 1
+                    flex: 1,
                 }, {
                     field: 'time',
                     headerName: 'Respawn time (in miliseconds)',
@@ -82,20 +89,41 @@ export const SelectedItemPanel = () => {
         </div>
         <div className={styles['npc-edit-panel']}>
             {activeNpc ? <>
-                <TextField
-                    value={activeNpc.time}
-                    onChange={(e) => {
-                        setActiveNpc({
+                <div className={styles['form-holder']}>
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel id="walkingType">Walking type</InputLabel>
+                        <Select labelId="walkingType" value={activeNpc.walkingType} label="Slot" onChange={(e) => setActiveNpc({
                             ...activeNpc,
-                            time: parseInt(e.target.value)
-                        })
-                    }}
-                    margin="dense"
-                    label="Respawn time"
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                />
+                            walkingType: e.target.value
+                        })}>
+                            {Object.values(WalkingType).map((key) => (
+                                <MenuItem key={key} value={key}>
+                                    {key}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        value={activeNpc.time}
+                        onChange={(e) => {
+                            setActiveNpc({
+                                ...activeNpc,
+                                time: parseInt(e.target.value)
+                            })
+                        }}
+                        margin="dense"
+                        label="Respawn time"
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                    />
+                </div>
+                <div className={styles['button-holder']}>
+                    <Button variant="contained" onClick={() => {
+                        updateNpc(activeNpc);
+                        setActiveNpc(null);
+                    }}>Update</Button>
+                </div>
             </> : null}
         </div>
     </div>
