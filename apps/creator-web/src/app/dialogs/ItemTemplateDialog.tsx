@@ -97,7 +97,7 @@ export const ItemTemplateDialog = () => {
                 />
                 <TextField
                     value={itemTemplate.value}
-                    onChange={(e) => changeValue('stack', parseInt(e.target.value))}
+                    onChange={(e) => changeValue('value', parseInt(e.target.value))}
                     margin="dense"
                     label="Value in coppers"
                     fullWidth

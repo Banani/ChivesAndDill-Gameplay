@@ -1,0 +1,16 @@
+.panel {
+    flex: 1;
+    box-shadow: -1px -2px 3px #999;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+    .npc-instances-list {
+        flex: 1;
+    }
+
+    .npc-edit-panel {
+        flex: 1;
+        margin-top: 10px;
+    }
+}

@@ -1,13 +1,13 @@
 .app-view {
     display: flex;
-    flex:1;
+    flex: 1;
 
     .control-panel {
         flex: 1;
         box-shadow: 1px 2px 3px #999;
         padding: 10px;
     }
-    
+
     .map-editor {
         flex: 5;
         margin: 20px;
@@ -23,4 +23,9 @@
     .image {
         width: calc(384px * 3);
     }
+}
+
+.list-wrapper {
+    margin-top: 10px;
+    flex: 1;
 }

@@ -15,6 +15,17 @@ type NpcTemplate struct {
 	MovementSpeed            int32           `json:"movementSpeed"`
 	Stock                    map[string]bool `json:"stock"`
 	Quests                   map[string]bool `json:"quests"`
+	QuotesEvents             QuoteEvent      `json:"quotesEvents"`
+}
+
+type QuoteEvent struct {
+	Standard QuoteHandler `json:"standard"`
+	OnDying  QuoteHandler `json:"onDying"`
+}
+
+type QuoteHandler struct {
+	Chance int32    `json:"chance"`
+	Quotes []string `json:"quotes"`
 }
 
 type Location struct {
@@ -123,6 +134,26 @@ func (service *NpcTemplateService) serve() {
 			}
 
 			// Polaczyc to w jeden payload
+			service.application.writter.stream <- prepareDeletePayload2("npcTemplates", npcTemplates)
+			service.application.writter.stream <- prepareUpdatePayload("npcTemplates", npcTemplates)
+		}
+
+		if action.ActionType == deleteItemTemplate {
+			var deleteItemTemplateAction DeleteItemTemplateAction
+			json.Unmarshal(action.Body, &deleteItemTemplateAction)
+
+			api := NpcTemplateDbApi{application: service.application}
+			api.removeItemFromNpc(deleteItemTemplateAction.ItemTemplateId)
+
+			npcTemplates := make(map[string]NpcTemplate)
+
+			for npcTemplateId, npcTemplate := range service.npcTemplates {
+				if _, ok := npcTemplate.Stock[deleteItemTemplateAction.ItemTemplateId]; ok {
+					delete(npcTemplate.Stock, deleteItemTemplateAction.ItemTemplateId)
+					npcTemplates[npcTemplateId] = npcTemplate
+				}
+			}
+
 			service.application.writter.stream <- prepareDeletePayload2("npcTemplates", npcTemplates)
 			service.application.writter.stream <- prepareUpdatePayload("npcTemplates", npcTemplates)
 		}

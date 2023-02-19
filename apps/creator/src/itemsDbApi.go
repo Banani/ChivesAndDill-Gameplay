@@ -107,10 +107,7 @@ func (m *ItemsDbApi) getItemTemplates() map[string]ItemTemplate {
 func (m *ItemsDbApi) deleteItemTemplate(itemTemplateId string) {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("itemTemplates")
-	npcCollection := dbClient.db.Collection("npcTemplates")
 
 	objectId, _ := primitive.ObjectIDFromHex(itemTemplateId)
 	collection.DeleteMany(context.TODO(), bson.M{"_id": bson.M{"$in": []primitive.ObjectID{objectId}}})
-	// BUG, update idzie tylko na baze
-	npcCollection.UpdateMany(context.TODO(), bson.M{}, bson.M{"$unset": bson.M{"stock." + itemTemplateId: ""}})
 }

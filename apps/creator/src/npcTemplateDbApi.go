@@ -25,6 +25,7 @@ func (m *NpcTemplateDbApi) saveNpcTemplate(npcTemplate NpcTemplate) string {
 		{"movementSpeed", npcTemplate.MovementSpeed},
 		{"stock", npcTemplate.Stock},
 		{"quests", npcTemplate.Quests},
+		{"quotesEvents", npcTemplate.QuotesEvents},
 	}
 
 	record, _ := collection.InsertOne(context.TODO(), toSave)
@@ -35,8 +36,8 @@ func (m *NpcTemplateDbApi) saveNpcTemplate(npcTemplate NpcTemplate) string {
 func (m *NpcTemplateDbApi) updateNpcTemplate(npcTemplate NpcTemplate) {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("npcTemplates")
-
-	toSave := bson.D{
+	
+	toSave := bson.D{{"$set", bson.D{
 		{"name", npcTemplate.Name},
 		{"healthPoints", npcTemplate.HealthPoints},
 		{"healthPointsRegeneration", npcTemplate.HealthPointsRegeneration},
@@ -45,7 +46,8 @@ func (m *NpcTemplateDbApi) updateNpcTemplate(npcTemplate NpcTemplate) {
 		{"movementSpeed", npcTemplate.MovementSpeed},
 		{"stock", npcTemplate.Stock},
 		{"quests", npcTemplate.Quests},
-	}
+		{"quotesEvents", npcTemplate.QuotesEvents},
+	}}}
 
 	objectId, _ := primitive.ObjectIDFromHex(npcTemplate.Id)
 	collection.UpdateOne(context.TODO(), bson.M{"_id": objectId}, toSave)
@@ -137,6 +139,13 @@ func (m *NpcTemplateDbApi) removeQuestFromNpc(questId string) {
 	collection := dbClient.db.Collection("npcTemplates")
 
 	collection.UpdateMany(context.TODO(), bson.M{}, bson.M{"$unset": bson.M{"quests." + questId: ""}})
+}
+
+func (m *NpcTemplateDbApi) removeItemFromNpc(itemId string) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("npcTemplates")
+
+	collection.UpdateMany(context.TODO(), bson.M{}, bson.M{"$unset": bson.M{"stock." + itemId: ""}})
 }
 
 func (m *NpcTemplateDbApi) addNpc(npc Npc) string {

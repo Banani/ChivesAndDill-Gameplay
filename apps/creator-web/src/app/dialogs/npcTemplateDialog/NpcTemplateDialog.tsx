@@ -10,6 +10,7 @@ import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { NpcContext } from '../../views/npcPanel/NpcContextProvider';
 import { ItemStock } from './ItemStock';
 import { NpcQuests } from './NpcQuests';
+import { NpcQuotes } from './NpcQuotes';
 
 import styles from './NpcTemplateDialog.module.scss';
 
@@ -17,6 +18,7 @@ enum NpcTemplateDialogTabs {
     Default = 'Default',
     Stock = 'Stock',
     Quests = 'Quests',
+    Quotes = "Quotes"
 }
 
 const DefaultNpcTemplate = {
@@ -29,7 +31,11 @@ const DefaultNpcTemplate = {
     movementSpeed: 8,
     stock: {},
     quests: {},
-    npcRespawns: []
+    npcRespawns: [],
+    quotesEvents: {
+        standard: { chance: 1, quotes: [""] },
+        onDying: { chance: 1, quotes: [""] }
+    }
 };
 
 export const NpcTemplateDialog = () => {
@@ -91,6 +97,7 @@ export const NpcTemplateDialog = () => {
                         <Tab label="Details" aria-controls={NpcTemplateDialogTabs.Default} value={NpcTemplateDialogTabs.Default} />
                         <Tab label="Stock" aria-controls={NpcTemplateDialogTabs.Stock} value={NpcTemplateDialogTabs.Stock} />
                         <Tab label="Quests" aria-controls={NpcTemplateDialogTabs.Quests} value={NpcTemplateDialogTabs.Quests} />
+                        <Tab label="Quotes" aria-controls={NpcTemplateDialogTabs.Quotes} value={NpcTemplateDialogTabs.Quotes} />
                     </Tabs>
                 </Box>
 
@@ -105,7 +112,7 @@ export const NpcTemplateDialog = () => {
                     />
                     <TextField
                         value={activeNpcTemplate.healthPoints}
-                        onChange={(e) => changeValue('healthPoints', e.target.value)}
+                        onChange={(e) => changeValue('healthPoints', parseInt(e.target.value))}
                         margin="dense"
                         label="Health Points"
                         fullWidth
@@ -114,7 +121,7 @@ export const NpcTemplateDialog = () => {
                     />
                     <TextField
                         value={activeNpcTemplate.healthPointsRegeneration}
-                        onChange={(e) => changeValue('healthPointsRegeneration', e.target.value)}
+                        onChange={(e) => changeValue('healthPointsRegeneration', parseInt(e.target.value))}
                         margin="dense"
                         label="Health Points Regeneration"
                         fullWidth
@@ -123,7 +130,7 @@ export const NpcTemplateDialog = () => {
                     />
                     <TextField
                         value={activeNpcTemplate.spellPower}
-                        onChange={(e) => changeValue('spellPower', e.target.value)}
+                        onChange={(e) => changeValue('spellPower', parseInt(e.target.value))}
                         margin="dense"
                         label="Spell Power"
                         fullWidth
@@ -132,7 +139,7 @@ export const NpcTemplateDialog = () => {
                     />
                     <TextField
                         value={activeNpcTemplate.spellPowerRegeneration}
-                        onChange={(e) => changeValue('spellPowerRegeneration', e.target.value)}
+                        onChange={(e) => changeValue('spellPowerRegeneration', parseInt(e.target.value))}
                         margin="dense"
                         label="Spell Power Regeneration"
                         fullWidth
@@ -141,7 +148,7 @@ export const NpcTemplateDialog = () => {
                     />
                     <TextField
                         value={activeNpcTemplate.movementSpeed}
-                        onChange={(e) => changeValue('movementSpeed', e.target.value)}
+                        onChange={(e) => changeValue('movementSpeed', parseInt(e.target.value))}
                         margin="dense"
                         label="Movement Speed"
                         fullWidth
@@ -154,6 +161,9 @@ export const NpcTemplateDialog = () => {
                 </div>
                 <div role="tabpanel" hidden={activeTab !== NpcTemplateDialogTabs.Quests} aria-labelledby={NpcTemplateDialogTabs.Quests}>
                     <NpcQuests />
+                </div>
+                <div role="tabpanel" hidden={activeTab !== NpcTemplateDialogTabs.Quotes} aria-labelledby={NpcTemplateDialogTabs.Quotes}>
+                    <NpcQuotes quoteEvents={activeNpcTemplate.quotesEvents ?? {}} updateQuoteEvents={quoteEvents => setActiveNpcTemplate({ ...activeNpcTemplate, quotesEvents: quoteEvents })} />
                 </div>
             </DialogContent>
             <DialogActions>

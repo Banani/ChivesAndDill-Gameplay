@@ -1,6 +1,7 @@
-import React, { useCallback, useContext, useState } from 'react';
+import { QuotesEvents } from '@bananos/types';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { ACTIONS } from '../../actions';
-import { SocketContext } from '../../contexts';
+import { PackageContext, SocketContext } from '../../contexts';
 
 export const NpcContext = React.createContext<NpcContextProps>({} as NpcContextProps);
 
@@ -29,6 +30,7 @@ export interface NpcTemplate {
     stock: Record<string, boolean>;
     quests: Record<string, boolean>;
     npcRespawns: CharacterRespawn[];
+    quotesEvents?: QuotesEvents;
 }
 
 interface NpcContextProps {
@@ -41,15 +43,35 @@ interface NpcContextProps {
     deleteNpc: (npcId: string) => void;
     currentNpcAction: NpcActionsList;
     setCurrentNpcAction: any;
+    highlightedNpcId: string | null;
+    setHighlightedNpcId: (id: string | null) => void;
 }
 
 export const NpcContextProvider = ({ children }: any) => {
     const { socket } = useContext(SocketContext);
+    const packageContext = useContext(PackageContext);
     const [activeNpcTemplate, setActiveNpcTemplate] = useState<NpcTemplate | null>(null);
     const [currentNpcAction, setCurrentNpcAction] = useState(NpcActionsList.Adding);
+    const [highlightedNpcId, setHighlightedNpcId] = useState<string | null>(null);
+
+    const npcs = packageContext.backendStore.npcs?.data ?? {};
+    const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ?? {};
+
+    useEffect(() => {
+        if (highlightedNpcId && !npcs[highlightedNpcId]) {
+            setHighlightedNpcId(null);
+        }
+    }, [highlightedNpcId, npcs]);
+
+    useEffect(() => {
+        if (activeNpcTemplate && activeNpcTemplate.id && !npcTemplates[activeNpcTemplate.id]) {
+            setActiveNpcTemplate(null);
+        }
+    }, [activeNpcTemplate, npcs]);
 
     const createNpcTemplate = useCallback(
         (npcTemplate: NpcTemplate) => {
+            console.log(npcTemplate);
             socket.send(JSON.stringify({ actionType: ACTIONS.CREATE_NPC_TEMPLATE, npcTemplate }));
         },
         [socket]
@@ -95,6 +117,8 @@ export const NpcContextProvider = ({ children }: any) => {
                 updateNpcTemplate,
                 deleteNpcTemplate,
                 deleteNpc,
+                highlightedNpcId,
+                setHighlightedNpcId
             }}
         >
             {children}

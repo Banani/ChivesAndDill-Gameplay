@@ -7,68 +7,7 @@
     flex-direction: column;
 }
 
-.imageHolder {
-    width: calc(130px + 12px);
-    height: calc(130px + 12px);
-    overflow: hidden;
-    box-sizing: border-box;
-    border: 6px solid #CCC;
-    position: relative;
-
-    .image {
-        width: 130px;
-    }
-
-    &.active {
-        border: 6px solid #1976d2;
-    }
-
-    .bar {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 24px;
-        background-color: #000000b0;
-        color: #ddd;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        padding-left: 4px;
-    }
-
-    .action-holder {
-        position: absolute;
-        top: 0;
-        right: 0;
-
-        .action-icon {
-            cursor: pointer;
-            background-color: #000000b0;
-            height: 24px;
-            border-radius: 2px;
-            color: #ddd;
-
-            &:hover {
-                color: #eee;
-            }
-        }
-
-        *+* {
-            margin-top: 2px;
-        }
-    }
-
-
-}
-
 .list-wrapper {
     margin-top: 10px;
     flex: 1;
-
-    .list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
 }

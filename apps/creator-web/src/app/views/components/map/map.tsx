@@ -28,7 +28,7 @@ interface MapProps {
 
 export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, children }) => {
     const packageContext = useContext(PackageContext);
-    const { setIsMouseDown, setMousePosition, setLastMouseDownPosition, setPreviousTranslation, texturesMap, setTexturesMap, translation } =
+    const { setIsMouseDown, setMousePosition, setLastMouseDownPosition, setPreviousTranslation, texturesMap, setTexturesMap, translation, setMapSize } =
         useContext(MapContext);
     const [stage, setStage] = useState<null | HTMLDivElement>(null);
 
@@ -101,6 +101,12 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
             mapActionStates[state].onMouseLeave?.(e);
         }
     }, []);
+
+    useEffect(() => {
+        if (stage) {
+            setMapSize({ width: stage?.clientWidth, height: stage?.clientHeight })
+        }
+    }, [stage?.clientWidth, stage?.clientHeight]);
 
     if (!Object.keys(texturesMap).length || !packageContext?.backendStore?.map || !packageContext.backendStore.npcs) {
         return <></>;

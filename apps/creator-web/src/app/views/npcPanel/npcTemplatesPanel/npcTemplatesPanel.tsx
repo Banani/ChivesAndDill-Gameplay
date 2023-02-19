@@ -1,15 +1,14 @@
 import { Button } from '@mui/material';
-import { map } from 'lodash';
 import { useContext, useState } from 'react';
 
 
+import { QuoteHandler } from '@bananos/types';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import TextField from '@mui/material/TextField';
-import classNames from 'classnames';
 import _ from 'lodash';
-import { Circle, CircleBox, CircleType } from '../../../components';
+import { Circle, CircleType, ImageList } from '../../../components';
 import { PackageContext } from '../../../contexts';
 import { DialogContext, Dialogs } from '../../../contexts/dialogContext';
 import { DeleteConfirmationDialog } from '../../../dialogs';
@@ -44,7 +43,10 @@ export const NpcTemplatesPanel = () => {
                     }
                 }}
             />}
-            <Button variant="outlined" onClick={() => setActiveDialog(Dialogs.NpcTemplateDialogs)}>
+            <Button variant="outlined" onClick={() => {
+                setActiveNpcTemplate(null);
+                setActiveDialog(Dialogs.NpcTemplateDialogs)
+            }}>
                 <AddIcon />
             </Button>
 
@@ -62,58 +64,40 @@ export const NpcTemplatesPanel = () => {
             />
 
             <div className={styles['list-wrapper']}>
-                <div className={styles['list']}>
-                    {map(
-                        Object.values<NpcTemplate>(npcTemplates)
-                            .filter((npcTemplate: NpcTemplate) => npcTemplate.name?.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1)
-                            .slice(paginationRange.start, paginationRange.end),
-                        (npcTemplate: NpcTemplate) => {
+                <ImageList activeId={activeNpcTemplate?.id ?? ""} items={
+                    Object.values<NpcTemplate>(npcTemplates)
+                        .filter((npcTemplate: NpcTemplate) => npcTemplate.name?.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1)
+                        .slice(paginationRange.start, paginationRange.end).map(npcTemplate => {
                             const stockSize = Object.keys(npcTemplate.stock).length;
                             const questsAmount = Object.keys(npcTemplate.quests).length;
                             const respawnsAmount = _.filter(npcs, npc => npc.npcTemplateId === npcTemplate.id).length;
+                            const quotesAmount = _.chain(npcTemplate.quotesEvents ?? {}).map((event: QuoteHandler) => (event.quotes ?? []).length).sum().value();
 
-                            return (
-                                <div
-                                    key={npcTemplate.id}
-                                    className={classNames({
-                                        [styles['imageHolder']]: true,
-                                        [styles['active']]: activeNpcTemplate?.id === npcTemplate.id,
-                                    })}
-                                    onClick={() => setActiveNpcTemplate(npcTemplate)}
-                                >
-                                    <img className={styles['image']} src={'assets/citizen.png'} />
-                                    <div className={styles['bar']}>{npcTemplate.name}</div>
-                                    <CircleBox>
-                                        {respawnsAmount > 0 ? <Circle type={CircleType.npc} number={respawnsAmount} /> : null}
-                                        {questsAmount > 0 ? <Circle type={CircleType.quest} number={questsAmount} /> : null}
-                                        {stockSize > 0 ? <Circle type={CircleType.item} number={stockSize} /> : null}
-                                    </CircleBox>
-                                    <div className={styles['action-holder']}>
-                                        <div
-                                            className={styles['action-icon']}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setNpcTemplatesToDelete([npcTemplate]);
-                                            }}
-                                        >
-                                            <DeleteForeverIcon />
-                                        </div>
-                                        <div
-                                            className={styles['action-icon']}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setActiveNpcTemplate(npcTemplate)
-                                                setActiveDialog(Dialogs.NpcTemplateDialogs)
-                                            }}
-                                        >
-                                            <ModeEditIcon />
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        }
-                    )}
-                </div>
+                            return {
+                                id: npcTemplate.id,
+                                name: npcTemplate.name,
+                                path: 'assets/citizen.png',
+                                circles: <>
+                                    {respawnsAmount > 0 ? <Circle type={CircleType.npc} number={respawnsAmount} /> : null}
+                                    {questsAmount > 0 ? <Circle type={CircleType.quest} number={questsAmount} /> : null}
+                                    {stockSize > 0 ? <Circle type={CircleType.item} number={stockSize} /> : null}
+                                    {quotesAmount > 0 ? <Circle type={CircleType.quote} number={quotesAmount} /> : null}
+                                </>,
+                                onClick: () => setActiveNpcTemplate(npcTemplate),
+                                actions: [{
+                                    onClick: (npcTemplate) => setNpcTemplatesToDelete([npcTemplate]),
+                                    icon: <DeleteForeverIcon />
+                                }, {
+                                    onClick: () => {
+                                        setActiveNpcTemplate(npcTemplate)
+                                        setActiveDialog(Dialogs.NpcTemplateDialogs)
+                                    },
+                                    icon: <ModeEditIcon />
+                                },]
+                            }
+                        })
+                }
+                />
             </div>
             <Pagination pageSize={14} itemsAmount={Object.values(npcTemplates).length} setRange={setPaginationRange} reset={paginationReset} />
         </div>
