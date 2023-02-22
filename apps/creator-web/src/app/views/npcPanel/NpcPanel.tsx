@@ -58,7 +58,7 @@ export const NpcPanel = () => {
         x: Math.floor(((mousePosition?.x ?? 0) - translation.x) / 32),
         y: Math.floor(((mousePosition?.y ?? 0) - translation.y) / 32),
     };
-    console.log(121221)
+
     return (
         <>
             <div className={styles['app-view']}>

@@ -1,4 +1,1 @@
-export * from './NpcQuests';
-export * from './NpcQuotes';
-export * from './NpcTemplateDialog';
-
+export * from "./NpcTemplateDialog";

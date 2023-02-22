@@ -43,8 +43,9 @@ export const ImageList: FunctionComponent<ImageListProps> = ({ items, activeId, 
                     {item.circles}
                 </CircleBox>
                 <div className={styles['action-holder']}>
-                    {_.map(item.actions, action => (
+                    {_.map(item.actions, (action, key) => (
                         <div
+                            key={key}
                             className={styles['action-icon']}
                             onClick={(e) => { e.stopPropagation(); action.onClick(item) }}
                         >

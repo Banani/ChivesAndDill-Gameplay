@@ -72,7 +72,6 @@ export const NpcContextProvider = ({ children }: any) => {
 
     const createNpcTemplate = useCallback(
         (npcTemplate: NpcTemplate) => {
-            console.log(npcTemplate);
             socket.send(JSON.stringify({ actionType: ACTIONS.CREATE_NPC_TEMPLATE, npcTemplate }));
         },
         [socket]

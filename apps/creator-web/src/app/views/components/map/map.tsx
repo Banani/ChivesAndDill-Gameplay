@@ -2,7 +2,7 @@ import { Container, Stage } from '@inlet/react-pixi';
 import _, { throttle } from 'lodash';
 import * as PIXI from 'pixi.js';
 import { Texture } from 'pixi.js';
-import { FunctionComponent, useCallback, useContext, useEffect, useState } from 'react';
+import React, { FunctionComponent, useCallback, useContext, useEffect, useState } from 'react';
 import { BLOCK_SIZE } from '../../../consts';
 import { PackageContext } from '../../../contexts/packageContext';
 import { MapSprite } from './mapSprite/mapSprite';
@@ -31,46 +31,51 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
     const { setIsMouseDown, setMousePosition, setLastMouseDownPosition, setPreviousTranslation, texturesMap, setTexturesMap, translation, setMapSize } =
         useContext(MapContext);
     const [stage, setStage] = useState<null | HTMLDivElement>(null);
+    const [textureLoaded, setTextureLoaded] = useState(false);
 
     useEffect(() => {
-        const output: Record<string, Texture> = {};
+        if (packageContext?.backendStore?.sprites?.data && !textureLoaded) {
+            setTextureLoaded(true);
+            const output: Record<string, Texture> = {};
 
-        const loader = new PIXI.Loader();
-        loader.pre((resource, next) => {
-            resource.loadType = PIXI.LoaderResource.LOAD_TYPE.XHR;
-            next();
-        });
-        _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
-            const path = mapElement.spriteSheet.indexOf('https') === -1 ? '../../../assets/' + mapElement.spriteSheet : mapElement.spriteSheet;
-
-            if (!loader.resources[mapElement.spriteSheet]) {
-                loader.add({
-                    name: mapElement.spriteSheet,
-                    url: path,
-                    crossOrigin: 'no-cors',
-                    loadType: PIXI.LoaderResource.LOAD_TYPE.XHR,
-                });
-            }
-        });
-
-        loader.add({
-            name: 'citizen',
-            url: 'assets/citizen.png',
-        });
-
-        loader.load((loader, resources) => {
-            const citizen = resources['citizen']?.texture?.baseTexture;
-            if (citizen) {
-                output['citizen'] = new PIXI.Texture(citizen, new PIXI.Rectangle(0, 0, 60, 60));
-            }
+            const loader = new PIXI.Loader();
+            loader.pre((resource, next) => {
+                resource.loadType = PIXI.LoaderResource.LOAD_TYPE.XHR;
+                next();
+            });
             _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
-                const baseTexture = resources[mapElement.spriteSheet]?.texture?.baseTexture;
-                if (baseTexture) {
-                    output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.x * BLOCK_SIZE + 1, mapElement.y * BLOCK_SIZE + 1, 30, 30));
+                const path = mapElement.spriteSheet.indexOf('https') === -1 ? '../../../assets/' + mapElement.spriteSheet : mapElement.spriteSheet;
+
+                if (!loader.resources[mapElement.spriteSheet]) {
+                    loader.add({
+                        name: mapElement.spriteSheet,
+                        url: path,
+                        crossOrigin: 'no-cors',
+                        loadType: PIXI.LoaderResource.LOAD_TYPE.XHR,
+                    });
                 }
             });
-            setTexturesMap(output);
-        });
+
+            loader.add({
+                name: 'citizen',
+                url: 'assets/citizen.png',
+            });
+
+            loader.load((loader, resources) => {
+                const citizen = resources['citizen']?.texture?.baseTexture;
+                if (citizen) {
+                    output['citizen'] = new PIXI.Texture(citizen, new PIXI.Rectangle(0, 0, 60, 60));
+                }
+                _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
+                    const baseTexture = resources[mapElement.spriteSheet]?.texture?.baseTexture;
+                    if (baseTexture) {
+                        output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.x * BLOCK_SIZE + 1, mapElement.y * BLOCK_SIZE + 1, 30, 30));
+                    }
+                });
+                setTexturesMap(output);
+            });
+        }
+
     }, [packageContext?.backendStore?.sprites?.data]);
 
     const mapClick = useCallback(
@@ -140,7 +145,7 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
                         .filter(() => texturesMap['citizen'])
                         .map(({ location, npcTemplateId }, key) => {
                             return (
-                                <>
+                                <React.Fragment key={key}>
                                     <Text
                                         text={packageContext.backendStore.npcTemplates.data[npcTemplateId]?.name ?? ""}
                                         x={location.x * BLOCK_SIZE + BLOCK_SIZE / 2}
@@ -155,8 +160,8 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
                                             })
                                         }
                                     />
-                                    <MapSprite key={key} location={location} texture={texturesMap['citizen']} />
-                                </>
+                                    <MapSprite location={location} texture={texturesMap['citizen']} />
+                                </React.Fragment>
                             );
                         })
                         .value()}

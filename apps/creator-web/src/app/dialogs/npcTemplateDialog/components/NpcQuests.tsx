@@ -2,11 +2,11 @@ import { QuestSchema } from '@bananos/types';
 import { GridColDef, GridRenderCellParams, GridSelectionModel } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { useContext, useEffect, useState } from 'react';
-import { AssignmentPanel } from '../../components/assignmentPanel';
-import { ItemPreview } from '../../components/itemPreview';
-import { PackageContext } from '../../contexts';
-import { DialogContext, Dialogs } from '../../contexts/dialogContext';
-import { NpcContext, NpcTemplate } from '../../views';
+import { AssignmentPanel } from '../../../components/assignmentPanel';
+import { ItemPreview } from '../../../components/itemPreview';
+import { PackageContext } from '../../../contexts';
+import { DialogContext, Dialogs } from '../../../contexts/dialogContext';
+import { FormContext } from '../../../contexts/FormContext';
 
 
 export const NpcQuests = () => {
@@ -16,20 +16,17 @@ export const NpcQuests = () => {
     const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ?? {};
     const [localQuestSchemas, setLocalQuestsSchemas] = useState<Record<string, QuestSchema>>({});
     const { activeDialog } = useContext(DialogContext);
-    const { activeNpcTemplate, setActiveNpcTemplate } = useContext(NpcContext);
     const [initSelectionModel, setInitSelectionModel] = useState<GridSelectionModel>([]);
+    const { changeValue, getFieldValue } = useContext(FormContext);
 
     useEffect(() => {
-        if (activeDialog === Dialogs.NpcTemplateDialogs && activeNpcTemplate !== null) {
-            setInitSelectionModel(_.map(activeNpcTemplate.quests, (_, questId) => questId))
+        if (activeDialog === Dialogs.NpcTemplateDialogs) {
+            setInitSelectionModel(_.map(getFieldValue('quests'), (_, questId) => questId))
         }
     }, [activeDialog === Dialogs.NpcTemplateDialogs])
 
     useEffect(() => {
-        setActiveNpcTemplate(prev => ({
-            ...(prev ?? {}),
-            quests: _.mapValues(localQuestSchemas, () => true),
-        }) as NpcTemplate);
+        changeValue('quests', _.mapValues(localQuestSchemas, () => true))
     }, [localQuestSchemas]);
 
     const columns: GridColDef[] = [
@@ -67,8 +64,8 @@ export const NpcQuests = () => {
             flex: 1,
             renderCell: (params: GridRenderCellParams<QuestSchema>) => {
                 return <>
-                    {_.map(params.row.questReward.items, item =>
-                        <ItemPreview itemTemplate={itemTemplates[item.itemTemplateId]} />
+                    {_.map(params.row.questReward.items, (item, key) =>
+                        <ItemPreview key={key} itemTemplate={itemTemplates[item.itemTemplateId]} />
                     )}
                 </>
             },
