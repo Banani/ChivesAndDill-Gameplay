@@ -1,14 +1,22 @@
 package main
 
 const (
-	updateMapField     = "UPDATE_MAP_FIELD"
-	deleteMapField     = "DELETE_MAP_FIELD"
-	createNpcTemplate  = "CREATE_NPC_TEMPLATE"
-	updateNpcTemplate  = "UPDATE_NPC_TEMPLATE"
-	deleteNpcTemplate  = "DELETE_NPC_TEMPLATE"
-	addNpc             = "ADD_NPC"
-	updateNpc          = "UPDATE_NPC"
-	deleteNpc          = "DELETE_NPC"
+	updateMapField    = "UPDATE_MAP_FIELD"
+	deleteMapField    = "DELETE_MAP_FIELD"
+	createNpcTemplate = "CREATE_NPC_TEMPLATE"
+	updateNpcTemplate = "UPDATE_NPC_TEMPLATE"
+	deleteNpcTemplate = "DELETE_NPC_TEMPLATE"
+	addNpc            = "ADD_NPC"
+	updateNpc         = "UPDATE_NPC"
+	deleteNpc         = "DELETE_NPC"
+
+	createMonsterTemplate = "CREATE_MONSTER_TEMPLATE"
+	updateMonsterTemplate = "UPDATE_MONSTER_TEMPLATE"
+	deleteMonsterTemplate = "DELETE_MONSTER_TEMPLATE"
+	addMonster            = "ADD_MONSTER"
+	updateMonster         = "UPDATE_MONSTER"
+	deleteMonster         = "DELETE_MONSTER"
+
 	createItemTemplate = "CREATE_ITEM_TEMPLATE"
 	deleteItemTemplate = "DELETE_ITEM_TEMPLATE"
 	updateItemTemplate = "UPDATE_ITEM_TEMPLATE"
@@ -65,6 +73,37 @@ type UpdateNpcAction struct {
 type DeleteNpcAction struct {
 	ActionType string `json:"actionType"`
 	NpcId      string `json:"npcId"`
+}
+
+type CreateMonsterTemplateAction struct {
+	ActionType        string          `json:"actionType"`
+	CharacterTemplate MonsterTemplate `json:"characterTemplate"`
+}
+
+type UpdateMonsterTemplateAction struct {
+	ActionType      string          `json:"actionType"`
+	MonsterTemplate MonsterTemplate `json:"characterTemplate"`
+}
+
+type DeleteMonsterTemplateAction struct {
+	ActionType        string `json:"actionType"`
+	MonsterTemplateId string `json:"characterTemplateId"`
+}
+
+type AddMonsterAction struct {
+	X                 int    `json:"x"`
+	Y                 int    `json:"y"`
+	MonsterTemplateId string `json:"characterTemplateId"`
+}
+
+type UpdateMonsterAction struct {
+	ActionType string  `json:"actionType"`
+	Monster    Monster `json:"character"`
+}
+
+type DeleteMonsterAction struct {
+	ActionType string `json:"actionType"`
+	MonsterId  string `json:"characterId"`
 }
 
 type CreateItemTemplateAction struct {

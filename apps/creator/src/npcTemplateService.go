@@ -19,8 +19,10 @@ type NpcTemplate struct {
 }
 
 type QuoteEvent struct {
-	Standard QuoteHandler `json:"standard"`
-	OnDying  QuoteHandler `json:"onDying"`
+	Standard  QuoteHandler `json:"standard"`
+	OnDying   QuoteHandler `json:"onDying"`
+	OnKilling QuoteHandler `json:"onKilling"`
+	OnPulling QuoteHandler `json:"onPulling"`
 }
 
 type QuoteHandler struct {
@@ -29,8 +31,8 @@ type QuoteHandler struct {
 }
 
 type Location struct {
-	X int32 `json:"x"`
-	Y int32 `json:"y"`
+	X int32 `json:"x" bson:"x"`
+	Y int32 `json:"y" bson:"y"`
 }
 
 type Npc struct {

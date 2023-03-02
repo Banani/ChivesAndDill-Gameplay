@@ -60,11 +60,19 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
                 name: 'citizen',
                 url: 'assets/citizen.png',
             });
+            loader.add({
+                name: 'orc',
+                url: 'assets/orc.png',
+            });
 
             loader.load((loader, resources) => {
                 const citizen = resources['citizen']?.texture?.baseTexture;
                 if (citizen) {
                     output['citizen'] = new PIXI.Texture(citizen, new PIXI.Rectangle(0, 0, 60, 60));
+                }
+                const orc = resources['orc']?.texture?.baseTexture;
+                if (orc) {
+                    output['orc'] = new PIXI.Texture(orc, new PIXI.Rectangle(0, 0, 60, 60));
                 }
                 _.forEach(packageContext?.backendStore?.sprites?.data, (mapElement, key) => {
                     const baseTexture = resources[mapElement.spriteSheet]?.texture?.baseTexture;
@@ -161,6 +169,31 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
                                         }
                                     />
                                     <MapSprite location={location} texture={texturesMap['citizen']} />
+                                </React.Fragment>
+                            );
+                        })
+                        .value()}
+
+                    {_.chain(packageContext.backendStore.monsters.data)
+                        .filter(() => texturesMap['orc'])
+                        .map(({ location, monsterTemplateId }, key) => {
+                            return (
+                                <React.Fragment key={key}>
+                                    <Text
+                                        text={packageContext.backendStore.monsterTemplates.data[monsterTemplateId]?.name ?? ""}
+                                        x={location.x * BLOCK_SIZE + BLOCK_SIZE / 2}
+                                        y={location.y * BLOCK_SIZE - 12}
+                                        anchor={0.5}
+                                        style={
+                                            new TextStyle({
+                                                align: 'center',
+                                                fontFamily: 'Segoe UI',
+                                                fontSize: 14,
+                                                fill: '#ff6030',
+                                            })
+                                        }
+                                    />
+                                    <MapSprite location={location} texture={texturesMap['orc']} />
                                 </React.Fragment>
                             );
                         })

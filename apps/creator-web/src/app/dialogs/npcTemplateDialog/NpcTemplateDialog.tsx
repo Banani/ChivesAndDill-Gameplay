@@ -163,7 +163,7 @@ const NpcTemplateDialogContent = () => {
 
     return (
         <Dialog open={activeDialog === Dialogs.NpcTemplateDialogs} onClose={() => setActiveDialog(null)} maxWidth="xl">
-            <DialogTitle>Create Npc Template</DialogTitle>
+            <DialogTitle>{activeNpcTemplate.id ? 'Update' : 'Create'} Npc Template</DialogTitle>
             <DialogContent className={styles['dialog']}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={activeTab} onChange={changeActiveTab} aria-label="basic tabs example">

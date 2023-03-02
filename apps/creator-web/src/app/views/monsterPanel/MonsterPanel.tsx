@@ -1,0 +1,144 @@
+import { Text } from '@inlet/react-pixi';
+import { Paper } from '@mui/material';
+import { TextStyle } from 'pixi.js';
+import { useContext, useMemo } from 'react';
+import { MapContext, MapSprite, Rectangle } from '../components';
+
+import { Map } from '../components';
+
+import _ from 'lodash';
+import { AnimatedSelection } from '../../components/animatedSelection/AnimatedSelection';
+import { PackageContext } from '../../contexts';
+import { Dialogs } from '../../contexts/dialogContext';
+import { SelectedCharacterPanel } from '../shared';
+import { CharacterActions } from './characterActions';
+import { CharacterActionsList, CharacterContext, CharacterTemplate } from './CharacterContextProvider';
+import { CharacterTemplatesPanel } from './characterTemplatesPanel';
+import styles from './MonsterPanel.module.scss';
+
+export const MonsterPanel = () => {
+    const packageContext = useContext(PackageContext);
+    const { isMouseDown, mousePosition, lastMouseDownPosition, previousTranslation, texturesMap, translation, setTranslation } = useContext(MapContext);
+    const { currentCharacterAction, activeCharacterTemplate, addCharacter, deleteCharacter, highlightedCharacterId } = useContext(CharacterContext);
+    const monsterTemplates = packageContext.backendStore.monsterTemplates?.data ?? {};
+    const monsters = packageContext.backendStore.monsters?.data ?? {};
+
+    const actionModes: Partial<Record<string, any>> = useMemo(
+        () => ({
+            [CharacterActionsList.Adding]: {
+                onClick: (e: any) => {
+                    if (activeCharacterTemplate) {
+                        addCharacter({
+                            x: Math.floor((e.nativeEvent.offsetX - translation.x) / 32),
+                            y: Math.floor((e.nativeEvent.offsetY - translation.y) / 32),
+                            characterTemplateId: activeCharacterTemplate.id,
+                        });
+                    } else {
+                        console.log('Nie wybrano sprite');
+                    }
+                },
+            },
+            [CharacterActionsList.Translate]: {
+                onMouseMove: (e: any) => {
+                    if (isMouseDown) {
+                        setTranslation({
+                            x: previousTranslation.x + e.clientX - lastMouseDownPosition.x,
+                            y: previousTranslation.y + e.clientY - lastMouseDownPosition.y,
+                        });
+                    }
+                },
+            },
+            [CharacterActionsList.Delete]: {
+                onClick: (e: any) => {
+                    deleteCharacter(Math.floor((e.nativeEvent.offsetX - translation.x) / 32) + ':' + Math.floor((e.nativeEvent.offsetY - translation.y) / 32));
+                },
+            },
+        }),
+        [isMouseDown, activeCharacterTemplate, addCharacter, translation, deleteCharacter]
+    );
+
+    const mouseCenterSpritePosition = {
+        x: Math.floor(((mousePosition?.x ?? 0) - translation.x) / 32),
+        y: Math.floor(((mousePosition?.y ?? 0) - translation.y) / 32),
+    };
+
+    return (
+        <>
+            <div className={styles['app-view']}>
+                <CharacterTemplatesPanel characters={_.map(monsterTemplates, (character: CharacterTemplate) => ({
+                    id: character.id,
+                    name: character.name,
+                    path: 'assets/orc.png',
+                    circles: <></>
+
+                }))} createDialog={Dialogs.MonsterTemplateDialog} />
+                <CharacterActions />
+
+                <Paper className={styles['map-editor']}>
+                    <Map mapActionStates={actionModes} state={currentCharacterAction}>
+                        <Text
+                            text={mouseCenterSpritePosition.x + ':' + mouseCenterSpritePosition.y}
+                            x={mouseCenterSpritePosition.x * 32 + 32 + 6}
+                            y={mouseCenterSpritePosition.y * 32 - 18}
+                            style={
+                                new TextStyle({
+                                    align: 'center',
+                                    fontSize: 10,
+                                    fill: '#ff3030',
+                                })
+                            }
+                        />
+
+                        {mousePosition && !!activeCharacterTemplate && currentCharacterAction === CharacterActionsList.Adding && (
+                            <>
+                                <Rectangle
+                                    color={'33aa33'}
+                                    location={{
+                                        x: mouseCenterSpritePosition.x * 32 - 3,
+                                        y: mouseCenterSpritePosition.y * 32 - 3,
+                                    }}
+                                    size={{
+                                        width: 32 + 6,
+                                        height: 32 + 6,
+                                    }}
+                                />
+
+                                <MapSprite
+                                    texture={texturesMap['orc']}
+                                    location={{
+                                        x: Math.floor((mousePosition?.x - translation.x) / 32),
+                                        y: Math.floor((mousePosition?.y - translation.y) / 32),
+                                    }}
+                                />
+                            </>
+                        )}
+
+                        {mousePosition && currentCharacterAction === CharacterActionsList.Delete && (
+                            <>
+                                <Rectangle
+                                    color={'aa3333'}
+                                    location={{
+                                        x: mouseCenterSpritePosition.x * 32 - 3,
+                                        y: mouseCenterSpritePosition.y * 32 - 3,
+                                    }}
+                                    size={{
+                                        width: 32 + 6,
+                                        height: 32 + 6,
+                                    }}
+                                />
+                            </>
+                        )}
+
+                        {highlightedCharacterId != null && monsters[highlightedCharacterId] ? (
+                            <AnimatedSelection location={{
+                                x: monsters[highlightedCharacterId].location.x * 32 - 3,
+                                y: monsters[highlightedCharacterId].location.y * 32 - 3,
+                            }} />
+                        ) : null}
+                    </Map>
+                </Paper>
+                <SelectedCharacterPanel characters={monsters} templateIdFieldName="monsterTemplateId" />
+            </div>
+        </>
+    );
+};

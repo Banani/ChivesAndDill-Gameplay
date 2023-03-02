@@ -6,7 +6,8 @@ export enum SchemaFieldType {
     Record = "record",
     Text = "text",
     Number = "number",
-    Array = "array"
+    Array = "array",
+    Object = "object"
 }
 
 export type Schema = Record<string, PropertyDefinition>
@@ -167,7 +168,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             current = current[pathPart];
         })
 
-        if (propertyDefintion.type == SchemaFieldType.Array && propertyDefintion.newElement) {
+        if (propertyDefintion.type == SchemaFieldType.Array && propertyDefintion.newElement !== undefined) {
             current[prop] = [...current[prop], _.cloneDeep(propertyDefintion.newElement)];
             setValues(toSave);
         }
@@ -175,7 +176,6 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
 
 
     const removeElement = useCallback((field: string) => {
-        console.log(values);
         const path = field.split(".");
         const prop = path.pop() ?? "";
         const toSave = _.cloneDeep(values);
@@ -270,7 +270,6 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         return propertyDefintion.displayFormat && !errors[fieldName] ? propertyDefintion.displayFormat(current) : current;
     }, [values, errors]);
 
-    console.log(values);
     return <FormContext.Provider value={{
         values,
         changeValue,
