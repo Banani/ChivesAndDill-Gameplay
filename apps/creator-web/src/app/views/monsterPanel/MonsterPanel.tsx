@@ -6,13 +6,15 @@ import { MapContext, MapSprite, Rectangle } from '../components';
 
 import { Map } from '../components';
 
+import { QuoteHandler } from '@bananos/types';
 import _ from 'lodash';
+import { Circle, CircleType } from '../../components';
 import { AnimatedSelection } from '../../components/animatedSelection/AnimatedSelection';
 import { PackageContext } from '../../contexts';
 import { Dialogs } from '../../contexts/dialogContext';
 import { SelectedCharacterPanel } from '../shared';
 import { CharacterActions } from './characterActions';
-import { CharacterActionsList, CharacterContext, CharacterTemplate } from './CharacterContextProvider';
+import { CharacterActionsList, CharacterContext } from './CharacterContextProvider';
 import { CharacterTemplatesPanel } from './characterTemplatesPanel';
 import styles from './MonsterPanel.module.scss';
 
@@ -65,13 +67,23 @@ export const MonsterPanel = () => {
     return (
         <>
             <div className={styles['app-view']}>
-                <CharacterTemplatesPanel characters={_.map(monsterTemplates, (character: CharacterTemplate) => ({
-                    id: character.id,
-                    name: character.name,
-                    path: 'assets/orc.png',
-                    circles: <></>
+                <CharacterTemplatesPanel characters={_.map(monsterTemplates, (character: any) => {
+                    const lootSize = Object.keys(character.dropSchema.items).length;
+                    const respawnsAmount = _.filter(monsters, monster => monster.monsterTemplateId === character.id).length;
+                    const quotesAmount = _.chain(character.quotesEvents ?? {}).map((event: QuoteHandler) => (event.quotes ?? []).length).sum().value();
 
-                }))} createDialog={Dialogs.MonsterTemplateDialog} />
+                    return {
+                        id: character.id,
+                        name: character.name,
+                        path: 'assets/orc.png',
+                        circles: <>
+                            {respawnsAmount > 0 ? <Circle type={CircleType.monster} number={respawnsAmount} /> : null}
+                            {lootSize > 0 ? <Circle type={CircleType.item} number={lootSize} /> : null}
+                            {quotesAmount > 0 ? <Circle type={CircleType.quote} number={quotesAmount} /> : null}
+                        </>
+
+                    }
+                })} createDialog={Dialogs.MonsterTemplateDialog} />
                 <CharacterActions />
 
                 <Paper className={styles['map-editor']}>
