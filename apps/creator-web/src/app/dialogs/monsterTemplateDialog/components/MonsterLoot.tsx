@@ -1,6 +1,5 @@
 import { ItemTemplate } from '@bananos/types';
 import { GridColDef, GridRenderCellParams, GridSelectionModel } from '@mui/x-data-grid';
-import _ from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { AssignmentPanel } from '../../../components/assignmentPanel';
 import { ItemPreview } from '../../../components/itemPreview';
@@ -15,13 +14,20 @@ export const MonsterLoot = () => {
     const [localItemTemplates, setLocalItemTemplates] = useState<Record<string, ItemTemplate>>({});
     const { activeDialog } = useContext(DialogContext);
     const [initSelectionModel, setInitSelectionModel] = useState<GridSelectionModel>([]);
-    const { changeValue, getFieldValue } = useContext(FormContext);
+    const { changeValue, getFieldValue, errors } = useContext(FormContext);
 
     useEffect(() => {
-        if (activeDialog === Dialogs.NpcTemplateDialogs) {
-            setInitSelectionModel(_.map(getFieldValue('stock'), (_, stockItemId) => stockItemId))
+        if (activeDialog === Dialogs.MonsterTemplateDialog) {
+            const itemTemplates = getFieldValue('dropSchema.items');
+            setLocalItemTemplates(itemTemplates);
+            setInitSelectionModel(Object.keys(itemTemplates))
         }
-    }, [activeDialog === Dialogs.NpcTemplateDialogs])
+    }, [activeDialog === Dialogs.MonsterTemplateDialog])
+
+    useEffect(() => {
+        changeValue('dropSchema.items', localItemTemplates)
+    }, [localItemTemplates]);
+
 
     const columns: GridColDef[] = [
         {
@@ -33,18 +39,48 @@ export const MonsterLoot = () => {
             },
         }, { field: 'name', headerName: 'Item Name', flex: 1 }];
 
-    useEffect(() => {
-        changeValue('dropSchema.items', _.mapValues(localItemTemplates, () => true))
-    }, [localItemTemplates]);
+
+    const selectedColumns: GridColDef[] = [
+        {
+            field: 'image',
+            headerName: 'Image',
+            width: 54,
+            renderCell: (params: GridRenderCellParams<ItemTemplate>) => {
+                return <ItemPreview itemTemplate={itemTemplates[params.row.id]} />
+            },
+        },
+        { field: 'name', headerName: 'Item Name', flex: 1 },
+        { field: 'dropChance', headerName: 'Drop chance', flex: 1, editable: true },
+        { field: 'maxAmount', headerName: 'Max amount', flex: 1, editable: true },
+        { field: 'minAmount', headerName: 'Min amount', flex: 1, editable: true }
+    ];
 
     return (
         <AssignmentPanel
             allItems={itemTemplates}
             allItemsColumnDefinition={columns}
             selectedItems={localItemTemplates}
-            selectedItemsColumnDefinition={columns}
+            selectedItemsColumnDefinition={selectedColumns}
             initSelectionModel={initSelectionModel}
             updateSelectedItems={setLocalItemTemplates}
+            getInitialRow={(selectedId) => ({ itemTemplateId: selectedId, dropChance: 50, minAmount: 1, maxAmount: 1 })}
+            idField={'itemTemplateId'}
+            mapItemForPreview={(item: any) => ({
+                id: item.itemTemplateId,
+                image: itemTemplates[item.itemTemplateId].image,
+                name: itemTemplates[item.itemTemplateId].name,
+                dropChance: item.dropChance,
+                minAmount: item.minAmount,
+                maxAmount: item.maxAmount,
+            })}
+            mapItemForSave={(item, newRow) => ({
+                ...item,
+                dropChance: newRow.dropChance,
+                minAmount: newRow.minAmount,
+                maxAmount: newRow.maxAmount
+            })}
+            errors={errors}
+            errorPath="dropSchema.items."
         />
     );
 };

@@ -19,10 +19,10 @@ type NpcTemplate struct {
 }
 
 type QuoteEvent struct {
-	Standard  QuoteHandler `json:"standard"`
-	OnDying   QuoteHandler `json:"onDying"`
-	OnKilling QuoteHandler `json:"onKilling"`
-	OnPulling QuoteHandler `json:"onPulling"`
+	Standard  QuoteHandler `json:"standard" bson:"standard"`
+	OnDying   QuoteHandler `json:"onDying" bson:"onDying"`
+	OnKilling QuoteHandler `json:"onKilling" bson:"onKilling"`
+	OnPulling QuoteHandler `json:"onPulling" bson:"onPulling"`
 }
 
 type QuoteHandler struct {

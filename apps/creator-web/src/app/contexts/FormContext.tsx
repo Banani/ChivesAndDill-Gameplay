@@ -67,7 +67,7 @@ export const FormContext = React.createContext<FormContextApi>({} as FormContext
 
 const Validators: Record<FormFieldConditions, (value: string, conditionParameters: any) => string> = {
     [FormFieldConditions.Required]: (value: string) => {
-        if (value == "") {
+        if (value === "") {
             return "This field is required";
         }
         return "";
@@ -103,20 +103,50 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
 
     useEffect(() => {
         const values = _.mapValues(schema, (item, key) => item.defaultValue ?? "");
+
+        //TODO: wartosci powinny pojsc przez parsery
         setValues(values);
         setErrors(recursiveValidation("", values));
     }, [schema]);
 
+
+    const recursiveUpdate = (path: string, obj: any, errors: Record<string, string>) => {
+        let toSave: any = {};
+
+        if (typeof obj === "object") {
+            for (let prop in obj) {
+                const currentPropPath = path.length > 0 ? path + "." + prop : prop;
+                toSave[prop] = recursiveUpdate(currentPropPath, obj[prop], errors);
+            }
+        } else {
+            const propertyDefintion = findPropertyDefinition(path);
+            let value = obj;
+
+            if (errors[path] !== "") {
+                return value;
+            }
+
+            value = ValueParsers[propertyDefintion.type]?.(obj) ?? obj
+
+            if (propertyDefintion.saveFormat) {
+                value = propertyDefintion.saveFormat(value);
+            }
+            return value;
+        }
+
+        return toSave;
+    }
+
     const recursiveValidation = (path: string, obj: any) => {
         let errors: Record<string, string> = {};
-        for (let prop in obj) {
-            const currentPropPath = path.length > 0 ? path + "." + prop : prop;
-            if (typeof obj[prop] === "object") {
-                errors = { ...errors, ...recursiveValidation(currentPropPath, obj[prop]) };
-            } else {
-                const propertyDefintion = findPropertyDefinition(currentPropPath);
-                errors[currentPropPath] = validateField(propertyDefintion, obj[prop])
+        if (typeof obj === "object") {
+            for (let prop in obj) {
+                const currentPropPath = path.length > 0 ? path + "." + prop : prop;
+                errors = { ...errors, ...recursiveValidation(currentPropPath, obj[prop]) }
             }
+        } else {
+            const propertyDefintion = findPropertyDefinition(path);
+            return { [path]: validateField(propertyDefintion, obj) }
         }
 
         return errors;
@@ -140,12 +170,21 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
 
         for (let i = 0; i < path.length; i++) {
             current = current[path[i]];
+
+            if (!current) {
+                throw new Error("Cannot find property: " + path[i] + " in path: " + field)
+            }
+
             if ((current.type == SchemaFieldType.Record || current.type === SchemaFieldType.Array) && !current.schema) {
                 return current as PropertyDefinition;
             }
 
             if ((current.type == SchemaFieldType.Record || current.type === SchemaFieldType.Array) && current.schema) {
                 i++;
+                current = current.schema;
+            }
+
+            if (current.type == SchemaFieldType.Object && current.schema) {
                 current = current.schema;
             }
         }
@@ -210,33 +249,19 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             return;
         }
 
-        const propertyDefintion = findPropertyDefinition(field);
-        const error = validateField(propertyDefintion, value);
+        const errors = recursiveValidation(field, value);
 
-        if (error) {
-            setErrors(prev => ({
-                ...prev,
-                [field]: error
-            }))
-        } else {
-            setErrors(prev => _.pickBy(prev, (_, errorField) => errorField !== field))
-        }
+        setErrors(prev => ({
+            ...prev,
+            ...errors
+        }))
 
-        let output = value;
-
-        if (!error) {
-            output = ValueParsers[propertyDefintion.type]?.(value) ?? value;
-
-            if (propertyDefintion.saveFormat) {
-                output = propertyDefintion.saveFormat(output);
-            }
-        }
-
-        saveFieldValue(field, output);
+        const values = recursiveUpdate(field, value, errors);
+        saveFieldValue(field, values);
 
         setDirty(prev => ({
             ...prev,
-            [field]: true
+            ..._.mapValues(errors, () => true)
         }))
     }, [schema, saveFieldValue, doesFieldExist]);
 

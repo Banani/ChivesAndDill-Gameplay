@@ -92,7 +92,6 @@ export const CharacterContextProvider = ({ children }: any) => {
 
     const deleteCharacterTemplate = useCallback(
         (characterTemplateId: string) => {
-            console.log(characterTemplateId)
             socket.send(JSON.stringify({ actionType: ACTIONS.DELETE_MONSTER_TEMPLATE, characterTemplateId }));
         },
         [socket]

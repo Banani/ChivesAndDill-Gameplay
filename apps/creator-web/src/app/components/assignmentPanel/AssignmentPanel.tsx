@@ -1,7 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import { DataGrid, GridActionsCellItem, GridColumns, GridSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridCellParams, GridColumns, GridRenderCellParams, GridSelectionModel } from '@mui/x-data-grid';
 import _ from 'lodash';
-import { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import styles from './AssignmentPanel.module.scss';
 
@@ -17,6 +17,8 @@ interface AssignmentPanelProps {
     getInitialRow?: (selectedId: string) => any;
     idField?: string;
     initSelectionModel?: GridSelectionModel;
+    errorPath?: string;
+    errors?: Record<string, string>;
 }
 
 export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
@@ -29,28 +31,31 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
     getInitialRow,
     updateSelectedItems,
     idField,
-    initSelectionModel
+    initSelectionModel,
+    errorPath,
+    errors
 }) => {
     const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
 
-    useEffect(() => {
-        const currentItemsReward = _.cloneDeep(selectedItems ?? {});
+    const clearSelectedItems = useCallback((selectionModel) => {
+        updateSelectedItems((prev: GridSelectionModel) => {
+            const currentItemsReward = _.cloneDeep(prev ?? {});
 
-        _.forEach(currentItemsReward, (_, key) => {
-            if (selectionModel.indexOf(key) === -1) {
-                delete currentItemsReward[key];
-            }
+            _.forEach(currentItemsReward, (_, key) => {
+                if (selectionModel.indexOf(key) === -1) {
+                    delete currentItemsReward[key];
+                }
+            })
+
+            selectionModel.forEach((selectedId: any) => {
+                if (!currentItemsReward[selectedId]) {
+                    currentItemsReward[selectedId] = getInitialRow ? getInitialRow(selectedId as string) : allItems[selectedId];
+                }
+            })
+
+            return currentItemsReward;
         })
-
-        selectionModel.forEach(selectedId => {
-            if (!currentItemsReward[selectedId]) {
-                currentItemsReward[selectedId] = getInitialRow ? getInitialRow(selectedId as string) : allItems[selectedId];
-            }
-        })
-
-        updateSelectedItems(currentItemsReward)
-
-    }, [selectionModel])
+    }, []);
 
     useEffect(() => {
         if (initSelectionModel) {
@@ -70,7 +75,11 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
                         <GridActionsCellItem
                             label="Delete"
                             icon={<DeleteIcon />}
-                            onClick={() => setSelectionModel(selectionModel.filter((itemId) => itemId !== id))}
+                            onClick={() => {
+                                const newSelectionModel = selectionModel.filter((itemId) => itemId !== id);
+                                setSelectionModel(newSelectionModel)
+                                clearSelectedItems(newSelectionModel);
+                            }}
                         />,
                     ];
                 },
@@ -85,6 +94,7 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
                 <DataGrid
                     onSelectionModelChange={(newSelectionModel) => {
                         setSelectionModel(newSelectionModel);
+                        clearSelectedItems(newSelectionModel)
                     }}
                     selectionModel={selectionModel}
                     rows={_.map(allItems, (item) => item)}
@@ -100,14 +110,31 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
                     experimentalFeatures={{ newEditingApi: true }}
                     disableSelectionOnClick
                     rows={_.map(selectedItems, item => mapItemForPreview ? mapItemForPreview(item) : item)}
-                    columns={selectedColumns}
+                    columns={selectedColumns.map(col => {
+                        if (col.editable) {
+                            col.cellClassName = (params: GridCellParams<any>) => {
+                                if (params.value == null) {
+                                    return '';
+                                }
+
+                                const errorProp = (errorPath ?? "") + params.id + "." + params.field;
+                                return errors?.[errorProp] !== "" ? styles['error-cell'] : "";
+                            }
+
+                            col.renderCell = (params: GridRenderCellParams<any>) => {
+                                const errorProp = (errorPath ?? "") + params.id + "." + params.field;
+                                return <div title={errors?.[errorProp]}>{params.row[params.field]}</div>;
+                            }
+                        }
+                        return col;
+                    })}
                     pageSize={15}
                     density="compact"
                     autoPageSize
                     processRowUpdate={(newRow) => {
                         updateSelectedItems(_.mapValues(selectedItems, (item => {
                             if (item[idField ?? ""] === newRow.id) {
-                                mapItemForSave ? mapItemForSave(item, newRow) : item;
+                                return mapItemForSave ? mapItemForSave(item, newRow) : item;
                             }
                             return item;
                         })));

@@ -18,8 +18,20 @@ type MonsterTemplate struct {
 	EscapeRange              int32  `json:"escapeRange" bson:"escapeRange"`
 	AttackFrequency          int32  `json:"attackFrequency" bson:"attackFrequency"`
 	// TO CHANGE
-	DropSchema   map[string]bool `json:"dropSchema"`
-	QuotesEvents QuoteEvent      `json:"quotesEvents"`
+	DropSchema   DropSchema `json:"dropSchema" bson:"dropSchema"`
+	QuotesEvents QuoteEvent `json:"quotesEvents" bson:"quotesEvents"`
+}
+
+type DropSchema struct {
+	Items map[string]ItemDropDetails `json:"items" bson:"items"`
+	Coins ItemDropDetails            `json:"coins" bson:"coins"`
+}
+
+type ItemDropDetails struct {
+	DropChance     int32  `json:"dropChance" bson:"dropChance"`
+	MaxAmount      int32  `json:"maxAmount" bson:"maxAmount"`
+	MinAmount      int32  `json:"minAmount" bson:"minAmount"`
+	ItemTemplateId string `json:"itemTemplateId" bson:"itemTemplateId"`
 }
 
 type MonsterHolder struct {

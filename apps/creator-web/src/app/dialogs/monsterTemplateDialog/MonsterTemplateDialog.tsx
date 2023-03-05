@@ -36,6 +36,7 @@ const DefaultMonsterTemplate = {
     escapeRange: 1000,
     attackFrequency: 1000,
     dropSchema: {
+        coins: {},
         items: {}
     },
     quests: {},
@@ -53,6 +54,7 @@ export const MonsterTemplateDialog = () => {
 
     const schema: Schema = useMemo(() => {
         const defaultValues = activeCharacterTemplate?.id ? activeCharacterTemplate : DefaultMonsterTemplate;
+
         return {
             name: {
                 type: SchemaFieldType.Text,
@@ -104,18 +106,34 @@ export const MonsterTemplateDialog = () => {
                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
                 defaultValue: defaultValues.attackFrequency,
             },
-            // stock: {
-            //     type: SchemaFieldType.Record,
-            //     defaultValue: defaultValues.stock
-            // },
-            // quests: {
-            //     type: SchemaFieldType.Record,
-            //     defaultValue: defaultValues.quests
-            // },
             dropSchema: {
-
-                type: SchemaFieldType.Record,
+                type: SchemaFieldType.Object,
                 schema: {
+                    coins: {
+                        type: SchemaFieldType.Object,
+                        schema: {
+                            dropChance: {
+                                type: SchemaFieldType.Number,
+                                conditions: [{
+                                    type: FormFieldConditions.Required
+                                },
+                                { type: FormFieldConditions.Number },
+                                { type: FormFieldConditions.Range, min: 0, max: 100 }
+                                ],
+                            },
+                            maxAmount: {
+                                type: SchemaFieldType.Number,
+                                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                            },
+                            minAmount: {
+                                type: SchemaFieldType.Number,
+                                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                            },
+                            itemTemplateId: {
+                                type: SchemaFieldType.Text,
+                            }
+                        }
+                    },
                     items: {
                         type: SchemaFieldType.Record,
                         schema: {
@@ -136,9 +154,13 @@ export const MonsterTemplateDialog = () => {
                                 type: SchemaFieldType.Number,
                                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
                             },
+                            itemTemplateId: {
+                                type: SchemaFieldType.Text,
+                            }
                         }
                     }
-                }
+                },
+                defaultValue: defaultValues.dropSchema,
             },
             quotesEvents: {
                 type: SchemaFieldType.Record,

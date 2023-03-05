@@ -71,7 +71,6 @@ export const NpcQuotes: FunctionComponent = () => {
                             },
                         }]}
                         processRowUpdate={(newRow) => {
-                            console.log(newRow.id, "Test")
                             changeValue(`quotesEvents.${key}.quotes.${newRow.id}`, newRow.text);
                             return newRow
                         }}
