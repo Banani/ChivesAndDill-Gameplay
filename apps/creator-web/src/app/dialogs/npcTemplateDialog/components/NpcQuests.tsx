@@ -21,9 +21,11 @@ export const NpcQuests = () => {
 
     useEffect(() => {
         if (activeDialog === Dialogs.NpcTemplateDialogs) {
-            setInitSelectionModel(_.map(getFieldValue('quests'), (_, questId) => questId))
+            const quests = getFieldValue('quests')
+            setInitSelectionModel(_.map(quests, (_, questId) => questId))
+            setLocalQuestsSchemas(_.mapValues(quests, (_, stockItemId) => questSchemas[stockItemId]))
         }
-    }, [activeDialog === Dialogs.NpcTemplateDialogs])
+    }, [activeDialog === Dialogs.NpcTemplateDialogs, questSchemas])
 
     useEffect(() => {
         changeValue('quests', _.mapValues(localQuestSchemas, () => true))

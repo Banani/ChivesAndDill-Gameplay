@@ -12,10 +12,9 @@ import { Circle, CircleType } from '../../components';
 import { AnimatedSelection } from '../../components/animatedSelection/AnimatedSelection';
 import { PackageContext } from '../../contexts';
 import { Dialogs } from '../../contexts/dialogContext';
-import { SelectedCharacterPanel } from '../shared';
-import { CharacterActions } from './characterActions';
+import { CharacterActions, SelectedCharacterPanel } from '../shared';
+import { CharacterTemplatesPanel } from '../shared/characterTemplatesPanel';
 import { CharacterActionsList, CharacterContext } from './CharacterContextProvider';
-import { CharacterTemplatesPanel } from './characterTemplatesPanel';
 import styles from './MonsterPanel.module.scss';
 
 export const MonsterPanel = () => {

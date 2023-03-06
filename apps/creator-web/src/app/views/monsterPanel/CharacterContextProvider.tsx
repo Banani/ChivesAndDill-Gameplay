@@ -1,7 +1,7 @@
 import { QuotesEvents } from '@bananos/types';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { ACTIONS } from '../../actions';
-import { PackageContext, SocketContext } from '../../contexts';
+import React, { FunctionComponent, useCallback, useContext, useEffect, useState } from 'react';
+import { CharacterTemplateActions } from '../../actions';
+import { SocketContext } from '../../contexts';
 
 export const CharacterContext = React.createContext<CharacterContextProps>({} as CharacterContextProps);
 
@@ -50,15 +50,17 @@ interface CharacterContextProps {
     setHighlightedCharacterId: (id: string | null) => void;
 }
 
-export const CharacterContextProvider = ({ children }: any) => {
+interface CharacterContextProviderProps {
+    characters: Record<string, any>,
+    characterTemplates: Record<string, any>,
+    characterTemplateActions: CharacterTemplateActions
+}
+
+export const CharacterContextProvider: FunctionComponent<CharacterContextProviderProps> = ({ children, characters, characterTemplates, characterTemplateActions }) => {
     const { socket } = useContext(SocketContext);
-    const packageContext = useContext(PackageContext);
     const [activeCharacterTemplate, setActiveCharacterTemplate] = useState<any | null>(null);
     const [currentCharacterAction, setCurrentCharacterAction] = useState(CharacterActionsList.Adding);
     const [highlightedCharacterId, setHighlightedCharacterId] = useState<string | null>(null);
-
-    const characters = packageContext.backendStore.monsters?.data ?? {};
-    const characterTemplates = packageContext?.backendStore?.monsterTemplates?.data ?? {};
 
     useEffect(() => {
         if (highlightedCharacterId && !characters[highlightedCharacterId]) {
@@ -78,42 +80,43 @@ export const CharacterContextProvider = ({ children }: any) => {
 
     const createCharacterTemplate = useCallback(
         (characterTemplate: any) => {
-            socket.send(JSON.stringify({ actionType: ACTIONS.CREATE_MONSTER_TEMPLATE, characterTemplate }));
+            socket.send(JSON.stringify({ actionType: characterTemplateActions.CREATE_CHARACTER_TEMPLATE, characterTemplate }));
         },
         [socket]
     );
 
     const updateCharacterTemplate = useCallback(
         (characterTemplate: any) => {
-            socket.send(JSON.stringify({ actionType: ACTIONS.UPDATE_MONSTER_TEMPLATE, characterTemplate }));
+            socket.send(JSON.stringify({ actionType: characterTemplateActions.UPDATE_CHARACTER_TEMPLATE, characterTemplate }));
         },
         [socket]
     );
 
     const deleteCharacterTemplate = useCallback(
         (characterTemplateId: string) => {
-            socket.send(JSON.stringify({ actionType: ACTIONS.DELETE_MONSTER_TEMPLATE, characterTemplateId }));
+            console.log(characterTemplateId, characterTemplateActions.DELETE_CHARACTER_TEMPLATE)
+            socket.send(JSON.stringify({ actionType: characterTemplateActions.DELETE_CHARACTER_TEMPLATE, characterTemplateId }));
         },
         [socket]
     );
 
     const addCharacter = useCallback(
         ({ characterTemplateId, x, y }) => {
-            socket.send(JSON.stringify({ actionType: ACTIONS.ADD_MONSTER, characterTemplateId, x, y }));
+            socket.send(JSON.stringify({ actionType: characterTemplateActions.ADD_CHARACTER, characterTemplateId, x, y }));
         },
         [socket]
     );
 
     const deleteCharacter = useCallback(
         (characterId: string) => {
-            socket.send(JSON.stringify({ actionType: ACTIONS.DELETE_MONSTER, characterId }));
+            socket.send(JSON.stringify({ actionType: characterTemplateActions.DELETE_CHARACTER, characterId }));
         },
         [socket]
     );
 
     const updateCharacter = useCallback(
         (character: any) => {
-            socket.send(JSON.stringify({ actionType: ACTIONS.UPDATE_MONSTER, character }));
+            socket.send(JSON.stringify({ actionType: characterTemplateActions.UPDATE_CHARACTER, character }));
         },
         [socket]
     );

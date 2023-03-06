@@ -46,33 +46,33 @@ type DeleteMapFieldAction struct {
 
 type CreateNpcTemplateAction struct {
 	ActionType  string      `json:"actionType"`
-	NpcTemplate NpcTemplate `json:"npcTemplate"`
+	NpcTemplate NpcTemplate `json:"characterTemplate"`
 }
 
 type UpdateNpcTemplateAction struct {
 	ActionType  string      `json:"actionType"`
-	NpcTemplate NpcTemplate `json:"npcTemplate"`
+	NpcTemplate NpcTemplate `json:"characterTemplate"`
 }
 
 type DeleteNpcTemplateAction struct {
 	ActionType    string `json:"actionType"`
-	NpcTemplateId string `json:"npcTemplateId"`
+	NpcTemplateId string `json:"characterTemplateId"`
 }
 
 type AddNpcAction struct {
 	X             int    `json:"x"`
 	Y             int    `json:"y"`
-	NpcTemplateId string `json:"npcTemplateId"`
+	NpcTemplateId string `json:"characterTemplateId"`
 }
 
 type UpdateNpcAction struct {
 	ActionType string `json:"actionType"`
-	Npc        Npc    `json:"npc"`
+	Npc        Npc    `json:"character"`
 }
 
 type DeleteNpcAction struct {
 	ActionType string `json:"actionType"`
-	NpcId      string `json:"npcId"`
+	NpcId      string `json:"characterId"`
 }
 
 type CreateMonsterTemplateAction struct {

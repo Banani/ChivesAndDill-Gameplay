@@ -9,8 +9,9 @@ import _ from 'lodash';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { FormContext, FormContextProvider, FormFieldConditions, Schema, SchemaFieldType } from '../../contexts/FormContext';
-import { NpcContext } from '../../views/npcPanel/NpcContextProvider';
-import { NpcDefaultStep, NpcQuests, NpcQuotes } from './components';
+import { CharacterContext } from '../../views/monsterPanel/CharacterContextProvider';
+import { CharacterQuotes } from '../shared';
+import { NpcDefaultStep, NpcQuests } from './components';
 import { ItemStock } from './components/ItemStock';
 
 import styles from './NpcTemplateDialog.module.scss';
@@ -40,10 +41,10 @@ const DefaultNpcTemplate = {
 };
 
 export const NpcTemplateDialog = () => {
-    const { activeNpcTemplate } = useContext(NpcContext);
+    const { activeCharacterTemplate } = useContext(CharacterContext);
 
     const schema: Schema = useMemo(() => {
-        const defaultValues = activeNpcTemplate?.id ? activeNpcTemplate : DefaultNpcTemplate;
+        const defaultValues = activeCharacterTemplate?.id ? activeCharacterTemplate : DefaultNpcTemplate;
         return {
             name: {
                 type: SchemaFieldType.Text,
@@ -98,14 +99,14 @@ export const NpcTemplateDialog = () => {
                 defaultValue: defaultValues.quotesEvents
             }
         }
-    }, [activeNpcTemplate, DefaultNpcTemplate])
+    }, [activeCharacterTemplate, DefaultNpcTemplate])
 
     return <FormContextProvider schema={schema}><NpcTemplateDialogContent /></FormContextProvider>
 }
 
 const NpcTemplateDialogContent = () => {
     const { activeDialog, setActiveDialog } = useContext(DialogContext);
-    const { createNpcTemplate, setActiveNpcTemplate, activeNpcTemplate, updateNpcTemplate } = useContext(NpcContext);
+    const { createCharacterTemplate, setActiveCharacterTemplate, activeCharacterTemplate, updateCharacterTemplate } = useContext(CharacterContext);
     const { errors, setFormDirty, resetForm, getFieldValue, values } = useContext(FormContext);
 
     const [activeTab, setActiveTab] = useState<NpcTemplateDialogTabs>(NpcTemplateDialogTabs.Default);
@@ -115,14 +116,14 @@ const NpcTemplateDialogContent = () => {
     };
 
     useEffect(() => {
-        if (activeDialog === Dialogs.NpcTemplateDialogs && !activeNpcTemplate?.id) {
-            setActiveNpcTemplate(Object.assign({}, DefaultNpcTemplate));
+        if (activeDialog === Dialogs.NpcTemplateDialogs && !activeCharacterTemplate?.id) {
+            setActiveCharacterTemplate(Object.assign({}, DefaultNpcTemplate));
         }
-    }, [activeDialog === Dialogs.NpcTemplateDialogs, activeNpcTemplate?.id]);
+    }, [activeDialog === Dialogs.NpcTemplateDialogs, activeCharacterTemplate?.id]);
 
     useEffect(() => {
         if (activeDialog !== Dialogs.NpcTemplateDialogs) {
-            setActiveNpcTemplate(null);
+            setActiveCharacterTemplate(null);
             resetForm();
         }
     }, [activeDialog !== Dialogs.NpcTemplateDialogs]);
@@ -134,7 +135,7 @@ const NpcTemplateDialogContent = () => {
             return;
         }
 
-        if (!activeNpcTemplate) {
+        if (!activeCharacterTemplate) {
             return;
         }
 
@@ -144,26 +145,26 @@ const NpcTemplateDialogContent = () => {
         }));
 
         const newNpcTemplate = {
-            ...activeNpcTemplate,
+            ...activeCharacterTemplate,
             ...values,
             quotesEvents
         };
 
-        if (activeNpcTemplate.id) {
-            updateNpcTemplate(newNpcTemplate);
+        if (activeCharacterTemplate.id) {
+            updateCharacterTemplate(newNpcTemplate);
         } else {
-            createNpcTemplate(newNpcTemplate);
+            createCharacterTemplate(newNpcTemplate);
         }
         setActiveDialog(null);
-    }, [activeNpcTemplate, setFormDirty, updateNpcTemplate, createNpcTemplate, errors, values, getFieldValue]);
+    }, [activeCharacterTemplate, setFormDirty, updateCharacterTemplate, createCharacterTemplate, errors, values, getFieldValue]);
 
-    if (!activeNpcTemplate) {
+    if (!activeCharacterTemplate) {
         return null;
     }
 
     return (
         <Dialog open={activeDialog === Dialogs.NpcTemplateDialogs} onClose={() => setActiveDialog(null)} maxWidth="xl">
-            <DialogTitle>{activeNpcTemplate.id ? 'Update' : 'Create'} Npc Template</DialogTitle>
+            <DialogTitle>{activeCharacterTemplate.id ? 'Update' : 'Create'} Npc Template</DialogTitle>
             <DialogContent className={styles['dialog']}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={activeTab} onChange={changeActiveTab} aria-label="basic tabs example">
@@ -184,7 +185,7 @@ const NpcTemplateDialogContent = () => {
                     {activeTab === NpcTemplateDialogTabs.Quests ? <NpcQuests /> : null}
                 </div>
                 <div role="tabpanel" hidden={activeTab !== NpcTemplateDialogTabs.Quotes} aria-labelledby={NpcTemplateDialogTabs.Quotes}>
-                    {activeTab === NpcTemplateDialogTabs.Quotes ? <NpcQuotes /> : null}
+                    {activeTab === NpcTemplateDialogTabs.Quotes ? <CharacterQuotes /> : null}
                 </div>
             </DialogContent>
             <DialogActions>
@@ -192,7 +193,7 @@ const NpcTemplateDialogContent = () => {
                     onClick={confirmAction}
                     variant="contained"
                 >
-                    {activeNpcTemplate.id ? 'Update' : 'Create'}
+                    {activeCharacterTemplate.id ? 'Update' : 'Create'}
                 </Button>
                 <Button onClick={() => setActiveDialog(null)} variant="outlined">
                     Cancel

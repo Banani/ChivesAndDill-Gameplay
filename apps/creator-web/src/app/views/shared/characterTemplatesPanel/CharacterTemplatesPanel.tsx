@@ -10,7 +10,7 @@ import { ImageList } from '../../../components';
 import { DialogContext, Dialogs } from '../../../contexts/dialogContext';
 import { DeleteConfirmationDialog } from '../../../dialogs';
 import { Pagination } from '../../components';
-import { CharacterContext } from '../CharacterContextProvider';
+import { CharacterContext } from '../../monsterPanel/CharacterContextProvider';
 import styles from './CharacterTemplatesPanel.module.scss';
 
 interface PreviewCharacter {
@@ -73,21 +73,11 @@ export const CharacterTemplatesPanel: FunctionComponent<CharacterTemplatesPanelP
                     Object.values(characters)
                         .filter((characterTemplate: PreviewCharacter) => characterTemplate.name?.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1)
                         .slice(paginationRange.start, paginationRange.end).map(previewCharacter => {
-                            // const stockSize = Object.keys(characterTemplate.stock).length;
-                            // const questsAmount = Object.keys(characterTemplate.quests).length;
-                            // const respawnsAmount = _.filter(npcs, npc => npc.npcTemplateId === characterTemplate.id).length;
-                            // const quotesAmount = _.chain(characterTemplate.quotesEvents ?? {}).map((event: QuoteHandler) => (event.quotes ?? []).length).sum().value();
-
                             return {
                                 id: previewCharacter.id,
                                 name: previewCharacter.name,
                                 path: previewCharacter.path,
                                 circles: previewCharacter.circles,
-                                /* {respawnsAmount > 0 ? <Circle type={CircleType.npc} number={respawnsAmount} /> : null}
-                                {questsAmount > 0 ? <Circle type={CircleType.quest} number={questsAmount} /> : null}
-                                {stockSize > 0 ? <Circle type={CircleType.item} number={stockSize} /> : null}
-                                {quotesAmount > 0 ? <Circle type={CircleType.quote} number={quotesAmount} /> : null} */
-                                // </>,
                                 onClick: () => setActiveCharacterTemplateById(previewCharacter.id),
                                 actions: [{
                                     onClick: (npcTemplate) => setNpcTemplatesToDelete([npcTemplate]),

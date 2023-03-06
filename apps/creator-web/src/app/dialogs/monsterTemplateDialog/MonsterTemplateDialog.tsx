@@ -201,7 +201,7 @@ const MonsterTemplateDialogContent = () => {
 
     useEffect(() => {
         if (activeDialog !== Dialogs.MonsterTemplateDialog) {
-            setActiveCharacterTemplate(null);
+            setActiveCharacterTemplate?.(null);
             resetForm();
         }
     }, [activeDialog !== Dialogs.MonsterTemplateDialog]);

@@ -6,28 +6,26 @@ import (
 )
 
 type NpcTemplate struct {
-	Id                       string          `json:"id"`
-	Name                     string          `json:"name"`
-	HealthPoints             int32           `json:"healthPoints"`
-	HealthPointsRegeneration int32           `json:"healthPointsRegeneration"`
-	SpellPower               int32           `json:"spellPower"`
-	SpellPowerRegeneration   int32           `json:"spellPowerRegeneration"`
-	MovementSpeed            int32           `json:"movementSpeed"`
-	Stock                    map[string]bool `json:"stock"`
-	Quests                   map[string]bool `json:"quests"`
-	QuotesEvents             QuoteEvent      `json:"quotesEvents"`
+	Id                       string          `json:"id" bson:"id"`
+	Name                     string          `json:"name" bson:"name"`
+	HealthPoints             int32           `json:"healthPoints" bson:"healthPoints"`
+	HealthPointsRegeneration int32           `json:"healthPointsRegeneration" bson:"healthPointsRegeneration"`
+	SpellPower               int32           `json:"spellPower" bson:"spellPower"`
+	SpellPowerRegeneration   int32           `json:"spellPowerRegeneration" bson:"spellPowerRegeneration"`
+	MovementSpeed            int32           `json:"movementSpeed" bson:"movementSpeed"`
+	Stock                    map[string]bool `json:"stock" bson:"stock"`
+	Quests                   map[string]bool `json:"quests" bson:"quests"`
+	QuotesEvents             NpcQuoteEvent   `json:"quotesEvents" bson:"quotesEvents"`
 }
 
-type QuoteEvent struct {
-	Standard  QuoteHandler `json:"standard" bson:"standard"`
-	OnDying   QuoteHandler `json:"onDying" bson:"onDying"`
-	OnKilling QuoteHandler `json:"onKilling" bson:"onKilling"`
-	OnPulling QuoteHandler `json:"onPulling" bson:"onPulling"`
+type NpcQuoteEvent struct {
+	Standard QuoteHandler `json:"standard" bson:"standard"`
+	OnDying  QuoteHandler `json:"onDying" bson:"onDying"`
 }
 
 type QuoteHandler struct {
-	Chance int32    `json:"chance"`
-	Quotes []string `json:"quotes"`
+	Chance int32    `json:"chance" bson:"change"`
+	Quotes []string `json:"quotes" bson:"quotes"`
 }
 
 type Location struct {
@@ -35,12 +33,17 @@ type Location struct {
 	Y int32 `json:"y" bson:"y"`
 }
 
+type NpcHolder struct {
+	Id          string `json:"id" bson:"id"`
+	NpcRespawns []Npc  `json:"npcRespawns" bson:"npcRespawns"`
+}
+
 type Npc struct {
-	Id            string   `json:"id"`
-	Location      Location `json:"location"`
-	NpcTemplateId string   `json:"npcTemplateId"`
-	Time          int32    `json:"time"`
-	WalkingType   string   `json:"walkingType"`
+	Id            string   `json:"id"  bson:"id"`
+	Location      Location `json:"location"  bson:"location"`
+	NpcTemplateId string   `json:"npcTemplateId"  bson:"npcTemplateId"`
+	Time          int32    `json:"time"  bson:"time"`
+	WalkingType   string   `json:"walkingType"  bson:"walkingType"`
 }
 
 type NpcTemplateService struct {

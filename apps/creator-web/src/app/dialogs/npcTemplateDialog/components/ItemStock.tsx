@@ -19,9 +19,11 @@ export const ItemStock = () => {
 
     useEffect(() => {
         if (activeDialog === Dialogs.NpcTemplateDialogs) {
-            setInitSelectionModel(_.map(getFieldValue('stock'), (_, stockItemId) => stockItemId))
+            const stock = getFieldValue('stock')
+            setInitSelectionModel(_.map(stock, (_, stockItemId) => stockItemId))
+            setLocalItemTemplates(_.mapValues(stock, (_, stockItemId) => itemTemplates[stockItemId]))
         }
-    }, [activeDialog === Dialogs.NpcTemplateDialogs])
+    }, [activeDialog === Dialogs.NpcTemplateDialogs, itemTemplates])
 
     const columns: GridColDef[] = [
         {
@@ -34,6 +36,7 @@ export const ItemStock = () => {
         }, { field: 'name', headerName: 'Item Name', flex: 1 }];
 
     useEffect(() => {
+        console.log(_.mapValues(localItemTemplates, () => true))
         changeValue('stock', _.mapValues(localItemTemplates, () => true))
     }, [localItemTemplates]);
 

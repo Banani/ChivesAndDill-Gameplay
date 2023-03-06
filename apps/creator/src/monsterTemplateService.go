@@ -18,8 +18,15 @@ type MonsterTemplate struct {
 	EscapeRange              int32  `json:"escapeRange" bson:"escapeRange"`
 	AttackFrequency          int32  `json:"attackFrequency" bson:"attackFrequency"`
 	// TO CHANGE
-	DropSchema   DropSchema `json:"dropSchema" bson:"dropSchema"`
-	QuotesEvents QuoteEvent `json:"quotesEvents" bson:"quotesEvents"`
+	DropSchema   DropSchema        `json:"dropSchema" bson:"dropSchema"`
+	QuotesEvents MonsterQuoteEvent `json:"quotesEvents" bson:"quotesEvents"`
+}
+
+type MonsterQuoteEvent struct {
+	Standard  QuoteHandler `json:"standard" bson:"standard"`
+	OnDying   QuoteHandler `json:"onDying" bson:"onDying"`
+	OnKilling QuoteHandler `json:"onKilling" bson:"onKilling"`
+	OnPulling QuoteHandler `json:"onPulling" bson:"onPulling"`
 }
 
 type DropSchema struct {

@@ -7,7 +7,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { useContext, useEffect, useState } from 'react';
 import { KeyBoardContext } from '../../../contexts';
 
-import { CharacterActionsList, CharacterContext } from '../CharacterContextProvider';
+import { CharacterActionsList, CharacterContext } from '../../monsterPanel/CharacterContextProvider';
 import styles from './characterActions.module.scss';
 
 export const CharacterActions = () => {
