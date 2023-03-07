@@ -101,13 +101,6 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [dirty, setDirty] = useState({});
 
-    useEffect(() => {
-        const values = _.mapValues(schema, (item, key) => item.defaultValue ?? "");
-
-        //TODO: wartosci powinny pojsc przez parsery
-        setValues(values);
-        setErrors(recursiveValidation("", values));
-    }, [schema]);
 
 
     const recursiveUpdate = (path: string, obj: any, errors: Record<string, string>) => {
@@ -271,8 +264,11 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
     }, [schema, errors]);
 
     const resetForm = useCallback(() => {
-        setValues({});
-        setErrors({});
+        const values = _.mapValues(schema, (item, key) => item.defaultValue ?? "");
+
+        //TODO: wartosci powinny pojsc przez parsery
+        setValues(values);
+        setErrors(recursiveValidation("", values));
         setDirty({});
     }, []);
 
@@ -294,6 +290,10 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
 
         return propertyDefintion.displayFormat && !errors[fieldName] ? propertyDefintion.displayFormat(current) : current;
     }, [values, errors]);
+
+    useEffect(() => {
+        resetForm();
+    }, [resetForm]);
 
     return <FormContext.Provider value={{
         values,

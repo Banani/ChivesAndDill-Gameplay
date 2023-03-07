@@ -15,6 +15,8 @@ import classNames from 'classnames';
 import { useContext } from 'react';
 import { MonsterActionsMap, NpcActionsMap } from './actions';
 import styles from './app.module.scss';
+import { SpriteGroupContextProvider } from './dialogs/spriteGroupDialog/SpriteGroupContext';
+import { SpriteGroupDialog } from './dialogs/spriteGroupDialog/SpriteGroupDialog';
 import { ItemsContextProvider } from './views/items/ItemsContextProvider';
 import { MonsterPanel } from './views/monsterPanel';
 import { CharacterContextProvider } from './views/monsterPanel/CharacterContextProvider';
@@ -62,10 +64,11 @@ const NpcView = () => {
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <>
+        element: <SpriteGroupContextProvider>
+            <SpriteGroupDialog />
             <AllDialogs />
             <MapEditor />
-        </>,
+        </SpriteGroupContextProvider>,
     },
     {
         path: '/npc',

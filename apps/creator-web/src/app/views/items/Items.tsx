@@ -27,6 +27,7 @@ export const Items = () => {
     const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ? packageContext?.backendStore?.npcTemplates?.data : {};
     const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ? packageContext?.backendStore?.itemTemplates?.data : {};
     const questSchemas = packageContext?.backendStore?.questSchemas?.data ?? {};
+    const monsterTemplates = packageContext?.backendStore?.monsterTemplates?.data ?? {};
 
     return (
         <>
@@ -77,6 +78,7 @@ export const Items = () => {
                                 const npcsSellingThatItem = _.filter(npcTemplates, (npc) => npc.stock?.[itemTemplate.id]).length;
                                 const rewardsInQuests = _.filter(questSchemas, (quest) =>
                                     quest.questReward.items[itemTemplate.id]).length;
+                                const monsterDrop = _.filter(monsterTemplates, monsterTemplate => monsterTemplate.dropSchema.items[itemTemplate.id]).length
 
                                 return (
                                     <div
@@ -88,6 +90,7 @@ export const Items = () => {
                                         }}
                                     >
                                         <CircleBox>
+                                            {monsterDrop > 0 ? <Circle type={CircleType.monster} number={monsterDrop} /> : null}
                                             {npcsSellingThatItem > 0 ? <Circle type={CircleType.npc} number={npcsSellingThatItem} /> : null}
                                             {rewardsInQuests > 0 ? <Circle type={CircleType.quest} number={rewardsInQuests} /> : null}
                                         </CircleBox>

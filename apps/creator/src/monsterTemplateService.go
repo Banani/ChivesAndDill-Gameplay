@@ -6,7 +6,7 @@ import (
 )
 
 type MonsterTemplate struct {
-	Id                       string `json:"id" bson:"id"`
+	Id                       string `json:"id" bson:"_id"`
 	Name                     string `json:"name" bson:"name"`
 	HealthPoints             int32  `json:"healthPoints" bson:"healthPoints"`
 	HealthPointsRegeneration int32  `json:"healthPointsRegeneration" bson:"healthPointsRegeneration"`

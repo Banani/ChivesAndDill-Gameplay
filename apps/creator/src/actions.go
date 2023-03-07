@@ -1,8 +1,13 @@
 package main
 
 const (
-	updateMapField    = "UPDATE_MAP_FIELD"
-	deleteMapField    = "DELETE_MAP_FIELD"
+	updateMapField = "UPDATE_MAP_FIELD"
+	deleteMapField = "DELETE_MAP_FIELD"
+
+	createSpriteGroup = "CREATE_SPRITE_GROUP"
+	updateSpriteGroup = "UPDATE_SPRITE_GROUP"
+	deleteSpriteGroup = "DELETE_SPRITE_GROUP"
+
 	createNpcTemplate = "CREATE_NPC_TEMPLATE"
 	updateNpcTemplate = "UPDATE_NPC_TEMPLATE"
 	deleteNpcTemplate = "DELETE_NPC_TEMPLATE"
@@ -31,7 +36,7 @@ type Action struct {
 
 type UpdateMapFieldAction struct {
 	ActionType string `json:"actionType"`
-	BrushSize  int    `json:brushSize`
+	BrushSize  int    `json:"brushSize"`
 	X          int    `json:"x"`
 	Y          int    `json:"y"`
 	SpriteId   string `json:"spriteId"`
@@ -39,9 +44,25 @@ type UpdateMapFieldAction struct {
 
 type DeleteMapFieldAction struct {
 	ActionType string `json:"actionType"`
-	BrushSize  int    `json:brushSize`
+	BrushSize  int    `json:"brushSize"`
 	X          int    `json:"x"`
 	Y          int    `json:"y"`
+}
+
+type CreateSpriteGroupAction struct {
+	ActionType  string      `json:"actionType"`
+	SpriteGroup SpriteGroup `json:"spriteGroup"`
+}
+
+type UpdateSpriteGroupAction struct {
+	ActionType  string      `json:"actionType"`
+	Id          string      `json:"id"`
+	SpriteGroup SpriteGroup `json:"spriteGroup"`
+}
+
+type DeleteSpriteGroupAction struct {
+	ActionType string `json:"actionType"`
+	Id         string `json:"id"`
 }
 
 type CreateNpcTemplateAction struct {

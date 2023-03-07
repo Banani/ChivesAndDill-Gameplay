@@ -123,7 +123,7 @@ const NpcTemplateDialogContent = () => {
 
     useEffect(() => {
         if (activeDialog !== Dialogs.NpcTemplateDialogs) {
-            setActiveCharacterTemplate(null);
+            setActiveCharacterTemplate?.(null);
             resetForm();
         }
     }, [activeDialog !== Dialogs.NpcTemplateDialogs]);
