@@ -99,7 +99,6 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
                     selectionModel={selectionModel}
                     rows={_.map(allItems, (item) => item)}
                     columns={allItemsColumnDefinition}
-                    pageSize={15}
                     checkboxSelection
                     density="compact"
                     autoPageSize
@@ -128,7 +127,6 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
                         }
                         return col;
                     })}
-                    pageSize={15}
                     density="compact"
                     autoPageSize
                     processRowUpdate={(newRow) => {
