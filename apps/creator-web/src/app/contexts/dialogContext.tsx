@@ -8,6 +8,7 @@ export enum Dialogs {
     ItemDialog = 'ItemDialog',
     QuestDialog = 'QuestDialog',
     SpriteGroupsDialog = 'SpriteGroupsDialog',
+    EditSpriteGroupsDialog = 'EditSpriteGroupsDialog',
 }
 
 export const DialogProvider = ({ children }: any) => {

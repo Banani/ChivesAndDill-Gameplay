@@ -1,3 +1,14 @@
+.sprite-group-panel {
+    display: flex;
+
+    .modal-opener {
+        margin-top: 8px;
+        margin-left: 8px;
+        height: 56px;
+    }
+}
+
+
 .control-panel {
     flex: 1;
     box-shadow: 1px 2px 3px #999;

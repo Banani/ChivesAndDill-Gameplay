@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -17,33 +16,32 @@ var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {
 
 func main() {
 
-	// files, err := ioutil.ReadDir("./test")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	//files, err := ioutil.ReadDir("./test")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 
 	dbClient := DBClient{}
 	dbClient.startConnection()
 	defer dbClient.closeConnection()
 
-	// collection := dbClient.db.Collection("sprites")
-	// toSave := make([]interface{}, 12*12*155)
-	// counter := 0
-
-	// for _, file := range files {
-	// 	for x := 0; x < 12; x++ {
-	// 		for y := 0; y < 12; y++ {
-	// 			log.Print("lol")
-	// 			spriteSheet := "https://sprites-bucket.s3.amazonaws.com/" + strings.Replace(file.Name(), " ", "+", 1)
-
-	// 			toSave[counter] = bson.D{{"spriteSheet", spriteSheet}, {"x", strconv.Itoa(x)}, {"y", strconv.Itoa(y)}}
-	// 			counter++
-	// 		}
-	// 	}
-	// }
-
-	// _, err = collection.InsertMany(context.TODO(), toSave)
-	// log.Print(err)
+	//collection := dbClient.db.Collection("sprites")
+	//toSave := make([]interface{}, 12*12*155)
+	//counter := 0
+	//
+	//for _, file := range files {
+	//	for x := 0; x < 12; x++ {
+	//		for y := 0; y < 12; y++ {
+	//			spriteSheet := "https://sprites-bucket.s3.amazonaws.com/" + strings.Replace(file.Name(), " ", "+", 1)
+	//
+	//			toSave[counter] = bson.D{{"spriteSheet", spriteSheet}, {"x", y}, {"y", x}}
+	//			counter++
+	//		}
+	//	}
+	//}
+	//
+	//_, err = collection.InsertMany(context.TODO(), toSave)
+	//log.Print(err)
 
 	writter := &Writter{
 		stream:            make(chan map[string]EnginePackageStringArray),

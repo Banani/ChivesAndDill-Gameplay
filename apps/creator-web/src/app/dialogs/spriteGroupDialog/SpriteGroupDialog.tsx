@@ -1,10 +1,12 @@
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+
 import { Button } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { FunctionComponent, useCallback, useContext, useEffect, useMemo } from 'react';
 import { FormTextField } from '../../components';
@@ -32,7 +34,7 @@ export const SpriteGroupDialog = () => {
 const SpriteGroupDialogContent: FunctionComponent = ({ }) => {
     const { activeDialog, setActiveDialog } = useContext(DialogContext);
     const { errors, setFormDirty, resetForm, getFieldValue } = useContext(FormContext);
-    const { createSpriteGroup, deleteSpriteGroup } = useContext(SpriteGroupContext);
+    const { createSpriteGroup, deleteSpriteGroup, setActiveSpriteGroup } = useContext(SpriteGroupContext);
     const packageContext = useContext(PackageContext);
     const spriteGroups = packageContext?.backendStore?.spriteGroups?.data ?? {};
 
@@ -48,12 +50,18 @@ const SpriteGroupDialogContent: FunctionComponent = ({ }) => {
             return;
         }
 
-        createSpriteGroup({ name: getFieldValue('name') })
+        createSpriteGroup({ name: getFieldValue('name'), spriteAssignment: {} })
         resetForm();
     }, [createSpriteGroup, errors, setFormDirty, getFieldValue]);
 
     const spriteGroupColumns: GridColumns = [
         { field: 'name', headerName: 'Item Name', flex: 1 },
+        {
+            field: 'spritesCount',
+            headerName: 'Sprites Count',
+            flex: 1,
+            renderCell: (params: GridRenderCellParams<any>) => Object.keys(params.row.spriteAssignment ?? {}).length,
+        },
         {
             field: 'actions',
             headerName: 'Actions',
@@ -61,6 +69,14 @@ const SpriteGroupDialogContent: FunctionComponent = ({ }) => {
             width: 80,
             getActions: ({ id }: any) => {
                 return [
+                    <GridActionsCellItem
+                        label="Edit"
+                        icon={<ModeEditIcon />}
+                        onClick={() => {
+                            setActiveDialog(Dialogs.EditSpriteGroupsDialog)
+                            setActiveSpriteGroup(spriteGroups[id])
+                        }}
+                    />,
                     <GridActionsCellItem
                         label="Delete"
                         icon={<DeleteIcon />}

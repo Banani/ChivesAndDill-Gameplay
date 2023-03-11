@@ -101,8 +101,6 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [dirty, setDirty] = useState({});
 
-
-
     const recursiveUpdate = (path: string, obj: any, errors: Record<string, string>) => {
         let toSave: any = {};
 
@@ -256,7 +254,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             ...prev,
             ..._.mapValues(errors, () => true)
         }))
-    }, [schema, saveFieldValue, doesFieldExist]);
+    }, [saveFieldValue, doesFieldExist]);
 
 
     const setFormDirty = useCallback(() => {
@@ -270,7 +268,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         setValues(values);
         setErrors(recursiveValidation("", values));
         setDirty({});
-    }, []);
+    }, [schema]);
 
     const setFieldDirty = useCallback((fieldName: string) => {
         setDirty(prev => ({

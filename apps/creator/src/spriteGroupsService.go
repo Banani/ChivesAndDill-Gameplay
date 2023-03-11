@@ -5,8 +5,9 @@ import (
 )
 
 type SpriteGroup struct {
-	Id   string `json:"id" bson:"id"`
-	Name string `json:"name" bson:"name"`
+	Id               string          `json:"id" bson:"-"`
+	Name             string          `json:"name" bson:"name"`
+	SpriteAssignment map[string]bool `json:"spriteAssignment" bson:"spriteAssignment"`
 }
 
 type SpriteGroupsService struct {
@@ -70,6 +71,7 @@ func (service *SpriteGroupsService) serve() {
 			api.updateSpriteGroup(spriteGroup)
 
 			service.SpriteGroups[spriteGroup.Id] = spriteGroup
+			service.application.writter.stream <- prepareDeletePayload2("spriteGroups", map[string]SpriteGroup{spriteGroup.Id: spriteGroup})
 			service.application.writter.stream <- prepareUpdatePayload("spriteGroups", map[string]SpriteGroup{spriteGroup.Id: spriteGroup})
 		}
 	}

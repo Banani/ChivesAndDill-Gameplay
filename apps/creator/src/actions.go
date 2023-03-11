@@ -56,7 +56,6 @@ type CreateSpriteGroupAction struct {
 
 type UpdateSpriteGroupAction struct {
 	ActionType  string      `json:"actionType"`
-	Id          string      `json:"id"`
 	SpriteGroup SpriteGroup `json:"spriteGroup"`
 }
 

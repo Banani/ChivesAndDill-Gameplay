@@ -18,6 +18,7 @@ interface ImageListProps {
             icon: any;
         }[];
     }[],
+    // TODO: Change name
     imagesPerLine?: number;
     activeId: string,
 }

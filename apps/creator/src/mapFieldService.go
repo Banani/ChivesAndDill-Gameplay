@@ -8,11 +8,12 @@ import (
 type Sprite struct {
 	X           int    `json:"x"`
 	Y           int    `json:"y"`
-	SpriteId    string `json:"spriteId"`
+	Id          string `json:"id"`
 	SpriteSheet string `json:"spriteSheet"`
 }
 
 type MapField struct {
+	Id       string `json:"id" bson:"-"`
 	SpriteId string `json:"spriteId"`
 	X        int32  `json:"x"`
 	Y        int32  `json:"y"`
@@ -24,7 +25,7 @@ type MapFieldsService struct {
 	sprites         map[string]Sprite
 	mapFieldUpdated chan UpdateMapFieldAction
 	mapFieldDeleted chan DeleteMapFieldAction
-	actionStream chan TypedAction
+	actionStream    chan TypedAction
 }
 
 func (s *MapFieldsService) processAction(action TypedAction) {
@@ -77,7 +78,7 @@ func (service *MapFieldsService) serve() {
 			api.saveMapField(toSave)
 			service.application.writter.stream <- mapFieldPackage
 		}
-		
+
 		if action.ActionType == deleteMapField {
 			var deleteMapFieldAction DeleteMapFieldAction
 			json.Unmarshal(action.Body, &deleteMapFieldAction)

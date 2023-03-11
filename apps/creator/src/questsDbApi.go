@@ -6,10 +6,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type MongodbEntity struct {
-	ID primitive.ObjectID `json:"id" bson:"_id"`
-}
-
 type QuestsDbApi struct {
 	application *Application
 }

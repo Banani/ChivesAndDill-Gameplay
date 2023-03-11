@@ -15,6 +15,7 @@ import classNames from 'classnames';
 import { useContext } from 'react';
 import { MonsterActionsMap, NpcActionsMap } from './actions';
 import styles from './app.module.scss';
+import { EditSpriteGroupDialog } from './dialogs/editSpriteGroupDialog';
 import { SpriteGroupContextProvider } from './dialogs/spriteGroupDialog/SpriteGroupContext';
 import { SpriteGroupDialog } from './dialogs/spriteGroupDialog/SpriteGroupDialog';
 import { ItemsContextProvider } from './views/items/ItemsContextProvider';
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
         path: '/',
         element: <SpriteGroupContextProvider>
             <SpriteGroupDialog />
+            <EditSpriteGroupDialog />
             <AllDialogs />
             <MapEditor />
         </SpriteGroupContextProvider>,

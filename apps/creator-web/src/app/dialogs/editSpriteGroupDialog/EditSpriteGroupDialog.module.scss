@@ -1,0 +1,61 @@
+.adding-row {
+    display: flex;
+    align-items: center;
+
+    .add-button {
+        margin-left: 12px;
+    }
+}
+
+.dialog {
+    min-width: 1400px;
+    min-height: 860px; // tutaj jest wiecej
+    display: flex;
+    flex-direction: column;
+}
+
+.sprites-assignment-panel {
+    display: flex;
+    flex: 1;
+    margin-top: 16px;
+
+    .sprites-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        .available-sprites {
+            flex: 1;
+            border-right: 1px solid #30303075;
+            margin-bottom: 20px;
+        }
+
+        .selected-sprites {
+            flex: 1;
+            margin-bottom: 20px;
+            margin-left: 44px;
+        }
+
+        .pagination-centerer {
+            display: flex;
+            justify-content: center;
+
+            .pagination-holder {
+                width: 60%;
+            }
+        }
+
+
+    }
+
+
+}
+
+.imageHolder {
+    overflow: hidden;
+    box-sizing: border-box;
+
+    .image {
+        width: calc(384px * 2.46875);
+    }
+}

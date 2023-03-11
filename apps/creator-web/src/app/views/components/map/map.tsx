@@ -33,6 +33,7 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
     const [stage, setStage] = useState<null | HTMLDivElement>(null);
     const [textureLoaded, setTextureLoaded] = useState(false);
 
+
     useEffect(() => {
         if (packageContext?.backendStore?.sprites?.data && !textureLoaded) {
             setTextureLoaded(true);
@@ -125,6 +126,7 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
         return <></>;
     }
 
+    console.log(packageContext.backendStore.map.data);
     return (
         <div className={styles['stage']} ref={(newRef) => setStage(newRef)}>
             <Stage
