@@ -1,8 +1,12 @@
 .sprite-group-panel {
     display: flex;
+    margin-top: 8px;
+
+    .sprite-group-select {
+        flex: 1;
+    }
 
     .modal-opener {
-        margin-top: 8px;
         margin-left: 8px;
         height: 56px;
     }

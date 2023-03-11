@@ -28,6 +28,11 @@
             flex: 1;
             border-right: 1px solid #30303075;
             margin-bottom: 20px;
+
+            .group-selection-holder {
+                padding-right: 44px;
+                margin-bottom: 12px;
+            }
         }
 
         .selected-sprites {
@@ -44,12 +49,10 @@
                 width: 60%;
             }
         }
-
-
     }
-
-
 }
+
+
 
 .imageHolder {
     overflow: hidden;

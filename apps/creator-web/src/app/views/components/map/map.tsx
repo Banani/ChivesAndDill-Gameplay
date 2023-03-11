@@ -126,7 +126,6 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
         return <></>;
     }
 
-    console.log(packageContext.backendStore.map.data);
     return (
         <div className={styles['stage']} ref={(newRef) => setStage(newRef)}>
             <Stage

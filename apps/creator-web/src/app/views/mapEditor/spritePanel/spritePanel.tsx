@@ -1,73 +1,60 @@
 import { map } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
-import { PackageContext } from '../../../contexts';
 
 
 import { MapEditorContext } from '../contexts/mapEditorContextProvider';
 import styles from './spritePanel.module.scss';
 
 import FolderIcon from '@mui/icons-material/Folder';
-import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import _ from 'lodash';
+import { Button, TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { ImageList } from '../../../components';
+import { KeyBoardContext } from '../../../contexts';
 import { DialogContext, Dialogs } from '../../../contexts/dialogContext';
+import { SpriteGroupFilterModes, useSpriteGroupFilter } from '../../../hooks';
 import { Pagination } from '../../components';
 
-enum SpriteGroupFilterModes {
-    All = "All",
-}
-
-interface SpriteGroup {
+export interface SpriteGroup {
     name: string,
     spriteAssignment: Record<string, boolean>
 }
 
 export const SpritePanel = () => {
-    const packageContext = useContext(PackageContext);
     const mapEditorContext = useContext(MapEditorContext);
     const { setActiveDialog } = useContext(DialogContext);
+    const keyBoardContext = useContext(KeyBoardContext);
     const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
-    const [spriteGroupFilter, setSpriteGroupFilter] = useState<SpriteGroupFilterModes | string>(SpriteGroupFilterModes.All);
-
-    const sprites = packageContext?.backendStore?.sprites?.data ?? {};
-    const spriteGroups = (packageContext?.backendStore?.spriteGroups?.data ?? {}) as Record<string, SpriteGroup>;
-    const [filteredSprites, setFilteredSprites] = useState<Record<string, SpriteGroup>>({});
     const [paginationReset, setPaginationReset] = useState(1);
-
-    const spriteGroupSelectOptions = [
-        { id: SpriteGroupFilterModes.All, name: SpriteGroupFilterModes.All },
-        ..._.map(spriteGroups, ((spriteGroup, key) => ({
-            id: key,
-            name: spriteGroup.name
-        }))),
-    ]
+    const {
+        filteredSprites,
+        spriteGroupFilter,
+        setSpriteGroupFilter,
+        spriteGroupSelectOptions } = useSpriteGroupFilter();
 
     useEffect(() => {
-        const spriteGroup = spriteGroups[spriteGroupFilter];
-
-        if (spriteGroupFilter == SpriteGroupFilterModes.All || !spriteGroup) {
-            setFilteredSprites(sprites)
-            return;
-        }
-
-        setFilteredSprites(_.pickBy(sprites, (sprite: any) => spriteGroup.spriteAssignment[sprite.id]))
         setPaginationReset(prev => (prev + 1) % 2)
-
-    }, [spriteGroupFilter, sprites, spriteGroups]);
+    }, [filteredSprites]);
 
     return (
         <div className={styles['control-panel']}>
             <div className={styles['sprite-group-panel']}>
-                <FormControl fullWidth margin="dense">
-                    <InputLabel id="group-id">Sprite Group</InputLabel>
-                    <Select labelId="group-id" value={spriteGroupFilter} label="Sprite Group" onChange={(e) => setSpriteGroupFilter(e.target.value ?? SpriteGroupFilterModes.All)}>
-                        {spriteGroupSelectOptions.map((option) => (
-                            <MenuItem key={option.id} value={option.id}>
-                                {option.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <Autocomplete
+                    disableClearable
+                    value={spriteGroupSelectOptions.find(option => option.id === spriteGroupFilter)}
+                    className={styles['sprite-group-select']}
+                    options={spriteGroupSelectOptions}
+                    renderInput={(params) => <TextField {...params} label="Sprite Group" />}
+                    getOptionLabel={(option) => option.name}
+                    onFocus={() => keyBoardContext.addKeyHandler({ id: 'ChatBlockAll', matchRegex: '.*' })}
+                    onBlur={() => keyBoardContext.removeKeyHandler('ChatBlockAll')}
+                    onChange={(_, newValue) => {
+                        if (newValue === null) {
+                            setSpriteGroupFilter(SpriteGroupFilterModes.All);
+                        } else {
+                            setSpriteGroupFilter(newValue?.id ?? "");
+                        }
+                    }}
+                />
                 <Button className={styles['modal-opener']} variant="outlined" onClick={() => setActiveDialog(Dialogs.SpriteGroupsDialog)}>
                     <FolderIcon />
                 </Button>
