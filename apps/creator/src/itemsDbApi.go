@@ -16,23 +16,7 @@ func (m *ItemsDbApi) saveItemTemplate(itemTemplate ItemTemplate) string {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("itemTemplates")
 
-	toSave := bson.D{
-		{"name", itemTemplate.Name},
-		{"description", itemTemplate.Description},
-		{"type", itemTemplate.Type},
-		{"value", itemTemplate.Value},
-		{"stack", itemTemplate.Stack},
-		{"image", itemTemplate.Image},
-		{"slot", itemTemplate.Slot},
-		{"armor", itemTemplate.Armor},
-		{"strength", itemTemplate.Strength},
-		{"stamina", itemTemplate.Stamina},
-		{"agility", itemTemplate.Agility},
-		{"intelect", itemTemplate.Intelect},
-		{"spirit", itemTemplate.Spirit},
-	}
-
-	record, _ := collection.InsertOne(context.TODO(), toSave)
+	record, _ := collection.InsertOne(context.TODO(), itemTemplate)
 
 	return record.InsertedID.(primitive.ObjectID).Hex()
 }

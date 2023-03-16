@@ -1,13 +1,15 @@
-import { EquipmentSlot, GenericItemTemplate, ItemTemplate, ItemTemplateType } from '@bananos/types';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { EquipmentItemTemplate, EquipmentSlot, ItemTemplate, ItemTemplateType } from '@bananos/types';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import _ from 'lodash';
+import { useCallback, useContext, useEffect, useMemo } from 'react';
+import { FormTextField } from '../components';
+import { FormSelectField } from '../components/formSelectField';
 import { DialogContext, Dialogs } from '../contexts/dialogContext';
+import { FormContext, FormContextProvider, FormFieldConditions, Schema, SchemaFieldType } from '../contexts/FormContext';
 import { ItemsContext } from '../views/items/ItemsContextProvider';
 
 const DefaultItem = {
@@ -28,149 +30,137 @@ const DefaultItem = {
 };
 
 export const ItemTemplateDialog = () => {
+    const { activeItemTemplate } = useContext(ItemsContext);
+
+    const schema: Schema = useMemo(() => {
+        const defaultValues = activeItemTemplate?.id ? _.merge(DefaultItem, activeItemTemplate) : DefaultItem;
+        console.log(activeItemTemplate);
+
+        return {
+            id: {
+                type: SchemaFieldType.Text,
+                defaultValue: defaultValues.id
+            },
+            name: {
+                type: SchemaFieldType.Text,
+                conditions: [{ type: FormFieldConditions.Required }],
+                defaultValue: defaultValues.name
+            },
+            description: {
+                type: SchemaFieldType.Text,
+                defaultValue: defaultValues.description
+            },
+            stack: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: defaultValues.stack,
+            },
+            value: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: defaultValues.value,
+            },
+            image: {
+                type: SchemaFieldType.Text,
+                defaultValue: defaultValues.image,
+            },
+            type: {
+                type: SchemaFieldType.Text,
+                options: [ItemTemplateType.Generic, ItemTemplateType.Equipment],
+                defaultValue: defaultValues.type,
+            },
+            slot: {
+                type: SchemaFieldType.Text,
+                options: Object.values(EquipmentSlot),
+                defaultValue: (defaultValues as EquipmentItemTemplate).slot,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            },
+            armor: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: (defaultValues as EquipmentItemTemplate).armor,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            },
+            stamina: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: (defaultValues as EquipmentItemTemplate).stamina,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            },
+            agility: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: (defaultValues as EquipmentItemTemplate).agility,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            },
+            intelect: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: (defaultValues as EquipmentItemTemplate).intelect,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            },
+            spirit: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: (defaultValues as EquipmentItemTemplate).spirit,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            },
+            strength: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: (defaultValues as EquipmentItemTemplate).strength,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            }
+        }
+    }, [activeItemTemplate, DefaultItem])
+
+    return <FormContextProvider schema={schema}><ItemTemplateDialogContent /></FormContextProvider>
+}
+
+const ItemTemplateDialogContent = () => {
     const { activeDialog, setActiveDialog } = useContext(DialogContext);
     const { createItemTemplate, updateItemTemplate, activeItemTemplate } = useContext(ItemsContext);
-    const [itemTemplate, setItemTemplate] = useState<ItemTemplate>(Object.assign({}, DefaultItem) as GenericItemTemplate);
+    const { errors, setFormDirty, resetForm, getFieldValue, getValues } = useContext(FormContext);
 
     useEffect(() => {
-        if (activeDialog === Dialogs.ItemDialog && activeItemTemplate === null) {
-            setItemTemplate(Object.assign({}, DefaultItem) as GenericItemTemplate);
+        if (activeDialog !== Dialogs.ItemDialog) {
+            resetForm();
         }
-
-        if (activeDialog === Dialogs.ItemDialog && activeItemTemplate !== null) {
-            setItemTemplate(activeItemTemplate);
-        }
-    }, [activeDialog === Dialogs.ItemDialog, activeItemTemplate]);
-
-    const changeValue = useCallback(
-        (prop: string, value: string | number) => {
-            setItemTemplate({ ...itemTemplate, [prop]: value });
-        },
-        [itemTemplate]
-    );
+    }, [activeDialog !== Dialogs.ItemDialog]);
 
     const confirmAction = useCallback(() => {
+        if (_.filter(errors, err => err != '').length > 0) {
+            setFormDirty();
+            return;
+        }
+
         if (activeItemTemplate === null) {
-            createItemTemplate(itemTemplate);
+            createItemTemplate(getValues() as unknown as ItemTemplate);
         } else {
-            updateItemTemplate(itemTemplate);
+            updateItemTemplate(getValues() as unknown as ItemTemplate);
         }
         setActiveDialog(null);
-    }, [itemTemplate, activeItemTemplate]);
+    }, [getValues, activeItemTemplate]);
 
     return (
         <Dialog open={activeDialog === Dialogs.ItemDialog} onClose={() => setActiveDialog(null)}>
             <DialogTitle>Create Item</DialogTitle>
             <DialogContent>
-                <FormControl fullWidth margin="dense">
-                    <InputLabel id="item-type">Item type</InputLabel>
-                    <Select labelId="item-type" value={itemTemplate.type} label="Item type" onChange={(e) => changeValue('type', e.target.value)}>
-                        <MenuItem value={ItemTemplateType.Generic}>Generic</MenuItem>
-                        <MenuItem value={ItemTemplateType.Equipment}>Equipment</MenuItem>
-                    </Select>
-                </FormControl>
-                <TextField
-                    value={itemTemplate.name}
-                    onChange={(e) => changeValue('name', e.target.value)}
-                    margin="dense"
-                    label="Name"
-                    fullWidth
-                    variant="standard"
-                />
-                <TextField
-                    value={itemTemplate.description}
-                    onChange={(e) => changeValue('description', e.target.value)}
-                    margin="dense"
-                    label="Description"
-                    fullWidth
-                    multiline
-                    variant="standard"
-                />
-                <TextField
-                    value={itemTemplate.stack}
-                    onChange={(e) => changeValue('stack', parseInt(e.target.value))}
-                    margin="dense"
-                    label="Stack size"
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                />
-                <TextField
-                    value={itemTemplate.value}
-                    onChange={(e) => changeValue('value', parseInt(e.target.value))}
-                    margin="dense"
-                    label="Value in coppers"
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                />
+                <FormSelectField propName="type" label="Item type" />
+                <FormTextField propName="name" label="Name" />
+                <FormTextField propName="description" label="Description" multiline />
+                <FormTextField propName="stack" label="Stack" />
+                <FormTextField propName="value" label="Value in coppers" />
 
-                {itemTemplate.type === ItemTemplateType.Equipment ? (
+                {getFieldValue("type") === ItemTemplateType.Equipment ? (
                     <>
-                        <FormControl fullWidth margin="dense">
-                            <InputLabel id="item-slot">Slot</InputLabel>
-                            <Select labelId="item-slot" value={itemTemplate.slot} label="Slot" onChange={(e) => changeValue('slot', e.target.value)}>
-                                {Object.values(EquipmentSlot).map((key) => (
-                                    <MenuItem key={key} value={key}>
-                                        {key}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            value={itemTemplate.armor}
-                            onChange={(e) => changeValue('armor', parseInt(e.target.value))}
-                            margin="dense"
-                            label="Armor"
-                            fullWidth
-                            variant="standard"
-                            type="number"
-                        />
-                        <TextField
-                            value={itemTemplate.stamina}
-                            onChange={(e) => changeValue('stamina', parseInt(e.target.value))}
-                            margin="dense"
-                            label="Stamina"
-                            fullWidth
-                            variant="standard"
-                            type="number"
-                        />
-                        <TextField
-                            value={itemTemplate.agility}
-                            onChange={(e) => changeValue('agility', parseInt(e.target.value))}
-                            margin="dense"
-                            label="Agility"
-                            fullWidth
-                            variant="standard"
-                            type="number"
-                        />
-                        <TextField
-                            value={itemTemplate.intelect}
-                            onChange={(e) => changeValue('intelect', parseInt(e.target.value))}
-                            margin="dense"
-                            label="Intelect"
-                            fullWidth
-                            variant="standard"
-                            type="number"
-                        />
-                        <TextField
-                            value={itemTemplate.strength}
-                            onChange={(e) => changeValue('strength', parseInt(e.target.value))}
-                            margin="dense"
-                            label="Strength"
-                            fullWidth
-                            variant="standard"
-                            type="number"
-                        />
-                        <TextField
-                            value={itemTemplate.spirit}
-                            onChange={(e) => changeValue('spirit', parseInt(e.target.value))}
-                            margin="dense"
-                            label="Spirit"
-                            fullWidth
-                            variant="standard"
-                            type="number"
-                        />
+                        <FormSelectField propName="slot" label="Slot" />
+                        <FormTextField propName="armor" label="Armor" />
+                        <FormTextField propName="stamina" label="Stamina" />
+                        <FormTextField propName="agility" label="Agility" />
+                        <FormTextField propName="intelect" label="Intelect" />
+                        <FormTextField propName="strength" label="Strength" />
+                        <FormTextField propName="spirit" label="Spirit" />
                     </>
                 ) : null}
             </DialogContent>
@@ -182,6 +172,6 @@ export const ItemTemplateDialog = () => {
                     Cancel
                 </Button>
             </DialogActions>
-        </Dialog>
+        </Dialog >
     );
 };

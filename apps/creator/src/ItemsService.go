@@ -10,13 +10,13 @@ type ItemTemplate struct {
 	Image       string `json:"image"`
 	Stack       int32  `json:"stack"`
 	Value       int32  `json:"value"`
-	Slot        string `json:"slot"`
-	Armor       int32  `json:"armor"`
-	Stamina     int32  `json:"stamina"`
-	Agility     int32  `json:"agility"`
-	Intelect    int32  `json:"intelect"`
-	Strength    int32  `json:"strength"`
-	Spirit      int32  `json:"spirit"`
+	Slot        string `json:"slot,omitempty" bson:"slot,omitempty"`
+	Armor       int32  `json:"armor,omitempty" bson:"armor,omitempty"`
+	Stamina     int32  `json:"stamina,omitempty" bson:"stamina,omitempty"`
+	Agility     int32  `json:"agility,omitempty" bson:"agility,omitempty"`
+	Intelect    int32  `json:"intelect,omitempty" bson:"intelect,omitempty"`
+	Strength    int32  `json:"strength,omitempty" bson:"strength,omitempty"`
+	Spirit      int32  `json:"spirit,omitempty" bson:"spirit,omitempty"`
 }
 
 type ItemsService struct {

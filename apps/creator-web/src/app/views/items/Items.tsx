@@ -112,7 +112,7 @@ export const Items = () => {
                     </div>
                 </div>
                 <div className={styles['pagination-holder']}>
-                    <Pagination itemsAmount={Object.values(itemTemplates).length} setRange={setPaginationRange} reset={paginationReset} />
+                    <Pagination pageSize={60} itemsAmount={Object.values(itemTemplates).length} setRange={setPaginationRange} reset={paginationReset} />
                 </div>
             </Paper>
         </>

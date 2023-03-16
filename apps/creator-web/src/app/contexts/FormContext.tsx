@@ -46,7 +46,10 @@ interface PropertyDefinition {
     displayFormat?: (value: any) => any;
     saveFormat?: (value: any) => any;
     newElement?: any;
+    options?: string[];
+    prerequisite?: (values: Record<string, any>) => boolean;
 }
+
 interface FormContextApi {
     values: Record<string, any>;
     changeValue: (field: string, value: any) => void;
@@ -60,6 +63,8 @@ interface FormContextApi {
     getFieldValue: (fieldName: string) => any;
     appendElement: (fieldName: string) => void;
     removeElement: (fieldName: string) => void;
+    findPropertyDefinition: (fieldName: string) => PropertyDefinition;
+    getValues: () => Record<string, string>;
 }
 
 export const FormContext = React.createContext<FormContextApi>({} as FormContextApi);
@@ -112,6 +117,10 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         } else {
             const propertyDefintion = findPropertyDefinition(path);
             let value = obj;
+
+            if (propertyDefintion.prerequisite?.(values) === false) {
+                return value;
+            }
 
             if (errors[path] !== "") {
                 return value;
@@ -184,8 +193,11 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
     }
 
     const validateField = useCallback((propertyDefintion: PropertyDefinition, value: string) => {
+        if (propertyDefintion.prerequisite?.(values) === false) {
+            return "";
+        }
         return propertyDefintion.conditions?.map(condition => Validators[condition.type](value, condition)).find(text => text !== "") ?? ""
-    }, []);
+    }, [values]);
 
     const appendElement = useCallback((field: string) => {
         const propertyDefintion = findPropertyDefinition(field);
@@ -293,6 +305,16 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         resetForm();
     }, [resetForm]);
 
+    // this is called because dependend field might not have error anymore, and it should be cleared
+    useEffect(() => {
+        const err = recursiveValidation("", values)
+        setErrors(err);
+    }, [values]);
+
+    const getValues = useCallback(() => _.pickBy(values, (value, key) =>
+        findPropertyDefinition(key).prerequisite?.(values) !== false
+    ), [values, findPropertyDefinition]);
+
     return <FormContext.Provider value={{
         values,
         changeValue,
@@ -305,7 +327,9 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         setFieldDirty,
         schema,
         doesFieldExist,
-        getFieldValue
+        getFieldValue,
+        findPropertyDefinition,
+        getValues
     }}>
         {children}
     </FormContext.Provider>;
