@@ -34,7 +34,6 @@ export const ItemTemplateDialog = () => {
 
     const schema: Schema = useMemo(() => {
         const defaultValues = activeItemTemplate?.id ? _.merge(DefaultItem, activeItemTemplate) : DefaultItem;
-        console.log(activeItemTemplate);
 
         return {
             id: {
