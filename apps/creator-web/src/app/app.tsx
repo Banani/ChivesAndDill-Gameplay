@@ -15,6 +15,8 @@ import classNames from 'classnames';
 import { useContext } from 'react';
 import { MonsterActionsMap, NpcActionsMap } from './actions';
 import styles from './app.module.scss';
+import { AnimatedSpritesDialog } from './dialogs/animatedSpritesDialog';
+import { EditAnimatedSpritesDialog } from './dialogs/editAnimatedSpritesDialog';
 import { EditSpriteGroupDialog } from './dialogs/editSpriteGroupDialog';
 import { SpriteGroupContextProvider } from './dialogs/spriteGroupDialog/SpriteGroupContext';
 import { SpriteGroupDialog } from './dialogs/spriteGroupDialog/SpriteGroupDialog';
@@ -66,6 +68,8 @@ const router = createBrowserRouter([
     {
         path: '/',
         element: <SpriteGroupContextProvider>
+            <AnimatedSpritesDialog />
+            <EditAnimatedSpritesDialog />
             <SpriteGroupDialog />
             <EditSpriteGroupDialog />
             <AllDialogs />

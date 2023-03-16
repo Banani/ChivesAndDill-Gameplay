@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import { MapEditorContext } from '../contexts/mapEditorContextProvider';
 import styles from './spritePanel.module.scss';
 
+import AnimationIcon from '@mui/icons-material/Animation';
 import FolderIcon from '@mui/icons-material/Folder';
 import { Button, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -57,6 +58,9 @@ export const SpritePanel = () => {
                 />
                 <Button className={styles['modal-opener']} variant="outlined" onClick={() => setActiveDialog(Dialogs.SpriteGroupsDialog)}>
                     <FolderIcon />
+                </Button>
+                <Button className={styles['modal-opener']} variant="outlined" onClick={() => setActiveDialog(Dialogs.AnimatedSpritesDialog)}>
+                    <AnimationIcon />
                 </Button>
             </div>
 

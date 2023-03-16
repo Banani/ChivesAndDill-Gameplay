@@ -1,0 +1,19 @@
+.adding-row {
+    display: flex;
+    align-items: center;
+
+    .add-button {
+        margin-left: 12px;
+    }
+}
+
+.dialog {
+    min-width: 1400px;
+    min-height: 840px;
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-holder {
+    height: calc(840px - 90px);
+}

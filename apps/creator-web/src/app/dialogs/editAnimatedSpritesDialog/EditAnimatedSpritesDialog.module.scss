@@ -1,6 +1,10 @@
 .adding-row {
     display: flex;
     align-items: center;
+
+    .add-button {
+        margin-left: 12px;
+    }
 }
 
 .dialog {
@@ -32,8 +36,8 @@
         }
 
         .selected-sprites {
-            flex: 1;
-            margin-bottom: 20px;
+            flex: 4;
+            margin-bottom: 4px;
             margin-left: 44px;
         }
 
@@ -48,7 +52,11 @@
     }
 }
 
-
+.image-wrapper {
+    overflow: hidden;
+    width: 79.33px;
+    height: 79.33px;
+}
 
 .imageHolder {
     overflow: hidden;
@@ -57,4 +65,10 @@
     .image {
         width: calc(384px * 2.48);
     }
+}
+
+.animation-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
