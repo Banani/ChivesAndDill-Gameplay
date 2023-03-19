@@ -20,12 +20,12 @@ export const FormSelectField: FunctionComponent<FormTextFieldProps & TextFieldPr
     }
 
     return <FormControl fullWidth margin="dense">
-        <InputLabel id={propName}>{props.label}</InputLabel>
+        <InputLabel id={propName}>{propertyDefintion.label}</InputLabel>
         <Select
             onBlur={() => setFieldDirty(propName)}
             labelId={propName}
             value={getFieldValue(propName)}
-            label={props.label}
+            label={propertyDefintion.label}
             onChange={(e) => changeValue(propName, e.target.value)}
             error={dirty[propName] && !!errors[propName]}
         >

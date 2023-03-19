@@ -130,13 +130,14 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
                     density="compact"
                     autoPageSize
                     processRowUpdate={(newRow) => {
+                        const parsedNewRow: Record<string, any> = _.mapValues(newRow, (field: any) => field === null ? "" : field)
                         updateSelectedItems(_.mapValues(selectedItems, (item => {
-                            if (item[idField ?? ""] === newRow.id) {
-                                return mapItemForSave ? mapItemForSave(item, newRow) : item;
+                            if (item[idField ?? ""] === parsedNewRow["id"]) {
+                                return mapItemForSave ? mapItemForSave(item, parsedNewRow) : item;
                             }
                             return item;
                         })));
-                        return newRow;
+                        return parsedNewRow;
                     }}
                 />
             </div>

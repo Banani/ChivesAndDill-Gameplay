@@ -64,7 +64,7 @@ export const ItemTemplateDialog = () => {
                 defaultValue: defaultValues.image,
             },
             type: {
-                type: SchemaFieldType.Text,
+                type: SchemaFieldType.Select,
                 options: [ItemTemplateType.Generic, ItemTemplateType.Equipment],
                 defaultValue: defaultValues.type,
             },

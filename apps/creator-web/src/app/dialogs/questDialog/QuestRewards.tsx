@@ -1,32 +1,30 @@
 import { QuestRewardItem } from "@bananos/types";
-import { TextField } from "@mui/material";
 import { GridRenderCellParams, GridSelectionModel } from "@mui/x-data-grid";
-import _ from "lodash";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AssignmentPanel } from "../../components/assignmentPanel";
 import { ItemPreview } from "../../components/itemPreview";
 import { PackageContext } from "../../contexts";
 import { DialogContext, Dialogs } from "../../contexts/dialogContext";
-import { QuestsContext } from "../../views/quests/QuestsContextProvider";
+import { FormContext } from "../../contexts/FormContext";
 
 export const QuestRewards = () => {
-    const packageContext = useContext(PackageContext);
-    const { activeQuest, setActiveQuest } = useContext(QuestsContext);
-    const [rewardItems, setRewardItems] = useState<Record<string, QuestRewardItem>>({});
-    const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
     const { activeDialog } = useContext(DialogContext);
+    const { changeValue, getFieldValue, errors } = useContext(FormContext);
+    const packageContext = useContext(PackageContext);
+    const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
+    const [rewardItems, setRewardItems] = useState<Record<string, QuestRewardItem>>({});
     const [initSelectionModel, setInitSelectionModel] = useState<GridSelectionModel>([]);
 
     useEffect(() => {
-        if (activeDialog === Dialogs.QuestDialog && activeQuest !== null) {
-            setInitSelectionModel(_.map(activeQuest.questReward.items, (_, itemId) => itemId))
+        if (activeDialog === Dialogs.QuestDialog) {
+            const rewardItems = getFieldValue('questReward.items');
+            setRewardItems(rewardItems);
+            setInitSelectionModel(Object.keys(rewardItems))
         }
     }, [activeDialog === Dialogs.QuestDialog])
 
     useEffect(() => {
-        if (activeQuest) {
-            setActiveQuest((prev: any) => ({ ...prev, questReward: { ...prev.questReward, items: rewardItems } }))
-        }
+        changeValue('questReward.items', rewardItems);
     }, [rewardItems]);
 
     const columns = [
@@ -57,42 +55,7 @@ export const QuestRewards = () => {
         editable: true,
     }]
 
-    const changeValue = useCallback(
-        (prop: string, value: string | number) => {
-            const path = prop.split('.');
-            const toUpdate: Record<string, any> = {};
-            let nested = toUpdate;
-
-            for (let i = 0; i < path.length - 1; i++) {
-                nested[path[i]] = {};
-                nested = nested[path[i]];
-            }
-            nested[path[path.length - 1]] = value;
-
-            setActiveQuest(_.merge({}, activeQuest, toUpdate));
-        },
-        [activeQuest]
-    );
-
     return (<>
-        <TextField
-            value={activeQuest?.questReward.experience}
-            onChange={(e) => changeValue('questReward.experience', parseInt(e.target.value))}
-            margin="dense"
-            label="Experience"
-            type="number"
-            fullWidth
-            variant="standard"
-        />
-        <TextField
-            value={activeQuest?.questReward.currency}
-            onChange={(e) => changeValue('questReward.currency', parseInt(e.target.value))}
-            margin="dense"
-            label="Money (in coppers)"
-            fullWidth
-            variant="standard"
-            type="number"
-        />
         <AssignmentPanel
             allItems={itemTemplates}
             allItemsColumnDefinition={columns}
@@ -112,5 +75,7 @@ export const QuestRewards = () => {
             updateSelectedItems={setRewardItems}
             getInitialRow={(id) => ({ itemTemplateId: id, amount: 1 })}
             initSelectionModel={initSelectionModel}
+            errors={errors}
+            errorPath="questReward.items."
         /></>)
 }

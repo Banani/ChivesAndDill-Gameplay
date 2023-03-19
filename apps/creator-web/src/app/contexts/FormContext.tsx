@@ -7,7 +7,8 @@ export enum SchemaFieldType {
     Text = "text",
     Number = "number",
     Array = "array",
-    Object = "object"
+    Object = "object",
+    Select = "select"
 }
 
 export type Schema = Record<string, PropertyDefinition>
@@ -38,7 +39,9 @@ interface FormContextProps {
     schema: Schema;
 }
 
-interface PropertyDefinition {
+export interface PropertyDefinition {
+    // TODO: ZMIENIC NA NOT OPTIONAL
+    label?: string;
     type: SchemaFieldType;
     conditions?: FormFieldCondition[];
     defaultValue?: any;
@@ -48,6 +51,8 @@ interface PropertyDefinition {
     newElement?: any;
     options?: string[];
     prerequisite?: (values: Record<string, any>) => boolean;
+    formFieldProps?: Record<string, number | string | boolean>
+    hidden?: boolean;
 }
 
 interface FormContextApi {
@@ -61,7 +66,7 @@ interface FormContextApi {
     schema: Schema;
     doesFieldExist: (fieldName: string) => boolean;
     getFieldValue: (fieldName: string) => any;
-    appendElement: (fieldName: string) => void;
+    appendElement: (fieldName: string, key?: string) => void;
     removeElement: (fieldName: string) => void;
     findPropertyDefinition: (fieldName: string) => PropertyDefinition;
     getValues: () => Record<string, string>;
@@ -161,7 +166,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             current = current?.[pathPart] ? current[pathPart] : undefined;
         })
 
-        return current.hasOwnProperty(lastProp);
+        return current?.hasOwnProperty(lastProp);
     }, [schema, values]);
 
     const findPropertyDefinition = (field: string) => {
@@ -175,7 +180,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
                 throw new Error("Cannot find property: " + path[i] + " in path: " + field)
             }
 
-            if ((current.type == SchemaFieldType.Record || current.type === SchemaFieldType.Array) && !current.schema) {
+            if ((current.type == SchemaFieldType.Record || current.type === SchemaFieldType.Array) && (!current.schema || i === path.length - 1)) {
                 return current as PropertyDefinition;
             }
 
@@ -199,7 +204,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         return propertyDefintion.conditions?.map(condition => Validators[condition.type](value, condition)).find(text => text !== "") ?? ""
     }, [values]);
 
-    const appendElement = useCallback((field: string) => {
+    const appendElement = useCallback((field: string, key?: string) => {
         const propertyDefintion = findPropertyDefinition(field);
         const path = field.split(".");
         const prop = path.pop() ?? "";
@@ -212,6 +217,11 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
 
         if (propertyDefintion.type == SchemaFieldType.Array && propertyDefintion.newElement !== undefined) {
             current[prop] = [...current[prop], _.cloneDeep(propertyDefintion.newElement)];
+            setValues(toSave);
+        }
+
+        if (propertyDefintion.type == SchemaFieldType.Record && propertyDefintion.newElement !== undefined && key != undefined) {
+            current[prop][key] = propertyDefintion.newElement;
             setValues(toSave);
         }
     }, [values, findPropertyDefinition])
@@ -227,7 +237,12 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             current = current[pathPart];
         });
 
-        (current as []).splice(parseInt(prop), 1);
+        if (Array.isArray(current)) {
+            current.splice(parseInt(prop), 1);
+        } else {
+            delete current[prop];
+        }
+
         setValues(toSave);
     }, [values])
 

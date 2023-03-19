@@ -9,12 +9,12 @@ import { FormContext } from '../../../contexts/FormContext';
 
 
 export const MonsterLoot = () => {
+    const { activeDialog } = useContext(DialogContext);
+    const { changeValue, getFieldValue, errors } = useContext(FormContext);
     const packageContext = useContext(PackageContext);
     const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
     const [localItemTemplates, setLocalItemTemplates] = useState<Record<string, ItemTemplate>>({});
-    const { activeDialog } = useContext(DialogContext);
     const [initSelectionModel, setInitSelectionModel] = useState<GridSelectionModel>([]);
-    const { changeValue, getFieldValue, errors } = useContext(FormContext);
 
     useEffect(() => {
         if (activeDialog === Dialogs.MonsterTemplateDialog) {
