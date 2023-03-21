@@ -1,4 +1,4 @@
-import { AllQuestStagePart, QuestSchema, QuestStage, QuestType } from '@bananos/types';
+import { KillingQuestStagePart, MovementQuestStagePart, QuestSchema, QuestStage, QuestType } from '@bananos/types';
 import { Box, Tab, Tabs } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -22,7 +22,7 @@ enum QuestDialogTabs {
     Conditions = 'Conditions',
 }
 
-const DefaultSubstage = {
+const DefaultMovementSubstage: MovementQuestStagePart = {
     id: "",
     questId: "",
     stageId: "",
@@ -30,6 +30,13 @@ const DefaultSubstage = {
     locationName: "",
     targetLocation: { x: 0, y: 0 },
     acceptableRange: 200,
+}
+
+const DefaultKillingSubstage: KillingQuestStagePart = {
+    id: "",
+    questId: "",
+    stageId: "",
+    type: QuestType.KILLING,
     monsterName: "",
     // rule: [{
     //     fieldName: "characterTemplateId",
@@ -37,13 +44,13 @@ const DefaultSubstage = {
     //     value: ""
     // }],
     amount: 0
-}
+} as KillingQuestStagePart;
 
 const DefaultStage: QuestStage = {
     id: "",
     description: '',
     stageParts: {
-        '2': _.cloneDeep(DefaultSubstage as AllQuestStagePart)
+        '2': _.cloneDeep(DefaultMovementSubstage)
     }
 }
 
@@ -155,7 +162,7 @@ export const QuestDialog = () => {
                     stageParts: {
                         label: "Substage",
                         type: SchemaFieldType.Record,
-                        newElement: _.cloneDeep(DefaultSubstage),
+                        newElement: _.cloneDeep(DefaultMovementSubstage),
                         schema: {
                             id: {
                                 type: SchemaFieldType.Text,
@@ -172,7 +179,11 @@ export const QuestDialog = () => {
                             type: {
                                 label: "Substage Type",
                                 type: SchemaFieldType.Select,
-                                options: [QuestType.MOVEMENT, QuestType.KILLING]
+                                options: [{ label: "Go to place", value: QuestType.MOVEMENT }, { label: "Kill monster", value: QuestType.KILLING }],
+                                typeChanger: {
+                                    [QuestType.MOVEMENT]: DefaultMovementSubstage,
+                                    [QuestType.KILLING]: DefaultKillingSubstage,
+                                }
                             },
                             locationName: {
                                 label: "Location Name",

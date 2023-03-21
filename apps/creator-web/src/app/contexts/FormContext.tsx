@@ -44,6 +44,11 @@ interface FormContextProps {
     schema: Schema;
 }
 
+export interface SelectOption {
+    label: string;
+    value: string;
+}
+
 export interface PropertyDefinition {
     // TODO: ZMIENIC NA NOT OPTIONAL
     label?: string;
@@ -54,10 +59,13 @@ export interface PropertyDefinition {
     displayFormat?: (value: any) => any;
     saveFormat?: (value: any) => any;
     newElement?: any;
-    options?: string[];
+    options?: SelectOption[];
     prerequisite?: (values: Record<string, any>) => boolean;
     formFieldProps?: Record<string, number | string | boolean>
     hidden?: boolean;
+
+    // typeChanger allows to change other fields of object when it is changed
+    typeChanger?: Record<string, any>;
 }
 
 interface FormContextApi {
@@ -293,16 +301,28 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
 
 
     const saveFieldValue = useCallback((field: string, value: any) => {
+        const propertyDefintion = findPropertyDefinition(field);
         const path = field.split(".");
-        const prop = path.pop() ?? "";
+        let prop = path.pop() ?? "";
         const toSave = _.cloneDeep(values);
         let current = toSave;
+        let valueToSet = value;
+
+        // During type changing, parent should be modified, not the field
+        if (propertyDefintion.typeChanger) {
+            if (!propertyDefintion.typeChanger[value]) {
+                console.error("Type: " + value + " does not contain its definition in the typeChanger");
+            }
+
+            prop = path.pop() ?? "";
+            valueToSet = propertyDefintion.typeChanger[value]
+        }
 
         path.forEach(pathPart => {
             current = current[pathPart];
         })
 
-        current[prop] = value;
+        current[prop] = valueToSet;
         setValues(toSave);
     }, [values])
 
@@ -311,13 +331,6 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             console.warn(`Field: ${field} does not exist in the schema`);
             return;
         }
-
-        const errors = recursiveValidation(field, value);
-
-        setErrors(prev => ({
-            ...prev,
-            ...errors
-        }))
 
         const values = recursiveUpdate(field, value, errors);
         saveFieldValue(field, values);

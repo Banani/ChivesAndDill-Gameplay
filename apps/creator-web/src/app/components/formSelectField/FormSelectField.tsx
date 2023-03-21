@@ -29,7 +29,7 @@ export const FormSelectField: FunctionComponent<FormTextFieldProps & TextFieldPr
             onChange={(e) => changeValue(propName, e.target.value)}
             error={dirty[propName] && !!errors[propName]}
         >
-            {propertyDefintion.options?.map(option => <MenuItem key={option} value={option}>{option}</MenuItem>)}
+            {propertyDefintion.options?.map(option => <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>)}
         </Select>
     </FormControl>
 }

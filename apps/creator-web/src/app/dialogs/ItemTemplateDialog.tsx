@@ -65,12 +65,15 @@ export const ItemTemplateDialog = () => {
             },
             type: {
                 type: SchemaFieldType.Select,
-                options: [ItemTemplateType.Generic, ItemTemplateType.Equipment],
+                options: [
+                    { label: ItemTemplateType.Equipment, value: ItemTemplateType.Equipment },
+                    { label: ItemTemplateType.Generic, value: ItemTemplateType.Generic }
+                ],
                 defaultValue: defaultValues.type,
             },
             slot: {
                 type: SchemaFieldType.Text,
-                options: Object.values(EquipmentSlot),
+                options: Object.values(EquipmentSlot).map(slot => ({ label: slot, value: slot })),
                 defaultValue: (defaultValues as EquipmentItemTemplate).slot,
                 prerequisite: ({ type }) => type === ItemTemplateType.Equipment
             },
