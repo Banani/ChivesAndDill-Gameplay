@@ -36,7 +36,6 @@ export const ItemStock = () => {
         }, { field: 'name', headerName: 'Item Name', flex: 1 }];
 
     useEffect(() => {
-        console.log(_.mapValues(localItemTemplates, () => true))
         changeValue('stock', _.mapValues(localItemTemplates, () => true))
     }, [localItemTemplates]);
 

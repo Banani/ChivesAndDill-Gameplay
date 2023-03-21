@@ -1,6 +1,6 @@
 import { QuestSchema } from "@bananos/types";
 import { GridSelectionModel } from "@mui/x-data-grid";
-import _ from "lodash";
+import _, { map } from "lodash";
 import { useContext, useEffect, useState } from "react";
 import { Label } from "../../components";
 import { AssignmentPanel } from "../../components/assignmentPanel";
@@ -11,28 +11,19 @@ import { QuestsContext } from "../../views/quests/QuestsContextProvider";
 
 
 export const QuestConditions = () => {
-    const { activeQuest, setActiveQuest } = useContext(QuestsContext);
+    const { activeQuest } = useContext(QuestsContext);
     const { activeDialog } = useContext(DialogContext);
-    const { changeValue, getFieldValue, errors } = useContext(FormContext);
+    const { changeValue, getFieldValue, errors, isFormReady } = useContext(FormContext);
     const packageContext = useContext(PackageContext);
     const questSchemas = packageContext?.backendStore?.questSchemas?.data ?? {};
-    const [requiredQuests, setRequiredQuests] = useState<Record<string, string>>({});
     const [initSelectionModel, setInitSelectionModel] = useState<GridSelectionModel>([]);
 
     useEffect(() => {
-        if (activeDialog === Dialogs.QuestDialog && activeQuest !== null) {
-            setInitSelectionModel(_.map(activeQuest.requiredQuests, (_, questId) => questId))
+        if (activeDialog === Dialogs.QuestDialog && isFormReady) {
             const requiredQuests = getFieldValue('requiredQuests');
-            setRequiredQuests(requiredQuests);
             setInitSelectionModel(Object.keys(requiredQuests))
         }
-    }, [activeDialog === Dialogs.QuestDialog])
-
-    useEffect(() => {
-        if (activeQuest) {
-            changeValue('requiredQuests', requiredQuests);
-        }
-    }, [requiredQuests]);
+    }, [activeDialog === Dialogs.QuestDialog, getFieldValue, isFormReady])
 
     const columns = [
         {
@@ -42,14 +33,20 @@ export const QuestConditions = () => {
         },
     ]
 
+    if (!isFormReady) {
+        return null;
+    }
+
+    const items: Record<string, boolean> = getFieldValue('requiredQuests');
+
     return (<>
         <Label>Required quests completed:</Label>
         <AssignmentPanel
             allItems={_.pickBy(questSchemas, (questSchema: QuestSchema) => questSchema.id !== activeQuest?.id)}
             allItemsColumnDefinition={columns}
-            selectedItems={requiredQuests}
+            selectedItems={map(items, (_, key) => questSchemas[key])}
             selectedItemsColumnDefinition={columns}
-            updateSelectedItems={setRequiredQuests}
+            updateSelectedItems={(callback) => changeValue('requiredQuests', _.mapValues(callback(items), () => ""))}
             initSelectionModel={initSelectionModel}
             errors={errors}
             errorPath={"requiredQuests."}

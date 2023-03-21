@@ -94,7 +94,6 @@ export const CharacterContextProvider: FunctionComponent<CharacterContextProvide
 
     const deleteCharacterTemplate = useCallback(
         (characterTemplateId: string) => {
-            console.log(characterTemplateId, characterTemplateActions.DELETE_CHARACTER_TEMPLATE)
             socket.send(JSON.stringify({ actionType: characterTemplateActions.DELETE_CHARACTER_TEMPLATE, characterTemplateId }));
         },
         [socket]

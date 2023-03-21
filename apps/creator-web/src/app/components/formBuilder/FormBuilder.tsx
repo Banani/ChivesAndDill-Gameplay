@@ -14,7 +14,7 @@ interface FormBuilderProps {
 }
 
 export const FormBuilder: FunctionComponent<FormBuilderProps> = ({ schema }) => {
-    const { getFieldValue, removeElement, appendElement } = useContext(FormContext);
+    const { getFieldValue, removeElement, appendElement, values } = useContext(FormContext);
 
     const generateId = useCallback((key: string) => {
         const highestId = Math.max(0, ...(Object.keys(getFieldValue(key)).map((n: string) => parseInt(n))));
@@ -64,6 +64,10 @@ export const FormBuilder: FunctionComponent<FormBuilderProps> = ({ schema }) => 
                 <Button variant="outlined" onClick={() => appendElement(fieldName, generateId(fieldName))}>Add {propertyDefinition.label}</Button>
             </div>
         </React.Fragment>),
+    }
+
+    if (!Object.keys(values).length) {
+        return <></>;
     }
 
     return <>

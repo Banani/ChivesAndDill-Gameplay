@@ -16,7 +16,8 @@ export type Schema = Record<string, PropertyDefinition>
 export enum FormFieldConditions {
     Required = 'required',
     Number = 'number',
-    Range = 'range'
+    Range = 'range',
+    PositiveNumber = "positiveNumber"
 }
 
 interface RequiredCondition {
@@ -27,13 +28,17 @@ interface NumberCondition {
     type: FormFieldConditions.Number
 }
 
+interface PositiveNumberCondition {
+    type: FormFieldConditions.PositiveNumber,
+}
+
 interface RangeCondition {
     type: FormFieldConditions.Range,
     min: number,
     max: number
 }
 
-type FormFieldCondition = RequiredCondition | NumberCondition | RangeCondition;
+type FormFieldCondition = RequiredCondition | NumberCondition | RangeCondition | PositiveNumberCondition;
 
 interface FormContextProps {
     schema: Schema;
@@ -70,6 +75,9 @@ interface FormContextApi {
     removeElement: (fieldName: string) => void;
     findPropertyDefinition: (fieldName: string) => PropertyDefinition;
     getValues: () => Record<string, string>;
+
+    // Form is not ready, when it does not have its values set to initial state
+    isFormReady: boolean;
 }
 
 export const FormContext = React.createContext<FormContextApi>({} as FormContextApi);
@@ -85,6 +93,12 @@ const Validators: Record<FormFieldConditions, (value: string, conditionParameter
     [FormFieldConditions.Number]: (value: string) => {
         if (parseInt(value).toString() != value) {
             return "This value has to be a number"
+        }
+        return "";
+    },
+    [FormFieldConditions.PositiveNumber]: (value: string) => {
+        if (parseInt(value) < 0) {
+            return "This values cannot be a negative number"
         }
         return "";
     },
@@ -110,6 +124,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
     const [values, setValues] = useState<Record<string, any>>({});
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [dirty, setDirty] = useState({});
+    const [isFormReady, setIsFormReady] = useState(false);
 
     const recursiveUpdate = (path: string, obj: any, errors: Record<string, string>) => {
         let toSave: any = {};
@@ -123,7 +138,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             const propertyDefintion = findPropertyDefinition(path);
             let value = obj;
 
-            if (propertyDefintion.prerequisite?.(values) === false) {
+            if (!matchedPrerequisites(propertyDefintion, path)) {
                 return value;
             }
 
@@ -151,7 +166,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             }
         } else {
             const propertyDefintion = findPropertyDefinition(path);
-            return { [path]: validateField(propertyDefintion, obj) }
+            return { [path]: validateField(propertyDefintion, obj, path) }
         }
 
         return errors;
@@ -180,7 +195,8 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
                 throw new Error("Cannot find property: " + path[i] + " in path: " + field)
             }
 
-            if ((current.type == SchemaFieldType.Record || current.type === SchemaFieldType.Array) && (!current.schema || i === path.length - 1)) {
+            if ((current.type == SchemaFieldType.Record || current.type === SchemaFieldType.Array || current.type === SchemaFieldType.Object) &&
+                (!current.schema || i === path.length - 1)) {
                 return current as PropertyDefinition;
             }
 
@@ -197,12 +213,41 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         return current as PropertyDefinition;
     }
 
-    const validateField = useCallback((propertyDefintion: PropertyDefinition, value: string) => {
-        if (propertyDefintion.prerequisite?.(values) === false) {
+    const getFieldValue = useCallback((fieldName: string) => {
+        const propertyDefintion = findPropertyDefinition(fieldName);
+        const path = fieldName.split(".");
+        let current = values;
+
+        path.forEach(pathElement => {
+            current = current[pathElement];
+        })
+
+        return (propertyDefintion.displayFormat && !errors[fieldName]) ? propertyDefintion.displayFormat(current) : current;
+    }, [values, errors]);
+
+    const matchedPrerequisites = useCallback((propertyDefintion: PropertyDefinition, path: string) => {
+        if (!propertyDefintion.prerequisite) {
+            return true
+        }
+
+        const dividedPath = path.split(".");
+        dividedPath.pop();
+        const parentPath = dividedPath.join(".");
+
+        if (!parentPath) {
+            return true;
+        }
+
+        const parentValue = getFieldValue(parentPath);
+        return propertyDefintion.prerequisite(parentValue);
+    }, [getFieldValue]);
+
+    const validateField = useCallback((propertyDefintion: PropertyDefinition, value: string, path: string) => {
+        if (!matchedPrerequisites(propertyDefintion, path)) {
             return "";
         }
         return propertyDefintion.conditions?.map(condition => Validators[condition.type](value, condition)).find(text => text !== "") ?? ""
-    }, [values]);
+    }, [values, matchedPrerequisites]);
 
     const appendElement = useCallback((field: string, key?: string) => {
         const propertyDefintion = findPropertyDefinition(field);
@@ -293,7 +338,6 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
 
         //TODO: wartosci powinny pojsc przez parsery
         setValues(values);
-        setErrors(recursiveValidation("", values));
         setDirty({});
     }, [schema]);
 
@@ -304,19 +348,8 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         }));
     }, []);
 
-    const getFieldValue = useCallback((fieldName: string) => {
-        const propertyDefintion = findPropertyDefinition(fieldName);
-        const path = fieldName.split(".");
-        let current = values;
-
-        path.forEach(pathElement => {
-            current = current[pathElement];
-        })
-
-        return propertyDefintion.displayFormat && !errors[fieldName] ? propertyDefintion.displayFormat(current) : current;
-    }, [values, errors]);
-
     useEffect(() => {
+        setIsFormReady(true);
         resetForm();
     }, [resetForm]);
 
@@ -326,9 +359,30 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         setErrors(err);
     }, [values]);
 
-    const getValues = useCallback(() => _.pickBy(values, (value, key) =>
-        findPropertyDefinition(key).prerequisite?.(values) !== false
-    ), [values, findPropertyDefinition]);
+
+    const getRecursiveValues = useCallback((values, path) => {
+        const output: Record<string, any> = {};
+
+        _.forEach(values, (value, key) => {
+            const currentPath = path.length > 0 ? path + "." + key : key;
+            const propertyDefintion = findPropertyDefinition(currentPath);
+            if (!matchedPrerequisites(propertyDefintion, currentPath)) {
+                return;
+            }
+
+            if (typeof value === "object") {
+                output[key] = getRecursiveValues(value, currentPath);
+            } else {
+                output[key] = value;
+            }
+        })
+
+        return output;
+    }, [findPropertyDefinition, matchedPrerequisites]);
+
+    const getValues = useCallback(() => {
+        return getRecursiveValues(values, "");
+    }, [values, getRecursiveValues]);
 
     return <FormContext.Provider value={{
         values,
@@ -344,7 +398,8 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         doesFieldExist,
         getFieldValue,
         findPropertyDefinition,
-        getValues
+        getValues,
+        isFormReady
     }}>
         {children}
     </FormContext.Provider>;

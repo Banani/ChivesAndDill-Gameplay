@@ -1,17 +1,17 @@
-import { KillingQuestStagePart, KillingQuestStagePartComparison, MovementQuestStagePart, QuestSchema, QuestStage, QuestType } from '@bananos/types';
+import { AllQuestStagePart, QuestSchema, QuestStage, QuestType } from '@bananos/types';
 import { Box, Tab, Tabs } from '@mui/material';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import _ from 'lodash';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { QuestsContext } from '../../views/quests/QuestsContextProvider';
 
 import { FormBuilder } from '../../components/formBuilder';
 import { FormContextProvider, FormFieldConditions, Schema, SchemaFieldType } from '../../contexts/FormContext';
+import { QuestActions } from './QuestActions';
 import { QuestConditions } from './QuestConditions';
 import styles from "./QuestDialog.module.scss";
 import { QuestRewards } from './QuestRewards';
@@ -22,27 +22,20 @@ enum QuestDialogTabs {
     Conditions = 'Conditions',
 }
 
-const DefaultMovementSubstage: MovementQuestStagePart = {
+const DefaultSubstage = {
     id: "",
     questId: "",
     stageId: "",
     type: QuestType.MOVEMENT,
     locationName: "",
     targetLocation: { x: 0, y: 0 },
-    acceptableRange: 200
-}
-
-const DefaultKillingSubstage: KillingQuestStagePart = {
-    id: "",
-    questId: "",
-    stageId: "",
-    type: QuestType.KILLING,
+    acceptableRange: 200,
     monsterName: "",
-    rule: [{
-        fieldName: "characterTemplateId",
-        comparison: KillingQuestStagePartComparison.equality,
-        value: ""
-    }],
+    // rule: [{
+    //     fieldName: "characterTemplateId",
+    //     comparison: KillingQuestStagePartComparison.equality,
+    //     value: ""
+    // }],
     amount: 0
 }
 
@@ -50,7 +43,7 @@ const DefaultStage: QuestStage = {
     id: "",
     description: '',
     stageParts: {
-        '2': _.cloneDeep(DefaultMovementSubstage)
+        '2': _.cloneDeep(DefaultSubstage as AllQuestStagePart)
     }
 }
 
@@ -71,38 +64,40 @@ const DefaultQuest: QuestSchema = {
 };
 
 export const QuestDialog = () => {
+    const { activeQuest, setActiveQuest } = useContext(QuestsContext);
+    const defaultQuest = activeQuest?.id ? activeQuest : DefaultQuest;
 
     const conditionsSchema: Schema = useMemo(() => {
         return {
             requiredLevel: {
                 label: "Required level",
                 type: SchemaFieldType.Number,
-                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
-                defaultValue: 1
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
+                defaultValue: defaultQuest.requiredLevel
             },
             requiredQuests: {
                 type: SchemaFieldType.Record,
                 hidden: true,
-                defaultValue: {}
+                defaultValue: defaultQuest.requiredQuests
             }
         }
-    }, []);
+    }, [activeQuest]);
 
     const rewardsSchema: Schema = useMemo(() => {
         return {
             questReward: {
                 type: SchemaFieldType.Object,
-                defaultValue: DefaultQuest.questReward,
+                defaultValue: defaultQuest.questReward,
                 schema: {
                     experience: {
                         label: "Experience",
                         type: SchemaFieldType.Number,
-                        conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                        conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
                     },
                     currency: {
                         label: "Money (in coppers)",
                         type: SchemaFieldType.Number,
-                        conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                        conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
                     },
                     items: {
                         type: SchemaFieldType.Record,
@@ -117,29 +112,34 @@ export const QuestDialog = () => {
                             }
                         }
                     }
-                }
+                },
             },
         }
-    }, []);
+    }, [defaultQuest]);
 
     const defaultPartSchema: Schema = useMemo(() => {
         return {
+            id: {
+                type: SchemaFieldType.Text,
+                defaultValue: defaultQuest.id,
+                hidden: true
+            },
             name: {
                 label: "Name",
                 type: SchemaFieldType.Text,
                 conditions: [{ type: FormFieldConditions.Required }],
-                defaultValue: ""
+                defaultValue: defaultQuest.name
             },
             description: {
                 label: "Description",
                 type: SchemaFieldType.Text,
-                defaultValue: "",
+                defaultValue: defaultQuest.description,
                 formFieldProps: { 'multiline': true }
             },
             stages: {
                 label: "Stage",
                 type: SchemaFieldType.Record,
-                defaultValue: DefaultQuest.stages,
+                defaultValue: defaultQuest.stages,
                 newElement: _.cloneDeep(DefaultStage),
                 schema: {
                     id: {
@@ -155,7 +155,7 @@ export const QuestDialog = () => {
                     stageParts: {
                         label: "Substage",
                         type: SchemaFieldType.Record,
-                        newElement: _.cloneDeep(DefaultMovementSubstage),
+                        newElement: _.cloneDeep(DefaultSubstage),
                         schema: {
                             id: {
                                 type: SchemaFieldType.Text,
@@ -177,6 +177,7 @@ export const QuestDialog = () => {
                             locationName: {
                                 label: "Location Name",
                                 type: SchemaFieldType.Text,
+                                conditions: [{ type: FormFieldConditions.Required }],
                                 prerequisite: ({ type }) => type === QuestType.MOVEMENT
                             },
                             targetLocation: {
@@ -198,7 +199,7 @@ export const QuestDialog = () => {
                             acceptableRange: {
                                 label: "Acceptable Range",
                                 type: SchemaFieldType.Number,
-                                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
                                 prerequisite: ({ type }) => type === QuestType.MOVEMENT
                             },
                             monsterName: {
@@ -209,7 +210,7 @@ export const QuestDialog = () => {
                             amount: {
                                 label: "Amount",
                                 type: SchemaFieldType.Number,
-                                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
                                 prerequisite: ({ type }) => type === QuestType.KILLING
                             },
                         }
@@ -217,13 +218,11 @@ export const QuestDialog = () => {
                 }
             }
         };
-    }, []);
+    }, [defaultQuest]);
 
     const { activeDialog, setActiveDialog } = useContext(DialogContext);
-    const { activeQuest, createQuest, setActiveQuest, updateQuest } = useContext(QuestsContext);
 
     const [activeTab, setActiveTab] = useState<QuestDialogTabs>(QuestDialogTabs.Default);
-
     const changeActiveTab = (event: React.SyntheticEvent, newValue: QuestDialogTabs) => {
         setActiveTab(newValue);
     };
@@ -240,26 +239,16 @@ export const QuestDialog = () => {
         }
     }, [activeDialog !== Dialogs.QuestDialog]);
 
-
-    const confirmAction = useCallback(() => {
-        if (activeQuest?.id) {
-            updateQuest(activeQuest);
-        } else {
-            createQuest(activeQuest as QuestSchema);
-        }
-        setActiveDialog(null);
-    }, [activeQuest, activeQuest]);
+    const wholeSchema = useMemo(() => ({ ...defaultPartSchema, ...rewardsSchema, ...conditionsSchema }), [defaultPartSchema, rewardsSchema, conditionsSchema]);
 
     if (!activeQuest) {
         return null;
     }
 
-    const wholeSchema = { ...defaultPartSchema, ...rewardsSchema, ...conditionsSchema };
-
     return (
         <Dialog open={activeDialog === Dialogs.QuestDialog} onClose={() => setActiveDialog(null)} maxWidth="xl" className={styles['dialog']}>
             <FormContextProvider schema={wholeSchema}>
-                <DialogTitle>Create Quest</DialogTitle>
+                <DialogTitle>{activeQuest?.id ? 'Update' : 'Create'} Quest</DialogTitle>
                 <DialogContent className={styles['dialog-content']}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={activeTab} onChange={changeActiveTab} aria-label="basic tabs example">
@@ -269,7 +258,9 @@ export const QuestDialog = () => {
                         </Tabs>
                     </Box>
                     <div role="tabpanel" hidden={activeTab !== QuestDialogTabs.Default} aria-labelledby={QuestDialogTabs.Default}>
-                        <FormBuilder schema={defaultPartSchema} />
+                        {activeTab === QuestDialogTabs.Default ? <>
+                            <FormBuilder schema={defaultPartSchema} />
+                        </> : null}
                     </div>
                     <div role="tabpanel" hidden={activeTab !== QuestDialogTabs.Reward} aria-labelledby={QuestDialogTabs.Reward}>
                         {activeTab === QuestDialogTabs.Reward ? <>
@@ -285,12 +276,7 @@ export const QuestDialog = () => {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={confirmAction} variant="contained">
-                        {activeQuest.id ? 'Update' : 'Create'}
-                    </Button>
-                    <Button onClick={() => setActiveDialog(null)} variant="outlined">
-                        Cancel
-                    </Button>
+                    <QuestActions />
                 </DialogActions>
             </FormContextProvider>
         </Dialog >

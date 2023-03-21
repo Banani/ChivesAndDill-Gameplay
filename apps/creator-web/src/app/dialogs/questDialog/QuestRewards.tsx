@@ -9,23 +9,17 @@ import { FormContext } from "../../contexts/FormContext";
 
 export const QuestRewards = () => {
     const { activeDialog } = useContext(DialogContext);
-    const { changeValue, getFieldValue, errors } = useContext(FormContext);
+    const { changeValue, getFieldValue, errors, isFormReady } = useContext(FormContext);
     const packageContext = useContext(PackageContext);
     const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
-    const [rewardItems, setRewardItems] = useState<Record<string, QuestRewardItem>>({});
     const [initSelectionModel, setInitSelectionModel] = useState<GridSelectionModel>([]);
 
     useEffect(() => {
-        if (activeDialog === Dialogs.QuestDialog) {
+        if (activeDialog === Dialogs.QuestDialog && isFormReady) {
             const rewardItems = getFieldValue('questReward.items');
-            setRewardItems(rewardItems);
             setInitSelectionModel(Object.keys(rewardItems))
         }
-    }, [activeDialog === Dialogs.QuestDialog])
-
-    useEffect(() => {
-        changeValue('questReward.items', rewardItems);
-    }, [rewardItems]);
+    }, [activeDialog === Dialogs.QuestDialog, getFieldValue, isFormReady])
 
     const columns = [
         {
@@ -55,11 +49,17 @@ export const QuestRewards = () => {
         editable: true,
     }]
 
+
+    if (!isFormReady) {
+        return null;
+    }
+    const items = getFieldValue('questReward.items');
+
     return (<>
         <AssignmentPanel
             allItems={itemTemplates}
             allItemsColumnDefinition={columns}
-            selectedItems={rewardItems}
+            selectedItems={items}
             selectedItemsColumnDefinition={selectedColumns}
             mapItemForPreview={(item: QuestRewardItem) => ({
                 id: item.itemTemplateId,
@@ -72,10 +72,11 @@ export const QuestRewards = () => {
                 amount: newRow.amount
             })}
             idField={'itemTemplateId'}
-            updateSelectedItems={setRewardItems}
+            updateSelectedItems={(callback) => changeValue('questReward.items', callback(items))}
             getInitialRow={(id) => ({ itemTemplateId: id, amount: 1 })}
             initSelectionModel={initSelectionModel}
             errors={errors}
             errorPath="questReward.items."
-        /></>)
+        />
+    </>)
 }
