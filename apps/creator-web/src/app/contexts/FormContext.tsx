@@ -314,6 +314,9 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
                 console.error("Type: " + value + " does not contain its definition in the typeChanger");
             }
 
+            const pathToElement = path.join('.');
+            setDirty(prev => _.mapValues(prev, (val, key: string) => key.indexOf(pathToElement) === -1 ? val : ""));
+
             prop = path.pop() ?? "";
             valueToSet = propertyDefintion.typeChanger[value]
         }
@@ -324,7 +327,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
 
         current[prop] = valueToSet;
         setValues(toSave);
-    }, [values])
+    }, [values, setDirty])
 
     const changeValue = useCallback((field: string, value: string) => {
         if (!doesFieldExist(field)) {
@@ -332,17 +335,20 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             return;
         }
 
+        // console.log(field)
         const values = recursiveUpdate(field, value, errors);
         saveFieldValue(field, values);
 
+        // console.log("te wartosci", errors);
         setDirty(prev => ({
             ...prev,
-            ..._.mapValues(errors, () => true)
+            [field]: true
         }))
-    }, [saveFieldValue, doesFieldExist]);
+    }, [saveFieldValue, doesFieldExist, errors]);
 
 
     const setFormDirty = useCallback(() => {
+        console.log('caly form');
         setDirty(_.mapValues(errors, () => true));
     }, [schema, errors]);
 

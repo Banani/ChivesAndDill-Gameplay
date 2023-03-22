@@ -1,4 +1,4 @@
-import { KillingQuestStagePart, MovementQuestStagePart, QuestSchema, QuestStage, QuestType } from '@bananos/types';
+import { KillingQuestStagePart, KillingQuestStagePartComparison, MovementQuestStagePart, QuestSchema, QuestStage, QuestType } from '@bananos/types';
 import { Box, Tab, Tabs } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,6 +10,7 @@ import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { QuestsContext } from '../../views/quests/QuestsContextProvider';
 
 import { FormBuilder } from '../../components/formBuilder';
+import { PackageContext } from '../../contexts';
 import { FormContextProvider, FormFieldConditions, Schema, SchemaFieldType } from '../../contexts/FormContext';
 import { QuestActions } from './QuestActions';
 import { QuestConditions } from './QuestConditions';
@@ -38,13 +39,13 @@ const DefaultKillingSubstage: KillingQuestStagePart = {
     stageId: "",
     type: QuestType.KILLING,
     monsterName: "",
-    // rule: [{
-    //     fieldName: "characterTemplateId",
-    //     comparison: KillingQuestStagePartComparison.equality,
-    //     value: ""
-    // }],
+    rule: [{
+        fieldName: "characterTemplateId",
+        comparison: KillingQuestStagePartComparison.equality,
+        value: ""
+    }],
     amount: 0
-} as KillingQuestStagePart;
+};
 
 const DefaultStage: QuestStage = {
     id: "",
@@ -72,7 +73,9 @@ const DefaultQuest: QuestSchema = {
 
 export const QuestDialog = () => {
     const { activeQuest, setActiveQuest } = useContext(QuestsContext);
-    const defaultQuest = activeQuest?.id ? activeQuest : DefaultQuest;
+    let defaultQuest = activeQuest?.id ? activeQuest : DefaultQuest;
+    const packageContext = useContext(PackageContext);
+    const monsterTemplates = packageContext.backendStore.monsterTemplates?.data ?? {};
 
     const conditionsSchema: Schema = useMemo(() => {
         return {
@@ -125,6 +128,25 @@ export const QuestDialog = () => {
     }, [defaultQuest]);
 
     const defaultPartSchema: Schema = useMemo(() => {
+        // That part can be deleted, when Quest dialog will support adding multiple rules for monster comparison
+        defaultQuest = {
+            ...defaultQuest,
+            stages: _.mapValues(defaultQuest.stages, stage => {
+                return {
+                    ...stage,
+                    stageParts: _.mapValues(stage.stageParts, stagePart => {
+                        if (stagePart.type === QuestType.KILLING) {
+                            return {
+                                ..._.pickBy(stagePart, (_, key) => key != "rule"),
+                                monsterTemplateId: stagePart.rule[0].value
+                            } as KillingQuestStagePart;
+                        }
+                        return stagePart;
+                    })
+                }
+            })
+        }
+
         return {
             id: {
                 type: SchemaFieldType.Text,
@@ -182,7 +204,7 @@ export const QuestDialog = () => {
                                 options: [{ label: "Go to place", value: QuestType.MOVEMENT }, { label: "Kill monster", value: QuestType.KILLING }],
                                 typeChanger: {
                                     [QuestType.MOVEMENT]: DefaultMovementSubstage,
-                                    [QuestType.KILLING]: DefaultKillingSubstage,
+                                    [QuestType.KILLING]: { ..._.pickBy(DefaultKillingSubstage, (_, key) => key != "rule"), monsterTemplateId: "" }
                                 }
                             },
                             locationName: {
@@ -213,6 +235,12 @@ export const QuestDialog = () => {
                                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
                                 prerequisite: ({ type }) => type === QuestType.MOVEMENT
                             },
+                            monsterTemplateId: {
+                                label: "Monster Template",
+                                options: _.map(monsterTemplates, monsterTemplate => ({ label: monsterTemplate.name, value: monsterTemplate.id })),
+                                type: SchemaFieldType.Select,
+                                prerequisite: ({ type }) => type === QuestType.KILLING,
+                            },
                             monsterName: {
                                 label: "Monster Name",
                                 type: SchemaFieldType.Text,
@@ -229,7 +257,7 @@ export const QuestDialog = () => {
                 }
             }
         };
-    }, [defaultQuest]);
+    }, [defaultQuest, monsterTemplates]);
 
     const { activeDialog, setActiveDialog } = useContext(DialogContext);
 

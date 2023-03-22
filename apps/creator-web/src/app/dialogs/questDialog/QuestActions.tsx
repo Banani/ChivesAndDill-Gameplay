@@ -1,4 +1,4 @@
-import { QuestSchema } from "@bananos/types";
+import { KillingQuestStagePart, KillingQuestStagePartComparison, QuestSchema, QuestType } from "@bananos/types";
 import { Button } from "@mui/material";
 import _ from "lodash";
 import { useCallback, useContext, useEffect } from "react";
@@ -23,10 +23,35 @@ export const QuestActions = () => {
             return;
         }
 
+        const originalQuestSchema = getValues() as unknown as QuestSchema;
+
+        // That part can be deleted, when Quest dialog will support adding multiple rules for monster comparison
+        const questSchema = {
+            ...originalQuestSchema,
+            stages: _.mapValues(originalQuestSchema.stages, stage => {
+                return {
+                    ...stage,
+                    stageParts: _.mapValues(stage.stageParts, stagePart => {
+                        if (stagePart.type === QuestType.KILLING) {
+                            return {
+                                ...stagePart,
+                                rule: [{
+                                    fieldName: "characterTemplateId",
+                                    comparison: KillingQuestStagePartComparison.equality,
+                                    value: (stagePart as any).monsterTemplateId
+                                }]
+                            } as KillingQuestStagePart;
+                        }
+                        return stagePart;
+                    })
+                }
+            })
+        };
+
         if (activeQuest?.id) {
-            updateQuest(getValues() as unknown as QuestSchema);
+            updateQuest(questSchema);
         } else {
-            createQuest(getValues() as unknown as QuestSchema);
+            createQuest(questSchema);
         }
         setActiveDialog(null);
     }, [activeQuest, getValues, errors, values]);
