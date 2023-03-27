@@ -1,19 +1,36 @@
-.ContentWrapper {
-    padding: 25px 40px 0 24px;   
-    overflow: scroll;
-    flex: 1;
-    margin-bottom: 30px;
+.NpcModal {
+    position: absolute;
+    width: 346px;
+    height: 507px;
+    top: 15%;
+    left: 5%;
+    background: url('../../../../../assets/spritesheets/backgrounds/npcModal.png');
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
 
-    .questName {
-        cursor: pointer;
-    }
+    .ContentWrapper {
+        padding: 25px 40px 0 24px;   
+        overflow: scroll;
+        flex: 1;
+        margin-bottom: 30px;
 
-    .SectionText {
-        font-size: 18px;
-    }
+        .TradeModal {
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 16px;
+        };
 
-    .SectionHeader {
-        font-size: 22px;
-    }
-}
-  
+        .questName {
+            cursor: pointer;
+        };
+
+        .SectionText {
+            font-size: 18px;
+        };
+
+        .SectionHeader {
+            font-size: 22px;
+        };
+    };
+};

@@ -4,9 +4,7 @@ import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useContext, useState } from 'react';
-import { Button } from '../components/button/Button';
 import { AvailableQuestNpcModal, CompleteQuestNpcModal, DefaultNpcModal, TradeNpcModal } from './components';
-import styles from './NpcModal.module.scss';
 
 enum NpcModalView {
    Default,
@@ -48,14 +46,7 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
       };
 
       return (
-         <div className={styles.NpcModal}>
-            <div className={styles.ModalHeader}>
-               <img className={styles.Avatar} src={activeNpc.avatar} alt={''} />
-               <div className={styles.Name}>{activeNpc.name}</div>
-               <Button className={styles.closeButton} onClick={closeButtonHandler}>
-                  X
-               </Button>
-            </div>
+         <>
             {currentModal === NpcModalView.Default && (
                <DefaultNpcModal
                   openQuest={(questId) => {
@@ -64,6 +55,7 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
                   }}
                   setCurrentModal={setCurrentModal}
                   NpcModalView={NpcModalView}
+                  closeButtonHandler={closeButtonHandler}
                />
             )}
             {currentModal === NpcModalView.AvailableQuest && (
@@ -86,7 +78,7 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
                   close={() => setCurrentModal(NpcModalView.Default)}
                />
             )}
-         </div>
+         </>
       );
    },
    (oldProps, newProps) => oldProps.activeNpc.id === newProps.activeNpc.id

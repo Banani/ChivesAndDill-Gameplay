@@ -1,5 +1,55 @@
 .ContentWrapper {
-    padding: 10px 40px 0 25px;
+    padding: 25px 40px 0 17px;
+
+    .ItemsWrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .Item {
+            width: 48%;
+            display: flex;
+            border: 1px solid rgb(83, 83, 83);
+            background: #29292980;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            position: relative;
+    
+            &:nth-child(odd) {
+                margin-right: 2px;
+            }
+    
+            .ItemImage {
+                width: 40px;
+                height: 40px;
+                border-right: 1px solid rgb(83, 83, 83);
+                border-radius: 4px;
+            }
+            
+            .ItemInfoWrapper {
+                height: 50px;
+                
+                .ItemText {
+                    color: white;
+                    display: flex;
+                    text-shadow: 1px 1px black;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    justify-content: center;
+                    margin: 3px 0 3px 7px;
+                    font-size: 12px;
+                }
+            }
+            
+            .Stack {
+                position: absolute;
+                left: 30px;
+                bottom: 0;
+                color: white;
+            }
+        }
+    }
 
     .MoneyBarWrapper {
         position: absolute;

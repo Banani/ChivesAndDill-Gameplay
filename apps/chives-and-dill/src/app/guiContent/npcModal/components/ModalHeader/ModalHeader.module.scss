@@ -1,0 +1,28 @@
+.ModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .Avatar {
+    border-radius: 50%;
+    height: 56px;
+    width: 56px;
+    position: relative;
+    top: 6px;
+    left: 4px;
+  }
+
+  .Name {
+    color: gold;
+    position: relative;
+    top: -4px;
+  }
+
+  .closeButton {  
+      margin-bottom: 8px;
+      margin-right: 2px;
+      height: 16px;
+      font-size: 10px;
+      padding: 1px 15px;
+  }
+}

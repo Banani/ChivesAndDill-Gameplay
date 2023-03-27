@@ -1,8 +1,9 @@
-import { CharacterDirection, ItemTemplate, QuotesEvents } from '@bananos/types';
-import { QuestSchema } from 'libs/types/src/QuestPackage';
+import type { ItemTemplate, QuotesEvents } from '@bananos/types';
+import { CharacterDirection } from '@bananos/types';
+import type { QuestSchema } from 'libs/types/src/QuestPackage';
 import { ItemTemplates } from '../ItemModule/ItemTemplates';
 import { Quests } from '../QuestModule/Quests';
-import { Spell } from '../SpellModule/types/SpellTypes';
+import type { Spell } from '../SpellModule/types/SpellTypes';
 
 export interface NpcTemplate {
    id: string;
@@ -28,7 +29,7 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
       id: 'Manczur',
       name: 'Mańczur',
       sprites: 'citizen',
-      avatar: 'https://www.colorland.pl/sites/default/files/article-image/kot1_1.jpg',
+      avatar: 'https://www.colorland.pl/storage/app/uploads/public/a29/0MV/8xL/a290MV8xLmpwZyExY2E4OTk4Zjg1M2ZmNzYxODgyNDhhNmMyZjU1MjI5Ng==.jpg',
       size: 96,
       healthPoints: 100,
       spellPower: 100,
@@ -43,6 +44,10 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
          '2': ItemTemplates['2'],
          '4': ItemTemplates['4'],
          '5': ItemTemplates['5'],
+         '3': ItemTemplates['3'],
+         '6': ItemTemplates['6'],
+         '7': ItemTemplates['7'],
+         '8': ItemTemplates['8'],
       },
       quests: {
          '1': Quests['1'],

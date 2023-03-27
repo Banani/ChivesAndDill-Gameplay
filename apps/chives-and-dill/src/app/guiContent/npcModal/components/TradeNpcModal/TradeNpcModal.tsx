@@ -7,6 +7,7 @@ import React, { useContext, useEffect } from 'react';
 import styles from './TradeNpcModal.module.scss';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { MoneyBar } from '../../../../guiContent/moneyBar/MoneyBar';
+import _ from 'lodash';
 
 interface TradeNpcModalProps {
    close: () => void;
@@ -33,10 +34,22 @@ export const TradeNpcModal: FunctionComponent<TradeNpcModalProps> = ({ close }) 
       return () => {
          keyBoardContext.removeKeyHandler('TradeNpcModalEscape');
       };
-   }, []);
+   }, [engineApiContext.closeNpcConversationDialog, keyBoardContext]);
+
+   const items = _.map(activeNpc.stock, (item) => (
+      < div className={styles.Item}>
+         <img src={item.image} className={styles.ItemImage} alt=""></img>
+         <div className={styles.Stack}>{item.stack}</div>
+         <div className={styles.ItemInfoWrapper}>
+            <div className={styles.ItemText}>{item.name}</div>
+            <MoneyBar currency={item.value} />
+         </div>
+      </div>
+   ));
 
    return (
       <div className={styles.ContentWrapper}>
+         <div className={styles.ItemsWrapper}>{items}</div>
          <div className={styles.MoneyBarWrapper}>
             <MoneyBar currency={6435422} />
          </div>

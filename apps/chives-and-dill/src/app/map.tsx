@@ -114,7 +114,7 @@ const Map = () => {
                                                    -(characterMovements[activeCharacterId]?.location.y ?? 0) + gameSize.height / 2,
                                                 ]}
                                              >
-                                                <MapWrapper />
+                                                {/* <MapWrapper /> */}
                                                 <AreasSpellsEffectsManager />
                                                 <AreasManager />
                                                 {renderSpells()}

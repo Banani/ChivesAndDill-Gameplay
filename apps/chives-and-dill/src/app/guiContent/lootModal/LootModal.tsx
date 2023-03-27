@@ -132,6 +132,10 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     }
   };
 
+
+
+
+
   return (
     mousePosition.x !== null ?
       <div>
