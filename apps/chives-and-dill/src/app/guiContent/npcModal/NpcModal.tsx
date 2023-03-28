@@ -37,7 +37,8 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
          setActiveQuestId(null);
       }, [activeNpc.id, activeQuestId, context]);
 
-      const closeButtonHandler = () => {
+      const closeNpcModal = () => {
+         console.log(":D")
          if (currentModal !== NpcModalView.Default && currentModal !== NpcModalView.Trade) {
             setCurrentModal(NpcModalView.Default);
          } else {
@@ -55,7 +56,7 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
                   }}
                   setCurrentModal={setCurrentModal}
                   NpcModalView={NpcModalView}
-                  closeButtonHandler={closeButtonHandler}
+                  closeNpcModal={closeNpcModal}
                />
             )}
             {currentModal === NpcModalView.AvailableQuest && (
@@ -63,6 +64,7 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
                   close={() => setCurrentModal(NpcModalView.Default)}
                   acceptQuest={acceptQuest}
                   questSchema={questDefinition[activeQuestId]}
+                  closeNpcModal={closeNpcModal}
                />
             )}
             {currentModal === NpcModalView.CompletedQuest && (
@@ -71,12 +73,11 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
                   questSchema={questDefinition[activeQuestId]}
                   completeQuest={completeQuest}
                   questId={activeQuestId}
+                  closeNpcModal={closeNpcModal}
                />
             )}
             {currentModal === NpcModalView.Trade && (
-               <TradeNpcModal
-                  close={() => setCurrentModal(NpcModalView.Default)}
-               />
+               <TradeNpcModal />
             )}
          </>
       );

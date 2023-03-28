@@ -1,19 +1,14 @@
 import { GlobalStoreModule } from '@bananos/types';
-import type { QuestSchema } from '@bananos/types';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
-import type { FunctionComponent } from 'react';
 import React, { useContext, useEffect } from 'react';
 import styles from './TradeNpcModal.module.scss';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { MoneyBar } from '../../../../guiContent/moneyBar/MoneyBar';
 import _ from 'lodash';
+import { ModalHeader } from '../ModalHeader/ModalHeader';
 
-interface TradeNpcModalProps {
-   close: () => void;
-}
-
-export const TradeNpcModal: FunctionComponent<TradeNpcModalProps> = ({ close }) => {
+export const TradeNpcModal = () => {
 
    const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
    const { data: activeConversation } = useEngineModuleReader(GlobalStoreModule.NPC_CONVERSATION);
@@ -22,7 +17,6 @@ export const TradeNpcModal: FunctionComponent<TradeNpcModalProps> = ({ close }) 
    const engineApiContext = useContext(EngineApiContext);
    const keyBoardContext = useContext(KeyBoardContext);
    const activeNpc = characters[activeConversation[activeCharacterId]?.npcId];
-   const activePlayer = characters[activeCharacterId];
 
    useEffect(() => {
       keyBoardContext.addKeyHandler({
@@ -48,10 +42,13 @@ export const TradeNpcModal: FunctionComponent<TradeNpcModalProps> = ({ close }) 
    ));
 
    return (
-      <div className={styles.ContentWrapper}>
-         <div className={styles.ItemsWrapper}>{items}</div>
-         <div className={styles.MoneyBarWrapper}>
-            <MoneyBar currency={6435422} />
+      <div className={styles.NpcModal}>
+         <ModalHeader activeNpc={activeNpc} />
+         <div className={styles.ContentWrapper}>
+            <div className={styles.ItemsWrapper}>{items}</div>
+            <div className={styles.MoneyBarWrapper}>
+               <MoneyBar currency={6435422} />
+            </div>
          </div>
       </div>
    );

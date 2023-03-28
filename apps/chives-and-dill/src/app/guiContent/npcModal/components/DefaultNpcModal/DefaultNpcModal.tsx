@@ -12,23 +12,18 @@ interface DefaultNpcModalProps {
    openQuest: (questId: string) => void;
    setCurrentModal: any;
    NpcModalView: any;
-   closeButtonHandler: any;
+   closeNpcModal: () => void;
 }
 
-interface ActiveNpc {
-   avatar: string;
-   name: string;
-}
-
-export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQuest, setCurrentModal, NpcModalView, closeButtonHandler }) => {
+export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQuest, setCurrentModal, NpcModalView, closeNpcModal }) => {
    const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
    const { data: activeConversation } = useEngineModuleReader(GlobalStoreModule.NPC_CONVERSATION);
    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
    const { data: questDefinition } = useEngineModuleReader(GlobalStoreModule.QUEST_DEFINITION);
    const { data: npcQuests } = useEngineModuleReader(GlobalStoreModule.NPC_QUESTS);
    const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
-
-   const activeNpc = characters[activeConversation[activeCharacterId]?.npcId] as any;
+   console.log('123', typeof(closeNpcModal))
+   const activeNpc = characters[activeConversation[activeCharacterId]?.npcId];
    const activeNpcQuests = npcQuests[activeNpc?.templateId];
 
    const keyBoardContext = useContext(KeyBoardContext);
@@ -73,7 +68,7 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
 
    return activeNpc ? (
       <div className={styles.NpcModal}>
-         {/* <ModalHeader activeNpc={activeNpc} closeButtonHandler={closeButtonHandler} /> */}
+         <ModalHeader activeNpc={activeNpc} closeNpcModal={closeNpcModal} />
          <div className={styles.ContentWrapper}>
             <div className={styles.SectionText}>Cześć!</div>
             {activeNpc.stock ? <div className={styles.TradeModal} onClick={() => setCurrentModal(NpcModalView.Trade)}>Show me your wares.</div> : null}
