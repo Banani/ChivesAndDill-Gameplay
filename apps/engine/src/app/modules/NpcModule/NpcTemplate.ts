@@ -48,6 +48,12 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
          '6': ItemTemplates['6'],
          '7': ItemTemplates['7'],
          '8': ItemTemplates['8'],
+         '9': ItemTemplates['8'],
+         '10': ItemTemplates['8'],
+         '11': ItemTemplates['6'],
+         '12': ItemTemplates['2'],
+         '13': ItemTemplates['1'],
+         '14': ItemTemplates['5'],
       },
       quests: {
          '1': Quests['1'],

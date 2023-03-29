@@ -4,13 +4,14 @@
     height: 507px;
     top: 15%;
     left: 5%;
-    background: url('../../../../../assets/spritesheets/backgrounds/npcModal.png');
+    background: url('../../../../../assets/spritesheets/backgrounds/tradeModal.png');
     background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
 
     .ContentWrapper {
-        padding: 25px 40px 0 17px;
+        padding: 30px 40px 0 20px;
+        width: 315px;
 
         .ItemsWrapper {
             display: flex;
@@ -26,14 +27,16 @@
                 margin-bottom: 4px;
                 cursor: pointer;
                 position: relative;
-        
+                overflow: hidden;
+                margin-top: 2px;
+
                 &:nth-child(odd) {
                     margin-right: 2px;
                 }
         
                 .ItemImage {
-                    width: 40px;
-                    height: 40px;
+                    width: 50px;
+                    height: 50px;
                     border-right: 1px solid rgb(83, 83, 83);
                     border-radius: 4px;
                 }
@@ -67,5 +70,41 @@
             bottom: 5px;
             left: 15px;
         }
+
+        .PaginationContainer {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            width: 75%;
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            bottom: 95px;
+        
+            .RightPaginationSide {
+                position: absolute;
+                right: -8px;
+                bottom: 0;
+            }
+        
+            .PaginationSide {
+                display: flex;
+                align-items: center;
+                
+                .PaginationButton {
+                    color: #EEC300;
+                    background-color: #070807; 
+                    border-radius: 5px;
+                    border: 1px solid #666962;
+                    cursor: pointer;
+                 }
+             
+                 .PaginationText {
+                    color: #EEC300;
+                    margin: 8px;
+                 }
+            }
+          }
     }
 }

@@ -38,7 +38,6 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
       }, [activeNpc.id, activeQuestId, context]);
 
       const closeNpcModal = () => {
-         console.log(":D")
          if (currentModal !== NpcModalView.Default && currentModal !== NpcModalView.Trade) {
             setCurrentModal(NpcModalView.Default);
          } else {
@@ -77,7 +76,9 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
                />
             )}
             {currentModal === NpcModalView.Trade && (
-               <TradeNpcModal />
+               <TradeNpcModal
+                  closeNpcModal={closeNpcModal}
+               />
             )}
          </>
       );

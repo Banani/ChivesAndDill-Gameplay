@@ -22,7 +22,7 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
    const { data: questDefinition } = useEngineModuleReader(GlobalStoreModule.QUEST_DEFINITION);
    const { data: npcQuests } = useEngineModuleReader(GlobalStoreModule.NPC_QUESTS);
    const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
-   console.log('123', typeof(closeNpcModal))
+
    const activeNpc = characters[activeConversation[activeCharacterId]?.npcId];
    const activeNpcQuests = npcQuests[activeNpc?.templateId];
 
