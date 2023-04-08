@@ -1,15 +1,16 @@
-import { GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import React, { useContext, useEffect, useState } from 'react';
 import styles from './TradeNpcModal.module.scss';
-import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
+import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
 import { MoneyBar } from '../../../../guiContent/moneyBar/MoneyBar';
 import _ from 'lodash';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
 import { usePagination } from 'apps/creator-web/src/app/mapEditor/spritePanel/components/usePagination';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { SocketContext } from '../../../../gameController/socketContext';
 
 export const TradeNpcModal = ({ closeNpcModal }) => {
 
@@ -19,6 +20,9 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
 
    const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
    const [itemsAmount, updateItemsAmount] = useState(0);
+
+   const context = useContext(SocketContext);
+   const { socket } = context;
 
    const { start, end, prevPage, nextPage, page, allPagesCount } = usePagination({
       pageSize: 10,
@@ -46,14 +50,14 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
    }, [engineApiContext.closeNpcConversationDialog, keyBoardContext]);
 
    const allItems = _.map(activeNpc.stock, (item) => (
-      < div className={styles.Item}>
+      < div className={styles.Item} onClick={() => buyItem(item, activeNpc)}>
          <img src={item.image} className={styles.ItemImage} alt=""></img>
          <div className={styles.Stack}>{item.stack}</div>
          <div className={styles.ItemInfoWrapper}>
             <div className={styles.ItemText}>{item.name}</div>
             <MoneyBar currency={item.value} />
          </div>
-      </div>
+      </div >
    ));
 
    useEffect(() => {
@@ -67,6 +71,13 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
          return items;
       }
    }
+
+   const buyItem = (item, npc) => {
+      socket?.emit(NpcClientMessages.BuyItemFromNpc, {
+         npcId: npc.id,
+         itemTemplateId: item.id,
+      });
+   };
 
    return (
       <div className={styles.NpcModal}>

@@ -1,4 +1,5 @@
-import { EquipmentSlot, ItemTemplate, ItemTemplateType } from '@bananos/types';
+import type { ItemTemplate} from '@bananos/types';
+import { EquipmentSlot, ItemTemplateType } from '@bananos/types';
 
 export const ItemTemplates: Record<string, ItemTemplate> = {
    '1': {
@@ -29,7 +30,7 @@ export const ItemTemplates: Record<string, ItemTemplate> = {
       type: ItemTemplateType.Generic,
       id: '4',
       name: 'Longjaw Mud Snapper',
-      image: 'https://static.wikia.nocookie.net/wowpedia/images/6/68/Inv_misc_fish_32.png/revision/latest?cb=20061020053343',
+      image: 'https://wotlk-twinhead.twinstar.cz/images/icons/wotlk/large/inv_misc_fish_32.jpg',
       stack: 20,
       value: 125,
    },
