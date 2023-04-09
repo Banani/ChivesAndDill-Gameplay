@@ -1,0 +1,52 @@
+.backpacksContainer {
+  width: 250px;
+  position: absolute;
+  bottom: 20px;
+  right: 0;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+
+  .backpack {
+    height: 30px;
+    width: 30px;
+    background-image: url(https://wotlk.evowow.com/static/images/wow/icons/large/inv_misc_bag_08.jpg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin: 4px;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 3px solid #dab744;
+    transform: .5s;
+
+    &:hover {
+      border-color: gold;
+    }
+
+    &:nth-child(5) {
+      width: 40px;
+      height: 40px;
+      margin-left: 20px;
+    }
+  }
+  
+}
+
+.availableSlots {
+  position: absolute;
+  right: 10px;
+  bottom: 12px;
+  color: #fff;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,  1px 1px 0 #000;
+}
+
+.expandBackpacksIcon {
+  background-color: transparent;
+  border: none;
+  transform: scale(1.6);
+  position: absolute;
+  right: 45px;
+  bottom: 30px;
+  color: #dab744;
+  cursor: pointer;
+}

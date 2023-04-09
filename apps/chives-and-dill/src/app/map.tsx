@@ -16,6 +16,7 @@ import { LootModal } from './guiContent/lootModal/LootModal';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
 import { QuestManager } from './guiContent/quests';
 import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
+import { Backpacks } from './guiContent/backpacks/Backpacks';
 import { AreasManager } from './mapContent/AreasManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
@@ -95,6 +96,7 @@ const Map = () => {
             monsterId={Object.keys(activeLoot ?? {})?.[0]}
             activeLoot={activeLoot[Object.keys(activeLoot ?? {})?.[0]]} /> : null}
          {activeNpc ? <NpcModal questDefinition={questDefinition as Record<string, QuestSchema>} activeNpc={activeNpc} /> : null}
+         <Backpacks />
          <ExperienceBar />
          <PackageContext.Consumer>
             {(packageContext) => (
