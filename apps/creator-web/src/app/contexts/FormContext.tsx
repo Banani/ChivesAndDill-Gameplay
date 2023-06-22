@@ -335,11 +335,9 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             return;
         }
 
-        // console.log(field)
         const values = recursiveUpdate(field, value, errors);
         saveFieldValue(field, values);
 
-        // console.log("te wartosci", errors);
         setDirty(prev => ({
             ...prev,
             [field]: true

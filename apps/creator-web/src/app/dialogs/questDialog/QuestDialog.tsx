@@ -238,6 +238,7 @@ export const QuestDialog = () => {
                             monsterTemplateId: {
                                 label: "Monster Template",
                                 options: _.map(monsterTemplates, monsterTemplate => ({ label: monsterTemplate.name, value: monsterTemplate.id })),
+                                conditions: [{ type: FormFieldConditions.Required }],
                                 type: SchemaFieldType.Select,
                                 prerequisite: ({ type }) => type === QuestType.KILLING,
                             },
