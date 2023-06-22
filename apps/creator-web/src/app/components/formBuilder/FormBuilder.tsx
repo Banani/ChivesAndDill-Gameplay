@@ -35,35 +35,38 @@ export const FormBuilder: FunctionComponent<FormBuilderProps> = ({ schema }) => 
                     object[childFieldName]
                 )
             ).value()}</React.Fragment>,
-        [SchemaFieldType.Record]: (propertyDefinition, fieldName, record) => (<React.Fragment key={fieldName}>
-            {map(record, (child, key) => {
-                return (<React.Fragment key={fieldName + "." + key}>
-                    <div className={styles['element-header']}>
-                        <Label>{propertyDefinition.label}: {key}</Label>
-                        <IconButton
-                            onClick={() => removeElement(fieldName + "." + key)}
-                        >
-                            <DeleteForeverIcon />
-                        </IconButton >
-                    </div>
-                    <hr className={styles['line']} />
-                    <div className={styles['child-wrapper']}>
-                        {_.chain(propertyDefinition.schema)
-                            .pickBy((field) => field.hidden !== true && field.prerequisite?.(record[key]) !== false)
-                            .map((childPropertyDefinition, childFieldName) =>
-                                fieldBuilders[childPropertyDefinition.type](
-                                    childPropertyDefinition,
-                                    fieldName + "." + key + "." + childFieldName,
-                                    record[key][childFieldName]
-                                )
-                            ).value()}
-                    </div>
-                </React.Fragment>)
-            })}
-            <div className={styles['creation-button-holder']}>
-                <Button variant="outlined" onClick={() => appendElement(fieldName, generateId(fieldName))}>Add {propertyDefinition.label}</Button>
-            </div>
-        </React.Fragment>),
+        [SchemaFieldType.Record]: (propertyDefinition, fieldName, record) => {
+            let counter = 1;
+            return <React.Fragment key={fieldName}>
+                {map(record, (child, key) => {
+                    return (<React.Fragment key={fieldName + "." + key}>
+                        <div className={styles['element-header']}>
+                            <Label>{propertyDefinition.label}: {counter++}</Label>
+                            <IconButton
+                                onClick={() => removeElement(fieldName + "." + key)}
+                            >
+                                <DeleteForeverIcon />
+                            </IconButton >
+                        </div>
+                        <hr className={styles['line']} />
+                        <div className={styles['child-wrapper']}>
+                            {_.chain(propertyDefinition.schema)
+                                .pickBy((field) => field.hidden !== true && field.prerequisite?.(record[key]) !== false)
+                                .map((childPropertyDefinition, childFieldName) =>
+                                    fieldBuilders[childPropertyDefinition.type](
+                                        childPropertyDefinition,
+                                        fieldName + "." + key + "." + childFieldName,
+                                        record[key][childFieldName]
+                                    )
+                                ).value()}
+                        </div>
+                    </React.Fragment>)
+                })}
+                <div className={styles['creation-button-holder']}>
+                    <Button variant="outlined" onClick={() => { console.log(fieldName); appendElement(fieldName, generateId(fieldName)) }}>Add {propertyDefinition.label}</Button>
+                </div>
+            </React.Fragment>
+        },
     }
 
     if (!Object.keys(values).length) {
