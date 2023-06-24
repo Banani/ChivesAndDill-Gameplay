@@ -2,7 +2,7 @@
 import { EquipmentItemTemplate, ItemTemplate, ItemTemplateType, RecursivePartial } from "@bananos/types";
 import { Tooltip } from "@mui/material";
 import { FunctionComponent, useMemo } from "react";
-import styles from "./ItemPreview.module.scss";
+import { ImagePreview } from "../imagePreview";
 
 interface ItemPreviewProps {
     itemTemplate: ItemTemplate
@@ -33,6 +33,6 @@ export const ItemPreview: FunctionComponent<ItemPreviewProps> = ({ itemTemplate 
     }, [itemTemplate])
 
     return (<Tooltip title={tooltipContent} placement="right">
-        <img src={itemTemplate.image} className={styles['item-image-preview']} />
+        <ImagePreview src={itemTemplate.image} />
     </Tooltip>)
 }

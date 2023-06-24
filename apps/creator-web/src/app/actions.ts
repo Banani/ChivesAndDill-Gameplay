@@ -27,6 +27,10 @@ export enum ACTIONS {
     CREATE_QUEST = 'CREATE_QUEST',
     UPDATE_QUEST = 'UPDATE_QUEST',
     DELETE_QUEST = 'DELETE_QUEST',
+
+    CREATE_SPELL = 'CREATE_SPELL',
+    UPDATE_SPELL = 'UPDATE_SPELL',
+    DELETE_SPELL = 'DELETE_SPELL',
  }
 
  export interface CharacterTemplateActions {

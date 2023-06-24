@@ -16,7 +16,7 @@ type QuestReward struct {
 }
 
 type QuestSchema struct {
-	Id             string                `json:"id"`
+	Id             string                `json:"id" bson:"-"`
 	Name           string                `json:"name"`
 	Description    string                `json:"description"`
 	QuestReward    QuestReward           `json:"questReward"`

@@ -88,6 +88,8 @@ export interface Projectile {
 }
 
 export interface Spell {
+    // TODO: Dodalem to po to zeby typescript nie krzyczal, Ale trzeba to posprzatac
+    id?: string;
    cooldown: number;
    damage: number;
    name: string;

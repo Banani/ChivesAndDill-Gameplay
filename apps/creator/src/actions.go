@@ -25,9 +25,14 @@ const (
 	createItemTemplate = "CREATE_ITEM_TEMPLATE"
 	deleteItemTemplate = "DELETE_ITEM_TEMPLATE"
 	updateItemTemplate = "UPDATE_ITEM_TEMPLATE"
+	
 	createQuest        = "CREATE_QUEST"
 	updateQuest        = "UPDATE_QUEST"
 	deleteQuest        = "DELETE_QUEST"
+
+	createSpell        = "CREATE_SPELL"
+	updateSpell        = "UPDATE_SPELL"
+	deleteSpell        = "DELETE_SPELL"
 )
 
 type Action struct {
@@ -154,6 +159,21 @@ type UpdateQuestAction struct {
 type DeleteQuestAction struct {
 	ActionType string `json:"actionType"`
 	QuestId    string `json:"questId"`
+}
+
+type CreateSpellAction struct {
+	ActionType  string	`json:"actionType"`
+	Spell 		Spell 	`json:"spell"`
+}
+
+type UpdateSpellAction struct {
+	ActionType  string	`json:"actionType"`
+	Spell 		Spell 	`json:"spell"`
+}
+
+type DeleteSpellAction struct {
+	ActionType string `json:"actionType"`
+	SpellId    string `json:"spellId"`
 }
 
 type TypedAction struct {

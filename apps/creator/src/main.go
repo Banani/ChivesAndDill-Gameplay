@@ -79,6 +79,10 @@ func main() {
 			application:  application,
 			actionStream: make(chan TypedAction),
 		},
+		"spellsService": &SpellsService{
+			application:  application,
+			actionStream: make(chan TypedAction),
+		},
 	}
 
 	for _, service := range application.services {

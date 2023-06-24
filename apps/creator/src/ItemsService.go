@@ -1,10 +1,12 @@
 package main
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type ItemTemplate struct {
 	Type        string `json:"type"`
-	Id          string `json:"id"`
+	Id          string `json:"id" bson:"-"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Image       string `json:"image"`
@@ -50,7 +52,7 @@ func (service *ItemsService) serve() {
 			json.Unmarshal(action.Body, &createItemTemplateAction)
 
 			itemTemplate := createItemTemplateAction.ItemTemplate
-
+			
 			api := ItemsDbApi{application: service.application}
 			itemTemplate.Id = api.saveItemTemplate(itemTemplate)
 

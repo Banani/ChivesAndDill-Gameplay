@@ -1,13 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CssBaseline, Toolbar } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { KeyBoardContextProvider, PackageContext, PackageContextProvider, SocketCommunicator } from './contexts';
 import { DialogProvider } from './contexts/dialogContext';
 import { AllDialogs } from './dialogs';
-import { Items, MapEditor, NpcPanel, Quests } from './views';
+import { Items, MapEditor, NpcPanel, Quests, Spells } from './views';
 import { MapContextProvider } from './views/components/map/MapContextProvider';
 import { MapEditorContextProvider } from './views/mapEditor/contexts/mapEditorContextProvider';
 
@@ -18,12 +18,14 @@ import styles from './app.module.scss';
 import { AnimatedSpritesDialog } from './dialogs/animatedSpritesDialog';
 import { EditAnimatedSpritesDialog } from './dialogs/editAnimatedSpritesDialog';
 import { EditSpriteGroupDialog } from './dialogs/editSpriteGroupDialog';
+import { SpellDialog } from './dialogs/spellDialog';
 import { SpriteGroupContextProvider } from './dialogs/spriteGroupDialog/SpriteGroupContext';
 import { SpriteGroupDialog } from './dialogs/spriteGroupDialog/SpriteGroupDialog';
 import { ItemsContextProvider } from './views/items/ItemsContextProvider';
 import { MonsterPanel } from './views/monsterPanel';
 import { CharacterContextProvider } from './views/monsterPanel/CharacterContextProvider';
 import { QuestsContextProvider } from './views/quests/QuestsContextProvider';
+import { SpellsContextProvider } from './views/spells/SpellsContextProvider';
 
 const darkTheme = createTheme({
     palette: {
@@ -98,6 +100,13 @@ const router = createBrowserRouter([
             <Quests />
         </>,
     },
+    {
+        path: '/spells',
+        element: <SpellsContextProvider>
+            <SpellDialog />
+            <Spells />
+        </SpellsContextProvider>,
+    },
 ]);
 
 export function App() {
@@ -159,9 +168,16 @@ export function App() {
                                                             Quests
                                                         </a>
                                                     </Typography>
+                                                    <Typography component="h3" variant="h6" color="inherit" noWrap>
+                                                        <a
+                                                            className={classNames({ [styles['link']]: true, [styles['active']]: window.location.pathname === '/spells' })}
+                                                            href={'/spells'}
+                                                        >
+                                                            Spells
+                                                        </a>
+                                                    </Typography>
                                                 </Toolbar>
                                             </AppBar>
-
                                             <RouterProvider router={router} />
                                         </ThemeProvider>
                                     </QuestsContextProvider>

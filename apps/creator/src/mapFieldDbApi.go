@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"strconv"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -27,9 +26,7 @@ func (m *MapFieldDbApi) saveMapField(mapFields []MapField) {
 	}
 
 	collection.DeleteMany(context.TODO(), bson.M{"_id": bson.M{"$in": toDelete}})
-	_, err := collection.InsertMany(context.TODO(), toSave)
-
-	log.Print(err)
+	collection.InsertMany(context.TODO(), toSave)
 }
 
 func (m *MapFieldDbApi) deleteMapField(idsMap map[string]interface{}) {
