@@ -16,11 +16,14 @@ import { useContext } from 'react';
 import { MonsterActionsMap, NpcActionsMap } from './actions';
 import styles from './app.module.scss';
 import { AnimatedSpritesDialog } from './dialogs/animatedSpritesDialog';
+import { CharacterClassesDialog } from './dialogs/characterClassesDialog';
 import { EditAnimatedSpritesDialog } from './dialogs/editAnimatedSpritesDialog';
 import { EditSpriteGroupDialog } from './dialogs/editSpriteGroupDialog';
 import { SpellDialog } from './dialogs/spellDialog';
 import { SpriteGroupContextProvider } from './dialogs/spriteGroupDialog/SpriteGroupContext';
 import { SpriteGroupDialog } from './dialogs/spriteGroupDialog/SpriteGroupDialog';
+import { CharacterClasses } from './views/characterClasses';
+import { CharacterClassesContextProvider } from './views/characterClasses/CharacterClassesContextProvider';
 import { ItemsContextProvider } from './views/items/ItemsContextProvider';
 import { MonsterPanel } from './views/monsterPanel';
 import { CharacterContextProvider } from './views/monsterPanel/CharacterContextProvider';
@@ -107,6 +110,13 @@ const router = createBrowserRouter([
             <Spells />
         </SpellsContextProvider>,
     },
+    {
+        path: '/classes',
+        element: <CharacterClassesContextProvider>
+            <CharacterClassesDialog />
+            <CharacterClasses />
+        </CharacterClassesContextProvider>,
+    },
 ]);
 
 export function App() {
@@ -174,6 +184,14 @@ export function App() {
                                                             href={'/spells'}
                                                         >
                                                             Spells
+                                                        </a>
+                                                    </Typography>
+                                                    <Typography component="h3" variant="h6" color="inherit" noWrap>
+                                                        <a
+                                                            className={classNames({ [styles['link']]: true, [styles['active']]: window.location.pathname === '/classes' })}
+                                                            href={'/classes'}
+                                                        >
+                                                            Classes
                                                         </a>
                                                     </Typography>
                                                 </Toolbar>

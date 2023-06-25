@@ -33,6 +33,10 @@ const (
 	createSpell        = "CREATE_SPELL"
 	updateSpell        = "UPDATE_SPELL"
 	deleteSpell        = "DELETE_SPELL"
+
+	createCharacterClass        = "CREATE_CHARACTER_CLASS"
+	updateCharacterClass        = "UPDATE_CHARACTER_CLASS"
+	deleteCharacterClass        = "DELETE_CHARACTER_CLASS"
 )
 
 type Action struct {
@@ -174,6 +178,21 @@ type UpdateSpellAction struct {
 type DeleteSpellAction struct {
 	ActionType string `json:"actionType"`
 	SpellId    string `json:"spellId"`
+}
+
+type CreateCharacterClassAction struct {
+	ActionType  string	`json:"actionType"`
+	CharacterClass 		CharacterClass 	`json:"characterClass"`
+}
+
+type UpdateCharacterClassAction struct {
+	ActionType  string	`json:"actionType"`
+	CharacterClass 		CharacterClass 	`json:"characterClass"`
+}
+
+type DeleteCharacterClassAction struct {
+	ActionType string `json:"actionType"`
+	CharacterClassId    string `json:"characterClassId"`
 }
 
 type TypedAction struct {

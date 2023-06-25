@@ -83,6 +83,10 @@ func main() {
 			application:  application,
 			actionStream: make(chan TypedAction),
 		},
+		"characterClassesService": &CharacterClassesService{
+			application:  application,
+			actionStream: make(chan TypedAction),
+		},
 	}
 
 	for _, service := range application.services {

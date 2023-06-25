@@ -1,0 +1,29 @@
+.map-editor {
+    flex: 1;
+    margin: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.manage-panel {
+    display: flex;
+    margin: 0 10px;
+    width: 400px;
+    align-items: center;
+
+    .add-button {
+        margin-left: 20px;
+    }
+}
+
+.list-holder {
+    margin-top: 12px;
+    display: flex;
+    // BUG - powinno byc liczone automatycznie
+    height: 1100px;
+}
+
+.pagination-holder {
+    width: 400px;
+}

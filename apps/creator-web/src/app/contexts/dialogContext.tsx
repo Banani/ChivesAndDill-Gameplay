@@ -12,6 +12,7 @@ export enum Dialogs {
     AnimatedSpritesDialog = 'AnimatedSpritesDialog',
     EditAnimatedSpritesDialog = 'EditAnimatedSpritesDialog',
     SpellDialog = 'SpellDialog',
+    CharacterClassDialog = 'CharacterClassDialog',
 }
 
 export const DialogProvider = ({ children }: any) => {
