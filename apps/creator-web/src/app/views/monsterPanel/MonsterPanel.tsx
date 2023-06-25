@@ -70,6 +70,7 @@ export const MonsterPanel = () => {
                     const lootSize = Object.keys(character.dropSchema.items).length;
                     const respawnsAmount = _.filter(monsters, monster => monster.monsterTemplateId === character.id).length;
                     const quotesAmount = _.chain(character.quotesEvents ?? {}).map((event: QuoteHandler) => (event.quotes ?? []).length).sum().value();
+                    const spellsAmount = Object.keys(character.spells ?? {}).length;
 
                     return {
                         id: character.id,
@@ -79,6 +80,7 @@ export const MonsterPanel = () => {
                             {respawnsAmount > 0 ? <Circle type={CircleType.monster} number={respawnsAmount} /> : null}
                             {lootSize > 0 ? <Circle type={CircleType.item} number={lootSize} /> : null}
                             {quotesAmount > 0 ? <Circle type={CircleType.quote} number={quotesAmount} /> : null}
+                            {spellsAmount > 0 ? <Circle type={CircleType.spell} number={spellsAmount} /> : null}
                         </>
 
                     }

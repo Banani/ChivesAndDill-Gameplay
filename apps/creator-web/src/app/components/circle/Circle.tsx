@@ -8,6 +8,7 @@ export enum CircleType {
     quest = 'quest',
     item = 'item',
     quote = 'quote',
+    spell = 'spell'
 }
 
 interface CircleProps {
