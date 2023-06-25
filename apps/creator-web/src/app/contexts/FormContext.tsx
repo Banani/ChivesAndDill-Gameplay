@@ -346,7 +346,6 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
 
 
     const setFormDirty = useCallback(() => {
-        console.log('caly form');
         setDirty(_.mapValues(errors, () => true));
     }, [schema, errors]);
 

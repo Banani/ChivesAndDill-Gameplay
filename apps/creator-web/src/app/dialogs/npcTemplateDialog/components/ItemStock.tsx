@@ -39,8 +39,6 @@ export const ItemStock = () => {
         changeValue('stock', _.mapValues(localItemTemplates, () => true))
     }, [localItemTemplates]);
 
-    console.log(localItemTemplates)
-
     return (
         <AssignmentPanel
             allItems={itemTemplates}

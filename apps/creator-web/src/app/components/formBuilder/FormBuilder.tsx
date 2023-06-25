@@ -63,7 +63,7 @@ export const FormBuilder: FunctionComponent<FormBuilderProps> = ({ schema }) => 
                     </React.Fragment>)
                 })}
                 <div className={styles['creation-button-holder']}>
-                    <Button variant="outlined" onClick={() => { console.log(fieldName); appendElement(fieldName, generateId(fieldName)) }}>Add {propertyDefinition.label}</Button>
+                    <Button variant="outlined" onClick={() => appendElement(fieldName, generateId(fieldName))}>Add {propertyDefinition.label}</Button>
                 </div>
             </React.Fragment>
         },
