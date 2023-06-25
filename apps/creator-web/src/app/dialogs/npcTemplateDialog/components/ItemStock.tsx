@@ -5,8 +5,8 @@ import { useContext, useEffect, useState } from 'react';
 import { AssignmentPanel } from '../../../components/assignmentPanel';
 import { ItemPreview } from '../../../components/itemPreview';
 import { PackageContext } from '../../../contexts';
-import { DialogContext, Dialogs } from '../../../contexts/dialogContext';
 import { FormContext } from '../../../contexts/FormContext';
+import { DialogContext, Dialogs } from '../../../contexts/dialogContext';
 
 
 export const ItemStock = () => {
@@ -38,6 +38,8 @@ export const ItemStock = () => {
     useEffect(() => {
         changeValue('stock', _.mapValues(localItemTemplates, () => true))
     }, [localItemTemplates]);
+
+    console.log(localItemTemplates)
 
     return (
         <AssignmentPanel

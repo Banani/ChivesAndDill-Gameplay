@@ -17,6 +17,7 @@ type MonsterTemplate struct {
 	DesiredRange             int32  `json:"desiredRange" bson:"desiredRange"`
 	EscapeRange              int32  `json:"escapeRange" bson:"escapeRange"`
 	AttackFrequency          int32  `json:"attackFrequency" bson:"attackFrequency"`
+	Spells                    map[string]bool `json:"spells" bson:"spells"`
 	// TO CHANGE
 	DropSchema   DropSchema        `json:"dropSchema" bson:"dropSchema"`
 	QuotesEvents MonsterQuoteEvent `json:"quotesEvents" bson:"quotesEvents"`

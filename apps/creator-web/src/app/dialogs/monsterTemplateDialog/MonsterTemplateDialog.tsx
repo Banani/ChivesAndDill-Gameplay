@@ -7,14 +7,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import _ from 'lodash';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { FormContext, FormContextProvider, FormFieldConditions, Schema, SchemaFieldType } from '../../contexts/FormContext';
+import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { CharacterContext } from '../../views/monsterPanel/CharacterContextProvider';
 import { CharacterQuotes } from '../shared';
 import { MonsterDefaultStep } from './components';
 import { MonsterLoot } from './components/MonsterLoot';
 
 import styles from './MonsterTemplateDialog.module.scss';
+import { MonsterSpells } from './components/MonsterSpells';
 
 enum MonsterTemplateDialogTabs {
     Default = 'Default',
@@ -41,6 +42,7 @@ const DefaultMonsterTemplate = {
     },
     quests: {},
     npcRespawns: [],
+    spells: {},
     quotesEvents: {
         standard: { chance: 1, quotes: [""] },
         onDying: { chance: 1, quotes: [""] },
@@ -105,6 +107,10 @@ export const MonsterTemplateDialog = () => {
                 type: SchemaFieldType.Number,
                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
                 defaultValue: defaultValues.attackFrequency,
+            },
+            spells: {
+                type: SchemaFieldType.Record,
+                defaultValue: defaultValues.spells
             },
             dropSchema: {
                 type: SchemaFieldType.Object,
@@ -260,7 +266,7 @@ const MonsterTemplateDialogContent = () => {
                     {activeTab === MonsterTemplateDialogTabs.Loot ? <MonsterLoot /> : null}
                 </div>
                 <div role="tabpanel" hidden={activeTab !== MonsterTemplateDialogTabs.Spells} aria-labelledby={MonsterTemplateDialogTabs.Spells}>
-                    {/* {activeTab === MonsterTemplateDialogTabs.Quests ? <CharacterQuests /> : null} */}
+                    {activeTab === MonsterTemplateDialogTabs.Spells ? <MonsterSpells /> : null}
                 </div>
                 <div role="tabpanel" hidden={activeTab !== MonsterTemplateDialogTabs.Quotes} aria-labelledby={MonsterTemplateDialogTabs.Quotes}>
                     {activeTab === MonsterTemplateDialogTabs.Quotes ? <CharacterQuotes /> : null}
