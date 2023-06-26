@@ -10,7 +10,7 @@ import { DeleteConfirmationDialog } from '../../dialogs';
 
 import { CharacterClass } from '@bananos/types';
 import _ from 'lodash';
-import { ImagePreview } from '../../components';
+import { ImagePreview, SpellPreview } from '../../components';
 import styles from './CharacterClasses.module.scss';
 import { CharacterClassesContext } from './CharacterClassesContextProvider';
 
@@ -21,6 +21,7 @@ export const CharacterClasses = () => {
     const [characterClassesToDelete, setCharacterClassesToDelete] = useState<CharacterClass[]>([]);
 
     const characterClasses = packageContext?.backendStore?.characterClasses?.data ?? {};
+    const spells = packageContext?.backendStore?.spells?.data ?? {};
 
     return (
         <>
@@ -63,7 +64,17 @@ export const CharacterClasses = () => {
                             {
                                 field: 'name',
                                 headerName: 'Name',
+                            },
+                            {
+                                field: 'spells',
+                                headerName: 'Spells',
                                 flex: 1,
+                                renderCell: (params: GridRenderCellParams<CharacterClass>) => {
+                                    return _.map(params.row.spells, spell =>
+                                        <SpellPreview key={spell.spellId} spell={spells[spell.spellId]} />
+                                    )
+                                }
+
                             },
                             {
                                 field: 'actions',
