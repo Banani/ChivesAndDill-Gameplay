@@ -1,259 +1,292 @@
 {
-   "version": 2,
-   "projects": {
-      "chives-and-dill": {
-         "root": "apps/chives-and-dill",
-         "sourceRoot": "apps/chives-and-dill/src",
-         "projectType": "application",
-         "targets": {
-            "build": {
-               "executor": "@nrwl/web:webpack",
-               "outputs": ["{options.outputPath}"],
-               "options": {
-                  "outputPath": "dist/apps/chives-and-dill",
-                  "index": "apps/chives-and-dill/src/index.html",
-                  "main": "apps/chives-and-dill/src/main.tsx",
-                  "polyfills": "apps/chives-and-dill/src/polyfills.ts",
-                  "tsConfig": "apps/chives-and-dill/tsconfig.app.json",
-                  "assets": ["apps/chives-and-dill/src/favicon.ico", "apps/chives-and-dill/src/assets"],
-                  "styles": ["apps/chives-and-dill/src/styles.scss"],
-                  "scripts": [],
-                  "webpackConfig": "@nrwl/react/plugins/webpack"
-               },
-               "configurations": {
-                  "production": {
-                     "fileReplacements": [
-                        {
-                           "replace": "apps/chives-and-dill/src/environments/environment.ts",
-                           "with": "apps/chives-and-dill/src/environments/environment.prod.ts"
+    "version": 2,
+    "projects": {
+        "chives-and-dill": {
+            "root": "apps/chives-and-dill",
+            "sourceRoot": "apps/chives-and-dill/src",
+            "projectType": "application",
+            "targets": {
+                "build": {
+                    "executor": "@nrwl/web:webpack",
+                    "outputs": [
+                        "{options.outputPath}"
+                    ],
+                    "options": {
+                        "outputPath": "dist/apps/chives-and-dill",
+                        "index": "apps/chives-and-dill/src/index.html",
+                        "main": "apps/chives-and-dill/src/main.tsx",
+                        "polyfills": "apps/chives-and-dill/src/polyfills.ts",
+                        "tsConfig": "apps/chives-and-dill/tsconfig.app.json",
+                        "assets": [
+                            "apps/chives-and-dill/src/favicon.ico",
+                            "apps/chives-and-dill/src/assets"
+                        ],
+                        "styles": [
+                            "apps/chives-and-dill/src/styles.scss"
+                        ],
+                        "scripts": [],
+                        "webpackConfig": "@nrwl/react/plugins/webpack"
+                    },
+                    "configurations": {
+                        "production": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/chives-and-dill/src/environments/environment.ts",
+                                    "with": "apps/chives-and-dill/src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                }
+                            ]
                         }
-                     ],
-                     "optimization": true,
-                     "outputHashing": "all",
-                     "sourceMap": false,
-                     "extractCss": true,
-                     "namedChunks": false,
-                     "extractLicenses": true,
-                     "vendorChunk": false,
-                     "budgets": [
-                        {
-                           "type": "initial",
-                           "maximumWarning": "2mb",
-                           "maximumError": "5mb"
+                    }
+                },
+                "serve": {
+                    "executor": "@nrwl/web:dev-server",
+                    "options": {
+                        "buildTarget": "chives-and-dill:build",
+                        "proxyConfig": "apps/chives-and-dill/proxy.conf.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "buildTarget": "chives-and-dill:build:production"
                         }
-                     ]
-                  }
-               }
+                    }
+                },
+                "lint": {
+                    "executor": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "apps/chives-and-dill/**/*.{ts,tsx,js,jsx}"
+                        ]
+                    }
+                },
+                "test": {
+                    "executor": "@nrwl/jest:jest",
+                    "outputs": [
+                        "coverage/apps/chives-and-dill"
+                    ],
+                    "options": {
+                        "jestConfig": "apps/chives-and-dill/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
             },
-            "serve": {
-               "executor": "@nrwl/web:dev-server",
-               "options": {
-                  "buildTarget": "chives-and-dill:build",
-                  "proxyConfig": "apps/chives-and-dill/proxy.conf.json"
-               },
-               "configurations": {
-                  "production": {
-                     "buildTarget": "chives-and-dill:build:production"
-                  }
-               }
+            "tags": []
+        },
+        "creator": {
+            "root": "apps/creator",
+            "projectType": "application",
+            "sourceRoot": "apps/creator",
+            "targets": {
+                "build": {
+                    "executor": "@nx-go/nx-go:build",
+                    "options": {
+                        "outputPath": "dist/apps/creator",
+                        "main": "apps/creator/main.go"
+                    }
+                },
+                "serve": {
+                    "executor": "@nx-go/nx-go:serve",
+                    "options": {
+                        "main": "apps/creator/main.go"
+                    }
+                },
+                "test": {
+                    "executor": "@nx-go/nx-go:test"
+                },
+                "lint": {
+                    "executor": "@nx-go/nx-go:lint"
+                }
             },
-            "lint": {
-               "executor": "@nrwl/linter:eslint",
-               "options": {
-                  "lintFilePatterns": ["apps/chives-and-dill/**/*.{ts,tsx,js,jsx}"]
-               }
-            },
-            "test": {
-               "executor": "@nrwl/jest:jest",
-               "outputs": ["coverage/apps/chives-and-dill"],
-               "options": {
-                  "jestConfig": "apps/chives-and-dill/jest.config.js",
-                  "passWithNoTests": true
-               }
-            }
-         },
-         "tags": []
-      },
-      "creator": {
-         "root": "apps/creator",
-         "projectType": "application",
-         "sourceRoot": "apps/creator",
-         "targets": {
-            "build": {
-               "executor": "@nx-go/nx-go:build",
-               "options": {
-                  "outputPath": "dist/apps/creator",
-                  "main": "apps/creator/main.go"
-               }
-            },
-            "serve": {
-               "executor": "@nx-go/nx-go:serve",
-               "options": {
-                  "main": "apps/creator/main.go"
-               }
-            },
-            "test": {
-               "executor": "@nx-go/nx-go:test"
-            },
-            "lint": {
-               "executor": "@nx-go/nx-go:lint"
-            }
-         },
-         "tags": []
-      },
-      "creator-web": {
-         "root": "apps/creator-web",
-         "sourceRoot": "apps/creator-web/src",
-         "projectType": "application",
-         "targets": {
-            "build": {
-               "executor": "@nrwl/web:webpack",
-               "outputs": ["{options.outputPath}"],
-               "defaultConfiguration": "production",
-               "options": {
-                  "compiler": "babel",
-                  "outputPath": "dist/apps/creator-web",
-                  "index": "apps/creator-web/src/index.html",
-                  "baseHref": "/",
-                  "main": "apps/creator-web/src/main.tsx",
-                  "polyfills": "apps/creator-web/src/polyfills.ts",
-                  "tsConfig": "apps/creator-web/tsconfig.app.json",
-                  "assets": ["apps/creator-web/src/favicon.ico", "apps/creator-web/src/assets"],
-                  "styles": [],
-                  "scripts": [],
-                  "webpackConfig": "@nrwl/react/plugins/webpack"
-               },
-               "configurations": {
-                  "development": {
-                     "extractLicenses": false,
-                     "optimization": false,
-                     "sourceMap": true,
-                     "vendorChunk": true
-                  },
-                  "production": {
-                     "fileReplacements": [
-                        {
-                           "replace": "apps/creator-web/src/environments/environment.ts",
-                           "with": "apps/creator-web/src/environments/environment.prod.ts"
+            "tags": []
+        },
+        "creator-web": {
+            "root": "apps/creator-web",
+            "sourceRoot": "apps/creator-web/src",
+            "projectType": "application",
+            "targets": {
+                "build": {
+                    "executor": "@nrwl/web:webpack",
+                    "outputs": [
+                        "{options.outputPath}"
+                    ],
+                    "defaultConfiguration": "production",
+                    "options": {
+                        "compiler": "babel",
+                        "outputPath": "dist/apps/creator-web",
+                        "index": "apps/creator-web/src/index.html",
+                        "baseHref": "/",
+                        "main": "apps/creator-web/src/main.tsx",
+                        "polyfills": "apps/creator-web/src/polyfills.ts",
+                        "tsConfig": "apps/creator-web/tsconfig.app.json",
+                        "assets": [
+                            "apps/creator-web/src/favicon.ico",
+                            "apps/creator-web/src/assets"
+                        ],
+                        "styles": [],
+                        "scripts": [],
+                        "webpackConfig": "@nrwl/react/plugins/webpack"
+                    },
+                    "configurations": {
+                        "development": {
+                            "extractLicenses": false,
+                            "optimization": false,
+                            "sourceMap": true,
+                            "vendorChunk": true
+                        },
+                        "production": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/creator-web/src/environments/environment.ts",
+                                    "with": "apps/creator-web/src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "extractLicenses": true,
+                            "vendorChunk": false
                         }
-                     ],
-                     "optimization": true,
-                     "outputHashing": "all",
-                     "sourceMap": false,
-                     "extractCss": true,
-                     "namedChunks": false,
-                     "extractLicenses": true,
-                     "vendorChunk": false
-                  }
-               }
-            },
-            "serve": {
-               "executor": "@nrwl/web:dev-server",
-               "defaultConfiguration": "development",
-               "options": {
-                  "buildTarget": "creator-web:build",
-                  "hmr": true
-               },
-               "configurations": {
-                  "development": {
-                     "buildTarget": "creator-web:build:development"
-                  },
-                  "production": {
-                     "buildTarget": "creator-web:build:production",
-                     "hmr": false
-                  }
-               }
-            },
-            "lint": {
-               "executor": "@nrwl/linter:eslint",
-               "outputs": ["{options.outputFile}"],
-               "options": {
-                  "lintFilePatterns": ["apps/creator-web/**/*.{ts,tsx,js,jsx}"]
-               }
-            },
-            "test": {
-               "executor": "@nrwl/jest:jest",
-               "outputs": ["coverage/apps/creator-web"],
-               "options": {
-                  "jestConfig": "apps/creator-web/jest.config.ts",
-                  "passWithNoTests": true
-               }
-            }
-         },
-         "tags": []
-      },
-      "engine": {
-         "root": "apps/engine",
-         "sourceRoot": "apps\\engine\\src",
-         "projectType": "application",
-         "targets": {
-            "build": {
-               "executor": "@nrwl/node:webpack",
-               "outputs": ["{options.outputPath}"],
-               "options": {
-                  "outputPath": "dist/apps/engine",
-                  "main": "apps/engine/src/main.ts",
-                  "tsConfig": "apps/engine/tsconfig.app.json"
-               },
-               "configurations": {
-                  "production": {
-                     "optimization": true,
-                     "extractLicenses": true,
-                     "inspect": false,
-                     "fileReplacements": [
-                        {
-                           "replace": "apps/engine/src/environments/environment.ts",
-                           "with": "apps/engine/src/environments/environment.prod.ts"
+                    }
+                },
+                "serve": {
+                    "executor": "@nrwl/web:dev-server",
+                    "defaultConfiguration": "development",
+                    "options": {
+                        "buildTarget": "creator-web:build",
+                        "hmr": true,
+                        "port": 3100
+                    },
+                    "configurations": {
+                        "development": {
+                            "buildTarget": "creator-web:build:development"
+                        },
+                        "production": {
+                            "buildTarget": "creator-web:build:production",
+                            "hmr": false
                         }
-                     ]
-                  }
-               }
+                    }
+                },
+                "lint": {
+                    "executor": "@nrwl/linter:eslint",
+                    "outputs": [
+                        "{options.outputFile}"
+                    ],
+                    "options": {
+                        "lintFilePatterns": [
+                            "apps/creator-web/**/*.{ts,tsx,js,jsx}"
+                        ]
+                    }
+                },
+                "test": {
+                    "executor": "@nrwl/jest:jest",
+                    "outputs": [
+                        "coverage/apps/creator-web"
+                    ],
+                    "options": {
+                        "jestConfig": "apps/creator-web/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
             },
-            "serve": {
-               "executor": "@nrwl/node:node",
-               "options": {
-                  "buildTarget": "engine:build"
-               }
+            "tags": []
+        },
+        "engine": {
+            "root": "apps/engine",
+            "sourceRoot": "apps\\engine\\src",
+            "projectType": "application",
+            "targets": {
+                "build": {
+                    "executor": "@nrwl/node:webpack",
+                    "outputs": [
+                        "{options.outputPath}"
+                    ],
+                    "options": {
+                        "outputPath": "dist/apps/engine",
+                        "main": "apps/engine/src/main.ts",
+                        "tsConfig": "apps/engine/tsconfig.app.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "optimization": true,
+                            "extractLicenses": true,
+                            "inspect": false,
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/engine/src/environments/environment.ts",
+                                    "with": "apps/engine/src/environments/environment.prod.ts"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "serve": {
+                    "executor": "@nrwl/node:node",
+                    "options": {
+                        "buildTarget": "engine:build"
+                    }
+                },
+                "lint": {
+                    "executor": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "apps/engine/**/*.ts"
+                        ]
+                    }
+                },
+                "test": {
+                    "executor": "@nrwl/jest:jest",
+                    "outputs": [
+                        "coverage/apps/engine"
+                    ],
+                    "options": {
+                        "jestConfig": "apps/engine/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
             },
-            "lint": {
-               "executor": "@nrwl/linter:eslint",
-               "options": {
-                  "lintFilePatterns": ["apps/engine/**/*.ts"]
-               }
+            "tags": []
+        },
+        "socket-store": "libs/socket-store",
+        "types": {
+            "root": "libs/types",
+            "sourceRoot": "libs/types/src",
+            "projectType": "library",
+            "targets": {
+                "lint": {
+                    "executor": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/types/**/*.ts"
+                        ]
+                    }
+                },
+                "test": {
+                    "executor": "@nrwl/jest:jest",
+                    "outputs": [
+                        "coverage/libs/types"
+                    ],
+                    "options": {
+                        "jestConfig": "libs/types/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
             },
-            "test": {
-               "executor": "@nrwl/jest:jest",
-               "outputs": ["coverage/apps/engine"],
-               "options": {
-                  "jestConfig": "apps/engine/jest.config.js",
-                  "passWithNoTests": true
-               }
-            }
-         },
-         "tags": []
-      },
-      "socket-store": "libs/socket-store",
-      "types": {
-         "root": "libs/types",
-         "sourceRoot": "libs/types/src",
-         "projectType": "library",
-         "targets": {
-            "lint": {
-               "executor": "@nrwl/linter:eslint",
-               "options": {
-                  "lintFilePatterns": ["libs/types/**/*.ts"]
-               }
-            },
-            "test": {
-               "executor": "@nrwl/jest:jest",
-               "outputs": ["coverage/libs/types"],
-               "options": {
-                  "jestConfig": "libs/types/jest.config.js",
-                  "passWithNoTests": true
-               }
-            }
-         },
-         "tags": []
-      }
-   }
+            "tags": []
+        }
+    }
 }
