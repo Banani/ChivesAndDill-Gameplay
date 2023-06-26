@@ -3,10 +3,12 @@ package main
 import "encoding/json"
 
 type CharacterClass struct {
-	Id          string `json:"id" bson:"-"`
-	Name        string `json:"name"`
-	IconImage       string `json:"iconImage"`
-	Spells         map[string]CharacterClassSpellAssignment `json:"spells"`
+	Id          	string 	`json:"id" bson:"-"`
+	Name        	string 	`json:"name"`
+	IconImage       string 	`json:"iconImage"`
+	MaxHp 			int64 	`json:"maxHp"`
+	MaxSpellPower 	int64 	`json:"maxSpellPower"`
+	Spells         	map[string]CharacterClassSpellAssignment `json:"spells"`
 }
 
 type CharacterClassSpellAssignment struct {

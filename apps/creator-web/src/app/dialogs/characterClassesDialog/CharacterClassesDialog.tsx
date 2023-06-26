@@ -7,6 +7,7 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 
 import { Box, Tab, Tabs } from '@mui/material';
+import { merge } from 'lodash';
 import { FormBuilder } from '../../components/formBuilder';
 import { FormContextProvider, FormFieldConditions, Schema, SchemaFieldType } from '../../contexts/FormContext';
 import { CharacterClassesContext } from '../../views/characterClasses/CharacterClassesContextProvider';
@@ -23,12 +24,14 @@ const DefaultCharacterClass: CharacterClass = {
     id: "",
     name: "",
     iconImage: "https://static.wikia.nocookie.net/wowwiki/images/0/0c/Ability_dualwieldspecialization.png",
-    spells: {}
+    spells: {},
+    maxHp: 100,
+    maxSpellPower: 100,
 } as CharacterClass
 
 export const CharacterClassesDialog = () => {
     const { activeCharacterClass, setActiveCharacterClass } = useContext(CharacterClassesContext);
-    let defaultCharacterClass = activeCharacterClass?.id ? activeCharacterClass : DefaultCharacterClass;
+    let defaultCharacterClass = activeCharacterClass?.id ? merge(DefaultCharacterClass, activeCharacterClass) : DefaultCharacterClass;
 
     const [activeTab, setActiveTab] = useState<CharacterClassesDialogTabs>(CharacterClassesDialogTabs.Default);
     const changeActiveTab = (event: React.SyntheticEvent, newValue: CharacterClassesDialogTabs) => {
@@ -47,6 +50,18 @@ export const CharacterClassesDialog = () => {
                 type: SchemaFieldType.Text,
                 conditions: [{ type: FormFieldConditions.Required }],
                 defaultValue: defaultCharacterClass.name
+            },
+            maxHp: {
+                label: "Health Points",
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.PositiveNumber },],
+                defaultValue: defaultCharacterClass.maxHp
+            },
+            maxSpellPower: {
+                label: "Spell Power",
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.PositiveNumber },],
+                defaultValue: defaultCharacterClass.maxSpellPower
             },
             iconImage: {
                 label: "Icon Image",

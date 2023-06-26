@@ -124,7 +124,7 @@ const Validators: Record<FormFieldConditions, (value: string, conditionParameter
 
 const ValueParsers: Partial<Record<SchemaFieldType, (value: string) => any>> = {
     [SchemaFieldType.Number]: (value: string) => {
-        return parseInt(value);
+        return value != "" ? parseInt(value) : value;
     }
 }
 

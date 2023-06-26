@@ -11,7 +11,7 @@ import (
 var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {
 	origin := r.Header.Get("Origin")
 	fmt.Println(origin)
-	return origin == "http://localhost:4200"
+	return origin == "http://localhost:3100"
 }}
 
 func main() {

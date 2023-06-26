@@ -112,9 +112,7 @@ export interface CharacterClass {
     id: string;
     name: string;
     iconImage: string;
-    currentHp: number,
     maxHp: number,
-    currentSpellPower: number,
     maxSpellPower: number,
     spells: Record<string, CharacterClassSpellAssignment>;
 }
