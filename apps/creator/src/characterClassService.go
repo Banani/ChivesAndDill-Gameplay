@@ -6,6 +6,12 @@ type CharacterClass struct {
 	Id          string `json:"id" bson:"-"`
 	Name        string `json:"name"`
 	IconImage       string `json:"iconImage"`
+	Spells         map[string]CharacterClassSpellAssignment `json:"spells"`
+}
+
+type CharacterClassSpellAssignment struct {
+	SpellId string `json:"spellId"`
+	MinLevel int64 `json:"minLevel"`
 }
 
 type CharacterClassesService struct {
@@ -69,6 +75,7 @@ func (service *CharacterClassesService) serve() {
 			api.updateCharacterClass(characterClass)
 
 			service.CharacterClasses[characterClass.Id] = characterClass
+			service.application.writter.stream <- prepareDeletePayload2("characterClasses",  map[string]CharacterClass{characterClass.Id: characterClass})
 			service.application.writter.stream <- prepareUpdatePayload("characterClasses", map[string]CharacterClass{characterClass.Id: characterClass})
 		}
 	}

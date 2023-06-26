@@ -4,4 +4,5 @@ export * from "./formTextField";
 export * from "./imageList";
 export * from "./imagePreview";
 export * from "./label";
+export * from "./spellPreview";
 

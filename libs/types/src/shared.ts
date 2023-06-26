@@ -116,5 +116,10 @@ export interface CharacterClass {
     maxHp: number,
     currentSpellPower: number,
     maxSpellPower: number,
-    spells: Record<string, string>;
+    spells: Record<string, CharacterClassSpellAssignment>;
+}
+
+export interface CharacterClassSpellAssignment {
+    spellId: string,
+    minLevel: number
 }

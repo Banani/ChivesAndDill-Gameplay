@@ -11,10 +11,21 @@ interface AssignmentPanelProps {
     selectedItems?: Record<string, any>;
     allItemsColumnDefinition: GridColumns;
     selectedItemsColumnDefinition: GridColumns;
+
+    // mapItemForPreview takes the selected object as a parameter and transform it to a form in which it will be presented in the selected table.
+    // It should contain "id" field.
     mapItemForPreview?: (item: any) => any;
+
+    // mapItemForSave takes the selected object as a parameter and transform it to a form in which it will be saved in the ContextForm.
     mapItemForSave?: (item: any, newRow: any) => any;
+
+    // updateSelectedItems allows to change value of currect ContextForm, and also change the internal component state, by calling provided callback function.
     updateSelectedItems: React.Dispatch<React.SetStateAction<any>>;
+
+    // getInitialRow is called when the object is beeing selected. It takes it id, and creates new selected object with initial state.
     getInitialRow?: (selectedId: string) => any;
+
+    // idField is a foreign key in selected object. That refers to object from allItems. 
     idField?: string;
     initSelectionModel?: GridSelectionModel;
     errorPath?: string;
@@ -37,6 +48,7 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
 }) => {
     const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
 
+    // This is wrapped in the callback, to not cause the function redefinition.
     const clearSelectedItems = useCallback((selectionModel) => {
         updateSelectedItems((prev: GridSelectionModel) => {
             const currentItemsReward = _.cloneDeep(prev ?? {});
@@ -131,12 +143,13 @@ export const AssignmentPanel: FunctionComponent<AssignmentPanelProps> = ({
                     autoPageSize
                     processRowUpdate={(newRow) => {
                         const parsedNewRow: Record<string, any> = _.mapValues(newRow, (field: any) => field === null ? "" : field)
-                        updateSelectedItems(_.mapValues(selectedItems, (item => {
+                        const mappedValues = _.mapValues(selectedItems, (item => {
                             if (item[idField ?? ""] === parsedNewRow["id"]) {
                                 return mapItemForSave ? mapItemForSave(item, parsedNewRow) : item;
                             }
                             return item;
-                        })));
+                        }));
+                        updateSelectedItems(() => mappedValues);
                         return parsedNewRow;
                     }}
                 />
