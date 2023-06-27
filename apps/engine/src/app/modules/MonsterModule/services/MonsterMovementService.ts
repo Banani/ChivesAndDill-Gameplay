@@ -6,36 +6,38 @@ import { MonsterMovementEngine } from '../engines/MonsterMovementEngine';
 import { MonsterEngineEvents, MonsterLostAggroEvent, MonsterPulledEvent } from '../Events';
 
 export class MonsterMovementService extends EventParser {
-   monsterMovementEngine: MonsterMovementEngine;
+    monsterMovementEngine: MonsterMovementEngine;
 
-   constructor(monsterMovementEngine: MonsterMovementEngine) {
-      super();
-      this.monsterMovementEngine = monsterMovementEngine;
-      this.eventsToHandlersMap = {
-         [MonsterEngineEvents.MonsterPulled]: this.handleMonsterPulled,
-         [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
-      };
-   }
+    constructor(monsterMovementEngine: MonsterMovementEngine) {
+        super();
+        this.monsterMovementEngine = monsterMovementEngine;
+        this.eventsToHandlersMap = {
+            [MonsterEngineEvents.MonsterPulled]: this.handleMonsterPulled,
+            [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
+        };
+    }
 
-   init(engineEventCrator: EngineEventCrator, services) {
-      super.init(engineEventCrator);
-      this.monsterMovementEngine.init(this.engineEventCrator, services);
-   }
+    init(engineEventCrator: EngineEventCrator, services) {
+        super.init(engineEventCrator);
+        this.monsterMovementEngine.init(this.engineEventCrator, services);
+    }
 
-   handleMonsterPulled: EngineEventHandler<MonsterPulledEvent> = ({ event }) => {
-      this.monsterMovementEngine.stopIdleWalking(event.monster.id);
-      this.engineEventCrator.asyncCeateEvent<CreatePathEvent>({
-         type: EngineEvents.CreatePath,
-         pathSeekerId: event.monster.id,
-         targetId: event.targetId,
-      });
-   };
+    handleMonsterPulled: EngineEventHandler<MonsterPulledEvent> = ({ event }) => {
+        this.monsterMovementEngine.stopIdleWalking(event.monster.id);
+        this.engineEventCrator.asyncCeateEvent<CreatePathEvent>({
+            type: EngineEvents.CreatePath,
+            pathSeekerId: event.monster.id,
+            targetId: event.targetId,
+        });
+    };
 
-   handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
-      this.monsterMovementEngine.startIdleWalking(event.monsterId);
-      this.engineEventCrator.asyncCeateEvent<DeletePathEvent>({
-         type: EngineEvents.DeletePath,
-         pathSeekerId: event.monsterId,
-      });
-   };
+    handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event, services }) => {
+        if (services.characterService.getAllCharacters()[event.monsterId]?.isDead === false) {
+            this.monsterMovementEngine.startIdleWalking(event.monsterId);
+        }
+        this.engineEventCrator.asyncCeateEvent<DeletePathEvent>({
+            type: EngineEvents.DeletePath,
+            pathSeekerId: event.monsterId,
+        });
+    };
 }
