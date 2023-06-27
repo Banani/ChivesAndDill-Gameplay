@@ -1,5 +1,5 @@
-import { EngineEventCrator } from './EngineEventsCreator';
-import { Services } from './types/Services';
+import type { EngineEventCrator } from './EngineEventsCreator';
+import type { Services } from './types/Services';
 
 export abstract class Engine {
    eventCrator: EngineEventCrator;

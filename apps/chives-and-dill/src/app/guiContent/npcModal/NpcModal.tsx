@@ -5,13 +5,14 @@ import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useContext, useState } from 'react';
 import { Button } from '../components/button/Button';
-import { AvailableQuestNpcModal, CompleteQuestNpcModal, DefaultNpcModal } from './components';
+import { AvailableQuestNpcModal, CompleteQuestNpcModal, DefaultNpcModal, TradeNpcModal } from './components';
 import styles from './NpcModal.module.scss';
 
 enum NpcModalView {
    Default,
    AvailableQuest,
    CompletedQuest,
+   Trade,
 }
 
 export interface NpcModalProps {
@@ -39,7 +40,7 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
       }, [activeNpc.id, activeQuestId, context]);
 
       const closeButtonHandler = () => {
-         if (currentModal !== NpcModalView.Default) {
+         if (currentModal !== NpcModalView.Default && currentModal !== NpcModalView.Trade) {
             setCurrentModal(NpcModalView.Default);
          } else {
             context.closeNpcConversationDialog();
@@ -61,6 +62,8 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
                      setCurrentModal(questProgress?.[questId] ? NpcModalView.CompletedQuest : NpcModalView.AvailableQuest);
                      setActiveQuestId(questId);
                   }}
+                  setCurrentModal={setCurrentModal}
+                  NpcModalView={NpcModalView}
                />
             )}
             {currentModal === NpcModalView.AvailableQuest && (
@@ -76,6 +79,11 @@ export const NpcModal: FunctionComponent<NpcModalProps> = React.memo(
                   questSchema={questDefinition[activeQuestId]}
                   completeQuest={completeQuest}
                   questId={activeQuestId}
+               />
+            )}
+            {currentModal === NpcModalView.Trade && (
+               <TradeNpcModal
+                  close={() => setCurrentModal(NpcModalView.Default)}
                />
             )}
          </div>

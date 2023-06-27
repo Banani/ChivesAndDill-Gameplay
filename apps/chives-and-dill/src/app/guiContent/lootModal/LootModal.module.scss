@@ -1,3 +1,13 @@
+.LootModalButton {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+
+    .closeButton {
+        margin-top: 22px;
+    }
+}
+
 .LootModal {
   position: absolute;
   height: 364px;
@@ -17,7 +27,6 @@
 
     .Item {
         width: 82%;
-        height: 50px;
         display: flex;
         border: 1px solid rgb(83, 83, 83);
         background: #29292980;
@@ -41,7 +50,10 @@
             align-items: center;
             text-shadow: 1px 1px black;
             text-align: center;
-            margin-left: 5px;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            margin: 3px 0 3px 7px;
         }
 
         .Stack {
@@ -53,4 +65,39 @@
     }
   }
 
+  .PaginationContainer {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+
+    .RightPaginationSide {
+        position: absolute;
+        right: -8px;
+        bottom: 0;
+    }
+
+    .PaginationSide {
+        display: flex;
+        align-items: center;
+        
+        .PaginationButton {
+            color: #EEC300;
+            background-color: #070807; 
+            border-radius: 5px;
+            border: 1px solid #666962;
+            cursor: pointer;
+         }
+     
+         .PaginationText {
+            color: #EEC300;
+            margin: 8px;
+         }
+    }
+  }
 }
