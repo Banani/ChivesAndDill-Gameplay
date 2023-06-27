@@ -1,111 +1,111 @@
 import { KillingQuestStagePartComparison } from './QuestPackage';
 
 export interface Location {
-   x: number;
-   y: number;
+    x: number;
+    y: number;
 }
 
 export enum CharacterDirection {
-   UP,
-   DOWN,
-   LEFT,
-   RIGHT,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
 }
 
 export interface Player {
-   currentHp: number;
-   direction: CharacterDirection;
-   id: string;
-   isDead: boolean;
-   isInMove: boolean;
-   location: Location;
-   maxHp: number;
-   name: string;
-   size: number;
-   sprites: string;
-   hpLost: number;
-   spellEffect: string;
-   currentSpellPower: number;
-   maxSpellPower: number;
-   class: string;
-   avatar: string;
+    currentHp: number;
+    direction: CharacterDirection;
+    id: string;
+    isDead: boolean;
+    isInMove: boolean;
+    location: Location;
+    maxHp: number;
+    name: string;
+    size: number;
+    sprites: string;
+    hpLost: number;
+    spellEffect: string;
+    currentSpellPower: number;
+    maxSpellPower: number;
+    class: string;
+    avatar: string;
 }
 
 export interface Quest {
-   id: string;
-   name: string;
-   description: string;
-   questStage: {
-      description: string;
-      id: string;
-      stageParts: Record<string, StagePart>;
-   };
+    id: string;
+    name: string;
+    description: string;
+    questStage: {
+        description: string;
+        id: string;
+        stageParts: Record<string, StagePart>;
+    };
 }
 
 interface StagePart {
-   amount: number;
-   id: string;
-   questId: string;
-   stageId: string;
-   type: number;
-   rule: {
-      fieldName: string;
-      comparison: KillingQuestStagePartComparison;
-      value: string;
-   }[];
-   targetLocation: Location;
-   description: string;
-   currentProgress: number;
+    amount: number;
+    id: string;
+    questId: string;
+    stageId: string;
+    type: number;
+    rule: {
+        fieldName: string;
+        comparison: KillingQuestStagePartComparison;
+        value: string;
+    }[];
+    targetLocation: Location;
+    description: string;
+    currentProgress: number;
 }
 
 export interface SpriteSheet {
-   spriteHeight: number;
-   spriteWidth: number;
-   image: string;
-   movementDown: SpriteSheetCoordinates;
-   movementRight: SpriteSheetCoordinates;
-   movementUp: SpriteSheetCoordinates;
-   movementLeft: SpriteSheetCoordinates;
-   standingDown: SpriteSheetCoordinates;
-   standingRight: SpriteSheetCoordinates;
-   standingUp: SpriteSheetCoordinates;
-   standingLeft: SpriteSheetCoordinates;
-   dead: SpriteSheetCoordinates;
+    spriteHeight: number;
+    spriteWidth: number;
+    image: string;
+    movementDown: SpriteSheetCoordinates;
+    movementRight: SpriteSheetCoordinates;
+    movementUp: SpriteSheetCoordinates;
+    movementLeft: SpriteSheetCoordinates;
+    standingDown: SpriteSheetCoordinates;
+    standingRight: SpriteSheetCoordinates;
+    standingUp: SpriteSheetCoordinates;
+    standingLeft: SpriteSheetCoordinates;
+    dead: SpriteSheetCoordinates;
 }
 
 interface SpriteSheetCoordinates {
-   yOffSet: number;
-   xOffSet: number;
-   spriteAmount: number;
+    yOffSet: number;
+    xOffSet: number;
+    spriteAmount: number;
 }
 
 export interface Projectile {
-   projectileId: string;
-   spell: string;
-   angle: number;
-   newLocation: Location;
-   currentLocation: Location;
+    projectileId: string;
+    spell: string;
+    angle: number;
+    newLocation: Location;
+    currentLocation: Location;
 }
 
 export interface Spell {
     // TODO: Dodalem to po to zeby typescript nie krzyczal, Ale trzeba to posprzatac
     id?: string;
-   cooldown: number;
-   damage: number;
-   name: string;
-   range: number;
-   speed: number;
-   type: string;
-   image: string;
-   description: string;
-   channelTime: number;
-   spellPowerCost: number;
+    cooldown: number;
+    damage: number;
+    name: string;
+    range: number;
+    speed: number;
+    type: string;
+    image: string;
+    description: string;
+    channelTime: number;
+    spellPowerCost: number;
 }
 
 export interface ActiveSpellCast {
-   casterid: number;
-   castTime: number;
-   spellCastTimeStamp: number;
+    casterid: number;
+    castTime: number;
+    spellCastTimeStamp: number;
 }
 
 export interface CharacterClass {
@@ -115,6 +115,7 @@ export interface CharacterClass {
     maxHp: number,
     maxSpellPower: number,
     spells: Record<string, CharacterClassSpellAssignment>;
+    color: string;
 }
 
 export interface CharacterClassSpellAssignment {

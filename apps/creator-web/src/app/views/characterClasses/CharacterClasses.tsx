@@ -62,6 +62,14 @@ export const CharacterClasses = () => {
                                     <ImagePreview src={params.row.iconImage} />
                             },
                             {
+                                field: 'color',
+                                headerName: 'Color',
+                                renderCell: (params: GridRenderCellParams<CharacterClass>) => {
+                                    return <div className={styles['color-box']} style={{ backgroundColor: params.row.color }}></div>
+                                }
+
+                            },
+                            {
                                 field: 'name',
                                 headerName: 'Name',
                             },

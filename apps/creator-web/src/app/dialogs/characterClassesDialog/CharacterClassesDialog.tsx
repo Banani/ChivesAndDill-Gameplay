@@ -27,6 +27,7 @@ const DefaultCharacterClass: CharacterClass = {
     spells: {},
     maxHp: 100,
     maxSpellPower: 100,
+    color: "#000000"
 } as CharacterClass
 
 export const CharacterClassesDialog = () => {
@@ -62,6 +63,12 @@ export const CharacterClassesDialog = () => {
                 type: SchemaFieldType.Number,
                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.PositiveNumber },],
                 defaultValue: defaultCharacterClass.maxSpellPower
+            },
+            color: {
+                label: "Color",
+                type: SchemaFieldType.Text,
+                conditions: [{ type: FormFieldConditions.Required }],
+                defaultValue: defaultCharacterClass.color
             },
             iconImage: {
                 label: "Icon Image",
