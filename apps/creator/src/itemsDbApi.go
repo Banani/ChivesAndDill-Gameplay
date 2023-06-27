@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -27,11 +26,7 @@ func (m *ItemsDbApi) updateItemTemplate(itemTemplate ItemTemplate) {
 	toSave := bson.D{{"$set", itemTemplate}}
 
 	objectId, _ := primitive.ObjectIDFromHex(itemTemplate.Id)
-	log.Print(objectId)
-	log.Print(itemTemplate.Id)
-	res, e := collection.UpdateOne(context.TODO(), bson.M{"_id": objectId}, toSave)
-	log.Print(res)
-	log.Print(e)
+	collection.UpdateOne(context.TODO(), bson.M{"_id": objectId}, toSave)
 }
 
 func (m *ItemsDbApi) getItemTemplates() map[string]ItemTemplate {

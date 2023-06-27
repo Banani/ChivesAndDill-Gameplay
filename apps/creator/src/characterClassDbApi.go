@@ -40,3 +40,10 @@ func (m *CharacterClassesDbApi) deleteCharacterClass(CharacterClassId string) {
 	objectId, _ := primitive.ObjectIDFromHex(CharacterClassId)
 	collection.DeleteMany(context.TODO(), bson.M{"_id": bson.M{"$in": []primitive.ObjectID{objectId}}})
 }
+
+func (m *CharacterClassesDbApi) removeSpellFromCharacterClasses(spellId string) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("characterClasses")
+
+	collection.UpdateMany(context.TODO(), bson.M{}, bson.M{"$unset": bson.M{"spells." + spellId: ""}})
+}
