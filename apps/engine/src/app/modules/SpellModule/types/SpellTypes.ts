@@ -2,91 +2,91 @@ import type { TimeEffectType } from '@bananos/types';
 import { PowerStackType } from '@bananos/types';
 
 export enum SpellType {
-   Projectile = 'Projectile',
-   GuidedProjectile = 'GuidedProjectile',
-   DirectInstant = 'DirectInstant',
-   AngleBlast = 'AngleBlast',
-   Area = 'Area',
-   Channel = 'Channel',
-   Teleportation = 'Teleportation',
+    Projectile = 'Projectile',
+    GuidedProjectile = 'GuidedProjectile',
+    DirectInstant = 'DirectInstant',
+    AngleBlast = 'AngleBlast',
+    Area = 'Area',
+    Channel = 'Channel',
+    Teleportation = 'Teleportation',
 }
 
 export enum AreaType {
-   Circle = 'Circle',
+    Circle = 'Circle',
 }
 
 export enum SpellEffectType {
-   Damage = 'Damage',
-   Heal = 'Heal',
-   Area = 'Area',
-   GenerateSpellPower = 'GenerateSpellPower',
-   TickEffectOverTime = 'TickEffectOverTime',
-   GainPowerStack = 'GetPowerStack',
-   LosePowerStack = 'LosePowerStack',
-   AbsorbShield = 'AbsorbShield',
+    Damage = 'Damage',
+    Heal = 'Heal',
+    Area = 'Area',
+    GenerateSpellPower = 'GenerateSpellPower',
+    TickEffectOverTime = 'TickEffectOverTime',
+    GainPowerStack = 'GetPowerStack',
+    LosePowerStack = 'LosePowerStack',
+    AbsorbShield = 'AbsorbShield',
 }
 
 export const PowerStackLimit: Record<PowerStackType, number> = {
-   [PowerStackType.HolyPower]: 3,
+    [PowerStackType.HolyPower]: 3,
 };
 
 interface BaseSpell {
-   range: number;
-   cooldown: number;
-   image?: string;
-   description?: string;
-   spellPowerCost: number;
-   requiredPowerStacks?: PowerStackRequirement[];
+    range: number;
+    cooldown: number;
+    image?: string;
+    description?: string;
+    spellPowerCost: number;
+    requiredPowerStacks?: PowerStackRequirement[];
 }
 
 interface PowerStackRequirement {
-   type: PowerStackType;
-   amount: number;
+    type: PowerStackType;
+    amount: number;
 }
 
 interface BaseSubSpell {
-   name: string;
+    name: string;
 }
 
 interface EffectHolders {
-   spellEffectsOnTarget?: AllEffects[];
-   spellEffectsOnDirectionLocation?: AllEffects[];
-   spellEffectsOnCasterOnSpellHit?: AllEffects[];
+    spellEffectsOnTarget?: AllEffects[];
+    spellEffectsOnDirectionLocation?: AllEffects[];
+    spellEffectsOnCasterOnSpellHit?: AllEffects[];
 }
 
 export interface ProjectileSubSpell extends EffectHolders, BaseSubSpell {
-   type: SpellType.Projectile;
-   speed: number;
-   range: number;
+    type: SpellType.Projectile;
+    speed: number;
+    range: number;
 }
 
 export interface GuidedProjectileSubSpell extends EffectHolders, BaseSubSpell {
-   type: SpellType.GuidedProjectile;
-   speed: number;
+    type: SpellType.GuidedProjectile;
+    speed: number;
 }
 
 export interface DirectInstantSubSpell extends EffectHolders, BaseSubSpell {
-   type: SpellType.DirectInstant;
+    type: SpellType.DirectInstant;
 }
 
 export interface AngleBlastSpellSubSpell extends EffectHolders, BaseSubSpell {
-   type: SpellType.AngleBlast;
-   range: number;
-   angle: number;
+    type: SpellType.AngleBlast;
+    range: number;
+    angle: number;
 }
 
 export interface AreaSubSpell extends EffectHolders, BaseSubSpell {
-   type: SpellType.Area;
-   areaType: AreaType;
-   radius: number;
+    type: SpellType.Area;
+    areaType: AreaType;
+    radius: number;
 }
 
 export interface ChannelSubSpell extends EffectHolders, BaseSubSpell {
-   type: SpellType.Channel;
-   channelSpells: SubSpell[];
-   channelFrequency: number;
-   channelTime: number;
-   canByCastedInMovement: boolean;
+    type: SpellType.Channel;
+    channelSpells: SubSpell[];
+    channelFrequency: number;
+    channelTime: number;
+    canByCastedInMovement: boolean;
 }
 
 export type SubSpell = ProjectileSubSpell | GuidedProjectileSubSpell | DirectInstantSubSpell | AngleBlastSpellSubSpell | AreaSubSpell;
@@ -102,75 +102,76 @@ export type TeleportationSpell = BaseSpell & BaseSubSpell & EffectHolders & { ty
 export type Spell = ProjectileSpell | GuidedProjectileSpell | DirectInstantSpell | AngleBlastSpell | AreaSpell | ChannelSpell | TeleportationSpell;
 
 export interface SpellEffect {
-   type: SpellEffectType;
+    type: SpellEffectType;
+    spellId: string;
 }
 
 export interface DamageEffect extends SpellEffect {
-   type: SpellEffectType.Damage;
-   amount: number;
+    type: SpellEffectType.Damage;
+    amount: number;
 }
 
 export interface HealEffect extends SpellEffect {
-   type: SpellEffectType.Heal;
-   amount: number;
+    type: SpellEffectType.Heal;
+    amount: number;
 }
 
 export interface AreaEffect extends SpellEffect {
-   type: SpellEffectType.Area;
-   name: string;
-   areaType: AreaType;
-   period: number;
-   radius: number;
-   attackFrequency: number;
-   spellEffects: AllEffects[];
+    type: SpellEffectType.Area;
+    name: string;
+    areaType: AreaType;
+    period: number;
+    radius: number;
+    attackFrequency: number;
+    spellEffects: AllEffects[];
 }
 
 export interface GenerateSpellPowerEffect extends SpellEffect {
-   type: SpellEffectType.GenerateSpellPower;
-   amount: number;
+    type: SpellEffectType.GenerateSpellPower;
+    amount: number;
 }
 
 export interface TickOverTimeEffect extends SpellEffect {
-   type: SpellEffectType.TickEffectOverTime;
-   name: string;
-   description: string;
-   timeEffectType: TimeEffectType;
-   period: number;
-   iconImage: string;
-   activationFrequency: number;
-   spellEffects: AllEffects[];
-   spellId: string;
+    type: SpellEffectType.TickEffectOverTime;
+    name: string;
+    description: string;
+    timeEffectType: TimeEffectType;
+    period: number;
+    iconImage: string;
+    activationFrequency: number;
+    spellEffects: AllEffects[];
+    spellId: string;
 }
 
 export interface GainPowerStackEffect extends SpellEffect {
-   type: SpellEffectType.GainPowerStack;
-   powerStackType: PowerStackType;
-   amount: number;
+    type: SpellEffectType.GainPowerStack;
+    powerStackType: PowerStackType;
+    amount: number;
 }
 
 export interface LosePowerStackEffect extends SpellEffect {
-   type: SpellEffectType.LosePowerStack;
-   powerStackType: PowerStackType;
-   amount: number;
+    type: SpellEffectType.LosePowerStack;
+    powerStackType: PowerStackType;
+    amount: number;
 }
 
 export interface AbsorbShieldEffect extends SpellEffect {
-   type: SpellEffectType.AbsorbShield;
-   id: string;
-   name: string,
-   shieldValue: number;
-   period: number;
-   stack?: number;
-   timeEffectType: TimeEffectType;
-   iconImage: string;
+    type: SpellEffectType.AbsorbShield;
+    id: string;
+    name: string,
+    shieldValue: number;
+    period: number;
+    stack?: number;
+    timeEffectType: TimeEffectType;
+    iconImage: string;
 }
 
 type AllEffects =
-   | DamageEffect
-   | HealEffect
-   | AreaEffect
-   | GenerateSpellPowerEffect
-   | TickOverTimeEffect
-   | GainPowerStackEffect
-   | LosePowerStackEffect
-   | AbsorbShieldEffect;
+    | DamageEffect
+    | HealEffect
+    | AreaEffect
+    | GenerateSpellPowerEffect
+    | TickOverTimeEffect
+    | GainPowerStackEffect
+    | LosePowerStackEffect
+    | AbsorbShieldEffect;

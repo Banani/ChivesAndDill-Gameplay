@@ -12,6 +12,7 @@ import {
     getSpellModule,
 } from '../modules';
 import { Classes } from '../types/Classes';
+import { PlayerCharacter } from '../types/PlayerCharacter';
 import { EngineEvent } from '../types/events';
 
 jest.mock('../modules/MapModule/db', () => ({
@@ -21,6 +22,12 @@ jest.mock('../modules/MapModule/db', () => ({
         watchForMapDefinition: jest.fn()
     })),
 }));
+
+export interface PlayerCharacterForTesting {
+    socketId: string;
+    character: PlayerCharacter;
+    characterId: string;
+}
 
 export class EngineManager {
     private mainEngine: MainEngine;
@@ -95,7 +102,7 @@ export class EngineManager {
         return this.getLatestPlayerDataPackage(playerId);
     }
 
-    preparePlayerWithCharacter(character: { name: string; class: Classes }) {
+    preparePlayerWithCharacter: (character: { name: string; class: Classes }) => PlayerCharacterForTesting = (character) => {
         const id = this.addNewPlayer();
         this.callPlayerAction(id, { type: CommonClientMessages.CreateCharacter, ...character });
         const dataPackage = this.getLatestPlayerDataPackage(id);

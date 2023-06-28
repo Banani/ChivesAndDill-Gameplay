@@ -243,12 +243,16 @@ export interface CharacterGotHpEvent {
     characterId: string;
     source: HealthPointsSource;
     amount: number;
+    healerId: string;
+    spellId: string;
 }
 
 export interface CharacterLostHpEvent {
     type: EngineEventType.CharacterLostHp;
     characterId: string;
     amount: number;
+    spellId: string;
+    attackerId: string;
 }
 
 export interface DamageAbsorbedEvent {

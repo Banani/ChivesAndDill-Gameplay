@@ -95,6 +95,7 @@ describe('Combat state service', () => {
             effect: {
                 type: SpellEffectType.Damage,
                 amount: 200,
+                spellId: "SPELL_ID"
             } as SpellEffect,
         });
 
@@ -130,6 +131,7 @@ describe('Combat state service', () => {
             effect: {
                 type: SpellEffectType.Damage,
                 amount: 200,
+                spellId: "SPELL_ID"
             } as SpellEffect,
         });
 
@@ -161,6 +163,7 @@ describe('Combat state service', () => {
             effect: {
                 type: SpellEffectType.Damage,
                 amount: 200,
+                spellId: "SPELL_ID"
             } as SpellEffect,
         });
 
@@ -171,6 +174,7 @@ describe('Combat state service', () => {
             effect: {
                 type: SpellEffectType.Damage,
                 amount: 200,
+                spellId: "SPELL_ID"
             } as SpellEffect,
         });
 
