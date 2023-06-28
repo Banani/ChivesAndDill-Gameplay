@@ -1,2 +1,4 @@
-export * from './SocketConnectionService';
+export * from './DbService';
 export * from './PathFinderService';
+export * from './SocketConnectionService';
+

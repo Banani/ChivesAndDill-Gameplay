@@ -1,4 +1,5 @@
 import { MapDefinition, MapSchema } from '@bananos/types';
+import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { NewPlayerCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
@@ -14,8 +15,11 @@ export class MapService extends EventParser {
         this.eventsToHandlersMap = {
             [PlayerEngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
         };
+    }
 
-        const mapDbApi = new MapDbApi();
+    init(engineEventCrator: EngineEventCrator, services) {
+        super.init(engineEventCrator);
+        const mapDbApi = new MapDbApi(services.dbService.getDb());
         mapDbApi.fetchMapDefinition().then((mapDefinition) => {
             this.mapDefinition = mapDefinition;
         });

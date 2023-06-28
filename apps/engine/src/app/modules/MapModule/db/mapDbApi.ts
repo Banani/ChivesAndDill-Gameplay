@@ -1,20 +1,13 @@
 import { MapDefinition, MapSchema } from '@bananos/types';
-import { dbConfig } from 'apps/engine/database';
 import * as _ from 'lodash';
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { DbApi } from '../../../services';
 
 const BLOCK_SIZE = 32;
 
-const URI = `mongodb+srv://${dbConfig.userName}:${dbConfig.password}@cluster0.bmgp9.mongodb.net/?retryWrites=true&w=majority`;
-
-export class MapDbApi {
+export class MapDbApi extends DbApi {
     fetchMapDefinition: () => Promise<MapDefinition> = async () => {
-        const client = new MongoClient(URI, { serverApi: ServerApiVersion.v1 });
-        const collection = client.db(dbConfig.database).collection('mapFields');
-
+        const collection = this.db.collection('mapFields');
         const data = await collection.find().toArray();
-
-        client.close();
 
         return _.chain(data)
             .keyBy('_id')
@@ -23,21 +16,15 @@ export class MapDbApi {
     };
 
     watchForMapDefinition = (onChange) => {
-        const client = new MongoClient(URI, { serverApi: ServerApiVersion.v1 });
-        const collection = client.db(dbConfig.database).collection('mapFields');
-
+        const collection = this.db.collection('mapFields');
         let changeStream = collection.watch();
 
         changeStream.on("change", (changeEvent) => onChange(changeEvent));
     }
 
     fetchMapSchema: () => Promise<MapSchema> = async () => {
-        const client = new MongoClient(URI, { serverApi: ServerApiVersion.v1 });
-        const collection = client.db(dbConfig.database).collection('sprites');
-
+        const collection = this.db.collection('sprites');
         const data = await collection.find().toArray();
-
-        client.close();
 
         return _.chain(data)
             .keyBy('_id')
