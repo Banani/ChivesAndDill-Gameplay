@@ -6,7 +6,7 @@ import { Button } from '../components/button/Button';
 import { SocketContext } from '../../gameController/socketContext';
 import styles from "./LootModal.module.scss";
 import { CalculateCurrenty } from '../moneyBar/CalculateCurrency';
-import { usePagination } from '../../../../../creator-web/src/app/mapEditor/spritePanel/components/usePagination';
+import { usePagination } from '../../../../../creator-web/src/app/views/components/pagination/usePagination';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
