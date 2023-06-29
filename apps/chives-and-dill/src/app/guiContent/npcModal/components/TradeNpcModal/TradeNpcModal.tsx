@@ -7,7 +7,7 @@ import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-
 import { MoneyBar } from '../../../../guiContent/moneyBar/MoneyBar';
 import _ from 'lodash';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
-import { usePagination } from 'apps/creator-web/src/app/mapEditor/spritePanel/components/usePagination';
+import { usePagination } from 'apps/creator-web/src/app/views/components/pagination/usePagination';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { SocketContext } from '../../../../gameController/socketContext';
@@ -17,6 +17,7 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
    const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
    const { data: activeConversation } = useEngineModuleReader(GlobalStoreModule.NPC_CONVERSATION);
    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+   const PlayerMoney = useEngineModuleReader(GlobalStoreModule.CURRENCY).data[activeCharacterId];
 
    const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
    const [itemsAmount, updateItemsAmount] = useState(0);
@@ -61,7 +62,7 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
    ));
 
    useEffect(() => {
-      updateItemsAmount(_.size(allItems))
+      updateItemsAmount(_.size(allItems));
    }, [allItems, start, end]);
 
    const pagination = (items) => {
@@ -96,7 +97,7 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
                </div> : null}
             </div>
             <div className={styles.MoneyBarWrapper}>
-               <MoneyBar currency={6435422} />
+               <MoneyBar currency={PlayerMoney} />
             </div>
          </div>
       </div>
