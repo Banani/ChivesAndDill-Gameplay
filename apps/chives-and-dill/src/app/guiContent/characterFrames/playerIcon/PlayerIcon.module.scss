@@ -15,11 +15,16 @@
     background-color: black;
   }
 
+  .combatBorder {
+    box-shadow: 0px 0px 17px 3px rgb(197, 23, 23);
+    border: 5px solid gray;
+  }
+
   .playerLvl {
     border-radius: 50%;
     width: 25px;
     height: 25px;
-    border: 3px solid gold;
+    border: 2px solid gold;
     position: absolute;
     z-index: 9;
     display: flex;
@@ -45,20 +50,30 @@
     cursor: pointer;
   }
 
+  .combatSwords {
+    background-image: url("../../../../assets/spritesheets/characterFrames/crossedSwords.png");
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: 65px;
+    bottom: 0;
+    z-index: 9;
+    border: 2px solid gold;
+    border-radius: 50%;
+    background-color: gold;
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+  }
+
   .barsContainer {
-    border-radius: 10px;
-    border-width: 0 5px 0 5px;
-    border-color: gray;
-    border-style: solid;
-    padding: 10px 0;
+    border-radius: 5px;
+    border: 4px solid gray;
   
     .nameBar {
       color: gold;
       padding: 5px 0;
-      border-width: 3px 0 3px 0;
-      border-radius: 3px;
-      border-style: solid;
-      border-color: gray;
       display: flex;
       justify-content: center;
       background-color: black;
@@ -68,7 +83,7 @@
       width: 200px;
       height: 20px;
       background-color: white;
-      border-width: 3px 0 3px 0;
+      border-width: 3px 0 0 0;
       border-radius: 3px;
       border-style: solid;
       border-color: gray;
@@ -90,6 +105,7 @@
         color: gold;
         z-index: 9;
         text-align: center;
+        text-shadow: 0 0 5px black;
       }
 
       .hpColor {

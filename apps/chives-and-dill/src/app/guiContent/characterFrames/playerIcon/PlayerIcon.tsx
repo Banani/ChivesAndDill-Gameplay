@@ -9,6 +9,7 @@ export const PlayerIcon = ({ playerId }) => {
    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
    const { data: characterPowerPoints } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
    const { data: powerStacks } = useEngineModuleReader(GlobalStoreModule.POWER_STACKS);
+   const { data: combatState } = useEngineModuleReader(GlobalStoreModule.COMBAT_STATE);
 
    const player = characters[playerId];
    const { name, avatar } = player;
@@ -42,11 +43,13 @@ export const PlayerIcon = ({ playerId }) => {
    return (
       <div>
          <div className={styles.playerIconContainer}>
-            <div className={styles.playerAvatar} style={{ backgroundImage: `url(${avatar})` }}></div>
-            <div className={styles.playerLvl}>{experience[playerId].level}</div>
+
+            <div className={styles.playerAvatar + " " + (combatState[playerId] ? styles.combatBorder : "")} style={{ backgroundImage: `url(${avatar})` }}></div>
+
+            {combatState[playerId] ? <div className={styles.combatSwords}></div> : <div className={styles.playerLvl}>{experience[playerId].level}</div>}
             <div className={styles.playerRole} />
             <div>
-               <div className={styles.barsContainer}>
+               <div className={styles.barsContainer + " " + (combatState[playerId] ? styles.combatBorder : "")}>
                   <div className={styles.nameBar}>{name}</div>
                   <div className={styles.bar}>
                      <div className={styles.barText}>{currentHp >= 0 ? currentHp + '/' + maxHp : 0}</div>
