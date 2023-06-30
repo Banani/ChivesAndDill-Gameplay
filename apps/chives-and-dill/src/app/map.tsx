@@ -117,8 +117,9 @@ const Map = () => {
                                                 {/* <MapWrapper /> */}
                                                 <AreasSpellsEffectsManager />
                                                 <AreasManager />
-                                                {renderSpells()}
+
                                                 <RenderPlayersManager />
+                                                {renderSpells()}
                                                 <FloatingNumbersManager />
                                                 <BlinkSpellEffect />
                                                 <BloodPoolManager />
