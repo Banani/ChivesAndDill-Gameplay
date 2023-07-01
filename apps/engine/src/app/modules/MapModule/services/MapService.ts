@@ -27,14 +27,16 @@ export class MapService extends EventParser {
             this.mapSchema = mapSchema;
         });
         mapDbApi.watchForMapDefinition((data) => {
-            const sprites = [data.fullDocument.spriteId];
-            this.mapDefinition[data.documentKey['_id']] = sprites;
-            this.engineEventCrator.asyncCeateEvent<MapDefinitionUpdatedEvent>({
-                type: MapEvents.MapDefinitionUpdated,
-                mapDefinition: {
-                    [data.documentKey['_id']]: sprites
-                },
-            });
+            if (data.operationType === "insert") {
+                const sprites = [data.fullDocument.spriteId];
+                this.mapDefinition[data.documentKey['_id']] = sprites;
+                this.engineEventCrator.asyncCeateEvent<MapDefinitionUpdatedEvent>({
+                    type: MapEvents.MapDefinitionUpdated,
+                    mapDefinition: {
+                        [data.documentKey['_id']]: sprites
+                    },
+                });
+            }
         });
     }
 

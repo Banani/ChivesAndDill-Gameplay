@@ -60,9 +60,9 @@ export class NpcApi extends DbApi {
         return npcRespawns;
     };
 
-    watchForMapDefinition = (onChange) => {
-        const collection = this.db.collection('mapFields');
-        let changeStream = collection.watch();
+    watchForNpcTemplates = (onChange) => {
+        const collection = this.db.collection('npcTemplates');
+        let changeStream = collection.watch([], { fullDocument: "updateLookup" });
 
         changeStream.on("change", (changeEvent) => onChange(changeEvent));
     }

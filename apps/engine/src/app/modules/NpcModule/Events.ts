@@ -2,11 +2,9 @@ import { ItemLocationInBag } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterRespawn } from '../../types/CharacterRespawn';
 import { NpcTemplateDb } from './db';
-import { Npc } from './types';
 
 export enum NpcEngineEvents {
     CreateNewNpc = 'CreateNewNpc',
-    NewNpcCreated = 'NewNpcCreated',
 
     PlayerTriesToStartConversation = 'PlayerTriesToStartConversation',
     ConversationWithNpcStarted = 'ConversationWithNpcStarted',
@@ -27,11 +25,6 @@ export enum NpcEngineEvents {
 export interface CreateNewNpcEvent extends EngineEvent {
     type: NpcEngineEvents.CreateNewNpc;
     npcDefinition: CharacterRespawn;
-}
-
-export interface NewNpcCreatedEvent extends EngineEvent {
-    type: NpcEngineEvents.NewNpcCreated;
-    npc: Npc;
 }
 
 export interface PlayerTriesToStartConversationEvent extends EngineEvent {
@@ -92,7 +85,6 @@ export interface NpcTemplateFetchedFromDbEvent extends EngineEvent {
 
 export interface NpcEngineEventsMap {
     [NpcEngineEvents.CreateNewNpc]: EngineEventHandler<CreateNewNpcEvent>;
-    [NpcEngineEvents.NewNpcCreated]: EngineEventHandler<NewNpcCreatedEvent>;
 
     [NpcEngineEvents.PlayerTriesToStartConversation]: EngineEventHandler<PlayerTriesToStartConversationEvent>;
     [NpcEngineEvents.ConversationWithNpcStarted]: EngineEventHandler<ConversationWithNpcStartedEvent>;

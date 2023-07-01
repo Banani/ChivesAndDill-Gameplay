@@ -42,6 +42,7 @@ export class MonsterMovementEngine extends Engine {
         const respawn = monsterRespawns[monster.respawnId];
 
         if (distanceBetweenTwoPoints(monster.location, respawn.location) <= monster.movementSpeed) {
+            // TODO: TO sie wysyla nawet jak potwor stoi w miejscu
             this.eventCrator.createEvent<PlayerMovedEvent>({
                 type: EngineEvents.PlayerMoved,
                 characterId: monster.id,

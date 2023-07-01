@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { CharacterType, EngineEventHandler } from '../../../types';
 import { CharacterEngineEvents, CreateCharacterEvent } from '../../CharacterModule/Events';
-import { NewNpcCreatedEvent, NpcEngineEvents, NpcRespawnsUpdatedEvent } from '../Events';
+import { NpcEngineEvents, NpcRespawnsUpdatedEvent } from '../Events';
 import type { Npc } from '../types';
 
 export class NpcService extends EventParser {
@@ -38,11 +38,6 @@ export class NpcService extends EventParser {
             this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
                 type: CharacterEngineEvents.CreateCharacter,
                 character: this.npcs[id],
-            });
-
-            this.engineEventCrator.asyncCeateEvent<NewNpcCreatedEvent>({
-                type: NpcEngineEvents.NewNpcCreated,
-                npc: this.npcs[id],
             });
         });
     };
