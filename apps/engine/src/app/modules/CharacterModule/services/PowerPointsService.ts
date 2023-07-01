@@ -68,13 +68,13 @@ export class PowerPointsService extends EventParser {
         }
 
         if (event.character.type === CharacterType.Monster) {
-            const monsterRespawns = services.monsterRespawnTemplateService.getData();
-            const respawn = monsterRespawns[event.character.respawnId];
+            const monsterRespawn = services.monsterRespawnTemplateService.getData()[event.character.respawnId];
+            const monsterTemplate = services.monsterTemplateService.getData()[monsterRespawn.characterTemplateId];
             this.powerPoints[event.character.id] = {
-                currentHp: respawn.characterTemplate.healthPoints,
-                maxHp: respawn.characterTemplate.healthPoints,
-                currentSpellPower: respawn.characterTemplate.spellPower,
-                maxSpellPower: respawn.characterTemplate.spellPower,
+                currentHp: monsterTemplate.healthPoints,
+                maxHp: monsterTemplate.healthPoints,
+                currentSpellPower: monsterTemplate.spellPower,
+                maxSpellPower: monsterTemplate.spellPower,
             };
         }
         // TODO: powinno byc jakies wspolne rozwiazanie dla wszystkich

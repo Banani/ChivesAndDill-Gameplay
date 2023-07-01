@@ -10,102 +10,99 @@ import { MonsterEngineEvents } from '../Events';
 import type { Monster } from '../types';
 
 export class MonsterService extends EventParser {
-   monsters: Record<string, Monster> = {};
-   increment = 0;
+    monsters: Record<string, Monster> = {};
+    increment = 0;
 
-   constructor() {
-      super();
-      this.eventsToHandlersMap = {
-         [MonsterEngineEvents.CreateNewMonster]: this.handleCreateNewMonster,
-         [MonsterEngineEvents.MonsterTargetChanged]: this.test,
-         [MonsterEngineEvents.MonsterLostTarget]: this.test2,
-         [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
-         [EngineEvents.CharacterDied]: this.handleCharacterDied,
-         [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
-         [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
-         [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
-      };
-   }
+    constructor() {
+        super();
+        this.eventsToHandlersMap = {
+            [MonsterEngineEvents.CreateNewMonster]: this.handleCreateNewMonster,
+            [MonsterEngineEvents.MonsterTargetChanged]: this.test,
+            [MonsterEngineEvents.MonsterLostTarget]: this.test2,
+            [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
+            [EngineEvents.CharacterDied]: this.handleCharacterDied,
+            [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+            [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
+            [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
+        };
+    }
 
-   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
-      delete this.monsters[event.characterId];
-   };
+    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
+        delete this.monsters[event.characterId];
+    };
 
-   handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event }) => {
-      if (this.monsters[event.characterId]) {
-         this.monsters[event.characterId].isInMove = true;
-      }
-   };
+    handlePlayerStartedMovement: EngineEventHandler<PlayerStartedMovementEvent> = ({ event }) => {
+        if (this.monsters[event.characterId]) {
+            this.monsters[event.characterId].isInMove = true;
+        }
+    };
 
-   handlePlayerStopedAllMovementVectors: EngineEventHandler<PlayerStopedAllMovementVectorsEvent> = ({ event }) => {
-      if (this.monsters[event.characterId]) {
-         this.monsters[event.characterId].isInMove = false;
-      }
-   };
+    handlePlayerStopedAllMovementVectors: EngineEventHandler<PlayerStopedAllMovementVectorsEvent> = ({ event }) => {
+        if (this.monsters[event.characterId]) {
+            this.monsters[event.characterId].isInMove = false;
+        }
+    };
 
-   test: EngineEventHandler<MonsterTargetChangedEvent> = ({ event }) => {
-      console.log('targetChanged:', event.newTargetId);
-   };
-   test2: EngineEventHandler<MonsterLostTargetEvent> = ({ event }) => {
-      console.log('targetLost:', event.targetId);
-   };
+    test: EngineEventHandler<MonsterTargetChangedEvent> = ({ event }) => {
+        console.log('targetChanged:', event.newTargetId);
+    };
+    test2: EngineEventHandler<MonsterLostTargetEvent> = ({ event }) => {
+        console.log('targetLost:', event.targetId);
+    };
 
-   handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
-      if (this.monsters[event.characterId]) {
-         this.monsters[event.characterId].location = event.newLocation;
-         this.monsters[event.characterId].direction = event.newCharacterDirection;
-      }
-   };
+    handlePlayerMoved: EngineEventHandler<PlayerMovedEvent> = ({ event }) => {
+        if (this.monsters[event.characterId]) {
+            this.monsters[event.characterId].location = event.newLocation;
+            this.monsters[event.characterId].direction = event.newCharacterDirection;
+        }
+    };
 
-   handleCreateNewMonster: EngineEventHandler<CreateNewMonsterEvent> = ({ event }) => {
-      const id = `monster_${(this.increment++).toString()}`;
+    handleCreateNewMonster: EngineEventHandler<CreateNewMonsterEvent> = ({ event, services }) => {
+        const id = `monster_${(this.increment++).toString()}`;
+        const monsterTemplate = services.monsterTemplateService.getData()[event.monsterRespawn.characterTemplateId];
 
-      this.monsters[id] = {
-         type: CharacterType.Monster,
-         id,
-         isDead: false,
-         name: event.monsterRespawn.characterTemplate.name,
-         location: event.monsterRespawn.location,
-         sprites: event.monsterRespawn.characterTemplate.sprites,
-         avatar: event.monsterRespawn.characterTemplate.avatar,
-         size: event.monsterRespawn.characterTemplate.size,
-         direction: CharacterDirection.DOWN,
-         division: event.monsterRespawn.characterTemplate.division,
-         isInMove: false,
-         respawnId: event.monsterRespawn.id,
-         sightRange: event.monsterRespawn.characterTemplate.sightRange,
-         speed: event.monsterRespawn.characterTemplate.speed,
-         desiredRange: event.monsterRespawn.characterTemplate.desiredRange,
-         escapeRange: event.monsterRespawn.characterTemplate.escapeRange,
-         spells: event.monsterRespawn.characterTemplate.spells,
-         attackFrequency: event.monsterRespawn.characterTemplate.attackFrequency,
-         healthPointsRegen: event.monsterRespawn.characterTemplate.healthPointsRegen,
-         spellPowerRegen: event.monsterRespawn.characterTemplate.spellPowerRegen,
-      };
+        this.monsters[id] = {
+            type: CharacterType.Monster,
+            id,
+            isDead: false,
+            name: monsterTemplate.name,
+            location: event.monsterRespawn.location,
+            sprites: monsterTemplate.sprites,
+            avatar: monsterTemplate.avatar,
+            size: monsterTemplate.size,
+            direction: CharacterDirection.DOWN,
+            division: monsterTemplate.division,
+            isInMove: false,
+            respawnId: event.monsterRespawn.id,
+            sightRange: monsterTemplate.sightRange,
+            movementSpeed: monsterTemplate.speed,
+            desiredRange: monsterTemplate.desiredRange,
+            escapeRange: monsterTemplate.escapeRange,
+            spells: monsterTemplate.spells,
+            attackFrequency: monsterTemplate.attackFrequency,
+            healthPointsRegeneration: monsterTemplate.healthPointsRegen,
+            spellPowerRegeneration: monsterTemplate.spellPowerRegen,
+        };
 
-      this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
-         type: CharacterEngineEvents.CreateCharacter,
-         character: this.monsters[id],
-      });
+        this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
+            type: CharacterEngineEvents.CreateCharacter,
+            character: this.monsters[id],
+        });
 
-      this.engineEventCrator.asyncCeateEvent<NewMonsterCreatedEvent>({
-         type: MonsterEngineEvents.NewMonsterCreated,
-         monster: this.monsters[id],
-      });
-   };
+        this.engineEventCrator.asyncCeateEvent<NewMonsterCreatedEvent>({
+            type: MonsterEngineEvents.NewMonsterCreated,
+            monster: this.monsters[id],
+        });
+    };
 
-   handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
-      if (this.monsters[event.monsterId]) {
-         this.engineEventCrator.asyncCeateEvent<ResetCharacterEvent>({
-            type: CharacterEngineEvents.ResetCharacter,
-            characterId: event.monsterId,
-         });
-      }
-   };
+    handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
+        if (this.monsters[event.monsterId]) {
+            this.engineEventCrator.asyncCeateEvent<ResetCharacterEvent>({
+                type: CharacterEngineEvents.ResetCharacter,
+                characterId: event.monsterId,
+            });
+        }
+    };
 
-   CharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
-      delete this.monsters[event.characterId];
-   };
-
-   getAllCharacters = () => this.monsters;
+    getAllCharacters = () => this.monsters;
 }

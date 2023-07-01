@@ -1,49 +1,51 @@
 import * as _ from 'lodash';
-import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { CharacterType } from '../../../types';
-import { Services } from '../../../types/Services';
+import { CharacterType, EngineEventHandler } from '../../../types';
 import { CharacterEngineEvents, CreateCharacterEvent } from '../../CharacterModule/Events';
-import { NewNpcCreatedEvent, NpcEngineEvents } from '../Events';
+import { NewNpcCreatedEvent, NpcEngineEvents, NpcRespawnsUpdatedEvent } from '../Events';
 import type { Npc } from '../types';
 
 export class NpcService extends EventParser {
-   npcs: Record<string, Npc> = {};
-   increment = 0;
+    //TODO: Jak zginie to sie nie usuwa? 
+    npcs: Record<string, Npc> = {};
+    increment = 0;
 
-   constructor() {
-      super();
-      this.eventsToHandlersMap = {};
-   }
+    constructor() {
+        super();
+        this.eventsToHandlersMap = {
+            [NpcEngineEvents.NpcRespawnsUpdated]: this.handleNpcRespawnsUpdated,
+        };
+    }
 
-   init(engineEventCrator: EngineEventCrator, services: Services) {
-      super.init(engineEventCrator);
+    handleNpcRespawnsUpdated: EngineEventHandler<NpcRespawnsUpdatedEvent> = ({ event, services }) => {
+        const respawns = services.npcRespawnTemplateService.getData();
+        _.map(event.respawnIds, (respawnId) => {
+            const npcRespawn = respawns[respawnId];
+            this.increment++;
+            const id = 'npc_' + this.increment;
 
-      _.map(services.npcRespawnTemplateService.getData(), (npcRespawn) => {
-         this.increment++;
-         const id = 'npc_' + this.increment;
+            this.npcs[id] = {
+                type: CharacterType.Npc,
+                //TODO: niech to sie odwoluje do npc template, zamiast przekopiowac go calego
+                ...services.npcTemplateService.getData()[npcRespawn.characterTemplateId],
+                location: npcRespawn.location,
+                isDead: false,
+                respawnId: npcRespawn.id,
+                templateId: npcRespawn.characterTemplateId,
+                id,
+            };
 
-         this.npcs[id] = {
-            type: CharacterType.Npc,
-            ...npcRespawn.characterTemplate,
-            location: npcRespawn.location,
-            isDead: false,
-            respawnId: npcRespawn.id,
-            templateId: npcRespawn.characterTemplate.id,
-            id,
-         };
+            this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
+                type: CharacterEngineEvents.CreateCharacter,
+                character: this.npcs[id],
+            });
 
-         this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
-            type: CharacterEngineEvents.CreateCharacter,
-            character: this.npcs[id],
-         });
+            this.engineEventCrator.asyncCeateEvent<NewNpcCreatedEvent>({
+                type: NpcEngineEvents.NewNpcCreated,
+                npc: this.npcs[id],
+            });
+        });
+    };
 
-         this.engineEventCrator.asyncCeateEvent<NewNpcCreatedEvent>({
-            type: NpcEngineEvents.NewNpcCreated,
-            npc: this.npcs[id],
-         });
-      });
-   }
-
-   getNpcById = (npcId: string) => this.npcs[npcId];
+    getNpcById = (npcId: string) => this.npcs[npcId];
 }

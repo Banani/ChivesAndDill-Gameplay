@@ -24,7 +24,7 @@ type NpcQuoteEvent struct {
 }
 
 type QuoteHandler struct {
-	Chance int32    `json:"chance" bson:"change"`
+	Chance int32    `json:"chance" bson:"chance"`
 	Quotes []string `json:"quotes" bson:"quotes"`
 }
 
@@ -39,7 +39,7 @@ type NpcHolder struct {
 }
 
 type Npc struct {
-	Id            string   `json:"id"  bson:"id"`
+	Id            string   `json:"id"  bson:"_id"`
 	Location      Location `json:"location"  bson:"location"`
 	NpcTemplateId string   `json:"npcTemplateId"  bson:"npcTemplateId"`
 	Time          int32    `json:"time"  bson:"time"`

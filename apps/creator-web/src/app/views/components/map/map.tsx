@@ -9,8 +9,8 @@ import { MapSprite } from './mapSprite/mapSprite';
 
 import { Text } from '@inlet/react-pixi';
 import { TextStyle } from 'pixi.js';
-import styles from './map.module.scss';
 import { MapContext } from './MapContextProvider';
+import styles from './map.module.scss';
 
 type MapActionStates = Record<
     string,

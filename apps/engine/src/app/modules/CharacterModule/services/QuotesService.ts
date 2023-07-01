@@ -7,111 +7,113 @@ import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../
 import { ChatEngineEvents, SendChatMessageEvent } from '../../ChatModule/Events';
 import { MonsterEngineEvents, MonsterPulledEvent } from '../../MonsterModule/Events';
 import { Monster } from '../../MonsterModule/types';
-import { RandomQuoteEngine } from '../engines/RandomQuoteEngine';
 import { CharacterEngineEvents, SendQuoteMessageEvent } from '../Events';
+import { RandomQuoteEngine } from '../engines/RandomQuoteEngine';
 
 export class QuotesService extends EventParser {
-   // characterId => last call
-   quotesTimeStamps: Record<string, number> = {};
-   QUOTE_COOLDOWN = 5000;
-   randomQuoteEngine: RandomQuoteEngine;
+    // characterId => last call
+    quotesTimeStamps: Record<string, number> = {};
+    QUOTE_COOLDOWN = 5000;
+    randomQuoteEngine: RandomQuoteEngine;
 
-   constructor(randomQuoteEngine: RandomQuoteEngine) {
-      super();
-      this.randomQuoteEngine = randomQuoteEngine;
-      this.eventsToHandlersMap = {
-         [EngineEvents.CharacterDied]: this.handleCharacterDied,
-         [MonsterEngineEvents.MonsterPulled]: this.handleMonsterPulled,
-         [CharacterEngineEvents.SendQuoteMessage]: this.handleSendQuoteMessage,
-      };
-   }
+    constructor(randomQuoteEngine: RandomQuoteEngine) {
+        super();
+        this.randomQuoteEngine = randomQuoteEngine;
+        this.eventsToHandlersMap = {
+            [EngineEvents.CharacterDied]: this.handleCharacterDied,
+            [MonsterEngineEvents.MonsterPulled]: this.handleMonsterPulled,
+            [CharacterEngineEvents.SendQuoteMessage]: this.handleSendQuoteMessage,
+        };
+    }
 
-   init(engineEventCrator: EngineEventCrator, services) {
-      super.init(engineEventCrator);
-      this.randomQuoteEngine.init(this.engineEventCrator, services);
-   }
+    init(engineEventCrator: EngineEventCrator, services) {
+        super.init(engineEventCrator);
+        this.randomQuoteEngine.init(this.engineEventCrator, services);
+    }
 
-   handleSendQuoteMessage: EngineEventHandler<SendQuoteMessageEvent> = ({ event, services }) => {
-      this.quotesTimeStamps[event.characterId] = now();
+    handleSendQuoteMessage: EngineEventHandler<SendQuoteMessageEvent> = ({ event, services }) => {
+        this.quotesTimeStamps[event.characterId] = now();
 
-      this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
-         type: ChatEngineEvents.SendChatMessage,
-         characterId: event.characterId,
-         message: event.message,
-         channelType: ChannelType.Quotes,
-      });
-   };
+        this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
+            type: ChatEngineEvents.SendChatMessage,
+            characterId: event.characterId,
+            message: event.message,
+            channelType: ChannelType.Quotes,
+        });
+    };
 
-   handleMonsterPulled: EngineEventHandler<MonsterPulledEvent> = ({ event, services }) => {
-      const respawn = services.monsterRespawnTemplateService.getData()[event.monster.respawnId];
-      const onPulling = respawn.characterTemplate.quotesEvents?.onPulling;
+    handleMonsterPulled: EngineEventHandler<MonsterPulledEvent> = ({ event, services }) => {
+        const respawn = services.monsterRespawnTemplateService.getData()[event.monster.respawnId];
+        const monsterTemplate = services.monsterTemplateService.getData()[respawn.characterTemplateId];
+        const onPulling = monsterTemplate.quotesEvents?.onPulling;
 
-      if (this.quotesTimeStamps[event.monster.id] > now() - this.QUOTE_COOLDOWN) {
-         return;
-      }
+        if (this.quotesTimeStamps[event.monster.id] > now() - this.QUOTE_COOLDOWN) {
+            return;
+        }
 
-      if (!onPulling) {
-         return;
-      }
+        if (!onPulling) {
+            return;
+        }
 
-      if (services.randomGeneratorService.generateNumber() > onPulling.chance) {
-         return;
-      }
+        if (services.randomGeneratorService.generateNumber() > onPulling.chance) {
+            return;
+        }
 
-      this.quotesTimeStamps[event.monster.id] = now();
+        this.quotesTimeStamps[event.monster.id] = now();
 
-      this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
-         type: ChatEngineEvents.SendChatMessage,
-         characterId: event.monster.id,
-         message: onPulling.quotes[Math.floor(services.randomGeneratorService.generateNumber() * onPulling.quotes.length)],
-         channelType: ChannelType.Quotes,
-      });
-   };
+        this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
+            type: ChatEngineEvents.SendChatMessage,
+            characterId: event.monster.id,
+            message: onPulling.quotes[Math.floor(services.randomGeneratorService.generateNumber() * onPulling.quotes.length)],
+            channelType: ChannelType.Quotes,
+        });
+    };
 
-   handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
-      let quotesType;
-      let characterId;
-      let monster = event.character;
+    handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event, services }) => {
+        let quotesType;
+        let characterId;
+        let monster = event.character;
 
-      if (event.character.type === CharacterType.Monster) {
-         characterId = event.character.id;
-         quotesType = 'onDying';
-      } else if (event.character.type === CharacterType.Player) {
-         characterId = event.killerId;
-         quotesType = 'onKilling';
-         monster = services.characterService.getCharacterById(characterId) as Monster;
-      } else {
-         return;
-      }
+        if (event.character.type === CharacterType.Monster) {
+            characterId = event.character.id;
+            quotesType = 'onDying';
+        } else if (event.character.type === CharacterType.Player) {
+            characterId = event.killerId;
+            quotesType = 'onKilling';
+            monster = services.characterService.getCharacterById(characterId) as Monster;
+        } else {
+            return;
+        }
 
-      if (monster.type !== CharacterType.Monster) {
-         return;
-      }
+        if (monster.type !== CharacterType.Monster) {
+            return;
+        }
 
-      const respawn = services.monsterRespawnTemplateService.getData()[monster.respawnId];
-      const quotes = respawn.characterTemplate.quotesEvents?.[quotesType];
+        const respawn = services.monsterRespawnTemplateService.getData()[monster.respawnId];
+        const monsterTemplate = services.monsterTemplateService.getData()[respawn.characterTemplateId];
+        const quotes = monsterTemplate.quotesEvents?.[quotesType];
 
-      if (this.quotesTimeStamps[characterId] > now() - this.QUOTE_COOLDOWN) {
-         return;
-      }
+        if (this.quotesTimeStamps[characterId] > now() - this.QUOTE_COOLDOWN) {
+            return;
+        }
 
-      if (!quotes) {
-         return;
-      }
+        if (!quotes) {
+            return;
+        }
 
-      if (services.randomGeneratorService.generateNumber() > quotes.chance) {
-         return;
-      }
+        if (services.randomGeneratorService.generateNumber() > quotes.chance) {
+            return;
+        }
 
-      this.quotesTimeStamps[characterId] = now();
+        this.quotesTimeStamps[characterId] = now();
 
-      this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
-         type: ChatEngineEvents.SendChatMessage,
-         characterId,
-         message: quotes.quotes[Math.floor(services.randomGeneratorService.generateNumber() * quotes.quotes.length)],
-         channelType: ChannelType.Quotes,
-      });
-   };
+        this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
+            type: ChatEngineEvents.SendChatMessage,
+            characterId,
+            message: quotes.quotes[Math.floor(services.randomGeneratorService.generateNumber() * quotes.quotes.length)],
+            channelType: ChannelType.Quotes,
+        });
+    };
 
-   canNpcSayQuote = (characterId: string) => (this.quotesTimeStamps[characterId] ?? 0) + this.QUOTE_COOLDOWN < now();
+    canNpcSayQuote = (characterId: string) => (this.quotesTimeStamps[characterId] ?? 0) + this.QUOTE_COOLDOWN < now();
 }

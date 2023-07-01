@@ -39,8 +39,8 @@ export class RegenerationService extends EventParser {
     scheduleRegenerations = (character: Character) => {
         this.activeRegenerations[`${SERVICE_PREFIX}${character.id}`] = {
             targetId: character.id,
-            spellPowerRegeneration: character.spellPowerRegen,
-            healthPointsRegeneration: character.healthPointsRegen,
+            spellPowerRegeneration: character.spellPowerRegeneration,
+            healthPointsRegeneration: character.healthPointsRegeneration,
         };
 
         this.engineEventCrator.asyncCeateEvent<ScheduleActionEvent>({
