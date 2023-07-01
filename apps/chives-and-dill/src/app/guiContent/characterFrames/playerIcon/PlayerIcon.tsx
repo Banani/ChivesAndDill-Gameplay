@@ -45,8 +45,8 @@ export const PlayerIcon = ({ playerId }) => {
          <div className={styles.playerIconContainer}>
 
             <div className={styles.playerAvatar + " " + (combatState[playerId] ? styles.combatBorder : "")} style={{ backgroundImage: `url(${avatar})` }}></div>
-
-            {combatState[playerId] ? <div className={styles.combatSwords}></div> : <div className={styles.playerLvl}>{experience[playerId].level}</div>}
+            <div className={styles.combatSwords} style={combatState[playerId] ? { visibility: "visible", opacity: '1' } : null}></div>
+            <div className={styles.playerLvl}>{experience[playerId].level}</div>
             <div className={styles.playerRole} />
             <div>
                <div className={styles.barsContainer + " " + (combatState[playerId] ? styles.combatBorder : "")}>

@@ -18,6 +18,7 @@
   .combatBorder {
     box-shadow: 0px 0px 17px 3px rgb(197, 23, 23);
     border: 5px solid gray;
+    transition: 0.3s ease-in-out;
   }
 
   .playerLvl {
@@ -57,14 +58,16 @@
     position: absolute;
     left: 65px;
     bottom: 0;
-    z-index: 9;
+    z-index: 10;
     border: 2px solid gold;
     border-radius: 50%;
     background-color: gold;
     background-size: 60%;
     background-repeat: no-repeat;
     background-position: center;
-    
+    transition: 0.3s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
   }
 
   .barsContainer {
