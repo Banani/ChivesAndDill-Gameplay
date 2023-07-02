@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { DbApi } from '../../../services';
-import { CharacterRespawn, WalkingType } from '../../../types/CharacterRespawn';
+import { WalkingType } from '../../../types/CharacterRespawn';
 
 const BLOCK_SIZE = 32;
 
@@ -36,29 +36,6 @@ export class NpcApi extends DbApi {
             .value() as unknown as Record<string, NpcTemplateDb>;
     };
 
-    fetchNpcRespawns: () => Promise<Record<string, CharacterRespawn>> = async () => {
-        const collection = this.db.collection('npcTemplates');
-        const data = await collection.find().toArray();
-        const npcRespawns = {};
-
-        for (let npcTemplate of data) {
-            if (!npcTemplate.npcRespawns) {
-                continue;
-            }
-
-            for (let respawn of npcTemplate.npcRespawns) {
-                npcRespawns[respawn._id] = {
-                    id: respawn._id,
-                    npcTemplateId: npcTemplate._id.toString(),
-                    location: { x: respawn.location.x * BLOCK_SIZE, y: respawn.location.y * BLOCK_SIZE },
-                    time: respawn.time,
-                    walkingType: respawn.walkingType
-                }
-            }
-        }
-
-        return npcRespawns;
-    };
 
     watchForNpcTemplates = (onChange) => {
         const collection = this.db.collection('npcTemplates');

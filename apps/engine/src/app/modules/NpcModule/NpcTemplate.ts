@@ -1,6 +1,5 @@
-import { CharacterDirection, ItemTemplate, QuotesEvents } from '@bananos/types';
+import { CharacterDirection, QuotesEvents } from '@bananos/types';
 import { QuestSchema } from 'libs/types/src/QuestPackage';
-import { ItemTemplates } from '../ItemModule/ItemTemplates';
 import { Quests } from '../QuestModule/Quests';
 import { Spell } from '../SpellModule/types/SpellTypes';
 
@@ -16,7 +15,7 @@ export interface NpcTemplate {
     healthPointsRegeneration: number;
     spellPowerRegeneration: number;
     spells: Record<string, Spell>;
-    stock?: Record<string, ItemTemplate>;
+    stock?: Record<string, boolean>;
     quests?: Record<string, QuestSchema>;
     quotesEvents?: QuotesEvents;
 
@@ -41,20 +40,20 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
         spellPowerRegeneration: 5,
         spells: {},
         stock: {
-            '1': ItemTemplates['1'],
-            '2': ItemTemplates['2'],
-            '4': ItemTemplates['4'],
-            '5': ItemTemplates['5'],
-            '3': ItemTemplates['3'],
-            '6': ItemTemplates['6'],
-            '7': ItemTemplates['7'],
-            '8': ItemTemplates['8'],
-            '9': ItemTemplates['8'],
-            '10': ItemTemplates['8'],
-            '11': ItemTemplates['6'],
-            '12': ItemTemplates['2'],
-            '13': ItemTemplates['1'],
-            '14': ItemTemplates['5'],
+            '1': true,
+            '2': true,
+            '4': true,
+            '5': true,
+            '3': true,
+            '6': true,
+            '7': true,
+            '8': true,
+            '9': true,
+            '10': true,
+            '11': true,
+            '12': true,
+            '13': true,
+            '14': true,
         },
         quests: {
             '1': Quests['1'],
