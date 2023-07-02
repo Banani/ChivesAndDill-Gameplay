@@ -1,4 +1,5 @@
-import { EngineEventType, EnginePackageEvent, GlobalStoreModule } from '@bananos/types';
+import type { EnginePackageEvent } from '@bananos/types';
+import { EngineEventType, GlobalStoreModule } from '@bananos/types';
 import { Graphics, Text } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -28,22 +29,20 @@ export const NextLevelManager = React.memo<{ experienceEvents: EnginePackageEven
          }, 3000);
       }, [characterLevel]);
 
-      const drawLines = useCallback(
+      const drawBackground = useCallback(
          (g) => {
-            g.clear();
-            g.lineStyle(1, 0xfac20a, 1);
-            g.moveTo(messageLocation.x - 200, messageLocation.y - 80);
-            g.lineTo(messageLocation.x + 200, messageLocation.y - 80);
-
-            g.moveTo(messageLocation.x - 200, messageLocation.y + 80);
-            g.lineTo(messageLocation.x + 200, messageLocation.y + 80);
+            const rectangleWidth = (messageLocation.x + 200) - (messageLocation.x - 200);
+            const rectangleHeight = (messageLocation.y + 80) - (messageLocation.y - 80);
+            g.lineStyle(2, 0xfac20a);
+            g.beginFill(0x000, 0.5);
+            g.drawRoundedRect(messageLocation.x - 200, messageLocation.y - 80, rectangleWidth, rectangleHeight, 15);
          },
          [messageLocation]
       );
 
       return characterLevel && characterId === activeCharacterId ? (
          <>
-            <Graphics draw={drawLines} />
+            <Graphics draw={drawBackground} />
             <Text
                anchor={0.5}
                text={"You've Reached"}
