@@ -49,7 +49,7 @@ export const PackageContextProvider: FunctionComponent = ({ children }) => {
             newState = merge(
                 {},
                 newState,
-                mapValues(deserializedData, (module) => ({ data: module }))
+                mapValues(deserializedData, (module) => ({ data: module, lastUpdateTime: Date.now() }))
             );
 
             forEach(

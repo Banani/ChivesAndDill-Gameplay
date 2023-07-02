@@ -10,8 +10,13 @@ export enum SpriteGroupFilterModes {
 
 export const useSpriteGroupFilter = () => {
     const packageContext = useContext(PackageContext);
+
     const sprites = packageContext?.backendStore?.sprites?.data ?? {};
     const spriteGroups = (packageContext?.backendStore?.spriteGroups?.data ?? {}) as Record<string, SpriteGroup>;
+
+    const spritesLastUpdate = packageContext?.backendStore?.sprites?.lastUpdateTime ?? 0;
+    const spriteGroupsUpdate = packageContext?.backendStore?.spriteGroups?.lastUpdateTime ?? 0;
+
     const [filteredSprites, setFilteredSprites] = useState<Record<string, SpriteGroup>>({});
     const [spriteGroupFilter, setSpriteGroupFilter] = useState<SpriteGroupFilterModes | string>(SpriteGroupFilterModes.All);
 
@@ -47,7 +52,7 @@ export const useSpriteGroupFilter = () => {
         }
 
         setFilteredSprites(_.pickBy(sprites, (sprite: any) => spriteGroup.spriteAssignment[sprite.id]))
-    }, [spriteGroupFilter, sprites, spriteGroups]);
+    }, [spriteGroupFilter, spritesLastUpdate, spriteGroupsUpdate]);
 
     return {
         filteredSprites,
