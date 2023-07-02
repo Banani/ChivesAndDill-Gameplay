@@ -8,8 +8,8 @@ import _ from 'lodash';
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { FormTextField } from '../components';
 import { FormSelectField } from '../components/formSelectField';
-import { DialogContext, Dialogs } from '../contexts/dialogContext';
 import { FormContext, FormContextProvider, FormFieldConditions, Schema, SchemaFieldType } from '../contexts/FormContext';
+import { DialogContext, Dialogs } from '../contexts/dialogContext';
 import { ItemsContext } from '../views/items/ItemsContextProvider';
 
 const DefaultItem = {
@@ -17,7 +17,7 @@ const DefaultItem = {
     id: '',
     name: '',
     description: "",
-    image: 'https://www.tibiaitens.com.br/image/cache/catalog/espadas/fire-swordtibia-604-500x500.png',
+    image: '',
     stack: 1,
     value: 100,
     slot: EquipmentSlot.Back,
@@ -153,6 +153,7 @@ const ItemTemplateDialogContent = () => {
                 <FormTextField propName="description" label="Description" multiline />
                 <FormTextField propName="stack" label="Stack" />
                 <FormTextField propName="value" label="Value in coppers" />
+                <FormTextField propName="image" label="Image" />
 
                 {getFieldValue("type") === ItemTemplateType.Equipment ? (
                     <>

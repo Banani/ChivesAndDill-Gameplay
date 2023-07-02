@@ -1,4 +1,5 @@
 import { ItemTemplate } from '@bananos/types';
+import * as _ from 'lodash';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { ItemApi } from '../db';
@@ -17,24 +18,21 @@ export class ItemTemplateService extends EventParser {
 
         itemDbApi.fetchItemTemplates().then((itemTemplates) => {
             this.itemTemplates = itemTemplates;
-
-            // this.engineEventCrator.asyncCeateEvent<NpcTemplateFetchedFromDbEvent>({
-            //     type: NpcEngineEvents.NpcTemplateFetchedFromDb,
-            //     npcTemplateDbRecords: itemTemplates
-            // });
         });
-        // itemDbApi.watchForNpcTemplates((data) => {
-        //     if (data.operationType === "update") {
-        //         this.npcTemplates[data.fullDocument._id] = this.mapNpcTemplate(data.fullDocument);
 
-        //         this.engineEventCrator.asyncCeateEvent<NpcTemplateFetchedFromDbEvent>({
-        //             type: NpcEngineEvents.NpcTemplateFetchedFromDb,
-        //             npcTemplateDbRecords: {
-        //                 [data.fullDocument._id]: data.fullDocument
-        //             }
-        //         });
-        //     }
-        // });
+        itemDbApi.watchForItemTemplates((data) => {
+            if (data.operationType === "update") {
+                this.itemTemplates[data.fullDocument._id] = {
+                    id: data.fullDocument._id.toString(),
+                    ..._.omit(data.fullDocument, "_id")
+                } as ItemTemplate;
+
+            }
+
+            if (data.operationType === "delete") {
+                delete this.itemTemplates[data.documentKey._id.toString()]
+            }
+        });
     }
 
     getData = () => this.itemTemplates;

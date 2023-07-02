@@ -16,10 +16,10 @@ export class ItemApi extends DbApi {
             .value() as unknown as Record<string, ItemTemplate>;
     };
 
-    // watchForNpcTemplates = (onChange) => {
-    //     const collection = this.db.collection('npcTemplates');
-    //     let changeStream = collection.watch([], { fullDocument: "updateLookup" });
+    watchForItemTemplates = (onChange) => {
+        const collection = this.db.collection('itemTemplates');
+        let changeStream = collection.watch([], { fullDocument: "updateLookup" });
 
-    //     changeStream.on("change", (changeEvent) => onChange(changeEvent));
-    // }
+        changeStream.on("change", (changeEvent) => onChange(changeEvent));
+    }
 }
