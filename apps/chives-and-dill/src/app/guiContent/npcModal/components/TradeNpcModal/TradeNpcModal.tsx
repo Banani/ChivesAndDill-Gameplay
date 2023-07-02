@@ -49,7 +49,7 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
         return () => {
             keyBoardContext.removeKeyHandler('TradeNpcModalEscape');
         };
-    }, [engineApiContext.closeNpcConversationDialog, keyBoardContext]);
+    }, []);
 
     const allItems = _.map(activeNpc.stock, (_, itemId) =>
         itemTemplates[itemId] ?
@@ -81,6 +81,8 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
             itemTemplateId: item.id,
         });
     };
+
+    console.log(123)
 
     return (
         <div className={styles.NpcModal}>
