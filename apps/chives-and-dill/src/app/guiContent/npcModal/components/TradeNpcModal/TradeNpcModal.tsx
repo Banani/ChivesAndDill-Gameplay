@@ -82,8 +82,6 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
         });
     };
 
-    console.log(123)
-
     return (
         <div className={styles.NpcModal}>
             <ModalHeader activeNpc={activeNpc} closeNpcModal={closeNpcModal} />

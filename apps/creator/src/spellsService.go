@@ -3,14 +3,26 @@ package main
 import "encoding/json"
 
 type Spell struct {
-	Id          string `json:"id" bson:"-"`
-	Name        string `json:"name"`
-	Image       string `json:"image"`
+	Id                   string                          `json:"id" bson:"-"`
+	Name                 string                          `json:"name"`
+	Image                string                          `json:"image"`
+	Description          string                          `json:"description" bson:"description"`
+	Range                int32                           `json:"range" bson:"range"`
+	SpellPowerCost       int32                           `json:"spellPowerCost" bson:"spellPowerCost"`
+	Cooldown             int32                           `json:"cooldown" bson:"cooldown"`
+	Speed                int32                           `json:"speed,omitempty" bson:"speed,omitempty"`
+	Angle                int32                           `json:"angle,omitempty" bson:"angle,omitempty"`
+	SpellEffectsOnTarget map[string]SpellEffectsOnTarget `json:"spellEffectsOnTarget,omitempty" bson:"spellEffectsOnTarget,omitempty"`
+}
+
+type SpellEffectsOnTarget struct {
+	Type   string `json:"type"`
+	Amount int32  `json:"amount,omitempty" bson:"amount,omitempty"`
 }
 
 type SpellsService struct {
-	application   *Application
-	spells map[string]Spell
+	application *Application
+	spells      map[string]Spell
 
 	actionStream chan TypedAction
 }

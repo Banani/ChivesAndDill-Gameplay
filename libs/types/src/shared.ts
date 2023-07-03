@@ -87,21 +87,6 @@ export interface Projectile {
     currentLocation: Location;
 }
 
-export interface Spell {
-    // TODO: Dodalem to po to zeby typescript nie krzyczal, Ale trzeba to posprzatac
-    id?: string;
-    cooldown: number;
-    damage: number;
-    name: string;
-    range: number;
-    speed: number;
-    type: string;
-    image: string;
-    description: string;
-    channelTime: number;
-    spellPowerCost: number;
-}
-
 export interface ActiveSpellCast {
     casterid: number;
     castTime: number;
