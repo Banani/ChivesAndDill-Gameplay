@@ -1,50 +1,59 @@
 .LootModalButton {
-    width: 100%;
-    display: flex;
-    justify-content: end;
+   width: 100%;
+   display: flex;
+   justify-content: end;
 
-    .closeButton {
-        margin-top: 22px;
-    }
+   .closeButton {
+      margin-top: 22px;
+   }
 }
 
 .LootModal {
-  position: absolute;
-  height: 364px;
-  width: 258px;
-  background: url('../../../assets/spritesheets/backgrounds/lootmodal.png');
-  z-index: 99;
+   position: absolute;
+   height: 364px;
+   width: 258px;
+   background: url('../../../assets/spritesheets/backgrounds/lootmodal.png');
+   z-index: 99;
 
-  .ItemsContainer {
-    display: flex;
-    margin-bottom: 10px;
-    max-width: 100%;
-    width: 100%;
-    flex-wrap: wrap;
-    position: absolute;
-    top: 112px;
-    left: 28px;
+   .ItemsContainer {
+      display: flex;
+      margin-bottom: 10px;
+      max-width: 100%;
+      width: 100%;
+      flex-wrap: wrap;
+      position: absolute;
+      top: 112px;
+      left: 28px;
 
-    .Item {
-        width: 82%;
-        display: flex;
-        border: 1px solid rgb(83, 83, 83);
-        background: #29292980;
-        border-radius: 4px;
-        margin-bottom: 4px;
+      .Item {
+         width: 82%;
+         display: flex;
+         border: 1px solid rgb(83, 83, 83);
+         background: #29292980;
+         border-radius: 4px;
+         margin-bottom: 4px;
+         transition: 0.2s;
 
-        &:nth-child(odd) {
+         &:nth-child(odd) {
             margin-right: 2px;
-        }
+         }
 
-        .ItemImage {
+         &:hover {
+            box-shadow: inset 0 0 5px 1px #1ba9fd;
+            .ItemImage {
+               box-shadow: inset 0 0 5px 1px #1ba9fd;
+            }
+         }
+
+         .ItemImage {
             width: 50px;
             height: 50px;
             border-right: 1px solid rgb(83, 83, 83);
             border-radius: 4px;
-        }
+            transition: 0.2s;
+         }
 
-        .RewardText {
+         .RewardText {
             color: white;
             display: flex;
             align-items: center;
@@ -54,50 +63,50 @@
             align-items: flex-start;
             justify-content: center;
             margin: 3px 0 3px 7px;
-        }
+         }
 
-        .Stack {
+         .Stack {
             position: relative;
             left: -18px;
             top: 33px;
             color: white;
-        }
-    }
-  }
+         }
+      }
+   }
 
-  .PaginationContainer {
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    width: 75%;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    bottom: 16px;
+   .PaginationContainer {
+      display: flex;
+      justify-content: space-between;
+      position: absolute;
+      width: 75%;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      bottom: 16px;
 
-    .RightPaginationSide {
-        position: absolute;
-        right: -8px;
-        bottom: 0;
-    }
+      .RightPaginationSide {
+         position: absolute;
+         right: -8px;
+         bottom: 0;
+      }
 
-    .PaginationSide {
-        display: flex;
-        align-items: center;
-        
-        .PaginationButton {
-            color: #EEC300;
-            background-color: #070807; 
+      .PaginationSide {
+         display: flex;
+         align-items: center;
+
+         .PaginationButton {
+            color: #eec300;
+            background-color: #070807;
             border-radius: 5px;
             border: 1px solid #666962;
             cursor: pointer;
          }
-     
+
          .PaginationText {
-            color: #EEC300;
+            color: #eec300;
             margin: 8px;
          }
-    }
-  }
+      }
+   }
 }
