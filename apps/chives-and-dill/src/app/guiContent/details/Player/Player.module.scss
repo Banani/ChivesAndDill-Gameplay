@@ -1,0 +1,30 @@
+.Player {
+  width: 100%;
+  display: flex;
+  margin-bottom: 2px;
+  font-size: 14px;
+
+  .ClassIcon {
+    width: 25px;
+    background-image: url("https://wow.zamimg.com/images/wow/icons/medium/spell_holy_holybolt.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  .ColorBar {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    padding: 3px;
+
+    .PlayerName {
+      width: 60%;
+    }
+
+    .PlayerData {
+      flex-grow: 1;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
