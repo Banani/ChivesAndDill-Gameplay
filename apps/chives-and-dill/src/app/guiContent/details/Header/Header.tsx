@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Header.module.scss';
 import SkullImg from '../../../../assets/spritesheets/details/DetailsSkull.png';
 import ConfigImg from '../../../../assets/spritesheets/details/DetailsConfig.png';
@@ -6,9 +6,12 @@ import NoteImg from '../../../../assets/spritesheets/details/DetailsNote.png';
 import SwordImg from '../../../../assets/spritesheets/details/DetailsSword.png';
 import ChatlImg from '../../../../assets/spritesheets/details/DetailsChat.png';
 import ResetImg from '../../../../assets/spritesheets/details/DetailsReset.png';
+import { DetailsModal } from '../modal/DetailsModal';
 
 export const Header = () => {
   console.log();
+
+  const [modalStatus, changeModalStatus] = useState(true);
 
   return (
     <div className={styles.Header}>
@@ -21,6 +24,7 @@ export const Header = () => {
         <img className={styles.Icon} src={ChatlImg} alt={'Chat img'}></img>
         <img className={styles.Icon} src={ResetImg} alt={'Reset img'}></img>
       </div>
+      {modalStatus ? <DetailsModal /> : null}
     </div>
   )
 }
