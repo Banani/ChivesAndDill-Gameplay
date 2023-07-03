@@ -1,4 +1,5 @@
 import type { CorpseDropTrack } from '@bananos/types';
+import * as _ from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
@@ -67,8 +68,7 @@ export class CorpseDropService extends EventParser {
             }
 
             const itemsToDrop = {};
-            characterTemplate.dropSchema.items
-                ?.filter((dropItem) => dropItem.dropChance >= services.randomGeneratorService.generateNumber())
+            _.filter(characterTemplate.dropSchema.items ?? {}, (dropItem) => dropItem.dropChance >= services.randomGeneratorService.generateNumber())
                 .forEach((dropItem) => {
                     this.increment++;
                     const amountRange = dropItem.maxAmount - dropItem.minAmount;

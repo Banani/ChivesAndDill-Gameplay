@@ -23,18 +23,20 @@ export interface MonsterTemplate {
     size: number;
     healthPoints: number;
     spellPower: number;
+
+    // TODO: do wywalenia
     division?: string;
     sightRange: number;
     desiredRange: number;
-    speed: number;
+    movementSpeed: number;
     escapeRange: number;
     spells: Record<string, Spell>;
     attackFrequency: number;
-    healthPointsRegen: number;
-    spellPowerRegen: number;
+    healthPointsRegeneration: number;
+    spellPowerRegeneration: number;
     dropSchema?: {
         coins: CoinDropSchema;
-        items?: ItemDropSchema[];
+        items?: Record<string, ItemDropSchema>;
     };
     quotesEvents?: QuotesEvents;
 }
@@ -48,14 +50,14 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
         size: 96,
         healthPoints: 60,
         spellPower: 100,
-        speed: 2,
+        movementSpeed: 2,
         division: 'Orc',
         sightRange: 80,
         desiredRange: 50,
         escapeRange: 2000,
         attackFrequency: 1500,
-        healthPointsRegen: 5,
-        spellPowerRegen: 5,
+        healthPointsRegeneration: 5,
+        spellPowerRegeneration: 5,
         spells: {
             MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
             MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
@@ -67,7 +69,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
                 maxAmount: 30,
                 minAmount: 0,
             },
-            items: [
+            items: {
                 // {
                 //    itemTemplateId: '1',
                 //    dropChance: 1,
@@ -116,7 +118,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
                 //    maxAmount: 1,
                 //    minAmount: 1,
                 // },
-            ],
+            },
         },
         quotesEvents: {
             onDying: {
@@ -158,13 +160,13 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
         healthPoints: 200,
         spellPower: 100,
         division: 'OrcSpearman',
-        speed: 3,
+        movementSpeed: 3,
         sightRange: 200,
         desiredRange: 200,
         escapeRange: 2000,
         attackFrequency: 50,
-        healthPointsRegen: 5,
-        spellPowerRegen: 5,
+        healthPointsRegeneration: 5,
+        spellPowerRegeneration: 5,
         spells: {
             MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
             MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
@@ -185,13 +187,13 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
         size: 96,
         healthPoints: 20000,
         spellPower: 10000,
-        speed: 6,
+        movementSpeed: 6,
         sightRange: 200,
         desiredRange: 50,
         escapeRange: 2000,
         attackFrequency: 900,
-        healthPointsRegen: 5,
-        spellPowerRegen: 5,
+        healthPointsRegeneration: 5,
+        spellPowerRegeneration: 5,
         spells: {
             DestroyerBasic: ALL_SPELLS['DestroyerBasic'],
         },

@@ -61,6 +61,7 @@ export class MonsterService extends EventParser {
         const id = `monster_${(this.increment++).toString()}`;
         const monsterTemplate = services.monsterTemplateService.getData()[event.monsterRespawn.characterTemplateId];
 
+        //TODO: Te rzeczy powinny byc w npcTemplate tylko
         this.monsters[id] = {
             type: CharacterType.Monster,
             id,
@@ -75,13 +76,13 @@ export class MonsterService extends EventParser {
             isInMove: false,
             respawnId: event.monsterRespawn.id,
             sightRange: monsterTemplate.sightRange,
-            movementSpeed: monsterTemplate.speed,
+            movementSpeed: monsterTemplate.movementSpeed,
             desiredRange: monsterTemplate.desiredRange,
             escapeRange: monsterTemplate.escapeRange,
             spells: monsterTemplate.spells,
             attackFrequency: monsterTemplate.attackFrequency,
-            healthPointsRegeneration: monsterTemplate.healthPointsRegen,
-            spellPowerRegeneration: monsterTemplate.spellPowerRegen,
+            healthPointsRegeneration: monsterTemplate.spellPowerRegeneration,
+            spellPowerRegeneration: monsterTemplate.spellPowerRegeneration,
         };
 
         this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
