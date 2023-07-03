@@ -1,4 +1,4 @@
-import {
+import type {
     ActiveNpcConversation,
     BackpackItemsSpot,
     BackpackTrack,
@@ -9,11 +9,11 @@ import {
     ItemTemplate,
     NpcStock,
 } from '.';
-import { Attributes, CharacterEvents, MonsterCorpse } from './CharacterPackage';
-import { ChatChannel, EngineChatAction } from './ChatPackage';
+import type { Attributes, CharacterEvents, MonsterCorpse } from './CharacterPackage';
+import type { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
-import { CommonClientActions, CommonClientMessages } from './engineEvents';
-import { ExternalQuestProgress, QuestSchema } from './QuestPackage';
+import type { CommonClientActions, CommonClientMessages } from './engineEvents';
+import type { ExternalQuestProgress, QuestSchema } from './QuestPackage';
 import type { CharacterDirection } from './shared';
 
 export enum GlobalStoreModule {

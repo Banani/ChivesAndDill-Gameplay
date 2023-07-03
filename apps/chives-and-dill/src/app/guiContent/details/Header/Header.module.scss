@@ -1,5 +1,18 @@
 .Header {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   font-size: 12px;
   padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .DetailsIcons {
+    display: flex;
+
+    .Icon {
+      padding: 2px;
+      margin: 2px;
+      cursor: pointer;
+    }
+  }
 }
