@@ -6,7 +6,7 @@ import NoteImg from '../../../../assets/spritesheets/details/DetailsNote.png';
 import SwordImg from '../../../../assets/spritesheets/details/DetailsSword.png';
 import ChatlImg from '../../../../assets/spritesheets/details/DetailsChat.png';
 import ResetImg from '../../../../assets/spritesheets/details/DetailsReset.png';
-import { DetailsModal } from '../modal/DetailsModal';
+import { States } from '../states/States';
 
 export const Header = () => {
   console.log();
@@ -24,7 +24,7 @@ export const Header = () => {
         <img className={styles.Icon} src={ChatlImg} alt={'Chat img'}></img>
         <img className={styles.Icon} src={ResetImg} alt={'Reset img'}></img>
       </div>
-      {modalStatus ? <DetailsModal /> : null}
+      {modalStatus ? <States changeModalStatus={changeModalStatus} /> : null}
     </div>
   )
 }

@@ -1,9 +1,14 @@
 import { GlobalStoreModule } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Details.module.scss';
 import { Player } from './Player/Player';
 import { Header } from './Header/Header';
+
+enum States {
+  Damage,
+  Heal
+}
 
 export const Details = () => {
   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
@@ -15,15 +20,12 @@ export const Details = () => {
   //   console.log('events:', characterPowerPointsEvents);
   // }, [characterPowerPointsEvents])
 
+  const [activeState, changeActiveState] = useState(States.Damage);
+
   return (
     <div className={styles.DetailsContainer}>
       <Header />
       <div className={styles.PlayerList}>
-        <Player />
-        <Player />
-        <Player />
-        <Player />
-        <Player />
         <Player />
         <Player />
         <Player />
