@@ -32,7 +32,7 @@
          background: #29292980;
          border-radius: 4px;
          margin-bottom: 4px;
-         transition: 0.2s;
+         transition: 0.15s;
 
          &:nth-child(odd) {
             margin-right: 2px;
@@ -50,7 +50,7 @@
             height: 50px;
             border-right: 1px solid rgb(83, 83, 83);
             border-radius: 4px;
-            transition: 0.2s;
+            transition: 0.15s;
          }
 
          .RewardText {
