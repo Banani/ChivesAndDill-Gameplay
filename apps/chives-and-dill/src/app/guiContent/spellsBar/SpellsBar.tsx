@@ -1,86 +1,63 @@
 import { GlobalStoreModule } from '@bananos/types';
-import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
+import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import { useEngineModuleReader, useSpellDefinitionProvider } from 'apps/chives-and-dill/src/hooks';
+import classnames from 'classnames';
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
-import { GameControllerContext } from '../../gameController/gameControllerContext';
 import styles from './SpellsBar.module.scss';
 
 export const SpellsBar = () => {
-   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
-   const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
-   const context = useContext(GameControllerContext);
-   const spells = characters[activeCharacterId].spells;
+    const { data: availableSpells } = useEngineModuleReader(GlobalStoreModule.AVAILABLE_SPELLS);
+    const keyBoardContext = useContext(KeyBoardContext);
+    const { spellDefinitions } = useSpellDefinitionProvider({ spellDefinitionIds: Object.keys(availableSpells) });
+    const [clickedKey, setClickedKey] = useState('');
 
-   const [spellsOnCooldown, setSpellOnCooldown] = useState([]);
-   const [clickedSpell, setClickedSpell] = useState('');
+    useEffect(() => {
+        keyBoardContext.addKeyHandler({
+            id: 'activeSpellHightlight',
+            matchRegex: '[0-9]',
+            keydown: (key) => setClickedKey(key),
+            keyup: () => setClickedKey(""),
+        });
 
-   let renderSpells;
+        return () => {
+            keyBoardContext.removeKeyHandler('activeSpellHightlight');
+        };
+    }, []);
 
-   let keyBinds = _.map(characters[activeCharacterId].spells, (spell) => spell.name);
-   keyBinds = keyBinds.reduce((prev, current, index) => {
-      prev[index + 1] = current;
-      return prev;
-   }, {});
+    if (!Object.keys(availableSpells).length) {
+        return <></>
+    }
 
-   useEffect(() => {
-      _.forIn(context, function (value, key) {
-         if (keyBinds[key] && value) {
-            const spell = [keyBinds[key]];
-            setSpellOnCooldown([...spellsOnCooldown, ...spell.filter((c) => !spellsOnCooldown.includes(c))]);
+    let counter = 0;
 
-            setClickedSpell(spell[0]);
-         }
-      });
-   }, [context]);
+    return <div className={styles.spellsBarContainer}>
+        {_.map(availableSpells, (_, spellId) => {
+            counter++;
+            const activeSpell = spellDefinitions[spellId] ?? {};
 
-   useEffect(() => {
-      if (spellsOnCooldown.includes(clickedSpell) && clickedSpell !== '') {
-         setTimeout(() => {
-            setSpellOnCooldown(spellsOnCooldown.filter((item) => item !== clickedSpell));
-            setClickedSpell('');
-         }, spells[clickedSpell].cooldown);
-      }
-   }, [clickedSpell]);
-
-   const colorOfSpellBorder = (spell) => {
-      if (spellsOnCooldown.includes(spell.name)) {
-         return 'silver';
-      } else {
-         return 'black';
-      }
-   };
-
-   if (Object.keys(spells).length) {
-      let i = 0;
-      renderSpells = _.map(spells, (spell, key) => {
-         i++;
-         const activeSpell = spell;
-         return (
-            <div key={key} className={styles.spellContainer}>
-               <div className={styles.keyboardNumber}>{i}</div>
-               <img
-                  src={activeSpell.image}
-                  style={{ borderColor: `${colorOfSpellBorder(activeSpell)}` }}
-                  className={styles.spellImage + ' ' + `${context[key] ? styles.activeSpell : null}`}
-                  alt={activeSpell.name}
-               />
-               <div className={styles.spellTooltip}>
-                  <div>{activeSpell.name}</div>
-                  <div>
-                     <div>{activeSpell.spellPowerCost} Mana</div>
-                     <div>{activeSpell.range} yd range</div>
-                  </div>
-                  <div>{activeSpell.channelTime ? `${activeSpell.channelTime / 1000} sec cast` : 'Instant cast'}</div>
-                  <div>{'Cooldown: ' + activeSpell.cooldown / 1000 + ' sec'}</div>
-                  <div className={styles.spellDesc}>{activeSpell.description}</div>
-               </div>
-               {spellsOnCooldown.includes(activeSpell.name) ? (
-                  <div className={styles.cooldown} style={{ animationDuration: `${activeSpell.cooldown / 1000}s` }}></div>
-               ) : null}
-            </div>
-         );
-      });
-   }
-
-   return <div className={styles.spellsBarContainer}>{renderSpells}</div>;
+            return (
+                <div key={spellId} className={styles.spellContainer}>
+                    <div className={styles.keyboardNumber}>{counter}</div>
+                    <div
+                        className={classnames({
+                            [styles.spellImage]: true,
+                            [styles.spellHightlight]: counter.toString() == clickedKey
+                        })}
+                        style={{ backgroundImage: `url(${activeSpell.image})` }}
+                    />
+                    <div className={styles.spellTooltip}>
+                        <div>{activeSpell.name}</div>
+                        <div>
+                            <div>{activeSpell.spellPowerCost} Mana</div>
+                            <div>{activeSpell.range} yd range</div>
+                        </div>
+                        <div>{activeSpell.channelTime ? `${activeSpell.channelTime / 1000} sec cast` : 'Instant cast'}</div>
+                        <div>{'Cooldown: ' + activeSpell.cooldown / 1000 + ' sec'}</div>
+                        <div className={styles.spellDesc}>{activeSpell.description}</div>
+                    </div>
+                </div>
+            );
+        })}
+    </div>;
 };

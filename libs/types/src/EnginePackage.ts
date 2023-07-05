@@ -8,6 +8,7 @@ import {
     EquipmentTrack,
     ItemTemplate,
     NpcStock,
+    SpellDefinition,
 } from '.';
 import { Attributes, CharacterEvents, MonsterCorpse } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
@@ -48,7 +49,9 @@ export enum GlobalStoreModule {
     QUEST_PROGRESS = 'questProgress',
     NPC_QUESTS = 'npcQuests',
     ATTRIBUTES = 'attributes',
-    COMBAT_STATE = "combatState"
+    COMBAT_STATE = "combatState",
+    AVAILABLE_SPELLS = "availableSpells",
+    SPELL_DEFINITION = "spellDefinition"
 }
 
 export interface PartialEnginePackage<Data> {
@@ -89,6 +92,8 @@ export interface EnginePackage {
     [GlobalStoreModule.EQUIPMENT]: PartialEnginePackage<EquipmentTrack>;
     [GlobalStoreModule.ATTRIBUTES]: PartialEnginePackage<Attributes>;
     [GlobalStoreModule.COMBAT_STATE]: PartialEnginePackage<boolean>;
+    [GlobalStoreModule.AVAILABLE_SPELLS]: PartialEnginePackage<boolean>;
+    [GlobalStoreModule.SPELL_DEFINITION]: PartialEnginePackage<SpellDefinition>;
 }
 
 interface StoreModule<Data> {
@@ -131,6 +136,8 @@ export interface GlobalStore {
     [GlobalStoreModule.EQUIPMENT]: StoreModule<EquipmentTrack>;
     [GlobalStoreModule.ATTRIBUTES]: StoreModule<Attributes>;
     [GlobalStoreModule.COMBAT_STATE]: StoreModule<boolean>;
+    [GlobalStoreModule.AVAILABLE_SPELLS]: StoreModule<boolean>;
+    [GlobalStoreModule.SPELL_DEFINITION]: StoreModule<SpellDefinition>;
 }
 
 export interface ActiveCharacterStorePart {

@@ -1,6 +1,4 @@
-import type { QuotesEvents } from '@bananos/types';
-import { ALL_SPELLS } from '../SpellModule/spells';
-import type { Spell } from '../SpellModule/types/SpellTypes';
+import type { QuotesEvents, Spell } from '@bananos/types';
 
 export interface CoinDropSchema {
     dropChance: number;
@@ -59,9 +57,9 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
         healthPointsRegeneration: 5,
         spellPowerRegeneration: 5,
         spells: {
-            MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
-            MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
-            MonsterInstant2: ALL_SPELLS['MonsterInstant2'],
+            // MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
+            // MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
+            // MonsterInstant2: ALL_SPELLS['MonsterInstant2'],
         },
         dropSchema: {
             coins: {
@@ -168,8 +166,8 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
         healthPointsRegeneration: 5,
         spellPowerRegeneration: 5,
         spells: {
-            MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
-            MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
+            // MonsterProjectile: ALL_SPELLS['MonsterProjectile'],
+            // MonsterInstant1: ALL_SPELLS['MonsterInstant1'],
         },
         dropSchema: {
             coins: {
@@ -195,7 +193,7 @@ export const MonsterTemplates: Record<string, MonsterTemplate> = {
         healthPointsRegeneration: 5,
         spellPowerRegeneration: 5,
         spells: {
-            DestroyerBasic: ALL_SPELLS['DestroyerBasic'],
+            // DestroyerBasic: ALL_SPELLS['DestroyerBasic'],
         },
     },
 };

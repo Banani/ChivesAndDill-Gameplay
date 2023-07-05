@@ -5,6 +5,7 @@ import "encoding/json"
 type Spell struct {
 	Id                   string                          `json:"id" bson:"-"`
 	Name                 string                          `json:"name"`
+	Type                 string                          `json:"type"`
 	Image                string                          `json:"image"`
 	Description          string                          `json:"description" bson:"description"`
 	Range                int32                           `json:"range" bson:"range"`

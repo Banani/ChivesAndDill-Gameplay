@@ -1,7 +1,6 @@
-import { CharacterDirection, QuotesEvents } from '@bananos/types';
+import { CharacterDirection, QuotesEvents, Spell } from '@bananos/types';
 import { QuestSchema } from 'libs/types/src/QuestPackage';
 import { Quests } from '../QuestModule/Quests';
-import { Spell } from '../SpellModule/types/SpellTypes';
 
 export interface NpcTemplate {
     id: string;

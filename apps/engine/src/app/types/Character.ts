@@ -1,5 +1,4 @@
-import type { CharacterDirection, Location } from '@bananos/types';
-import type { Spell } from '../modules/SpellModule/types/SpellTypes';
+import type { CharacterDirection, Location, Spell } from '@bananos/types';
 
 export interface Character {
     type: CharacterType;

@@ -1,6 +1,6 @@
+import { Spell } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterRespawn } from '../../types/CharacterRespawn';
-import { Spell } from '../SpellModule/types/SpellTypes';
 import { MonsterTemplateDb } from './db';
 import { Monster } from './types';
 

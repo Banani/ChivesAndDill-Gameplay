@@ -42,6 +42,8 @@ export const EngineContexts: Record<GlobalStoreModule, React.Context<any>> = {
     [GlobalStoreModule.EQUIPMENT]: React.createContext<GlobalStore[GlobalStoreModule.EQUIPMENT]>(null),
     [GlobalStoreModule.ATTRIBUTES]: React.createContext<GlobalStore[GlobalStoreModule.ATTRIBUTES]>(null),
     [GlobalStoreModule.COMBAT_STATE]: React.createContext<GlobalStore[GlobalStoreModule.COMBAT_STATE]>(null),
+    [GlobalStoreModule.AVAILABLE_SPELLS]: React.createContext<GlobalStore[GlobalStoreModule.AVAILABLE_SPELLS]>(null),
+    [GlobalStoreModule.SPELL_DEFINITION]: React.createContext<GlobalStore[GlobalStoreModule.SPELL_DEFINITION]>(null),
 };
 
 const deleteRequestedFields = (data: any, pathToDelete: any) => {

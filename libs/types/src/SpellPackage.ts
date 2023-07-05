@@ -61,6 +61,7 @@ interface EffectHolders {
 export interface ProjectileSubSpell extends EffectHolders, BaseSubSpell {
     type: SpellType.Projectile;
     speed: number;
+    range: number;
 }
 
 export interface GuidedProjectileSubSpell extends EffectHolders, BaseSubSpell {
@@ -74,6 +75,7 @@ export interface DirectInstantSubSpell extends EffectHolders, BaseSubSpell {
 
 export interface AngleBlastSpellSubSpell extends EffectHolders, BaseSubSpell {
     type: SpellType.AngleBlast;
+    range: number;
     angle: number;
 }
 
@@ -177,3 +179,24 @@ type AllEffects =
     | GainPowerStackEffect
     | LosePowerStackEffect
     | AbsorbShieldEffect;
+
+export interface SpellDefinition {
+    id: string;
+    cooldown: number;
+    image: string;
+    range: number;
+    description?: string;
+    spellPowerCost: number;
+    requiredPowerStacks?: PowerStackRequirement[];
+}
+
+export enum SpellClientMessages {
+    RequestSpellDefinitions = 'RequestSpellDefinitions',
+}
+
+export interface RequestSpellDefinitions {
+    type: SpellClientMessages.RequestSpellDefinitions;
+    spellIds: string[];
+}
+
+export type EngineSpellMessages = RequestSpellDefinitions;
