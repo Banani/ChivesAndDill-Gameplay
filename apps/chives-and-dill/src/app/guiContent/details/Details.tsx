@@ -6,8 +6,9 @@ import { Player } from './Player/Player';
 import { Header } from './Header/Header';
 
 enum States {
-  Damage,
-  Heal
+  Damage = "Damage Done",
+  Heal = "Heal Done",
+  DamageTaken = "Damage Taken"
 }
 
 export const Details = () => {
@@ -24,7 +25,7 @@ export const Details = () => {
 
   return (
     <div className={styles.DetailsContainer}>
-      <Header />
+      <Header activeState={activeState} changeActiveState={changeActiveState} />
       <div className={styles.PlayerList}>
         <Player />
         <Player />
