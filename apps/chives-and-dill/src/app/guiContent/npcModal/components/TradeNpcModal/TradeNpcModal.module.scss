@@ -25,7 +25,6 @@
             background: #29292980;
             border-radius: 4px;
             margin-bottom: 4px;
-            cursor: pointer;
             position: relative;
             overflow: hidden;
             margin-top: 2px;
@@ -40,6 +39,7 @@
                border-right: 1px solid rgb(83, 83, 83);
                border-radius: 3px;
                transition: 0.15s;
+               cursor: url(apps/chives-and-dill/src/assets/spritesheets/cursors/lootCursor.png), auto;
             }
 
             .ItemImage:hover {
@@ -102,7 +102,6 @@
                background-color: #070807;
                border-radius: 5px;
                border: 1px solid #666962;
-               cursor: pointer;
             }
 
             .PaginationText {

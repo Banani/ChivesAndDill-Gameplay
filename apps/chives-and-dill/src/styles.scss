@@ -1,27 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
 body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: black; 
-  -webkit-user-select: none;
-  -moz-user-select: none; 
-  -ms-user-select: none;
-  user-select: none;
+   margin: 0;
+   padding: 0;
+   overflow: hidden;
+   background-color: black;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+   cursor: url(apps/chives-and-dill/src/assets/spritesheets/cursors/defaultCursor.png), auto;
 
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  
-  #root { 
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    }
-    .qOpen{
-        position:fixed;
-        right:7.5%;
-        bottom:1.5%;
-    }
+   ::-webkit-scrollbar {
+      display: none;
+   }
+
+   #root {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+   }
+   .qOpen {
+      position: fixed;
+      right: 7.5%;
+      bottom: 1.5%;
+   }
+   button,
+   input {
+      cursor: url(apps/chives-and-dill/src/assets/spritesheets/cursors/defaultCursor.png), auto;
+   }
 }

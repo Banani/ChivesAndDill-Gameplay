@@ -1,71 +1,68 @@
 .chatContainer {
-  position: absolute;
-  bottom: 2%;
-  left: 0;
-  width: 400px;
+   position: absolute;
+   bottom: 2%;
+   left: 0;
+   width: 400px;
 
-  .channelsContainer {
-    width: 100%;
-    display: flex;
+   .channelsContainer {
+      width: 100%;
+      display: flex;
 
-    .channel {
-      color: gold;
-      padding: 5px 8px;
-      cursor: pointer;
+      .channel {
+         color: gold;
+         padding: 5px 8px;
 
-      &:hover {
-        color: rgb(214, 214, 214);
+         &:hover {
+            color: rgb(214, 214, 214);
+         }
       }
-    }
-  }
+   }
 
-  .chatContent {
-    overflow: hidden;
-    height: 250px;
-    background-color: rgba(0, 0, 0, 0.2);
-    display: flex;
-    justify-content: flex-end;
-    flex-direction: column;
+   .chatContent {
+      overflow: hidden;
+      height: 250px;
+      background-color: rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: column;
 
-    .messagesHolder {
-        overflow-y: scroll;
+      .messagesHolder {
+         overflow-y: scroll;
 
-        .message {
+         .message {
             display: flex;
             color: white;
             word-break: break-word;
-        }
-    }
-  }
-
-  .messageHolder {
-    display: flex;
-    border: 2px solid grey;
-    align-items: center;
-    padding: 0px 8px;
-
-    &.active {
-        border: 2px solid white;
-    }
-
-    .channelName {
-        color: white;
-    }
-
-    .chatInput {
-        flex: 1;
-        padding: 0;
-        background-color: rgba(0, 0, 0, 0.6);
-        border: none;
-        padding: 5px;
-        box-sizing: border-box;
-        color: white;
-    
-        &:focus {
-          outline: none;
-        }
+         }
       }
-  }
+   }
 
-  
+   .messageHolder {
+      display: flex;
+      border: 2px solid grey;
+      align-items: center;
+      padding: 0px 8px;
+
+      &.active {
+         border: 2px solid white;
+      }
+
+      .channelName {
+         color: white;
+      }
+
+      .chatInput {
+         flex: 1;
+         padding: 0;
+         background-color: rgba(0, 0, 0, 0.6);
+         border: none;
+         padding: 5px;
+         box-sizing: border-box;
+         color: white;
+
+         &:focus {
+            outline: none;
+         }
+      }
+   }
 }

@@ -1,86 +1,83 @@
 .QuestLog {
-    position: absolute;
-    width: 1000px;
-    height: 650px;
-    top: 15%;
-    left: 5%;
-    background: url("../../../../../assets/spritesheets/backgrounds/qlog.png");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    display: flex;
-    align-self: center;
-    align-items: flex-end;
-    
-      .QuestList {
-        width: 440px;
-        height: 460px;
-        position: absolute;
-        overflow-y: scroll;
-        left: 23px;
-        top: 120px;
-        display: flex;
-        align-self: left;
-        flex-direction: column;
+   position: absolute;
+   width: 1000px;
+   height: 650px;
+   top: 15%;
+   left: 5%;
+   background: url('../../../../../assets/spritesheets/backgrounds/qlog.png');
+   background-repeat: no-repeat;
+   background-size: 100% 100%;
+   display: flex;
+   align-self: center;
+   align-items: flex-end;
 
-        .QuestTitle{
-          color:#6b6b6b;
-          font-size: 18px;
-          padding: 5px 20px;
-          cursor: pointer;
+   .QuestList {
+      width: 440px;
+      height: 460px;
+      position: absolute;
+      overflow-y: scroll;
+      left: 23px;
+      top: 120px;
+      display: flex;
+      align-self: left;
+      flex-direction: column;
 
-          &:hover {
-            color:#7b7b7b;
-          }
-        }
+      .QuestTitle {
+         color: #6b6b6b;
+         font-size: 18px;
+         padding: 5px 20px;
 
-        .ActiveTitle {
-          color: #ffc700;
-
-          &:hover {
-            color:#ffd700;
-          }
-        }
+         &:hover {
+            color: #7b7b7b;
+         }
       }
-      .QuestDetails {
-        width: 440px;
-        height: 460px;
-        overflow-y: scroll;
-        position: absolute;
-        top: 120px;
-        right: 50px;
-        display: flex;
-        align-self: right;
-        flex-direction: column;
 
-        .QuestDesc {
-          padding: 0 25px;
+      .ActiveTitle {
+         color: #ffc700;
 
-          .activeQuestTitle {
+         &:hover {
+            color: #ffd700;
+         }
+      }
+   }
+   .QuestDetails {
+      width: 440px;
+      height: 460px;
+      overflow-y: scroll;
+      position: absolute;
+      top: 120px;
+      right: 50px;
+      display: flex;
+      align-self: right;
+      flex-direction: column;
+
+      .QuestDesc {
+         padding: 0 25px;
+
+         .activeQuestTitle {
             padding: 5px 0;
             font-size: 2em;
-          }
+         }
 
-          .activeQuestDesc {
+         .activeQuestDesc {
             padding: 10px 0;
-          }
-        }
+         }
       }
+   }
 
-      .closeWindow {
-        color: white;
-        position: absolute;
-        right: 4px;
-        top: 22px;
-        background: transparent;
-        border: none;
-        padding: 5px 10px;
-        display: flex;
-        border-radius: 8px;
-     }
+   .closeWindow {
+      color: white;
+      position: absolute;
+      right: 4px;
+      top: 22px;
+      background: transparent;
+      border: none;
+      padding: 5px 10px;
+      display: flex;
+      border-radius: 8px;
+   }
 
-      .closeWindow:hover {
-        color: red;
-        cursor: pointer;
-      }
-  }
-
+   .closeWindow:hover {
+      color: red;
+   }
+}
