@@ -1,79 +1,78 @@
 .map-editor {
-    flex: 1;
-    margin: 20px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
+   flex: 1;
+   margin: 20px;
+   padding: 20px;
+   display: flex;
+   flex-direction: column;
 }
 
 .manage-panel {
-    display: flex;
-    margin: 0 10px;
-    width: 400px;
-    align-items: center;
+   display: flex;
+   margin: 0 10px;
+   width: 400px;
+   align-items: center;
 
-    .add-item-template-button {
-        margin-left: 20px;
-    }
+   .add-item-template-button {
+      margin-left: 20px;
+   }
 }
 
 .list-holder {
-    flex: 1;
+   flex: 1;
 }
 
 .list {
-    display: flex;
-    margin-top: 12px;
-    flex-wrap: wrap;
+   display: flex;
+   margin-top: 12px;
+   flex-wrap: wrap;
 }
 
 .list-item {
-    border: 1px solid #404040;
-    width: 120px;
-    height: 120px;
-    border-radius: 3px;
-    position: relative;
-    margin-left: 10px;
-    margin-top: 10px;
-    cursor: pointer;
+   border: 1px solid #404040;
+   width: 120px;
+   height: 120px;
+   border-radius: 3px;
+   position: relative;
+   margin-left: 10px;
+   margin-top: 10px;
 
-    &:hover {
-        background: #eee;
-    }
+   &:hover {
+      background: #eee;
+   }
 
-    .image-preview {
-        max-width: 100%;
-    }
+   .image-preview {
+      max-width: 100%;
+   }
 
-    .bar {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 24px;
-        background-color: #000000b0;
-        color: #ddd;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        padding-left: 4px;
-    }
+   .bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      background-color: #000000b0;
+      color: #ddd;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding-left: 4px;
+   }
 
-    .delete-icon {
-        position: absolute;
-        top: 0;
-        right: 0;
-        background-color: #000000b0;
-        height: 24px;
-        border-radius: 2px;
-        color: #ddd;
+   .delete-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #000000b0;
+      height: 24px;
+      border-radius: 2px;
+      color: #ddd;
 
-        &:hover {
-            color: #eee;
-        }
-    }
+      &:hover {
+         color: #eee;
+      }
+   }
 }
 
 .pagination-holder {
-    width: 400px;
+   width: 400px;
 }
