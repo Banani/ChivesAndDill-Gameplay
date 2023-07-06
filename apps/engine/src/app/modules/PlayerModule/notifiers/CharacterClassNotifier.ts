@@ -22,4 +22,6 @@ export class CharacterClassNotifier extends Notifier<CharacterClassPreview> {
             }))
         }]);
     };
+
+
 }
