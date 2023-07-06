@@ -103,6 +103,13 @@ export interface CharacterClass {
     color: string;
 }
 
+export interface CharacterClassPreview {
+    id: string;
+    name: string;
+    iconImage: string;
+    color: string;
+}
+
 export interface CharacterClassSpellAssignment {
     spellId: string,
     minLevel: number

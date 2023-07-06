@@ -2,7 +2,6 @@ import { CharacterDirection } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
-import { Classes } from '../../../types/Classes';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { CharacterEngineEvents, CreateCharacterEvent, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
 import { CreatePlayerCharacterEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
@@ -21,7 +20,7 @@ export class PlayerCharacterService extends EventParser {
     }
 
     handleCreatePlayerCharacter: EngineEventHandler<CreatePlayerCharacterEvent> = ({ event }) => {
-        const newCharacter = this.generateCharacter({ name: event.name, className: event.class, ownerId: event.playerOwnerId });
+        const newCharacter = this.generateCharacter({ name: event.name, characterClassId: event.characterClassId, ownerId: event.playerOwnerId });
 
         this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
             type: CharacterEngineEvents.CreateCharacter,
@@ -45,8 +44,8 @@ export class PlayerCharacterService extends EventParser {
         }
     };
 
-    generateCharacter: ({ className, name, ownerId }: { className: Classes; name: string; ownerId: string }) => PlayerCharacter = ({
-        className,
+    generateCharacter: ({ characterClassId, name, ownerId }: { characterClassId: string; name: string; ownerId: string }) => PlayerCharacter = ({
+        characterClassId,
         name,
         ownerId,
     }) => {
@@ -66,7 +65,7 @@ export class PlayerCharacterService extends EventParser {
             size: 96,
             absorb: 0,
             isDead: false,
-            class: className,
+            characterClassId: characterClassId,
             spells: {},
             ownerId,
         };

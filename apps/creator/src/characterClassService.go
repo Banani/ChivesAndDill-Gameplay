@@ -5,9 +5,9 @@ import "encoding/json"
 type CharacterClass struct {
 	Id            string                                   `json:"id" bson:"-"`
 	Name          string                                   `json:"name"`
-	IconImage     string                                   `json:"iconImage"`
-	MaxHp         int64                                    `json:"maxHp"`
-	MaxSpellPower int64                                    `json:"maxSpellPower"`
+	IconImage     string                                   `json:"iconImage" bson:"iconImage"`
+	MaxHp         int64                                    `json:"maxHp" bson:"maxHp"`
+	MaxSpellPower int64                                    `json:"maxSpellPower" bson:"maxSpellPower"`
 	Spells        map[string]CharacterClassSpellAssignment `json:"spells"`
 	Color         string                                   `json:"color"`
 }

@@ -21,7 +21,7 @@ export class PlayerNotifier extends Notifier {
                 type: PlayerEngineEvents.CreatePlayerCharacter,
                 playerOwnerId: event.playerId,
                 name: character.name,
-                class: character.class,
+                characterClassId: character.characterClassId,
             });
         });
     };

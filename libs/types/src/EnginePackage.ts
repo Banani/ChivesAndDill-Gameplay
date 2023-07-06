@@ -15,10 +15,11 @@ import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
 import { CommonClientActions, CommonClientMessages } from './engineEvents';
 import { ExternalQuestProgress, QuestSchema } from './QuestPackage';
-import type { CharacterDirection } from './shared';
+import type { CharacterClassPreview, CharacterDirection } from './shared';
 
 export enum GlobalStoreModule {
     CHARACTER = 'character',
+    CHARACTER_CLASS = "characterClass",
     ACTIVE_CHARACTER = 'activeCharacter',
     AREA_TIME_EFFECTS = 'areaTimeEffects',
     CHARACTER_MOVEMENTS = 'characterMovements',
@@ -62,6 +63,7 @@ export interface PartialEnginePackage<Data> {
 
 export interface EnginePackage {
     [GlobalStoreModule.CHARACTER_MOVEMENTS]: PartialEnginePackage<CharacterMovement>;
+    [GlobalStoreModule.CHARACTER_CLASS]: PartialEnginePackage<CharacterClassPreview>;
     [GlobalStoreModule.PROJECTILE_MOVEMENTS]: PartialEnginePackage<ProjectileMovement>;
     [GlobalStoreModule.SPELL_CHANNELS]: PartialEnginePackage<ChannelingTrack>;
     [GlobalStoreModule.CHARACTER_POWER_POINTS]: PartialEnginePackage<PowerPointsTrack>;
@@ -105,6 +107,7 @@ interface StoreModule<Data> {
 
 export interface GlobalStore {
     [GlobalStoreModule.CHARACTER_MOVEMENTS]: StoreModule<CharacterMovement>;
+    [GlobalStoreModule.CHARACTER_CLASS]: StoreModule<CharacterClassPreview>;
     [GlobalStoreModule.PROJECTILE_MOVEMENTS]: StoreModule<ProjectileMovement>;
     [GlobalStoreModule.SPELL_CHANNELS]: StoreModule<ChannelingTrack>;
     [GlobalStoreModule.CHARACTER_POWER_POINTS]: StoreModule<PowerPointsTrack>;
