@@ -17,8 +17,19 @@ type Spell struct {
 }
 
 type SpellEffectsOnTarget struct {
-	Type   string `json:"type"`
-	Amount int32  `json:"amount,omitempty" bson:"amount,omitempty"`
+	Type                string                          `json:"type"`
+	Amount              int32                           `json:"amount,omitempty" bson:"amount,omitempty"`
+	Name                string                          `json:"name,omitempty" bson:"name,omitempty"`
+	Description         string                          `json:"description,omitempty" bson:"description,omitempty"`
+	ShieldValue         int32                           `json:"shieldValue,omitempty" bson:"shieldValue,omitempty"`
+	Period              int32                           `json:"period,omitempty" bson:"period,omitempty"`
+	ActivationFrequency int32                           `json:"activationFrequency,omitempty" bson:"activationFrequency,omitempty"`
+	Stack               int32                           `json:"stack,omitempty" bson:"stack,omitempty"`
+	TimeEffectType      string                          `json:"timeEffectType,omitempty" bson:"timeEffectType,omitempty"`
+	IconImage           string                          `json:"iconImage,omitempty" bson:"iconImage,omitempty"`
+	Radius              int32                           `json:"radius,omitempty" bson:"radius,omitempty"`
+	AreaType            string                          `json:"areaType,omitempty" bson:"areaType,omitempty"`
+	SpellEffects        map[string]SpellEffectsOnTarget `json:"spellEffects,omitempty" bson:"spellEffects,omitempty"`
 }
 
 type SpellsService struct {

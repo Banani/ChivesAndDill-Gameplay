@@ -53,7 +53,7 @@ interface BaseSubSpell {
 }
 
 interface EffectHolders {
-    spellEffectsOnTarget?: AllEffects[];
+    spellEffectsOnTarget?: Record<string, AllEffects>;
     spellEffectsOnDirectionLocation?: AllEffects[];
     spellEffectsOnCasterOnSpellHit?: AllEffects[];
 }
@@ -126,8 +126,8 @@ export interface AreaEffect extends SpellEffect {
     areaType: AreaType;
     period: number;
     radius: number;
-    attackFrequency: number;
-    spellEffects: AllEffects[];
+    activationFrequency: number;
+    spellEffects: Record<string, AllEffects>;
 }
 
 export interface GenerateSpellPowerEffect extends SpellEffect {
@@ -143,7 +143,7 @@ export interface TickOverTimeEffect extends SpellEffect {
     period: number;
     iconImage: string;
     activationFrequency: number;
-    spellEffects: AllEffects[];
+    spellEffects: Record<string, AllEffects>;
     spellId: string;
 }
 
