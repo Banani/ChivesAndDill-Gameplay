@@ -15,9 +15,25 @@
       flex: 1;
       margin-bottom: 30px;
 
-      .TradeModal {
-         font-size: 18px;
+      .TradeModalContainer {
+         display: flex;
          margin-top: 16px;
+         cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
+
+         &:hover {
+            background-image: linear-gradient(to right, rgb(255, 250, 94, 0.1), rgb(255, 250, 94, 1), rgb(255, 250, 94, 0.1));
+         }
+
+         img {
+            margin-right: 5px;
+            margin-top: 2px;
+            height: 16px;
+         }
+
+         .TradeModal {
+            font-size: 18px;
+            cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
+         }
       }
 
       .SectionText {
