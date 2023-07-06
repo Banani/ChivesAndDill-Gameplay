@@ -43,7 +43,7 @@ export class SpellAvailabilityService extends EventParser {
             return;
         }
 
-        if (services.cooldownService.isSpellAvailable(character.id, spell)) {
+        if (services.cooldownService.isSpellAvailable(character.id, spell.id)) {
             this.engineEventCrator.asyncCeateEvent<PlayerCastSpellEvent>({
                 type: SpellEngineEvents.PlayerCastSpell,
                 casterId: event.spellData.characterId,

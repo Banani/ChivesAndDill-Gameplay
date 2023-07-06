@@ -1,4 +1,5 @@
 import { Spell } from '@bananos/types';
+import * as _ from 'lodash';
 import { filter, forEach } from 'lodash';
 import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints, isSegementCrossingWithAnyWall } from '../../../math';
@@ -63,6 +64,9 @@ export class MonsterAttackEngine extends Engine {
                 return;
             }
 
+            const monsterRespawn = this.services.monsterRespawnTemplateService.getData()[monster.respawnId];
+            const monsterTemplate = this.services.monsterTemplateService.getData()[monsterRespawn.characterTemplateId];
+
             if (this.scheduledAttacks[monsterId]) {
                 const scheduledAttack = this.scheduledAttacks[monsterId].pop();
                 this.eventCrator.createEvent<PlayerCastSpellEvent>({
@@ -80,15 +84,20 @@ export class MonsterAttackEngine extends Engine {
                 return;
             }
 
-            const readySpells = filter(monster.spells, (spell) => this.services.cooldownService.isSpellAvailable(monster.id, spell));
-            const readySpellsWithRange = filter(readySpells, (spell) => distanceBetweenTwoPoints(monster.location, character.location) <= spell.range);
+
+            const spells = this.services.spellService.getData();
+            const readySpells = _.chain(monsterTemplate.spells)
+                .map((_, spellId) => spellId)
+                .filter(spellId => this.services.cooldownService.isSpellAvailable(monster.id, spellId))
+                .value();
+            const readySpellsWithRange = filter(readySpells, (spellId) => distanceBetweenTwoPoints(monster.location, character.location) <= spells[spellId].range);
 
             if (readySpellsWithRange.length > 0) {
                 this.attacksHistory[monster.id] = Date.now();
                 this.eventCrator.createEvent<PlayerTriesToCastASpellEvent>({
                     type: SpellEngineEvents.PlayerTriesToCastASpell,
                     spellData: {
-                        spellId: readySpellsWithRange[Math.floor(Math.random() * readySpellsWithRange.length)].id,
+                        spellId: readySpellsWithRange[Math.floor(Math.random() * readySpellsWithRange.length)],
                         directionLocation: character.location,
                         characterId: monster.id,
                     },

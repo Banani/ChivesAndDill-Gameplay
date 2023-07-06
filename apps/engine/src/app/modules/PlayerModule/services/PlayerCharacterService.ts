@@ -5,7 +5,6 @@ import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../
 import { Classes } from '../../../types/Classes';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { CharacterEngineEvents, CreateCharacterEvent, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
-import { SpellsPerClass } from '../../SpellModule/spells';
 import { CreatePlayerCharacterEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
 
 export class PlayerCharacterService extends EventParser {
@@ -68,7 +67,7 @@ export class PlayerCharacterService extends EventParser {
             absorb: 0,
             isDead: false,
             class: className,
-            spells: SpellsPerClass[className],
+            spells: {},
             ownerId,
         };
     };

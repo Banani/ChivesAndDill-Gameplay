@@ -33,6 +33,7 @@ export class NpcService extends EventParser {
                 respawnId: npcRespawn.id,
                 templateId: npcRespawn.characterTemplateId,
                 id,
+                spells: {}
             };
 
             this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
