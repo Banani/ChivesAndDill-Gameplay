@@ -1,4 +1,5 @@
 import { GlobalStoreModule } from '@bananos/types';
+import { mapValues } from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
@@ -12,15 +13,11 @@ export class AvailableSpellsNotifier extends Notifier<boolean> {
     }
 
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
-        const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
+        const spells = services.characterClassService.getData()[event.playerCharacter.characterClassId].spells;
 
         this.multicastMultipleObjectsUpdate([{
             receiverId: event.playerCharacter.ownerId,
-            objects: {
-                "6496f58e6dff053cbafd9fa2": true,
-                "649ae88d229708ea977d0fca": true,
-                "649ae8a0229708ea977d0fcb": true,
-            }
+            objects: mapValues(spells, () => true)
         }]);
     };
 }

@@ -2,7 +2,6 @@ import { ItemTemplate } from '@bananos/types';
 import * as _ from 'lodash';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { ItemApi } from '../db';
 
 export class ItemTemplateService extends EventParser {
     itemTemplates: Record<string, ItemTemplate> = {}
@@ -14,13 +13,20 @@ export class ItemTemplateService extends EventParser {
 
     init(engineEventCrator: EngineEventCrator, services) {
         super.init(engineEventCrator);
-        const itemDbApi = new ItemApi(services.dbService.getDb());
+        let realItemTemplatesFetched = false;
 
-        itemDbApi.fetchItemTemplates().then((itemTemplates) => {
+        services.dbService.getCachedData("itemTemplates", (itemTemplates) => {
+            if (!realItemTemplatesFetched) {
+                this.itemTemplates = itemTemplates;
+            }
+        });
+
+        services.dbService.fetchDataFromDb("itemTemplates").then((itemTemplates) => {
+            realItemTemplatesFetched = true;
             this.itemTemplates = itemTemplates;
         });
 
-        itemDbApi.watchForItemTemplates((data) => {
+        services.dbService.watchForDataChanges("itemTemplates", (data) => {
             if (data.operationType === "update") {
                 this.itemTemplates[data.fullDocument._id] = {
                     id: data.fullDocument._id.toString(),

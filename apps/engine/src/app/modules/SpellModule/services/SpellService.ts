@@ -2,7 +2,6 @@ import { Spell } from '@bananos/types';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { SpellDefinitionUpdatedEvent, SpellEngineEvents } from '../Events';
-import { SpellApi } from '../db';
 
 export class SpellService extends EventParser {
     spells: Record<string, Spell> = {}
@@ -14,13 +13,20 @@ export class SpellService extends EventParser {
 
     init(engineEventCrator: EngineEventCrator, services) {
         super.init(engineEventCrator);
-        const spellApi = new SpellApi(services.dbService.getDb());
+        let realSpellsFetched = false;
 
-        spellApi.fetchSpells().then((spells) => {
+        services.dbService.getCachedData("spells", (spells) => {
+            if (!realSpellsFetched) {
+                this.spells = spells;
+            }
+        });
+
+        services.dbService.fetchDataFromDb("spells").then((spells) => {
+            realSpellsFetched = true;
             this.spells = spells;
         });
 
-        spellApi.watchForSpells((data) => {
+        services.dbService.watchForDataChanges("spells", (data) => {
             if (data.operationType === "update") {
                 this.spells[data.fullDocument._id] = data.fullDocument;
 

@@ -1,7 +1,6 @@
 import { CharacterClass } from '@bananos/types';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { CharacterClassApi } from '../db';
 
 export class CharacterClassService extends EventParser {
     characterClasses: Record<string, CharacterClass> = {}
@@ -13,13 +12,20 @@ export class CharacterClassService extends EventParser {
 
     init(engineEventCrator: EngineEventCrator, services) {
         super.init(engineEventCrator);
-        const characterClassDbApi = new CharacterClassApi(services.dbService.getDb());
+        let realDataFetched = false;
 
-        characterClassDbApi.fetchCharacterClasses().then((characterClasses) => {
+        services.dbService.getCachedData("characterClasses", (characterClasses) => {
+            if (!realDataFetched) {
+                this.characterClasses = characterClasses;
+            }
+        });
+
+        services.dbService.fetchDataFromDb("characterClasses").then((characterClasses) => {
+            realDataFetched = true;
             this.characterClasses = characterClasses;
         });
 
-        characterClassDbApi.watchForCharacterClasses((data) => {
+        services.dbService.watchForDataChanges("characterClasses", (data) => {
             // if (data.operationType === "update") {
             //     this.itemTemplates[data.fullDocument._id] = {
             //         id: data.fullDocument._id.toString(),
