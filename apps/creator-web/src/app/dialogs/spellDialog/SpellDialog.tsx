@@ -116,7 +116,7 @@ export const SpellDialog = () => {
                 prerequisite: ({ type }) => type === SpellType.Projectile
             },
             angle: {
-                label: "Angle (radians 0-2)",
+                label: "Angle (radians 0-3.14*2)",
                 type: SchemaFieldType.Number,
                 conditions: [
                     { type: FormFieldConditions.Required },
