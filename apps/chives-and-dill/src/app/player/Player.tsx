@@ -182,7 +182,6 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
                         x={charactersMovements[player.id].location.x - w / 2}
                         y={charactersMovements[player.id].location.y - h / 2}
                         pointerdown={() => handlePlayerClick()}
-                        cursor={'wait'}
                     />
                 )}
             </>

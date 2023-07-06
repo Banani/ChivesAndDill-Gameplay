@@ -11,8 +11,6 @@ import { StatesModal } from '../states/StatesModal';
 export const Header = ({ activeState, changeActiveState }) => {
   console.log();
 
-  const [stateModalStatus, changeStateModalStatus] = useState(false);
-
   return (
     <div className={styles.Header}>
       <div>{activeState} [5]</div>
@@ -24,13 +22,11 @@ export const Header = ({ activeState, changeActiveState }) => {
           className={styles.Icon}
           src={SwordImg}
           alt={'Sword img'}
-          onMouseEnter={() => changeStateModalStatus(true)}
-          onMouseLeave={() => changeStateModalStatus(false)}
         />
         <img className={styles.Icon} src={ChatlImg} alt={'Chat img'} />
         <img className={styles.Icon} src={ResetImg} alt={'Reset img'} />
       </div>
-      {stateModalStatus ? <StatesModal changeActiveState={changeActiveState} /> : null}
+      {<StatesModal changeActiveState={changeActiveState} />}
     </div>
   )
 }

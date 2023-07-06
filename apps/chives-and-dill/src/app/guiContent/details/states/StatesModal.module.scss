@@ -1,15 +1,18 @@
-.Item {
-  display: flex;
-  align-items: center;
-  color: #C08416;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #656465;
-  }
-
-  .ItemImg {
-    width: 20px;
-    margin: 5px; 
+.StatesModal {
+  
+  .Item {
+    display: flex;
+    align-items: center;
+    color: #C08416;
+  
+    &:hover {
+      cursor: pointer;
+      background-color: #656465;
+    }
+  
+    .ItemImg {
+      width: 20px;
+      margin: 5px; 
+    }
   }
 }

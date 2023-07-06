@@ -15,17 +15,19 @@ export const StatesModal = ({ changeActiveState }) => {
 
   return (
     <DetailsModal>
-      <div className={styles.Item} onClick={() => changeActiveState(States.Damage)}>
-        <img src={DamageIcon} alt="damage icon" className={styles.ItemImg} />
-        <div>Damage</div>
-      </div>
-      <div className={styles.Item} onClick={() => changeActiveState(States.Heal)}>
-        <img src={HealIcon} alt="heal icon" className={styles.ItemImg} />
-        <div>Heal</div>
-      </div>
-      <div className={styles.Item} onClick={() => changeActiveState(States.DamageTaken)}>
-        <img src={HealIcon} alt="damage taken icon" className={styles.ItemImg} />
-        <div>Damage taken</div>
+      <div className={styles.StatesModal}>
+        <div className={styles.Item} onClick={() => changeActiveState(States.Damage)}>
+          <img src={DamageIcon} alt="damage icon" className={styles.ItemImg} />
+          <div>Damage</div>
+        </div>
+        <div className={styles.Item} onClick={() => changeActiveState(States.Heal)}>
+          <img src={HealIcon} alt="heal icon" className={styles.ItemImg} />
+          <div>Heal</div>
+        </div>
+        <div className={styles.Item} onClick={() => changeActiveState(States.DamageTaken)}>
+          <img src={HealIcon} alt="damage taken icon" className={styles.ItemImg} />
+          <div>Damage taken</div>
+        </div>
       </div>
     </DetailsModal>
   )
