@@ -40,6 +40,8 @@
                border-radius: 3px;
                transition: 0.15s;
                cursor: url(apps/chives-and-dill/src/assets/spritesheets/cursors/lootCursor.png), auto;
+               background-size: cover;
+               background-repeat: no-repeat;
             }
 
             .ItemImage:hover {
