@@ -10,11 +10,11 @@ enum States {
   DamageTaken = "Damage Taken"
 }
 
-export const StatesModal = ({ changeActiveState }) => {
+export const StatesModal = ({ changeActiveState, setStatesModal }) => {
   console.log();
 
   return (
-    <DetailsModal>
+    <DetailsModal setStatesModal={setStatesModal}>
       <div className={styles.StatesModal}>
         <div className={styles.Item} onClick={() => changeActiveState(States.Damage)}>
           <img src={DamageIcon} alt="damage icon" className={styles.ItemImg} />

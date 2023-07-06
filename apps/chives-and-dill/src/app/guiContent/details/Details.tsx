@@ -17,11 +17,18 @@ export const Details = () => {
   const { events: characterPowerPointsEvents } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
   const { data: combatState } = useEngineModuleReader(GlobalStoreModule.COMBAT_STATE);
 
-  // useEffect(() => {
-  //   console.log('events:', characterPowerPointsEvents);
-  // }, [characterPowerPointsEvents])
+  useEffect(() => {
+    if (combatState[activeCharacterId]) {
+      console.log("start");
+      updateStartFightTime(new Date().getTime());
+    } else {
+      console.log("end");
+      updateStartFightTime(0);
+    }
+  }, [combatState, activeCharacterId])
 
   const [activeState, changeActiveState] = useState(States.Damage);
+  const [startFightTime, updateStartFightTime] = useState(0);
 
   return (
     <div className={styles.DetailsContainer}>

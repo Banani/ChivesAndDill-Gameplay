@@ -9,7 +9,8 @@ import ResetImg from '../../../../assets/spritesheets/details/DetailsReset.png';
 import { StatesModal } from '../states/StatesModal';
 
 export const Header = ({ activeState, changeActiveState }) => {
-  console.log();
+
+  const [statesModal, setStatesModal] = useState(false);
 
   return (
     <div className={styles.Header}>
@@ -22,11 +23,12 @@ export const Header = ({ activeState, changeActiveState }) => {
           className={styles.Icon}
           src={SwordImg}
           alt={'Sword img'}
+          onMouseEnter={() => setStatesModal(true)}
         />
         <img className={styles.Icon} src={ChatlImg} alt={'Chat img'} />
         <img className={styles.Icon} src={ResetImg} alt={'Reset img'} />
       </div>
-      {<StatesModal changeActiveState={changeActiveState} />}
+      {statesModal ? <StatesModal changeActiveState={changeActiveState} setStatesModal={setStatesModal} /> : null}
     </div>
   )
 }
