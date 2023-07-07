@@ -19,6 +19,7 @@ type Spell struct {
 type SpellEffectsOnTarget struct {
 	Type                string                          `json:"type"`
 	Amount              int32                           `json:"amount,omitempty" bson:"amount,omitempty"`
+	Attribute           string                          `json:"attribute,omitempty" bson:"attribute,omitempty"`
 	Name                string                          `json:"name,omitempty" bson:"name,omitempty"`
 	Description         string                          `json:"description,omitempty" bson:"description,omitempty"`
 	ShieldValue         int32                           `json:"shieldValue,omitempty" bson:"shieldValue,omitempty"`

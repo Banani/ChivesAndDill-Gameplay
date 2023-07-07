@@ -1,4 +1,4 @@
-import { AbsorbShieldEffect, AngleBlastSpell, AreaEffect, AreaType, DamageEffect, DirectInstantSpell, GenerateSpellPowerEffect, GuidedProjectileSpell, HealEffect, ProjectileSpell, ProjectileSubSpell, Spell, SpellEffectType, SpellType, TeleportationSpell, TickOverTimeEffect, TimeEffectType } from '@bananos/types';
+import { AbsorbShieldEffect, AngleBlastSpell, AreaEffect, AreaType, Attribute, DamageEffect, DirectInstantSpell, GenerateSpellPowerEffect, GuidedProjectileSpell, HealEffect, ProjectileSpell, ProjectileSubSpell, Spell, SpellEffectType, SpellType, TeleportationSpell, TickOverTimeEffect, TimeEffectType } from '@bananos/types';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -56,6 +56,7 @@ const DefaultTeleportation: TeleportationSpell = {
 const DefaultDamageEffect: DamageEffect = {
     type: SpellEffectType.Damage,
     amount: 100,
+    attribute: Attribute.Strength,
     spellId: "",
 }
 
@@ -216,13 +217,27 @@ export const SpellDialog = () => {
                         }
                     },
                     amount: {
-                        label: "Amount",
+                        label: "Amount (percentage from the attribute)",
                         type: SchemaFieldType.Number,
                         conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
                         prerequisite: ({ type }) => [
                             SpellEffectType.Damage,
                             SpellEffectType.Heal,
                             SpellEffectType.GenerateSpellPower
+                        ].includes(type)
+                    },
+                    attribute: {
+                        label: "Attribute",
+                        type: SchemaFieldType.Select,
+                        options: [
+                            { label: "Stamina", value: Attribute.Stamina },
+                            { label: "Strength", value: Attribute.Strength },
+                            { label: "Agility", value: Attribute.Agility },
+                            { label: "Intelect", value: Attribute.Intelect },
+                            { label: "Spirit", value: Attribute.Spirit },
+                        ],
+                        prerequisite: ({ type }) => [
+                            SpellEffectType.Damage,
                         ].includes(type)
                     },
                     spellId: {
@@ -343,12 +358,26 @@ export const SpellDialog = () => {
                                 }
                             },
                             amount: {
-                                label: "Amount",
+                                label: "Amount (percentage from the attribute)",
                                 type: SchemaFieldType.Number,
                                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
                                 prerequisite: ({ type }) => [
                                     SpellEffectType.Damage,
                                     SpellEffectType.Heal
+                                ].includes(type)
+                            },
+                            attribute: {
+                                label: "Attribute",
+                                type: SchemaFieldType.Select,
+                                options: [
+                                    { label: "Stamina", value: Attribute.Stamina },
+                                    { label: "Strength", value: Attribute.Strength },
+                                    { label: "Agility", value: Attribute.Agility },
+                                    { label: "Intelect", value: Attribute.Intelect },
+                                    { label: "Spirit", value: Attribute.Spirit },
+                                ],
+                                prerequisite: ({ type }) => [
+                                    SpellEffectType.Damage,
                                 ].includes(type)
                             },
                             spellId: {

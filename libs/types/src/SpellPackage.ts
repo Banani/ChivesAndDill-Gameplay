@@ -1,7 +1,7 @@
 // TODO: JUST COPPIED 
 
 
-import type { TimeEffectType } from '@bananos/types';
+import type { Attribute, TimeEffectType } from '@bananos/types';
 import { PowerStackType } from '@bananos/types';
 
 export enum SpellType {
@@ -113,6 +113,7 @@ export interface SpellEffect {
 export interface DamageEffect extends SpellEffect {
     type: SpellEffectType.Damage;
     amount: number;
+    attribute: Attribute;
 }
 
 export interface HealEffect extends SpellEffect {

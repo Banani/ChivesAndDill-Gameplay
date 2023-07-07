@@ -1,8 +1,8 @@
+import { DamageEffect, SpellEffectType } from '@bananos/types';
 import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
 import { CharacterEngineEvents, TakeCharacterHealthPointsEvent } from '../../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, DamageAbsorbedEvent, SpellEngineEvents, TakeAbsorbShieldValueEvent } from '../../Events';
-import { DamageEffect, SpellEffectType } from '../../types/SpellTypes';
 
 export class DamageEffectService extends EventParser {
     constructor() {
@@ -16,14 +16,24 @@ export class DamageEffectService extends EventParser {
         if (event.effect.type === SpellEffectType.Damage) {
             const effect = event.effect as DamageEffect;
 
+            const attributes = services.attributesService.getAllStats()[event.caster.id];
+            if (!attributes) {
+                return;
+            }
+
+            const RANDOM_RANGE = 10;
+            const randomNumber = services.randomGeneratorService.generateNumber() / RANDOM_RANGE - 0.05;
+            let damage = (effect.amount / 100) * attributes[effect.attribute];
+            damage = Math.ceil(damage + damage * randomNumber);
+
             const absorbsValue = services.absorbShieldEffectService.getAbsorbShieldValue(event.target.id);
 
-            if (absorbsValue < effect.amount) {
+            if (absorbsValue < damage) {
                 this.engineEventCrator.asyncCeateEvent<TakeCharacterHealthPointsEvent>({
                     type: CharacterEngineEvents.TakeCharacterHealthPoints,
                     attackerId: event.caster?.id ?? null,
                     characterId: event.target.id,
-                    amount: effect.amount - absorbsValue,
+                    amount: damage - absorbsValue,
                     spellId: event.effect.spellId
                 });
             }
@@ -32,7 +42,7 @@ export class DamageEffectService extends EventParser {
                 this.engineEventCrator.asyncCeateEvent<TakeAbsorbShieldValueEvent>({
                     type: SpellEngineEvents.TakeAbsorbShieldValue,
                     targetId: event.target.id,
-                    amount: Math.min(absorbsValue, effect.amount),
+                    amount: Math.min(absorbsValue, damage),
                 });
 
                 this.engineEventCrator.asyncCeateEvent<DamageAbsorbedEvent>({
