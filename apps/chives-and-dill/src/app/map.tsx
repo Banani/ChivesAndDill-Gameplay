@@ -4,7 +4,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Provider, ReactReduxContext } from 'react-redux';
 import { SocketContext } from './gameController/socketContext';
 
-import type { ErrorMessage, QuestSchema } from '@bananos/types';
+import type { QuestSchema } from '@bananos/types';
 import { GlobalStoreModule } from '@bananos/types';
 import { EngineContexts, PackageContext } from '../contexts/PackageContext';
 import { useEngineModuleReader } from '../hooks';
@@ -39,7 +39,6 @@ const Map = () => {
     const { data: projectileMovements } = useEngineModuleReader(GlobalStoreModule.PROJECTILE_MOVEMENTS);
 
     const { events: experienceEvents } = useEngineModuleReader(GlobalStoreModule.EXPERIENCE);
-    const { events: errorMessagesEvents } = useEngineModuleReader(GlobalStoreModule.ERROR_MESSAGES);
 
     const contexts = mapValues(EngineContexts, (context) => useContext(context));
 
@@ -128,7 +127,7 @@ const Map = () => {
                                                             </Container>
                                                         )}
                                                         <NextLevelManager experienceEvents={experienceEvents} />
-                                                        <ErrorMessages errorMessages={errorMessagesEvents as ErrorMessage[]} />
+                                                        <ErrorMessages />
                                                     </ContextProvider>
                                                 </Provider>
                                             </SocketContext.Provider>
