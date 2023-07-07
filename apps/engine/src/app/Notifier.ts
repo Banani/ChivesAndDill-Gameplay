@@ -1,156 +1,168 @@
 import { EnginePackageEvent, GlobalStoreModule, RecursivePartial } from '@bananos/types';
 import { forEach, merge } from 'lodash';
 import { EventParser } from './EventParser';
+import { CharacterType } from './types';
+import { Services } from './types/Services';
 
 export interface ModulePackage<T> {
-   data: Record<string, T>;
-   events?: EnginePackageEvent[];
-   toDelete: Record<string, T>;
-   key: GlobalStoreModule;
+    data: Record<string, T>;
+    events?: EnginePackageEvent[];
+    toDelete: Record<string, T>;
+    key: GlobalStoreModule;
 }
 
 export interface MulticastPackage<T> {
-   key: string;
-   messages: Record<string, Partial<ModulePackage<T>>>;
+    key: string;
+    messages: Record<string, Partial<ModulePackage<T>>>;
 }
 
 interface NotifierProps {
-   key: GlobalStoreModule;
+    key: GlobalStoreModule;
 }
 
 export abstract class Notifier<T = never> extends EventParser {
-   private notifierKey: GlobalStoreModule;
-   private dataToSend: Record<string, Partial<T> | T> = {};
-   private objectsToDelete: Record<string, Partial<T> | T> = {};
-   private events: EnginePackageEvent[] = [];
-   private multicast: MulticastPackage<T>;
+    private notifierKey: GlobalStoreModule;
+    private dataToSend: Record<string, Partial<T> | T> = {};
+    private objectsToDelete: Record<string, Partial<T> | T> = {};
+    private events: EnginePackageEvent[] = [];
+    private multicast: MulticastPackage<T>;
 
-   constructor(notifierProps: NotifierProps) {
-      super();
-      this.notifierKey = notifierProps.key;
-      this.multicast = this.getEmptyPackage();
-   }
+    constructor(notifierProps: NotifierProps) {
+        super();
+        this.notifierKey = notifierProps.key;
+        this.multicast = this.getEmptyPackage();
+    }
 
-   getNotifierKey = () => this.notifierKey;
+    getReceiverId = (playerCharacterId: string, services: Services) => {
+        const character = services.characterService.getCharacterById(playerCharacterId);
 
-   getEmptyPackage = () => {
-      return { key: this.notifierKey, messages: {} };
-   };
+        if (!character || character.type != CharacterType.Player) {
+            return null;
+        }
 
-   getBroadcast = () => {
-      const dataToSend = this.dataToSend;
-      const toDelete = this.objectsToDelete;
-      const events = this.events;
+        return character.ownerId;
+    }
 
-      this.dataToSend = {};
-      this.objectsToDelete = {};
-      this.events = [];
+    getNotifierKey = () => this.notifierKey;
 
-      const packageToSend: Partial<ModulePackage<any>> = { key: this.notifierKey };
+    getEmptyPackage = () => {
+        return { key: this.notifierKey, messages: {} };
+    };
 
-      if (Object.keys(dataToSend).length) {
-         packageToSend.data = dataToSend;
-      }
+    getBroadcast = () => {
+        const dataToSend = this.dataToSend;
+        const toDelete = this.objectsToDelete;
+        const events = this.events;
 
-      if (Object.keys(toDelete).length) {
-         packageToSend.toDelete = toDelete;
-      }
+        this.dataToSend = {};
+        this.objectsToDelete = {};
+        this.events = [];
 
-      if (events.length) {
-         packageToSend.events = events;
-      }
+        const packageToSend: Partial<ModulePackage<any>> = { key: this.notifierKey };
 
-      return packageToSend;
-   };
+        if (Object.keys(dataToSend).length) {
+            packageToSend.data = dataToSend;
+        }
 
-   getMulticast = () => {
-      const tempMulticast = this.multicast;
+        if (Object.keys(toDelete).length) {
+            packageToSend.toDelete = toDelete;
+        }
 
-      forEach(tempMulticast.messages, (dataPackage, receiver) => {
-         forEach(dataPackage, (dataPackage, updateType) => {
-            if (Object.keys(tempMulticast.messages[receiver][updateType]).length === 0) {
-               delete tempMulticast.messages[receiver][updateType];
+        if (events.length) {
+            packageToSend.events = events;
+        }
+
+        return packageToSend;
+    };
+
+    getMulticast = () => {
+        const tempMulticast = this.multicast;
+
+        forEach(tempMulticast.messages, (dataPackage, receiver) => {
+            forEach(dataPackage, (dataPackage, updateType) => {
+                if (Object.keys(tempMulticast.messages[receiver][updateType]).length === 0) {
+                    delete tempMulticast.messages[receiver][updateType];
+                }
+            });
+        });
+
+        this.multicast = this.getEmptyPackage();
+        return tempMulticast;
+    };
+
+    protected broadcastEvents = ({ events }: { events: EnginePackageEvent[] }) => {
+        this.events = this.events.concat(events);
+    };
+
+    private recursiveRemoveKeys = (toBeCleared, pattern) => {
+        forEach(toBeCleared, (toDelete, key) => {
+            if (pattern[key]) {
+                if (toDelete === null) {
+                    delete toBeCleared[key];
+                } else {
+                    this.recursiveRemoveKeys(toBeCleared[key], pattern[key]);
+
+                    if (Object.keys(toBeCleared[key]).length === 0) {
+                        delete toBeCleared[key];
+                    }
+                }
             }
-         });
-      });
+        });
+    };
 
-      this.multicast = this.getEmptyPackage();
-      return tempMulticast;
-   };
+    protected broadcastObjectsUpdate = ({ objects }: { objects: Record<string, Partial<T> | T> }) => {
+        this.dataToSend = merge({}, this.dataToSend, objects);
 
-   protected broadcastEvents = ({ events }: { events: EnginePackageEvent[] }) => {
-      this.events = this.events.concat(events);
-   };
+        // When some data are assigned again, the revert deletion
+        this.recursiveRemoveKeys(this.objectsToDelete, objects);
+    };
 
-   private recursiveRemoveKeys = (toBeCleared, pattern) => {
-      forEach(toBeCleared, (toDelete, key) => {
-         if (pattern[key]) {
-            if (toDelete === null) {
-               delete toBeCleared[key];
-            } else {
-               this.recursiveRemoveKeys(toBeCleared[key], pattern[key]);
+    protected broadcastObjectsDeletion = ({ objects }: { objects: Record<string, Partial<T> | T> }) => {
+        //TODO: do the same for multicast
+        //   ids.forEach((id) => {
+        //      delete this.dataToSend[id];
+        //   });
+        this.objectsToDelete = merge({}, this.objectsToDelete, objects);
+    };
 
-               if (Object.keys(toBeCleared[key]).length === 0) {
-                  delete toBeCleared[key];
-               }
+    protected multicastMultipleObjectsUpdate = (dataUpdatePackages: { receiverId: string; objects: Record<string, RecursivePartial<T> | T> }[]) => {
+        dataUpdatePackages.forEach((dataUpdatePackage) => {
+            if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
+                this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey, data: {}, toDelete: {}, events: [] };
             }
-         }
-      });
-   };
 
-   protected broadcastObjectsUpdate = ({ objects }: { objects: Record<string, Partial<T> | T> }) => {
-      this.dataToSend = merge({}, this.dataToSend, objects);
+            this.multicast.messages[dataUpdatePackage.receiverId].data = merge(
+                {},
+                this.multicast.messages[dataUpdatePackage.receiverId].data,
+                dataUpdatePackage.objects
+            );
 
-      // When some data are assigned again, the revert deletion
-      this.recursiveRemoveKeys(this.objectsToDelete, objects);
-   };
+            this.recursiveRemoveKeys(this.multicast.messages[dataUpdatePackage.receiverId].toDelete, dataUpdatePackage.objects);
+        });
+    };
 
-   protected broadcastObjectsDeletion = ({ objects }: { objects: Record<string, Partial<T> | T> }) => {
-      //TODO: do the same for multicast
-      //   ids.forEach((id) => {
-      //      delete this.dataToSend[id];
-      //   });
-      this.objectsToDelete = merge({}, this.objectsToDelete, objects);
-   };
+    protected multicastObjectsDeletion = (dataUpdatePackages: { receiverId: string; objects: Record<string, Partial<T> | T> }[]) => {
+        dataUpdatePackages.forEach((dataUpdatePackage) => {
+            if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
+                this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey, data: {}, toDelete: {}, events: [] };
+            }
 
-   protected multicastMultipleObjectsUpdate = (dataUpdatePackages: { receiverId: string; objects: Record<string, RecursivePartial<T> | T> }[]) => {
-      dataUpdatePackages.forEach((dataUpdatePackage) => {
-         if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
-            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey, data: {}, toDelete: {}, events: [] };
-         }
+            this.multicast.messages[dataUpdatePackage.receiverId].toDelete = merge(
+                {},
+                this.multicast.messages[dataUpdatePackage.receiverId].toDelete,
+                dataUpdatePackage.objects
+            );
+        });
+    };
 
-         this.multicast.messages[dataUpdatePackage.receiverId].data = merge(
-            {},
-            this.multicast.messages[dataUpdatePackage.receiverId].data,
-            dataUpdatePackage.objects
-         );
-
-         this.recursiveRemoveKeys(this.multicast.messages[dataUpdatePackage.receiverId].toDelete, dataUpdatePackage.objects);
-      });
-   };
-
-   protected multicastObjectsDeletion = (dataUpdatePackages: { receiverId: string; objects: Record<string, Partial<T> | T> }[]) => {
-      dataUpdatePackages.forEach((dataUpdatePackage) => {
-         if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
-            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey, data: {}, toDelete: {}, events: [] };
-         }
-
-         this.multicast.messages[dataUpdatePackage.receiverId].toDelete = merge(
-            {},
-            this.multicast.messages[dataUpdatePackage.receiverId].toDelete,
-            dataUpdatePackage.objects
-         );
-      });
-   };
-
-   protected multicastEvents = (dataUpdatePackages: { receiverId: string; events: EnginePackageEvent[] }[]) => {
-      dataUpdatePackages.forEach((dataUpdatePackage) => {
-         if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
-            this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey, data: {}, toDelete: {}, events: [] };
-         }
-         this.multicast.messages[dataUpdatePackage.receiverId].events = this.multicast.messages[dataUpdatePackage.receiverId].events.concat(
-            dataUpdatePackage.events
-         );
-      });
-   };
+    protected multicastEvents = (dataUpdatePackages: { receiverId: string; events: EnginePackageEvent[] }[]) => {
+        dataUpdatePackages.forEach((dataUpdatePackage) => {
+            if (!this.multicast.messages[dataUpdatePackage.receiverId]) {
+                this.multicast.messages[dataUpdatePackage.receiverId] = { key: this.notifierKey, data: {}, toDelete: {}, events: [] };
+            }
+            this.multicast.messages[dataUpdatePackage.receiverId].events = this.multicast.messages[dataUpdatePackage.receiverId].events.concat(
+                dataUpdatePackage.events
+            );
+        });
+    };
 }
