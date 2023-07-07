@@ -4,9 +4,12 @@ import React from 'react';
 import { MapManager } from './MapManager';
 
 export const MapWrapper = () => {
-   const activeCharacterId = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER)?.data?.activeCharacterId;
-   const { data: mapSchema } = useEngineModuleReader(GlobalStoreModule.MAP_SCHEMA);
-   const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
+    const activeCharacterId = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER)?.data?.activeCharacterId;
+    const { data: mapSchema, lastUpdateTime: mapSchemaLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.MAP_SCHEMA);
+    const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
 
-   return <MapManager mapSchema={mapSchema} location={characterMovements[activeCharacterId as any]?.location} />;
+    return <MapManager
+        mapSchema={mapSchema} location={characterMovements[activeCharacterId as any]?.location}
+        lastUpdateTime={mapSchemaLastUpdateTime.toString()}
+    />;
 };

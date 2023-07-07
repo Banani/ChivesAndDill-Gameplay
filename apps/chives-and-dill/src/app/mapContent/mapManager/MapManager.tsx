@@ -4,7 +4,7 @@ import * as PIXI from 'pixi.js';
 import React, { useEffect, useState } from 'react';
 import { MapField } from './MapField';
 
-export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y: number } }>(
+export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y: number }, lastUpdateTime: string }>(
     ({ mapSchema, location }) => {
         const [texturesMap, setTexturesMap] = useState({});
 
@@ -46,5 +46,6 @@ export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y:
     },
     (old, newProps) =>
         Math.round(old.location.x / BLOCK_SIZE) === Math.round(newProps.location.x / BLOCK_SIZE) &&
-        Math.round(old.location.y / BLOCK_SIZE) === Math.round(newProps.location.y / BLOCK_SIZE)
+        Math.round(old.location.y / BLOCK_SIZE) === Math.round(newProps.location.y / BLOCK_SIZE) &&
+        old.lastUpdateTime === newProps.lastUpdateTime
 );
