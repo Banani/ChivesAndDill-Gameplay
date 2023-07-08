@@ -285,7 +285,10 @@ export type MapSchema = Record<
 >;
 
 export interface MapDefinition {
-    [key: string]: string[];
+    [key: string]: {
+        upperSpriteId?: string;
+        bottomSpriteId?: string;
+    };
 }
 
 export interface ErrorMessage {

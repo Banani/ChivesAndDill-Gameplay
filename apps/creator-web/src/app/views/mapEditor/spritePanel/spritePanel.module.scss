@@ -29,6 +29,19 @@
 .imageHolder {
     overflow: hidden;
     box-sizing: border-box;
+    position: relative;
+
+    .actions {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        background-color: rgba(#c0c0c0, 0.75);
+
+        &:hover {
+            background-color: rgba(#c0c0c0, 1);
+        }
+    }
 
     .image {
         width: calc(384px * 2.48);

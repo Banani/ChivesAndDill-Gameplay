@@ -29,14 +29,15 @@ export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y:
                     .map((x) =>
                         _.range(Math.round(location.y / BLOCK_SIZE) - BOTTOM_UP_BLOCKS_AMOUNT, Math.round(location.y / BLOCK_SIZE) + BOTTOM_UP_BLOCKS_AMOUNT).map(
                             (y) => {
-                                const sprites = mapSchema.mapDefinition[`${x}:${y}`];
-                                if (!sprites) {
-                                    return <></>;
+                                const sprite = mapSchema.mapDefinition[`${x}:${y}`];
+                                if (!sprite) {
+                                    return <React.Fragment key={`${x}:${y}`}></React.Fragment>;
                                 }
 
-                                return sprites.map((sprite, i) => (
-                                    <MapField texture={texturesMap[sprite]} spriteIndex={sprite} location={{ x, y }} key={`${x}:${y}:${i}`} />
-                                ));
+                                return <React.Fragment key={`${x}:${y}`}>
+                                    {sprite.bottomSpriteId && <MapField texture={texturesMap[sprite.bottomSpriteId]} spriteIndex={sprite.bottomSpriteId} location={{ x, y }} />}
+                                    {sprite.upperSpriteId && <MapField texture={texturesMap[sprite.upperSpriteId]} spriteIndex={sprite.upperSpriteId} location={{ x, y }} />}
+                                </React.Fragment>
                             }
                         )
                     )

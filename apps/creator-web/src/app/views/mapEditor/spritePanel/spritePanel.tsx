@@ -7,6 +7,8 @@ import styles from './spritePanel.module.scss';
 
 import AnimationIcon from '@mui/icons-material/Animation';
 import FolderIcon from '@mui/icons-material/Folder';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Button, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ImageList } from '../../../components';
@@ -35,6 +37,11 @@ export const SpritePanel = () => {
     useEffect(() => {
         setPaginationReset(prev => (prev + 1) % 2)
     }, [filteredSprites]);
+
+    const changeSpriteLevel = (e: any, spriteId: string, position: string) => {
+        e.stopPropagation();
+        mapEditorContext.changeSpritePosition({ spriteId, position });
+    };
 
     return (
         <div className={styles['control-panel']}>
@@ -69,15 +76,20 @@ export const SpritePanel = () => {
                     activeId={mapEditorContext.activeSprite ?? ""}
                     imagesPerLine={3}
                     items={
-                        map(Object.values(filteredSprites).slice(paginationRange.start, paginationRange.end), (sprite: any, id) => {
+                        map(Object.values(filteredSprites).slice(paginationRange.start, paginationRange.end), (sprite: any) => {
                             return {
                                 id: sprite.id,
-                                image: <div className={styles['imageHolder']}><img
-                                    style={{ marginLeft: `${-sprite.x * 100}%`, marginTop: `${-sprite.y * 100}%` }}
-                                    className={styles['image']}
-                                    src={sprite.spriteSheet.indexOf('https') === -1 ? './assets/' + sprite.spriteSheet : sprite.spriteSheet}
-                                    loading="lazy"
-                                /></div>,
+                                image: <div className={styles['imageHolder']}>
+                                    <div className={styles['actions']} onClick={e => changeSpriteLevel(e, sprite.id, sprite.position === "upper" ? "bottom" : 'upper')}>
+                                        {sprite.position === "upper" ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
+                                    </div>
+                                    <img
+                                        style={{ marginLeft: `${-sprite.x * 100}%`, marginTop: `${-sprite.y * 100}%` }}
+                                        className={styles['image']}
+                                        src={sprite.spriteSheet.indexOf('https') === -1 ? './assets/' + sprite.spriteSheet : sprite.spriteSheet}
+                                        loading="lazy"
+                                    />
+                                </div>,
                                 onClick: () => mapEditorContext.setActiveSprite(sprite.id),
                             }
                         })

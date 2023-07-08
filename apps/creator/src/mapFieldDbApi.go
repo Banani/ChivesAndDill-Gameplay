@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"strconv"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -20,7 +21,7 @@ func (m *MapFieldDbApi) saveMapField(mapFields []MapField) {
 	counter := 0
 
 	for _, field := range mapFields {
-		toSave[counter] = bson.D{{"spriteId", field.SpriteId}, {"x", field.X}, {"y", field.Y}, {"_id", strconv.Itoa(int(field.X)) + ":" + strconv.Itoa(int(field.Y))}}
+		toSave[counter] = bson.D{{"positions", field.Positions}, {"x", field.X}, {"y", field.Y}, {"_id", strconv.Itoa(int(field.X)) + ":" + strconv.Itoa(int(field.Y))}}
 		toDelete[counter] = strconv.Itoa(int(field.X)) + ":" + strconv.Itoa(int(field.Y))
 		counter++
 	}
@@ -49,4 +50,14 @@ func (m *MapFieldDbApi) getSprites() map[string]Sprite {
 
 func (m *MapFieldDbApi) getMapFields() map[string]MapField {
 	return getAllItemsFromDb[MapField](m.application.dbClient, "mapFields")
+}
+
+func (m *MapFieldDbApi) updateSprite(sprite Sprite) {
+	dbClient := m.application.dbClient
+	collection := dbClient.db.Collection("sprites")
+
+	toSave := bson.D{{"$set", sprite}}
+
+	objectId, _ := primitive.ObjectIDFromHex(sprite.Id)
+	collection.UpdateOne(context.TODO(), bson.M{"_id": objectId}, toSave)
 }

@@ -47,23 +47,23 @@ export class MapService extends EventParser {
 
         services.dbService.getCachedData("mapFields", (mapFields) => {
             if (!realMapFieldsFetched) {
-                this.mapDefinition = mapValues(mapFields, (mapField) => [mapField.spriteId]);
+                this.mapDefinition = mapValues(mapFields, (mapField) => mapField.positions);
             }
         });
 
         services.dbService.fetchDataFromDb("mapFields").then((mapFields) => {
             realMapFieldsFetched = true;
-            this.mapDefinition = mapValues(mapFields, (mapField) => [mapField.spriteId]);
+            this.mapDefinition = mapValues(mapFields, (mapField) => mapField.positions);
         });
 
         services.dbService.watchForDataChanges("mapFields", (data) => {
             if (data.operationType === "insert") {
-                const sprites = [data.fullDocument.spriteId];
-                this.mapDefinition[data.documentKey['_id']] = sprites;
+                const positions = data.fullDocument.positions;
+                this.mapDefinition[data.documentKey['_id']] = positions;
                 this.engineEventCrator.asyncCeateEvent<MapDefinitionUpdatedEvent>({
                     type: MapEvents.MapDefinitionUpdated,
                     mapDefinition: {
-                        [data.documentKey['_id']]: sprites
+                        [data.documentKey['_id']]: positions
                     },
                 });
             }
