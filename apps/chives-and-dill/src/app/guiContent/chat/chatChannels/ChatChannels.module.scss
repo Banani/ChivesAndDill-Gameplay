@@ -1,83 +1,78 @@
 .chatChannels {
-    box-sizing: content-box;
-    width: 600px;
-    height: 548px;
-    background:url("../../../../assets/spritesheets/backgrounds/chatChannels.PNG");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    position: absolute;
-    top: 200px;
-    left: 200px;
-    display: flex;
-    flex-direction: column;
+   box-sizing: content-box;
+   width: 600px;
+   height: 548px;
+   background: url('../../../../assets/spritesheets/backgrounds/chatChannels.PNG');
+   background-repeat: no-repeat;
+   background-size: 100% 100%;
+   position: absolute;
+   top: 200px;
+   left: 200px;
+   display: flex;
+   flex-direction: column;
 
+   .channelName {
+      padding: 10px;
+      background: transparent;
+      border: none;
+   }
 
-    .channelName {
-        padding: 10px;
-        background: transparent;
-        border: none;
-        cursor: pointer;
+   .contentHolder {
+      display: flex;
+      flex: 1;
+      max-height: 100%;
+      overflow: hidden;
 
-        
-    }
+      .objectList {
+         margin: 40px 20px 5px 30px;
+         max-width: 50%;
+         box-sizing: border-box;
+         overflow-y: scroll;
 
-    .contentHolder {
-        display: flex;
-        flex: 1;
-        max-height: 100%;
-        overflow: hidden;
+         &.channelList {
+            flex: 6;
+         }
 
-        .objectList {
-            margin: 40px 20px 5px 30px;
-            max-width: 50%;
-            box-sizing: border-box;
-            overflow-y: scroll;
+         &.memberList {
+            flex: 8;
+         }
 
-            &.channelList {
-                flex: 6;
-            }
-            
-            &.memberList {
-                flex: 8;
-            }
+         .listElement {
+            max-width: 100%;
+            display: flex;
+            color: white;
 
-            .listElement {
-                max-width: 100%;
-                display: flex;
-                color: white;
-
-                .crown {
-                    color: gold;
-                    height: 16px;
-                    margin-right: 8px;
-                }
-
-                .memberName {
-                    margin-left: 24px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                }
-
-                .crown + .memberName {
-                    margin-left: 0;
-                }
-                
-                &:hover {
-                    color: gold;
-                }
+            .crown {
+               color: gold;
+               height: 16px;
+               margin-right: 8px;
             }
 
-        }
-    }
+            .memberName {
+               margin-left: 24px;
+               overflow: hidden;
+               text-overflow: ellipsis;
+               white-space: nowrap;
+            }
 
-    .actionHolder {
-        display: flex;
-        padding: 7.5px;
-        justify-content: flex-end;
+            .crown + .memberName {
+               margin-left: 0;
+            }
 
-        .actionButton {
-            margin-left: 5px;
-        }
-    }
+            &:hover {
+               color: gold;
+            }
+         }
+      }
+   }
+
+   .actionHolder {
+      display: flex;
+      padding: 7.5px;
+      justify-content: flex-end;
+
+      .actionButton {
+         margin-left: 5px;
+      }
+   }
 }

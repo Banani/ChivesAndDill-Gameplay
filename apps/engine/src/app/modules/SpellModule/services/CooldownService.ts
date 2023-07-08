@@ -1,57 +1,59 @@
-import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { CharacterEngineEvents, CharacterRemovedEvent, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
-import { PlayerCastedSpellEvent, PlayerCastSpellEvent, SpellEngineEvents } from '../Events';
-import { Spell } from '../types/SpellTypes';
+import { PlayerCastSpellEvent, PlayerCastedSpellEvent, SpellEngineEvents } from '../Events';
 
 export class CooldownService extends EventParser {
-   cooldownHistoryPerUserSpells: Record<string, Record<string, number>> = {};
+    spellsAvailabilityPerUser: Record<string, Record<string, number>> = {};
 
-   constructor() {
-      super();
-      this.eventsToHandlersMap = {
-         [SpellEngineEvents.PlayerCastedSpell]: this.handlePlayerCastedSpell,
-         [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
-         [CharacterEngineEvents.CharacterRemoved]: this.handleCharacterRemoved,
-         [SpellEngineEvents.PlayerCastSpell]: this.handlePlayerCastSpell,
-         // TODO: CLEAR OLD VALUES ABOUT MONSTER WHEN IT DIES
-      };
-   }
+    constructor() {
+        super();
+        this.eventsToHandlersMap = {
+            [SpellEngineEvents.PlayerCastedSpell]: this.handlePlayerCastedSpell,
+            [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
+            [CharacterEngineEvents.CharacterRemoved]: this.handleCharacterRemoved,
+            [SpellEngineEvents.PlayerCastSpell]: this.handlePlayerCastSpell,
+            // TODO: CLEAR OLD VALUES ABOUT MONSTER WHEN IT DIES
+        };
+    }
 
-   init(engineEventCrator: EngineEventCrator) {
-      super.init(engineEventCrator);
-   }
+    init(engineEventCrator: EngineEventCrator) {
+        super.init(engineEventCrator);
+    }
 
-   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
-      this.cooldownHistoryPerUserSpells[event.character.id] = {};
-   };
+    handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
+        this.spellsAvailabilityPerUser[event.character.id] = {};
+    };
 
-   handlePlayerCastedSpell: EngineEventHandler<PlayerCastedSpellEvent> = ({ event }) => {
-      if (event.casterId) {
-         this.cooldownHistoryPerUserSpells[event.casterId][event.spell.name] = Date.now();
-      }
-   };
+    handlePlayerCastedSpell: EngineEventHandler<PlayerCastedSpellEvent> = ({ event }) => {
+        if (event.casterId) {
+            this.spellsAvailabilityPerUser[event.casterId][event.spell.id] = Date.now() + event.spell.cooldown;
+        }
+    };
 
-   handleCharacterRemoved: EngineEventHandler<CharacterRemovedEvent> = ({ event }) => {
-      delete this.cooldownHistoryPerUserSpells[event.character.id];
-   };
+    handleCharacterRemoved: EngineEventHandler<CharacterRemovedEvent> = ({ event }) => {
+        delete this.spellsAvailabilityPerUser[event.character.id];
+    };
 
-   isSpellAvailable = (characterId: string, spell: Spell) => {
-      if (!this.cooldownHistoryPerUserSpells[characterId]) {
-         throw new Error('Character not registered');
-      }
+    isSpellAvailable = (characterId: string, spellId: string) => {
+        if (!this.spellsAvailabilityPerUser[characterId]) {
+            throw new Error('Character not registered');
+        }
 
-      const spellLastCast = this.cooldownHistoryPerUserSpells[characterId][spell.name];
+        const spellAvailability = this.spellsAvailabilityPerUser[characterId][spellId];
 
-      return spellLastCast ? Date.now() - spellLastCast > spell.cooldown : true;
-   };
+        if (!spellAvailability) {
+            return true;
+        }
 
-   handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event }) => {
-      if (event.casterId) {
-         // TODO: Bug, it should happen when spell was really cast, not when player only tries to do it
-         this.cooldownHistoryPerUserSpells[event.casterId][event.spell.name] = Date.now();
-      }
-   };
+        return Date.now() > spellAvailability;
+    };
+
+    handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event }) => {
+        if (event.casterId) {
+            // TODO: Bug, it should happen when spell was really cast, not when player only tries to do it
+            this.spellsAvailabilityPerUser[event.casterId][event.spell.id] = Date.now() + event.spell.cooldown;
+        }
+    };
 }

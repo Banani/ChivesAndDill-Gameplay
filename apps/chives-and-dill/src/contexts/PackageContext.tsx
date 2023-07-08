@@ -11,6 +11,7 @@ export const PackageContext = React.createContext<PackageContextReturns>(null);
 
 export const EngineContexts: Record<GlobalStoreModule, React.Context<any>> = {
     [GlobalStoreModule.CHARACTER_MOVEMENTS]: React.createContext<GlobalStore[GlobalStoreModule.CHARACTER_MOVEMENTS]>(null),
+    [GlobalStoreModule.CHARACTER_CLASS]: React.createContext<GlobalStore[GlobalStoreModule.CHARACTER_CLASS]>(null),
     [GlobalStoreModule.PROJECTILE_MOVEMENTS]: React.createContext<GlobalStore[GlobalStoreModule.PROJECTILE_MOVEMENTS]>(null),
     [GlobalStoreModule.SPELL_CHANNELS]: React.createContext<GlobalStore[GlobalStoreModule.SPELL_CHANNELS]>(null),
     [GlobalStoreModule.CHARACTER_POWER_POINTS]: React.createContext<GlobalStore[GlobalStoreModule.CHARACTER_POWER_POINTS]>(null),
@@ -42,6 +43,8 @@ export const EngineContexts: Record<GlobalStoreModule, React.Context<any>> = {
     [GlobalStoreModule.EQUIPMENT]: React.createContext<GlobalStore[GlobalStoreModule.EQUIPMENT]>(null),
     [GlobalStoreModule.ATTRIBUTES]: React.createContext<GlobalStore[GlobalStoreModule.ATTRIBUTES]>(null),
     [GlobalStoreModule.COMBAT_STATE]: React.createContext<GlobalStore[GlobalStoreModule.COMBAT_STATE]>(null),
+    [GlobalStoreModule.AVAILABLE_SPELLS]: React.createContext<GlobalStore[GlobalStoreModule.AVAILABLE_SPELLS]>(null),
+    [GlobalStoreModule.SPELL_DEFINITION]: React.createContext<GlobalStore[GlobalStoreModule.SPELL_DEFINITION]>(null),
 };
 
 const deleteRequestedFields = (data: any, pathToDelete: any) => {

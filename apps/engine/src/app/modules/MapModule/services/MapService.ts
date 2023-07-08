@@ -1,10 +1,12 @@
 import { MapDefinition, MapSchema } from '@bananos/types';
+import { mapValues } from 'lodash';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { NewPlayerCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import { MapDefinitionUpdatedEvent, MapEvents, MapUpdatedEvent } from '../Events';
-import { MapDbApi } from '../db';
+
+const BLOCK_SIZE = 32;
 
 export class MapService extends EventParser {
     mapDefinition: MapDefinition = {};
@@ -17,16 +19,44 @@ export class MapService extends EventParser {
         };
     }
 
+    mapMapField = (mapField) => ({
+        location: {
+            x: mapField.x * BLOCK_SIZE,
+            y: mapField.y * BLOCK_SIZE,
+        },
+        path: "http://localhost:3000/photo?path=" + mapField.spriteSheet,
+    })
+
     init(engineEventCrator: EngineEventCrator, services) {
         super.init(engineEventCrator);
-        const mapDbApi = new MapDbApi(services.dbService.getDb());
-        mapDbApi.fetchMapDefinition().then((mapDefinition) => {
-            this.mapDefinition = mapDefinition;
+
+        let realMapSchemaFetched = false;
+
+        services.dbService.getCachedData("sprites", (mapFields) => {
+            if (!realMapSchemaFetched) {
+                this.mapSchema = mapValues(mapFields, this.mapMapField);
+            }
         });
-        mapDbApi.fetchMapSchema().then((mapSchema) => {
-            this.mapSchema = mapSchema;
+
+        services.dbService.fetchDataFromDb("sprites").then((mapFields) => {
+            realMapSchemaFetched = true;
+            this.mapSchema = mapValues(mapFields, this.mapMapField);
         });
-        mapDbApi.watchForMapDefinition((data) => {
+
+        let realMapFieldsFetched = false;
+
+        services.dbService.getCachedData("mapFields", (mapFields) => {
+            if (!realMapFieldsFetched) {
+                this.mapDefinition = mapValues(mapFields, (mapField) => [mapField.spriteId]);
+            }
+        });
+
+        services.dbService.fetchDataFromDb("mapFields").then((mapFields) => {
+            realMapFieldsFetched = true;
+            this.mapDefinition = mapValues(mapFields, (mapField) => [mapField.spriteId]);
+        });
+
+        services.dbService.watchForDataChanges("mapFields", (data) => {
             if (data.operationType === "insert") {
                 const sprites = [data.fullDocument.spriteId];
                 this.mapDefinition[data.documentKey['_id']] = sprites;

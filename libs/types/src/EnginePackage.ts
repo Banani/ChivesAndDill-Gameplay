@@ -8,16 +8,18 @@ import type {
     EquipmentTrack,
     ItemTemplate,
     NpcStock,
+    SpellDefinition,
 } from '.';
 import type { Attributes, CharacterEvents, MonsterCorpse } from './CharacterPackage';
 import type { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
 import type { CommonClientActions, CommonClientMessages } from './engineEvents';
 import type { ExternalQuestProgress, QuestSchema } from './QuestPackage';
-import type { CharacterDirection } from './shared';
+import type { CharacterClassPreview, CharacterDirection } from './shared';
 
 export enum GlobalStoreModule {
     CHARACTER = 'character',
+    CHARACTER_CLASS = "characterClass",
     ACTIVE_CHARACTER = 'activeCharacter',
     AREA_TIME_EFFECTS = 'areaTimeEffects',
     CHARACTER_MOVEMENTS = 'characterMovements',
@@ -48,7 +50,9 @@ export enum GlobalStoreModule {
     QUEST_PROGRESS = 'questProgress',
     NPC_QUESTS = 'npcQuests',
     ATTRIBUTES = 'attributes',
-    COMBAT_STATE = "combatState"
+    COMBAT_STATE = "combatState",
+    AVAILABLE_SPELLS = "availableSpells",
+    SPELL_DEFINITION = "spellDefinition"
 }
 
 export interface PartialEnginePackage<Data> {
@@ -59,6 +63,7 @@ export interface PartialEnginePackage<Data> {
 
 export interface EnginePackage {
     [GlobalStoreModule.CHARACTER_MOVEMENTS]: PartialEnginePackage<CharacterMovement>;
+    [GlobalStoreModule.CHARACTER_CLASS]: PartialEnginePackage<CharacterClassPreview>;
     [GlobalStoreModule.PROJECTILE_MOVEMENTS]: PartialEnginePackage<ProjectileMovement>;
     [GlobalStoreModule.SPELL_CHANNELS]: PartialEnginePackage<ChannelingTrack>;
     [GlobalStoreModule.CHARACTER_POWER_POINTS]: PartialEnginePackage<PowerPointsTrack>;
@@ -89,6 +94,8 @@ export interface EnginePackage {
     [GlobalStoreModule.EQUIPMENT]: PartialEnginePackage<EquipmentTrack>;
     [GlobalStoreModule.ATTRIBUTES]: PartialEnginePackage<Attributes>;
     [GlobalStoreModule.COMBAT_STATE]: PartialEnginePackage<boolean>;
+    [GlobalStoreModule.AVAILABLE_SPELLS]: PartialEnginePackage<boolean>;
+    [GlobalStoreModule.SPELL_DEFINITION]: PartialEnginePackage<SpellDefinition>;
 }
 
 interface StoreModule<Data> {
@@ -100,6 +107,7 @@ interface StoreModule<Data> {
 
 export interface GlobalStore {
     [GlobalStoreModule.CHARACTER_MOVEMENTS]: StoreModule<CharacterMovement>;
+    [GlobalStoreModule.CHARACTER_CLASS]: StoreModule<CharacterClassPreview>;
     [GlobalStoreModule.PROJECTILE_MOVEMENTS]: StoreModule<ProjectileMovement>;
     [GlobalStoreModule.SPELL_CHANNELS]: StoreModule<ChannelingTrack>;
     [GlobalStoreModule.CHARACTER_POWER_POINTS]: StoreModule<PowerPointsTrack>;
@@ -131,6 +139,8 @@ export interface GlobalStore {
     [GlobalStoreModule.EQUIPMENT]: StoreModule<EquipmentTrack>;
     [GlobalStoreModule.ATTRIBUTES]: StoreModule<Attributes>;
     [GlobalStoreModule.COMBAT_STATE]: StoreModule<boolean>;
+    [GlobalStoreModule.AVAILABLE_SPELLS]: StoreModule<boolean>;
+    [GlobalStoreModule.SPELL_DEFINITION]: StoreModule<SpellDefinition>;
 }
 
 export interface ActiveCharacterStorePart {

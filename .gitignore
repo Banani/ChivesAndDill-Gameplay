@@ -19,3 +19,4 @@ Thumbs.db
 database.yml
 database.ts
 tmp
+cachedDb/*

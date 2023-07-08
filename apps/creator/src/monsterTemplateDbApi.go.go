@@ -97,5 +97,5 @@ func (m *MonsterTemplateDbApi) deleteMonster(monsterId string) {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("monsterTemplates")
 
-	collection.UpdateMany(context.TODO(), bson.M{}, bson.M{"$pull": bson.M{"monsterRespawns": bson.M{"_id": monsterId}}})
+	collection.UpdateMany(context.TODO(), bson.M{}, bson.M{"$pull": bson.M{"monsterRespawns": bson.M{"id": monsterId}}})
 }

@@ -1,14 +1,13 @@
 .wrapper {
-    position: absolute;    
-    background: rgba(0,0,0, 0.7);
-    color: #eee;
-    border: 1px solid #eee;
-    border-radius: 3px;
-    padding: 8px;
-    z-index: 10;
+   position: absolute;
+   background: rgba(0, 0, 0, 0.7);
+   color: #eee;
+   border: 1px solid #eee;
+   border-radius: 3px;
+   padding: 8px;
+   z-index: 10;
 
-    .option:hover {
-        color: gold;
-        cursor: pointer;
-    }
+   .option:hover {
+      color: gold;
+   }
 }

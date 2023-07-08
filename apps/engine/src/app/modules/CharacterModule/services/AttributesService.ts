@@ -7,73 +7,75 @@ import { ItemEngineEvents, ItemEquippedEvent, ItemStrippedEvent } from '../../It
 import { AttributesUpdatedEvent, CharacterEngineEvents, NewCharacterCreatedEvent } from '../Events';
 
 export class AttributesService extends EventParser {
-   stats: Record<string, Attributes> = {};
+    stats: Record<string, Attributes> = {};
 
-   constructor() {
-      super();
-      this.eventsToHandlersMap = {
-         [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
-         [ItemEngineEvents.ItemEquipped]: this.handleItemEquipped,
-         [ItemEngineEvents.ItemStripped]: this.handleItemStripped,
-      };
-   }
+    constructor() {
+        super();
+        this.eventsToHandlersMap = {
+            [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
+            [ItemEngineEvents.ItemEquipped]: this.handleItemEquipped,
+            [ItemEngineEvents.ItemStripped]: this.handleItemStripped,
+        };
+    }
 
-   handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
-      this.stats[event.character.id] = {
-         armor: 0,
-         stamina: 0,
-         agility: 0,
-         intelect: 0,
-         strength: 0,
-         spirit: 0,
-      };
+    handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event }) => {
+        this.stats[event.character.id] = {
+            armor: 0,
+            stamina: 20,
+            agility: 20,
+            intelect: 20,
+            strength: 20,
+            spirit: 20,
+        };
 
-      this.engineEventCrator.asyncCeateEvent<AttributesUpdatedEvent>({
-         type: CharacterEngineEvents.AttributesUpdated,
-         characterId: event.character.id,
-         attributes: this.stats[event.character.id],
-      });
-   };
+        this.engineEventCrator.asyncCeateEvent<AttributesUpdatedEvent>({
+            type: CharacterEngineEvents.AttributesUpdated,
+            characterId: event.character.id,
+            attributes: this.stats[event.character.id],
+        });
+    };
 
-   handleItemStripped: EngineEventHandler<ItemStrippedEvent> = ({ event, services }) => {
-      this.recalculateAttributes(event.characterId, services);
-   };
+    handleItemStripped: EngineEventHandler<ItemStrippedEvent> = ({ event, services }) => {
+        this.recalculateAttributes(event.characterId, services);
+    };
 
-   handleItemEquipped: EngineEventHandler<ItemEquippedEvent> = ({ event, services }) => {
-      this.recalculateAttributes(event.characterId, services);
-   };
+    handleItemEquipped: EngineEventHandler<ItemEquippedEvent> = ({ event, services }) => {
+        this.recalculateAttributes(event.characterId, services);
+    };
 
-   recalculateAttributes = (characterId: string, services: Services) => {
-      const attributes = {
-         armor: 0,
-         stamina: 0,
-         agility: 0,
-         intelect: 0,
-         strength: 0,
-         spirit: 0,
-      };
+    recalculateAttributes = (characterId: string, services: Services) => {
+        const attributes = {
+            armor: 0,
+            stamina: 20,
+            agility: 20,
+            intelect: 20,
+            strength: 20,
+            spirit: 20,
+        };
 
-      const equipment = services.equipmentService.getCharacterEquipment(characterId);
+        const equipment = services.equipmentService.getCharacterEquipment(characterId);
 
-      forEach(equipment, (itemId) => {
-         if (itemId) {
-            const item = services.itemService.getItemById(itemId);
-            const itemTemplate = services.itemTemplateService.getData()[item.itemTemplateId] as EquipmentItemTemplate;
+        forEach(equipment, (itemId) => {
+            if (itemId) {
+                const item = services.itemService.getItemById(itemId);
+                const itemTemplate = services.itemTemplateService.getData()[item.itemTemplateId] as EquipmentItemTemplate;
 
-            forEach(attributes, (_, attr) => {
-               if (itemTemplate[attr]) {
-                  attributes[attr] += itemTemplate[attr];
-               }
-            });
-         }
-      });
+                forEach(attributes, (_, attr) => {
+                    if (itemTemplate[attr]) {
+                        attributes[attr] += itemTemplate[attr];
+                    }
+                });
+            }
+        });
 
-      this.stats[characterId] = attributes;
+        this.stats[characterId] = attributes;
 
-      this.engineEventCrator.asyncCeateEvent<AttributesUpdatedEvent>({
-         type: CharacterEngineEvents.AttributesUpdated,
-         characterId: characterId,
-         attributes: this.stats[characterId],
-      });
-   };
+        this.engineEventCrator.asyncCeateEvent<AttributesUpdatedEvent>({
+            type: CharacterEngineEvents.AttributesUpdated,
+            characterId: characterId,
+            attributes: this.stats[characterId],
+        });
+    };
+
+    getAllStats = () => this.stats;
 }

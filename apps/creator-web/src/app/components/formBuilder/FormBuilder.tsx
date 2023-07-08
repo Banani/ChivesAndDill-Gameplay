@@ -75,7 +75,7 @@ export const FormBuilder: FunctionComponent<FormBuilderProps> = ({ schema }) => 
 
     return <>
         {_.chain(schema)
-            .pickBy((field, fieldName) => field.hidden !== true && field.prerequisite?.(getFieldValue(fieldName)) !== false)
+            .pickBy((field) => field.hidden !== true && field.prerequisite?.(values) !== false)
             .map((field, fieldName) => fieldBuilders[field.type](field, fieldName, getFieldValue(fieldName)))
             .value()}
     </>

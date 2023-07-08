@@ -26,7 +26,6 @@ export const SpellActions = () => {
 
         const spellSchema = getValues() as unknown as Spell;
 
-
         if (activeSpell?.id) {
             updateSpell(spellSchema);
         } else {

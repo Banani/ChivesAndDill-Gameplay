@@ -49,7 +49,7 @@ interface BaseSubSpell {
 }
 
 interface EffectHolders {
-    spellEffectsOnTarget?: AllEffects[];
+    spellEffectsOnTarget?: Record<string, AllEffects>;
     spellEffectsOnDirectionLocation?: AllEffects[];
     spellEffectsOnCasterOnSpellHit?: AllEffects[];
 }

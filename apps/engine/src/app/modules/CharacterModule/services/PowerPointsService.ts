@@ -1,10 +1,8 @@
 import type { PowerPointsTrack } from '@bananos/types';
 import { HealthPointsSource } from '@bananos/types';
-import { clone } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
-import { Classes } from '../../../types/Classes';
 import type {
     AddCharacterHealthPointsEvent,
     AddCharacterSpellPowerEvent,
@@ -19,33 +17,6 @@ import type {
     TakeCharacterSpellPowerEvent,
 } from '../Events';
 import { CharacterEngineEvents } from '../Events';
-
-const classesBaseStats: Record<Classes, PowerPointsTrack> = {
-    [Classes.Tank]: {
-        currentHp: 400,
-        maxHp: 400,
-        currentSpellPower: 0,
-        maxSpellPower: 100,
-    },
-    [Classes.Healer]: {
-        currentHp: 25000,
-        maxHp: 25000,
-        currentSpellPower: 2000,
-        maxSpellPower: 2000,
-    },
-    [Classes.Hunter]: {
-        currentHp: 300,
-        maxHp: 300,
-        currentSpellPower: 100,
-        maxSpellPower: 100,
-    },
-    [Classes.Mage]: {
-        currentHp: 300,
-        maxHp: 300,
-        currentSpellPower: 2000,
-        maxSpellPower: 2000,
-    },
-};
 
 export class PowerPointsService extends EventParser {
     private powerPoints: Record<string, PowerPointsTrack> = {};
@@ -64,12 +35,20 @@ export class PowerPointsService extends EventParser {
 
     handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event, services }) => {
         if (event.character.type === CharacterType.Player) {
-            this.powerPoints[event.character.id] = clone(classesBaseStats[event.character.class]);
+            const characterClass = services.characterClassService.getData()[event.character.characterClassId];
+
+            this.powerPoints[event.character.id] = {
+                currentHp: characterClass.maxHp,
+                maxHp: characterClass.maxHp,
+                currentSpellPower: characterClass.maxSpellPower,
+                maxSpellPower: characterClass.maxSpellPower,
+            };
         }
 
         if (event.character.type === CharacterType.Monster) {
             const monsterRespawn = services.monsterRespawnTemplateService.getData()[event.character.respawnId];
             const monsterTemplate = services.monsterTemplateService.getData()[monsterRespawn.characterTemplateId];
+
             this.powerPoints[event.character.id] = {
                 currentHp: monsterTemplate.healthPoints,
                 maxHp: monsterTemplate.healthPoints,
@@ -80,6 +59,7 @@ export class PowerPointsService extends EventParser {
         // TODO: powinno byc jakies wspolne rozwiazanie dla wszystkich
         if (event.character.type === CharacterType.Npc) {
             const template = services.npcTemplateService.getData()[event.character.templateId];
+
             this.powerPoints[event.character.id] = {
                 currentHp: template.healthPoints,
                 maxHp: template.healthPoints,

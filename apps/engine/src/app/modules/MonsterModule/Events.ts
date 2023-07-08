@@ -1,6 +1,7 @@
+import { Spell } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 import { CharacterRespawn } from '../../types/CharacterRespawn';
-import { Spell } from '../SpellModule/types/SpellTypes';
+import { MonsterTemplateDb } from './db';
 import { Monster } from './types';
 
 export enum MonsterEngineEvents {
@@ -21,7 +22,10 @@ export enum MonsterEngineEvents {
     MonsterLostPlayerCharacter = 'MonsterLostPlayerCharacter',
 
     CharacterCombatStarted = 'CharacterCombatStarted',
-    CharacterCombatFinished = 'CharacterCombatFinished'
+    CharacterCombatFinished = 'CharacterCombatFinished',
+
+    MonsterTemplateFetchedFromDb = "MonsterTemplateFetchedFromDb",
+    MonsterRespawnsUpdated = "MonsterRespawnsUpdated"
 }
 
 export interface CreateNewMonsterEvent extends EngineEvent {
@@ -89,6 +93,16 @@ export interface CharacterCombatFinishedEvent extends EngineEvent {
     playerCharacterId: string;
 }
 
+export interface MonsterRespawnsUpdatedEvent extends EngineEvent {
+    type: MonsterEngineEvents.MonsterRespawnsUpdated;
+    respawnIds: string[];
+}
+
+export interface MonsterTemplateFetchedFromDbEvent extends EngineEvent {
+    type: MonsterEngineEvents.MonsterTemplateFetchedFromDb;
+    monsterTemplateDbRecords: Record<string, MonsterTemplateDb>;
+}
+
 export interface MonsterEngineEventsMap {
     [MonsterEngineEvents.CreateNewMonster]: EngineEventHandler<CreateNewMonsterEvent>;
     [MonsterEngineEvents.NewMonsterCreated]: EngineEventHandler<NewMonsterCreatedEvent>;
@@ -103,4 +117,6 @@ export interface MonsterEngineEventsMap {
     [MonsterEngineEvents.MonsterLostPlayerCharacter]: EngineEventHandler<MonsterLostPlayerCharacterEvent>;
     [MonsterEngineEvents.CharacterCombatStarted]: EngineEventHandler<CharacterCombatStartedEvent>;
     [MonsterEngineEvents.CharacterCombatFinished]: EngineEventHandler<CharacterCombatFinishedEvent>;
+    [MonsterEngineEvents.MonsterRespawnsUpdated]: EngineEventHandler<MonsterRespawnsUpdatedEvent>;
+    [MonsterEngineEvents.MonsterTemplateFetchedFromDb]: EngineEventHandler<MonsterTemplateFetchedFromDbEvent>;
 }

@@ -1,14 +1,12 @@
 .Button {
-    background-color: #640103;
-    color: #f5d100;
-    border-radius: 4px;
-    padding: 2px 15px;
-    cursor: pointer;
-    font-size: 11px;
+   background-color: #640103;
+   color: #f5d100;
+   border-radius: 4px;
+   padding: 2px 15px;
+   font-size: 11px;
 
-    &:disabled {
-        background-color: #353435;
-        color: #808080;
-        cursor: default;
-    }
+   &:disabled {
+      background-color: #353435;
+      color: #808080;
+   }
 }

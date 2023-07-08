@@ -52,26 +52,27 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
       </div>
    );
 
-   const currentQuests = (
-      _.chain(activeNpcQuests)
-         .pickBy((_, questId) => questProgress?.[questId])
-         .map((_, questId) => questItem(questId))
-         .value()
-   );
+   const currentQuests = _.chain(activeNpcQuests)
+      .pickBy((_, questId) => questProgress?.[questId])
+      .map((_, questId) => questItem(questId))
+      .value();
 
-   const availableQuests = (
-      _.chain(activeNpcQuests)
-         .pickBy((_, questId) => !questProgress?.[questId])
-         .map((_, questId) => questItem(questId))
-         .value()
-   );
+   const availableQuests = _.chain(activeNpcQuests)
+      .pickBy((_, questId) => !questProgress?.[questId])
+      .map((_, questId) => questItem(questId))
+      .value();
 
    return activeNpc ? (
       <div className={styles.NpcModal}>
          <ModalHeader activeNpc={activeNpc} closeNpcModal={closeNpcModal} />
          <div className={styles.ContentWrapper}>
             <div className={styles.SectionText}>Cześć!</div>
-            {activeNpc.stock ? <div className={styles.TradeModal} onClick={() => setCurrentModal(NpcModalView.Trade)}>Show me your wares.</div> : null}
+            {activeNpc.stock ? (
+               <div className={styles.TradeModalContainer} onClick={() => setCurrentModal(NpcModalView.Trade)}>
+                  <img src="../../../../../assets/spritesheets/icons/tradeIcon.png" />
+                  <div className={styles.TradeModal}>Show me your wares.</div>
+               </div>
+            ) : null}
             {currentQuests.length > 0 ? <h3 className={styles.SectionHeader}>Current Quests</h3> : null}
             {currentQuests}
             {availableQuests.length > 0 ? <h3 className={styles.SectionHeader}>Available Quests</h3> : null}

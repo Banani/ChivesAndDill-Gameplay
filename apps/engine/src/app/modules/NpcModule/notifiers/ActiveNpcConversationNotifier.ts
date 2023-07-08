@@ -1,6 +1,6 @@
 import { ActiveNpcConversation, GlobalStoreModule, NpcClientMessages } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
     ConversationWithNpcEndedEvent,
@@ -40,23 +40,23 @@ export class ActiveNpcConversationNotifier extends Notifier<ActiveNpcConversatio
     };
 
     handleConversationWithNpcStarted: EngineEventHandler<ConversationWithNpcStartedEvent> = ({ event, services }) => {
-        const character = services.characterService.getCharacterById(event.characterId);
-        if (character.type != CharacterType.Player) {
+        const receiverId = this.getReceiverId(event.characterId, services);
+        if (!receiverId) {
             return;
         }
 
-        this.multicastMultipleObjectsUpdate([{ receiverId: character.ownerId, objects: { [character.id]: { npcId: event.npcId } } }]);
+        this.multicastMultipleObjectsUpdate([{ receiverId, objects: { [event.characterId]: { npcId: event.npcId } } }]);
     };
 
     handleConversationWithNpcEnded: EngineEventHandler<ConversationWithNpcEndedEvent> = ({ event, services }) => {
-        const character = services.characterService.getCharacterById(event.characterId);
-        if (character.type != CharacterType.Player) {
+        const receiverId = this.getReceiverId(event.characterId, services);
+        if (!receiverId) {
             return;
         }
 
         this.multicastObjectsDeletion([
             {
-                receiverId: character.ownerId,
+                receiverId,
                 objects: { [event.characterId]: null },
             },
         ]);

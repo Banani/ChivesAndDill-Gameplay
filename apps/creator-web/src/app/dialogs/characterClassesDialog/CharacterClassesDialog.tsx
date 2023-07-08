@@ -32,7 +32,7 @@ const DefaultCharacterClass: CharacterClass = {
 
 export const CharacterClassesDialog = () => {
     const { activeCharacterClass, setActiveCharacterClass } = useContext(CharacterClassesContext);
-    let defaultCharacterClass = activeCharacterClass?.id ? merge(DefaultCharacterClass, activeCharacterClass) : DefaultCharacterClass;
+    let defaultCharacterClass = activeCharacterClass?.id ? merge({}, DefaultCharacterClass, activeCharacterClass) : DefaultCharacterClass;
 
     const [activeTab, setActiveTab] = useState<CharacterClassesDialogTabs>(CharacterClassesDialogTabs.Default);
     const changeActiveTab = (event: React.SyntheticEvent, newValue: CharacterClassesDialogTabs) => {

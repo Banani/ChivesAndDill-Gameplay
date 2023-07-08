@@ -1,63 +1,63 @@
 .modalContainer {
-  width: 425px;
-  background-color: black;
-  position: absolute;
-  top: 25%;
-  right: 0;
-  left: 0;
-  margin: auto;
-  padding: 25px;
-  border: 2px solid #e6e6e6;
-  border-radius: 50px;
-  
-  .modalForm {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+    width: 425px;
+    background-color: black;
+    position: absolute;
+    top: 25%;
+    right: 0;
+    left: 0;
+    margin: auto;
+    padding: 25px;
+    border: 2px solid #e6e6e6;
+    border-radius: 50px;
 
-    .inputContainer {
-      margin-top: 25px;
-      display: flex;
-      justify-content: space-between;
-      width: 65%;
-    }
+    .modalForm {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
 
-    .formHeader {
-      color: white;
-      font-size: 20px;
-    }
+        .inputContainer {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            width: 65%;
+        }
 
-    .classImages {
-      display: flex;
-      flex-wrap: wrap;
-  
-      .classImage {
-        width: 80px;
-        height: 80px;
-        border-radius: 15px;
-        background-size: cover;
-        cursor: pointer;
-        margin: 50px 10px;
-        border: 2px solid #e6e6e6;
-      }
-    }
-  
-    .inputName {
-      outline: 0;
-    }
-  
-    .submitButton {
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      background: #e6e6e6;
-      font-size: 18px;
-      border: none;
+        .formHeader {
+            color: white;
+            font-size: 20px;
+        }
 
-      &:hover{
-        background: #c4c4c4;
-      }
+        .classImages {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            justify-content: center;
+
+            .classImage {
+                width: 56px;
+                height: 56px;
+                border-radius: 15px;
+                background-size: cover;
+                margin: 10px 10px;
+                border: 2px solid #e6e6e6;
+            }
+        }
+
+        .inputName {
+            outline: 0;
+        }
+
+        .submitButton {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #e6e6e6;
+            font-size: 18px;
+            border: none;
+
+            &:hover {
+                background: #c4c4c4;
+            }
+        }
     }
-  }
 }

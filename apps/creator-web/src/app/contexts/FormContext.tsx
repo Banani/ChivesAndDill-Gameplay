@@ -319,13 +319,35 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
 
             prop = path.pop() ?? "";
             valueToSet = propertyDefintion.typeChanger[value]
+
+            path.forEach(pathPart => {
+                current = current[pathPart];
+            })
+
+            if (prop !== "") {
+                current = current[prop];
+            }
+
+            for (let i in valueToSet) {
+                if (current[i] === undefined) {
+                    current[i] = valueToSet[i]
+                }
+                current['type'] = valueToSet.type;
+            }
+
+            for (let i in current) {
+                if (valueToSet[i] === undefined) {
+                    delete current[i];
+                }
+            }
+        } else {
+            path.forEach(pathPart => {
+                current = current[pathPart];
+            })
+
+            current[prop] = valueToSet;
         }
 
-        path.forEach(pathPart => {
-            current = current[pathPart];
-        })
-
-        current[prop] = valueToSet;
         setValues(toSave);
     }, [values, setDirty])
 
@@ -350,7 +372,8 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
     }, [schema, errors]);
 
     const resetForm = useCallback(() => {
-        const values = _.mapValues(schema, (item, key) => item.defaultValue ?? "");
+        let values = _.mapValues(schema, item => item.defaultValue ?? "");
+        values = _.pickBy(values, (_, key) => schema[key].prerequisite === undefined || schema[key]?.prerequisite?.(values));
 
         //TODO: wartosci powinny pojsc przez parsery
         setValues(values);

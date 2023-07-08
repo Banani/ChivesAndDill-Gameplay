@@ -1,110 +1,116 @@
 .NpcModal {
-    position: absolute;
-    width: 346px;
-    height: 507px;
-    top: 15%;
-    left: 5%;
-    background: url('../../../../../assets/spritesheets/backgrounds/tradeModal.png');
-    background-repeat: no-repeat;
-    display: flex;
-    flex-direction: column;
+   position: absolute;
+   width: 346px;
+   height: 507px;
+   top: 15%;
+   left: 5%;
+   background: url('../../../../../assets/spritesheets/backgrounds/tradeModal.png');
+   background-repeat: no-repeat;
+   display: flex;
+   flex-direction: column;
 
-    .ContentWrapper {
-        padding: 30px 40px 0 20px;
-        width: 315px;
+   .ContentWrapper {
+      padding: 30px 40px 0 20px;
+      width: 315px;
 
-        .ItemsWrapper {
+      .ItemsWrapper {
+         display: flex;
+         flex-wrap: wrap;
+         justify-content: space-between;
+
+         .Item {
+            width: 48%;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
+            border: 1px solid rgb(83, 83, 83);
+            background: #29292980;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 2px;
 
-            .Item {
-                width: 48%;
-                display: flex;
-                border: 1px solid rgb(83, 83, 83);
-                background: #29292980;
-                border-radius: 4px;
-                margin-bottom: 4px;
-                cursor: pointer;
-                position: relative;
-                overflow: hidden;
-                margin-top: 2px;
-
-                &:nth-child(odd) {
-                    margin-right: 2px;
-                }
-        
-                .ItemImage {
-                    width: 50px;
-                    height: 50px;
-                    border-right: 1px solid rgb(83, 83, 83);
-                    border-radius: 4px;
-                }
-                
-                .ItemInfoWrapper {
-                    height: 50px;
-                    
-                    .ItemText {
-                        color: white;
-                        display: flex;
-                        text-shadow: 1px 1px black;
-                        flex-direction: column;
-                        align-items: flex-start;
-                        justify-content: center;
-                        margin: 3px 0 3px 7px;
-                        font-size: 12px;
-                    }
-                }
-                
-                .Stack {
-                    position: absolute;
-                    left: 30px;
-                    bottom: 0;
-                    color: white;
-                }
+            &:nth-child(odd) {
+               margin-right: 2px;
             }
-        }
 
-        .MoneyBarWrapper {
+            .ItemImage {
+               width: 50px;
+               height: 50px;
+               border-right: 1px solid rgb(83, 83, 83);
+               border-radius: 3px;
+               transition: 0.15s;
+               cursor: url(apps/chives-and-dill/src/assets/spritesheets/cursors/lootCursor.png), auto;
+               background-size: cover;
+               background-repeat: no-repeat;
+            }
+
+            .ItemImage:hover {
+               box-shadow: inset 0 0 7px 3px #1ba9fd;
+            }
+
+            .ItemInfoWrapper {
+               height: 50px;
+
+               .ItemText {
+                  color: white;
+                  display: flex;
+                  text-shadow: 1px 1px black;
+                  flex-direction: column;
+                  align-items: flex-start;
+                  justify-content: center;
+                  margin: 3px 0 3px 7px;
+                  font-size: 12px;
+               }
+            }
+
+            .Stack {
+               position: absolute;
+               left: 30px;
+               bottom: 0;
+               color: white;
+            }
+         }
+      }
+
+      .MoneyBarWrapper {
+         position: absolute;
+         bottom: 5px;
+         left: 15px;
+      }
+
+      .PaginationContainer {
+         display: flex;
+         justify-content: space-between;
+         position: absolute;
+         width: 75%;
+         margin-left: auto;
+         margin-right: auto;
+         left: 0;
+         right: 0;
+         bottom: 95px;
+
+         .RightPaginationSide {
             position: absolute;
-            bottom: 5px;
-            left: 15px;
-        }
+            right: -8px;
+            bottom: 0;
+         }
 
-        .PaginationContainer {
+         .PaginationSide {
             display: flex;
-            justify-content: space-between;
-            position: absolute;
-            width: 75%;
-            margin-left: auto;
-            margin-right: auto;
-            left: 0;
-            right: 0;
-            bottom: 95px;
-        
-            .RightPaginationSide {
-                position: absolute;
-                right: -8px;
-                bottom: 0;
+            align-items: center;
+
+            .PaginationButton {
+               color: #eec300;
+               background-color: #070807;
+               border-radius: 5px;
+               border: 1px solid #666962;
             }
-        
-            .PaginationSide {
-                display: flex;
-                align-items: center;
-                
-                .PaginationButton {
-                    color: #EEC300;
-                    background-color: #070807; 
-                    border-radius: 5px;
-                    border: 1px solid #666962;
-                    cursor: pointer;
-                 }
-             
-                 .PaginationText {
-                    color: #EEC300;
-                    margin: 8px;
-                 }
+
+            .PaginationText {
+               color: #eec300;
+               margin: 8px;
             }
-          }
-    }
+         }
+      }
+   }
 }

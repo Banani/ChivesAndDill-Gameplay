@@ -1,153 +1,152 @@
 .playerIconContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 50px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-right: 50px;
 
-  .playerAvatar {
-    border-radius: 50%;
-    width: 85px;
-    height: 85px;
-    border: 5px solid gray;
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin-right: 25px;
-    background-color: black;
-    transition: 0.2s;
-  }
-
-  .combatBorder {
-    box-shadow: 0px 0px 17px 3px rgb(197, 23, 23);
-    border: 5px solid gray;
-  }
-
-  .playerLvl {
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    border: 2px solid gold;
-    position: absolute;
-    z-index: 9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: gold;
-    left: 65px;
-    bottom: 0;
-    background: black;
-  }
-
-  .playerRole {
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    position: absolute;
-    z-index: 9;
-    left: 0;
-    bottom: 0;
-    background-image: url("../../../../assets/spritesheets/partyRoles/dpsIcon.png");
-    background-position: center;
-    background-size: cover;
-    cursor: pointer;
-  }
-
-  .combatSwords {
-    background-image: url("../../../../assets/spritesheets/characterFrames/crossedSwords.png");
-    width: 25px;
-    height: 25px;
-    position: absolute;
-    left: 65px;
-    bottom: 0;
-    z-index: 10;
-    border: 2px solid gold;
-    border-radius: 50%;
-    background-color: gold;
-    background-size: 60%;
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: 0.2s;
-    visibility: hidden;
-    opacity: 0;
-  }
-
-  .barsContainer {
-    border-radius: 5px;
-    border: 4px solid gray;
-    transition: 0.2s;
-  
-    .nameBar {
-      color: gold;
-      padding: 5px 0;
-      display: flex;
-      justify-content: center;
+   .playerAvatar {
+      border-radius: 50%;
+      width: 85px;
+      height: 85px;
+      border: 5px solid gray;
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin-right: 25px;
       background-color: black;
-    }
-  
-    .bar {
-      width: 200px;
-      height: 20px;
-      background-color: white;
-      border-width: 3px 0 0 0;
-      border-radius: 3px;
-      border-style: solid;
-      border-color: gray;
+      transition: 0.2s;
+   }
+
+   .combatBorder {
+      box-shadow: 0px 0px 17px 3px rgb(197, 23, 23);
+      border: 5px solid gray;
+   }
+
+   .playerLvl {
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      border: 2px solid gold;
+      position: absolute;
+      z-index: 9;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
+      color: gold;
+      left: 65px;
+      bottom: 0;
       background: black;
+   }
 
-      &:hover > div{
-        visibility: visible;
+   .playerRole {
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      position: absolute;
+      z-index: 9;
+      left: 0;
+      bottom: 0;
+      background-image: url('../../../../assets/spritesheets/partyRoles/dpsIcon.png');
+      background-position: center;
+      background-size: cover;
+   }
+
+   .combatSwords {
+      background-image: url('../../../../assets/spritesheets/characterFrames/crossedSwords.png');
+      width: 25px;
+      height: 25px;
+      position: absolute;
+      left: 65px;
+      bottom: 0;
+      z-index: 10;
+      border: 2px solid gold;
+      border-radius: 50%;
+      background-color: gold;
+      background-size: 60%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: 0.2s;
+      visibility: hidden;
+      opacity: 0;
+   }
+
+   .barsContainer {
+      border-radius: 5px;
+      border: 4px solid gray;
+      transition: 0.2s;
+
+      .nameBar {
+         color: gold;
+         padding: 5px 0;
+         display: flex;
+         justify-content: center;
+         background-color: black;
       }
 
-      .barText {
-        visibility: hidden;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        color: gold;
-        z-index: 9;
-        text-align: center;
-        text-shadow: 0 0 5px black;
-      }
+      .bar {
+         width: 200px;
+         height: 20px;
+         background-color: white;
+         border-width: 3px 0 0 0;
+         border-radius: 3px;
+         border-style: solid;
+         border-color: gray;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         position: relative;
+         background: black;
 
-      .hpColor {
-        background-color: #2fed00;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        left: 0;
-      }
-      
-      .manaColor {
-        background-color: #001ee3;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        left: 0;
-      }
+         &:hover > div {
+            visibility: visible;
+         }
 
-      .absorbColor {
-        background-color: #e8e8e8;
-        position: absolute;
-        height: 100%;
-        width: 100%;
+         .barText {
+            visibility: hidden;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            color: gold;
+            z-index: 9;
+            text-align: center;
+            text-shadow: 0 0 5px black;
+         }
+
+         .hpColor {
+            background-color: #2fed00;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            left: 0;
+         }
+
+         .manaColor {
+            background-color: #001ee3;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            left: 0;
+         }
+
+         .absorbColor {
+            background-color: #e8e8e8;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+         }
       }
-    }
-  }
+   }
 }
 
 .powerStacks {
-  display: flex;
-  margin: 0 20px;
+   display: flex;
+   margin: 0 20px;
 
-  .powerStackCircle {
-    margin-right: 20px;
-    background-color: gold;
-    border: 1px solid black;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-  }
+   .powerStackCircle {
+      margin-right: 20px;
+      background-color: gold;
+      border: 1px solid black;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+   }
 }

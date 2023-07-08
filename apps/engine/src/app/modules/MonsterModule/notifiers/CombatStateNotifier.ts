@@ -1,6 +1,6 @@
 import { GlobalStoreModule } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { CharacterCombatFinishedEvent, CharacterCombatStartedEvent, MonsterEngineEvents } from '../Events';
 
 export class CombatStateNotifier extends Notifier<boolean> {
@@ -13,32 +13,32 @@ export class CombatStateNotifier extends Notifier<boolean> {
     }
 
     handleCharacterCombatStarted: EngineEventHandler<CharacterCombatStartedEvent> = ({ event, services }) => {
-        const character = services.characterService.getCharacterById(event.playerCharacterId);
-        if (character.type != CharacterType.Player) {
+        const receiverId = this.getReceiverId(event.playerCharacterId, services);
+        if (!receiverId) {
             return;
         }
 
         this.multicastMultipleObjectsUpdate([
             {
-                receiverId: character.ownerId,
+                receiverId,
                 objects: {
-                    [character.id]: true
+                    [event.playerCharacterId]: true
                 },
             },
         ]);
     };
 
     handleCharacterCombatFinished: EngineEventHandler<CharacterCombatFinishedEvent> = ({ event, services }) => {
-        const character = services.characterService.getCharacterById(event.playerCharacterId);
-        if (character.type != CharacterType.Player) {
+        const receiverId = this.getReceiverId(event.playerCharacterId, services);
+        if (!receiverId) {
             return;
         }
 
         this.multicastMultipleObjectsUpdate([
             {
-                receiverId: character.ownerId,
+                receiverId,
                 objects: {
-                    [character.id]: false
+                    [event.playerCharacterId]: false
                 },
             },
         ]);

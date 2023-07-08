@@ -1,5 +1,4 @@
 import type { CharacterDirection, Location } from '@bananos/types';
-import type { Spell } from '../modules/SpellModule/types/SpellTypes';
 
 export interface Character {
     type: CharacterType;
@@ -15,7 +14,7 @@ export interface Character {
     isInMove: boolean;
     healthPointsRegeneration: number;
     spellPowerRegeneration: number;
-    spells: Record<string, Spell>;
+    spells: Record<string, boolean>;
 }
 
 export enum CharacterType {
