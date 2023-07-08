@@ -1,9 +1,8 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
-	"strconv"
+  "encoding/json"
+  "strconv"
 )
 
 type Sprite struct {
@@ -75,9 +74,6 @@ func (service *MapFieldsService) serve() {
 					currentMapField, currentMapFieldExists := service.mapFields[location]
 					if currentMapFieldExists {
 						position = currentMapField.Positions
-						log.Print("istnieje")
-					} else {
-						log.Print(" nie istnieje")
 					}
 
 					spritePosition := service.sprites[updateMapFieldAction.SpriteId].Position

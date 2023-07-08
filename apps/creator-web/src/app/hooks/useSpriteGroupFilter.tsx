@@ -57,6 +57,7 @@ export const useSpriteGroupFilter = () => {
     return {
         filteredSprites,
         spriteGroupFilter,
+        spriteGroupsUpdate,
         setSpriteGroupFilter,
         spriteGroupSelectOptions
     }

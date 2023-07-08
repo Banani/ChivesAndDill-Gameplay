@@ -31,12 +31,13 @@ export const SpritePanel = () => {
     const {
         filteredSprites,
         spriteGroupFilter,
+        spriteGroupsUpdate,
         setSpriteGroupFilter,
         spriteGroupSelectOptions } = useSpriteGroupFilter();
 
     useEffect(() => {
         setPaginationReset(prev => (prev + 1) % 2)
-    }, [filteredSprites]);
+    }, [spriteGroupsUpdate, spriteGroupFilter]);
 
     const changeSpriteLevel = (e: any, spriteId: string, position: string) => {
         e.stopPropagation();
