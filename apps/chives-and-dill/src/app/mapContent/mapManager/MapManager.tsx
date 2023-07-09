@@ -13,7 +13,7 @@ export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y:
 
             _.forEach(mapSchema.mapSchema, (mapElement, key) => {
                 const baseTexture = PIXI.BaseTexture.from(mapElement.path);
-                output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.location.x + 1, mapElement.location.y + 1, 30, 30));
+                output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.location.x, mapElement.location.y, 32, 32));
             });
 
             setTexturesMap(output);
