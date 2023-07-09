@@ -1,8 +1,8 @@
 package main
 
 import (
-  "encoding/json"
-  "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type Sprite struct {
@@ -11,6 +11,7 @@ type Sprite struct {
 	Y           int    `json:"y"`
 	SpriteSheet string `json:"spriteSheet" bson:"spriteSheet"`
 	Position    string `json:"position"`
+	Collision   bool   `json:"collision"`
 }
 
 type MapField struct {
@@ -138,12 +139,33 @@ func (service *MapFieldsService) serve() {
 			sprite.Position = changeSpritePositionAction.Position
 
 			service.sprites[changeSpritePositionAction.SpriteId] = sprite
+
 			api := MapFieldDbApi{application: service.application}
 			api.updateSprite(sprite)
 
 			jsonSprite, _ := json.Marshal(sprite)
 			serializedSprites[sprite.Id] = string(jsonSprite)
+			spritesPackage["sprites"] = EnginePackageStringArray{Data: serializedSprites}
+			service.application.writter.stream <- spritesPackage
+		}
 
+		if action.ActionType == changeSpriteCollision {
+			var changeSpriteCollisionAction ChangeSpriteCollisionAction
+			json.Unmarshal(action.Body, &changeSpriteCollisionAction)
+
+			spritesPackage := make(map[string]EnginePackageStringArray)
+			serializedSprites := make(map[string]string)
+
+			sprite := service.sprites[changeSpriteCollisionAction.SpriteId]
+			sprite.Collision = changeSpriteCollisionAction.Collision
+
+			service.sprites[changeSpriteCollisionAction.SpriteId] = sprite
+
+			api := MapFieldDbApi{application: service.application}
+			api.updateSprite(sprite)
+
+			jsonSprite, _ := json.Marshal(sprite)
+			serializedSprites[sprite.Id] = string(jsonSprite)
 			spritesPackage["sprites"] = EnginePackageStringArray{Data: serializedSprites}
 			service.application.writter.stream <- spritesPackage
 		}

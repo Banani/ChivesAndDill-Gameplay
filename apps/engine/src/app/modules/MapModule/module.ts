@@ -1,16 +1,19 @@
 import { EngineModule } from '../../types/EngineModule';
-import { AreaNotifier, MapSchemaNotifier } from './notifiers';
+import { MapSchemaNotifier } from './notifiers';
+import { CollisionService } from './services/CollisionService';
 import { MapService } from './services/MapService';
 
 export interface MapServices {
-   mapService: MapService;
+    mapService: MapService;
+    collisionService: CollisionService;
 }
 
 export const getMapModule: () => EngineModule<MapServices> = () => {
-   return {
-      notifiers: [new AreaNotifier(), new MapSchemaNotifier()],
-      services: {
-         mapService: new MapService(),
-      },
-   };
+    return {
+        notifiers: [new MapSchemaNotifier()],
+        services: {
+            mapService: new MapService(),
+            collisionService: new CollisionService()
+        },
+    };
 };

@@ -6,6 +6,7 @@ import { MapEditorContext } from '../contexts/mapEditorContextProvider';
 import styles from './spritePanel.module.scss';
 
 import AnimationIcon from '@mui/icons-material/Animation';
+import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import FolderIcon from '@mui/icons-material/Folder';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -42,6 +43,11 @@ export const SpritePanel = () => {
     const changeSpriteLevel = (e: any, spriteId: string, position: string) => {
         e.stopPropagation();
         mapEditorContext.changeSpritePosition({ spriteId, position });
+    };
+
+    const changeSpriteCollision = (e: any, spriteId: string, collision: boolean) => {
+        e.stopPropagation();
+        mapEditorContext.changeSpriteCollision({ spriteId, collision });
     };
 
     return (
@@ -81,8 +87,15 @@ export const SpritePanel = () => {
                             return {
                                 id: sprite.id,
                                 image: <div className={styles['imageHolder']}>
-                                    <div className={styles['actions']} onClick={e => changeSpriteLevel(e, sprite.id, sprite.position === "upper" ? "bottom" : 'upper')}>
-                                        {sprite.position === "upper" ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
+                                    <div className={styles['actions']}>
+                                        <div className={styles['action']} onClick={e => changeSpriteLevel(e, sprite.id, sprite.position === "upper" ? "bottom" : 'upper')}>
+                                            {sprite.position === "upper" ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
+                                        </div>
+                                        <div
+                                            className={styles['action'] + " " + (sprite.collision ? styles['action-enabled'] : "")}
+                                            onClick={e => changeSpriteCollision(e, sprite.id, !sprite.collision)}>
+                                            <DoNotDisturbIcon fontSize="small" />
+                                        </div>
                                     </div>
                                     <img
                                         style={{ marginLeft: `${-sprite.x * 100}%`, marginTop: `${-sprite.y * 100}%` }}

@@ -1,6 +1,5 @@
 import { CharacterDirection } from '@bananos/types';
 import { each } from 'lodash';
-import { AREAS, BORDER } from '../../';
 import { Engine } from '../../../Engine';
 import { EngineEvents } from '../../../EngineEvents';
 import { areSegmentsIntersecting } from '../../../math';
@@ -55,8 +54,8 @@ export class PlayersMovement extends Engine {
         }['true'];
     }
 
-    canMove(movementSegment) {
-        return ![...BORDER, ...AREAS].find((polygon) => {
+    canMove(movementSegment, areas) {
+        return !areas.find((polygon) => {
             for (let i = 0; i < polygon.length; i++) {
                 if (areSegmentsIntersecting(movementSegment, [polygon[i], polygon[(i + 1) % polygon.length]])) {
                     return true;
@@ -67,6 +66,8 @@ export class PlayersMovement extends Engine {
 
     doAction() {
         each(this.services.characterService.getAllCharacters(), (player) => {
+            const areas = this.services.collisionService.getAreas();
+
             const movement = this.movements.get(player);
             if (movement && movement.length) {
                 const vector = movement.reduce(
@@ -88,7 +89,7 @@ export class PlayersMovement extends Engine {
                 ];
                 const lastMovement = movement[movement.length - 1];
 
-                if (this.canMove(movementSegment)) {
+                if (this.canMove(movementSegment, areas)) {
                     this.eventCrator.createEvent<PlayerMovedEvent>({
                         type: EngineEvents.PlayerMoved,
                         characterId: player.id,

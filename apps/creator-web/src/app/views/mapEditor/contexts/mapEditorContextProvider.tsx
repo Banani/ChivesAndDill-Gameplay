@@ -26,6 +26,7 @@ interface MapEditorContextProps {
     brushSize: BrushSize;
     setBrushSize: (brushSize: BrushSize) => void;
     changeSpritePosition: (params: { spriteId: string, position: string }) => void;
+    changeSpriteCollision: (params: { spriteId: string, collision: boolean }) => void;
 }
 
 export const MapEditorContextProvider = ({ children }: any) => {
@@ -55,6 +56,13 @@ export const MapEditorContextProvider = ({ children }: any) => {
         [socket]
     );
 
+    const changeSpriteCollision = useCallback(
+        ({ spriteId, collision }) => {
+            socket.send(JSON.stringify({ actionType: ACTIONS.CHANGE_SPRITE_COLLISION, spriteId, collision }));
+        },
+        [socket]
+    );
+
     return (
         <MapEditorContext.Provider
             value={{
@@ -66,7 +74,8 @@ export const MapEditorContextProvider = ({ children }: any) => {
                 deleteMapField,
                 brushSize,
                 setBrushSize,
-                changeSpritePosition
+                changeSpritePosition,
+                changeSpriteCollision
             }}
         >
             {children}

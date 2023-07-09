@@ -2,9 +2,7 @@ import { MapDefinition, MapSchema } from '@bananos/types';
 import { mapValues } from 'lodash';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler } from '../../../types';
-import { NewPlayerCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { MapDefinitionUpdatedEvent, MapEvents, MapUpdatedEvent } from '../Events';
+import { MapDefinitionUpdatedEvent, MapEvents } from '../Events';
 
 const BLOCK_SIZE = 32;
 
@@ -14,9 +12,7 @@ export class MapService extends EventParser {
 
     constructor() {
         super();
-        this.eventsToHandlersMap = {
-            [PlayerEngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
-        };
+        this.eventsToHandlersMap = {};
     }
 
     mapMapField = (mapField) => ({
@@ -25,6 +21,7 @@ export class MapService extends EventParser {
             y: mapField.y * BLOCK_SIZE,
         },
         path: "http://localhost:3000/photo?path=" + mapField.spriteSheet,
+        collision: mapField.collision
     })
 
     init(engineEventCrator: EngineEventCrator, services) {
@@ -54,6 +51,11 @@ export class MapService extends EventParser {
         services.dbService.fetchDataFromDb("mapFields").then((mapFields) => {
             realMapFieldsFetched = true;
             this.mapDefinition = mapValues(mapFields, (mapField) => mapField.positions);
+
+            this.engineEventCrator.asyncCeateEvent<MapDefinitionUpdatedEvent>({
+                type: MapEvents.MapDefinitionUpdated,
+                mapDefinition: this.mapDefinition,
+            });
         });
 
         services.dbService.watchForDataChanges("mapFields", (data) => {
@@ -69,13 +71,4 @@ export class MapService extends EventParser {
             }
         });
     }
-
-    handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event }) => {
-        this.engineEventCrator.asyncCeateEvent<MapUpdatedEvent>({
-            type: MapEvents.MapUpdated,
-            playerId: event.playerId,
-            mapDefinition: this.mapDefinition,
-            mapSchema: this.mapSchema,
-        });
-    };
 }

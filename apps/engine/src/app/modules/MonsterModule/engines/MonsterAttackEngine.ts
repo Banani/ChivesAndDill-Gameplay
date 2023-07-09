@@ -16,13 +16,13 @@ export class MonsterAttackEngine extends Engine {
     attacksHistory: Record<string, number> = {};
     scheduledAttacks: Record<string, ScheduledAttack[]> = {};
 
-    isTargetInSight = (monster: Monster, target: Character) => {
+    isTargetInSight = (monster: Monster, target: Character, areas) => {
         const shotSegment = [
             [monster.location.x, monster.location.y],
             [target.location.x, target.location.y],
         ];
 
-        return !isSegementCrossingWithAnyWall(shotSegment);
+        return !isSegementCrossingWithAnyWall(shotSegment, areas);
     };
 
     isReadyToPerformAttack = (monster: Monster) => {
@@ -52,7 +52,7 @@ export class MonsterAttackEngine extends Engine {
                 return;
             }
 
-            if (!monster || !this.isTargetInSight(monster, character)) {
+            if (!monster || !this.isTargetInSight(monster, character, this.services.collisionService.getAreas())) {
                 return;
             }
 

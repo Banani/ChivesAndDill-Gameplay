@@ -35,11 +35,18 @@
         position: absolute;
         top: 0;
         left: 0;
-        height: 20px;
-        background-color: rgba(#c0c0c0, 0.75);
 
-        &:hover {
-            background-color: rgba(#c0c0c0, 1);
+        // &:hover {
+        //     background-color: rgba(#c0c0c0, 1);
+        // }
+
+        .action {
+            height: 20px;
+            background-color: rgba(#c0c0c0, 0.75);
+        }
+
+        .action-enabled {
+            background-color: rgba(#ff0000, 0.75);
         }
     }
 

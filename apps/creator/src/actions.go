@@ -1,9 +1,10 @@
 package main
 
 const (
-	updateMapField       = "UPDATE_MAP_FIELD"
-	deleteMapField       = "DELETE_MAP_FIELD"
-	changeSpritePosition = "CHANGE_SPRITE_POSITION"
+	updateMapField        = "UPDATE_MAP_FIELD"
+	deleteMapField        = "DELETE_MAP_FIELD"
+	changeSpritePosition  = "CHANGE_SPRITE_POSITION"
+	changeSpriteCollision = "CHANGE_SPRITE_COLLISION"
 
 	createSpriteGroup = "CREATE_SPRITE_GROUP"
 	updateSpriteGroup = "UPDATE_SPRITE_GROUP"
@@ -56,6 +57,12 @@ type ChangeSpritePositionAction struct {
 	ActionType string `json:"actionType"`
 	SpriteId   string `json:"spriteId"`
 	Position   string `json:"position"`
+}
+
+type ChangeSpriteCollisionAction struct {
+	ActionType string `json:"actionType"`
+	SpriteId   string `json:"spriteId"`
+	Collision  bool   `json:"collision"`
 }
 
 type DeleteMapFieldAction struct {
