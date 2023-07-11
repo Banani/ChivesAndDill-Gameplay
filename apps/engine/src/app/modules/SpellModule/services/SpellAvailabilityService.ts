@@ -1,6 +1,6 @@
 import { Spell } from '@bananos/types';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler } from '../../../types';
+import { CharacterType, EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { Services } from '../../../types/Services';
 import { PlayerCastSpellEvent, PlayerTriesToCastASpellEvent, SpellEngineEvents } from '../Events';
@@ -34,10 +34,13 @@ export class SpellAvailabilityService extends EventParser {
         }
 
         const spell = services.spellService.getData()[event.spellData.spellId];
-        const characterClass = services.characterClassService.getData()[character.characterClassId];
 
-        if (!characterClass.spells[spell.id]) {
-            return;
+        if (character.type == CharacterType.Player) {
+            const characterClass = services.characterClassService.getData()[character.characterClassId];
+
+            if (!characterClass.spells[spell.id]) {
+                return;
+            }
         }
 
         if (services.powerPointsService.getSpellPower(character.id) < spell.spellPowerCost) {

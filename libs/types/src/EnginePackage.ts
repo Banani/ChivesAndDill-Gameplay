@@ -14,7 +14,7 @@ import {
 import { Attributes, CharacterEvents, MonsterCorpse } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
-import { CommonClientActions, CommonClientMessages } from './engineEvents';
+import { CommonClientActions, CommonClientMessages, CreateCharacter } from './engineEvents';
 import { ExternalQuestProgress, QuestSchema } from './QuestPackage';
 import type { CharacterClassPreview, CharacterDirection } from './shared';
 
@@ -293,12 +293,6 @@ export interface MapDefinition {
 export interface ErrorMessage {
     type: EngineEventType.ErrorMessage;
     message: string;
-}
-
-export interface CreateCharacter {
-    type: CommonClientMessages.CreateCharacter;
-    name: string;
-    characterClassId: string;
 }
 
 export interface PlayerStartMoveAction {
