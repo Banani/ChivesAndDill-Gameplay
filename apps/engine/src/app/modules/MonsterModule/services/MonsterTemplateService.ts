@@ -40,22 +40,25 @@ export class MonsterTemplateService extends EventParser {
         });
     }
 
-    mapMonsterTemplate = (npcTemplate: MonsterTemplateDb) =>
+    mapMonsterTemplate = (monsterTemplate: MonsterTemplateDb) =>
     ({
-        id: npcTemplate._id.toString(),
-        name: npcTemplate.name,
-        healthPoints: npcTemplate.healthPoints,
-        healthPointsRegeneration: npcTemplate.healthPointsRegeneration,
-        spellPower: npcTemplate.spellPower,
-        spellPowerRegeneration: npcTemplate.spellPowerRegeneration,
-        movementSpeed: npcTemplate.movementSpeed,
-        sightRange: npcTemplate.sightRange,
-        desiredRange: npcTemplate.desiredRange,
-        escapeRange: npcTemplate.escapeRange,
-        attackFrequency: npcTemplate.attackFrequency,
-        spells: npcTemplate.spells,
-        dropSchema: npcTemplate.dropSchema,
-        quotesEvents: npcTemplate.quotesEvents,
+        id: monsterTemplate._id.toString(),
+        name: monsterTemplate.name,
+        healthPoints: monsterTemplate.healthPoints,
+        healthPointsRegeneration: monsterTemplate.healthPointsRegeneration,
+        spellPower: monsterTemplate.spellPower,
+        spellPowerRegeneration: monsterTemplate.spellPowerRegeneration,
+        movementSpeed: monsterTemplate.movementSpeed,
+        sightRange: monsterTemplate.sightRange,
+        desiredRange: monsterTemplate.desiredRange,
+        escapeRange: monsterTemplate.escapeRange,
+        attackFrequency: monsterTemplate.attackFrequency,
+        spells: monsterTemplate.spells,
+        dropSchema: monsterTemplate.dropSchema,
+        quotesEvents: _.mapValues(monsterTemplate.quotesEvents, quoteEvent => ({
+            ...quoteEvent,
+            chance: quoteEvent.chance / 1000,
+        })),
         sprites: 'orc',
         avatar: '../../../../assets/spritesheets/avatars/orcAvatar.png',
         direction: CharacterDirection.DOWN,
