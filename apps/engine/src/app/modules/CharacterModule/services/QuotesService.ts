@@ -33,12 +33,17 @@ export class QuotesService extends EventParser {
 
     handleSendQuoteMessage: EngineEventHandler<SendQuoteMessageEvent> = ({ event, services }) => {
         this.quotesTimeStamps[event.characterId] = now();
+        const character = services.characterService.getAllCharacters()[event.characterId];
 
         this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
             type: ChatEngineEvents.SendChatMessage,
             characterId: event.characterId,
             message: event.message,
             channelType: ChannelType.Quotes,
+            location: {
+                x: character.location.x,
+                y: character.location.y
+            }
         });
     };
 
@@ -70,6 +75,10 @@ export class QuotesService extends EventParser {
             characterId: event.monster.id,
             message: onPulling.quotes[Math.round(services.randomGeneratorService.generateNumber() * onPulling.quotes.length)],
             channelType: ChannelType.Quotes,
+            location: {
+                x: event.monster.location.x,
+                y: event.monster.location.y
+            }
         });
     };
 
@@ -119,6 +128,10 @@ export class QuotesService extends EventParser {
             characterId,
             message: quotes.quotes[Math.round(services.randomGeneratorService.generateNumber() * (quotes.quotes.length - 1))],
             channelType: ChannelType.Quotes,
+            location: {
+                x: monster.location.x,
+                y: monster.location.y
+            }
         });
     };
 

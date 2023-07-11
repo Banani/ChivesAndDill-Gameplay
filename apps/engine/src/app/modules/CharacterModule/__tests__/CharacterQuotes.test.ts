@@ -88,6 +88,10 @@ describe('CharacterQuotes', () => {
                     id: 'chatQuoteMessage_1',
                     message: 'Tylko nie to...',
                     time: newCurrentTime,
+                    location: {
+                        x: 250,
+                        y: 200,
+                    }
                 },
             },
         });
@@ -174,6 +178,10 @@ describe('CharacterQuotes', () => {
                     id: 'chatQuoteMessage_1',
                     message: 'Zgniotę Cie jak truskaweczke',
                     time: newCurrentTime,
+                    location: {
+                        x: 250,
+                        y: 200,
+                    }
                 },
             },
         });
@@ -280,6 +288,10 @@ describe('CharacterQuotes', () => {
                     id: 'chatQuoteMessage_1',
                     message: 'Tylko nie to...',
                     time: newCurrentTime,
+                    location: {
+                        x: 250,
+                        y: 200,
+                    }
                 },
             },
         });
@@ -310,6 +322,10 @@ describe('CharacterQuotes', () => {
                     id: 'chatQuoteMessage_1',
                     message: 'Pfff... ledwie go uderzyłem',
                     time: newCurrentTime,
+                    location: {
+                        x: 250,
+                        y: 200,
+                    }
                 },
             },
         });
@@ -329,6 +345,10 @@ describe('CharacterQuotes', () => {
                     id: 'chatQuoteMessage_0',
                     message: 'Zjadłbym zupe pomidorową Kamila, była super',
                     time: currentTime,
+                    location: {
+                        x: 250,
+                        y: 200,
+                    }
                 },
             },
         });
@@ -344,6 +364,26 @@ describe('CharacterQuotes', () => {
         engineManager.doEngineAction();
 
         dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
+
+        checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, undefined);
+    });
+
+
+    it('Player should not be notified about quote if he is standing to far away', () => {
+        const { engineManager, players, randomGeneratorService, currentTime } = setupEngine({
+            respawnServiceProps: {
+                'respawn_1': {
+                    id: 'respawn_1',
+                    location: { x: 1350, y: 200 },
+                    characterTemplateId: "1",
+                    time: 4000,
+                    walkingType: WalkingType.None,
+                }
+            }
+        });
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+
+        let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
 
         checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, undefined);
     });

@@ -33,6 +33,7 @@ export class ChatMessageService extends EventParser {
             return;
         }
 
+        const character = services.characterService.getAllCharacters()[event.characterId];
         const id = `chatMessage_${this.increment++}`;
         this.messages[id] = {
             id,
@@ -41,6 +42,10 @@ export class ChatMessageService extends EventParser {
             time: now(),
             chatChannelId: event.chatChannelId,
             channelType: ChannelType.Custom,
+            location: {
+                x: character.location.x,
+                y: character.location.y
+            }
         };
 
         this.engineEventCrator.asyncCeateEvent<ChatMessageSentEvent>({

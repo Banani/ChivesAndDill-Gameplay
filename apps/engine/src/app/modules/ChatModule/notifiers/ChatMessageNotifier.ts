@@ -22,12 +22,17 @@ export class ChatMessageNotifier extends Notifier<ChatMessage> {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
         currentSocket.on(ChatChannelClientMessages.SendChatMessage, ({ chatChannelId, message, channelType }) => {
+            const character = services.characterService.getAllCharacters()[event.playerCharacter.id];
             this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
                 type: ChatEngineEvents.SendChatMessage,
                 requestingCharacterId: event.playerCharacter.id,
                 chatChannelId,
                 channelType,
                 message,
+                location: {
+                    x: character.location.x,
+                    y: character.location.y,
+                }
             });
         });
     };
@@ -41,18 +46,18 @@ export class ChatMessageNotifier extends Notifier<ChatMessage> {
                 PlayerCharacter
             >;
         } else if (event.chatMessage.channelType === ChannelType.Quotes) {
-            chatMembers = pickBy(services.characterService.getAllCharacters(), (character) => character.type === CharacterType.Player) as Record<
-                string,
-                PlayerCharacter
-            >;
+            chatMembers = pickBy(services.characterService.getAllCharacters(),
+                (character) => character.type === CharacterType.Player &&
+                    distanceBetweenTwoPoints(character.location, event.chatMessage.location) < RangeChannels.say.range
+            ) as Record<string, PlayerCharacter>;
+
         } else if (event.chatMessage.channelType === ChannelType.Range) {
             const chatMessage: RangeChatMessage = event.chatMessage;
-            const allCharacters = services.characterService.getAllCharacters();
             chatMembers = pickBy(
                 services.characterService.getAllCharacters(),
                 (character) =>
                     character.type === CharacterType.Player &&
-                    distanceBetweenTwoPoints(character.location, allCharacters[chatMessage.authorId].location) < RangeChannels[chatMessage.chatChannelId].range
+                    distanceBetweenTwoPoints(character.location, event.chatMessage.location) < RangeChannels[chatMessage.chatChannelId].range
             ) as Record<string, PlayerCharacter>;
         }
 

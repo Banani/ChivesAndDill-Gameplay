@@ -27,6 +27,7 @@ export class ChatQuoteMessageService extends EventParser {
             authorId: event.characterId,
             time: now(),
             channelType: ChannelType.Quotes,
+            location: event.location
         };
 
         this.engineEventCrator.asyncCeateEvent<ChatMessageSentEvent>({
