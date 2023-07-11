@@ -26,6 +26,29 @@ export const DialogsManager = () => {
       ]);
    }, [chatMessages]);
 
+   const getColorByCharacterType = (type) => {
+      if (type === 'Npc') {
+         return '#e5e4e0';
+      } else if (type === 'Monster') {
+         return '#ea5c19';
+      }
+
+      return '#e5e4e0';
+   };
+
+   const getDialogStyles = (event) =>
+      new PIXI.TextStyle({
+         fontSize: 18,
+         fill: getColorByCharacterType(characters[event.authorId].type),
+         stroke: '#000000',
+         fontWeight: 'bold',
+         lineJoin: 'round',
+         strokeThickness: 4,
+         wordWrap: true,
+         wordWrapWidth: 200,
+         align: 'center',
+      });
+
    return (
       <>
          {map(activeShapes, ({ event, location }, i) => (
@@ -35,34 +58,14 @@ export const DialogsManager = () => {
                   text={characters[event.authorId].name + ':'}
                   x={location.x}
                   y={location.y - characters[event.authorId].size / 1.5 - 20}
-                  style={
-                     new PIXI.TextStyle({
-                        fontSize: 18,
-                        fill: '#e5e4e0',
-                        stroke: '#000000',
-                        strokeThickness: 3,
-                        wordWrap: true,
-                        wordWrapWidth: 200,
-                        align: 'center',
-                     })
-                  }
+                  style={getDialogStyles(event)}
                />
                <Text
                   anchor={[0.5, 0]}
                   text={event.message}
                   x={location.x}
                   y={location.y - characters[event.authorId].size / 1.5}
-                  style={
-                     new PIXI.TextStyle({
-                        fontSize: 18,
-                        fill: '#e5e4e0',
-                        stroke: '#000000',
-                        strokeThickness: 3,
-                        wordWrap: true,
-                        wordWrapWidth: 200,
-                        align: 'center',
-                     })
-                  }
+                  style={getDialogStyles(event)}
                />
             </>
          ))}
