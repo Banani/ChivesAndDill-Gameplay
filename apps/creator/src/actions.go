@@ -1,8 +1,10 @@
 package main
 
 const (
-	updateMapField = "UPDATE_MAP_FIELD"
-	deleteMapField = "DELETE_MAP_FIELD"
+	updateMapField        = "UPDATE_MAP_FIELD"
+	deleteMapField        = "DELETE_MAP_FIELD"
+	changeSpritePosition  = "CHANGE_SPRITE_POSITION"
+	changeSpriteCollision = "CHANGE_SPRITE_COLLISION"
 
 	createSpriteGroup = "CREATE_SPRITE_GROUP"
 	updateSpriteGroup = "UPDATE_SPRITE_GROUP"
@@ -25,18 +27,18 @@ const (
 	createItemTemplate = "CREATE_ITEM_TEMPLATE"
 	deleteItemTemplate = "DELETE_ITEM_TEMPLATE"
 	updateItemTemplate = "UPDATE_ITEM_TEMPLATE"
-	
-	createQuest        = "CREATE_QUEST"
-	updateQuest        = "UPDATE_QUEST"
-	deleteQuest        = "DELETE_QUEST"
 
-	createSpell        = "CREATE_SPELL"
-	updateSpell        = "UPDATE_SPELL"
-	deleteSpell        = "DELETE_SPELL"
+	createQuest = "CREATE_QUEST"
+	updateQuest = "UPDATE_QUEST"
+	deleteQuest = "DELETE_QUEST"
 
-	createCharacterClass        = "CREATE_CHARACTER_CLASS"
-	updateCharacterClass        = "UPDATE_CHARACTER_CLASS"
-	deleteCharacterClass        = "DELETE_CHARACTER_CLASS"
+	createSpell = "CREATE_SPELL"
+	updateSpell = "UPDATE_SPELL"
+	deleteSpell = "DELETE_SPELL"
+
+	createCharacterClass = "CREATE_CHARACTER_CLASS"
+	updateCharacterClass = "UPDATE_CHARACTER_CLASS"
+	deleteCharacterClass = "DELETE_CHARACTER_CLASS"
 )
 
 type Action struct {
@@ -49,6 +51,18 @@ type UpdateMapFieldAction struct {
 	X          int    `json:"x"`
 	Y          int    `json:"y"`
 	SpriteId   string `json:"spriteId"`
+}
+
+type ChangeSpritePositionAction struct {
+	ActionType string `json:"actionType"`
+	SpriteId   string `json:"spriteId"`
+	Position   string `json:"position"`
+}
+
+type ChangeSpriteCollisionAction struct {
+	ActionType string `json:"actionType"`
+	SpriteId   string `json:"spriteId"`
+	Collision  bool   `json:"collision"`
 }
 
 type DeleteMapFieldAction struct {
@@ -166,13 +180,13 @@ type DeleteQuestAction struct {
 }
 
 type CreateSpellAction struct {
-	ActionType  string	`json:"actionType"`
-	Spell 		Spell 	`json:"spell"`
+	ActionType string `json:"actionType"`
+	Spell      Spell  `json:"spell"`
 }
 
 type UpdateSpellAction struct {
-	ActionType  string	`json:"actionType"`
-	Spell 		Spell 	`json:"spell"`
+	ActionType string `json:"actionType"`
+	Spell      Spell  `json:"spell"`
 }
 
 type DeleteSpellAction struct {
@@ -181,18 +195,18 @@ type DeleteSpellAction struct {
 }
 
 type CreateCharacterClassAction struct {
-	ActionType  string	`json:"actionType"`
-	CharacterClass 		CharacterClass 	`json:"characterClass"`
+	ActionType     string         `json:"actionType"`
+	CharacterClass CharacterClass `json:"characterClass"`
 }
 
 type UpdateCharacterClassAction struct {
-	ActionType  string	`json:"actionType"`
-	CharacterClass 		CharacterClass 	`json:"characterClass"`
+	ActionType     string         `json:"actionType"`
+	CharacterClass CharacterClass `json:"characterClass"`
 }
 
 type DeleteCharacterClassAction struct {
-	ActionType string `json:"actionType"`
-	CharacterClassId    string `json:"characterClassId"`
+	ActionType       string `json:"actionType"`
+	CharacterClassId string `json:"characterClassId"`
 }
 
 type TypedAction struct {

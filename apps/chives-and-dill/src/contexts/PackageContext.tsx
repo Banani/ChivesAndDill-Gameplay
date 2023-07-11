@@ -23,7 +23,6 @@ export const EngineContexts: Record<GlobalStoreModule, React.Context<any>> = {
     [GlobalStoreModule.PLAYER]: React.createContext<GlobalStore[GlobalStoreModule.PLAYER]>(null),
     [GlobalStoreModule.CHARACTER]: React.createContext<GlobalStore[GlobalStoreModule.CHARACTER]>(null),
     [GlobalStoreModule.ACTIVE_CHARACTER]: React.createContext<GlobalStore[GlobalStoreModule.ACTIVE_CHARACTER]>(null),
-    [GlobalStoreModule.AREAS]: React.createContext<GlobalStore[GlobalStoreModule.AREAS]>(null),
     [GlobalStoreModule.MAP_SCHEMA]: React.createContext<GlobalStore[GlobalStoreModule.MAP_SCHEMA]>(null),
     [GlobalStoreModule.ACTIVE_LOOT]: React.createContext<GlobalStore[GlobalStoreModule.ACTIVE_LOOT]>(null),
     [GlobalStoreModule.ERROR_MESSAGES]: React.createContext<GlobalStore[GlobalStoreModule.ERROR_MESSAGES]>(null),

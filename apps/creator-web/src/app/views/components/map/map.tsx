@@ -144,9 +144,16 @@ export const Map: FunctionComponent<MapProps> = ({ mapActionStates, state, child
             >
                 <Container position={[translation.x, translation.y]}>
                     {_.chain(packageContext.backendStore.map.data)
-                        .filter(({ spriteId }) => texturesMap[spriteId])
-                        .map(({ x, y, spriteId }, key) => {
-                            return <MapSprite key={key} location={{ x, y }} texture={texturesMap[spriteId]} />;
+                        .filter(({ positions }) => positions.bottomSpriteId && texturesMap[positions.bottomSpriteId])
+                        .map(({ x, y, positions }, key) => {
+                            return <MapSprite key={key} location={{ x, y }} texture={texturesMap[positions.bottomSpriteId]} />;
+                        })
+                        .value()}
+
+                    {_.chain(packageContext.backendStore.map.data)
+                        .filter(({ positions }) => positions.upperSpriteId && texturesMap[positions.upperSpriteId])
+                        .map(({ x, y, positions }, key) => {
+                            return <MapSprite key={key} location={{ x, y }} texture={texturesMap[positions.upperSpriteId]} />;
                         })
                         .value()}
 

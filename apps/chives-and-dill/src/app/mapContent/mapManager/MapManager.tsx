@@ -13,7 +13,7 @@ export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y:
 
             _.forEach(mapSchema.mapSchema, (mapElement, key) => {
                 const baseTexture = PIXI.BaseTexture.from(mapElement.path);
-                output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.location.x + 1, mapElement.location.y + 1, 30, 30));
+                output[key] = new PIXI.Texture(baseTexture, new PIXI.Rectangle(mapElement.location.x, mapElement.location.y, 32, 32));
             });
 
             setTexturesMap(output);
@@ -29,14 +29,15 @@ export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y:
                     .map((x) =>
                         _.range(Math.round(location.y / BLOCK_SIZE) - BOTTOM_UP_BLOCKS_AMOUNT, Math.round(location.y / BLOCK_SIZE) + BOTTOM_UP_BLOCKS_AMOUNT).map(
                             (y) => {
-                                const sprites = mapSchema.mapDefinition[`${x}:${y}`];
-                                if (!sprites) {
-                                    return <></>;
+                                const sprite = mapSchema.mapDefinition[`${x}:${y}`];
+                                if (!sprite) {
+                                    return <React.Fragment key={`${x}:${y}`}></React.Fragment>;
                                 }
 
-                                return sprites.map((sprite, i) => (
-                                    <MapField texture={texturesMap[sprite]} spriteIndex={sprite} location={{ x, y }} key={`${x}:${y}:${i}`} />
-                                ));
+                                return <React.Fragment key={`${x}:${y}`}>
+                                    {sprite.bottomSpriteId && <MapField texture={texturesMap[sprite.bottomSpriteId]} spriteIndex={sprite.bottomSpriteId} location={{ x, y }} />}
+                                    {sprite.upperSpriteId && <MapField texture={texturesMap[sprite.upperSpriteId]} spriteIndex={sprite.upperSpriteId} location={{ x, y }} />}
+                                </React.Fragment>
                             }
                         )
                     )

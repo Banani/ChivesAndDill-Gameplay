@@ -31,7 +31,6 @@ export enum GlobalStoreModule {
     POWER_STACKS = 'powerStacks',
     ABSORB_SHIELDS = 'absorbShields',
     PLAYER = 'player',
-    AREAS = 'areas',
     MAP_SCHEMA = 'mapSchema',
     EXPERIENCE = 'experience',
     CURRENCY = 'currency',
@@ -74,7 +73,6 @@ export interface EnginePackage {
     [GlobalStoreModule.ABSORB_SHIELDS]: PartialEnginePackage<AbsorbShieldTrack>;
     [GlobalStoreModule.CHARACTER]: PartialEnginePackage<any>; // TODO: PlayerCharacter
     [GlobalStoreModule.ACTIVE_CHARACTER]: PartialEnginePackage<string>;
-    [GlobalStoreModule.AREAS]: PartialEnginePackage<number[][]>;
     [GlobalStoreModule.MAP_SCHEMA]: PartialEnginePackage<MapSchema | MapDefinition>;
     [GlobalStoreModule.ACTIVE_LOOT]: PartialEnginePackage<CorpseLoot>;
     [GlobalStoreModule.ERROR_MESSAGES]: PartialEnginePackage<undefined>;
@@ -119,7 +117,6 @@ export interface GlobalStore {
     [GlobalStoreModule.PLAYER]: StoreModule<undefined>;
     [GlobalStoreModule.CHARACTER]: StoreModule<any>; // TODO: PlayerCharacter
     [GlobalStoreModule.ACTIVE_CHARACTER]: StoreModule<string>;
-    [GlobalStoreModule.AREAS]: StoreModule<number[][]>;
     [GlobalStoreModule.MAP_SCHEMA]: StoreModule<MapSchema | MapDefinition>;
     [GlobalStoreModule.ACTIVE_LOOT]: StoreModule<CorpseLoot>;
     [GlobalStoreModule.ERROR_MESSAGES]: StoreModule<undefined>;
@@ -281,11 +278,15 @@ export type MapSchema = Record<
     {
         path: string;
         location: Location;
+        collision: boolean;
     }
 >;
 
 export interface MapDefinition {
-    [key: string]: string[];
+    [key: string]: {
+        upperSpriteId?: string;
+        bottomSpriteId?: string;
+    };
 }
 
 export interface ErrorMessage {

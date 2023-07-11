@@ -17,7 +17,6 @@ import { NpcModal } from './guiContent/npcModal/NpcModal';
 import { QuestManager } from './guiContent/quests';
 import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
 import { Details } from './guiContent/details/Details';
-import { AreasManager } from './mapContent/AreasManager';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
 import { BloodPoolManager } from './mapContent/BloodPoolsManager';
@@ -117,7 +116,6 @@ const Map = () => {
                                                             >
                                                                 <MapWrapper />
                                                                 <AreasSpellsEffectsManager />
-                                                                <AreasManager />
 
                                                                 <RenderPlayersManager />
                                                                 {renderSpells()}
