@@ -47,16 +47,15 @@ export class QuotesService extends EventParser {
         const monsterTemplate = services.monsterTemplateService.getData()[respawn.characterTemplateId];
         const onPulling = monsterTemplate.quotesEvents?.onPulling;
 
-        // TODO: pokryc testami case, kiedy potwor nie ma w ogole cytatu
-        if (onPulling.quotes.length === 0) {
-            return;
-        }
-
         if (this.quotesTimeStamps[event.monster.id] > now() - this.QUOTE_COOLDOWN) {
             return;
         }
 
         if (!onPulling) {
+            return;
+        }
+
+        if (onPulling.quotes.length === 0) {
             return;
         }
 
@@ -69,7 +68,7 @@ export class QuotesService extends EventParser {
         this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
             type: ChatEngineEvents.SendChatMessage,
             characterId: event.monster.id,
-            message: onPulling.quotes[Math.floor(services.randomGeneratorService.generateNumber() * onPulling.quotes.length)],
+            message: onPulling.quotes[Math.round(services.randomGeneratorService.generateNumber() * onPulling.quotes.length)],
             channelType: ChannelType.Quotes,
         });
     };
@@ -98,11 +97,6 @@ export class QuotesService extends EventParser {
         const monsterTemplate = services.monsterTemplateService.getData()[respawn.characterTemplateId];
         const quotes = monsterTemplate.quotesEvents?.[quotesType];
 
-        // TODO: pokryc testami case, kiedy potwor nie ma w ogole cytatu
-        if (quotes.quotes.length === 0) {
-            return;
-        }
-
         if (this.quotesTimeStamps[characterId] > now() - this.QUOTE_COOLDOWN) {
             return;
         }
@@ -111,16 +105,19 @@ export class QuotesService extends EventParser {
             return;
         }
 
+        if (quotes.quotes.length === 0) {
+            return;
+        }
+
         if (services.randomGeneratorService.generateNumber() > quotes.chance) {
             return;
         }
 
         this.quotesTimeStamps[characterId] = now();
-
         this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
             type: ChatEngineEvents.SendChatMessage,
             characterId,
-            message: quotes.quotes[Math.floor(services.randomGeneratorService.generateNumber() * quotes.quotes.length)],
+            message: quotes.quotes[Math.round(services.randomGeneratorService.generateNumber() * (quotes.quotes.length - 1))],
             channelType: ChannelType.Quotes,
         });
     };

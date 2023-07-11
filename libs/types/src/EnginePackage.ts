@@ -297,7 +297,7 @@ export interface ErrorMessage {
 export interface CreateCharacter {
     type: CommonClientMessages.CreateCharacter;
     name: string;
-    class: any; // MOve classes
+    characterClassId: string;
 }
 
 export interface PlayerStartMoveAction {

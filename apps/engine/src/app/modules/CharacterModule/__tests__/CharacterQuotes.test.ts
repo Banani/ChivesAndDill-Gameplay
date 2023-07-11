@@ -4,78 +4,34 @@ import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUt
 import { CharacterDiedEvent, CharacterType } from 'apps/engine/src/app/types';
 import { CharacterRespawn, WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { CharacterUnion } from 'apps/engine/src/app/types/CharacterUnion';
-import { Classes } from 'apps/engine/src/app/types/Classes';
-import { merge, now } from 'lodash';
+import { now } from 'lodash';
 import { } from '../..';
+import { MockedMonsterTemplates } from '../../../mocks';
 import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
-import { MonsterEngineEvents, MonsterPulledEvent } from '../../MonsterModule/Events';
-import { MonsterTemplate, MonsterTemplates } from '../../MonsterModule/MonsterTemplates';
-import { MonsterRespawnTemplateService } from '../../MonsterModule/dataProviders';
+import { MonsterEngineEvents, MonsterPulledEvent, MonsterRespawnsUpdatedEvent } from '../../MonsterModule/Events';
+import { MonsterTemplate } from '../../MonsterModule/MonsterTemplates';
+import { MonsterRespawnTemplateService, MonsterTemplateService } from '../../MonsterModule/services';
 import { Monster } from '../../MonsterModule/types';
 import _ = require('lodash');
 
-jest.mock('lodash', () => ({
-    ...(jest.requireActual('lodash') as any),
-    now: jest.fn(),
-}));
-
-jest.mock('../../MonsterModule/dataProviders/MonsterRespawnTemplateService', () => {
-    const getData = jest.fn();
-
-    return {
-        MonsterRespawnTemplateService: function () {
-            return {
-                init: jest.fn(),
-                handleEvent: jest.fn(),
-                getData,
-            };
-        },
-    };
-});
-
-jest.mock('../../NpcModule/services/NpcRespawnTemplateService', () => {
-    const getData = jest.fn();
-
-    return {
-        NpcRespawnTemplateService: function () {
-            return {
-                init: jest.fn(),
-                handleEvent: jest.fn(),
-                getData,
-            };
-        },
-    };
-});
-
-jest.mock('../../../services/RandomGeneratorService', () => {
-    const generateNumber = jest.fn();
-
-    return {
-        RandomGeneratorService: function () {
-            return {
-                init: jest.fn(),
-                handleEvent: jest.fn(),
-                generateNumber,
-            };
-        },
-    };
-});
-
 interface CharacterQuotesProps {
-    respawnServiceProps?: Record<string, CharacterRespawn<MonsterTemplate>>;
+    respawnServiceProps?: Record<string, CharacterRespawn>;
+    monsterTemplate: Partial<MonsterTemplate>;
 }
 
-const setupEngine = ({ respawnServiceProps }: RecursivePartial<CharacterQuotesProps> = {}) => {
-    const respawnService = new MonsterRespawnTemplateService();
+const setupEngine = ({ respawnServiceProps, monsterTemplate }: RecursivePartial<CharacterQuotesProps> = {}) => {
+    const monsterTemplateService = new MonsterTemplateService();
+    (monsterTemplateService.getData as jest.Mock).mockReturnValue({ "1": _.merge({}, MockedMonsterTemplates['1'], monsterTemplate) })
 
+    const respawnService = new MonsterRespawnTemplateService();
     (respawnService.getData as jest.Mock).mockReturnValue(
-        merge(
+        _.merge(
             {},
             {
-                '2': {
-                    id: '2',
+                'respawn_1': {
+                    id: 'respawn_1',
                     location: { x: 250, y: 200 },
-                    characterTemplate: MonsterTemplates['Orc'],
+                    characterTemplateId: "1",
                     time: 4000,
                     walkingType: WalkingType.None,
                 },
@@ -88,14 +44,19 @@ const setupEngine = ({ respawnServiceProps }: RecursivePartial<CharacterQuotesPr
     (now as jest.Mock).mockReturnValue(currentTime);
 
     const randomGeneratorService = new RandomGeneratorService();
-    (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
+    (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
     const engineManager = new EngineManager();
 
     const players = {
-        '1': engineManager.preparePlayerWithCharacter({ name: 'character_1', class: Classes.Tank }),
-        '2': engineManager.preparePlayerWithCharacter({ name: 'character_2', class: Classes.Tank }),
+        '1': engineManager.preparePlayerWithCharacter({ name: 'character_1' }),
+        '2': engineManager.preparePlayerWithCharacter({ name: 'character_2' }),
     };
+
+    engineManager.createSystemAction<MonsterRespawnsUpdatedEvent>({
+        type: MonsterEngineEvents.MonsterRespawnsUpdated,
+        respawnIds: ['respawn_1']
+    });
 
     return { engineManager, players, randomGeneratorService, currentTime };
 };
@@ -121,10 +82,10 @@ describe('CharacterQuotes', () => {
 
         checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, {
             data: {
-                chatQuoteMessage_0: {
+                chatQuoteMessage_1: {
                     authorId: 'monster_0',
                     channelType: 'Quotes',
-                    id: 'chatQuoteMessage_0',
+                    id: 'chatQuoteMessage_1',
                     message: 'Tylko nie to...',
                     time: newCurrentTime,
                 },
@@ -133,7 +94,13 @@ describe('CharacterQuotes', () => {
     });
 
     it('Monster should not say anything when dying, if random number is not low enough', () => {
-        const { engineManager, players, randomGeneratorService } = setupEngine();
+        const { engineManager, players, randomGeneratorService } = setupEngine({
+            monsterTemplate: {
+                quotesEvents: {
+                    onDying: { chance: 0.6, quotes: ["test"] }
+                }
+            }
+        });
         (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.7);
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
@@ -156,13 +123,11 @@ describe('CharacterQuotes', () => {
 
     it('Monster should not say anything when dying, if monster does not have defined quotes', () => {
         const { engineManager, players, randomGeneratorService } = setupEngine({
-            respawnServiceProps: {
-                '2': {
-                    characterTemplate: {
-                        quotesEvents: { onDying: null },
-                    },
-                },
-            },
+            monsterTemplate: {
+                quotesEvents: {
+                    onDying: null
+                }
+            }
         });
         (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.8);
 
@@ -187,6 +152,9 @@ describe('CharacterQuotes', () => {
         const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
         (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
+        const newCurrentTime = '992221';
+        (now as jest.Mock).mockReturnValue(newCurrentTime);
+
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
         const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
@@ -200,12 +168,12 @@ describe('CharacterQuotes', () => {
 
         checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, {
             data: {
-                chatQuoteMessage_0: {
+                chatQuoteMessage_1: {
                     authorId: 'monster_0',
                     channelType: 'Quotes',
-                    id: 'chatQuoteMessage_0',
+                    id: 'chatQuoteMessage_1',
                     message: 'Zgniotę Cie jak truskaweczke',
-                    time: currentTime,
+                    time: newCurrentTime,
                 },
             },
         });
@@ -213,13 +181,11 @@ describe('CharacterQuotes', () => {
 
     it('Monster should not say anything when starting fight, if monster does not have defined quotes', () => {
         const { engineManager, players, randomGeneratorService } = setupEngine({
-            respawnServiceProps: {
-                '2': {
-                    characterTemplate: {
-                        quotesEvents: { onPulling: null },
-                    },
-                },
-            },
+            monsterTemplate: {
+                quotesEvents: {
+                    onPulling: null
+                }
+            }
         });
         (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.8);
 
@@ -282,6 +248,7 @@ describe('CharacterQuotes', () => {
 
     it('Monster should say a quote if the number is high enough and enough time passed', () => {
         const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
         const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
@@ -320,7 +287,6 @@ describe('CharacterQuotes', () => {
 
     it('Monster should say a quote if killed a player', () => {
         const { engineManager, players, randomGeneratorService, currentTime } = setupEngine();
-        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
         const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
@@ -338,10 +304,10 @@ describe('CharacterQuotes', () => {
 
         checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, {
             data: {
-                chatQuoteMessage_0: {
+                chatQuoteMessage_1: {
                     authorId: 'monster_0',
                     channelType: 'Quotes',
-                    id: 'chatQuoteMessage_0',
+                    id: 'chatQuoteMessage_1',
                     message: 'Pfff... ledwie go uderzyłem',
                     time: newCurrentTime,
                 },
@@ -354,11 +320,6 @@ describe('CharacterQuotes', () => {
         (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
-        const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
-
-        engineManager.doEngineAction();
-
-        dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
 
         checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, {
             data: {

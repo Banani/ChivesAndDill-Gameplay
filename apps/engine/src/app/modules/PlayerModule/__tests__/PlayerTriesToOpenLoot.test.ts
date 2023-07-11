@@ -1,207 +1,197 @@
 import { CommonClientMessages, GlobalStoreModule, Location, RecursivePartial } from '@bananos/types';
-import { checkIfErrorWasHandled, checkIfPackageIsValid, EngineManager } from 'apps/engine/src/app/testUtilities';
-import { Classes } from 'apps/engine/src/app/types/Classes';
-import {} from '../../';
+import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
+import { } from '../../';
 import { EngineEvents } from '../../../EngineEvents';
+import { MockedMonsterTemplates } from '../../../mocks';
 import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
 import { CharacterDiedEvent, CharacterType } from '../../../types';
 import { WalkingType } from '../../../types/CharacterRespawn';
 import { CharacterUnion } from '../../../types/CharacterUnion';
-import { MonsterRespawnTemplateService } from '../../MonsterModule/dataProviders';
-import { MonsterTemplates } from '../../MonsterModule/MonsterTemplates';
+import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../../MonsterModule/Events';
+import { MonsterRespawnTemplateService, MonsterTemplateService } from '../../MonsterModule/services';
 import { Monster } from '../../MonsterModule/types';
 import _ = require('lodash');
 
-jest.mock('../../../services/RandomGeneratorService', () => {
-   const generateNumber = jest.fn();
-
-   return {
-      RandomGeneratorService: function () {
-         return {
-            init: jest.fn(),
-            handleEvent: jest.fn(),
-            generateNumber,
-         };
-      },
-   };
-});
-
-jest.mock('../../MonsterModule/dataProviders/MonsterRespawnTemplateService', () => {
-   const getData = jest.fn();
-
-   return {
-      MonsterRespawnTemplateService: function () {
-         return {
-            init: jest.fn(),
-            handleEvent: jest.fn(),
-            getData,
-         };
-      },
-   };
-});
-
 interface SetupProps {
-   monsterLocation: Location;
+    monsterLocation: Location;
 }
 
 const setupEngine = (setupProps: RecursivePartial<SetupProps> = {}) => {
-   const respawnService = new MonsterRespawnTemplateService();
-   (respawnService.getData as jest.Mock).mockReturnValue({
-      '2': {
-         id: '2',
-         location: setupProps.monsterLocation ?? { x: 300, y: 400 },
-         characterTemplate: MonsterTemplates['Orc'],
-         time: 4000,
-         walkingType: WalkingType.None,
-      },
-      '3': {
-         id: '3',
-         location: setupProps.monsterLocation ?? { x: 350, y: 400 },
-         characterTemplate: MonsterTemplates['Orc'],
-         time: 4000,
-         walkingType: WalkingType.None,
-      },
-   });
+    const monsterTemplateService = new MonsterTemplateService();
+    (monsterTemplateService.getData as jest.Mock).mockReturnValue(MockedMonsterTemplates)
 
-   const randomGeneratorService = new RandomGeneratorService();
-   (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.64);
+    const respawnService = new MonsterRespawnTemplateService();
+    (respawnService.getData as jest.Mock).mockReturnValue(
+        {
+            'respawn_1': {
+                id: 'respawn_1',
+                location: setupProps.monsterLocation ?? { x: 300, y: 400 },
+                characterTemplateId: "1",
+                time: 4000,
+                walkingType: WalkingType.None,
+            },
+            'respawn_2': {
+                id: 'respawn_2',
+                location: setupProps.monsterLocation ?? { x: 350, y: 400 },
+                characterTemplateId: "1",
+                time: 4000,
+                walkingType: WalkingType.None,
+            },
+        }
+    );
 
-   const engineManager = new EngineManager();
+    const randomGeneratorService = new RandomGeneratorService();
+    (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.64);
 
-   const players = {
-      '1': engineManager.preparePlayerWithCharacter({ name: 'character_1', class: Classes.Tank }),
-   };
+    const engineManager = new EngineManager();
 
-   return { engineManager, players, randomGeneratorService };
+    const players = {
+        '1': engineManager.preparePlayerWithCharacter({ name: 'character_1' }),
+    };
+
+    engineManager.createSystemAction<MonsterRespawnsUpdatedEvent>({
+        type: MonsterEngineEvents.MonsterRespawnsUpdated,
+        respawnIds: ['respawn_1', "respawn_2"]
+    });
+
+    return { engineManager, players, randomGeneratorService };
 };
 
 describe('PlayerTriesToOpenLoot', () => {
-   it('Player should be able to open corpse', () => {
-      const { engineManager, players } = setupEngine({ monsterLocation: { x: 150, y: 100 } });
+    it('Player should be able to open corpse', () => {
+        const { engineManager, players } = setupEngine({ monsterLocation: { x: 150, y: 100 } });
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
-      engineManager.createSystemAction<CharacterDiedEvent>({
-         type: EngineEvents.CharacterDied,
-         characterId: monster.id,
-         killerId: players['1'].characterId,
-         character: monster,
-      });
+        engineManager.createSystemAction<CharacterDiedEvent>({
+            type: EngineEvents.CharacterDied,
+            characterId: monster.id,
+            killerId: players['1'].characterId,
+            character: monster,
+        });
 
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.OpenLoot,
-         corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
-      });
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: CommonClientMessages.OpenLoot,
+            corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
+        });
 
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
-         data: {
-            monster_0: {
-               coins: 19,
-               items: {
-                  corpseItemId_1: {
-                     amount: 1,
-                     itemTemplateId: '1',
-                  },
-               },
+        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
+            data: {
+                monster_0: {
+                    coins: 19,
+                    items: {
+                        corpseItemId_1: {
+                            amount: 1,
+                            itemTemplateId: '1',
+                        },
+                        corpseItemId_2: {
+                            amount: 1,
+                            itemTemplateId: "2",
+                        }
+                    },
+                },
             },
-         },
-      });
-   });
+        });
+    });
 
-   it('Player should get error if tries to open corpse that does not exist', () => {
-      const { engineManager, players } = setupEngine();
+    it('Player should get error if tries to open corpse that does not exist', () => {
+        const { engineManager, players } = setupEngine();
 
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.OpenLoot,
-         corpseId: 'Some_random_id',
-      });
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: CommonClientMessages.OpenLoot,
+            corpseId: 'Some_random_id',
+        });
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      checkIfErrorWasHandled(GlobalStoreModule.ACTIVE_LOOT, 'This corpse does not exist.', dataPackage);
-   });
+        checkIfErrorWasHandled(GlobalStoreModule.ACTIVE_LOOT, 'This corpse does not exist.', dataPackage);
+    });
 
-   it('Player should get error if tries to open corpse that is to far away', () => {
-      const { engineManager, players } = setupEngine({ monsterLocation: { x: 500, y: 500 } });
+    it('Player should get error if tries to open corpse that is to far away', () => {
+        const { engineManager, players } = setupEngine({ monsterLocation: { x: 500, y: 500 } });
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-      const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
-      engineManager.createSystemAction<CharacterDiedEvent>({
-         type: EngineEvents.CharacterDied,
-         characterId: monster.id,
-         killerId: players['1'].characterId,
-         character: monster,
-      });
+        engineManager.createSystemAction<CharacterDiedEvent>({
+            type: EngineEvents.CharacterDied,
+            characterId: monster.id,
+            killerId: players['1'].characterId,
+            character: monster,
+        });
 
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.OpenLoot,
-         corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
-      });
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: CommonClientMessages.OpenLoot,
+            corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
+        });
 
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      checkIfErrorWasHandled(GlobalStoreModule.ACTIVE_LOOT, 'This corpse is to far away.', dataPackage);
-   });
+        checkIfErrorWasHandled(GlobalStoreModule.ACTIVE_LOOT, 'This corpse is to far away.', dataPackage);
+    });
 
-   it('Player should have current loot closed it tries to open another one', () => {
-      const { engineManager, players } = setupEngine({ monsterLocation: { x: 150, y: 100 } });
+    it('Player should have current loot closed it tries to open another one', () => {
+        const { engineManager, players } = setupEngine({ monsterLocation: { x: 150, y: 100 } });
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-      const monster: Monster[] = _.filter(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        const monster: Monster[] = _.filter(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
-      engineManager.createSystemAction<CharacterDiedEvent>({
-         type: EngineEvents.CharacterDied,
-         characterId: monster[0].id,
-         killerId: players['1'].characterId,
-         character: monster[0],
-      });
+        engineManager.createSystemAction<CharacterDiedEvent>({
+            type: EngineEvents.CharacterDied,
+            characterId: monster[0].id,
+            killerId: players['1'].characterId,
+            character: monster[0],
+        });
 
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.OpenLoot,
-         corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
-      });
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: CommonClientMessages.OpenLoot,
+            corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
+        });
 
-      engineManager.createSystemAction<CharacterDiedEvent>({
-         type: EngineEvents.CharacterDied,
-         characterId: monster[1].id,
-         killerId: players['1'].characterId,
-         character: monster[1],
-      });
+        engineManager.createSystemAction<CharacterDiedEvent>({
+            type: EngineEvents.CharacterDied,
+            characterId: monster[1].id,
+            killerId: players['1'].characterId,
+            character: monster[1],
+        });
 
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      engineManager.callPlayerAction(players['1'].socketId, {
-         type: CommonClientMessages.OpenLoot,
-         corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
-      });
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: CommonClientMessages.OpenLoot,
+            corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
+        });
 
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
-         data: {
-            monster_1: {
-               coins: 19,
-               items: {
-                  corpseItemId_2: {
-                     amount: 1,
-                     itemTemplateId: '1',
-                  },
-               },
+        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
+            data: {
+                monster_1: {
+                    coins: 19,
+                    items: {
+                        corpseItemId_3: {
+                            amount: 1,
+                            itemTemplateId: '1',
+                        },
+                        corpseItemId_4: {
+                            amount: 1,
+                            itemTemplateId: '2',
+                        }
+                    },
+                },
             },
-         },
-         toDelete: {
-            monster_0: null,
-         },
-      });
-   });
+            toDelete: {
+                monster_0: null,
+            },
+        });
+    });
 });
