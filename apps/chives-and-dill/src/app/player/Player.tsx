@@ -183,6 +183,8 @@ const Player = React.memo<{ player: any; characterViewsSettings: any; characters
                            fontSize: 15,
                            fill: 'green',
                            fontWeight: 'bold',
+                           lineJoin: 'round',
+                           strokeThickness: 4,
                         })
                      }
                   />
