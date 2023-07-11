@@ -5,6 +5,7 @@ import {
     ChatMessage,
     EngineItemMessages,
     EngineNpcAction,
+    EngineSpellMessages,
     EquipmentTrack,
     ItemTemplate,
     NpcStock,
@@ -324,11 +325,13 @@ export type EnginePackageEvent =
     | LevelChangedEvent
     | ErrorMessage
     | CreateCharacter
-    | EngineChatAction
+    | EngineChatAction// nie wiem czemu to tu jest, ale raczej nie powinno
     | EngineItemMessages
     | CharacterEvents
-    | EngineNpcAction
-    | CommonClientActions;
+    | EngineNpcAction // nie wiem czemu to tu jest, ale raczej nie powinno
+    | CommonClientActions;// nie wiem czemu to tu jest, ale raczej nie powinno
+
+export type EnginePackageActions = EngineSpellMessages | CommonClientActions | EngineNpcAction | EngineChatAction | EngineItemMessages;
 
 export enum HealthPointsSource {
     Healing = 'Healing',

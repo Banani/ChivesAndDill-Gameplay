@@ -1,4 +1,4 @@
-import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
+import { CommonClientMessages, GlobalStoreModule, SpellClientMessages } from '@bananos/types';
 import React, { useContext, useEffect, useState } from 'react';
 import { KeyBoardContext } from '../../contexts/KeyBoardContext';
 import { useEngineModuleReader } from '../../hooks';
@@ -55,7 +55,7 @@ const GameController = ({ children }) => {
         }
 
         if (keyBinds[key]) {
-            socket?.emit(CommonClientMessages.PerformBasicAttack, {
+            socket?.emit(SpellClientMessages.CastSpell, {
                 directionLocation: {
                     x: characterMovements[activeCharacterId].location.x + mousePosition.x - gameWidth / 2,
                     y: characterMovements[activeCharacterId].location.y + mousePosition.y - gameHeight / 2,

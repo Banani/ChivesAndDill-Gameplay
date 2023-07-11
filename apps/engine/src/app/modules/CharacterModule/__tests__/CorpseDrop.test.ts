@@ -1,18 +1,18 @@
-import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
+import { CommonClientMessages, GlobalStoreModule, RecursivePartial } from '@bananos/types';
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { CharacterDiedEvent, CharacterType } from 'apps/engine/src/app/types';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { CharacterUnion } from 'apps/engine/src/app/types/CharacterUnion';
-import { } from '..';
 import { MockedMonsterTemplates } from '../../../mocks';
 import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
 import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../../MonsterModule/Events';
+import { MonsterTemplate } from '../../MonsterModule/MonsterTemplates';
 import { MonsterRespawnTemplateService, MonsterTemplateService } from '../../MonsterModule/services';
 import { Monster } from '../../MonsterModule/types';
 import _ = require('lodash');
 
-const setupEngine = ({ monsterTemplates }: { monsterTemplates: Record<string, MonsterTemplate> } = {}) => {
+const setupEngine = ({ monsterTemplates }: RecursivePartial<{ monsterTemplates: Record<string, MonsterTemplate> }> = {}) => {
     const monsterTemplateService = new MonsterTemplateService();
     (monsterTemplateService.getData as jest.Mock).mockReturnValue({ '1': Object.assign({}, MockedMonsterTemplates['1'], monsterTemplates ? monsterTemplates['1'] : {}) })
 

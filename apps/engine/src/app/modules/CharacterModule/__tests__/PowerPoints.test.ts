@@ -140,7 +140,7 @@ describe('Power points service', () => {
         checkIfPackageIsValid(GlobalStoreModule.CHARACTER_POWER_POINTS, dataPackage, {
             data: {
                 playerCharacter_2: {
-                    currentHp: 89,
+                    currentHp: 189,
                 }
             },
             events: [

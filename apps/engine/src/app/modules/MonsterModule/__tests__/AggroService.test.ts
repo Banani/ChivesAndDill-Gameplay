@@ -16,7 +16,6 @@ import _ = require('lodash');
 
 
 const setupEngine = ({ monsterTemplates, startingLocation }: RecursivePartial<{ monsterTemplates: Record<string, MonsterTemplate>, startingLocation: Location }> = {}) => {
-
     const monsterTemplateService = new MonsterTemplateService();
     const calculatedMonsterTemplates = { '1': Object.assign({}, MockedMonsterTemplates['1'], monsterTemplates ? monsterTemplates['1'] : {}) };
     (monsterTemplateService.getData as jest.Mock).mockReturnValue(calculatedMonsterTemplates)
@@ -39,8 +38,6 @@ const setupEngine = ({ monsterTemplates, startingLocation }: RecursivePartial<{ 
     const players = {
         '1': engineManager.preparePlayerWithCharacter({ name: 'character_1' }),
     };
-
-    let zxc = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
     engineManager.createSystemAction<MonsterRespawnsUpdatedEvent>({
         type: MonsterEngineEvents.MonsterRespawnsUpdated,

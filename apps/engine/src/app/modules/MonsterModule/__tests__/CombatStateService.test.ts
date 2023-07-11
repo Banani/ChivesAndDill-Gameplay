@@ -1,4 +1,4 @@
-import { Attribute, DamageEffect, GlobalStoreModule, RecursivePartial } from '@bananos/types';
+import { Attribute, DamageEffect, GlobalStoreModule, Location, RecursivePartial } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { MockedMonsterTemplates } from '../../../mocks';
 import { RandomGeneratorService } from '../../../services/RandomGeneratorService';

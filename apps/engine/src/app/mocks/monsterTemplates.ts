@@ -9,7 +9,7 @@ export const MockedMonsterTemplates: Record<string, MonsterTemplate> = {
         spellPower: 0,
         spellPowerRegeneration: 0,
         movementSpeed: 10,
-        sightRange: 0,
+        sightRange: 100,
         desiredRange: 0,
         escapeRange: 0,
         attackFrequency: 100,

@@ -1,5 +1,6 @@
-import { ClientMessages, CommonClientMessages, EnginePackage, EnginePackageEvent } from '@bananos/types';
+import { ClientMessages, CommonClientMessages, EnginePackage, EnginePackageActions } from '@bananos/types';
 import { MainEngine } from '../engines/MainEngine';
+import { MockedCharacterClasses, MockedItemTemplates, MockedMonsterTemplates, MockedNpcTemplates, MockedSpells } from '../mocks';
 import {
     getCharacterModule,
     getChatModule,
@@ -11,7 +12,6 @@ import {
     getQuestModule,
     getSpellModule,
 } from '../modules';
-import { Classes } from '../types/Classes';
 import { PlayerCharacter } from '../types/PlayerCharacter';
 import { EngineEvent } from '../types/events';
 
@@ -21,7 +21,7 @@ jest.mock('lodash', () => ({
 }));
 
 jest.mock('../services/RandomGeneratorService', () => {
-    const generateNumber = jest.fn();
+    const generateNumber = jest.fn().mockReturnValue(1);
 
     return {
         RandomGeneratorService: function () {
@@ -50,12 +50,7 @@ jest.mock('../modules/MapModule/services/MapService', () => ({
 }));
 
 jest.mock('../modules/PlayerModule/services/CharacterClassService', () => {
-    const getData = jest.fn().mockReturnValue({
-        ["Tank"]: {
-            maxHp: 100,
-            maxSpellPower: 100,
-        }
-    });
+    const getData = jest.fn().mockReturnValue(MockedCharacterClasses);
 
     return {
         CharacterClassService: jest.fn().mockImplementation(() => ({
@@ -67,7 +62,7 @@ jest.mock('../modules/PlayerModule/services/CharacterClassService', () => {
 });
 
 jest.mock('../modules/ItemModule/services/ItemTemplateService', () => {
-    const getData = jest.fn().mockReturnValue({});
+    const getData = jest.fn().mockReturnValue(MockedItemTemplates);
 
     return {
         ItemTemplateService: jest.fn().mockImplementation(() => ({
@@ -79,7 +74,7 @@ jest.mock('../modules/ItemModule/services/ItemTemplateService', () => {
 });
 
 jest.mock('../modules/MonsterModule/services/MonsterTemplateService', () => {
-    const getData = jest.fn().mockReturnValue({});
+    const getData = jest.fn().mockReturnValue(MockedMonsterTemplates);
 
     return {
         MonsterTemplateService: jest.fn().mockImplementation(() => ({
@@ -103,7 +98,7 @@ jest.mock('../modules/MonsterModule/services/MonsterRespawnTemplateService', () 
 });
 
 jest.mock('../modules/NpcModule/services/NpcTemplateService', () => {
-    const getData = jest.fn().mockReturnValue({});
+    const getData = jest.fn().mockReturnValue(MockedNpcTemplates);
 
     return {
         NpcTemplateService: jest.fn().mockImplementation(() => ({
@@ -127,7 +122,7 @@ jest.mock('../modules/NpcModule/services/NpcRespawnTemplateService', () => {
 });
 
 jest.mock('../modules/SpellModule/services/SpellService', () => {
-    const getData = jest.fn().mockReturnValue({});
+    const getData = jest.fn().mockReturnValue(MockedSpells);
 
     return {
         SpellService: jest.fn().mockImplementation(() => ({
@@ -217,7 +212,7 @@ export class EngineManager {
         throw new Error('IO is not ready yet.');
     }
 
-    callPlayerAction(playerId: string, action: EnginePackageEvent) {
+    callPlayerAction(playerId: string, action: EnginePackageActions) {
         if (!this.playerActionHandlers[playerId]) {
             throw new Error('Unknown playerId: ' + playerId);
         }
@@ -233,7 +228,7 @@ export class EngineManager {
 
     preparePlayerWithCharacter: (character: { name: string; characterClassId?: string }) => PlayerCharacterForTesting = (character) => {
         const id = this.addNewPlayer();
-        this.callPlayerAction(id, { type: CommonClientMessages.CreateCharacter, characterClassId: Classes.Tank, ...character });
+        this.callPlayerAction(id, { type: CommonClientMessages.CreateCharacter, characterClassId: '1', ...character });
         const dataPackage = this.getLatestPlayerDataPackage(id);
 
         return {
