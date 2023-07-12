@@ -1,4 +1,5 @@
-import { CharacterClientEvents, DamageAbsorbedEvent, EngineEventType, ExperienceGainEvent, GlobalStoreModule, HealthPointsSource } from '@bananos/types';
+import type { DamageAbsorbedEvent, ExperienceGainEvent } from '@bananos/types';
+import { CharacterClientEvents, EngineEventType, GlobalStoreModule, HealthPointsSource } from '@bananos/types';
 import { Text } from '@inlet/react-pixi';
 import { chain, filter, forEach, map } from 'lodash';
 import * as PIXI from 'pixi.js';
@@ -55,18 +56,16 @@ export const FloatingNumbersManager = () => {
             ...prev,
             ...chain(experienceEvents)
                 .filter((event) => event.type === CharacterClientEvents.ExperienceGain)
-                .map((event: ExperienceGainEvent) => {
-                    return {
-                        creationTime: Date.now(),
-                        y: 3.5,
-                        x: randomNumber(1.5, -1.5),
-                        event: {
-                            type: event.type,
-                            characterId: event.characterId,
-                            amount: `XP: ${event.amount}`,
-                        },
-                    };
-                })
+                .map((event: ExperienceGainEvent) => ({
+                    creationTime: Date.now(),
+                    y: 3.5,
+                    x: randomNumber(1.5, -1.5),
+                    event: {
+                        type: event.type,
+                        characterId: event.characterId,
+                        amount: `XP: ${event.amount}`,
+                    },
+                }))
                 .value(),
         ]);
     }, [experienceEvents]);

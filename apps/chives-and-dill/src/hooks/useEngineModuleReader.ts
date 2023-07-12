@@ -10,5 +10,6 @@ export const useEngineModuleReader = (moduleName: GlobalStoreModule) => {
       events: context?.events,
       recentData: context?.recentData,
       lastUpdateTime: context?.lastUpdateTime,
+      lastUpdateEventTime: context?.lastUpdateEventTime,
    } as GlobalStore[typeof moduleName];
 };

@@ -14,7 +14,7 @@ import cursorSpeak from '../../assets/spritesheets/cursors/speakCursor.png';
 import cursorLoot from '../../assets/spritesheets/cursors/lootCursor.png';
 import defaultCursor from '../../assets/spritesheets/cursors/defaultCursor.png';
 
-const Player = React.memo<{ player: any; characterViewsSettings: any; charactersMovements: any; characterPowerPoints: any }>(
+const Player = React.memo<{ player: any, characterViewsSettings: any, charactersMovements: any, characterPowerPoints: any }>(
    ({ player, characterViewsSettings, charactersMovements, characterPowerPoints }) => {
       const [timer, setTimer] = useState(0);
       const [playerSheet, setPlayerSheet] = useState({});

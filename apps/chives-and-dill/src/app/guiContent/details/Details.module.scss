@@ -1,0 +1,13 @@
+.DetailsContainer {
+   width: 400px;
+   position: absolute;
+   bottom: 2%;
+   right: 2%;
+   color: white;
+
+   .PlayerList {
+      height: 140px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.3);
+   }
+}
