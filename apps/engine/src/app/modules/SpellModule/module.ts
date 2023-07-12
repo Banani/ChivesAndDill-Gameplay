@@ -11,6 +11,7 @@ import {
     SpellPowerNotifier,
     TimeEffectNotifier,
 } from './notifiers';
+import { SpellCastTimeNotifier } from './notifiers/SpellCastTimeNotifier';
 import {
     AbsorbShieldEffectService,
     AngleBlastSpellService,
@@ -72,7 +73,8 @@ export const getSpellModule: () => EngineModule<SpellModuleServices> = () => {
             new SpellPowerNotifier(),
             new TimeEffectNotifier(),
             new AvailableSpellsNotifier(),
-            new SpellDefinitionNotifier()
+            new SpellDefinitionNotifier(),
+            new SpellCastTimeNotifier()
         ],
         services: {
             spellService: new SpellService(),
