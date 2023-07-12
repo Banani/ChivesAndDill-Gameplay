@@ -11,6 +11,8 @@
       .channel {
          color: gold;
          padding: 5px 8px;
+         text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+         font-size: 17px;
 
          &:hover {
             color: rgb(214, 214, 214);
@@ -21,10 +23,11 @@
    .chatContent {
       overflow: hidden;
       height: 250px;
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.6);
       display: flex;
       justify-content: flex-end;
       flex-direction: column;
+      padding-top: 4px;
 
       .messagesHolder {
          overflow-y: scroll;
@@ -41,7 +44,6 @@
       display: flex;
       border: 2px solid grey;
       align-items: center;
-      padding: 0px 8px;
 
       &.active {
          border: 2px solid white;
