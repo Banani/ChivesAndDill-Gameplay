@@ -63,6 +63,10 @@ describe('Chat module - Send chat message action', () => {
                     message,
                     time: currentTime,
                     channelType: ChannelType.Custom,
+                    location: {
+                        x: 50,
+                        y: 100,
+                    }
                 },
             },
         });
@@ -91,6 +95,10 @@ describe('Chat module - Send chat message action', () => {
                     message,
                     time: currentTime,
                     channelType: ChannelType.Custom,
+                    location: {
+                        x: 50,
+                        y: 100,
+                    }
                 },
             },
         });
@@ -240,6 +248,10 @@ describe('Chat module - Send chat message action', () => {
                     id: 'chatRangeMessage_0',
                     message: 'Hello there.',
                     time: currentTime,
+                    location: {
+                        x: 50,
+                        y: 100,
+                    }
                 },
             },
         });
@@ -297,6 +309,10 @@ describe('Chat module - Send chat message action', () => {
                     id: 'chatRangeMessage_0',
                     message: 'Hello there.',
                     time: currentTime,
+                    location: {
+                        x: 50,
+                        y: 100,
+                    }
                 },
             },
         });

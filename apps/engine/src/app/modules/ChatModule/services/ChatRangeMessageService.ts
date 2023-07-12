@@ -26,7 +26,6 @@ export class ChatRangeMessageService extends EventParser {
             return;
         }
 
-        const character = services.characterService.getAllCharacters()[event.characterId];
         const id = `chatRangeMessage_${this.increment++}`;
         this.messages[id] = {
             id,
@@ -35,10 +34,7 @@ export class ChatRangeMessageService extends EventParser {
             time: now(),
             chatChannelId: event.chatChannelId,
             channelType: ChannelType.Range,
-            location: {
-                x: character.location.x,
-                y: character.location.y
-            }
+            location: event.location
         };
 
         this.engineEventCrator.asyncCeateEvent<ChatMessageSentEvent>({
