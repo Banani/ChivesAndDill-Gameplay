@@ -1,0 +1,17 @@
+.Header {
+  background: rgba(11, 10, 12, 0.9);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .DetailsIcons {
+    display: flex;
+
+    .Icon {
+      padding: 2px;
+      margin: 2px;
+      cursor: pointer;
+    }
+  }
+}
