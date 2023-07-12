@@ -11,6 +11,7 @@ import { PackageContext } from '../../contexts';
 import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { DeleteConfirmationDialog } from '../../dialogs';
 
+import { Loader } from '../components';
 import styles from './Quests.module.scss';
 import { QuestsContext } from './QuestsContextProvider';
 
@@ -20,9 +21,13 @@ export const Quests = () => {
     const { deleteQuest, setActiveQuest } = useContext(QuestsContext);
     const [questsToDelete, setQuestsToDelete] = useState<QuestSchema[]>([]);
 
-    const questSchemas = packageContext?.backendStore?.questSchemas?.data ?? {};
-    const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ?? {};
-    const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ?? {};
+    const { data: questSchemas, lastUpdateTime: lastUpdateTimeQuestSchemas } = (packageContext?.backendStore?.questSchemas ?? {});
+    const { data: itemTemplates, lastUpdateTime: lastUpdateTimeItemTemplates } = (packageContext?.backendStore?.itemTemplates ?? {});
+    const { data: npcTemplates, lastUpdateTime: lastUpdateTimeNpcTemplates } = (packageContext?.backendStore?.npcTemplates ?? {});
+
+    if (!lastUpdateTimeQuestSchemas || !lastUpdateTimeItemTemplates || !lastUpdateTimeNpcTemplates) {
+        return <Loader />;
+    }
 
     return (
         <>

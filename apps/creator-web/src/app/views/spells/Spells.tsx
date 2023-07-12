@@ -11,6 +11,7 @@ import { DeleteConfirmationDialog } from '../../dialogs';
 import { Spell } from '@bananos/types';
 import _ from 'lodash';
 import { ImagePreview } from '../../components';
+import { Loader } from '../components';
 import styles from './Spells.module.scss';
 import { SpellsContext } from './SpellsContextProvider';
 
@@ -20,7 +21,11 @@ export const Spells = () => {
     const { deleteSpell, setActiveSpell } = useContext(SpellsContext);
     const [spellsToDelete, setSpellsToDelete] = useState<Spell[]>([]);
 
-    const spells = packageContext?.backendStore?.spells?.data ?? {};
+    const { data: spells, lastUpdateTime } = (packageContext?.backendStore?.spells ?? {});
+
+    if (!lastUpdateTime) {
+        return <Loader />;
+    }
 
     return (
         <>

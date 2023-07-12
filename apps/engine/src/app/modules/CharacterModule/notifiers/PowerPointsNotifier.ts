@@ -1,5 +1,5 @@
 import type { PowerPointsTrack } from '@bananos/types';
-import { EngineEventType, GlobalStoreModule } from '@bananos/types';
+import { EngineEventType, GlobalStoreModule, HealthPointsSource } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { Notifier } from '../../../Notifier';
 import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
@@ -66,18 +66,20 @@ export class PowerPointsNotifier extends Notifier<PowerPointsTrack> {
     };
 
     handleCharacterGotHp: EngineEventHandler<CharacterGotHpEvent> = ({ event }) => {
-        this.broadcastEvents({
-            events: [
-                {
-                    type: EngineEventType.CharacterGotHp,
-                    characterId: event.characterId,
-                    amount: event.amount,
-                    source: event.source,
-                    healerId: event.healerId,
-                    spellId: event.spellId
-                },
-            ],
-        });
+        if (event.source !== HealthPointsSource.Regeneration) {
+            this.broadcastEvents({
+                events: [
+                    {
+                        type: EngineEventType.CharacterGotHp,
+                        characterId: event.characterId,
+                        amount: event.amount,
+                        source: event.source,
+                        healerId: event.healerId,
+                        spellId: event.spellId
+                    },
+                ],
+            });
+        }
 
         this.broadcastObjectsUpdate({
             objects: { [event.characterId]: { currentHp: event.currentHp } },

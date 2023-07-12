@@ -47,7 +47,7 @@ export class RandomQuoteEngine extends Engine {
             this.eventCrator.createEvent<SendQuoteMessageEvent>({
                 type: CharacterEngineEvents.SendQuoteMessage,
                 characterId: character.id,
-                message: quotesObject.quotes[Math.floor(this.services.randomGeneratorService.generateNumber() * quotesObject.quotes.length)],
+                message: quotesObject.quotes[Math.round(this.services.randomGeneratorService.generateNumber() * (quotesObject.quotes.length - 1))],
             });
         });
     }

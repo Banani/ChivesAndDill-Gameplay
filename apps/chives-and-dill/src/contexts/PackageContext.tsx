@@ -82,6 +82,7 @@ export const PackageContextProvider: FunctionComponent = ({ children }) => {
             data: {},
             events: [],
             lastUpdateTime: 0,
+            lastEventUpdateTime: 0,
             recentData: {},
         });
         return { state, setState };
@@ -90,9 +91,11 @@ export const PackageContextProvider: FunctionComponent = ({ children }) => {
     const updatePackage = (payload: any) => {
         forEach(payload, (module: PartialEnginePackage<any>, moduleName: string) => {
             let events = [];
+            let lastEventUpdateTime = states[moduleName].state.lastEventUpdateTime;
 
             if (module.events) {
                 events = module.events;
+                lastEventUpdateTime = now();
             }
 
             let newState: Record<string, Module> = {};
@@ -107,6 +110,7 @@ export const PackageContextProvider: FunctionComponent = ({ children }) => {
                 data: newState,
                 lastUpdateTime: now(),
                 recentData: module.data,
+                lastEventUpdateTime
             });
         });
     };

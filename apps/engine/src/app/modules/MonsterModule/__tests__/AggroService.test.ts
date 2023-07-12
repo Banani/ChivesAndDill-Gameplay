@@ -1,68 +1,49 @@
-import { CommonClientMessages, GlobalStoreModule, RecursivePartial } from '@bananos/types';
+import { CommonClientMessages, GlobalStoreModule, Location, RecursivePartial } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
-import { Classes } from 'apps/engine/src/app/types/Classes';
-import { merge, times } from 'lodash';
+import { times } from 'lodash';
+import { MockedMonsterTemplates } from '../../../mocks';
 import { Character, CharacterType } from '../../../types';
-import { CharacterRespawn, WalkingType } from '../../../types/CharacterRespawn';
+import { WalkingType } from '../../../types/CharacterRespawn';
 import { CharacterUnion } from '../../../types/CharacterUnion';
 import { CharacterEngineEvents, TakeCharacterHealthPointsEvent } from '../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
 import { SpellEffect, SpellEffectType } from '../../SpellModule/types/SpellTypes';
-import { MonsterTemplate, MonsterTemplates } from '../MonsterTemplates';
-import { MonsterRespawnTemplateService } from '../dataProviders';
+import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../Events';
+import { MonsterTemplate } from '../MonsterTemplates';
+import { MonsterRespawnTemplateService, MonsterTemplateService } from '../services';
 import { Monster } from '../types';
 import _ = require('lodash');
 
-jest.mock('../dataProviders/MonsterRespawnTemplateService', () => {
-    const getData = jest.fn();
 
-    return {
-        MonsterRespawnTemplateService: function () {
-            return {
-                init: jest.fn(),
-                handleEvent: jest.fn(),
-                getData,
-            };
-        },
-    };
-});
+const setupEngine = ({ monsterTemplates, startingLocation }: RecursivePartial<{ monsterTemplates: Record<string, MonsterTemplate>, startingLocation: Location }> = {}) => {
+    const monsterTemplateService = new MonsterTemplateService();
+    const calculatedMonsterTemplates = { '1': Object.assign({}, MockedMonsterTemplates['1'], monsterTemplates ? monsterTemplates['1'] : {}) };
+    (monsterTemplateService.getData as jest.Mock).mockReturnValue(calculatedMonsterTemplates)
 
-jest.mock('../../NpcModule/services/NpcRespawnTemplateService', () => {
-    const getData = jest.fn().mockReturnValue({});
-
-    return {
-        NpcRespawnTemplateService: function () {
-            return {
-                init: jest.fn(),
-                handleEvent: jest.fn(),
-                getData,
-            };
-        },
-    };
-});
-
-const setupEngine = ({ monsterTemplates }: RecursivePartial<{ monsterTemplates: Record<string, CharacterRespawn<MonsterTemplate>> }> = {}) => {
-    const calculatedMonsterTemplates = merge(
-        {},
+    const respawnService = new MonsterRespawnTemplateService();
+    (respawnService.getData as jest.Mock).mockReturnValue(
         {
-            '1': {
-                id: '1',
-                location: { x: 150, y: 100 },
-                characterTemplate: { ...MonsterTemplates['Orc'], sightRange: 300 },
+            'respawn_1': {
+                id: 'respawn_1',
+                location: startingLocation ?? { x: 150, y: 100 },
+                characterTemplateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
-        },
-        monsterTemplates
+        }
     );
-    const monsterRespawnTemplateService = new MonsterRespawnTemplateService();
-    (monsterRespawnTemplateService.getData as jest.Mock).mockReturnValue(calculatedMonsterTemplates);
 
     const engineManager = new EngineManager();
 
     const players = {
-        '1': engineManager.preparePlayerWithCharacter({ name: 'character_1', class: Classes.Tank }),
+        '1': engineManager.preparePlayerWithCharacter({ name: 'character_1' }),
     };
+
+    engineManager.createSystemAction<MonsterRespawnsUpdatedEvent>({
+        type: MonsterEngineEvents.MonsterRespawnsUpdated,
+        respawnIds: ['respawn_1']
+    });
+
     let initialDataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
     return { engineManager, players, monsterTemplates: calculatedMonsterTemplates, initialDataPackage };
@@ -70,7 +51,7 @@ const setupEngine = ({ monsterTemplates }: RecursivePartial<{ monsterTemplates: 
 
 describe('Aggro service', () => {
     it('Monster should go to character if he is in range', () => {
-        const { players, engineManager, monsterTemplates } = setupEngine();
+        const { players, engineManager, monsterTemplates } = setupEngine({ monsterTemplates: { '1': { sightRange: 250 } } });
 
         engineManager.doEngineAction();
         engineManager.doEngineAction();
@@ -83,7 +64,7 @@ describe('Aggro service', () => {
                     direction: 2,
                     isInMove: true,
                     location: {
-                        x: 150 - monsterTemplates['1'].characterTemplate.speed,
+                        x: 150 - monsterTemplates['1'].movementSpeed,
                         y: 100,
                     },
                 },
@@ -94,7 +75,8 @@ describe('Aggro service', () => {
     it('Monster should not go to character if he is not in range', () => {
         const startingLocation = { x: 200, y: 100 };
         const { players, engineManager } = setupEngine({
-            monsterTemplates: { '1': { location: startingLocation, characterTemplate: { sightRange: 100 } } },
+            startingLocation,
+            monsterTemplates: { '1': { sightRange: 100 } },
         });
 
         engineManager.doEngineAction();
@@ -116,7 +98,8 @@ describe('Aggro service', () => {
     it('Monster should go to player character if he came to his sight range', () => {
         const startingLocation = { x: 200, y: 100 };
         const { players, engineManager, monsterTemplates } = setupEngine({
-            monsterTemplates: { '1': { location: startingLocation, characterTemplate: { sightRange: 100 } } },
+            startingLocation,
+            monsterTemplates: { '1': { sightRange: 100 } },
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
@@ -141,9 +124,9 @@ describe('Aggro service', () => {
         checkIfPackageIsValid(GlobalStoreModule.CHARACTER_MOVEMENTS, dataPackage, {
             data: {
                 monster_0: {
-                    direction: 2,
+                    direction: 3,
                     isInMove: true,
-                    location: { y: 100, x: 200 - monsterTemplates['1'].characterTemplate.speed },
+                    location: { y: 100, x: 270 },
                 },
             },
         });
@@ -152,7 +135,8 @@ describe('Aggro service', () => {
     it('Monster should go back to his respawn when player character ran to far away', () => {
         const startingLocation = { x: 52, y: 100 };
         const { players, engineManager, monsterTemplates } = setupEngine({
-            monsterTemplates: { '1': { location: startingLocation, characterTemplate: { sightRange: 2, speed: 1, desiredRange: 1 } } },
+            startingLocation,
+            monsterTemplates: { '1': { sightRange: 2, movementSpeed: 1, desiredRange: 1 } },
         });
 
         engineManager.doEngineAction();
@@ -221,7 +205,8 @@ describe('Aggro service', () => {
     it('Monster should start chasing when is beeing hit by player character', () => {
         const startingLocation = { x: 100, y: 100 };
         const { players, engineManager, monsterTemplates } = setupEngine({
-            monsterTemplates: { '1': { location: startingLocation, characterTemplate: { sightRange: 25, desiredRange: 1 } } },
+            startingLocation,
+            monsterTemplates: { '1': { sightRange: 25, desiredRange: 1 } },
         });
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
@@ -249,7 +234,7 @@ describe('Aggro service', () => {
                     direction: 2,
                     isInMove: true,
                     location: {
-                        x: 94,
+                        x: 70,
                         y: 100,
                     },
                 },

@@ -51,7 +51,10 @@ export class NpcTemplateService extends EventParser {
         movementSpeed: npcTemplate.movementSpeed,
         stock: npcTemplate.stock,
         quests: npcTemplate.quests,
-        quotesEvents: npcTemplate.quotesEvents,
+        quotesEvents: _.mapValues(npcTemplate.quotesEvents, quoteEvent => ({
+            ...quoteEvent,
+            chance: quoteEvent.chance / 1000,
+        })),
         sprites: 'citizen',
         avatar: 'https://avatars.githubusercontent.com/u/5495772?v=4',
         direction: CharacterDirection.DOWN,
