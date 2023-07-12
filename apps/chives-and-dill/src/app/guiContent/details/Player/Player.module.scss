@@ -1,34 +1,31 @@
 .Player {
-  width: 100%;
-  display: flex;
-  margin-bottom: 2px;
-  font-size: 14px;
+   width: 100%;
+   display: flex;
+   margin-bottom: 2px;
+   font-size: 14px;
 
-  .ClassIcon {
-    width: 25px;
-    background-image: url("https://wow.zamimg.com/images/wow/icons/medium/spell_holy_holybolt.jpg");
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
+   .ClassIcon {
+      width: 25px;
+   }
 
-  .ColorBar {
-    display: flex;
-    flex: 1;
-    justify-content: space-between;
-    padding: 3px;
-    width: 100%;
-
-    .PlayerName {
-      width: 60%;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .PlayerData {
-      flex-grow: 1;
+   .ColorBar {
       display: flex;
-      justify-content: flex-end;
-    }
-  }
+      flex: 1;
+      justify-content: space-between;
+      padding: 3px;
+      width: 100%;
+
+      .PlayerName {
+         width: 60%;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+         overflow: hidden;
+      }
+
+      .PlayerData {
+         flex-grow: 1;
+         display: flex;
+         justify-content: flex-end;
+      }
+   }
 }

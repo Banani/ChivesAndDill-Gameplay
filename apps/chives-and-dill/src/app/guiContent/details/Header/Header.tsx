@@ -8,13 +8,13 @@ import ChatlImg from '../../../../assets/spritesheets/details/DetailsChat.png';
 import ResetImg from '../../../../assets/spritesheets/details/DetailsReset.png';
 import { StatesModal } from '../states/StatesModal';
 
-export const Header = ({ activeState, changeActiveState }) => {
+export const Header = ({ activeState, changeActiveState, playersAmount }) => {
 
   const [statesModal, setStatesModal] = useState(false);
 
   return (
     <div className={styles.Header}>
-      <div>{activeState} [5]</div>
+      <div>{activeState} [{playersAmount}]</div>
       <div className={styles.DetailsIcons}>
         <img className={styles.Icon} src={SkullImg} alt={'Skull img'} />
         <img className={styles.Icon} src={ConfigImg} alt={'Config img'} />

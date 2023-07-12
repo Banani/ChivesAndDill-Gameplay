@@ -102,6 +102,7 @@ interface StoreModule<Data> {
    events: EnginePackageEvent[];
    lastUpdateTime: number;
    recentData: Record<string, Data>;
+   lastUpdateEventTime: number;
 }
 
 export interface GlobalStore {
