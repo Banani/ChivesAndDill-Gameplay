@@ -9,7 +9,7 @@ import { Circle, CircleBox, CircleType } from '../../components';
 import { PackageContext } from '../../contexts';
 import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { DeleteConfirmationDialog } from '../../dialogs';
-import { Pagination } from '../components';
+import { Loader, Pagination } from '../components';
 
 import styles from './Items.module.scss';
 import { ItemsContext } from './ItemsContextProvider';
@@ -24,10 +24,14 @@ export const Items = () => {
 
     const [itemsToDelete, setItemsToDelete] = useState<ItemTemplate[]>([]);
 
-    const npcTemplates = packageContext?.backendStore?.npcTemplates?.data ? packageContext?.backendStore?.npcTemplates?.data : {};
-    const itemTemplates = packageContext?.backendStore?.itemTemplates?.data ? packageContext?.backendStore?.itemTemplates?.data : {};
-    const questSchemas = packageContext?.backendStore?.questSchemas?.data ?? {};
-    const monsterTemplates = packageContext?.backendStore?.monsterTemplates?.data ?? {};
+    const { data: questSchemas, lastUpdateTime: lastUpdateTimeQuestSchemas } = (packageContext?.backendStore?.questSchemas ?? {});
+    const { data: itemTemplates, lastUpdateTime: lastUpdateItemTemplates } = (packageContext?.backendStore?.itemTemplates ?? {});
+    const { data: monsterTemplates, lastUpdateTime: lastUpdateTimeMonsterTemplates } = (packageContext?.backendStore?.monsterTemplates ?? {});
+    const { data: npcTemplates, lastUpdateTime: lastUpdateTimeNpcTemplates } = (packageContext?.backendStore?.npcTemplates ?? {});
+
+    if (!lastUpdateTimeQuestSchemas || !lastUpdateItemTemplates || !lastUpdateTimeMonsterTemplates || !lastUpdateTimeNpcTemplates) {
+        return <Loader />;
+    }
 
     return (
         <>

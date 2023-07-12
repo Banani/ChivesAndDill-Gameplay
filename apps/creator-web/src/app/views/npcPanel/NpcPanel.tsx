@@ -2,7 +2,7 @@ import { Text } from '@inlet/react-pixi';
 import { Paper } from '@mui/material';
 import { TextStyle } from 'pixi.js';
 import { useContext, useMemo } from 'react';
-import { MapContext, MapSprite, Rectangle } from '../components';
+import { Loader, MapContext, MapSprite, Rectangle } from '../components';
 
 import { Map } from '../components';
 
@@ -21,8 +21,9 @@ export const NpcPanel = () => {
     const packageContext = useContext(PackageContext);
     const { isMouseDown, mousePosition, lastMouseDownPosition, previousTranslation, texturesMap, translation, setTranslation } = useContext(MapContext);
     const { currentCharacterAction, activeCharacterTemplate, addCharacter, deleteCharacter, highlightedCharacterId } = useContext(CharacterContext);
-    const npcs = packageContext.backendStore.npcs?.data ?? {};
-    const npcTemplates = packageContext.backendStore.npcTemplates?.data ?? {};
+
+    const { data: npcTemplates, lastUpdateTime: lastUpdateTimeNpcTemplates } = (packageContext?.backendStore?.npcTemplates ?? {});
+    const { data: npcs, lastUpdateTime: lastUpdateTimeNpcs } = (packageContext?.backendStore?.npcs ?? {});
 
     const actionModes: Partial<Record<string, any>> = useMemo(
         () => ({
@@ -57,6 +58,10 @@ export const NpcPanel = () => {
         }),
         [isMouseDown, activeCharacterTemplate, addCharacter, translation, deleteCharacter]
     );
+
+    if (!lastUpdateTimeNpcs || !lastUpdateTimeNpcTemplates) {
+        return <Loader />;;
+    }
 
     const mouseCenterSpritePosition = {
         x: Math.floor(((mousePosition?.x ?? 0) - translation.x) / 32),
