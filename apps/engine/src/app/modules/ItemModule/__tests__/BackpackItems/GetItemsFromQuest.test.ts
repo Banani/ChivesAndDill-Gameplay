@@ -1,74 +1,63 @@
 import { GlobalStoreModule } from '@bananos/types';
-import { checkIfPackageIsValid, EngineManager } from '../../../../testUtilities';
-import { Classes } from '../../../../types/Classes';
+import { MockedItemTemplates, MockedQuests } from 'apps/engine/src/app/mocks';
+import { EngineManager, checkIfPackageIsValid } from '../../../../testUtilities';
 import { QuestCompletedEvent, QuestEngineEvents, StartQuestEvent } from '../../../QuestModule/Events';
-import { Quests } from '../../../QuestModule/Quests';
 import { QuestTemplateService } from '../../../QuestModule/services';
+import { ItemTemplateService } from '../../services/ItemTemplateService';
 import _ = require('lodash');
 
-jest.mock('../../../QuestModule/services/QuestTemplateService', () => {
-   const getData = jest.fn();
-
-   return {
-      QuestTemplateService: function () {
-         return {
-            init: jest.fn(),
-            handleEvent: jest.fn(),
-            getData,
-         };
-      },
-   };
-});
-
 const setupEngine = () => {
-   const respawnService = new QuestTemplateService();
-   (respawnService.getData as jest.Mock).mockReturnValue(Quests);
-   const engineManager = new EngineManager();
+    const itemTemplateService = new ItemTemplateService();
+    (itemTemplateService.getData as jest.Mock).mockReturnValue(MockedItemTemplates)
 
-   const players = {
-      '1': engineManager.preparePlayerWithCharacter({ name: 'character_1', class: Classes.Tank }),
-      '2': engineManager.preparePlayerWithCharacter({ name: 'character_2', class: Classes.Tank }),
-      '3': engineManager.preparePlayerWithCharacter({ name: 'character_3', class: Classes.Tank }),
-   };
+    const questService = new QuestTemplateService();
+    (questService.getData as jest.Mock).mockReturnValue(MockedQuests);
+    const engineManager = new EngineManager();
 
-   return { engineManager, players };
+    const players = {
+        '1': engineManager.preparePlayerWithCharacter({ name: 'character_1' }),
+        '2': engineManager.preparePlayerWithCharacter({ name: 'character_2' }),
+        '3': engineManager.preparePlayerWithCharacter({ name: 'character_3' }),
+    };
+
+    return { engineManager, players };
 };
 
 describe('GetItemsFromQuest.test', () => {
-   it('Player should get items after completing quest', () => {
-      const { players, engineManager } = setupEngine();
+    it('Player should get items after completing quest', () => {
+        const { players, engineManager } = setupEngine();
 
-      let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      engineManager.createSystemAction<StartQuestEvent>({
-         type: QuestEngineEvents.StartQuest,
-         characterId: players['1'].characterId,
-         questId: '1',
-      });
+        engineManager.createSystemAction<StartQuestEvent>({
+            type: QuestEngineEvents.StartQuest,
+            characterId: players['1'].characterId,
+            questId: '1',
+        });
 
-      engineManager.createSystemAction<QuestCompletedEvent>({
-         type: QuestEngineEvents.QuestCompleted,
-         characterId: players['1'].characterId,
-         questId: '1',
-      });
+        engineManager.createSystemAction<QuestCompletedEvent>({
+            type: QuestEngineEvents.QuestCompleted,
+            characterId: players['1'].characterId,
+            questId: '1',
+        });
 
-      dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-      checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
-         data: {
-            playerCharacter_1: {
-               '1': {
-                  '0': {
-                     amount: 1,
-                     itemId: 'ItemInstance_0',
-                  },
-                  '1': {
-                     amount: 5,
-                     itemId: 'ItemInstance_1',
-                  },
-               },
+        checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
+            data: {
+                playerCharacter_1: {
+                    '1': {
+                        '0': {
+                            amount: 1,
+                            itemId: 'ItemInstance_0',
+                        },
+                        '1': {
+                            amount: 5,
+                            itemId: 'ItemInstance_1',
+                        },
+                    },
+                },
             },
-         },
-      });
-   });
+        });
+    });
 });

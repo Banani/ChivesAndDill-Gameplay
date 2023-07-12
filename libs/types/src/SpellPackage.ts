@@ -1,7 +1,7 @@
 // TODO: JUST COPPIED 
 
 
-import type { Attribute, TimeEffectType } from '@bananos/types';
+import type { Attribute, Location, TimeEffectType } from '@bananos/types';
 import { PowerStackType } from '@bananos/types';
 
 export enum SpellType {
@@ -193,6 +193,7 @@ export interface SpellDefinition {
 
 export enum SpellClientMessages {
     RequestSpellDefinitions = 'RequestSpellDefinitions',
+    CastSpell = 'CastSpell',
 }
 
 export interface RequestSpellDefinitions {
@@ -200,4 +201,10 @@ export interface RequestSpellDefinitions {
     spellIds: string[];
 }
 
-export type EngineSpellMessages = RequestSpellDefinitions;
+export interface CastSpell {
+    type: SpellClientMessages.CastSpell;
+    directionLocation: Location;
+    spellId: string;
+}
+
+export type EngineSpellMessages = RequestSpellDefinitions | CastSpell;

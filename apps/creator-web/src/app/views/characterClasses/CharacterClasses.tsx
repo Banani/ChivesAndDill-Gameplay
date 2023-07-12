@@ -11,6 +11,7 @@ import { DeleteConfirmationDialog } from '../../dialogs';
 import { CharacterClass } from '@bananos/types';
 import _ from 'lodash';
 import { ImagePreview, SpellPreview } from '../../components';
+import { Loader } from '../components';
 import styles from './CharacterClasses.module.scss';
 import { CharacterClassesContext } from './CharacterClassesContextProvider';
 
@@ -20,8 +21,12 @@ export const CharacterClasses = () => {
     const { deleteCharacterClass, setActiveCharacterClass } = useContext(CharacterClassesContext);
     const [characterClassesToDelete, setCharacterClassesToDelete] = useState<CharacterClass[]>([]);
 
-    const characterClasses = packageContext?.backendStore?.characterClasses?.data ?? {};
-    const spells = packageContext?.backendStore?.spells?.data ?? {};
+    const { data: characterClasses, lastUpdateTime: lastUpdateTimeCharacterClasses } = (packageContext?.backendStore?.characterClasses ?? {});
+    const { data: spells, lastUpdateTime: lastUpdateTimeSpells } = (packageContext?.backendStore?.spells ?? {});
+
+    if (!lastUpdateTimeSpells || !lastUpdateTimeCharacterClasses) {
+        return <Loader />;
+    }
 
     return (
         <>

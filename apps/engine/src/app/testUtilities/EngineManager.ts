@@ -1,5 +1,6 @@
-import { ClientMessages, CommonClientMessages, EnginePackage, EnginePackageEvent } from '@bananos/types';
+import { ClientMessages, CommonClientMessages, EnginePackage, EnginePackageActions } from '@bananos/types';
 import { MainEngine } from '../engines/MainEngine';
+import { MockedCharacterClasses, MockedItemTemplates, MockedMonsterTemplates, MockedNpcTemplates, MockedSpells } from '../mocks';
 import {
     getCharacterModule,
     getChatModule,
@@ -11,17 +12,140 @@ import {
     getQuestModule,
     getSpellModule,
 } from '../modules';
-import { Classes } from '../types/Classes';
 import { PlayerCharacter } from '../types/PlayerCharacter';
 import { EngineEvent } from '../types/events';
 
-jest.mock('../modules/MapModule/db', () => ({
-    MapDbApi: jest.fn().mockImplementation(() => ({
-        fetchMapDefinition: jest.fn().mockReturnValue(Promise.resolve({ data: {} })),
-        fetchMapSchema: jest.fn().mockReturnValue(Promise.resolve({ data: {} })),
-        watchForMapDefinition: jest.fn()
+jest.mock('lodash', () => ({
+    ...(jest.requireActual('lodash') as any),
+    now: jest.fn(),
+}));
+
+jest.mock('../services/RandomGeneratorService', () => {
+    const generateNumber = jest.fn().mockReturnValue(1);
+
+    return {
+        RandomGeneratorService: function () {
+            return {
+                init: jest.fn(),
+                handleEvent: jest.fn(),
+                generateNumber,
+            };
+        },
+    };
+});
+
+jest.mock('../services/DbService', () => ({
+    DbService: jest.fn().mockImplementation(() => ({
+        init: jest.fn(),
+        handleEvent: jest.fn(),
     })),
 }));
+
+jest.mock('../modules/MapModule/services/MapService', () => ({
+    MapService: jest.fn().mockImplementation(() => ({
+        init: jest.fn(),
+        handleEvent: jest.fn(),
+        getData: jest.fn().mockReturnValue({}),
+    })),
+}));
+
+jest.mock('../modules/PlayerModule/services/CharacterClassService', () => {
+    const getData = jest.fn().mockReturnValue(MockedCharacterClasses);
+
+    return {
+        CharacterClassService: jest.fn().mockImplementation(() => ({
+            init: jest.fn(),
+            handleEvent: jest.fn(),
+            getData,
+        })),
+    }
+});
+
+jest.mock('../modules/ItemModule/services/ItemTemplateService', () => {
+    const getData = jest.fn().mockReturnValue(MockedItemTemplates);
+
+    return {
+        ItemTemplateService: jest.fn().mockImplementation(() => ({
+            init: jest.fn(),
+            handleEvent: jest.fn(),
+            getData,
+        })),
+    }
+});
+
+jest.mock('../modules/MonsterModule/services/MonsterTemplateService', () => {
+    const getData = jest.fn().mockReturnValue(MockedMonsterTemplates);
+
+    return {
+        MonsterTemplateService: jest.fn().mockImplementation(() => ({
+            init: jest.fn(),
+            handleEvent: jest.fn(),
+            getData,
+        })),
+    }
+});
+
+jest.mock('../modules/MonsterModule/services/MonsterRespawnTemplateService', () => {
+    const getData = jest.fn().mockReturnValue({});
+
+    return {
+        MonsterRespawnTemplateService: jest.fn().mockImplementation(() => ({
+            init: jest.fn(),
+            handleEvent: jest.fn(),
+            getData,
+        }))
+    }
+});
+
+jest.mock('../modules/NpcModule/services/NpcTemplateService', () => {
+    const getData = jest.fn().mockReturnValue(MockedNpcTemplates);
+
+    return {
+        NpcTemplateService: jest.fn().mockImplementation(() => ({
+            init: jest.fn(),
+            handleEvent: jest.fn(),
+            getData,
+        })),
+    }
+});
+
+jest.mock('../modules/NpcModule/services/NpcRespawnTemplateService', () => {
+    const getData = jest.fn().mockReturnValue({});
+
+    return {
+        NpcRespawnTemplateService: jest.fn().mockImplementation(() => ({
+            init: jest.fn(),
+            handleEvent: jest.fn(),
+            getData,
+        }))
+    }
+});
+
+jest.mock('../modules/SpellModule/services/SpellService', () => {
+    const getData = jest.fn().mockReturnValue(MockedSpells);
+
+    return {
+        SpellService: jest.fn().mockImplementation(() => ({
+            init: jest.fn(),
+            handleEvent: jest.fn(),
+            getData,
+        })),
+    }
+});
+
+jest.mock('../modules/QuestModule/services/QuestTemplateService', () => {
+    const getData = jest.fn();
+
+    return {
+        QuestTemplateService: function () {
+            return {
+                init: jest.fn(),
+                handleEvent: jest.fn(),
+                getData,
+            };
+        },
+    };
+});
 
 export interface PlayerCharacterForTesting {
     socketId: string;
@@ -88,7 +212,7 @@ export class EngineManager {
         throw new Error('IO is not ready yet.');
     }
 
-    callPlayerAction(playerId: string, action: EnginePackageEvent) {
+    callPlayerAction(playerId: string, action: EnginePackageActions) {
         if (!this.playerActionHandlers[playerId]) {
             throw new Error('Unknown playerId: ' + playerId);
         }
@@ -102,9 +226,9 @@ export class EngineManager {
         return this.getLatestPlayerDataPackage(playerId);
     }
 
-    preparePlayerWithCharacter: (character: { name: string; class: Classes }) => PlayerCharacterForTesting = (character) => {
+    preparePlayerWithCharacter: (character: { name: string; characterClassId?: string }) => PlayerCharacterForTesting = (character) => {
         const id = this.addNewPlayer();
-        this.callPlayerAction(id, { type: CommonClientMessages.CreateCharacter, ...character });
+        this.callPlayerAction(id, { type: CommonClientMessages.CreateCharacter, characterClassId: '1', ...character });
         const dataPackage = this.getLatestPlayerDataPackage(id);
 
         return {

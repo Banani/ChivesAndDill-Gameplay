@@ -5,6 +5,7 @@ import {
     ChatMessage,
     EngineItemMessages,
     EngineNpcAction,
+    EngineSpellMessages,
     EquipmentTrack,
     ItemTemplate,
     NpcStock,
@@ -13,7 +14,7 @@ import {
 import { Attributes, CharacterEvents, MonsterCorpse } from './CharacterPackage';
 import { ChatChannel, EngineChatAction } from './ChatPackage';
 import type { Location } from './common/Location';
-import { CommonClientActions, CommonClientMessages } from './engineEvents';
+import { CommonClientActions, CommonClientMessages, CreateCharacter } from './engineEvents';
 import { ExternalQuestProgress, QuestSchema } from './QuestPackage';
 import type { CharacterClassPreview, CharacterDirection } from './shared';
 
@@ -294,12 +295,6 @@ export interface ErrorMessage {
     message: string;
 }
 
-export interface CreateCharacter {
-    type: CommonClientMessages.CreateCharacter;
-    name: string;
-    class: any; // MOve classes
-}
-
 export interface PlayerStartMoveAction {
     type: CommonClientMessages.PlayerStartMove;
     y?: number;
@@ -324,11 +319,13 @@ export type EnginePackageEvent =
     | LevelChangedEvent
     | ErrorMessage
     | CreateCharacter
-    | EngineChatAction
+    | EngineChatAction// nie wiem czemu to tu jest, ale raczej nie powinno
     | EngineItemMessages
     | CharacterEvents
-    | EngineNpcAction
-    | CommonClientActions;
+    | EngineNpcAction // nie wiem czemu to tu jest, ale raczej nie powinno
+    | CommonClientActions;// nie wiem czemu to tu jest, ale raczej nie powinno
+
+export type EnginePackageActions = EngineSpellMessages | CommonClientActions | EngineNpcAction | EngineChatAction | EngineItemMessages;
 
 export enum HealthPointsSource {
     Healing = 'Healing',
