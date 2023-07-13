@@ -41,7 +41,7 @@ type NpcHolder struct {
 type Npc struct {
 	Id            string   `json:"id"  bson:"_id"`
 	Location      Location `json:"location"  bson:"location"`
-	NpcTemplateId string   `json:"npcTemplateId"  bson:"npcTemplateId"`
+	NpcTemplateId string   `json:"npcTemplateId"  bson:"-"`
 	Time          int32    `json:"time"  bson:"time"`
 	WalkingType   string   `json:"walkingType"  bson:"walkingType"`
 }

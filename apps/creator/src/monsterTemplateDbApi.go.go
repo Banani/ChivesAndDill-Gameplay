@@ -31,6 +31,7 @@ func (m *MonsterTemplateDbApi) getMonsterTemplates() (map[string]MonsterTemplate
 		}
 
 		for _, monster := range monsterTemplate.MonsterRespawns {
+			monster.MonsterTemplateId = monsterTemplate.Id
 			monsters[monster.Id] = monster
 		}
 	}

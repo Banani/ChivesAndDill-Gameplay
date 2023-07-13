@@ -6,18 +6,18 @@ import (
 )
 
 type MonsterTemplate struct {
-	Id                       string `json:"id" bson:"-"`
-	Name                     string `json:"name" bson:"name"`
-	HealthPoints             int32  `json:"healthPoints" bson:"healthPoints"`
-	HealthPointsRegeneration int32  `json:"healthPointsRegeneration" bson:"healthPointsRegeneration"`
-	SpellPower               int32  `json:"spellPower" bson:"spellPower"`
-	SpellPowerRegeneration   int32  `json:"spellPowerRegeneration" bson:"spellPowerRegeneration"`
-	MovementSpeed            int32  `json:"movementSpeed" bson:"movementSpeed"`
-	SightRange               int32  `json:"sightRange" bson:"sightRange"`
-	DesiredRange             int32  `json:"desiredRange" bson:"desiredRange"`
-	EscapeRange              int32  `json:"escapeRange" bson:"escapeRange"`
-	AttackFrequency          int32  `json:"attackFrequency" bson:"attackFrequency"`
-	Spells                    map[string]bool `json:"spells" bson:"spells"`
+	Id                       string          `json:"id" bson:"-"`
+	Name                     string          `json:"name" bson:"name"`
+	HealthPoints             int32           `json:"healthPoints" bson:"healthPoints"`
+	HealthPointsRegeneration int32           `json:"healthPointsRegeneration" bson:"healthPointsRegeneration"`
+	SpellPower               int32           `json:"spellPower" bson:"spellPower"`
+	SpellPowerRegeneration   int32           `json:"spellPowerRegeneration" bson:"spellPowerRegeneration"`
+	MovementSpeed            int32           `json:"movementSpeed" bson:"movementSpeed"`
+	SightRange               int32           `json:"sightRange" bson:"sightRange"`
+	DesiredRange             int32           `json:"desiredRange" bson:"desiredRange"`
+	EscapeRange              int32           `json:"escapeRange" bson:"escapeRange"`
+	AttackFrequency          int32           `json:"attackFrequency" bson:"attackFrequency"`
+	Spells                   map[string]bool `json:"spells" bson:"spells"`
 	// TO CHANGE
 	DropSchema   DropSchema        `json:"dropSchema" bson:"dropSchema"`
 	QuotesEvents MonsterQuoteEvent `json:"quotesEvents" bson:"quotesEvents"`
@@ -50,7 +50,7 @@ type MonsterHolder struct {
 type Monster struct {
 	Id                string   `json:"id" bson:"id"`
 	Location          Location `json:"location" bson:"location"`
-	MonsterTemplateId string   `json:"monsterTemplateId" bson:"monsterTemplateId"`
+	MonsterTemplateId string   `json:"monsterTemplateId" bson:"-"`
 	Time              int32    `json:"time" bson:"time"`
 	WalkingType       string   `json:"walkingType" bson:"walkingType"`
 }
