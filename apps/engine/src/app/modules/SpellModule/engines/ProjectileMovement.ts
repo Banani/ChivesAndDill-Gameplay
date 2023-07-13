@@ -21,7 +21,7 @@ export class ProjectileMovement extends Engine {
     }
 
     getCrossingCharacter(movementSegment) {
-        return pickBy({ ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }, (character) => {
+        return pickBy(this.services.characterService.getAllCharacters(), (character) => {
             return isSegmentIntersectingWithACircle(movementSegment, [character.location.x, character.location.y, character.size / 2]);
         });
     }
@@ -56,10 +56,19 @@ export class ProjectileMovement extends Engine {
             const theClossestIntersection = getTheClosestObject(projectile.currentLocation, allProjectileIntersections);
 
             if (theClossestIntersection?.type === ProjectileIntersection.CHARACTER) {
-                this.eventCrator.createEvent<RemoveProjectileEvent>({
-                    type: SpellEngineEvents.RemoveProjectile,
-                    projectileId,
-                });
+                if (!projectile.spell.passThrough) {
+                    this.eventCrator.createEvent<RemoveProjectileEvent>({
+                        type: SpellEngineEvents.RemoveProjectile,
+                        projectileId,
+                    });
+                } else {
+                    this.eventCrator.createEvent<ProjectileMovedEvent>({
+                        ...projectile,
+                        type: SpellEngineEvents.ProjectileMoved,
+                        projectileId,
+                        newLocation,
+                    });
+                }
 
                 this.eventCrator.createEvent<SpellLandedEvent>({
                     type: SpellEngineEvents.SpellLanded,

@@ -11,6 +11,7 @@ type Spell struct {
 	Range                int32                           `json:"range" bson:"range"`
 	SpellPowerCost       int32                           `json:"spellPowerCost" bson:"spellPowerCost"`
 	Cooldown             int32                           `json:"cooldown" bson:"cooldown"`
+	PassThrough          bool                            `json:"passThrough" bson:"passThrough"`
 	Speed                int32                           `json:"speed,omitempty" bson:"speed,omitempty"`
 	Angle                int32                           `json:"angle,omitempty" bson:"angle,omitempty"`
 	SpellEffectsOnTarget map[string]SpellEffectsOnTarget `json:"spellEffectsOnTarget,omitempty" bson:"spellEffectsOnTarget,omitempty"`

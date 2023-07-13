@@ -21,6 +21,7 @@ const DefaultSpell: Spell = {
     image: "https://static.wikia.nocookie.net/wowwiki/images/0/0c/Ability_dualwieldspecialization.png",
     range: 250,
     spellPowerCost: 100,
+    passThrough: false,
     cooldown: 1000,
     spellEffectsOnTarget: {}
 } as Spell
@@ -33,6 +34,7 @@ const DefaultDirectInstant: DirectInstantSpell = {
 const DefaultProjectile: ProjectileSpell = {
     ...DefaultSpell,
     type: SpellType.Projectile,
+    passThrough: false,
     speed: 10,
 }
 
@@ -178,6 +180,12 @@ export const SpellDialog = () => {
                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber },],
                 defaultValue: (defaultSpell as ProjectileSubSpell).speed,
                 prerequisite: ({ type }) => type === SpellType.Projectile || type === SpellType.GuidedProjectile
+            },
+            passThrough: {
+                label: "Pass through",
+                type: SchemaFieldType.Boolean,
+                defaultValue: (defaultSpell as ProjectileSubSpell).passThrough,
+                prerequisite: ({ type }) => type === SpellType.Projectile
             },
             angle: {
                 label: "Angle (radians 0-3.14*2)",

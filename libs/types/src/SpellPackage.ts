@@ -62,6 +62,7 @@ export interface ProjectileSubSpell extends EffectHolders, BaseSubSpell {
     type: SpellType.Projectile;
     speed: number;
     range: number;
+    passThrough: boolean;
 }
 
 export interface GuidedProjectileSubSpell extends EffectHolders, BaseSubSpell {

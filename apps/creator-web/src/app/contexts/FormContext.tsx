@@ -8,7 +8,8 @@ export enum SchemaFieldType {
     Number = "number",
     Array = "array",
     Object = "object",
-    Select = "select"
+    Select = "select",
+    Boolean = 'boolean'
 }
 
 export type Schema = Record<string, PropertyDefinition>
