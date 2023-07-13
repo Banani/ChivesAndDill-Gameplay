@@ -1,7 +1,6 @@
 import { Attribute, DamageEffect, GlobalStoreModule, Location, RecursivePartial } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { MockedMonsterTemplates } from '../../../mocks';
-import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
 import { Character, CharacterType } from '../../../types';
 import { WalkingType } from '../../../types/CharacterRespawn';
 import { CharacterUnion } from '../../../types/CharacterUnion';
@@ -39,9 +38,6 @@ const setupEngine = ({ monsterTemplates, startingLocation }: RecursivePartial<{ 
         }
     );
 
-    const randomGeneratorService = new RandomGeneratorService();
-    (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
-
     const engineManager = new EngineManager();
 
     const players = {
@@ -60,7 +56,7 @@ const setupEngine = ({ monsterTemplates, startingLocation }: RecursivePartial<{ 
 
 describe('Combat state service', () => {
     it('Player should be in combat state when monster starts fight', () => {
-        const { players, engineManager, initialDataPackage } = setupEngine({
+        const { players, engineManager } = setupEngine({
             monsterTemplates: { '1': { sightRange: 300 } }
         });
 
@@ -68,6 +64,7 @@ describe('Combat state service', () => {
 
         checkIfPackageIsValid(GlobalStoreModule.COMBAT_STATE, dataPackage, {
             data: {
+                monster_0: true,
                 playerCharacter_1: true
             },
         });
@@ -99,6 +96,7 @@ describe('Combat state service', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         checkIfPackageIsValid(GlobalStoreModule.COMBAT_STATE, dataPackage, {
             data: {
+                monster_0: false,
                 playerCharacter_1: false
             },
         });
@@ -170,6 +168,7 @@ describe('Combat state service', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         checkIfPackageIsValid(GlobalStoreModule.COMBAT_STATE, dataPackage, {
             data: {
+                monster_1: false,
                 playerCharacter_1: false
             }
         });

@@ -1,6 +1,6 @@
 import { ClientMessages, CommonClientMessages, EnginePackage, EnginePackageActions } from '@bananos/types';
 import { MainEngine } from '../engines/MainEngine';
-import { MockedCharacterClasses, MockedItemTemplates, MockedMonsterTemplates, MockedNpcTemplates, MockedSpells } from '../mocks';
+import { MockedCharacterClasses, MockedItemTemplates, MockedMonsterTemplates, MockedNpcTemplates, MockedQuests, MockedSpells } from '../mocks';
 import {
     getCharacterModule,
     getChatModule,
@@ -133,11 +133,11 @@ jest.mock('../modules/SpellModule/services/SpellService', () => {
     }
 });
 
-jest.mock('../modules/QuestModule/services/QuestTemplateService', () => {
-    const getData = jest.fn();
+jest.mock('../modules/QuestModule/services/QuestSchemasService', () => {
+    const getData = jest.fn().mockReturnValue(MockedQuests);
 
     return {
-        QuestTemplateService: function () {
+        QuestSchemasService: function () {
             return {
                 init: jest.fn(),
                 handleEvent: jest.fn(),

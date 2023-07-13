@@ -1,6 +1,4 @@
 import { CharacterDirection, QuotesEvents, Spell } from '@bananos/types';
-import { QuestSchema } from 'libs/types/src/QuestPackage';
-import { Quests } from '../QuestModule/Quests';
 
 export interface NpcTemplate {
     id: string;
@@ -15,7 +13,7 @@ export interface NpcTemplate {
     spellPowerRegeneration: number;
     spells: Record<string, Spell>;
     stock?: Record<string, boolean>;
-    quests?: Record<string, QuestSchema>;
+    quests?: Record<string, boolean>;
     quotesEvents?: QuotesEvents;
 
     //TODO: Co to tutaj robi?
@@ -55,8 +53,8 @@ export const NpcTemplates: Record<string, NpcTemplate> = {
             '14': true,
         },
         quests: {
-            '1': Quests['1'],
-            '2': Quests['2'],
+            '1': true,
+            '2': true,
         },
         quotesEvents: {
             onDying: {

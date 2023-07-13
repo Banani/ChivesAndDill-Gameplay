@@ -75,9 +75,7 @@ describe('PlayerTriesToFinalizeQuestWithNpc action', () => {
         checkIfErrorWasHandled(GlobalStoreModule.NPC_QUESTS, 'This npc does not have such quest.', dataPackage);
     });
 
-    // TODO: Fix this after integrating with creator quests
-
-    it.skip('Player should get error if he tries to finish quest that character does not have', () => {
+    it('Player should get error if he tries to finish quest that character does not have', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -97,7 +95,7 @@ describe('PlayerTriesToFinalizeQuestWithNpc action', () => {
         checkIfErrorWasHandled(GlobalStoreModule.NPC_QUESTS, 'You does not have that quest.', dataPackage);
     });
 
-    it.skip('Player should get error if he tries to finish quest which is not done yet', () => {
+    it('Player should get error if he tries to finish quest which is not done yet', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);

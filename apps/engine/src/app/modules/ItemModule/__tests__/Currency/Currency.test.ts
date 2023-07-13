@@ -1,18 +1,9 @@
 import { GlobalStoreModule } from '@bananos/types';
-import { MockedItemTemplates, MockedQuests } from 'apps/engine/src/app/mocks';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { QuestCompletedEvent, QuestEngineEvents, StartQuestEvent } from '../../../QuestModule/Events';
-import { QuestTemplateService } from '../../../QuestModule/services/QuestTemplateService';
-import { ItemTemplateService } from '../../services/ItemTemplateService';
 import _ = require('lodash');
 
 const setupEngine = () => {
-    const itemTemplateService = new ItemTemplateService();
-    (itemTemplateService.getData as jest.Mock).mockReturnValue(MockedItemTemplates)
-
-    const respawnService = new QuestTemplateService();
-    (respawnService.getData as jest.Mock).mockReturnValue(MockedQuests);
-
     const engineManager = new EngineManager();
 
     const players = {

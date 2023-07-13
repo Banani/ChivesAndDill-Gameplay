@@ -33,8 +33,7 @@ export const MockedNpcTemplates: Record<string, NpcTemplate> = {
             '14': true,
         },
         quests: {
-            // '1': Quests['1'],
-            // '2': Quests['2'],
+            '1': true
         },
         quotesEvents: {
             onDying: {

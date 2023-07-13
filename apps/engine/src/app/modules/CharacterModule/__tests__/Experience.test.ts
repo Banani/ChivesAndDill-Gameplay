@@ -1,17 +1,12 @@
 import { CharacterClientEvents, EngineEventType, ExperienceGainSource, GlobalStoreModule } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
-import { MockedQuests } from '../../../mocks';
 import { QuestCompletedEvent, QuestEngineEvents, StartQuestEvent } from '../../QuestModule/Events';
-import { QuestTemplateService } from '../../QuestModule/services/QuestTemplateService';
 import { AddExperienceEvent, CharacterEngineEvents } from '../Events';
 import _ = require('lodash');
 
 const CURRENT_MODULE = GlobalStoreModule.EXPERIENCE;
 
 const setupEngine = () => {
-    const respawnService = new QuestTemplateService();
-    (respawnService.getData as jest.Mock).mockReturnValue(MockedQuests);
-
     const engineManager = new EngineManager();
 
     const players = {
