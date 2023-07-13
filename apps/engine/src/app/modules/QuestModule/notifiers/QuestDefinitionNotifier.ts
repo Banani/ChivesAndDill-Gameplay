@@ -1,6 +1,7 @@
 import { GlobalStoreModule } from '@bananos/types';
 import { AllQuestStagePart, ExternalQuestStagePart, KillingQuestStagePart, MovementQuestStagePart, QuestSchema, QuestType } from 'libs/types/src/QuestPackage';
 import * as _ from 'lodash';
+import { mapValues } from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import { ConversationWithNpcStartedEvent, NpcEngineEvents } from '../../NpcModule/Events';
@@ -31,7 +32,7 @@ export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
             return;
         }
 
-        const quest = services.questTemplateService.getData()[event.questId];
+        const quest = services.questSchemasService.getData()[event.questId];
         const stageIndex = quest.stageOrder.indexOf(event.questStage.id);
 
         this.multicastMultipleObjectsUpdate([
@@ -65,12 +66,16 @@ export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
             return;
         }
 
+        const allQuestDefinitions = services.questSchemasService.getData();
+
+        const questSchemas = mapValues(quests, (_, questId) => allQuestDefinitions[questId])
+
         const completedQuests = services.archivedQuestService.getCompletedQuests(event.characterId);
 
-        const filteredQuests = _.omitBy(quests, (_, questId) => completedQuests[questId]);
+        const filteredQuests = _.omitBy(questSchemas, (_, questId) => completedQuests[questId]);
 
         if (Object.keys(filteredQuests).length > 0) {
-            this.multicastMultipleObjectsUpdate([{ receiverId, objects: this.getOnlyFirstStage(quests) }]);
+            this.multicastMultipleObjectsUpdate([{ receiverId, objects: this.getOnlyFirstStage(filteredQuests) }]);
         }
     };
 
@@ -90,8 +95,8 @@ export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
         ]);
     };
 
-    getOnlyFirstStage = (quests: Record<string, QuestSchema>) =>
-        _.mapValues(quests, (quest) => ({
+    getOnlyFirstStage = (quests: Record<string, QuestSchema>) => {
+        return _.mapValues(quests, (quest) => ({
             name: quest.name,
             description: quest.description,
             questReward: quest.questReward,
@@ -103,4 +108,5 @@ export class QuestDefinitionNotifier extends Notifier<QuestSchema> {
                 },
             },
         }));
+    }
 }

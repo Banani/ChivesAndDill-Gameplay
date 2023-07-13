@@ -5,7 +5,7 @@ import (
 )
 
 type QuestRewardItem struct {
-	ItemTemplateId string `json:"itemTemplateId"`
+	ItemTemplateId string `json:"itemTemplateId" bson:"itemTemplateId"`
 	Amount         int64  `json:"amount"`
 }
 
@@ -19,16 +19,16 @@ type QuestSchema struct {
 	Id             string                `json:"id" bson:"-"`
 	Name           string                `json:"name"`
 	Description    string                `json:"description"`
-	QuestReward    QuestReward           `json:"questReward"`
+	QuestReward    QuestReward           `json:"questReward" bson:"questReward"`
 	Stages         map[string]QuestStage `json:"stages"`
-	RequiredLevel  int64                 `json:"requiredLevel"`
-	RequiredQuests map[string]string     `json:"requiredQuests"`
+	RequiredLevel  int64                 `json:"requiredLevel" bson:"requiredLevel"`
+	RequiredQuests map[string]string     `json:"requiredQuests" bson:"requiredQuests"`
 }
 
 type QuestStage struct {
 	Id          string                    `json:"id"`
 	Description string                    `json:"description"`
-	StageParts  map[string]QuestStagePart `json:"stageParts"`
+	StageParts  map[string]QuestStagePart `json:"stageParts" bson:"stageParts"`
 }
 
 type QuestStagePart struct {
@@ -42,7 +42,7 @@ type QuestStagePart struct {
 }
 
 type KillingQuestStagePartRule struct {
-	FieldName  string `json:"fieldName"`
+	FieldName  string `json:"fieldName" bson:"fieldName"`
 	Comparison string `json:"comparison"`
 	Value      string `json:"value"`
 }

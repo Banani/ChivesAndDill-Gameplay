@@ -35,7 +35,6 @@ export class BackpackItemsService extends EventParser {
             [ItemEngineEvents.ItemEquipped]: this.handleItemEquipped,
             [ItemEngineEvents.PlayerTriesToMoveItemInBag]: this.handlePlayerTriesToMoveItemInBag,
             [ItemEngineEvents.PlayerTriesToSplitItemStack]: this.handlePlayerTriesToSplitItemStack,
-            [ItemEngineEvents.PlayerTriesToSplitItemStack]: this.handlePlayerTriesToSplitItemStack,
             [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
         };
     }
@@ -53,7 +52,7 @@ export class BackpackItemsService extends EventParser {
     };
 
     handleQuestCompleted: EngineEventHandler<QuestCompletedEvent> = ({ event, services }) => {
-        const { questReward } = services.questTemplateService.getData()[event.questId];
+        const { questReward } = services.questSchemasService.getData()[event.questId];
 
         if (questReward.items) {
             _.forEach(questReward.items, (item) => {

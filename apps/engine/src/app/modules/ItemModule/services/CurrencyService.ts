@@ -7,59 +7,59 @@ import type { AddCurrencyToCharacterEvent, CurrencyAmountUpdatedEvent, RemoveCur
 import { ItemEngineEvents } from '../Events';
 
 export class CurrencyService extends EventParser {
-   private currencyTracks: Record<string, number> = {};
+    private currencyTracks: Record<string, number> = {};
 
-   constructor() {
-      super();
-      this.eventsToHandlersMap = {
-         [PlayerEngineEvents.PlayerCharacterCreated]: this.handleNewPlayerCreated,
-         [ItemEngineEvents.RemoveCurrencyFromCharacter]: this.handleRemoveCurrencyFromCharacter,
-         [ItemEngineEvents.AddCurrencyToCharacter]: this.handleAddCurrencyToCharacter,
-         [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
-      };
-   }
+    constructor() {
+        super();
+        this.eventsToHandlersMap = {
+            [PlayerEngineEvents.PlayerCharacterCreated]: this.handleNewPlayerCreated,
+            [ItemEngineEvents.RemoveCurrencyFromCharacter]: this.handleRemoveCurrencyFromCharacter,
+            [ItemEngineEvents.AddCurrencyToCharacter]: this.handleAddCurrencyToCharacter,
+            [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
+        };
+    }
 
-   handleNewPlayerCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event }) => {
-      this.currencyTracks[event.playerCharacter.id] = 243798;
+    handleNewPlayerCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event }) => {
+        this.currencyTracks[event.playerCharacter.id] = 243798;
 
-      this.engineEventCrator.asyncCeateEvent<CurrencyAmountUpdatedEvent>({
-         type: ItemEngineEvents.CurrencyAmountUpdated,
-         characterId: event.playerCharacter.id,
-         newAmount: this.currencyTracks[event.playerCharacter.id],
-      });
-   };
+        this.engineEventCrator.asyncCeateEvent<CurrencyAmountUpdatedEvent>({
+            type: ItemEngineEvents.CurrencyAmountUpdated,
+            characterId: event.playerCharacter.id,
+            newAmount: this.currencyTracks[event.playerCharacter.id],
+        });
+    };
 
-   handleRemoveCurrencyFromCharacter: EngineEventHandler<RemoveCurrencyFromCharacterEvent> = ({ event }) => {
-      this.currencyTracks[event.characterId] = Math.max(0, this.currencyTracks[event.characterId] - event.amount);
+    handleRemoveCurrencyFromCharacter: EngineEventHandler<RemoveCurrencyFromCharacterEvent> = ({ event }) => {
+        this.currencyTracks[event.characterId] = Math.max(0, this.currencyTracks[event.characterId] - event.amount);
 
-      this.engineEventCrator.asyncCeateEvent<CurrencyAmountUpdatedEvent>({
-         type: ItemEngineEvents.CurrencyAmountUpdated,
-         characterId: event.characterId,
-         newAmount: this.currencyTracks[event.characterId],
-      });
-   };
-
-   handleAddCurrencyToCharacter: EngineEventHandler<AddCurrencyToCharacterEvent> = ({ event }) => {
-      this.currencyTracks[event.characterId] = this.currencyTracks[event.characterId] + event.amount;
-
-      this.engineEventCrator.asyncCeateEvent<CurrencyAmountUpdatedEvent>({
-         type: ItemEngineEvents.CurrencyAmountUpdated,
-         characterId: event.characterId,
-         newAmount: this.currencyTracks[event.characterId],
-      });
-   };
-
-   getCharacterMoneyById = (characterId: string) => this.currencyTracks[characterId];
-
-   handleQuestCompleted: EngineEventHandler<QuestCompletedEvent> = ({ event, services }) => {
-      const { questReward } = services.questTemplateService.getData()[event.questId];
-
-      if (questReward.currency) {
-         this.engineEventCrator.asyncCeateEvent<AddCurrencyToCharacterEvent>({
-            type: ItemEngineEvents.AddCurrencyToCharacter,
+        this.engineEventCrator.asyncCeateEvent<CurrencyAmountUpdatedEvent>({
+            type: ItemEngineEvents.CurrencyAmountUpdated,
             characterId: event.characterId,
-            amount: questReward.currency,
-         });
-      }
-   };
+            newAmount: this.currencyTracks[event.characterId],
+        });
+    };
+
+    handleAddCurrencyToCharacter: EngineEventHandler<AddCurrencyToCharacterEvent> = ({ event }) => {
+        this.currencyTracks[event.characterId] = this.currencyTracks[event.characterId] + event.amount;
+
+        this.engineEventCrator.asyncCeateEvent<CurrencyAmountUpdatedEvent>({
+            type: ItemEngineEvents.CurrencyAmountUpdated,
+            characterId: event.characterId,
+            newAmount: this.currencyTracks[event.characterId],
+        });
+    };
+
+    getCharacterMoneyById = (characterId: string) => this.currencyTracks[characterId];
+
+    handleQuestCompleted: EngineEventHandler<QuestCompletedEvent> = ({ event, services }) => {
+        const { questReward } = services.questSchemasService.getData()[event.questId];
+
+        if (questReward.currency) {
+            this.engineEventCrator.asyncCeateEvent<AddCurrencyToCharacterEvent>({
+                type: ItemEngineEvents.AddCurrencyToCharacter,
+                characterId: event.characterId,
+                amount: questReward.currency,
+            });
+        }
+    };
 }
