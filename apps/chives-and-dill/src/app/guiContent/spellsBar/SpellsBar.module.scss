@@ -1,89 +1,97 @@
 .spellsBarContainer {
-   position: absolute;
-   background-color: #303030;
-   width: 50%;
-   bottom: 12px;
-   justify-content: center;
-   display: flex;
-   align-items: center;
-   margin-right: auto;
-   margin-left: auto;
-   left: 0;
-   right: 0;
-   border-radius: 50px 50px 0 0;
-   border-top: 2px solid;
+    position: absolute;
+    background-color: #303030;
+    width: 50%;
+    bottom: 12px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+    margin-left: auto;
+    left: 0;
+    right: 0;
+    border-radius: 50px 50px 0 0;
+    border-top: 2px solid;
 
-   .spellContainer {
-      padding: 5px 3px;
-      position: relative;
+    .spellContainer {
+        padding: 5px 3px;
+        position: relative;
 
-      .spellImage {
-         width: 50px;
-         height: 50px;
-         border: 3px solid black;
-         background-size: cover;
+        .spellImage {
+            width: 50px;
+            height: 50px;
+            border: 3px solid black;
+            background-size: cover;
+        }
 
-         &:hover + .spellTooltip {
-            visibility: visible;
-         }
-      }
+        .spellLoader {
+            position: absolute;
+            top: 8px;
+            left: 6px;
+            right: 6px;
+            bottom: 8px;
 
-      .spellHightlight {
-         box-shadow: inset 0 0 7px 3px #b5b7bb;
-      }
+            &:hover+.spellTooltip {
+                visibility: visible;
+            }
+        }
 
-      .keyboardNumber {
-         position: absolute;
-         top: 9px;
-         right: 10px;
-         color: white;
-         font-weight: bold;
-         font-size: 18px;
-         font-family: Arial, Helvetica, sans-serif;
-         text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-      }
+        .spellHightlight {
+            box-shadow: inset 0 0 7px 3px #b5b7bb;
+        }
 
-      .spellTooltip {
-         background-color: #080d21;
-         border: 2px solid silver;
-         border-radius: 10px;
-         position: absolute;
-         bottom: 75px;
-         width: 300px;
-         left: 50%;
-         right: 0;
-         margin: 0 auto;
-         transform: translateX(-50%);
-         color: white;
-         padding: 8px;
-         visibility: hidden;
+        .keyboardNumber {
+            position: absolute;
+            top: 9px;
+            right: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
 
-         .spellDesc {
-            color: gold;
-         }
-      }
+        .spellTooltip {
+            background-color: #080d21;
+            border: 2px solid silver;
+            border-radius: 10px;
+            position: absolute;
+            bottom: 75px;
+            width: 300px;
+            left: 50%;
+            right: 0;
+            margin: 0 auto;
+            transform: translateX(-50%);
+            color: white;
+            padding: 8px;
+            visibility: hidden;
 
-      .cooldown {
-         position: absolute;
-         opacity: 0.5;
-         background-color: black;
-         width: 0;
-         height: 50px;
-         padding: 2px;
-         top: 5px;
-         left: 3px;
-         animation-name: slideCooldown;
-         animation-timing-function: linear;
-      }
-   }
+            .spellDesc {
+                color: gold;
+            }
+        }
+
+        .cooldown {
+            position: absolute;
+            opacity: 0.5;
+            background-color: black;
+            width: 0;
+            height: 50px;
+            padding: 2px;
+            top: 5px;
+            left: 3px;
+            animation-name: slideCooldown;
+            animation-timing-function: linear;
+        }
+    }
 }
 
 @keyframes slideCooldown {
-   from {
-      width: 50px;
-   }
+    from {
+        width: 50px;
+    }
 
-   to {
-      width: 0px;
-   }
+    to {
+        width: 0px;
+    }
 }
