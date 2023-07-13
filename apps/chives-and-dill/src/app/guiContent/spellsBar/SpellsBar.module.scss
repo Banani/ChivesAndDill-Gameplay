@@ -24,18 +24,6 @@
             background-size: cover;
         }
 
-        .spellLoader {
-            position: absolute;
-            top: 8px;
-            left: 6px;
-            right: 6px;
-            bottom: 8px;
-
-            &:hover+.spellTooltip {
-                visibility: visible;
-            }
-        }
-
         .spellHightlight {
             box-shadow: inset 0 0 7px 3px #b5b7bb;
         }
@@ -49,6 +37,10 @@
             font-size: 18px;
             font-family: Arial, Helvetica, sans-serif;
             text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+
+        .spellHolder:hover+.spellTooltip {
+            visibility: visible;
         }
 
         .spellTooltip {
@@ -83,15 +75,5 @@
             animation-name: slideCooldown;
             animation-timing-function: linear;
         }
-    }
-}
-
-@keyframes slideCooldown {
-    from {
-        width: 50px;
-    }
-
-    to {
-        width: 0px;
     }
 }
