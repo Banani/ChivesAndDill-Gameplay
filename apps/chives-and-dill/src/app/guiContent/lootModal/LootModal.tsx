@@ -9,6 +9,7 @@ import { SocketContext } from '../../gameController/socketContext';
 import { Button } from '../components/button/Button';
 import { CalculateCurrenty } from '../moneyBar/CalculateCurrency';
 import styles from "./LootModal.module.scss";
+import { ItemPreview, ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 
 interface Item {
     amount: number,
@@ -110,17 +111,17 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     };
 
     const activeItems = () => {
-
         let items = _.map(activeLoot.items, (key, id) => {
             const item = activeLoot.items[id];
             const itemData = itemTemplates[item.itemTemplateId];
-            return (
-                < div className={styles.Item} onClick={() => handleItemClick(monsterId, item)}>
-                    <img src={itemData.image} className={styles.ItemImage} alt=""></img>
-                    <div className={styles.Stack}>{itemData.stack}</div>
-                    <div className={styles.RewardText}>{itemData.name}</div>
-                </div>
-            )
+            return <div className={styles.ItemContainer}>
+                <ItemPreview
+                    itemData={itemData}
+                    handleItemClick={() => handleItemClick(monsterId, item)}
+                    showMoney={false}
+                    highlight={ItemPreviewHighlight.full}
+                />
+            </div>
         });
 
         items = [coins(), ...items];

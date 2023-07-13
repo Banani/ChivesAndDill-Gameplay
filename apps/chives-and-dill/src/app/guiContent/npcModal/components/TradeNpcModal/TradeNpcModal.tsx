@@ -11,6 +11,8 @@ import { SocketContext } from '../../../../gameController/socketContext';
 import { MoneyBar } from '../../../../guiContent/moneyBar/MoneyBar';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
 import styles from './TradeNpcModal.module.scss';
+import { ItemPreview } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
+import { ItemPreviewHighlight } from '../../../../../components/itemPreview/ItemPreview';
 
 export const TradeNpcModal = ({ closeNpcModal }) => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
@@ -52,13 +54,13 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
 
     const allItems = _.map(activeNpc.stock, (_, itemId) =>
         itemTemplates[itemId] ? (
-            <div className={styles.Item} onClick={() => buyItem(itemTemplates[itemId], activeNpc)}>
-                <div style={{ backgroundImage: `url(${itemTemplates[itemId].image})` }} className={styles.ItemImage}></div>
-                {itemTemplates[itemId].stack > 1 && <div className={styles.Stack}>{itemTemplates[itemId].stack}</div>}
-                <div className={styles.ItemInfoWrapper}>
-                    <div className={styles.ItemText}>{itemTemplates[itemId].name}</div>
-                    <MoneyBar currency={itemTemplates[itemId].value} />
-                </div>
+            <div className={styles.ItemContainer}>
+                <ItemPreview
+                    itemData={itemTemplates[itemId]}
+                    handleItemClick={() => buyItem(itemTemplates[itemId], activeNpc)}
+                    showMoney={true}
+                    highlight={ItemPreviewHighlight.icon}
+                />
             </div>
         ) : null
     );

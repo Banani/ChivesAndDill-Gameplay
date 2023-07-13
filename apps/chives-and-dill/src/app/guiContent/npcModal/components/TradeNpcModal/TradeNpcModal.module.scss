@@ -18,57 +18,8 @@
          flex-wrap: wrap;
          justify-content: space-between;
 
-         .Item {
+         .ItemContainer {
             width: 48%;
-            display: flex;
-            border: 1px solid rgb(83, 83, 83);
-            background: #29292980;
-            border-radius: 4px;
-            margin-bottom: 4px;
-            position: relative;
-            overflow: hidden;
-            margin-top: 2px;
-
-            &:nth-child(odd) {
-               margin-right: 2px;
-            }
-
-            .ItemImage {
-               width: 50px;
-               height: 50px;
-               border-right: 1px solid rgb(83, 83, 83);
-               border-radius: 3px;
-               transition: 0.15s;
-               cursor: url(apps/chives-and-dill/src/assets/spritesheets/cursors/lootCursor.png), auto;
-               background-size: cover;
-               background-repeat: no-repeat;
-            }
-
-            .ItemImage:hover {
-               box-shadow: inset 0 0 7px 3px #1ba9fd;
-            }
-
-            .ItemInfoWrapper {
-               height: 50px;
-
-               .ItemText {
-                  color: white;
-                  display: flex;
-                  text-shadow: 1px 1px black;
-                  flex-direction: column;
-                  align-items: flex-start;
-                  justify-content: center;
-                  margin: 3px 0 3px 7px;
-                  font-size: 12px;
-               }
-            }
-
-            .Stack {
-               position: absolute;
-               left: 30px;
-               bottom: 0;
-               color: white;
-            }
          }
       }
 

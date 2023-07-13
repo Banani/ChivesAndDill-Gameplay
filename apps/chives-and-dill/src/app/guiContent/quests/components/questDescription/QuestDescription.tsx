@@ -7,6 +7,7 @@ import { MoneyBar } from '../../../moneyBar/MoneyBar';
 import { QuestStagePart } from '../questStagePart';
 
 import styles from './QuestDescription.module.scss';
+import { ItemPreview, ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 
 interface QuestDescriptionProps {
     questSchema: QuestSchema;
@@ -21,10 +22,12 @@ export const QuestDescription: FunctionComponent<QuestDescriptionProps> = ({ que
                 const itemData = itemTemplates[item.itemTemplateId];
                 if (itemData) {
                     return (
-                        <div className={styles.Item}>
-                            <img src={itemData.image} className={styles.ItemImage} alt=""></img>
-                            <div className={styles.Stack}>{itemData.stack}</div>
-                            <div className={styles.RewardText}>{itemData.name}</div>
+                        <div className={styles.ItemContainer}>
+                            <ItemPreview
+                                itemData={itemData}
+                                showMoney={false}
+                                highlight={ItemPreviewHighlight.none}
+                            />
                         </div>
                     );
                 }
