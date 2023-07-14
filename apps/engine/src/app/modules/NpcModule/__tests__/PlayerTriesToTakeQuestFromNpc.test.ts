@@ -38,7 +38,7 @@ const setupEngine = ({ respawnLocation }: RecursivePartial<{ respawnLocation: Lo
 };
 
 describe('PlayerTriesToTakeQuestFromNpc action', () => {
-    it.skip('Player should be notified about new quest when he is taking that quest', () => {
+    it('Player should be notified about new quest when he is taking that quest', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -117,7 +117,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
         checkIfErrorWasHandled(GlobalStoreModule.NPC_QUESTS, 'This npc does not have such quest.', dataPackage);
     });
 
-    it.skip('Player should get error when tries to take the same quest second time', () => {
+    it('Player should get error when tries to take the same quest second time', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);

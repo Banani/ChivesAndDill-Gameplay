@@ -4,14 +4,9 @@ import { EngineEvents } from '../../../EngineEvents';
 import { CharacterDiedEvent, PlayerMovedEvent } from '../../../types';
 import { Monster } from '../../MonsterModule/types';
 import { QuestCompletedEvent, QuestEngineEvents, StartQuestEvent } from '../Events';
-import { Quests } from '../Quests';
-import { QuestTemplateService } from '../services';
 import _ = require('lodash');
 
 const setupEngine = () => {
-    const respawnService = new QuestTemplateService();
-    (respawnService.getData as jest.Mock).mockReturnValue(_.cloneDeep(Quests));
-
     const engineManager = new EngineManager();
 
     const players = {

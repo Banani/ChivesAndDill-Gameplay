@@ -31,30 +31,30 @@ const setupEngine = () => {
         '1': engineManager.preparePlayerWithCharacter({ name: 'character_1' }),
     };
 
+    let initDataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
     engineManager.createSystemAction<NpcRespawnsUpdatedEvent>({
         type: NpcEngineEvents.NpcRespawnsUpdated,
         respawnIds: ['respawn_1']
     });
 
-    return { engineManager, players };
+    return { engineManager, players, initDataPackage };
 };
 
 describe('QuestNotifier', () => {
-    it.skip('New players should be informed about available tests', () => {
-        const { players, engineManager } = setupEngine();
+    it('New players should be informed about available tests', () => {
+        const { players, engineManager, initDataPackage } = setupEngine();
 
-        let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-        checkIfPackageIsValid(GlobalStoreModule.NPC_QUESTS, dataPackage, {
+        checkIfPackageIsValid(GlobalStoreModule.NPC_QUESTS, initDataPackage, {
             data: {
-                Manczur: {
+                '1': {
                     '1': true,
                 },
             },
         });
     });
 
-    it.skip('Player should have quest deleted from npc offer when it is done', () => {
+    it('Player should have quest deleted from npc offer when it is done', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -74,7 +74,7 @@ describe('QuestNotifier', () => {
         });
     });
 
-    it.skip('Player should not be informed about available tests if they are already done', () => {
+    it('Player should not be informed about available tests if they are already done', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -95,7 +95,7 @@ describe('QuestNotifier', () => {
         checkIfPackageIsValid(GlobalStoreModule.NPC_QUESTS, dataPackage, undefined);
     });
 
-    it.skip('Quest definition should be removed when the quest is completed', () => {
+    it('Quest definition should be removed when the quest is completed', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);

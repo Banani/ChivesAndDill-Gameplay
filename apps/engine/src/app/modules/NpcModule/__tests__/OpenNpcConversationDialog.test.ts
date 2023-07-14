@@ -1,7 +1,7 @@
 import { GlobalStoreModule, Location, NpcClientMessages, QuestType, RecursivePartial } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
-import { MockedNpcTemplates } from '../../../mocks';
+import { MockedNpcTemplates, MockedQuests } from '../../../mocks';
 import { QuestCompletedEvent, QuestEngineEvents } from '../../QuestModule/Events';
 import { Quests } from '../../QuestModule/Quests';
 import { NpcEngineEvents, NpcRespawnsUpdatedEvent } from '../Events';
@@ -86,10 +86,7 @@ describe('OpenNpcConversationDialog action', () => {
         checkIfErrorWasHandled(CURRENT_MODULE, 'You are too far away.', dataPackage);
     });
 
-    // TODO: Fix this after integrating with creator quests
-
-    it.skip('Player should be informed about quests that NPC provides when starting conversation', () => {
-        const quests = { '1': Quests['1'] };
+    it('Player should be informed about quests that NPC provides when starting conversation', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -100,7 +97,7 @@ describe('OpenNpcConversationDialog action', () => {
             npcId,
         });
 
-        const quest = Quests['1'];
+        const quest = MockedQuests['1'];
         checkIfPackageIsValid(GlobalStoreModule.QUEST_DEFINITION, dataPackage, {
             data: {
                 '1': {
@@ -129,7 +126,7 @@ describe('OpenNpcConversationDialog action', () => {
         });
     });
 
-    it.skip('Player should not be get quest definition when the quest is already done', () => {
+    it('Player should not be get quest definition when the quest is already done', () => {
         const quests = { '1': Quests['1'] };
         const { players, engineManager } = setupEngine();
 
