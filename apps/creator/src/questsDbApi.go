@@ -25,7 +25,7 @@ func (m *QuestsDbApi) saveQuest(questSchema QuestSchema) string {
 
 	record, _ := collection.InsertOne(context.TODO(), toSave)
 
-	return record.InsertedID.(primitive.ObjectID).String()
+	return record.InsertedID.(primitive.ObjectID).Hex()
 }
 
 func (m *QuestsDbApi) updateQuest(questSchema QuestSchema) {
