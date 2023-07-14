@@ -18,12 +18,6 @@ interface ItemPreviewProps {
 }
 
 export const ItemPreview: FunctionComponent<ItemPreviewProps> = ({ itemData, handleItemClick, showMoney, highlight }) => {
-  console.log(itemData.type);
-
-  if(itemData.type === ItemTemplateType.Equipment) {
-    itemData
-  }
-
   return (
     <div className={styles.Item + ` ${highlight === ItemPreviewHighlight.full ? styles.highlight : null}`} onClick={() => handleItemClick()}>
       <ItemIconPreview itemData={itemData} highlight={highlight === ItemPreviewHighlight.icon} />
