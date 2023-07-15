@@ -43,5 +43,12 @@
       .SectionHeader {
          font-size: 22px;
       }
+
+      .AvailableQuests {
+         cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
+         &:hover {
+            background-image: linear-gradient(to right, rgb(255, 250, 94, 0.1), rgb(255, 250, 94, 1), rgb(255, 250, 94, 0.1));
+         }
+      }
    }
 }

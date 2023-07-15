@@ -55,6 +55,11 @@
                background-color: #070807;
                border-radius: 5px;
                border: 1px solid #666962;
+               cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
+               &:hover {
+                  color: #fff;
+                  text-shadow: 0 0 10px #fff;
+               }
             }
 
             .PaginationText {
