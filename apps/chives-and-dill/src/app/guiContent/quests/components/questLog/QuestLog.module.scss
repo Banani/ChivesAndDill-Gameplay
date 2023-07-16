@@ -46,9 +46,8 @@
       overflow-y: scroll;
       position: absolute;
       top: 120px;
-      right: 50px;
+      right: 35px;
       display: flex;
-      align-self: right;
       flex-direction: column;
 
       .QuestDesc {
@@ -63,6 +62,14 @@
             padding: 10px 0;
          }
       }
+   }
+
+   .QuestLogText {
+      position: absolute;
+      right: 470px;
+      top: 22px;
+      color: #ffc506;
+      font-size: 20px;
    }
 
    .closeWindow {

@@ -76,7 +76,7 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
             {currentQuests.length > 0 ? <h3 className={styles.SectionHeader}>Current Quests</h3> : null}
             {currentQuests}
             {availableQuests.length > 0 ? <h3 className={styles.SectionHeader}>Available Quests</h3> : null}
-            {availableQuests}
+            <div className={styles.AvailableQuests}>{availableQuests}</div>
          </div>
       </div>
    ) : null;

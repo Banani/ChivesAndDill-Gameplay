@@ -22,13 +22,14 @@ export const QuestLog = () => {
 
     return selectedQuestId ? (
         <div className={styles.QuestLog}>
+            <div className={styles.QuestLogText}>Quest Log</div>
+            <button className={styles.closeWindow} onClick={() => setSelectedQuestId(null)}>
+                x
+            </button>
             <div className={styles.QuestList}>{renderQuests ? renderQuests : null}</div>
             <div className={styles.QuestDetails}>
                 <QuestDescription questSchema={questDefinition[selectedQuestId]} />
             </div>
-            <button className={styles.closeWindow} onClick={() => setSelectedQuestId(null)}>
-                x
-            </button>
         </div>
     ) : null;
 };
