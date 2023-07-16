@@ -23,7 +23,10 @@ const DefaultSpell: Spell = {
     spellPowerCost: 100,
     passThrough: false,
     cooldown: 1000,
-    spellEffectsOnTarget: {}
+    spellEffectsOnTarget: {},
+    casterImpact: true,
+    monstersImpact: true,
+    playersImpact: true,
 } as Spell
 
 const DefaultDirectInstant: DirectInstantSpell = {
@@ -173,6 +176,21 @@ export const SpellDialog = () => {
                 type: SchemaFieldType.Number,
                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber },],
                 defaultValue: defaultSpell.cooldown
+            },
+            casterImpact: {
+                label: "Caster Impact",
+                type: SchemaFieldType.Boolean,
+                defaultValue: defaultSpell.casterImpact
+            },
+            monstersImpact: {
+                label: "Monsters Impact",
+                type: SchemaFieldType.Boolean,
+                defaultValue: defaultSpell.monstersImpact
+            },
+            playersImpact: {
+                label: "Players Impact",
+                type: SchemaFieldType.Boolean,
+                defaultValue: defaultSpell.playersImpact
             },
             speed: {
                 label: "Speed",

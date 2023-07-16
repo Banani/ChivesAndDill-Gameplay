@@ -38,7 +38,7 @@ export class KillingQuestService extends EventParser {
     handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
         if (this.activeStages[event.killerId]) {
             forEach(this.activeStages[event.killerId], (stagePart) => {
-                const matched = find(stagePart.rule, (rule) => { console.log(rule, comparators, comparators[rule.comparison], event.character, rule.fieldName, rule.value, comparators[rule.comparison](event.character, rule.fieldName, rule.value)); return comparators[rule.comparison](event.character, rule.fieldName, rule.value) });
+                const matched = find(stagePart.rule, (rule) => comparators[rule.comparison](event.character, rule.fieldName, rule.value));
 
                 if (matched) {
                     stagePart.currentAmount++;

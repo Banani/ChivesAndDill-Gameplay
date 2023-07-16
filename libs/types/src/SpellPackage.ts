@@ -41,6 +41,9 @@ interface BaseSpell {
     description?: string;
     spellPowerCost: number;
     requiredPowerStacks?: PowerStackRequirement[];
+    casterImpact: boolean;
+    monstersImpact: boolean;
+    playersImpact: boolean;
 }
 
 interface PowerStackRequirement {

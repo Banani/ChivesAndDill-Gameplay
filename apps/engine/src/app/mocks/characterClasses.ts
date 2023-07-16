@@ -11,7 +11,11 @@ export const MockedCharacterClasses: Record<string, CharacterClass> = {
             '1': {
                 spellId: "1",
                 minLevel: 0
-            }
+            },
+            '3': {
+                spellId: "3",
+                minLevel: 0
+            },
         },
         color: ""
     },
