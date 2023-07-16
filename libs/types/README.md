@@ -6,7 +6,6 @@ This library was generated with [Nx](https://nx.dev).
 
 Run `nx test types` to execute the unit tests via [Jest](https://jestjs.io).
 
-
 ## Run project
 
 Npm run start
