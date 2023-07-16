@@ -58,7 +58,7 @@ interface BaseSubSpell {
 interface EffectHolders {
     spellEffectsOnTarget?: Record<string, AllEffects>;
     spellEffectsOnDirectionLocation?: AllEffects[];
-    spellEffectsOnCasterOnSpellHit?: AllEffects[];
+    spellEffectsOnCasterOnSpellHit?: Record<string, AllEffects>;
 }
 
 export interface ProjectileSubSpell extends EffectHolders, BaseSubSpell {

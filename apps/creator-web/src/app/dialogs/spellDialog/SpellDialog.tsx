@@ -24,6 +24,7 @@ const DefaultSpell: Spell = {
     passThrough: false,
     cooldown: 1000,
     spellEffectsOnTarget: {},
+    spellEffectsOnCasterOnSpellHit: {},
     casterImpact: true,
     monstersImpact: true,
     playersImpact: true,
@@ -115,6 +116,199 @@ const DefaultAreaEffect: AreaEffect = {
 export const SpellDialog = () => {
     const { activeSpell, setActiveSpell } = useContext(SpellsContext);
     let defaultSpell = activeSpell?.id ? _.merge({}, DefaultSpell, activeSpell) : DefaultSpell;
+
+    const spellEffectsSchema: Schema = {
+        type: {
+            label: "Effect type",
+            type: SchemaFieldType.Select,
+            options: [
+                { label: "Damage", value: SpellEffectType.Damage },
+                { label: "Heal", value: SpellEffectType.Heal },
+                { label: "Generate Spell Power", value: SpellEffectType.GenerateSpellPower },
+                { label: "Absorb Shield", value: SpellEffectType.AbsorbShield },
+                { label: "Tick Effect Over Time", value: SpellEffectType.TickEffectOverTime },
+                { label: "Area", value: SpellEffectType.Area },
+            ],
+            typeChanger: {
+                [SpellEffectType.Damage]: DefaultDamageEffect,
+                [SpellEffectType.Heal]: DefaultHealEffect,
+                [SpellEffectType.GenerateSpellPower]: DefaultGenerateSpellPowerEffect,
+                [SpellEffectType.AbsorbShield]: DefaultAbsorbEffect,
+                [SpellEffectType.TickEffectOverTime]: DefaultTickOverTimeEffect,
+                [SpellEffectType.Area]: DefaultAreaEffect
+            }
+        },
+        amount: {
+            label: "Amount (percentage from the attribute)",
+            type: SchemaFieldType.Number,
+            conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
+            prerequisite: ({ type }) => [
+                SpellEffectType.Damage,
+                SpellEffectType.Heal,
+                SpellEffectType.GenerateSpellPower
+            ].includes(type)
+        },
+        attribute: {
+            label: "Attribute",
+            type: SchemaFieldType.Select,
+            options: [
+                { label: "Stamina", value: Attribute.Stamina },
+                { label: "Strength", value: Attribute.Strength },
+                { label: "Agility", value: Attribute.Agility },
+                { label: "Intelect", value: Attribute.Intelect },
+                { label: "Spirit", value: Attribute.Spirit },
+            ],
+            prerequisite: ({ type }) => [
+                SpellEffectType.Damage,
+            ].includes(type)
+        },
+        spellId: {
+            type: SchemaFieldType.Text,
+            hidden: true
+        },
+        id: {
+            type: SchemaFieldType.Text,
+            hidden: true
+        },
+        name: {
+            label: "Buff name",
+            type: SchemaFieldType.Text,
+            conditions: [{ type: FormFieldConditions.Required }],
+            prerequisite: ({ type }) => [
+                SpellEffectType.AbsorbShield,
+                SpellEffectType.TickEffectOverTime
+            ].includes(type)
+        },
+        description: {
+            label: "Description",
+            type: SchemaFieldType.Text,
+            prerequisite: ({ type }) => [
+                SpellEffectType.TickEffectOverTime
+            ].includes(type)
+        },
+        shieldValue: {
+            label: "Shield value",
+            type: SchemaFieldType.Number,
+            conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
+            prerequisite: ({ type }) => [
+                SpellEffectType.AbsorbShield
+            ].includes(type)
+        },
+        activationFrequency: {
+            label: "Activation Frequency (in milliseconds)",
+            type: SchemaFieldType.Number,
+            conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
+            prerequisite: ({ type }) => [
+                SpellEffectType.TickEffectOverTime,
+                SpellEffectType.Area
+            ].includes(type)
+        },
+        period: {
+            label: "Period",
+            type: SchemaFieldType.Number,
+            conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
+            prerequisite: ({ type }) => [
+                SpellEffectType.AbsorbShield,
+                SpellEffectType.TickEffectOverTime,
+                SpellEffectType.Area
+            ].includes(type)
+        },
+        stack: {
+            label: "Stack",
+            type: SchemaFieldType.Number,
+            conditions: [{ type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
+            prerequisite: ({ type }) => [
+                SpellEffectType.AbsorbShield
+            ].includes(type)
+        },
+        iconImage: {
+            label: "Icon Image",
+            type: SchemaFieldType.Text,
+            conditions: [{ type: FormFieldConditions.Required }],
+            prerequisite: ({ type }) => [
+                SpellEffectType.AbsorbShield,
+                SpellEffectType.TickEffectOverTime
+            ].includes(type)
+        },
+        timeEffectType: {
+            label: "Time effect type",
+            type: SchemaFieldType.Select,
+            options: [
+                { label: "Buff", value: TimeEffectType.BUFF },
+                { label: "Debuff", value: TimeEffectType.DEBUFF }
+            ],
+            prerequisite: ({ type }) => [
+                SpellEffectType.AbsorbShield,
+                SpellEffectType.TickEffectOverTime
+            ].includes(type)
+        },
+        areaType: {
+            label: "Area type",
+            type: SchemaFieldType.Text,
+            prerequisite: ({ type }) => [
+                SpellEffectType.Area
+            ].includes(type),
+            hidden: true
+        },
+        radius: {
+            label: "Radius",
+            type: SchemaFieldType.Number,
+            conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
+            prerequisite: ({ type }) => [
+                SpellEffectType.Area
+            ].includes(type)
+        },
+        spellEffects: {
+            label: "Spell effects on activation",
+            type: SchemaFieldType.Record,
+            newElement: _.cloneDeep(DefaultDamageEffect),
+            prerequisite: ({ type }) => [
+                SpellEffectType.TickEffectOverTime,
+                SpellEffectType.Area
+            ].includes(type),
+            schema: {
+                type: {
+                    label: "Effect type",
+                    type: SchemaFieldType.Select,
+                    options: [
+                        { label: "Damage", value: SpellEffectType.Damage },
+                        { label: "Heal", value: SpellEffectType.Heal },
+                    ],
+                    typeChanger: {
+                        [SpellEffectType.Damage]: DefaultDamageEffect,
+                        [SpellEffectType.Heal]: DefaultHealEffect
+                    }
+                },
+                amount: {
+                    label: "Amount (percentage from the attribute)",
+                    type: SchemaFieldType.Number,
+                    conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
+                    prerequisite: ({ type }) => [
+                        SpellEffectType.Damage,
+                        SpellEffectType.Heal
+                    ].includes(type)
+                },
+                attribute: {
+                    label: "Attribute",
+                    type: SchemaFieldType.Select,
+                    options: [
+                        { label: "Stamina", value: Attribute.Stamina },
+                        { label: "Strength", value: Attribute.Strength },
+                        { label: "Agility", value: Attribute.Agility },
+                        { label: "Intelect", value: Attribute.Intelect },
+                        { label: "Spirit", value: Attribute.Spirit },
+                    ],
+                    prerequisite: ({ type }) => [
+                        SpellEffectType.Damage,
+                    ].includes(type)
+                },
+                spellId: {
+                    type: SchemaFieldType.Text,
+                    hidden: true
+                },
+            }
+        },
+    };
 
     const schema: Schema = useMemo(() => {
         return {
@@ -221,198 +415,14 @@ export const SpellDialog = () => {
                 type: SchemaFieldType.Record,
                 newElement: _.cloneDeep(DefaultDamageEffect),
                 defaultValue: defaultSpell.spellEffectsOnTarget,
-                schema: {
-                    type: {
-                        label: "Effect type",
-                        type: SchemaFieldType.Select,
-                        options: [
-                            { label: "Damage", value: SpellEffectType.Damage },
-                            { label: "Heal", value: SpellEffectType.Heal },
-                            { label: "Generate Spell Power", value: SpellEffectType.GenerateSpellPower },
-                            { label: "Absorb Shield", value: SpellEffectType.AbsorbShield },
-                            { label: "Tick Effect Over Time", value: SpellEffectType.TickEffectOverTime },
-                            { label: "Area", value: SpellEffectType.Area },
-                        ],
-                        typeChanger: {
-                            [SpellEffectType.Damage]: DefaultDamageEffect,
-                            [SpellEffectType.Heal]: DefaultHealEffect,
-                            [SpellEffectType.GenerateSpellPower]: DefaultGenerateSpellPowerEffect,
-                            [SpellEffectType.AbsorbShield]: DefaultAbsorbEffect,
-                            [SpellEffectType.TickEffectOverTime]: DefaultTickOverTimeEffect,
-                            [SpellEffectType.Area]: DefaultAreaEffect
-                        }
-                    },
-                    amount: {
-                        label: "Amount (percentage from the attribute)",
-                        type: SchemaFieldType.Number,
-                        conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.Damage,
-                            SpellEffectType.Heal,
-                            SpellEffectType.GenerateSpellPower
-                        ].includes(type)
-                    },
-                    attribute: {
-                        label: "Attribute",
-                        type: SchemaFieldType.Select,
-                        options: [
-                            { label: "Stamina", value: Attribute.Stamina },
-                            { label: "Strength", value: Attribute.Strength },
-                            { label: "Agility", value: Attribute.Agility },
-                            { label: "Intelect", value: Attribute.Intelect },
-                            { label: "Spirit", value: Attribute.Spirit },
-                        ],
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.Damage,
-                        ].includes(type)
-                    },
-                    spellId: {
-                        type: SchemaFieldType.Text,
-                        hidden: true
-                    },
-                    id: {
-                        type: SchemaFieldType.Text,
-                        hidden: true
-                    },
-                    name: {
-                        label: "Buff name",
-                        type: SchemaFieldType.Text,
-                        conditions: [{ type: FormFieldConditions.Required }],
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.AbsorbShield,
-                            SpellEffectType.TickEffectOverTime
-                        ].includes(type)
-                    },
-                    description: {
-                        label: "Description",
-                        type: SchemaFieldType.Text,
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.TickEffectOverTime
-                        ].includes(type)
-                    },
-                    shieldValue: {
-                        label: "Shield value",
-                        type: SchemaFieldType.Number,
-                        conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.AbsorbShield
-                        ].includes(type)
-                    },
-                    activationFrequency: {
-                        label: "Activation Frequency (in milliseconds)",
-                        type: SchemaFieldType.Number,
-                        conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.TickEffectOverTime,
-                            SpellEffectType.Area
-                        ].includes(type)
-                    },
-                    period: {
-                        label: "Period",
-                        type: SchemaFieldType.Number,
-                        conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.AbsorbShield,
-                            SpellEffectType.TickEffectOverTime,
-                            SpellEffectType.Area
-                        ].includes(type)
-                    },
-                    stack: {
-                        label: "Stack",
-                        type: SchemaFieldType.Number,
-                        conditions: [{ type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.AbsorbShield
-                        ].includes(type)
-                    },
-                    iconImage: {
-                        label: "Icon Image",
-                        type: SchemaFieldType.Text,
-                        conditions: [{ type: FormFieldConditions.Required }],
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.AbsorbShield,
-                            SpellEffectType.TickEffectOverTime
-                        ].includes(type)
-                    },
-                    timeEffectType: {
-                        label: "Time effect type",
-                        type: SchemaFieldType.Select,
-                        options: [
-                            { label: "Buff", value: TimeEffectType.BUFF },
-                            { label: "Debuff", value: TimeEffectType.DEBUFF }
-                        ],
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.AbsorbShield,
-                            SpellEffectType.TickEffectOverTime
-                        ].includes(type)
-                    },
-                    areaType: {
-                        label: "Area type",
-                        type: SchemaFieldType.Text,
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.Area
-                        ].includes(type),
-                        hidden: true
-                    },
-                    radius: {
-                        label: "Radius",
-                        type: SchemaFieldType.Number,
-                        conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.Area
-                        ].includes(type)
-                    },
-                    spellEffects: {
-                        label: "Spell effects on activation",
-                        type: SchemaFieldType.Record,
-                        newElement: _.cloneDeep(DefaultDamageEffect),
-                        prerequisite: ({ type }) => [
-                            SpellEffectType.TickEffectOverTime,
-                            SpellEffectType.Area
-                        ].includes(type),
-                        schema: {
-                            type: {
-                                label: "Effect type",
-                                type: SchemaFieldType.Select,
-                                options: [
-                                    { label: "Damage", value: SpellEffectType.Damage },
-                                    { label: "Heal", value: SpellEffectType.Heal },
-                                ],
-                                typeChanger: {
-                                    [SpellEffectType.Damage]: DefaultDamageEffect,
-                                    [SpellEffectType.Heal]: DefaultHealEffect
-                                }
-                            },
-                            amount: {
-                                label: "Amount (percentage from the attribute)",
-                                type: SchemaFieldType.Number,
-                                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber }],
-                                prerequisite: ({ type }) => [
-                                    SpellEffectType.Damage,
-                                    SpellEffectType.Heal
-                                ].includes(type)
-                            },
-                            attribute: {
-                                label: "Attribute",
-                                type: SchemaFieldType.Select,
-                                options: [
-                                    { label: "Stamina", value: Attribute.Stamina },
-                                    { label: "Strength", value: Attribute.Strength },
-                                    { label: "Agility", value: Attribute.Agility },
-                                    { label: "Intelect", value: Attribute.Intelect },
-                                    { label: "Spirit", value: Attribute.Spirit },
-                                ],
-                                prerequisite: ({ type }) => [
-                                    SpellEffectType.Damage,
-                                ].includes(type)
-                            },
-                            spellId: {
-                                type: SchemaFieldType.Text,
-                                hidden: true
-                            },
-                        }
-                    },
-                }
+                schema: spellEffectsSchema
+            },
+            spellEffectsOnCasterOnSpellHit: {
+                label: "Spell effects on the caster when the target is hit",
+                type: SchemaFieldType.Record,
+                newElement: _.cloneDeep(DefaultDamageEffect),
+                defaultValue: defaultSpell.spellEffectsOnCasterOnSpellHit,
+                schema: spellEffectsSchema
             }
         }
     }, [activeSpell]);

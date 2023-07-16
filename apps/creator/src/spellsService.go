@@ -17,7 +17,8 @@ type Spell struct {
 	PlayersImpact        bool                            `json:"playersImpact" bson:"playersImpact"`
 	Speed                int32                           `json:"speed,omitempty" bson:"speed,omitempty"`
 	Angle                int32                           `json:"angle,omitempty" bson:"angle,omitempty"`
-	SpellEffectsOnTarget map[string]SpellEffectsOnTarget `json:"spellEffectsOnTarget,omitempty" bson:"spellEffectsOnTarget,omitempty"`
+	SpellEffectsOnTarget 			map[string]SpellEffectsOnTarget `json:"spellEffectsOnTarget,omitempty" bson:"spellEffectsOnTarget,omitempty"`
+	SpellEffectsOnCasterOnSpellHit  map[string]SpellEffectsOnTarget `json:"spellEffectsOnCasterOnSpellHit,omitempty" bson:"spellEffectsOnCasterOnSpellHit,omitempty"`
 }
 
 type SpellEffectsOnTarget struct {
