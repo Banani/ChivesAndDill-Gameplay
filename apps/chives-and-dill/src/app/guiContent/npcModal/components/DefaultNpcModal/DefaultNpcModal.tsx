@@ -67,7 +67,7 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
          <ModalHeader activeNpc={activeNpc} closeNpcModal={closeNpcModal} />
          <div className={styles.ContentWrapper}>
             <div className={styles.SectionText}>Cześć!</div>
-            {activeNpc.stock ? (
+            {!_.isEmpty(activeNpc.stock) ? (
                <div className={styles.TradeModalContainer} onClick={() => setCurrentModal(NpcModalView.Trade)}>
                   <img src="../../../../../assets/spritesheets/icons/tradeIcon.png" />
                   <div className={styles.TradeModal}>Show me your wares.</div>
