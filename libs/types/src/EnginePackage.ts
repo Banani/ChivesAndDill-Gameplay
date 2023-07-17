@@ -3,12 +3,14 @@ import type {
     BackpackItemsSpot,
     BackpackTrack,
     ChatMessage,
+    EngineGroupAction,
     EngineItemMessages,
     EngineNpcAction,
     EngineSpellMessages,
     EquipmentTrack,
     ItemTemplate,
     NpcStock,
+    Party,
     SpellDefinition,
 } from '.';
 import type { Attributes, CharacterEvents, MonsterCorpse } from './CharacterPackage';
@@ -53,7 +55,9 @@ export enum GlobalStoreModule {
     COMBAT_STATE = 'combatState',
     AVAILABLE_SPELLS = 'availableSpells',
     SPELL_DEFINITION = 'spellDefinition',
-    SPELL_CAST_TIME = 'spellCastTime'
+    SPELL_CAST_TIME = 'spellCastTime',
+    PARTY = 'party',
+    PARTY_INVITATION = 'partyInvitation'
 }
 
 export interface PartialEnginePackage<Data> {
@@ -97,6 +101,8 @@ export interface EnginePackage {
     [GlobalStoreModule.AVAILABLE_SPELLS]: PartialEnginePackage<boolean>;
     [GlobalStoreModule.SPELL_DEFINITION]: PartialEnginePackage<SpellDefinition>;
     [GlobalStoreModule.SPELL_CAST_TIME]: PartialEnginePackage<number>;
+    [GlobalStoreModule.PARTY]: PartialEnginePackage<Party>;
+    [GlobalStoreModule.PARTY_INVITATION]: PartialEnginePackage<string>;
 }
 
 interface StoreModule<Data> {
@@ -143,6 +149,8 @@ export interface GlobalStore {
     [GlobalStoreModule.AVAILABLE_SPELLS]: StoreModule<boolean>;
     [GlobalStoreModule.SPELL_DEFINITION]: StoreModule<SpellDefinition>;
     [GlobalStoreModule.SPELL_CAST_TIME]: StoreModule<number>;
+    [GlobalStoreModule.PARTY]: StoreModule<Party>;
+    [GlobalStoreModule.PARTY_INVITATION]: StoreModule<string>;
 }
 
 export interface ActiveCharacterStorePart {
@@ -329,7 +337,7 @@ export type EnginePackageEvent =
     | EngineNpcAction // nie wiem czemu to tu jest, ale raczej nie powinno
     | CommonClientActions; // nie wiem czemu to tu jest, ale raczej nie powinno
 
-export type EnginePackageActions = EngineSpellMessages | CommonClientActions | EngineNpcAction | EngineChatAction | EngineItemMessages;
+export type EnginePackageActions = EngineSpellMessages | CommonClientActions | EngineNpcAction | EngineChatAction | EngineItemMessages | EngineGroupAction;
 
 export enum HealthPointsSource {
     Healing = 'Healing',

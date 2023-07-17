@@ -1,6 +1,7 @@
 export * from './CharacterPackage';
 export * from './ChatPackage';
 export * from './EnginePackage';
+export * from './GroupPackage';
 export * from './ItemPackage';
 export * from './NpcPackage';
 export * from './QuestPackage';
