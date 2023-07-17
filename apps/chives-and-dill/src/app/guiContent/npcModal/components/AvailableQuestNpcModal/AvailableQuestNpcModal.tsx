@@ -5,7 +5,7 @@ import type { FunctionComponent } from 'react';
 import React, { useContext, useEffect } from 'react';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { QuestDescription } from '../../../quests/components';
-import { Button } from './../../../components/button/Button';
+import { RectangleButton } from '../../../components/rectangleButton/RectangleButton';
 import styles from './AvailableQuestNpcModal.module.scss';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
 
@@ -50,7 +50,7 @@ export const AvailableQuestNpcModal: FunctionComponent<AvailableQuestNpcModalPro
                <QuestDescription questSchema={questSchema} />
             </div>
             <div className={styles.ActionBar}>
-               <Button onClick={acceptQuest}>Accept</Button>
+               <RectangleButton onClick={acceptQuest}>Accept</RectangleButton>
             </div>
          </div>
       </div>

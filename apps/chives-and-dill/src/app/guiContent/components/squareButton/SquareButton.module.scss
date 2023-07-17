@@ -1,0 +1,24 @@
+.Button {
+   background-color: #640103;
+   color: #f5d100;
+   border-radius: 4px;
+   font-size: 16px;
+   height: 30px;
+   width: 30px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border-radius: 20%;
+   border: 2px solid #8a867c;
+   cursor: url(../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
+
+   &:hover {
+      background-color: #770103;
+      color: #ffd900;
+   }
+
+   &:disabled {
+      background-color: #353435;
+      color: #808080;
+   }
+}

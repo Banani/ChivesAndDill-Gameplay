@@ -1,6 +1,6 @@
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import React, { FunctionComponent, useContext, useEffect } from 'react';
-import { Button } from '../../components/button/Button';
+import { RectangleButton } from '../../components/rectangleButton/RectangleButton';
 import styles from './ConfirmationDialog.module.scss';
 
 interface ConfirmationDialogProps {
@@ -45,12 +45,12 @@ export const ConfirmationDialog: FunctionComponent<ConfirmationDialogProps> = ({
             </div>
 
             <div className={styles.actionBar}>
-               <Button className={styles.actionButton} onClick={accept}>
+               <RectangleButton className={styles.actionButton} onClick={accept}>
                   Okay
-               </Button>
-               <Button className={styles.actionButton} onClick={cancel}>
+               </RectangleButton>
+               <RectangleButton className={styles.actionButton} onClick={cancel}>
                   Cancel
-               </Button>
+               </RectangleButton>
             </div>
          </div>
       )
