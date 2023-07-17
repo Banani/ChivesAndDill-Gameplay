@@ -9,7 +9,7 @@ import { DialogContext, Dialogs } from '../../contexts/dialogContext';
 import { DeleteConfirmationDialog } from '../../dialogs';
 
 import { Spell } from '@bananos/types';
-import _ from 'lodash';
+import _, { chain } from 'lodash';
 import { ImagePreview } from '../../components';
 import { Loader } from '../components';
 import styles from './Spells.module.scss';
@@ -21,9 +21,11 @@ export const Spells = () => {
     const { deleteSpell, setActiveSpell } = useContext(SpellsContext);
     const [spellsToDelete, setSpellsToDelete] = useState<Spell[]>([]);
 
-    const { data: spells, lastUpdateTime } = (packageContext?.backendStore?.spells ?? {});
+    const { data: spells, lastUpdateTime: lastUpdateTimeSpells } = (packageContext?.backendStore?.spells ?? {});
+    const { data: monsterTemplates, lastUpdateTime: lastUpdateTimeMonsterTemplates } = (packageContext?.backendStore?.monsterTemplates ?? {});
+    const { data: characterClasses, lastUpdateTime: lastUpdateTimeCharacterClasses } = (packageContext?.backendStore?.characterClasses ?? {});
 
-    if (!lastUpdateTime) {
+    if (!lastUpdateTimeSpells || !lastUpdateTimeCharacterClasses || !lastUpdateTimeMonsterTemplates) {
         return <Loader />;
     }
 
@@ -68,7 +70,22 @@ export const Spells = () => {
                             {
                                 field: 'name',
                                 headerName: 'Name',
+                                width: 240,
+                            },
+                            {
+                                field: 'assigned',
+                                headerName: 'Assigned',
                                 flex: 1,
+                                renderCell: (params: GridRenderCellParams<Spell>) =>
+                                    chain(characterClasses)
+                                        .filter(characterClass => characterClass.spells[params.row.id])
+                                        .map(characterClass => characterClass.name)
+                                        .value()
+                                        .concat(chain(monsterTemplates)
+                                            .filter(characterClass => characterClass.spells[params.row.id])
+                                            .map(characterClass => characterClass.name)
+                                            .value())
+                                        .join(", ")
                             },
                             {
                                 field: 'actions',

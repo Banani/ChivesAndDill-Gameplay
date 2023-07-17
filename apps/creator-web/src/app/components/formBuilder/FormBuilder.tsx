@@ -3,6 +3,7 @@ import { Button, IconButton } from "@mui/material";
 import _, { map } from "lodash";
 import React, { FunctionComponent, useCallback, useContext } from "react";
 import { FormContext, PropertyDefinition, Schema, SchemaFieldType } from "../../contexts/FormContext";
+import { FormCheckboxField } from "../formCheckboxField";
 import { FormSelectField } from '../formSelectField';
 import { FormTextField } from "../formTextField";
 import { Label } from "../label";
@@ -24,6 +25,7 @@ export const FormBuilder: FunctionComponent<FormBuilderProps> = ({ schema }) => 
     const fieldBuilders: Record<SchemaFieldType, (field: PropertyDefinition, fieldName: string, value: any) => any> = {
         [SchemaFieldType.Text]: (_, fieldName) => <FormTextField key={fieldName} propName={fieldName} />,
         [SchemaFieldType.Number]: (_, fieldName) => <FormTextField key={fieldName} propName={fieldName} />,
+        [SchemaFieldType.Boolean]: (_, fieldName) => <FormCheckboxField key={fieldName} propName={fieldName} />,
         [SchemaFieldType.Select]: (_, fieldName) => <FormSelectField key={fieldName} propName={fieldName} />,
         [SchemaFieldType.Array]: () => <>TO BE IMPLEMENTED</>,
         [SchemaFieldType.Object]: (propertyDefinition, fieldName, object) => <React.Fragment key={fieldName}>{_.chain(propertyDefinition.schema)
