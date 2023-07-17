@@ -27,11 +27,18 @@ export class PartyInvitationService extends EventParser {
 
     handlePlayerTriesToInviteChracterToParty: EngineEventHandler<PlayerTriesToInviteChracterToPartyEvent> = ({ event, services }) => {
         const character = services.characterService.getAllCharacters()[event.characterId];
-        // jesli gracz juz jest w pt, to wysylamy ze gracz jest juz w grupie
         // jesli w grupie jest juz 40 graczy to wysylamy ze grupa jest pelna
+        // a co jesli party zostanie usuniete zanim gracz zaakceptuje
+        // co jesli gracz bedzie chcial dodac samego siebie
+        // Tylko lider moze zapraszac nowych graczy do pt
 
         if (!character) {
             this.sendErrorMessage(event.requestingCharacterId, 'This player does not exist.');
+            return;
+        }
+
+        if (services.partyService.getCharacterParty(event.characterId)) {
+            this.sendErrorMessage(event.requestingCharacterId, 'This player already has a group.');
             return;
         }
 
@@ -40,9 +47,11 @@ export class PartyInvitationService extends EventParser {
             return;
         }
 
+        const inviterParty = services.partyService.getCharacterParty(event.requestingCharacterId);
+
+        // pokryc testem case w ktorym wysylamy invite, wychodzimy z pt, a potem kolejny chlop akceptuje
         this.invitations[event.characterId] = {
-            // jesli postac ma juz party, to ustawiamy party
-            partyId: undefined,
+            partyId: inviterParty?.id,
             inviterId: event.requestingCharacterId,
         };
 

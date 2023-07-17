@@ -1,5 +1,5 @@
 import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
-import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
+import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { merge } from 'lodash';
 
 interface setupEngineProps {
@@ -57,5 +57,111 @@ describe('Group module - Party', () => {
                 }
             },
         });
+    });
+
+    it('Party leader should be able to pass leader to someone else', () => {
+        const { engineManager, players } = setupEngine();
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        const dataPackage2 = engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.PromoteToLeader,
+            characterId: players['2'].characterId
+        });
+
+        const dataPackage1 = engineManager.getLatestPlayerDataPackage(players['1'].socketId)
+
+        checkIfPackageIsValid(GlobalStoreModule.PARTY, dataPackage1, {
+            data: {
+                ['1']: {
+                    leader: players['2'].characterId,
+                }
+            },
+        });
+        checkIfPackageIsValid(GlobalStoreModule.PARTY, dataPackage2, {
+            data: {
+                ['1']: {
+                    leader: players['2'].characterId,
+                }
+            },
+        });
+    });
+
+    it('Party member should not be able to pass leader to someone else if he is not a leader', () => {
+        const { engineManager, players } = setupEngine();
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        const dataPackage1 = engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.PromoteToLeader,
+            characterId: players['2'].characterId
+        });
+
+        checkIfErrorWasHandled(GlobalStoreModule.PARTY, 'You are not a leader.', dataPackage1);
+    });
+
+    it('Player should not be able to pass anyone a leader if he is not a mamber of any party', () => {
+        const { engineManager, players } = setupEngine();
+
+        const dataPackage1 = engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.PromoteToLeader,
+            characterId: players['2'].characterId
+        });
+
+        checkIfErrorWasHandled(GlobalStoreModule.PARTY, 'You are not in the group.', dataPackage1);
+    });
+
+    it('Party leader should not be able to pass a leader to someone who is not a member', () => {
+        const { engineManager, players } = setupEngine();
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        const dataPackage1 = engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.PromoteToLeader,
+            characterId: players['3'].characterId
+        });
+
+        checkIfErrorWasHandled(GlobalStoreModule.PARTY, 'This player is not a member of your group.', dataPackage1);
+    });
+
+    it('Party leader should not be able to promote himself to be a leader', () => {
+        const { engineManager, players } = setupEngine();
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        const dataPackage1 = engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.PromoteToLeader,
+            characterId: players['1'].characterId
+        });
+
+        checkIfErrorWasHandled(GlobalStoreModule.PARTY, 'You are already a leader.', dataPackage1);
     });
 });

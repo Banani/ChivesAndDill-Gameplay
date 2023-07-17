@@ -19,6 +19,9 @@ export enum GroupEngineEvents {
     PartyCreated = "PartyCreated",
     PlayerJoinedTheParty = "PlayerJoinedTheParty",
     PlayerLeftTheParty = "PlayerLeftTheParty",
+
+    PlayerTriesToPassLeader = "PlayerTriesToPassLeader",
+    PartyLeaderChanged = "PartyLeaderChanged"
 }
 
 export interface PlayerTriesToInviteChracterToPartyEvent extends EngineEvent {
@@ -69,6 +72,17 @@ export interface PlayerLeftThePartyEvent extends EngineEvent {
     partyId: string
 }
 
+export interface PlayerTriesToPassLeaderEvent extends EngineEvent {
+    type: GroupEngineEvents.PlayerTriesToPassLeader,
+    characterId: string,
+}
+
+export interface PartyLeaderChangedEvent extends EngineEvent {
+    type: GroupEngineEvents.PartyLeaderChanged,
+    partyId: string,
+    newCharacterLeaderId: string;
+}
+
 export interface GroupEngineEventsMap {
     [GroupEngineEvents.PlayerTriesToInviteChracterToParty]: EngineEventHandler<PlayerTriesToInviteChracterToPartyEvent>;
     [GroupEngineEvents.PlayerCharacterWasInvitedToAParty]: EngineEventHandler<PlayerCharacterWasInvitedToAPartyEvent>;
@@ -79,4 +93,6 @@ export interface GroupEngineEventsMap {
     [GroupEngineEvents.PartyCreated]: EngineEventHandler<PartyCreatedEvent>;
     [GroupEngineEvents.PlayerJoinedTheParty]: EngineEventHandler<PlayerJoinedThePartyEvent>;
     [GroupEngineEvents.PlayerLeftTheParty]: EngineEventHandler<PlayerLeftThePartyEvent>;
+    [GroupEngineEvents.PlayerTriesToPassLeader]: EngineEventHandler<PlayerTriesToPassLeaderEvent>;
+    [GroupEngineEvents.PartyLeaderChanged]: EngineEventHandler<PartyLeaderChangedEvent>;
 }

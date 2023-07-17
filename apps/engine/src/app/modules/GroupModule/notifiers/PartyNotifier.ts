@@ -1,17 +1,37 @@
-import { GlobalStoreModule, Party } from '@bananos/types';
+import { GlobalStoreModule, GroupClientMessages, Party } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
-import { GroupEngineEvents, PartyCreatedEvent, PlayerJoinedThePartyEvent } from '../Events';
+import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
+import { GroupEngineEvents, PartyCreatedEvent, PartyLeaderChangedEvent, PlayerJoinedThePartyEvent, PlayerTriesToPassLeaderEvent } from '../Events';
 
 export class PartyNotifier extends Notifier<Party> {
     constructor() {
         super({ key: GlobalStoreModule.PARTY });
         this.eventsToHandlersMap = {
+            [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
             [GroupEngineEvents.PartyCreated]: this.handlePartyCreated,
-            [GroupEngineEvents.PlayerJoinedTheParty]: this.handlePlayerJoinedTheParty
+            [GroupEngineEvents.PlayerJoinedTheParty]: this.handlePlayerJoinedTheParty,
+            [GroupEngineEvents.PartyLeaderChanged]: this.handlePartyLeaderChanged
         };
     }
+
+    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
+        const receiverId = this.getReceiverId(event.playerCharacter.id, services);
+        if (!receiverId) {
+            return;
+        }
+
+        const currentSocket = services.socketConnectionService.getSocketById(receiverId);
+
+        currentSocket.on(GroupClientMessages.PromoteToLeader, ({ characterId }) => {
+            this.engineEventCrator.asyncCeateEvent<PlayerTriesToPassLeaderEvent>({
+                type: GroupEngineEvents.PlayerTriesToPassLeader,
+                requestingCharacterId: event.playerCharacter.id,
+                characterId
+            });
+        });
+    };
 
     handlePartyCreated: EngineEventHandler<PartyCreatedEvent> = ({ event, services }) => {
         const toUpdate = [];
@@ -68,5 +88,34 @@ export class PartyNotifier extends Notifier<Party> {
         });
 
         this.multicastMultipleObjectsUpdate(toUpdate);
+    };
+
+    handlePartyLeaderChanged: EngineEventHandler<PartyLeaderChangedEvent> = ({ event, services }) => {
+        const toUpdate = [];
+
+        const party = services.partyService.getAllParties()[event.partyId];
+        if (!party) {
+            return;
+        }
+
+        _.forEach(party.membersIds, (_, memberId) => {
+            const receiverId = this.getReceiverId(memberId, services);
+            if (!receiverId) {
+                return;
+            }
+
+            toUpdate.push({
+                receiverId,
+                objects: {
+                    [party.id]: {
+                        leader: event.newCharacterLeaderId
+                    }
+                }
+            })
+        });
+
+        if (toUpdate.length > 0) {
+            this.multicastMultipleObjectsUpdate(toUpdate);
+        }
     };
 }

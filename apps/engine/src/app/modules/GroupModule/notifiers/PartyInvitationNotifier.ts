@@ -15,7 +15,6 @@ export class PartyInvitationNotifier extends Notifier<string> {
         };
     }
 
-
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const receiverId = this.getReceiverId(event.playerCharacter.id, services);
         if (!receiverId) {

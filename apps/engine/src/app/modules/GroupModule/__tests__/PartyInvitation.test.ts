@@ -150,4 +150,24 @@ describe('Group module - Party Invitation', () => {
 
         checkIfErrorWasHandled(GlobalStoreModule.PARTY_INVITATION, 'You do not have pending invitation.', dataPackage);
     });
+
+    it('Player should not be able to invite another player who already has a group', () => {
+        const { engineManager, players } = setupEngine();
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        let dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        checkIfErrorWasHandled(GlobalStoreModule.PARTY_INVITATION, 'This player already has a group.', dataPackage);
+    });
 });
