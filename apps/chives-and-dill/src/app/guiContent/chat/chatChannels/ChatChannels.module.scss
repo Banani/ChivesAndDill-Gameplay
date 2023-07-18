@@ -1,7 +1,9 @@
+@use '../../../../constants/Constants.module.scss' as variables;
+
 .chatChannels {
    box-sizing: content-box;
    width: 600px;
-   height: 548px;
+   height: variables.$modal-height;
    background: url('../../../../assets/spritesheets/backgrounds/chatChannels.PNG');
    background-repeat: no-repeat;
    background-size: 100% 100%;

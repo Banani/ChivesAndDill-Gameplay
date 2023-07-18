@@ -1,7 +1,9 @@
+@use '../../../../../constants/Constants.module.scss' as variables;
+
 .QuestLog {
    position: absolute;
    width: 1000px;
-   height: 650px;
+   height: variables.$modal-height;
    top: 15%;
    left: 5%;
    background: url('../../../../../assets/spritesheets/backgrounds/qlog.png');
