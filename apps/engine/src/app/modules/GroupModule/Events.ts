@@ -17,11 +17,16 @@ export enum GroupEngineEvents {
     PlayerAcceptedInvite = "PlayerAcceptedInvite",
 
     PartyCreated = "PartyCreated",
+    PartyRemoved = "PartyRemoved",
     PlayerJoinedTheParty = "PlayerJoinedTheParty",
+
+    PlayerTriesToUninviteFromParty = "UninviteFromParty",
+
+    PlayerTriesToLeaveParty = "PlayerTriesToLeaveParty",
     PlayerLeftTheParty = "PlayerLeftTheParty",
 
     PlayerTriesToPassLeader = "PlayerTriesToPassLeader",
-    PartyLeaderChanged = "PartyLeaderChanged"
+    PartyLeaderChanged = "PartyLeaderChanged",
 }
 
 export interface PlayerTriesToInviteChracterToPartyEvent extends EngineEvent {
@@ -60,10 +65,24 @@ export interface PartyCreatedEvent extends EngineEvent {
     party: Party;
 }
 
+export interface PartyRemovedEvent extends EngineEvent {
+    type: GroupEngineEvents.PartyRemoved,
+    party: Party;
+}
+
 export interface PlayerJoinedThePartyEvent extends EngineEvent {
     type: GroupEngineEvents.PlayerJoinedTheParty,
     characterId: string,
     partyId: string
+}
+
+export interface PlayerTriesToUninviteFromPartyEvent extends EngineEvent {
+    type: GroupEngineEvents.PlayerTriesToUninviteFromParty,
+    characterId: string,
+}
+
+export interface PlayerTriesToLeavePartyEvent extends EngineEvent {
+    type: GroupEngineEvents.PlayerTriesToLeaveParty,
 }
 
 export interface PlayerLeftThePartyEvent extends EngineEvent {
@@ -91,8 +110,11 @@ export interface GroupEngineEventsMap {
     [GroupEngineEvents.PlayerTriesToAcceptInvite]: EngineEventHandler<PlayerTriesToAcceptInviteEvent>;
     [GroupEngineEvents.PlayerAcceptedInvite]: EngineEventHandler<PlayerAcceptedInviteEvent>;
     [GroupEngineEvents.PartyCreated]: EngineEventHandler<PartyCreatedEvent>;
+    [GroupEngineEvents.PartyRemoved]: EngineEventHandler<PartyRemovedEvent>;
     [GroupEngineEvents.PlayerJoinedTheParty]: EngineEventHandler<PlayerJoinedThePartyEvent>;
     [GroupEngineEvents.PlayerLeftTheParty]: EngineEventHandler<PlayerLeftThePartyEvent>;
     [GroupEngineEvents.PlayerTriesToPassLeader]: EngineEventHandler<PlayerTriesToPassLeaderEvent>;
     [GroupEngineEvents.PartyLeaderChanged]: EngineEventHandler<PartyLeaderChangedEvent>;
+    [GroupEngineEvents.PlayerTriesToLeaveParty]: EngineEventHandler<PlayerTriesToLeavePartyEvent>;
+    [GroupEngineEvents.PlayerTriesToUninviteFromParty]: EngineEventHandler<PlayerTriesToUninviteFromPartyEvent>;
 }

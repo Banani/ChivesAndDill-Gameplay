@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { GroupEngineEvents, PartyCreatedEvent, PartyLeaderChangedEvent, PlayerJoinedThePartyEvent, PlayerTriesToPassLeaderEvent } from '../Events';
+import { GroupEngineEvents, PartyCreatedEvent, PartyLeaderChangedEvent, PartyRemovedEvent, PlayerJoinedThePartyEvent, PlayerLeftThePartyEvent, PlayerTriesToLeavePartyEvent, PlayerTriesToPassLeaderEvent, PlayerTriesToUninviteFromPartyEvent } from '../Events';
 
 export class PartyNotifier extends Notifier<Party> {
     constructor() {
@@ -11,8 +11,10 @@ export class PartyNotifier extends Notifier<Party> {
         this.eventsToHandlersMap = {
             [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
             [GroupEngineEvents.PartyCreated]: this.handlePartyCreated,
+            [GroupEngineEvents.PartyRemoved]: this.handlePartyRemoved,
             [GroupEngineEvents.PlayerJoinedTheParty]: this.handlePlayerJoinedTheParty,
-            [GroupEngineEvents.PartyLeaderChanged]: this.handlePartyLeaderChanged
+            [GroupEngineEvents.PartyLeaderChanged]: this.handlePartyLeaderChanged,
+            [GroupEngineEvents.PlayerLeftTheParty]: this.handlePlayerLeftTheParty
         };
     }
 
@@ -27,6 +29,21 @@ export class PartyNotifier extends Notifier<Party> {
         currentSocket.on(GroupClientMessages.PromoteToLeader, ({ characterId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToPassLeaderEvent>({
                 type: GroupEngineEvents.PlayerTriesToPassLeader,
+                requestingCharacterId: event.playerCharacter.id,
+                characterId
+            });
+        });
+
+        currentSocket.on(GroupClientMessages.LeaveParty, () => {
+            this.engineEventCrator.asyncCeateEvent<PlayerTriesToLeavePartyEvent>({
+                type: GroupEngineEvents.PlayerTriesToLeaveParty,
+                requestingCharacterId: event.playerCharacter.id
+            });
+        });
+
+        currentSocket.on(GroupClientMessages.UninviteFromParty, ({ characterId }) => {
+            this.engineEventCrator.asyncCeateEvent<PlayerTriesToUninviteFromPartyEvent>({
+                type: GroupEngineEvents.PlayerTriesToUninviteFromParty,
                 requestingCharacterId: event.playerCharacter.id,
                 characterId
             });
@@ -54,6 +71,28 @@ export class PartyNotifier extends Notifier<Party> {
 
         if (toUpdate.length > 0) {
             this.multicastMultipleObjectsUpdate(toUpdate);
+        }
+    };
+
+    handlePartyRemoved: EngineEventHandler<PartyRemovedEvent> = ({ event, services }) => {
+        const toUpdate = [];
+
+        _.forEach(event.party.membersIds, (_, memberId) => {
+            const receiverId = this.getReceiverId(memberId, services);
+            if (!receiverId) {
+                return;
+            }
+
+            toUpdate.push({
+                receiverId,
+                objects: {
+                    [event.party.id]: null
+                }
+            })
+        });
+
+        if (toUpdate.length > 0) {
+            this.multicastObjectsDeletion(toUpdate);
         }
     };
 
@@ -116,6 +155,49 @@ export class PartyNotifier extends Notifier<Party> {
 
         if (toUpdate.length > 0) {
             this.multicastMultipleObjectsUpdate(toUpdate);
+        }
+    };
+
+    handlePlayerLeftTheParty: EngineEventHandler<PlayerLeftThePartyEvent> = ({ event, services }) => {
+        const toUpdate = [];
+
+        const party = services.partyService.getAllParties()[event.partyId];
+        if (!party) {
+            return;
+        }
+
+        _.forEach(party.membersIds, (_, memberId) => {
+            const receiverId = this.getReceiverId(memberId, services);
+            if (!receiverId) {
+                return;
+            }
+
+            toUpdate.push({
+                receiverId,
+                objects: {
+                    [party.id]: {
+                        membersIds: {
+                            [event.characterId]: null
+                        }
+                    }
+                }
+            })
+        });
+
+        const receiverId = this.getReceiverId(event.characterId, services);
+        if (!receiverId) {
+            return;
+        }
+
+        toUpdate.push({
+            receiverId,
+            objects: {
+                [party.id]: null
+            }
+        })
+
+        if (toUpdate.length > 0) {
+            this.multicastObjectsDeletion(toUpdate);
         }
     };
 }
