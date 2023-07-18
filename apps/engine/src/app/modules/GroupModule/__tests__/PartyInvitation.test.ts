@@ -1,6 +1,7 @@
 import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { merge } from 'lodash';
+import { MAX_PARTY_SIZE } from '../services';
 
 interface setupEngineProps {
     chatChannelName: string;
@@ -169,5 +170,149 @@ describe('Group module - Party Invitation', () => {
         });
 
         checkIfErrorWasHandled(GlobalStoreModule.PARTY_INVITATION, 'This player already has a group.', dataPackage);
+    });
+
+    it('Player should not be able to invite himself to the party', () => {
+        const { engineManager, players } = setupEngine();
+
+        const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['1'].characterId
+        });
+
+        checkIfErrorWasHandled(GlobalStoreModule.PARTY_INVITATION, 'You cannot add yourself to the group.', dataPackage);
+    });
+
+    it('Player should not be able to invite other players to the party if he is not a leader', () => {
+        const { engineManager, players } = setupEngine();
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        let dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['3'].characterId
+        });
+
+        checkIfErrorWasHandled(GlobalStoreModule.PARTY_INVITATION, 'You are not a leader.', dataPackage);
+    });
+
+    it('Player should be able to invite more player to group then defined in MAX_PARTY_SIZE', () => {
+        const { engineManager, players } = setupEngine();
+
+        for (let i = 4; i < MAX_PARTY_SIZE + 2; i++) {
+            players[i] = engineManager.preparePlayerWithCharacter({ name: 'character_' + i })
+        }
+
+        for (let i = 2; i < MAX_PARTY_SIZE + 1; i++) {
+            engineManager.callPlayerAction(players['1'].socketId, {
+                type: GroupClientMessages.InviteToParty,
+                characterId: players[i].characterId
+            });
+
+            engineManager.callPlayerAction(players[i].socketId, {
+                type: GroupClientMessages.AcceptInvite
+            });
+        }
+
+        let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['41'].characterId
+        });
+
+        checkIfErrorWasHandled(GlobalStoreModule.PARTY_INVITATION, 'Your group is full.', dataPackage);
+    });
+
+    it('When Party leader invites somone to the party, and then he leaves, that new person should join the party, not the leader', () => {
+        const { engineManager, players } = setupEngine();
+        players['4'] = engineManager.preparePlayerWithCharacter({ name: 'character_4' })
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['3'].characterId
+        });
+
+        engineManager.callPlayerAction(players['3'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['4'].characterId
+        });
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.LeaveParty
+        });
+
+        let dataPackage = engineManager.callPlayerAction(players['4'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        checkIfPackageIsValid(GlobalStoreModule.PARTY, dataPackage, {
+            data: {
+                '1': {
+                    leader: players['2'].characterId,
+                    membersIds: {
+                        playerCharacter_2: true,
+                        playerCharacter_3: true,
+                        playerCharacter_4: true,
+                    }
+                }
+            },
+        });
+    });
+
+    it('When party is removed before someone accepts the invite, he should join the leader to a new party', () => {
+        const { engineManager, players } = setupEngine();
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['3'].characterId
+        });
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.LeaveParty
+        });
+
+        const dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        checkIfPackageIsValid(GlobalStoreModule.PARTY, dataPackage, {
+            data: {
+                '2': {
+                    leader: players['1'].characterId,
+                    membersIds: {
+                        playerCharacter_1: true,
+                        playerCharacter_3: true,
+                    }
+                }
+            },
+        });
     });
 });

@@ -114,16 +114,28 @@ export class PartyNotifier extends Notifier<Party> {
                 return;
             }
 
-            toUpdate.push({
-                receiverId,
-                objects: {
-                    [party.id]: {
-                        membersIds: {
-                            [event.characterId]: true
+            if (event.characterId === memberId) {
+                toUpdate.push({
+                    receiverId,
+                    objects: {
+                        [party.id]: {
+                            leader: party.leader,
+                            membersIds: party.membersIds
                         }
                     }
-                }
-            })
+                })
+            } else {
+                toUpdate.push({
+                    receiverId,
+                    objects: {
+                        [party.id]: {
+                            membersIds: {
+                                [event.characterId]: true
+                            }
+                        }
+                    }
+                })
+            }
         });
 
         this.multicastMultipleObjectsUpdate(toUpdate);

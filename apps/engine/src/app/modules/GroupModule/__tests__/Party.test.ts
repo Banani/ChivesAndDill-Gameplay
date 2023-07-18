@@ -59,6 +59,42 @@ describe('Group module - Party', () => {
         });
     });
 
+    it('Player joining the party should be informed about party state', () => {
+        const { engineManager, players } = setupEngine();
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['3'].characterId
+        });
+
+        const dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        checkIfPackageIsValid(GlobalStoreModule.PARTY, dataPackage, {
+            data: {
+                ['1']: {
+                    leader: players['1'].characterId,
+                    membersIds: {
+                        [players['1'].characterId]: true,
+                        [players['2'].characterId]: true,
+                        [players['3'].characterId]: true,
+                    }
+                }
+            },
+        });
+    });
+
     it('Party leader should be able to pass leader to someone else', () => {
         const { engineManager, players } = setupEngine();
 

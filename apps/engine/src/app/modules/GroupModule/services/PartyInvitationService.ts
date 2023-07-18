@@ -11,6 +11,7 @@ import {
     PlayerTriesToDeclineInviteEvent,
     PlayerTriesToInviteChracterToPartyEvent
 } from '../Events';
+import { MAX_PARTY_SIZE } from './PartyService';
 
 export class PartyInvitationService extends EventParser {
     // Invited character => PartyInvitation
@@ -27,10 +28,12 @@ export class PartyInvitationService extends EventParser {
 
     handlePlayerTriesToInviteChracterToParty: EngineEventHandler<PlayerTriesToInviteChracterToPartyEvent> = ({ event, services }) => {
         const character = services.characterService.getAllCharacters()[event.characterId];
-        // jesli w grupie jest juz 40 graczy to wysylamy ze grupa jest pelna
         // a co jesli party zostanie usuniete zanim gracz zaakceptuje
-        // co jesli gracz bedzie chcial dodac samego siebie
-        // Tylko lider moze zapraszac nowych graczy do pt
+
+        if (event.characterId === event.requestingCharacterId) {
+            this.sendErrorMessage(event.requestingCharacterId, 'You cannot add yourself to the group.');
+            return;
+        }
 
         if (!character) {
             this.sendErrorMessage(event.requestingCharacterId, 'This player does not exist.');
@@ -49,7 +52,16 @@ export class PartyInvitationService extends EventParser {
 
         const inviterParty = services.partyService.getCharacterParty(event.requestingCharacterId);
 
-        // pokryc testem case w ktorym wysylamy invite, wychodzimy z pt, a potem kolejny chlop akceptuje
+        if (inviterParty && inviterParty.leader !== event.requestingCharacterId) {
+            this.sendErrorMessage(event.requestingCharacterId, 'You are not a leader.');
+            return;
+        }
+
+        if (inviterParty && Object.keys(inviterParty.membersIds).length === MAX_PARTY_SIZE) {
+            this.sendErrorMessage(event.requestingCharacterId, 'Your group is full.');
+            return;
+        }
+
         this.invitations[event.characterId] = {
             partyId: inviterParty?.id,
             inviterId: event.requestingCharacterId,

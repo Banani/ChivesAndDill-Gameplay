@@ -15,6 +15,8 @@ import {
     PlayerTriesToUninviteFromPartyEvent
 } from '../Events';
 
+export const MAX_PARTY_SIZE = 40;
+
 export class PartyService extends EventParser {
     private parties: Record<string, Party> = {};
     private increment = 0;
