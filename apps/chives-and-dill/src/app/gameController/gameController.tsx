@@ -4,6 +4,8 @@ import { KeyBoardContext } from '../../contexts/KeyBoardContext';
 import { useEngineModuleReader } from '../../hooks';
 import { SocketContext } from '../gameController/socketContext';
 import { GameControllerContext } from './gameControllerContext';
+import { useSelector } from 'react-redux';
+import { selectActiveTargetId } from '../../stores';
 
 const keyMovementMap = {
     w: { y: -1 },
@@ -17,6 +19,7 @@ const GameController = ({ children }) => {
     const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
     const { data: availableSpells } = useEngineModuleReader(GlobalStoreModule.AVAILABLE_SPELLS);
     const keyBoardContext = useContext(KeyBoardContext);
+    const activeTargetId = useSelector(selectActiveTargetId);
 
     const context = useContext(SocketContext);
     const { socket } = context;
@@ -56,6 +59,7 @@ const GameController = ({ children }) => {
 
         if (keyBinds[key]) {
             socket?.emit(SpellClientMessages.CastSpell, {
+                targetId: activeTargetId,
                 directionLocation: {
                     x: characterMovements[activeCharacterId].location.x + mousePosition.x - gameWidth / 2,
                     y: characterMovements[activeCharacterId].location.y + mousePosition.y - gameHeight / 2,
