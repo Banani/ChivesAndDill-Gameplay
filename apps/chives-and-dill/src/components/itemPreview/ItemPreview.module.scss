@@ -22,6 +22,9 @@
    }
 
    .ItemInfoWrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       height: 50px;
 
       .ItemText {
@@ -41,6 +44,7 @@
       left: -18px;
       top: 33px;
       color: white;
+      text-shadow: 0 0 4px black;
    }
 }
 

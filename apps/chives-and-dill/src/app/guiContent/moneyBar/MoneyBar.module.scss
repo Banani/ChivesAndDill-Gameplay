@@ -1,6 +1,7 @@
 .MoneyBar {
   display: flex;
   color: white;
+  padding-bottom: 2px;
 
   .MoneyTypeContainer {
     display: flex;
@@ -8,6 +9,11 @@
     
     .MoneyAmount {
       margin: 0 4px 0 8px;
+      font-size: 14px;
+    }
+
+    img{
+      height: 14px;
     }
   }
 }
