@@ -1,6 +1,7 @@
 import { EngineEventCrator } from './EngineEventsCreator';
 import { CharacterEngineEventsMap } from './modules/CharacterModule/Events';
 import { ChatEngineEventsMap } from './modules/ChatModule/Events';
+import { GroupEngineEventsMap } from './modules/GroupModule/Events';
 import { ItemEngineEventsMap } from './modules/ItemModule/Events';
 import { MapEventsMap } from './modules/MapModule/Events';
 import { MonsterEngineEventsMap } from './modules/MonsterModule/Events';
@@ -12,39 +13,40 @@ import { EngineEvent, EngineEventsMap } from './types';
 import { Services } from './types/Services';
 
 export abstract class EventParser {
-   engineEventCrator: EngineEventCrator;
-   eventsToHandlersMap: Partial<
-      EngineEventsMap &
-         QuestEngineEventsMap &
-         MonsterEngineEventsMap &
-         FightingEngineEventsMap &
-         CharacterEngineEventsMap &
-         PlayerEngineEventsMap &
-         ItemEngineEventsMap &
-         ChatEngineEventsMap &
-         NpcEngineEventsMap &
-         MapEventsMap
-   > = {};
+    engineEventCrator: EngineEventCrator;
+    eventsToHandlersMap: Partial<
+        EngineEventsMap &
+        QuestEngineEventsMap &
+        MonsterEngineEventsMap &
+        FightingEngineEventsMap &
+        CharacterEngineEventsMap &
+        PlayerEngineEventsMap &
+        ItemEngineEventsMap &
+        ChatEngineEventsMap &
+        NpcEngineEventsMap &
+        MapEventsMap &
+        GroupEngineEventsMap
+    > = {};
 
-   init(engineEventCrator: EngineEventCrator, services?: Services) {
-      this.engineEventCrator = engineEventCrator;
-   }
+    init(engineEventCrator: EngineEventCrator, services?: Services) {
+        this.engineEventCrator = engineEventCrator;
+    }
 
-   handleEvent<EventType extends EngineEvent>({ event, services }: { event: EventType; services: Services }) {
-      if (this.eventsToHandlersMap[event.type]) {
-         this.eventsToHandlersMap[event.type]({ event: event as any, services });
-      }
-   }
+    handleEvent<EventType extends EngineEvent>({ event, services }: { event: EventType; services: Services }) {
+        if (this.eventsToHandlersMap[event.type]) {
+            this.eventsToHandlersMap[event.type]({ event: event as any, services });
+        }
+    }
 
-   wasRequestedByPlayer(event: EngineEvent) {
-      return event.requestingCharacterId;
-   }
+    wasRequestedByPlayer(event: EngineEvent) {
+        return event.requestingCharacterId;
+    }
 
-   sendErrorMessage = (receiverId: string, message: string) => {
-      this.engineEventCrator.asyncCeateEvent<SendErrorMessageEvent>({
-         type: PlayerEngineEvents.SendErrorMessage,
-         characterId: receiverId,
-         message: message,
-      });
-   };
+    sendErrorMessage = (receiverId: string, message: string) => {
+        this.engineEventCrator.asyncCeateEvent<SendErrorMessageEvent>({
+            type: PlayerEngineEvents.SendErrorMessage,
+            characterId: receiverId,
+            message: message,
+        });
+    };
 }

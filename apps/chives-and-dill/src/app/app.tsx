@@ -12,31 +12,31 @@ import { Game } from './game';
 import SocketCommunicator from './gameController/socketCommunicator';
 
 const store: IModuleStore<any> = createStore(
-   {
-      initialState: {},
-      extensions: [],
-   },
-   PlayersModule,
-   SpellsModule
+    {
+        initialState: {},
+        extensions: [],
+    },
+    PlayersModule,
+    SpellsModule
 );
 
 export default function App() {
-   return (
-      <KeyBoardContextProvider>
-         <PackageContextProvider>
-            <Provider store={store}>
-               <SocketCommunicator>
-                  <MenuContextProvider>
-                     <>
-                        <ContextMenu />
-                        <EngineApi>
-                           <Game />
-                        </EngineApi>
-                     </>
-                  </MenuContextProvider>
-               </SocketCommunicator>
-            </Provider>
-         </PackageContextProvider>
-      </KeyBoardContextProvider>
-   );
+    return (
+        <KeyBoardContextProvider>
+            <PackageContextProvider>
+                <Provider store={store}>
+                    <SocketCommunicator>
+                        <MenuContextProvider>
+                            <>
+                                <ContextMenu />
+                                <EngineApi>
+                                    <Game />
+                                </EngineApi>
+                            </>
+                        </MenuContextProvider>
+                    </SocketCommunicator>
+                </Provider>
+            </PackageContextProvider>
+        </KeyBoardContextProvider>
+    );
 }
