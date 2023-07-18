@@ -6,7 +6,7 @@ import _ from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { usePagination } from '../../../components/pagination/usePagination';
 import { SocketContext } from '../../gameController/socketContext';
-import { Button } from '../components/button/Button';
+import { RectangleButton } from '../components/rectangleButton/RectangleButton';
 import { CalculateCurrenty } from '../moneyBar/CalculateCurrency';
 import styles from "./LootModal.module.scss";
 import { ItemPreview, ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
@@ -138,11 +138,11 @@ export const LootModal = ({ activeLoot, monsterId }) => {
             <div>
                 <div className={styles.LootModal} style={{ top: `${mousePosition.y}px`, left: `${mousePosition.x}px` }}>
                     <div className={styles.LootModalButton}>
-                        <Button className={styles.closeButton} onClick={() => {
+                        <RectangleButton className={styles.closeButton} onClick={() => {
                             socket?.emit(CommonClientMessages.CloseLoot, {});
                         }}>
                             X
-                        </Button>
+                        </RectangleButton>
                     </div>
                     {activeItems() && <div className={styles.ItemsContainer}>{activeItems()}</div>}
                     <div className={styles.PaginationContainer}>

@@ -72,19 +72,9 @@
       font-size: 20px;
    }
 
-   .closeWindow {
-      color: white;
+   .ButtonContainer {
       position: absolute;
-      right: 4px;
-      top: 22px;
-      background: transparent;
-      border: none;
-      padding: 5px 10px;
-      display: flex;
-      border-radius: 8px;
-   }
-
-   .closeWindow:hover {
-      color: red;
+      right: 2px;
+      top: 20px;
    }
 }

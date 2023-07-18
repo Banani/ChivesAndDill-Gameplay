@@ -1,14 +1,14 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
-import styles from './Button.module.scss';
+import styles from './RectangleButton.module.scss';
 
-interface ButtonProps {
+interface RectangleButtonProps {
    onClick?: () => void;
    disabled?: boolean;
    className?: string;
 }
 
-export const Button: FunctionComponent<ButtonProps> = ({ className, onClick, children, disabled = false }) => (
+export const RectangleButton: FunctionComponent<RectangleButtonProps> = ({ className, onClick, children, disabled = false }) => (
    <button className={styles.Button + ' ' + className} onClick={onClick} disabled={disabled}>
       {children}
    </button>
