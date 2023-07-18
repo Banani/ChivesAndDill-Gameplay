@@ -5,6 +5,7 @@ import React, { useContext, useState } from 'react';
 import { SelectedQuestProviderContext } from '../../contexts/SelectedQuestProvider';
 import { QuestStagePart } from '../questStagePart/QuestStagePart';
 import styles from './QuestsSideView.module.scss';
+import questionMark from '../../../../../assets/spritesheets/questNpc/questionMark.png';
 
 export const QuestsSideView = () => {
    const { setSelectedQuestId } = useContext(SelectedQuestProviderContext);
@@ -13,24 +14,28 @@ export const QuestsSideView = () => {
 
    const [showQuestsView, updateShowQuestsView] = useState(true);
 
+   let questsCounter = 0;
+
    const renderQuests = _.map(questProgress, (currentQuestProgress, questId) => {
       const questStage = questDefinition[questId]?.stages[currentQuestProgress.activeStage];
+      questsCounter++;
 
       return (
-         <div key={questId}>
-            <div className={styles.questTitle} onClick={() => setSelectedQuestId(questId)}>
-               {currentQuestProgress.allStagesCompleted ? '? ' : ''}
+         <div className={styles.questMainContainer} key={questId}>
+            {currentQuestProgress.allStagesCompleted ? <div className={styles.questionMarkContainer}><img src={questionMark} className={styles.questionMark} /></div> : <div className={styles.questionMarkContainer}>{questsCounter}</div>}
+            <div className={styles.questDefinitionContainer}><div className={styles.questTitle} onClick={() => setSelectedQuestId(questId)}>
                {questDefinition[questId]?.name}
             </div>
-            <div className={styles.questDesc}>
-               {_.map(questStage?.stageParts, (stagePart, stagePartId) => (
-                  <div className={currentQuestProgress.stagesProgress[currentQuestProgress.activeStage][stagePartId].isDone ? styles.stagePartDone : ''}>
-                     <QuestStagePart
-                        questStagePart={stagePart}
-                        stagePartProgress={currentQuestProgress.stagesProgress[currentQuestProgress.activeStage][stagePartId]}
-                     />
-                  </div>
-               ))}
+               <div className={styles.questDesc}>
+                  {_.map(questStage?.stageParts, (stagePart, stagePartId) => (
+                     <div className={currentQuestProgress.stagesProgress[currentQuestProgress.activeStage][stagePartId].isDone ? styles.stagePartDone : ''}>
+                        <QuestStagePart
+                           questStagePart={stagePart}
+                           stagePartProgress={currentQuestProgress.stagesProgress[currentQuestProgress.activeStage][stagePartId]}
+                        />
+                     </div>
+                  ))}
+               </div>
             </div>
          </div>
       );
