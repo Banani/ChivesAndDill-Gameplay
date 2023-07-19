@@ -4,7 +4,7 @@ import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { ChatEngineEvents, ChatMessageSentEvent, SendChatMessageEvent } from '../Events';
 
-export class ChatQuoteMessageService extends EventParser {
+export class SystemMessageService extends EventParser {
     private increment = 0;
 
     constructor() {
@@ -15,15 +15,15 @@ export class ChatQuoteMessageService extends EventParser {
     }
 
     handleSendChatMessage: EngineEventHandler<SendChatMessageEvent> = ({ event, services }) => {
-        if (event.details.channelType !== ChannelType.Quotes) {
+        if (event.details.channelType !== ChannelType.System) {
             return;
         }
 
-        const messageId = `chatQuoteMessage_${this.increment++}`;
+        const id = `systemMessage_${this.increment++}`;
 
         this.engineEventCrator.asyncCeateEvent<ChatMessageSentEvent>({
             type: ChatEngineEvents.ChatMessageSent,
-            messageId,
+            messageId: id,
             message: event.message,
             time: now(),
             chatMessage: event.details

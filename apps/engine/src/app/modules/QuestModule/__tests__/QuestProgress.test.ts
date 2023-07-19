@@ -1,5 +1,6 @@
-import { CharacterDirection, GlobalStoreModule, QuestType } from '@bananos/types';
+import { ChannelType, CharacterDirection, GlobalStoreModule, QuestType } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
+import { now } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { CharacterDiedEvent, PlayerMovedEvent } from '../../../types';
 import { Monster } from '../../MonsterModule/types';
@@ -48,6 +49,34 @@ describe('QuestProgress', () => {
                             },
                         },
                     },
+                },
+            },
+        });
+    });
+
+    it('Player should get notification when starts new quest', () => {
+        const { players, engineManager } = setupEngine();
+        const newCurrentTime = 9213;
+        (now as jest.Mock).mockReturnValue(newCurrentTime);
+
+        let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+        engineManager.createSystemAction<StartQuestEvent>({
+            type: QuestEngineEvents.StartQuest,
+            characterId: players['1'].characterId,
+            questId: '1',
+        });
+
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+        checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, {
+            data: {
+                'systemMessage_0': {
+                    channelType: ChannelType.System,
+                    id: "systemMessage_0",
+                    message: "Quest accepted: A Wee Bit O' Cloth",
+                    targetId: players['1'].characterId,
+                    time: newCurrentTime,
                 },
             },
         });
@@ -343,6 +372,48 @@ describe('QuestProgress', () => {
         checkIfPackageIsValid(GlobalStoreModule.QUEST_PROGRESS, dataPackage, {
             toDelete: {
                 '1': null,
+            },
+        });
+    });
+
+
+    it('Player should get notification when finishes a quest', () => {
+        const { players, engineManager } = setupEngine();
+        const newCurrentTime = 9213;
+        (now as jest.Mock).mockReturnValue(newCurrentTime);
+
+        let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+        engineManager.createSystemAction<StartQuestEvent>({
+            type: QuestEngineEvents.StartQuest,
+            characterId: players['1'].characterId,
+            questId: '1',
+        });
+
+        engineManager.createSystemAction<QuestCompletedEvent>({
+            type: QuestEngineEvents.QuestCompleted,
+            characterId: players['1'].characterId,
+            questId: '1',
+        });
+
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+        checkIfPackageIsValid(GlobalStoreModule.CHAT_MESSAGES, dataPackage, {
+            data: {
+                'systemMessage_1': {
+                    channelType: ChannelType.System,
+                    id: "systemMessage_1",
+                    message: "A Wee Bit O' Cloth completed.",
+                    targetId: players['1'].characterId,
+                    time: newCurrentTime,
+                },
+                'systemMessage_2': {
+                    channelType: ChannelType.System,
+                    id: "systemMessage_2",
+                    message: "Experience gained 120.",
+                    targetId: players['1'].characterId,
+                    time: newCurrentTime,
+                },
             },
         });
     });

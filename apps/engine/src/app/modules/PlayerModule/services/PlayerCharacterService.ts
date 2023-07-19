@@ -3,7 +3,7 @@ import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
-import { CharacterEngineEvents, CreateCharacterEvent, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
+import { CharacterEngineEvents, CreateCharacterEvent, NewCharacterCreatedEvent, RemoveCharacterEvent } from '../../CharacterModule/Events';
 import { CreatePlayerCharacterEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
 
 export class PlayerCharacterService extends EventParser {
@@ -14,6 +14,7 @@ export class PlayerCharacterService extends EventParser {
         super();
         this.eventsToHandlersMap = {
             [EngineEvents.CharacterDied]: this.handleCharacterDied,
+            [CharacterEngineEvents.RemoveCharacter]: this.handleRemoveCharacter,
             [PlayerEngineEvents.CreatePlayerCharacter]: this.handleCreatePlayerCharacter,
             [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
         };
@@ -42,6 +43,10 @@ export class PlayerCharacterService extends EventParser {
         if (this.characters[event.characterId]) {
             this.characters[event.characterId].isDead = true;
         }
+    };
+
+    handleRemoveCharacter: EngineEventHandler<RemoveCharacterEvent> = ({ event }) => {
+        delete this.characters[event.character.id];
     };
 
     generateCharacter: ({ characterClassId, name, ownerId }: { characterClassId: string; name: string; ownerId: string }) => PlayerCharacter = ({

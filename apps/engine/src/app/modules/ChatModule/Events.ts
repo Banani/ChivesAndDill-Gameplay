@@ -1,4 +1,4 @@
-import { ChannelType, ChatChannel, ChatMessage, Location } from '@bananos/types';
+import { ChannelType, ChatChannel, Location } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 
 export enum ChatEngineEvents {
@@ -94,19 +94,45 @@ export interface ChatChannelOwnerChangedEvent extends EngineEvent {
     newOwnerId: string;
 }
 
-// TODO: to powinien byc message object, i jeden wymaga characterId, a drugi chatChannelId, zaleznie od channelType
+interface CustomMessageDetails {
+    channelType: ChannelType.Custom,
+    authorId: string;
+    chatChannelId: string;
+    location: Location;
+}
+
+interface RangeMessageDetails {
+    channelType: ChannelType.Range,
+    authorId: string;
+    chatChannelId: string;
+    location: Location;
+
+}
+interface QuoteMessageDetails {
+    channelType: ChannelType.Quotes,
+    authorId: string;
+    location: Location;
+
+}
+interface SystemMessageDetails {
+    channelType: ChannelType.System,
+    targetId: string;
+}
+
+type MessageDetails = CustomMessageDetails | RangeMessageDetails | QuoteMessageDetails | SystemMessageDetails;
+
 export interface SendChatMessageEvent extends EngineEvent {
     type: ChatEngineEvents.SendChatMessage;
-    characterId?: string;
-    chatChannelId?: string;
     message: string;
-    channelType: ChannelType;
-    location: Location;
+    details: MessageDetails;
 }
 
 export interface ChatMessageSentEvent extends EngineEvent {
     type: ChatEngineEvents.ChatMessageSent;
-    chatMessage: ChatMessage;
+    messageId: string;
+    message: string;
+    time: number;
+    chatMessage: MessageDetails;
 }
 
 export interface ChatMessagesDeletedEvent extends EngineEvent {
