@@ -17,7 +17,7 @@ const questStagePartProgressTransformers: Record<
    QuestType,
    (questStagePart: AllQuestStagePart, stagePartProgress: AllExternalQuestStageProgress) => JSX.Element
 > = {
-   [QuestType.MOVEMENT]: (questStagePart: MovementQuestStagePart) => <>Go to {questStagePart.locationName}</>,
+   [QuestType.MOVEMENT]: (questStagePart: MovementQuestStagePart) => <>- Go to {questStagePart.locationName}</>,
    [QuestType.KILLING]: (questStagePart: KillingQuestStagePart, stagePartProgress: ExternalKillingQuestStageProgress) => (
       <>
          You killed {stagePartProgress.currentAmount} out of {questStagePart.amount}
