@@ -10,6 +10,16 @@
    src: url('./assets/fonts/morpheus/MORPHEUS.ttf') format('truetype');
 }
 
+@font-face {
+   font-family: 'Septimus';
+   src: url('./assets/fonts/septimus/Septimus.woff.ttf') format('truetype');
+}
+
+@font-face {
+   font-family: 'ArialRegular';
+   src: url('./assets/fonts/arialRegular/Arial\ regular.ttf') format('truetype');
+}
+
 body {
    margin: 0;
    padding: 0;
@@ -21,7 +31,7 @@ body {
    user-select: none;
    cursor: url(apps/chives-and-dill/src/assets/spritesheets/cursors/defaultCursor.png), auto;
 
-   font-family: 'Fritz';
+   font-family: 'Septimus';
 
    ::-webkit-scrollbar {
       display: none;
