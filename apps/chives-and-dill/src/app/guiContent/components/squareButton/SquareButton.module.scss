@@ -10,11 +10,11 @@
    align-items: center;
    border-radius: 20%;
    border: 2px solid #8a867c;
-   cursor: url(../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
 
-   &:hover {
+   &:hover:enabled {
       background-color: #770103;
       color: #ffd900;
+      cursor: url(../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
    }
 
    &:disabled {
