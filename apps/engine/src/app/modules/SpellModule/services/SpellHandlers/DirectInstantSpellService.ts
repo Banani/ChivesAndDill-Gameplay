@@ -1,7 +1,7 @@
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
-import { CharacterType, EngineEventHandler } from 'apps/engine/src/app/types';
-import { omit, pickBy } from 'lodash';
+import { EngineEventHandler } from 'apps/engine/src/app/types';
+import { omit } from 'lodash';
 import {
     PlayerCastSpellEvent,
     PlayerCastSubSpellEvent,
@@ -12,6 +12,7 @@ import {
     SubSpellCastedEvent,
 } from '../../Events';
 import { SpellType } from '../../types/SpellTypes';
+import { filterCharactersBaseOnSpellImpact } from '../utils';
 
 export class DirectInstantSpellService extends EventParser {
     constructor() {
@@ -25,20 +26,7 @@ export class DirectInstantSpellService extends EventParser {
     handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
         if (event.spell.type === SpellType.DirectInstant) {
             const caster = services.characterService.getAllCharacters()[event.casterId];
-            let allCharacters = services.characterService.getAllCharacters();
-            allCharacters = pickBy(allCharacters, character => character.type !== CharacterType.Npc);
-
-            if (!event.spell.monstersImpact) {
-                allCharacters = pickBy(allCharacters, character => character.type !== CharacterType.Monster);
-            }
-
-            if (!event.spell.casterImpact) {
-                allCharacters = omit(allCharacters, [event.casterId]);
-            }
-
-            if (!event.spell.playersImpact) {
-                allCharacters = pickBy(allCharacters, character => character.type !== CharacterType.Player);
-            }
+            const allCharacters = filterCharactersBaseOnSpellImpact(services.characterService.getAllCharacters(), event.spell, event.casterId);
 
             if (caster && distanceBetweenTwoPoints(caster.location, event.directionLocation) > event.spell.range) {
                 this.sendErrorMessage(event.casterId, 'Out of range.');
