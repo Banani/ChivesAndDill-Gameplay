@@ -4,6 +4,7 @@ import _ from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { SocketContext } from '../../gameController/socketContext';
 import styles from './classesModal.module.scss';
+import { RectangleButton } from '../components/rectangleButton/RectangleButton';
 
 export const ClassesModal = () => {
     const { data: characterClasses } = useEngineModuleReader(GlobalStoreModule.CHARACTER_CLASS);
@@ -62,15 +63,15 @@ export const ClassesModal = () => {
     return (
         <div className={styles.modalContainer}>
             <form className={styles.modalForm} onSubmit={(e) => onSubmit(e)}>
-                <div className={styles.formHeader}>Create your character</div>
+                <div>Create your character</div>
                 <div className={styles.inputContainer}>
                     <div className={styles.formHeader}>Your nick: </div>
                     <input type="text" name="nick" className={styles.inputName} value={nick} onChange={(e) => setNick(e.target.value)} />
                 </div>
                 <div className={styles.classImages}>{classesToRender}</div>
-                <button disabled={!selectedCharacterClass || !nick} className={styles.submitButton}>
-                    Create
-                </button>
+                <div className={styles.buttonContainer}>
+                    <RectangleButton disabled={!selectedCharacterClass || !nick}>Create</RectangleButton>
+                </div>
             </form>
         </div>
     );

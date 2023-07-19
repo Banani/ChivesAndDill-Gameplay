@@ -1,4 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+
+@font-face {
+   font-family: 'Fritz';
+   src: url('./assets/fonts/fritz/FRIZQUAD.ttf') format('truetype');
+}
+
+@font-face {
+   font-family: 'Morpheus';
+   src: url('./assets/fonts/morpheus/MORPHEUS.ttf') format('truetype');
+}
+
 body {
    margin: 0;
    padding: 0;
@@ -9,6 +20,8 @@ body {
    -ms-user-select: none;
    user-select: none;
    cursor: url(apps/chives-and-dill/src/assets/spritesheets/cursors/defaultCursor.png), auto;
+
+   font-family: 'Fritz';
 
    ::-webkit-scrollbar {
       display: none;
