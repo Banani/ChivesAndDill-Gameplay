@@ -13,6 +13,7 @@ import {
     SubSpellCastedEvent,
 } from '../../Events';
 import { SpellType } from '../../types/SpellTypes';
+import { filterCharactersBaseOnSpellImpact } from '../utils';
 
 export class AngleBlastSpellService extends EventParser {
     constructor() {
@@ -36,8 +37,9 @@ export class AngleBlastSpellService extends EventParser {
 
     handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
         if (event.spell.type === SpellType.AngleBlast) {
-            const allCharacters = { ...services.characterService.getAllCharacters(), ...services.monsterService.getAllCharacters() };
-            const caster = allCharacters[event.casterId];
+            const caster = services.characterService.getAllCharacters()[event.casterId];
+            const allCharacters = filterCharactersBaseOnSpellImpact(services.characterService.getAllCharacters(), event.spell, event.casterId);
+
             const castAngle = Math.atan2(-(event.directionLocation.y - caster.location.y), event.directionLocation.x - caster.location.x);
 
             const distanceToPI = Math.PI - Math.abs(castAngle);
@@ -59,7 +61,7 @@ export class AngleBlastSpellService extends EventParser {
                 angle: castAngle,
             });
 
-            for (const i in omit(allCharacters, [caster.id])) {
+            for (const i in allCharacters) {
                 const targetAngle = Math.atan2(-(allCharacters[i].location.y - caster.location.y), allCharacters[i].location.x - caster.location.x);
                 if (
                     (Math.abs(targetAngle - castAngle) <= angleDistance || Math.abs(targetAngle - rotatedAngle) <= angleDistance) &&

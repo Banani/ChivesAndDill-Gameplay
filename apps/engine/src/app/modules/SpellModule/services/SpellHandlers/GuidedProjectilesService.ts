@@ -2,9 +2,9 @@ import { GuidedProjectileSpell, GuidedProjectileSubSpell, Location, SpellType } 
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
-import { CharacterDiedEvent, CharacterType, EngineEventHandler } from 'apps/engine/src/app/types';
+import { CharacterDiedEvent, EngineEventHandler } from 'apps/engine/src/app/types';
 import { CharacterUnion } from 'apps/engine/src/app/types/CharacterUnion';
-import { chain, omit, pickBy } from 'lodash';
+import { chain } from 'lodash';
 import {
     PlayerCastSpellEvent,
     PlayerCastSubSpellEvent,
@@ -17,6 +17,7 @@ import {
     SubSpellCastedEvent,
 } from '../../Events';
 import { GuidedProjectileEngine } from '../../engines/GuidedProjectileEngine';
+import { filterCharactersBaseOnSpellImpact } from '../utils';
 
 interface GuidedProjectileTrack {
     caster: CharacterUnion;
@@ -61,20 +62,7 @@ export class GuidedProjectilesService extends EventParser {
     handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
         if (event.spell.type === SpellType.GuidedProjectile) {
             const caster = services.characterService.getCharacterById(event.casterId);
-            let allCharacters = services.characterService.getAllCharacters();
-            allCharacters = pickBy(allCharacters, character => character.type !== CharacterType.Npc);
-
-            if (!event.spell.monstersImpact) {
-                allCharacters = pickBy(allCharacters, character => character.type !== CharacterType.Monster);
-            }
-
-            if (!event.spell.casterImpact) {
-                allCharacters = omit(allCharacters, [event.casterId]);
-            }
-
-            if (!event.spell.playersImpact) {
-                allCharacters = pickBy(allCharacters, character => character.type !== CharacterType.Player);
-            }
+            const allCharacters = filterCharactersBaseOnSpellImpact(services.characterService.getAllCharacters(), event.spell, event.casterId);
 
             if (caster && distanceBetweenTwoPoints(caster.location, event.directionLocation) > event.spell.range) {
                 this.sendErrorMessage(event.casterId, 'Out of range.');
