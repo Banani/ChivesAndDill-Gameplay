@@ -10,7 +10,7 @@
    flex-direction: column;
 
    .ContentWrapper {
-      padding: 25px 40px 0 24px;
+      padding: 35px 40px 0 24px;
       overflow: scroll;
       flex: 1;
       margin-bottom: 30px;
@@ -18,6 +18,7 @@
       .TradeModalContainer {
          display: flex;
          margin-top: 16px;
+         align-items: center;
          cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
 
          &:hover {
@@ -43,12 +44,17 @@
       .SectionHeader {
          font-size: 22px;
          font-family: 'Morpheus';
+         margin: 10px 0;
       }
 
       .AvailableQuests {
          cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
          &:hover {
             background-image: linear-gradient(to right, rgb(255, 250, 94, 0.1), rgb(255, 250, 94, 1), rgb(255, 250, 94, 0.1));
+         }
+
+         div {
+            font-size: 13px;
          }
       }
    }

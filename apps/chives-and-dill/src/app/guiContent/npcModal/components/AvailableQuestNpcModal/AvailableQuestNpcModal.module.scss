@@ -10,7 +10,7 @@
    flex-direction: column;
 
    .ContentWrapper {
-      padding: 10px 40px 0 25px;
+      padding: 20px 40px 0 25px;
       flex: 1;
       display: flex;
       overflow: hidden;
@@ -21,6 +21,11 @@
          flex: 1;
          margin-bottom: 8px;
          padding-bottom: 20px;
+
+         div {
+            font-size: 14px;
+            line-height: 1.1;
+         }
 
          h3 {
             font-family: 'Morpheus';

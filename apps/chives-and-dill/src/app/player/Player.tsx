@@ -185,6 +185,7 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
                            fontWeight: 'bold',
                            lineJoin: 'round',
                            strokeThickness: 4,
+                           fontFamily: 'Septimus',
                         })
                      }
                   />
