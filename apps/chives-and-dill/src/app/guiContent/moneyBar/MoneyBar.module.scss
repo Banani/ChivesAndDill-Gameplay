@@ -1,19 +1,18 @@
 .MoneyBar {
   display: flex;
   color: white;
-  padding-bottom: 2px;
 
   .MoneyTypeContainer {
     display: flex;
     position: relative;
     
     .MoneyAmount {
-      margin: 0 4px 0 8px;
-      font-size: 14px;
+      margin: 0 2px 0 2px;
+      font-size: 10px;
     }
 
     img{
-      height: 14px;
+      height: 10px;
     }
   }
 }
