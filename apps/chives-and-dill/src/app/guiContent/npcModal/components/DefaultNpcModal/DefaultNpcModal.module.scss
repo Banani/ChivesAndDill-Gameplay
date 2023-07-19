@@ -38,7 +38,7 @@
       }
 
       .SectionText {
-         font-size: 18px;
+         font-size: 16px;
       }
 
       .SectionHeader {
@@ -51,10 +51,6 @@
          cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
          &:hover {
             background-image: linear-gradient(to right, rgb(255, 250, 94, 0.1), rgb(255, 250, 94, 1), rgb(255, 250, 94, 0.1));
-         }
-
-         div {
-            font-size: 13px;
          }
       }
    }
