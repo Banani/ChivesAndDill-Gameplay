@@ -21,7 +21,6 @@ export const ItemPreview: FunctionComponent<ItemPreviewProps> = ({ itemData, han
   return (
     <div className={styles.Item + ` ${highlight === ItemPreviewHighlight.full ? styles.highlight : null}`} onClick={() => handleItemClick()}>
       <ItemIconPreview itemData={itemData} highlight={highlight === ItemPreviewHighlight.icon} />
-      <div className={styles.Stack}>{itemData.stack}</div>
       <div className={styles.ItemInfoWrapper}>
         <div className={styles.ItemText}>{itemData.name}</div>
         {showMoney ? <MoneyBar currency={itemData.value} /> : null}
