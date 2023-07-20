@@ -1,11 +1,11 @@
 import { CharacterClass } from '@bananos/types';
 import React from 'react';
-import { DatailsStats } from '../hooks/useDetailsStats';
+import { DetailsStats } from '../hooks/useDetailsStats';
 import styles from './Player.module.scss';
 
 interface PlayerProps {
     highestAmount: number,
-    detailsStat: DatailsStats,
+    detailsStat: DetailsStats,
     playerCharacter: any,
     index: number,
     characterClass: CharacterClass,

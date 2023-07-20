@@ -5,12 +5,18 @@ import React, { useEffect, useState } from 'react';
 import styles from './Details.module.scss';
 import { Header } from './Header/Header';
 import { Player } from './Player/Player';
-import { useDetailsStats } from './hooks/useDetailsStats';
+import { DetailsStats, useDetailsStats } from './hooks/useDetailsStats';
+import { useStatsAgregator } from './hooks/useStatsAgregrator';
 
 export enum States {
-    Damage = "Damage Done",
-    Heal = "Heal Done",
-    DamageTaken = "Damage Taken"
+    Damage = "DamageDone",
+    Heal = "HealDone",
+    DamageTaken = "DamageTaken"
+}
+
+export enum FightScope {
+    Current = "Current",
+    Overall = "Overall"
 }
 
 interface DetailsInternalProps {
@@ -50,45 +56,89 @@ export const DetailsInternal = React.memo(
         const { detailsStats: damageTakenStats, clearDetailsStats: clearDamageTaken } = useDetailsStats({ characterPowerPointsEvents, eventPropertyId: 'characterId', eventType: EngineEventType.CharacterLostHp });
         const { detailsStats: healStats, clearDetailsStats: clearHeal } = useDetailsStats({ characterPowerPointsEvents, eventPropertyId: 'healerId', eventType: EngineEventType.CharacterGotHp });
 
-        useEffect(() => {
-            if (combatState[activeCharacterId]) {
-                updateStartFightTime(now());
-                clearDamage();
-                clearDamageTaken();
-                clearHeal();
-            } else {
-                updateEndFightTime(now());
-            }
-        }, [combatState, activeCharacterId])
+        const { addFightsStats, fightHistory } = useStatsAgregator();
 
         const [activeState, changeActiveState] = useState(States.Damage);
         const [startFightTime, updateStartFightTime] = useState(0);
         const [endFightTime, updateEndFightTime] = useState(0);
+        const [activeFight, setActiveFight] = useState(FightScope.Current);
+        const [isFightPending, setIsFightPending] = useState(false);
 
-        const fightTime = ((combatState[activeCharacterId] ? now() : endFightTime) - startFightTime) / 1000;
+        let fightTime = ((combatState[activeCharacterId] ? now() : endFightTime) - startFightTime) / 1000;
+        if (activeFight !== FightScope.Current) {
+            fightTime = (fightHistory[activeFight].endFightTime - fightHistory[activeFight].startFightTime) / 1000
+        }
+
+        useEffect(() => {
+            if (combatState[activeCharacterId] && !isFightPending) {
+                setIsFightPending(true);
+            }
+
+            if (!combatState[activeCharacterId] && isFightPending) {
+                setIsFightPending(false);
+            }
+        }, [combatState, activeCharacterId, isFightPending]);
+
+        useEffect(() => {
+            if (isFightPending) {
+                updateStartFightTime(now());
+                clearDamage();
+                clearDamageTaken();
+                clearHeal();
+            } else if (startFightTime !== 0) {
+                updateEndFightTime(now());
+                addFightsStats({
+                    startFightTime,
+                    endFightTime: now(),
+                    details: {
+                        [States.Damage]: damageStats,
+                        [States.DamageTaken]: damageTakenStats,
+                        [States.Heal]: healStats,
+                    }
+                });
+            }
+        }, [isFightPending]);
 
         const getActiveState = () => {
+            let currentDetails: Record<States, DetailsStats[]>;
+            if (activeFight === FightScope.Current) {
+                currentDetails = {
+                    [States.Damage]: damageStats,
+                    [States.DamageTaken]: damageTakenStats,
+                    [States.Heal]: healStats,
+                }
+            } else {
+                currentDetails = fightHistory[activeFight].details;
+            }
+
             if (activeState === States.DamageTaken) {
-                return damageTakenStats;
+                return currentDetails.DamageTaken;
             }
 
             if (activeState === States.Heal) {
-                return healStats;
+                return currentDetails.HealDone;
             }
 
-            return damageStats;
+            return currentDetails.DamageDone;
         }
 
         const activeStatesDetails = getActiveState();
 
         return (
             <div className={styles.DetailsContainer}>
-                <Header activeState={activeState} changeActiveState={changeActiveState} playersAmount={activeStatesDetails.length} />
+                <Header
+                    activeState={activeState}
+                    changeActiveState={changeActiveState}
+                    playersAmount={activeStatesDetails.length}
+                    fightHistory={fightHistory}
+                    setActiveFight={setActiveFight}
+                />
                 <div className={styles.PlayerList}>
                     {activeStatesDetails.map((damageStat, index) => (
                         <Player
                             highestAmount={activeStatesDetails[0].amount}
-                            fightTime={fightTime} detailsStat={damageStat}
+                            fightTime={fightTime}
+                            detailsStat={damageStat}
                             playerCharacter={characters[damageStat.id]}
                             index={index + 1}
                             characterClass={characterClasses[characters[damageStat.id].characterClassId]}

@@ -7,7 +7,7 @@ import styles from './StatesModal.module.scss';
 
 export const StatesModal = ({ changeActiveState, setStatesModal }) => {
     return (
-        <DetailsModal setStatesModal={setStatesModal}>
+        <DetailsModal setModal={setStatesModal}>
             <div className={styles.StatesModal}>
                 <div className={styles.Item} onClick={() => changeActiveState(States.Damage)}>
                     <img src={DamageIcon} alt="damage icon" className={styles.ItemImg} />

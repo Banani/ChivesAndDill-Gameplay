@@ -1,14 +1,14 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
 
-export interface DatailsStats {
+export interface DetailsStats {
     id: string,
     amount: number,
 };
 
 export const useDetailsStats = ({ characterPowerPointsEvents, eventPropertyId, eventType }) => {
 
-    const [detailsStats, updateDetailsStats] = useState<DatailsStats[]>([]);
+    const [detailsStats, updateDetailsStats] = useState<DetailsStats[]>([]);
 
     useEffect(() => {
         const events = characterPowerPointsEvents.filter((event) => (event.type === eventType));
