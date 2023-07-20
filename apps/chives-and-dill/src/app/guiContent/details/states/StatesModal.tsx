@@ -1,14 +1,9 @@
 import React from 'react';
 import DamageIcon from '../../../../assets/spritesheets/details/Damage.png';
 import HealIcon from '../../../../assets/spritesheets/details/Heal.png';
+import { States } from '../Details';
 import { DetailsModal } from '../modal/DetailsModal';
 import styles from './StatesModal.module.scss';
-
-enum States {
-    Damage = "Damage",
-    Heal = "Heal",
-    DamageTaken = "Damage Taken"
-}
 
 export const StatesModal = ({ changeActiveState, setStatesModal }) => {
     return (
