@@ -11,4 +11,4 @@ export abstract class Engine {
     }
 
     abstract doAction();
-}
+} 
