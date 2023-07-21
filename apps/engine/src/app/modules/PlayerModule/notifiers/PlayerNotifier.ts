@@ -29,13 +29,14 @@ export class PlayerNotifier extends Notifier {
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-        currentSocket.on(SpellClientMessages.CastSpell, ({ directionLocation, spellId }) => {
+        currentSocket.on(SpellClientMessages.CastSpell, ({ directionLocation, spellId, targetId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToCastASpellEvent>({
                 type: SpellEngineEvents.PlayerTriesToCastASpell,
                 spellData: {
                     characterId: event.playerCharacter.id,
                     spellId,
                     directionLocation,
+                    targetId
                 },
             });
         });

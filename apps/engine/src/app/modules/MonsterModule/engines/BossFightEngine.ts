@@ -48,6 +48,7 @@ export class BossFightEngine extends Engine {
                 casterId: null,
                 spell: templateItem.spell,
                 directionLocation: player.location,
+                targetId: player.id
             });
         });
     };

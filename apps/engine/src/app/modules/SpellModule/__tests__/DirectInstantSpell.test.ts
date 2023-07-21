@@ -81,7 +81,8 @@ describe('Direct instant spell', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: SpellClientMessages.CastSpell,
             directionLocation: monster.location,
-            spellId: '1'
+            spellId: '1',
+            targetId: monster.id
         })
 
         const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -107,6 +108,22 @@ describe('Direct instant spell', () => {
         });
     });
 
+    it('Player should not be able to use spell if does not have a target', () => {
+        const { players, engineManager, monsterDataPackage } = setupEngine({ monsterLocation: { x: 1000, y: 1000 } });
+        const monster: Monster = _.find(monsterDataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: SpellClientMessages.CastSpell,
+            directionLocation: monster.location,
+            spellId: '1',
+            targetId: null
+        })
+
+        const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+        checkIfErrorWasHandled(GlobalStoreModule.CHARACTER_POWER_POINTS, "You don't have a target.", dataPackage);
+    });
+
     it('Monster should not be hit if he is out of range', () => {
         const { players, engineManager, monsterDataPackage } = setupEngine({ monsterLocation: { x: 1000, y: 1000 } });
         const monster: Monster = _.find(monsterDataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
@@ -114,7 +131,8 @@ describe('Direct instant spell', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: SpellClientMessages.CastSpell,
             directionLocation: monster.location,
-            spellId: '1'
+            spellId: '1',
+            targetId: monster.id
         })
 
         const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -129,7 +147,8 @@ describe('Direct instant spell', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: SpellClientMessages.CastSpell,
             directionLocation: monster.location,
-            spellId: '1'
+            spellId: '1',
+            targetId: monster.id
         })
 
         const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -143,7 +162,8 @@ describe('Direct instant spell', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: SpellClientMessages.CastSpell,
             directionLocation: players['1'].character.location,
-            spellId: '1'
+            spellId: '1',
+            targetId: players['1'].character.id
         })
 
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -172,7 +192,8 @@ describe('Direct instant spell', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: SpellClientMessages.CastSpell,
             directionLocation: players['1'].character.location,
-            spellId: '1'
+            spellId: '1',
+            targetId: players['1'].character.id
         })
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -186,7 +207,8 @@ describe('Direct instant spell', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: SpellClientMessages.CastSpell,
             directionLocation: players['2'].character.location,
-            spellId: '1'
+            spellId: '1',
+            targetId: players['2'].character.id
         })
 
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -218,7 +240,8 @@ describe('Direct instant spell', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: SpellClientMessages.CastSpell,
             directionLocation: players['2'].character.location,
-            spellId: '1'
+            spellId: '1',
+            targetId: players['2'].character.id
         })
 
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -233,7 +256,8 @@ describe('Direct instant spell', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: SpellClientMessages.CastSpell,
             directionLocation: npc.location,
-            spellId: '1'
+            spellId: '1',
+            targetId: npc.id
         })
 
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);

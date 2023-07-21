@@ -6,7 +6,7 @@ import { useEngineModuleReader } from '../../hooks';
 import { selectCharacterViewsSettings } from '../../stores';
 import Player from '../player/Player';
 
-export const RenderPlayersManager = () => {
+export const RenderPlayersManager = ({ keyBoardContext }) => {
    const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
    const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
@@ -22,6 +22,7 @@ export const RenderPlayersManager = () => {
                characterViewsSettings={characterViewsSettings}
                charactersMovements={characterMovements}
                characterPowerPoints={characterPowerPoints}
+               keyBoardContext={keyBoardContext}
             />
          )),
       [characters, characterViewsSettings, activeCharacterId, characterMovements, characterPowerPoints]
@@ -36,6 +37,7 @@ export const RenderPlayersManager = () => {
                player={characters[activeCharacterId]}
                characterViewsSettings={characterViewsSettings}
                characterPowerPoints={characterPowerPoints}
+               keyBoardContext={keyBoardContext}
             />
          ) : null}
       </>

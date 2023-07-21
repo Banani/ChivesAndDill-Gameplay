@@ -69,7 +69,9 @@ describe('QuestNotifier', () => {
 
         checkIfPackageIsValid(GlobalStoreModule.NPC_QUESTS, dataPackage, {
             toDelete: {
-                '1': null,
+                '1': {
+                    '1': null,
+                }
             },
         });
     });

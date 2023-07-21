@@ -14,8 +14,8 @@ import cursorSpeak from '../../assets/spritesheets/cursors/speakCursor.png';
 import cursorLoot from '../../assets/spritesheets/cursors/lootCursor.png';
 import defaultCursor from '../../assets/spritesheets/cursors/defaultCursor.png';
 
-const Player = React.memo<{ player: any, characterViewsSettings: any, charactersMovements: any, characterPowerPoints: any }>(
-   ({ player, characterViewsSettings, charactersMovements, characterPowerPoints }) => {
+const Player = React.memo<{ player: any, characterViewsSettings: any, charactersMovements: any, characterPowerPoints: any, keyBoardContext }>(
+   ({ player, characterViewsSettings, charactersMovements, characterPowerPoints, keyBoardContext }) => {
       const [timer, setTimer] = useState(0);
       const [playerSheet, setPlayerSheet] = useState({});
       const [characterStatus, setCharacterStatus] = useState('standingDown');
@@ -103,6 +103,16 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
             getDirection(charactersMovements[player.id].direction);
          }
       }, [charactersMovements, currentHp, charactersMovements[player.id].isInMove, getDirection]);
+
+      useEffect(() => {
+         keyBoardContext.addKeyHandler({
+            id: 'TargetManagerEscape',
+            matchRegex: 'Escape',
+            keydown: () => dispatch(setActiveTarget({ characterId: null })),
+         });
+
+         return () => keyBoardContext.removeKeyHandler('TargetManagerEscape');
+      }, []);
 
       const drawAbsorbBar = (g) => {
          const barWidth = (playerAbsorb / (playerAbsorb + maxHp)) * 50;

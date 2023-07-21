@@ -11,12 +11,12 @@ import { useEngineModuleReader } from '../hooks';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
 import { ChatManager } from './guiContent/chat/ChatManager';
+import { Details } from './guiContent/details/Details';
 import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
 import { LootModal } from './guiContent/lootModal/LootModal';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
 import { QuestManager } from './guiContent/quests';
 import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
-import { Details } from './guiContent/details/Details';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
 import { BloodPoolManager } from './mapContent/BloodPoolsManager';
@@ -27,6 +27,7 @@ import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
 import { NextLevelManager } from './mapContent/NextLevelManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { MapWrapper } from './mapContent/mapManager/MapWrapper';
+import { KeyBoardContext } from '../contexts/KeyBoardContext';
 
 const Map = () => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
@@ -96,49 +97,53 @@ const Map = () => {
             {activeNpc ? <NpcModal questDefinition={questDefinition as Record<string, QuestSchema>} activeNpc={activeNpc} /> : null}
             <ExperienceBar />
             <Details />
-            <PackageContext.Consumer>
-                {(packageContext) => (
-                    <SocketContext.Consumer>
-                        {(socketContext) => (
-                            <ReactReduxContext.Consumer>
-                                {({ store }) => (
-                                    <Stage width={gameSize.width} height={gameSize.height} options={{ backgroundColor: 0x000000, autoDensity: true }}>
-                                        <PackageContext.Provider value={packageContext}>
-                                            <SocketContext.Provider value={socketContext}>
-                                                <Provider store={store}>
-                                                    <ContextProvider contexts={contexts}>
-                                                        {activeCharacterId && characterMovements && (
-                                                            <Container
-                                                                position={[
-                                                                    -(characterMovements[activeCharacterId]?.location.x ?? 0) + gameSize.width / 2,
-                                                                    -(characterMovements[activeCharacterId]?.location.y ?? 0) + gameSize.height / 2,
-                                                                ]}
-                                                            >
-                                                                <MapWrapper />
-                                                                <AreasSpellsEffectsManager />
+            <KeyBoardContext.Consumer>
+                {(keyBoardContext) => (
+                    <PackageContext.Consumer>
+                        {(packageContext) => (
+                            <SocketContext.Consumer>
+                                {(socketContext) => (
+                                    <ReactReduxContext.Consumer>
+                                        {({ store }) => (
+                                            <Stage width={gameSize.width} height={gameSize.height} options={{ backgroundColor: 0x000000, autoDensity: true }}>
+                                                <PackageContext.Provider value={packageContext}>
+                                                    <SocketContext.Provider value={socketContext}>
+                                                        <Provider store={store}>
+                                                            <ContextProvider contexts={contexts}>
+                                                                {activeCharacterId && characterMovements && (
+                                                                    <Container
+                                                                        position={[
+                                                                            -(characterMovements[activeCharacterId]?.location.x ?? 0) + gameSize.width / 2,
+                                                                            -(characterMovements[activeCharacterId]?.location.y ?? 0) + gameSize.height / 2,
+                                                                        ]}
+                                                                    >
+                                                                        <MapWrapper />
+                                                                        <AreasSpellsEffectsManager />
 
-                                                                <RenderPlayersManager />
-                                                                {renderSpells()}
-                                                                <FloatingNumbersManager />
-                                                                <BlinkSpellEffect />
-                                                                <BloodPoolManager />
-                                                                <DialogsManager />
-                                                                <CastBarsManager location={characterMovements[activeCharacterId]?.location} spellChannels={spellChannels} />
-                                                            </Container>
-                                                        )}
-                                                        <NextLevelManager experienceEvents={experienceEvents} />
-                                                        <ErrorMessages />
-                                                    </ContextProvider>
-                                                </Provider>
-                                            </SocketContext.Provider>
-                                        </PackageContext.Provider>
-                                    </Stage>
+                                                                        <RenderPlayersManager keyBoardContext={keyBoardContext} />
+                                                                        {renderSpells()}
+                                                                        <FloatingNumbersManager />
+                                                                        <BlinkSpellEffect />
+                                                                        <BloodPoolManager />
+                                                                        <DialogsManager />
+                                                                        <CastBarsManager location={characterMovements[activeCharacterId]?.location} spellChannels={spellChannels} />
+                                                                    </Container>
+                                                                )}
+                                                                <NextLevelManager experienceEvents={experienceEvents} />
+                                                                <ErrorMessages />
+                                                            </ContextProvider>
+                                                        </Provider>
+                                                    </SocketContext.Provider>
+                                                </PackageContext.Provider>
+                                            </Stage>
+                                        )}
+                                    </ReactReduxContext.Consumer>
                                 )}
-                            </ReactReduxContext.Consumer>
+                            </SocketContext.Consumer>
                         )}
-                    </SocketContext.Consumer>
+                    </PackageContext.Consumer>
                 )}
-            </PackageContext.Consumer>
+            </KeyBoardContext.Consumer>
         </>
     );
 };
