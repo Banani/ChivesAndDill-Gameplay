@@ -88,12 +88,14 @@ const InternalSpellsBar: React.FunctionComponent<SpellsBarProps> = React.memo(({
                     </div>
                     <div className={styles.spellTooltip}>
                         <div>{activeSpell.name}</div>
-                        <div>
+                        <div className={styles.spellTooltipItem}>
                             <div>{activeSpell.spellPowerCost} Mana</div>
                             <div>{activeSpell.range} yd range</div>
                         </div>
-                        <div>{activeSpell.channelTime ? `${activeSpell.channelTime / 1000} sec cast` : 'Instant cast'}</div>
-                        <div>{'Cooldown: ' + activeSpell.cooldown / 1000 + ' sec'}</div>
+                        <div className={styles.spellTooltipItem}>
+                            <div>{activeSpell.channelTime ? `${activeSpell.channelTime / 1000} sec cast` : 'Instant cast'}</div>
+                            <div>{'Cooldown: ' + activeSpell.cooldown / 1000 + ' sec'}</div>
+                        </div>
                         <div className={styles.spellDesc}>{activeSpell.description}</div>
                     </div>
                 </div>

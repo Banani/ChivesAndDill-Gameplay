@@ -58,6 +58,11 @@
             padding: 8px;
             visibility: hidden;
 
+            .spellTooltipItem{
+                display: flex;
+                justify-content: space-between;
+            }
+
             .spellDesc {
                 color: gold;
             }
