@@ -60,7 +60,8 @@ describe('Spell availability service', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: SpellClientMessages.CastSpell,
             directionLocation: { x: 150, y: 100 },
-            spellId: '1'
+            spellId: '1',
+            targetId: monster.id
         })
 
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
@@ -94,7 +95,8 @@ describe('Spell availability service', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: SpellClientMessages.CastSpell,
             directionLocation: { x: 150, y: 100 },
-            spellId: '2'
+            spellId: '2',
+            targetId: monster.id
         })
 
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);

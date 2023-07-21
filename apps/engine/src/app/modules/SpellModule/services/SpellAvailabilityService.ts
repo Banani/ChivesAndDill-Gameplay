@@ -57,6 +57,7 @@ export class SpellAvailabilityService extends EventParser {
                 casterId: event.spellData.characterId,
                 spell,
                 directionLocation: event.spellData.directionLocation,
+                targetId: event.spellData.targetId
             });
         }
     };

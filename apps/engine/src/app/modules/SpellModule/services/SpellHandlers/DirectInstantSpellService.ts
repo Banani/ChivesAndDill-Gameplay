@@ -26,39 +26,45 @@ export class DirectInstantSpellService extends EventParser {
     handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
         if (event.spell.type === SpellType.DirectInstant) {
             const caster = services.characterService.getAllCharacters()[event.casterId];
+
+            if (!event.targetId) {
+                this.sendErrorMessage(event.casterId, "You don't have a target.");
+                return;
+            }
+
             const allCharacters = filterCharactersBaseOnSpellImpact(services.characterService.getAllCharacters(), event.spell, event.casterId);
 
-            if (caster && distanceBetweenTwoPoints(caster.location, event.directionLocation) > event.spell.range) {
+            if (!allCharacters[event.targetId]) {
+                this.sendErrorMessage(event.casterId, 'Invalid target.');
+                return;
+            }
+
+            const target = allCharacters[event.targetId];
+
+            if (caster && distanceBetweenTwoPoints(caster.location, target.location) > event.spell.range) {
                 this.sendErrorMessage(event.casterId, 'Out of range.');
                 return;
             }
 
-            for (const i in allCharacters) {
-                if (distanceBetweenTwoPoints(event.directionLocation, allCharacters[i].location) < allCharacters[i].size / 2) {
-                    this.engineEventCrator.asyncCeateEvent<PlayerCastedSpellEvent>({
-                        type: SpellEngineEvents.PlayerCastedSpell,
-                        casterId: event.casterId,
-                        spell: event.spell,
-                    });
+            this.engineEventCrator.asyncCeateEvent<PlayerCastedSpellEvent>({
+                type: SpellEngineEvents.PlayerCastedSpell,
+                casterId: event.casterId,
+                spell: event.spell,
+            });
 
-                    this.engineEventCrator.asyncCeateEvent<SpellLandedEvent>({
-                        type: SpellEngineEvents.SpellLanded,
-                        spell: event.spell,
-                        caster: caster,
-                        location: allCharacters[i].location,
-                    });
+            this.engineEventCrator.asyncCeateEvent<SpellLandedEvent>({
+                type: SpellEngineEvents.SpellLanded,
+                spell: event.spell,
+                caster: caster,
+                location: target.location,
+            });
 
-                    this.engineEventCrator.asyncCeateEvent<SpellReachedTargetEvent>({
-                        type: SpellEngineEvents.SpellReachedTarget,
-                        spell: event.spell,
-                        caster: caster,
-                        target: allCharacters[i],
-                    });
-                    return;
-                }
-            }
-
-            this.sendErrorMessage(event.casterId, 'Invalid target.');
+            this.engineEventCrator.asyncCeateEvent<SpellReachedTargetEvent>({
+                type: SpellEngineEvents.SpellReachedTarget,
+                spell: event.spell,
+                caster: caster,
+                target: target,
+            });
         }
     };
 
