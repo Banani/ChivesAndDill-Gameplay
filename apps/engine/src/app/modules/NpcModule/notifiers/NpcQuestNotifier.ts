@@ -18,6 +18,7 @@ export class NpcQuestNotifier extends Notifier<Record<string, boolean>> {
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
         const completedQuests = services.archivedQuestService.getCompletedQuests(event.playerCharacter.id);
+        // npc => quest => boolean
         const questMap: Record<string, Record<string, boolean>> = _.chain(services.npcTemplateService.getData())
             .pickBy((template) => !!template.quests)
             .mapValues((template) =>
@@ -58,6 +59,13 @@ export class NpcQuestNotifier extends Notifier<Record<string, boolean>> {
             return;
         }
 
-        this.multicastObjectsDeletion([{ receiverId, objects: { [event.questId]: null } }]);
+        const questMap: Record<string, Record<string, null>> = _.chain(services.npcTemplateService.getData())
+            .pickBy((template) => !!template.quests && template.quests[event.questId])
+            .mapValues(() => ({
+                [event.questId]: null
+            }))
+            .value();
+
+        this.multicastObjectsDeletion([{ receiverId, objects: questMap }]);
     };
 }
