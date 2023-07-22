@@ -62,44 +62,51 @@ export class GuidedProjectilesService extends EventParser {
     handlePlayerCastSpell: EngineEventHandler<PlayerCastSpellEvent> = ({ event, services }) => {
         if (event.spell.type === SpellType.GuidedProjectile) {
             const caster = services.characterService.getCharacterById(event.casterId);
+
+            if (!event.targetId) {
+                this.sendErrorMessage(event.casterId, "You don't have a target.");
+                return;
+            }
+
             const allCharacters = filterCharactersBaseOnSpellImpact(services.characterService.getAllCharacters(), event.spell, event.casterId);
 
-            if (caster && distanceBetweenTwoPoints(caster.location, event.directionLocation) > event.spell.range) {
+            if (!allCharacters[event.targetId]) {
+                this.sendErrorMessage(event.casterId, 'Invalid target.');
+                return;
+            }
+
+            const target = allCharacters[event.targetId];
+
+            if (caster && distanceBetweenTwoPoints(caster.location, target.location) > event.spell.range) {
                 this.sendErrorMessage(event.casterId, 'Out of range.');
                 return;
             }
 
-            for (const i in allCharacters) {
-                if (distanceBetweenTwoPoints(event.directionLocation, allCharacters[i].location) < allCharacters[i].size / 2) {
-                    this.increment++;
-                    const projectileId = 'guided_projectile_' + this.increment;
-                    this.guidedProjectilesTracks[projectileId] = {
-                        caster: caster,
-                        spell: event.spell,
-                        directionLocation: event.directionLocation as Location,
-                        targetId: allCharacters[i].id,
-                        startLocation: caster.location,
-                        currentLocation: caster.location,
-                    };
+            this.increment++;
+            const projectileId = 'guided_projectile_' + this.increment;
+            this.guidedProjectilesTracks[projectileId] = {
+                caster: caster,
+                spell: event.spell,
+                directionLocation: event.directionLocation as Location,
+                targetId: target.id,
+                startLocation: caster.location,
+                currentLocation: caster.location,
+            };
 
-                    this.engineEventCrator.asyncCeateEvent<PlayerCastedSpellEvent>({
-                        type: SpellEngineEvents.PlayerCastedSpell,
-                        casterId: event.casterId,
-                        spell: event.spell,
-                    });
+            this.engineEventCrator.asyncCeateEvent<PlayerCastedSpellEvent>({
+                type: SpellEngineEvents.PlayerCastedSpell,
+                casterId: event.casterId,
+                spell: event.spell,
+            });
 
-                    this.engineEventCrator.asyncCeateEvent<ProjectileCreatedEvent>({
-                        type: SpellEngineEvents.ProjectileCreated,
-                        projectileId,
-                        currentLocation: caster.location,
-                        spell: event.spell,
-                    });
+            this.engineEventCrator.asyncCeateEvent<ProjectileCreatedEvent>({
+                type: SpellEngineEvents.ProjectileCreated,
+                projectileId,
+                currentLocation: caster.location,
+                spell: event.spell,
+            });
 
-                    return;
-                }
-            }
 
-            this.sendErrorMessage(event.casterId, 'Invalid target.');
         }
     };
 

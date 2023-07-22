@@ -209,6 +209,7 @@ export interface CastSpell {
     type: SpellClientMessages.CastSpell;
     directionLocation: Location;
     spellId: string;
+    targetId: string;
 }
 
 export type EngineSpellMessages = RequestSpellDefinitions | CastSpell;
