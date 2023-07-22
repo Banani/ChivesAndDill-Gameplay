@@ -62,6 +62,7 @@ export const DialogsManager = () => {
                         x={location.x}
                         y={location.y - characters[event.authorId].size / 1.5 - 20}
                         style={getDialogStyles(event)}
+                        zIndex={3}
                     />
                     <Text
                         anchor={[0.5, 0]}
@@ -69,6 +70,7 @@ export const DialogsManager = () => {
                         x={location.x}
                         y={location.y - characters[event.authorId].size / 1.5}
                         style={getDialogStyles(event)}
+                        zIndex={3}
                     />
                 </>
             ))}

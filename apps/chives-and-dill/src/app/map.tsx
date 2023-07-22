@@ -112,6 +112,7 @@ const Map = () => {
                                                             <ContextProvider contexts={contexts}>
                                                                 {activeCharacterId && characterMovements && (
                                                                     <Container
+                                                                        sortableChildren={true}
                                                                         position={[
                                                                             -(characterMovements[activeCharacterId]?.location.x ?? 0) + gameSize.width / 2,
                                                                             -(characterMovements[activeCharacterId]?.location.y ?? 0) + gameSize.height / 2,
