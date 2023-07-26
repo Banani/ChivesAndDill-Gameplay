@@ -88,7 +88,7 @@ export interface DeletePathEvent extends EngineEvent {
 export interface ScheduleActionEvent extends EngineEvent {
     type: EngineEvents.ScheduleAction;
     id: string;
-    frequency: number;
+    frequency?: number;
     perdiod?: number;
 }
 

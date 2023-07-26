@@ -1,7 +1,8 @@
+import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { NestedMap } from 'apps/engine/src/app/dataStructures/NestedMap';
 import { map, sum } from 'lodash';
 import { EventParser } from '../../../../EventParser';
-import { EngineEventHandler } from '../../../../types';
+import { EngineEventHandler, ScheduleActionEvent, ScheduleActionFinishedEvent } from '../../../../types';
 import {
     AbsorbShieldChangedEvent,
     AbsorbShieldCreatedEvent,
@@ -18,6 +19,8 @@ interface AbsorbEffectNavigation {
     absorbEffectId: string;
 }
 
+const SERVICE_PREFIX = 'AbsorbShield#';
+
 export class AbsorbShieldEffectService extends EventParser {
     private absorbNestedMap: NestedMap<AbsorbEffectNavigation>;
 
@@ -28,6 +31,8 @@ export class AbsorbShieldEffectService extends EventParser {
         this.eventsToHandlersMap = {
             [SpellEngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
             [SpellEngineEvents.TakeAbsorbShieldValue]: this.handleTakeAbsorbShieldValue,
+            [SpellEngineEvents.AbsorbShieldCreated]: this.handleAbsorbShieldCreated,
+            [EngineEvents.ScheduleActionFinished]: this.handleScheduleActionFinished
         };
     }
 
@@ -76,6 +81,25 @@ export class AbsorbShieldEffectService extends EventParser {
             }
         }
     };
+
+    handleAbsorbShieldCreated: EngineEventHandler<AbsorbShieldCreatedEvent> = ({ event }) => {
+        this.engineEventCrator.asyncCeateEvent<ScheduleActionEvent>({
+            type: EngineEvents.ScheduleAction,
+            id: `${SERVICE_PREFIX}${event.absorbId}`,
+            perdiod: event.period,
+        });
+    }
+
+    handleScheduleActionFinished: EngineEventHandler<ScheduleActionFinishedEvent> = ({ event }) => {
+        if (event.id.startsWith(SERVICE_PREFIX)) {
+            const id = event.id.split('#')[1];
+            this.absorbNestedMap.removeElementById(id);
+            this.engineEventCrator.asyncCeateEvent<AbsorbShieldFinishedEvent>({
+                type: SpellEngineEvents.AbsorbShieldFinished,
+                absorbId: id,
+            });
+        }
+    }
 
     handleTakeAbsorbShieldValue: EngineEventHandler<TakeAbsorbShieldValueEvent> = ({ event }) => {
         const absorbs = this.absorbNestedMap.getElementsByCriteriaMatchAll({ targetId: event.targetId });
