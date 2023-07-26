@@ -12,6 +12,7 @@ const comparators: Record<KillingQuestStagePartComparison, (character: Character
 };
 
 export class KillingQuestService extends EventParser {
+    // characterId => stagePartId
     activeStages: Record<string, Record<string, KillingQuestStagePartStatus>> = {};
 
     constructor() {

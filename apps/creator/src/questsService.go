@@ -32,6 +32,7 @@ type QuestStage struct {
 }
 
 type QuestStagePart struct {
+	Id              string                       `json:"id"`
 	Type            string                       `json:"type"`
 	LocationName    string                       `json:"locationName,omitempty" bson:"locationName,omitempty"`
 	TargetLocation  *Location                    `json:"targetLocation,omitempty" bson:"targetLocation,omitempty"`

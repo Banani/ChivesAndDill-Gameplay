@@ -6,17 +6,17 @@ import { SocketContext } from './gameController/socketContext';
 
 import type { QuestSchema } from '@bananos/types';
 import { GlobalStoreModule } from '@bananos/types';
+import { KeyBoardContext } from '../contexts/KeyBoardContext';
 import { EngineContexts, PackageContext } from '../contexts/PackageContext';
 import { useEngineModuleReader } from '../hooks';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
+import { BottomBar } from './guiContent/bottomBar/BottomBar';
 import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
 import { ChatManager } from './guiContent/chat/ChatManager';
 import { Details } from './guiContent/details/Details';
-import { ExperienceBar } from './guiContent/experienceBar/ExperienceBar';
 import { LootModal } from './guiContent/lootModal/LootModal';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
 import { QuestManager } from './guiContent/quests';
-import { SpellsBar } from './guiContent/spellsBar/SpellsBar';
 import { AreasSpellsEffectsManager } from './mapContent/AreasSpellsEffectsManager';
 import { BlinkSpellEffect } from './mapContent/BlinkSpellEffect';
 import { BloodPoolManager } from './mapContent/BloodPoolsManager';
@@ -27,8 +27,6 @@ import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
 import { NextLevelManager } from './mapContent/NextLevelManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { MapWrapper } from './mapContent/mapManager/MapWrapper';
-import { KeyBoardContext } from '../contexts/KeyBoardContext';
-import { BottomBar } from './guiContent/bottomBar/BottomBar';
 
 const Map = () => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;

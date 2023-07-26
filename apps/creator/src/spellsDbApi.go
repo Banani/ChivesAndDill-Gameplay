@@ -10,7 +10,7 @@ type SpellsDbApi struct {
 	application *Application
 }
 
-func updateEffectIds(effects map[string]SpellEffectsOnTarget) map[string]SpellEffectsOnTarget {
+func updateEffectIds(effects map[string]SpellEffectsOnTarget) {
 	for key, effect := range effects {
 		if effect.Id == "" {
 			effect.Id = primitive.NewObjectID().Hex()
@@ -19,8 +19,6 @@ func updateEffectIds(effects map[string]SpellEffectsOnTarget) map[string]SpellEf
 
 		updateEffectIds(effect.SpellEffects)
 	}
-
-	return effects
 }
 
 func (m *SpellsDbApi) saveSpell(spell Spell) string {

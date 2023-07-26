@@ -19,14 +19,12 @@ export class QuestSchemasService extends EventParser {
             if (!realQuestSchemasFetched) {
                 this.questSchemas = _.mapValues(questSchemas, (questSchema, questId) => ({
                     ...questSchema,
-                    stageOrder: Object.keys(questSchema.stages),
-                    stages: _.mapValues(questSchema.stages, (stage, stageId) => ({
+                    stageOrder: Object.keys(_.keyBy(questSchema.stages, "id")),
+                    stages: _.mapValues(_.keyBy(questSchema.stages, 'id'), (stage) => ({
                         ...stage,
-                        id: stageId,
-                        stageParts: _.mapValues(stage.stageParts, (stagePart, stagePartId) => ({
+                        stageParts: _.mapValues(_.keyBy(stage.stageParts, 'id'), (stagePart) => ({
                             ...stagePart,
-                            id: stagePartId,
-                            stageId,
+                            stageId: stage.id,
                             questId
                         }))
                     }))
@@ -38,14 +36,12 @@ export class QuestSchemasService extends EventParser {
             realQuestSchemasFetched = true;
             this.questSchemas = _.mapValues(questSchemas, (questSchema, questId) => ({
                 ...questSchema,
-                stageOrder: Object.keys(questSchema.stages),
-                stages: _.mapValues(questSchema.stages, (stage, stageId) => ({
+                stageOrder: Object.keys(_.keyBy(questSchema.stages, "id")),
+                stages: _.mapValues(_.keyBy(questSchema.stages, 'id'), (stage) => ({
                     ...stage,
-                    id: stageId,
-                    stageParts: _.mapValues(stage.stageParts, (stagePart, stagePartId) => ({
+                    stageParts: _.mapValues(_.keyBy(stage.stageParts, 'id'), (stagePart) => ({
                         ...stagePart,
-                        id: stagePartId,
-                        stageId,
+                        stageId: stage.id,
                         questId
                     }))
                 }))

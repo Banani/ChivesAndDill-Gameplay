@@ -10,21 +10,29 @@ type QuestsDbApi struct {
 	application *Application
 }
 
+func updateInternalIds(questSchema QuestSchema) {
+	for stageId, stage := range questSchema.Stages {
+		for stagePartId, stagePart := range stage.StageParts {
+			if stagePart.Id == "" {
+				stagePart.Id = primitive.NewObjectID().Hex()
+				stage.StageParts[stagePartId] = stagePart
+			}
+		}
+
+		if stage.Id == "" {
+			stage.Id = primitive.NewObjectID().Hex()
+			questSchema.Stages[stageId] = stage
+		}
+	}
+}
+
 func (m *QuestsDbApi) saveQuest(questSchema QuestSchema) string {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("questSchemas")
 
-	toSave := bson.D{
-		{"name", questSchema.Name},
-		{"description", questSchema.Description},
-		{"questReward", questSchema.QuestReward},
-		{"stages", questSchema.Stages},
-		{"requiredQuests", questSchema.RequiredQuests},
-		{"requiredLevel", questSchema.RequiredLevel},
-	}
+	updateInternalIds(questSchema)
 
-	record, _ := collection.InsertOne(context.TODO(), toSave)
-
+	record, _ := collection.InsertOne(context.TODO(), questSchema)
 	return record.InsertedID.(primitive.ObjectID).Hex()
 }
 
@@ -32,14 +40,8 @@ func (m *QuestsDbApi) updateQuest(questSchema QuestSchema) {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("questSchemas")
 
-	toSave := bson.D{{"$set", bson.D{
-		{"name", questSchema.Name},
-		{"description", questSchema.Description},
-		{"questReward", questSchema.QuestReward},
-		{"stages", questSchema.Stages},
-		{"requiredQuests", questSchema.RequiredQuests},
-		{"requiredLevel", questSchema.RequiredLevel},
-	}}}
+	updateInternalIds(questSchema)
+	toSave := bson.D{{"$set", questSchema}}
 
 	objectId, _ := primitive.ObjectIDFromHex(questSchema.Id)
 	collection.UpdateOne(context.TODO(), bson.M{"_id": objectId}, toSave)

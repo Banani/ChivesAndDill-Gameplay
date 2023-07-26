@@ -2,8 +2,8 @@ import { KillingQuestStagePart, KillingQuestStagePartComparison, QuestSchema, Qu
 import { Button } from "@mui/material";
 import _ from "lodash";
 import { useCallback, useContext, useEffect } from "react";
-import { DialogContext, Dialogs } from "../../contexts/dialogContext";
 import { FormContext } from "../../contexts/FormContext";
+import { DialogContext, Dialogs } from "../../contexts/dialogContext";
 import { QuestsContext } from "../../views/quests/QuestsContextProvider";
 
 export const QuestActions = () => {
