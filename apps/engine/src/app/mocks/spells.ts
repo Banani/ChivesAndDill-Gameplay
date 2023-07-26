@@ -15,6 +15,7 @@ export const MockedSpells: Record<string, Spell> = {
         playersImpact: true,
         spellEffectsOnTarget: {
             '1': {
+                id: "543534",
                 spellId: "1",
                 type: SpellEffectType.Damage,
                 amount: 100,
@@ -36,6 +37,7 @@ export const MockedSpells: Record<string, Spell> = {
         playersImpact: true,
         spellEffectsOnTarget: {
             '1': {
+                id: "525342",
                 spellId: "2",
                 type: SpellEffectType.Damage,
                 amount: 100,
@@ -57,6 +59,7 @@ export const MockedSpells: Record<string, Spell> = {
         playersImpact: true,
         spellEffectsOnTarget: {
             '1': {
+                id: "121221",
                 spellId: "3",
                 type: SpellEffectType.Damage,
                 amount: 100,

@@ -1,27 +1,30 @@
 package main
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type Spell struct {
-	Id                   string                          `json:"id" bson:"-"`
-	Name                 string                          `json:"name"`
-	Type                 string                          `json:"type"`
-	Image                string                          `json:"image"`
-	Description          string                          `json:"description" bson:"description"`
-	Range                int32                           `json:"range" bson:"range"`
-	SpellPowerCost       int32                           `json:"spellPowerCost" bson:"spellPowerCost"`
-	Cooldown             int32                           `json:"cooldown" bson:"cooldown"`
-	PassThrough          bool                            `json:"passThrough" bson:"passThrough"`
-	CasterImpact         bool                            `json:"casterImpact" bson:"casterImpact"`
-	MonstersImpact       bool                            `json:"monstersImpact" bson:"monstersImpact"`
-	PlayersImpact        bool                            `json:"playersImpact" bson:"playersImpact"`
-	Speed                int32                           `json:"speed,omitempty" bson:"speed,omitempty"`
-	Angle                int32                           `json:"angle,omitempty" bson:"angle,omitempty"`
-	SpellEffectsOnTarget 			map[string]SpellEffectsOnTarget `json:"spellEffectsOnTarget,omitempty" bson:"spellEffectsOnTarget,omitempty"`
-	SpellEffectsOnCasterOnSpellHit  map[string]SpellEffectsOnTarget `json:"spellEffectsOnCasterOnSpellHit,omitempty" bson:"spellEffectsOnCasterOnSpellHit,omitempty"`
+	Id                             string                          `json:"id" bson:"-"`
+	Name                           string                          `json:"name"`
+	Type                           string                          `json:"type"`
+	Image                          string                          `json:"image"`
+	Description                    string                          `json:"description" bson:"description"`
+	Range                          int32                           `json:"range" bson:"range"`
+	SpellPowerCost                 int32                           `json:"spellPowerCost" bson:"spellPowerCost"`
+	Cooldown                       int32                           `json:"cooldown" bson:"cooldown"`
+	PassThrough                    bool                            `json:"passThrough" bson:"passThrough"`
+	CasterImpact                   bool                            `json:"casterImpact" bson:"casterImpact"`
+	MonstersImpact                 bool                            `json:"monstersImpact" bson:"monstersImpact"`
+	PlayersImpact                  bool                            `json:"playersImpact" bson:"playersImpact"`
+	Speed                          int32                           `json:"speed,omitempty" bson:"speed,omitempty"`
+	Angle                          int32                           `json:"angle,omitempty" bson:"angle,omitempty"`
+	SpellEffectsOnTarget           map[string]SpellEffectsOnTarget `json:"spellEffectsOnTarget,omitempty" bson:"spellEffectsOnTarget,omitempty"`
+	SpellEffectsOnCasterOnSpellHit map[string]SpellEffectsOnTarget `json:"spellEffectsOnCasterOnSpellHit,omitempty" bson:"spellEffectsOnCasterOnSpellHit,omitempty"`
 }
 
 type SpellEffectsOnTarget struct {
+	Id                  string                          `json:"id" bson:"id"`
 	Type                string                          `json:"type"`
 	Amount              int32                           `json:"amount,omitempty" bson:"amount,omitempty"`
 	Attribute           string                          `json:"attribute,omitempty" bson:"attribute,omitempty"`

@@ -112,6 +112,7 @@ export type Spell = ProjectileSpell | GuidedProjectileSpell | DirectInstantSpell
 export interface SpellEffect {
     type: SpellEffectType;
     spellId: string;
+    id: string;
 }
 
 export interface DamageEffect extends SpellEffect {
@@ -175,7 +176,7 @@ export interface AbsorbShieldEffect extends SpellEffect {
     iconImage: string;
 }
 
-type AllEffects =
+export type AllEffects =
     | DamageEffect
     | HealEffect
     | AreaEffect

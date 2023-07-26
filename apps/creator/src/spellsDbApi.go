@@ -10,9 +10,24 @@ type SpellsDbApi struct {
 	application *Application
 }
 
+func updateEffectIds(effects map[string]SpellEffectsOnTarget) map[string]SpellEffectsOnTarget {
+	for key, effect := range effects {
+		if effect.Id == "" {
+			effect.Id = primitive.NewObjectID().Hex()
+			effects[key] = effect
+		}
+
+		updateEffectIds(effect.SpellEffects)
+	}
+
+	return effects
+}
+
 func (m *SpellsDbApi) saveSpell(spell Spell) string {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("spells")
+
+	updateEffectIds(spell.SpellEffectsOnTarget)
 
 	record, _ := collection.InsertOne(context.TODO(), spell)
 
@@ -22,6 +37,8 @@ func (m *SpellsDbApi) saveSpell(spell Spell) string {
 func (m *SpellsDbApi) updateSpell(spell Spell) {
 	dbClient := m.application.dbClient
 	collection := dbClient.db.Collection("spells")
+
+	updateEffectIds(spell.SpellEffectsOnTarget)
 
 	toSave := bson.D{{"$set", spell}}
 

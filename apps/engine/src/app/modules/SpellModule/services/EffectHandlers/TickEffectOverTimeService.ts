@@ -1,89 +1,88 @@
+import { SpellEffectType, TickOverTimeEffect } from '@bananos/types';
 import { forEach } from 'lodash';
-import { EngineEvents } from '../../../../EngineEvents';
 import { EventParser } from '../../../../EventParser';
 import { Character, EngineEventHandler } from '../../../../types';
 import { MonsterEngineEvents, MonsterLostAggroEvent } from '../../../MonsterModule/Events';
 import { Monster } from '../../../MonsterModule/types';
-import { TickOverTimeEffectEngine } from '../../engines/TickOverTimeEffectEngine';
 import { ApplyTargetSpellEffectEvent, RemoveTickOverTimeEffectEvent, SpellEngineEvents, TimeEffectCreatedEvent, TimeEffectRemovedEvent } from '../../Events';
-import { TickOverTimeEffect, SpellEffectType } from '../../types/SpellTypes';
+import { TickOverTimeEffectEngine } from '../../engines/TickOverTimeEffectEngine';
 
 export interface TickEffectOverTimeTrack {
-   id: string;
-   creationTime: number;
-   effect: TickOverTimeEffect;
-   target: Character | Monster;
-   caster: Character | Monster;
+    id: string;
+    creationTime: number;
+    effect: TickOverTimeEffect;
+    target: Character | Monster;
+    caster: Character | Monster;
 }
 
 export class TickEffectOverTimeService extends EventParser {
-   tickOverTimeEffectEngine: TickOverTimeEffectEngine;
-   activeTickEffectOverTime: Record<string, TickEffectOverTimeTrack> = {};
+    tickOverTimeEffectEngine: TickOverTimeEffectEngine;
+    activeTickEffectOverTime: Record<string, TickEffectOverTimeTrack> = {};
 
-   constructor(tickOverTimeEffectEngine: TickOverTimeEffectEngine) {
-      super();
-      this.tickOverTimeEffectEngine = tickOverTimeEffectEngine;
-      this.eventsToHandlersMap = {
-         [SpellEngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
-         [SpellEngineEvents.RemoveTickOverTimeEffect]: this.handleTickOverTimeFinished,
-         [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
-      };
-   }
+    constructor(tickOverTimeEffectEngine: TickOverTimeEffectEngine) {
+        super();
+        this.tickOverTimeEffectEngine = tickOverTimeEffectEngine;
+        this.eventsToHandlersMap = {
+            [SpellEngineEvents.ApplyTargetSpellEffect]: this.handleApplySpellEffect,
+            [SpellEngineEvents.RemoveTickOverTimeEffect]: this.handleTickOverTimeFinished,
+            [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
+        };
+    }
 
-   init(engineEventCrator, services) {
-      super.init(engineEventCrator);
-      this.tickOverTimeEffectEngine.init(engineEventCrator, services);
-   }
+    init(engineEventCrator, services) {
+        super.init(engineEventCrator);
+        this.tickOverTimeEffectEngine.init(engineEventCrator, services);
+    }
 
-   handleApplySpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event }) => {
-      if (event.effect.type === SpellEffectType.TickEffectOverTime) {
-         const effect = event.effect as TickOverTimeEffect;
-         const id = `${effect.spellId}_${event.target.id}`;
+    handleApplySpellEffect: EngineEventHandler<ApplyTargetSpellEffectEvent> = ({ event }) => {
+        if (event.effect.type === SpellEffectType.TickEffectOverTime) {
+            const effect = event.effect as TickOverTimeEffect;
+            const id = `${effect.spellId}_${event.target.id}`;
 
-         this.activeTickEffectOverTime[id] = {
-            id,
-            creationTime: Date.now(),
-            effect,
-            target: event.target,
-            caster: event.caster,
-         };
+            this.activeTickEffectOverTime[id] = {
+                id,
+                creationTime: Date.now(),
+                effect,
+                target: event.target,
+                caster: event.caster,
+            };
 
-         this.engineEventCrator.asyncCeateEvent<TimeEffectCreatedEvent>({
-            type: SpellEngineEvents.TimeEffectCreated,
-            timeEffect: {
-               id,
-               name: effect.name,
-               description: effect.description,
-               timeEffectType: effect.timeEffectType,
-               period: effect.period,
-               iconImage: effect.iconImage,
-               creationTime: this.activeTickEffectOverTime[id].creationTime,
-               targetId: event.target.id,
-            },
-         });
-      }
-   };
+            this.engineEventCrator.asyncCeateEvent<TimeEffectCreatedEvent>({
+                type: SpellEngineEvents.TimeEffectCreated,
+                timeEffect: {
+                    id,
+                    name: effect.name,
+                    description: effect.description,
+                    timeEffectType: effect.timeEffectType,
+                    period: effect.period,
+                    iconImage: effect.iconImage,
+                    creationTime: this.activeTickEffectOverTime[id].creationTime,
+                    targetId: event.target.id,
+                },
+            });
+        }
+    };
 
-   handleTickOverTimeFinished: EngineEventHandler<RemoveTickOverTimeEffectEvent> = ({ event }) => {
-      this.deleteTickOverTimeEffect(event.tickOverTimeId);
-   };
+    handleTickOverTimeFinished: EngineEventHandler<RemoveTickOverTimeEffectEvent> = ({ event }) => {
+        this.deleteTickOverTimeEffect(event.tickOverTimeId);
+    };
 
-   handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
-      forEach(Object.keys(this.activeTickEffectOverTime), (key) => {
-         if (key.includes(`_${event.monsterId}`)) {
-            this.deleteTickOverTimeEffect(key);
-         }
-      });
-   };
+    handleMonsterLostAggro: EngineEventHandler<MonsterLostAggroEvent> = ({ event }) => {
+        forEach(Object.keys(this.activeTickEffectOverTime), (key) => {
+            if (key.includes(`_${event.monsterId}`)) {
+                this.deleteTickOverTimeEffect(key);
+            }
+        });
+    };
 
-   deleteTickOverTimeEffect = (effectId: string) => {
-      delete this.activeTickEffectOverTime[effectId];
+    deleteTickOverTimeEffect = (effectId: string) => {
+        delete this.activeTickEffectOverTime[effectId];
 
-      this.engineEventCrator.asyncCeateEvent<TimeEffectRemovedEvent>({
-         type: SpellEngineEvents.TimeEffectRemoved,
-         tickOverTimeId: effectId,
-      });
-   };
+        this.engineEventCrator.asyncCeateEvent<TimeEffectRemovedEvent>({
+            type: SpellEngineEvents.TimeEffectRemoved,
+            tickOverTimeId: effectId,
+        });
+    };
 
-   getActiveTickEffectOverTime = () => this.activeTickEffectOverTime;
+    getActiveTickEffectOverTime = () => this.activeTickEffectOverTime;
 }

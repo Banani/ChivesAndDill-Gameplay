@@ -64,18 +64,21 @@ const DefaultDamageEffect: DamageEffect = {
     amount: 100,
     attribute: Attribute.Strength,
     spellId: "",
+    id: ""
 }
 
 const DefaultHealEffect: HealEffect = {
     type: SpellEffectType.Heal,
     amount: 100,
     spellId: "",
+    id: ""
 }
 
 const DefaultGenerateSpellPowerEffect: GenerateSpellPowerEffect = {
     type: SpellEffectType.GenerateSpellPower,
     amount: 100,
     spellId: "",
+    id: ""
 }
 
 const DefaultAbsorbEffect: AbsorbShieldEffect = {
@@ -99,7 +102,8 @@ const DefaultTickOverTimeEffect: TickOverTimeEffect = {
     iconImage: "",
     activationFrequency: 1000,
     spellEffects: {},
-    spellId: ""
+    spellId: "",
+    id: ""
 }
 
 const DefaultAreaEffect: AreaEffect = {
@@ -110,7 +114,8 @@ const DefaultAreaEffect: AreaEffect = {
     radius: 1000,
     activationFrequency: 1000,
     spellEffects: {},
-    spellId: ""
+    spellId: "",
+    id: ""
 }
 
 export const SpellDialog = () => {
@@ -303,6 +308,10 @@ export const SpellDialog = () => {
                     ].includes(type)
                 },
                 spellId: {
+                    type: SchemaFieldType.Text,
+                    hidden: true
+                },
+                id: {
                     type: SchemaFieldType.Text,
                     hidden: true
                 },

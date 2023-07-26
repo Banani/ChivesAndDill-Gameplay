@@ -1,4 +1,4 @@
-import { AreaEffect, ChannelSpell, GuidedProjectileSpell, GuidedProjectileSubSpell, Location, PowerStackType, ProjectileSpell, ProjectileSubSpell, Spell, SpellEffect, SubSpell, TimeEffect, TimeEffectType } from '@bananos/types';
+import { AllEffects, AreaEffect, ChannelSpell, GuidedProjectileSpell, GuidedProjectileSubSpell, Location, PowerStackType, ProjectileSpell, ProjectileSubSpell, Spell, SpellEffect, SubSpell, TimeEffect, TimeEffectType } from '@bananos/types';
 import { Character, EngineEvent, EngineEventHandler } from '../../types';
 import { Vector } from '../../types/Vector';
 import { Monster } from '../MonsterModule/types';
@@ -229,7 +229,7 @@ export interface ApplyTargetSpellEffectEvent extends EngineEvent {
     type: SpellEngineEvents.ApplyTargetSpellEffect;
     caster: Monster | Character;
     target: Monster | Character;
-    effect: SpellEffect;
+    effect: AllEffects;
 }
 
 export interface ApplyLocationSpellEffectEvent extends EngineEvent {
