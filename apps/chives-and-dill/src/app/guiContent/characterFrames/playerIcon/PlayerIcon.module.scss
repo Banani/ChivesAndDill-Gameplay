@@ -5,13 +5,13 @@
    margin-right: 50px;
 
    .playerAvatar {
-      border-radius: 50%;
+      margin-right: 25px;
       width: 85px;
       height: 85px;
       border: 5px solid gray;
+      border-radius: 50%;
       background-repeat: no-repeat;
       background-size: cover;
-      margin-right: 25px;
       background-color: black;
       transition: 0.2s;
    }
@@ -22,34 +22,33 @@
    }
 
    .playerLvl {
-      border-radius: 50%;
-      width: 25px;
-      height: 25px;
-      border: 2px solid gold;
-      position: absolute;
-      z-index: 9;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: gold;
-      left: 65px;
+      position: absolute;
+      left: 63px;
       bottom: 0;
-      background: black;
-      line-height: 25px;
+      width: 25px;
+      height: 25px;
+      border: 2px solid gold;
+      border-radius: 50%;
+      color: gold;
+      background-color: black;
       text-align: center;
+      z-index: 9;
    }
 
    .playerRole {
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
       position: absolute;
-      z-index: 9;
       left: 0;
       bottom: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
       background-image: url('../../../../assets/spritesheets/partyRoles/dpsIcon.png');
       background-position: center;
       background-size: cover;
+      z-index: 9;
    }
 
    .combatSwords {
