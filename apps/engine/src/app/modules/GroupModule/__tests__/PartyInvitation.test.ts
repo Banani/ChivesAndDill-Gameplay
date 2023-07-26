@@ -56,7 +56,7 @@ describe('Group module - Party Invitation', () => {
         checkIfErrorWasHandled(GlobalStoreModule.PARTY_INVITATION, 'This player is busy.', dataPackage);
     });
 
-    it('Player should not be able to invite another player to his party if that player has another pending invitation', () => {
+    it('Player should not be able to invite another player to his party if that player already invited someone', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {

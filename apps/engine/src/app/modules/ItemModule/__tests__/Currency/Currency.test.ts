@@ -36,7 +36,7 @@ describe('Currency', () => {
 
         checkIfPackageIsValid(GlobalStoreModule.CURRENCY, dataPackage, {
             data: {
-                playerCharacter_1: 245447,
+                playerCharacter_1: 13465447,
             },
         });
     });

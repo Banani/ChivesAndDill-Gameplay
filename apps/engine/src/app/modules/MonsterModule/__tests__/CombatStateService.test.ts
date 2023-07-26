@@ -80,6 +80,7 @@ describe('Combat state service', () => {
         const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         const damageEffect: DamageEffect = {
+            id: "damage_id_123",
             type: SpellEffectType.Damage,
             amount: 1000,
             spellId: "SPELL_ID",
@@ -115,6 +116,7 @@ describe('Combat state service', () => {
         const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         const damageEffect: DamageEffect = {
+            id: "damage_id_123",
             type: SpellEffectType.Damage,
             amount: 200,
             spellId: "SPELL_ID",
@@ -145,6 +147,7 @@ describe('Combat state service', () => {
         let [monster1, monster2]: Monster[] = _.filter(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         const damageEffect: DamageEffect = {
+            id: "damage_id_123",
             type: SpellEffectType.Damage,
             amount: 1000,
             spellId: "SPELL_ID",

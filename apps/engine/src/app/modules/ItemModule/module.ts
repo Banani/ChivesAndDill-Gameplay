@@ -8,6 +8,7 @@ import { BackpackItemsService } from './services/BackpackItemsService';
 import { BackpackService } from './services/BackpackService';
 import { CurrencyService } from './services/CurrencyService';
 import { EquipmentService } from './services/EquipmentService';
+import { ItemMessagesService } from './services/ItemMessagesService';
 import { ItemService } from './services/ItemService';
 import { ItemTemplateService } from './services/ItemTemplateService';
 
@@ -18,6 +19,7 @@ export interface ItemModuleServices {
     itemService: ItemService;
     equipmentService: EquipmentService;
     itemTemplateService: ItemTemplateService;
+    itemMessagesService: ItemMessagesService;
 }
 
 export const getItemModule: () => EngineModule<ItemModuleServices> = () => {
@@ -30,6 +32,7 @@ export const getItemModule: () => EngineModule<ItemModuleServices> = () => {
             itemService: new ItemService(),
             equipmentService: new EquipmentService(),
             itemTemplateService: new ItemTemplateService(),
+            itemMessagesService: new ItemMessagesService(),
         },
     };
 };

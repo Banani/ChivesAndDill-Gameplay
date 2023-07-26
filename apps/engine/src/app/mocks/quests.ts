@@ -64,7 +64,7 @@ export const MockedQuests: Record<string, QuestSchema> = {
         },
         questReward: {
             experience: 120,
-            currency: 1649,
+            currency: 13221649,
             items: {
                 "1": { itemTemplateId: '1', amount: 1 },
                 "3": { itemTemplateId: '3', amount: 5 },
