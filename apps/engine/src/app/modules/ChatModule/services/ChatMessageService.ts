@@ -17,11 +17,11 @@ export class ChatMessageService extends EventParser {
     }
 
     handleSendChatMessage: EngineEventHandler<SendChatMessageEvent> = ({ event, services }) => {
-        if (event.channelType !== ChannelType.Custom) {
+        if (event.details.channelType !== ChannelType.Custom) {
             return;
         }
 
-        const chatChannel = services.chatChannelService.getChatChannelById(event.chatChannelId);
+        const chatChannel = services.chatChannelService.getChatChannelById(event.details.chatChannelId);
 
         if (!chatChannel) {
             this.sendErrorMessage(event.requestingCharacterId, 'Chat channel does not exist.');
@@ -33,20 +33,23 @@ export class ChatMessageService extends EventParser {
             return;
         }
 
-        const id = `chatMessage_${this.increment++}`;
-        this.messages[id] = {
-            id,
+        const messageId = `chatMessage_${this.increment++}`;
+        this.messages[messageId] = {
+            id: messageId,
             message: event.message,
             authorId: event.requestingCharacterId,
             time: now(),
-            chatChannelId: event.chatChannelId,
+            chatChannelId: event.details.chatChannelId,
             channelType: ChannelType.Custom,
-            location: event.location
+            location: event.details.location
         };
 
         this.engineEventCrator.asyncCeateEvent<ChatMessageSentEvent>({
             type: ChatEngineEvents.ChatMessageSent,
-            chatMessage: this.messages[id],
+            messageId,
+            message: event.message,
+            time: now(),
+            chatMessage: event.details
         });
     };
 

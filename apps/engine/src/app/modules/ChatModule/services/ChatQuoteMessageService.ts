@@ -1,11 +1,10 @@
-import { ChannelType, QuoteChatMessage } from '@bananos/types';
+import { ChannelType } from '@bananos/types';
 import { now } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { ChatEngineEvents, ChatMessageSentEvent, SendChatMessageEvent } from '../Events';
 
 export class ChatQuoteMessageService extends EventParser {
-    private messages: Record<string, QuoteChatMessage> = {};
     private increment = 0;
 
     constructor() {
@@ -16,23 +15,18 @@ export class ChatQuoteMessageService extends EventParser {
     }
 
     handleSendChatMessage: EngineEventHandler<SendChatMessageEvent> = ({ event, services }) => {
-        if (event.channelType !== ChannelType.Quotes) {
+        if (event.details.channelType !== ChannelType.Quotes) {
             return;
         }
 
-        const id = `chatQuoteMessage_${this.increment++}`;
-        this.messages[id] = {
-            id,
-            message: event.message,
-            authorId: event.characterId,
-            time: now(),
-            channelType: ChannelType.Quotes,
-            location: event.location
-        };
+        const messageId = `chatQuoteMessage_${this.increment++}`;
 
         this.engineEventCrator.asyncCeateEvent<ChatMessageSentEvent>({
             type: ChatEngineEvents.ChatMessageSent,
-            chatMessage: this.messages[id],
+            messageId,
+            message: event.message,
+            time: now(),
+            chatMessage: event.details
         });
     };
 }

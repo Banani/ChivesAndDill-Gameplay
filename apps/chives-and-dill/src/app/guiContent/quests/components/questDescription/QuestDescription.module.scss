@@ -1,3 +1,8 @@
+.SectionText {
+   font-size: 14px;
+   line-height: 1.1;
+}
+
 .ItemsContainer {
    display: flex;
    margin-bottom: 10px;
@@ -7,6 +12,10 @@
    .ItemContainer {
       width: 48%;
    }
+}
+
+.stagePartDone {
+   color: #525252;
 }
 
 .MoneyReward {

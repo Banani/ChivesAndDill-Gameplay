@@ -1,8 +1,9 @@
 .chatContainer {
    position: absolute;
-   bottom: 2%;
+   bottom: 12%;
    left: 0;
    width: 400px;
+   font-family: 'ArialRegular';
 
    .channelsContainer {
       width: 100%;
@@ -68,4 +69,8 @@
          }
       }
    }
+}
+
+.systemMessage {
+   color: #ffff00;
 }

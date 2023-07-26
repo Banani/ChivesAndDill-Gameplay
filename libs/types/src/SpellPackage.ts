@@ -41,6 +41,9 @@ interface BaseSpell {
     description?: string;
     spellPowerCost: number;
     requiredPowerStacks?: PowerStackRequirement[];
+    casterImpact: boolean;
+    monstersImpact: boolean;
+    playersImpact: boolean;
 }
 
 interface PowerStackRequirement {
@@ -55,13 +58,14 @@ interface BaseSubSpell {
 interface EffectHolders {
     spellEffectsOnTarget?: Record<string, AllEffects>;
     spellEffectsOnDirectionLocation?: AllEffects[];
-    spellEffectsOnCasterOnSpellHit?: AllEffects[];
+    spellEffectsOnCasterOnSpellHit?: Record<string, AllEffects>;
 }
 
 export interface ProjectileSubSpell extends EffectHolders, BaseSubSpell {
     type: SpellType.Projectile;
     speed: number;
     range: number;
+    passThrough: boolean;
 }
 
 export interface GuidedProjectileSubSpell extends EffectHolders, BaseSubSpell {
@@ -205,6 +209,7 @@ export interface CastSpell {
     type: SpellClientMessages.CastSpell;
     directionLocation: Location;
     spellId: string;
+    targetId: string;
 }
 
 export type EngineSpellMessages = RequestSpellDefinitions | CastSpell;

@@ -4,7 +4,7 @@ import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardConte
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import type { FunctionComponent } from 'react';
 import React, { useContext, useEffect } from 'react';
-import { Button } from '../../../components/button/Button';
+import { RectangleButton } from '../../../components/rectangleButton/RectangleButton';
 import { QuestDescription } from '../../../quests/components';
 import styles from './CompleteQuestNpcModal.module.scss';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
@@ -24,7 +24,7 @@ export const CompleteQuestNpcModal: FunctionComponent<CompleteQuestNpcModalProps
    const { data: activeConversation } = useEngineModuleReader(GlobalStoreModule.NPC_CONVERSATION);
    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
    const activeNpc = characters[activeConversation[activeCharacterId]?.npcId];
-   
+
    useEffect(() => {
       keyBoardContext.addKeyHandler({
          id: 'CompleteQuestNpcModalEscape',
@@ -52,12 +52,12 @@ export const CompleteQuestNpcModal: FunctionComponent<CompleteQuestNpcModalProps
                <QuestDescription questSchema={questSchema} />
             </div>
             <div className={styles.ActionBar}>
-               <Button onClick={completeQuest} disabled={!questProgress?.[questId]?.allStagesCompleted}>
+               <RectangleButton onClick={completeQuest} disabled={!questProgress?.[questId]?.allStagesCompleted}>
                   Complete Quest
-               </Button>
+               </RectangleButton>
             </div>
          </div>
       </div>
-      
+
    );
 };

@@ -57,6 +57,7 @@ const ErrorMessagesInternal = React.memo(
                                 fill: '#8f0303',
                                 stroke: '#000000',
                                 strokeThickness: 2,
+                                fontFamily: 'Septimus',
                             })
                         }
                     />

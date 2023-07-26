@@ -59,8 +59,8 @@ export interface CharacterDiedPayload {
 }
 
 export interface UpdatePlayerAbsorbPayload {
-   targetId: string,
-   newValue: number,
+   targetId: string;
+   newValue: number;
 }
 
 export interface UpdatePlayerClassPayload {
@@ -69,5 +69,5 @@ export interface UpdatePlayerClassPayload {
 }
 
 export interface SetActiveTargetPayload {
-   characterId: string;
+   characterId: string | null;
 }

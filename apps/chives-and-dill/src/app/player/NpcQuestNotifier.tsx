@@ -1,36 +1,41 @@
 import { GlobalStoreModule } from '@bananos/types';
 import { Sprite } from '@inlet/react-pixi';
 import _ from 'lodash';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import exclamationMark from '../../assets/spritesheets/questNpc/exclamationMark.png';
 import questionMark from '../../assets/spritesheets/questNpc/questionMark.png';
 import { useEngineModuleReader } from '../../hooks';
 
 export const NpcQuestNotifier = ({ location, player }) => {
-   const { data: npcQuests } = useEngineModuleReader(GlobalStoreModule.NPC_QUESTS);
-   const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
+    const { data: npcQuests } = useEngineModuleReader(GlobalStoreModule.NPC_QUESTS);
+    const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
 
-   let questImageMark = exclamationMark;
+    const [questImageMark, updateQuestImageMark] = useState(exclamationMark);
+    const [isVisible, changeIsVisible] = useState(true);
 
-   if (player.type !== 'Npc') {
-      return null;
-   }
+    if (player.type !== 'Npc') {
+        return null;
+    }
 
-   const quests = _.cloneDeep(npcQuests?.[player.templateId]);
+    const quests = _.cloneDeep(npcQuests?.[player.templateId]);
 
-   _.forEach(quests, (_, questId) => {
-      if (questProgress?.[questId]) {
-         delete quests[questId];
-      }
-      if (questProgress?.[questId]?.allStagesCompleted) {
-         delete quests[questId];
-         questImageMark = questionMark;
-      }
-   });
+    useEffect(() => {
+        _.forEach(quests, (_, questId) => {
+            if (questProgress?.[questId]) {
+                changeIsVisible(false);
+            }
 
-   if (Object.keys(quests ?? {}).length === 0) {
-      return null;
-   }
+            if (questProgress?.[questId]?.allStagesCompleted) {
+                delete quests[questId];
+                changeIsVisible(true)
+                updateQuestImageMark(questionMark);
+            }
+        });
+    }, [questProgress]);
 
-   return <Sprite image={questImageMark} x={location.x} y={location.y - 95} />;
+    if (Object.keys(quests ?? {}).length === 0) {
+        return null;
+    }
+
+    return isVisible ? <Sprite image={questImageMark} x={location.x} y={location.y - 95} /> : null;
 };

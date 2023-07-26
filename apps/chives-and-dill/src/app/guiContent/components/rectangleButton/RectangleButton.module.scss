@@ -4,10 +4,11 @@
    border-radius: 4px;
    padding: 2px 15px;
    font-size: 11px;
-   cursor: url(../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
-   &:hover {
+
+   &:hover:enabled {
       color: #fff;
       text-shadow: 0 0 10px #fff;
+      cursor: url(../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
    }
 
    &:disabled {

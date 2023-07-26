@@ -1,31 +1,52 @@
 .Player {
-   width: 100%;
-   display: flex;
-   margin-bottom: 2px;
-   font-size: 14px;
+    width: 100%;
+    display: flex;
+    margin-bottom: 2px;
+    font-size: 14px;
 
-   .ClassIcon {
-      width: 25px;
-   }
+    .ClassIcon {
+        width: 25px;
+    }
 
-   .ColorBar {
-      display: flex;
-      flex: 1;
-      justify-content: space-between;
-      padding: 3px;
-      width: 100%;
+    .BarHolder {
+        position: relative;
+        flex: 1;
+        padding: 3px;
+        width: 100%;
 
-      .PlayerName {
-         width: 60%;
-         text-overflow: ellipsis;
-         white-space: nowrap;
-         overflow: hidden;
-      }
+        .ColorBar {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            transition: 0.4s;
+            background: linear-gradient(90deg, rgba(230, 230, 230, 0.1) 0%, rgba(50, 50, 50, 0.4) 100%);
+        }
 
-      .PlayerData {
-         flex-grow: 1;
-         display: flex;
-         justify-content: flex-end;
-      }
-   }
+        .DataHolder {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+
+            .PlayerName {
+                margin-left: 4px;
+                width: 60%;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            }
+
+            .PlayerData {
+                flex-grow: 1;
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+    }
 }

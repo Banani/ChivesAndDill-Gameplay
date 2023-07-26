@@ -4,7 +4,7 @@ import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { map } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
-import { Button } from '../../components/button/Button';
+import { RectangleButton } from '../../components/rectangleButton/RectangleButton';
 import { ConfirmationDialog } from '../ConfirmationDialog';
 import { ChannelNumeratorContext } from '../contexts';
 import { InputDialog } from '../InputDialog';
@@ -90,22 +90,22 @@ export const ChatChannels = () => {
             <div className={styles.actionHolder}>
                {selectedChannelId && chatChannels[selectedChannelId].characterOwnerId === activeCharacterId && (
                   <>
-                     <Button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.AddMember)}>
+                     <RectangleButton className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.AddMember)}>
                         Add Member
-                     </Button>
-                     <Button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.DeleteChatChannel)}>
+                     </RectangleButton>
+                     <RectangleButton className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.DeleteChatChannel)}>
                         Delete Channel
-                     </Button>
+                     </RectangleButton>
                   </>
                )}
                {selectedChannelId && (
-                  <Button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.LeaveChatChannel)}>
+                  <RectangleButton className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.LeaveChatChannel)}>
                      Leave Channel
-                  </Button>
+                  </RectangleButton>
                )}
-               <Button className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.CreateChannel)}>
+               <RectangleButton className={styles.actionButton} onClick={() => setActiveModal(ActiveModal.CreateChannel)}>
                   Create Channel
-               </Button>
+               </RectangleButton>
             </div>
          </div>
 

@@ -1,9 +1,11 @@
-import { Location } from '@bananos/types';
+import { Location, ProjectileSpell } from '@bananos/types';
 import { each, filter, pickBy } from 'lodash';
 import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints, getCrossingPointsWithWalls, getTheClosestObject, isSegmentIntersectingWithACircle } from '../../../math';
+import { Character } from '../../../types';
 import { ProjectileIntersection } from '../../PlayerModule/engines/types';
 import { Projectile, ProjectileMovedEvent, RemoveProjectileEvent, SpellEngineEvents, SpellLandedEvent, SpellReachedTargetEvent } from '../Events';
+import { filterCharactersBaseOnSpellImpact } from '../services/utils';
 
 export class ProjectileMovement extends Engine {
     calculateAngles(projectile) {
@@ -20,8 +22,8 @@ export class ProjectileMovement extends Engine {
         return distanceBetweenTwoPoints(projectile.startLocation, newLocation) > projectile.spell.range;
     }
 
-    getCrossingCharacter(movementSegment) {
-        return pickBy({ ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() }, (character) => {
+    getCrossingCharacter(characters: Record<string, Character>, movementSegment) {
+        return pickBy(characters, (character) => {
             return isSegmentIntersectingWithACircle(movementSegment, [character.location.x, character.location.y, character.size / 2]);
         });
     }
@@ -38,7 +40,13 @@ export class ProjectileMovement extends Engine {
                 [newLocation.x, newLocation.y],
             ];
 
-            const hitCharacters = filter(this.getCrossingCharacter(movementSegment), (character) => character.id !== projectile.characterId);
+            const allCharacters = filterCharactersBaseOnSpellImpact(
+                this.services.characterService.getAllCharacters(),
+                projectile.spell as ProjectileSpell,
+                projectile.characterId
+            );
+
+            const hitCharacters = filter(this.getCrossingCharacter(allCharacters, movementSegment), (character) => character.id !== projectile.characterId);
             const wallsInteractionPoints = getCrossingPointsWithWalls(movementSegment, this.services.collisionService.getAreas());
 
             const allProjectileIntersections = [
@@ -56,10 +64,19 @@ export class ProjectileMovement extends Engine {
             const theClossestIntersection = getTheClosestObject(projectile.currentLocation, allProjectileIntersections);
 
             if (theClossestIntersection?.type === ProjectileIntersection.CHARACTER) {
-                this.eventCrator.createEvent<RemoveProjectileEvent>({
-                    type: SpellEngineEvents.RemoveProjectile,
-                    projectileId,
-                });
+                if (!projectile.spell.passThrough) {
+                    this.eventCrator.createEvent<RemoveProjectileEvent>({
+                        type: SpellEngineEvents.RemoveProjectile,
+                        projectileId,
+                    });
+                } else {
+                    this.eventCrator.createEvent<ProjectileMovedEvent>({
+                        ...projectile,
+                        type: SpellEngineEvents.ProjectileMoved,
+                        projectileId,
+                        newLocation,
+                    });
+                }
 
                 this.eventCrator.createEvent<SpellLandedEvent>({
                     type: SpellEngineEvents.SpellLanded,

@@ -126,6 +126,7 @@ export interface PlayerTriesToCastASpellEvent extends EngineEvent {
         characterId: string;
         spellId: string;
         directionLocation: Vector;
+        targetId: string | null;
     };
 }
 
@@ -221,6 +222,7 @@ export interface PlayerCastSpellEvent extends EngineEvent {
     casterId: string | null;
     spell: Spell;
     directionLocation: Vector;
+    targetId: string | null;
 }
 
 export interface ApplyTargetSpellEffectEvent extends EngineEvent {

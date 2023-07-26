@@ -4,6 +4,7 @@ import { MockedCharacterClasses, MockedItemTemplates, MockedMonsterTemplates, Mo
 import {
     getCharacterModule,
     getChatModule,
+    getGroupModule,
     getItemModule,
     getMapModule,
     getMonsterModule,
@@ -181,6 +182,7 @@ export class EngineManager {
                 getNpcModule(),
                 getItemModule(),
                 getChatModule(),
+                getGroupModule()
             ]
         );
     }

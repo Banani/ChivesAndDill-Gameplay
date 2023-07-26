@@ -1,5 +1,5 @@
-import type { QuestSchema } from '@bananos/types';
-import { useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
+import { GlobalStoreModule, type QuestSchema } from '@bananos/types';
+import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
 import { map } from 'lodash';
 import type { FunctionComponent } from 'react';
 import React, { useMemo } from 'react';
@@ -8,6 +8,7 @@ import { QuestStagePart } from '../questStagePart';
 
 import styles from './QuestDescription.module.scss';
 import { ItemPreview, ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
+import _ from 'lodash';
 
 interface QuestDescriptionProps {
     questSchema: QuestSchema;
@@ -15,6 +16,7 @@ interface QuestDescriptionProps {
 
 export const QuestDescription: FunctionComponent<QuestDescriptionProps> = ({ questSchema }) => {
     const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: map(questSchema.questReward.items, (item) => item.itemTemplateId) ?? [] });
+    const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
 
     const items = useMemo(
         () =>
@@ -35,17 +37,32 @@ export const QuestDescription: FunctionComponent<QuestDescriptionProps> = ({ que
         [questSchema.questReward.items, itemTemplates]
     );
 
+    const renderQuests = _.map(questProgress, (currentQuestProgress) => {
+        const questStage = questSchema.stages[currentQuestProgress.activeStage];
+
+        return (
+            <div className={styles.questDesc}>
+                {_.map(questStage?.stageParts, (stagePart, stagePartId) => {
+
+                    return (
+                        <div className={currentQuestProgress.stagesProgress[currentQuestProgress.activeStage][stagePartId].isDone ? styles.stagePartDone : ''}>
+                            <QuestStagePart
+                                questStagePart={stagePart}
+                                stagePartProgress={currentQuestProgress.stagesProgress[currentQuestProgress.activeStage][stagePartId]}
+                            />
+                        </div>
+                    )
+                })}
+            </div>
+        )
+    });
+
     return (
         <>
             <h3 className={styles.SectionHeader}>{questSchema.name}</h3>
             <div className={styles.SectionText}>{questSchema.description}</div>
             <h3 className={styles.SectionHeader}>Quests Objectives</h3>
-            {map(questSchema.stages[questSchema.stageOrder[0]].stageParts, (stagePart) => (
-                <div className={styles.SectionText}>
-                    <QuestStagePart questStagePart={stagePart} />
-                </div>
-            ))}
-
+            {renderQuests}
             <h3 className={styles.SectionHeader}>Rewards</h3>
             {items && <div className={styles.ItemsContainer}>{items}</div>}
             {questSchema.questReward.currency && (

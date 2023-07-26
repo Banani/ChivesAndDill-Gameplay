@@ -10,6 +10,9 @@ export const MockedSpells: Record<string, Spell> = {
         cooldown: 0,
         image: '',
         description: '',
+        casterImpact: true,
+        monstersImpact: true,
+        playersImpact: true,
         spellEffectsOnTarget: {
             '1': {
                 spellId: "1",
@@ -28,6 +31,9 @@ export const MockedSpells: Record<string, Spell> = {
         cooldown: 0,
         image: '',
         description: '',
+        casterImpact: true,
+        monstersImpact: true,
+        playersImpact: true,
         spellEffectsOnTarget: {
             '1': {
                 spellId: "2",
@@ -36,6 +42,28 @@ export const MockedSpells: Record<string, Spell> = {
                 attribute: Attribute.Strength
             },
         },
+    },
+    '3': {
+        id: "3",
+        type: SpellType.GuidedProjectile,
+        name: 'BasicAttack_3',
+        range: 100,
+        spellPowerCost: 100,
+        cooldown: 0,
+        image: '',
+        description: '',
+        casterImpact: true,
+        monstersImpact: true,
+        playersImpact: true,
+        spellEffectsOnTarget: {
+            '1': {
+                spellId: "3",
+                type: SpellEffectType.Damage,
+                amount: 100,
+                attribute: Attribute.Strength
+            },
+        },
+        speed: 30
     },
 };
 

@@ -1,5 +1,5 @@
 import { CommonClientMessages, NpcClientMessages } from '@bananos/types';
-import { Graphics, Sprite, Text } from '@inlet/react-pixi';
+import { Sprite } from '@inlet/react-pixi';
 import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
@@ -7,15 +7,16 @@ import { useDispatch } from 'react-redux';
 import { BLOCK_SIZE } from '../../consts/consts';
 import { setActiveTarget } from '../../stores';
 import { SocketContext } from '../gameController/socketContext';
-import { GetAbsorbsValue } from './GetPlayerAbsorbs';
 import { NpcQuestNotifier } from './NpcQuestNotifier';
 import cursorSword from '../../assets/spritesheets/cursors/swordCursor.png';
 import cursorSpeak from '../../assets/spritesheets/cursors/speakCursor.png';
 import cursorLoot from '../../assets/spritesheets/cursors/lootCursor.png';
 import defaultCursor from '../../assets/spritesheets/cursors/defaultCursor.png';
+import { PlayerName } from '../player/PlayerName';
+import { PlayerBars } from '../player/PlayerBars';
 
-const Player = React.memo<{ player: any, characterViewsSettings: any, charactersMovements: any, characterPowerPoints: any }>(
-   ({ player, characterViewsSettings, charactersMovements, characterPowerPoints }) => {
+const Player = React.memo<{ player: any, characterViewsSettings: any, charactersMovements: any, characterPowerPoints: any, keyBoardContext }>(
+   ({ player, characterViewsSettings, charactersMovements, characterPowerPoints, keyBoardContext }) => {
       const [timer, setTimer] = useState(0);
       const [playerSheet, setPlayerSheet] = useState({});
       const [characterStatus, setCharacterStatus] = useState('standingDown');
@@ -26,9 +27,8 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
       const w = playerSprite.spriteWidth;
       const h = playerSprite.spriteHeight;
       const playerPoints = characterPowerPoints[player.id] ?? { maxHp: 0, currentHp: 0 };
-      const { maxHp, currentHp } = playerPoints;
+      const { currentHp } = playerPoints;
       const dispatch = useDispatch();
-      const playerAbsorb = GetAbsorbsValue(player.id);
 
       const context = useContext(SocketContext);
       const { socket } = context;
@@ -104,23 +104,15 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
          }
       }, [charactersMovements, currentHp, charactersMovements[player.id].isInMove, getDirection]);
 
-      const drawAbsorbBar = (g) => {
-         const barWidth = (playerAbsorb / (playerAbsorb + maxHp)) * 50;
-         const healthBarWidth = (currentHp / (playerAbsorb + maxHp)) * 50 - 25;
-         g.beginFill(0xe8e8e8);
-         g.drawRect(charactersMovements[player.id].location.x + healthBarWidth, charactersMovements[player.id].location.y - h / 1.5, barWidth, 5);
-         g.endFill();
-      };
+      useEffect(() => {
+         keyBoardContext.addKeyHandler({
+            id: 'TargetManagerEscape',
+            matchRegex: 'Escape',
+            keydown: () => dispatch(setActiveTarget({ characterId: null })),
+         });
 
-      const drawHealthBar = (g) => {
-         const barWidth = (currentHp / (playerAbsorb + maxHp)) * 50;
-         g.beginFill(0xff0000);
-         g.drawRect(charactersMovements[player.id].location.x - 25, charactersMovements[player.id].location.y - h / 1.5, 50, 5);
-         g.endFill();
-         g.beginFill(0x00ff00);
-         g.drawRect(charactersMovements[player.id].location.x - 25, charactersMovements[player.id].location.y - h / 1.5, barWidth, 5);
-         g.endFill();
-      };
+         return () => keyBoardContext.removeKeyHandler('TargetManagerEscape');
+      }, []);
 
       const handleNpcClick = () => {
          if (player.type !== 'Npc') {
@@ -147,15 +139,6 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
          handleMonsterClick();
       };
 
-      const hpBar = (g) => {
-         g.clear();
-         g.beginFill(0x000000);
-         g.drawRect(charactersMovements[player.id].location.x - 26, charactersMovements[player.id].location.y - h / 1.5 - 1, 52, 7);
-         g.endFill();
-         drawHealthBar(g);
-         drawAbsorbBar(g);
-      };
-
       const handlePlayerHover = () => {
          if (player.type === 'Monster') {
             if (characterStatus === 'dead') {
@@ -171,26 +154,6 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
       return charactersMovements[player.id] ? (
          <>
             <NpcQuestNotifier location={charactersMovements[player.id].location} player={player} />
-            {currentHp <= 0 ? null : (
-               <>
-                  <Text
-                     text={player.name}
-                     anchor={[0.5, 1.3]}
-                     x={charactersMovements[player.id].location.x}
-                     y={charactersMovements[player.id].location.y - h / 1.5}
-                     style={
-                        new PIXI.TextStyle({
-                           fontSize: 15,
-                           fill: 'green',
-                           fontWeight: 'bold',
-                           lineJoin: 'round',
-                           strokeThickness: 4,
-                        })
-                     }
-                  />
-                  <Graphics draw={hpBar} />
-               </>
-            )}
             {playerSheet['movementDown'] && (
                <Sprite
                   key={0}
@@ -203,7 +166,24 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
                   pointerdown={() => handlePlayerClick()}
                   mouseover={() => handlePlayerHover()}
                   cursor={cursorImage}
+                  zIndex={1}
+                  
                />
+            )}
+            {currentHp <= 0 ? null : (
+               <>
+                  <PlayerName
+                     h={h}
+                     player={player}
+                     charactersMovements={charactersMovements}
+                  />
+                  <PlayerBars
+                     charactersMovements={charactersMovements}
+                     player={player}
+                     playerPoints={playerPoints}
+                     h={h}
+                  />
+               </>
             )}
          </>
       ) : null;

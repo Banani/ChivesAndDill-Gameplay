@@ -10,32 +10,42 @@ export interface ChatChannel {
 export interface CommonChatMessage {
     id: string;
     time: number;
-    authorId: string;
     message: string;
     channelType: ChannelType;
-    location: Location;
+}
+
+export interface SystemChatMessage extends CommonChatMessage {
+    channelType: ChannelType.System;
+    targetId: string;
 }
 
 export interface QuoteChatMessage extends CommonChatMessage {
     channelType: ChannelType.Quotes;
+    authorId: string;
+    location: Location;
 }
 
 export interface RangeChatMessage extends CommonChatMessage {
     channelType: ChannelType.Range;
+    authorId: string;
     chatChannelId: string;
+    location: Location;
 }
 
 export interface ChannelChatMessage extends CommonChatMessage {
     channelType: ChannelType.Custom;
+    authorId: string;
     chatChannelId: string;
+    location: Location;
 }
 
-export type ChatMessage = ChannelChatMessage | RangeChatMessage | QuoteChatMessage;
+export type ChatMessage = ChannelChatMessage | RangeChatMessage | QuoteChatMessage | SystemChatMessage;
 
 export enum ChannelType {
     Custom = 'Custom',
     Range = 'Range',
     Quotes = 'Quotes',
+    System = "System"
 }
 
 export enum ChatChannelClientMessages {

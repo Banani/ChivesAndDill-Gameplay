@@ -74,6 +74,7 @@ export class MonsterAttackEngine extends Engine {
                     casterId: monster.id,
                     spell: scheduledAttack.spell,
                     directionLocation: this.services.characterService.getCharacterById(scheduledAttack.targetId).location,
+                    targetId: scheduledAttack.targetId
                 });
 
                 if (!this.scheduledAttacks[monsterId].length) {
@@ -100,6 +101,7 @@ export class MonsterAttackEngine extends Engine {
                         spellId: readySpellsWithRange[Math.floor(Math.random() * readySpellsWithRange.length)],
                         directionLocation: character.location,
                         characterId: monster.id,
+                        targetId: character.id
                     },
                 });
             }

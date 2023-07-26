@@ -1,32 +1,36 @@
 .NpcModal {
-    position: absolute;
-    width: 346px;
-    height: 507px;
-    top: 15%;
-    left: 5%;
-    background: url('../../../../../assets/spritesheets/backgrounds/npcModal.png');
-    background-repeat: no-repeat;
-    display: flex;
-    flex-direction: column;
+   position: absolute;
+   width: 346px;
+   height: 507px;
+   top: 15%;
+   left: 5%;
+   background: url('../../../../../assets/spritesheets/backgrounds/npcModal.png');
+   background-repeat: no-repeat;
+   display: flex;
+   flex-direction: column;
 
-    .ContentWrapper {
-        padding: 10px 40px 0 25px;   
-        flex: 1;
-        display: flex;
-        overflow: hidden;
-        flex-direction: column;
+   .ContentWrapper {
+      padding: 20px 40px 0 25px;
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      flex-direction: column;
 
-        .QuestDefinitionHolder {
-            overflow-y: scroll;
-            flex: 1;
-            margin-bottom: 8px;
-            padding-bottom: 20px;
-        }
+      .QuestDefinitionHolder {
+         overflow-y: scroll;
+         flex: 1;
+         margin-bottom: 8px;
+         padding-bottom: 20px;
 
-        .ActionBar {
-            margin: 3px -7px;
-            display: flex;
-            align-items: center;
-        }
-    }
+         h3 {
+            font-family: 'Morpheus';
+         }
+      }
+
+      .ActionBar {
+         margin: 3px -7px;
+         display: flex;
+         align-items: center;
+      }
+   }
 }
