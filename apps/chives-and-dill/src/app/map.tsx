@@ -28,6 +28,7 @@ import { NextLevelManager } from './mapContent/NextLevelManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { MapWrapper } from './mapContent/mapManager/MapWrapper';
 import { KeyBoardContext } from '../contexts/KeyBoardContext';
+import { BottomBar } from './guiContent/bottomBar/BottomBar';
 
 const Map = () => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
@@ -86,7 +87,7 @@ const Map = () => {
 
     return (
         <>
-            {activeCharacterId ? <SpellsBar /> : null}
+            {activeCharacterId ? <BottomBar /> : null}
             {activeCharacterId ? <ActivePlayerTimeEffects playerId={activeCharacterId} /> : null}
             <CharacterFrames />
             <QuestManager />
@@ -95,7 +96,6 @@ const Map = () => {
                 monsterId={Object.keys(activeLoot ?? {})?.[0]}
                 activeLoot={activeLoot[Object.keys(activeLoot ?? {})?.[0]]} /> : null}
             {activeNpc ? <NpcModal questDefinition={questDefinition as Record<string, QuestSchema>} activeNpc={activeNpc} /> : null}
-            <ExperienceBar />
             <Details />
             <KeyBoardContext.Consumer>
                 {(keyBoardContext) => (
