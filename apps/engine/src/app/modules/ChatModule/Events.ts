@@ -112,11 +112,13 @@ interface QuoteMessageDetails {
     channelType: ChannelType.Quotes,
     authorId: string;
     location: Location;
-
 }
+
 interface SystemMessageDetails {
     channelType: ChannelType.System,
-    targetId: string;
+    targetId: string,
+    itemId?: string,
+    amount?: number
 }
 
 type MessageDetails = CustomMessageDetails | RangeMessageDetails | QuoteMessageDetails | SystemMessageDetails;

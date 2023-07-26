@@ -2,18 +2,31 @@ import { ChannelType } from '@bananos/types';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { ChatEngineEvents, SendChatMessageEvent } from '../../ChatModule/Events';
-import { AddCurrencyToCharacterEvent, ItemEngineEvents } from '../Events';
+import { AddCurrencyToCharacterEvent, GenerateItemForCharacterEvent, ItemEngineEvents } from '../Events';
 
 export class ItemMessagesService extends EventParser {
     constructor() {
         super();
         this.eventsToHandlersMap = {
-            [ItemEngineEvents.AddCurrencyToCharacter]: this.handleAddCurrencyToCharacter
+            [ItemEngineEvents.AddCurrencyToCharacter]: this.handleAddCurrencyToCharacter,
+            [ItemEngineEvents.GenerateItemForCharacter]: this.handleGenerateItemForCharacter
         };
     }
 
-    handleAddCurrencyToCharacter: EngineEventHandler<AddCurrencyToCharacterEvent> = ({ event, services }) => {
+    handleGenerateItemForCharacter: EngineEventHandler<GenerateItemForCharacterEvent> = ({ event, services }) => {
+        this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
+            type: ChatEngineEvents.SendChatMessage,
+            message: ``,
+            details: {
+                channelType: ChannelType.System,
+                targetId: event.characterId,
+                itemId: event.itemTemplateId,
+                amount: event.amount
+            }
+        });
+    };
 
+    handleAddCurrencyToCharacter: EngineEventHandler<AddCurrencyToCharacterEvent> = ({ event, services }) => {
         this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
             type: ChatEngineEvents.SendChatMessage,
             message: `Received ${this.getFormatedText(event.amount)}.`,

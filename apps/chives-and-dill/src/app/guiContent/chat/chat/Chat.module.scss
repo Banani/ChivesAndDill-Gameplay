@@ -1,76 +1,80 @@
 .chatContainer {
-   position: absolute;
-   bottom: 12%;
-   left: 0;
-   width: 400px;
-   font-family: 'ArialRegular';
+    position: absolute;
+    bottom: 12%;
+    left: 0;
+    width: 400px;
+    font-family: 'ArialRegular';
 
-   .channelsContainer {
-      width: 100%;
-      display: flex;
+    .channelsContainer {
+        width: 100%;
+        display: flex;
 
-      .channel {
-         color: gold;
-         padding: 5px 8px;
-         text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-         font-size: 17px;
+        .channel {
+            color: gold;
+            padding: 5px 8px;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            font-size: 17px;
 
-         &:hover {
-            color: rgb(214, 214, 214);
-         }
-      }
-   }
+            &:hover {
+                color: rgb(214, 214, 214);
+            }
+        }
+    }
 
-   .chatContent {
-      overflow: hidden;
-      height: 250px;
-      background-color: rgba(0, 0, 0, 0.6);
-      display: flex;
-      justify-content: flex-end;
-      flex-direction: column;
-      padding-top: 4px;
+    .chatContent {
+        overflow: hidden;
+        height: 250px;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: flex-end;
+        flex-direction: column;
+        padding-top: 4px;
 
-      .messagesHolder {
-         overflow-y: scroll;
+        .messagesHolder {
+            overflow-y: scroll;
 
-         .message {
-            display: flex;
+            .message {
+                display: flex;
+                color: white;
+                word-break: break-word;
+            }
+        }
+    }
+
+    .messageHolder {
+        display: flex;
+        border: 2px solid grey;
+        align-items: center;
+
+        &.active {
+            border: 2px solid white;
+        }
+
+        .channelName {
             color: white;
-            word-break: break-word;
-         }
-      }
-   }
+            padding-left: 8px;
+        }
 
-   .messageHolder {
-      display: flex;
-      border: 2px solid grey;
-      align-items: center;
+        .chatInput {
+            flex: 1;
+            padding: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            border: none;
+            padding: 5px;
+            box-sizing: border-box;
+            color: white;
 
-      &.active {
-         border: 2px solid white;
-      }
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}
 
-      .channelName {
-         color: white;
-         padding-left: 8px;
-      }
-
-      .chatInput {
-         flex: 1;
-         padding: 0;
-         background-color: rgba(0, 0, 0, 0.6);
-         border: none;
-         padding: 5px;
-         box-sizing: border-box;
-         color: white;
-
-         &:focus {
-            outline: none;
-         }
-      }
-   }
+.itemReceiveMessage {
+    color: #40BC40;
 }
 
 .systemMessage {
-   color: #ffff00;
+    color: #ffff00;
 }

@@ -15,8 +15,10 @@ export interface CommonChatMessage {
 }
 
 export interface SystemChatMessage extends CommonChatMessage {
-    channelType: ChannelType.System;
-    targetId: string;
+    channelType: ChannelType.System,
+    targetId: string,
+    itemId?: string,
+    amount?: number
 }
 
 export interface QuoteChatMessage extends CommonChatMessage {

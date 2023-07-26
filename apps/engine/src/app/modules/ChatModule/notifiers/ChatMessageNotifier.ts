@@ -93,8 +93,16 @@ export class ChatMessageNotifier extends Notifier<ChatMessage> {
             chatMessage = {
                 ...chatMessage,
                 channelType: ChannelType.System,
-                targetId: event.chatMessage.targetId,
+                targetId: event.chatMessage.targetId
             };
+
+            if (event.chatMessage.amount) {
+                chatMessage.amount = event.chatMessage.amount;
+            }
+
+            if (event.chatMessage.itemId) {
+                chatMessage.itemId = event.chatMessage.itemId;
+            }
             chatMembers = { [event.chatMessage.targetId]: services.playerCharacterService.getAllCharacters()[event.chatMessage.targetId] }
         }
 

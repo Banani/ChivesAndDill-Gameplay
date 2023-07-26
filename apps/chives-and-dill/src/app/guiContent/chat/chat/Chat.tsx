@@ -1,8 +1,8 @@
-import { ChannelChatMessage, ChannelType, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage } from '@bananos/types';
+import { ChannelChatMessage, ChannelType, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage, SystemChatMessage } from '@bananos/types';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
-import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
+import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
 import { setActiveTarget } from 'apps/chives-and-dill/src/stores';
 import { map } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -35,6 +35,8 @@ const RangeChannelInputTest = {
 };
 
 export const Chat = () => {
+    const [requestedItems, setRequestedItems] = useState([]);
+    const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: requestedItems });
     const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
     const { data: chatChannels } = useEngineModuleReader(GlobalStoreModule.CHAT_CHANNEL);
     const { data: chatMessages } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
@@ -70,11 +72,24 @@ export const Chat = () => {
                 {`: ${message.message}`}
             </div>
         ),
-        [ChannelType.System]: (message: QuoteChatMessage) => (
-            <div className={styles.systemMessage}>
+        [ChannelType.System]: (message: SystemChatMessage) => {
+            if (message.itemId) {
+                if (!itemTemplates[message.itemId] && requestedItems.indexOf(message.itemId) === -1) {
+                    setRequestedItems(prev => [...prev, message.itemId]);
+                }
+                if (!itemTemplates[message.itemId]) {
+                    return <span className={styles.itemReceiveMessage}>Loading...</span>
+                }
+
+                return <div>
+                    <span className={styles.itemReceiveMessage}>You receive item: </span>[{itemTemplates[message.itemId].name}]
+                </div>
+            }
+
+            return <div className={styles.systemMessage}>
                 {message.message}
             </div>
-        ),
+        },
         [ChannelType.Custom]: (message: ChannelChatMessage) => (
             <>
                 <span

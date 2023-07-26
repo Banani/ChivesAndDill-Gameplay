@@ -420,6 +420,23 @@ describe('QuestProgress', () => {
                     message: "Received 1322 Gold 16 Silver 49 Copper.",
                     targetId: "playerCharacter_1",
                     time: 9213,
+                }, "systemMessage_4": {
+                    channelType: ChannelType.System,
+                    id: "systemMessage_3",
+                    message: "",
+                    targetId: "playerCharacter_1",
+                    time: 9213,
+                    itemId: '1',
+                    amount: 1
+                },
+                "systemMessage_5": {
+                    channelType: ChannelType.System,
+                    id: "systemMessage_3",
+                    message: "",
+                    targetId: "playerCharacter_1",
+                    time: 9213,
+                    itemId: '3',
+                    amount: 5
                 },
             },
         });
