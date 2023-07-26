@@ -24,6 +24,8 @@ export class ItemService extends EventParser {
 
     getItemById = (id: string) => this.items[id];
 
+    getAllItems = () => this.items;
+
     handleGenerateItemForCharacter: EngineEventHandler<GenerateItemForCharacterEvent> = ({ event, services }) => {
         if (!services.itemTemplateService.getData()[event.itemTemplateId]) {
             return;
