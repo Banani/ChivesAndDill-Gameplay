@@ -30,7 +30,8 @@ export class MonsterRespawnTemplateService extends EventParser {
                     characterTemplateId: monsterTemplate._id.toString(),
                     location: { x: respawn.location.x * BLOCK_SIZE, y: respawn.location.y * BLOCK_SIZE },
                     time: respawn.time,
-                    walkingType: respawn.walkingType
+                    walkingType: respawn.walkingType,
+                    patrolPath: respawn.patrolPath?.map(el => ({ x: el.x * 3, y: el.y * 3 }))
                 }
                 monsterRespawnIds.push(respawn.id)
             }

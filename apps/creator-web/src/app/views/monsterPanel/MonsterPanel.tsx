@@ -1,7 +1,7 @@
-import { Text } from '@inlet/react-pixi';
+import { Graphics, Text } from '@inlet/react-pixi';
 import { Paper } from '@mui/material';
 import { TextStyle } from 'pixi.js';
-import { useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { Loader, MapContext, MapSprite, Rectangle } from '../components';
 
 import { Map } from '../components';
@@ -20,7 +20,15 @@ import styles from './MonsterPanel.module.scss';
 export const MonsterPanel = () => {
     const packageContext = useContext(PackageContext);
     const { isMouseDown, mousePosition, lastMouseDownPosition, previousTranslation, texturesMap, translation, setTranslation } = useContext(MapContext);
-    const { currentCharacterAction, activeCharacterTemplate, addCharacter, deleteCharacter, highlightedCharacterId } = useContext(CharacterContext);
+    const {
+        currentCharacterAction,
+        activeCharacterTemplate,
+        addCharacter,
+        deleteCharacter,
+        highlightedCharacterId,
+        setActiveCharacter,
+        activeCharacter
+    } = useContext(CharacterContext);
 
     const { data: monsterTemplates, lastUpdateTime: lastUpdateTimeMonsterTemplates } = (packageContext?.backendStore?.monsterTemplates ?? {});
     const { data: monsters, lastUpdateTime: lastUpdateTimeMonsters } = (packageContext?.backendStore?.monsters ?? {});
@@ -55,9 +63,34 @@ export const MonsterPanel = () => {
                     deleteCharacter(Math.floor((e.nativeEvent.offsetX - translation.x) / 32) + ':' + Math.floor((e.nativeEvent.offsetY - translation.y) / 32));
                 },
             },
+            [CharacterActionsList.Route]: {
+                onClick: (e: any) => {
+                    setActiveCharacter((prev: any) => ({
+                        ...prev,
+                        patrolPath: [...(prev.patrolPath ?? []), { x: e.nativeEvent.offsetX - translation.x, y: e.nativeEvent.offsetY - translation.y }]
+                    }))
+                },
+            },
         }),
         [isMouseDown, activeCharacterTemplate, addCharacter, translation, deleteCharacter]
     );
+
+    const draw = useCallback((g) => {
+        g.clear();
+
+        if (!activeCharacter.patrolPath) {
+            return
+        }
+
+        g.lineStyle(2, 0xff0000, 1);
+        const startPos = activeCharacter.patrolPath[0]
+        g.moveTo(startPos.x, startPos.y);
+        for (let i in activeCharacter.patrolPath) {
+            const pos = activeCharacter.patrolPath[i];
+            g.lineTo(pos.x, pos.y);
+        }
+        g.lineTo(startPos.x, startPos.y);
+    }, [activeCharacter]);
 
     if (!lastUpdateTimeMonsterTemplates || !lastUpdateTimeMonsters) {
         return <Loader />;
@@ -146,6 +179,10 @@ export const MonsterPanel = () => {
                                 />
                             </>
                         )}
+
+                        {currentCharacterAction === CharacterActionsList.Route && activeCharacter ? (
+                            <Graphics draw={draw} />
+                        ) : null}
 
                         {highlightedCharacterId != null && monsters[highlightedCharacterId] ? (
                             <AnimatedSelection location={{

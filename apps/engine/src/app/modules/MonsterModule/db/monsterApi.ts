@@ -1,3 +1,4 @@
+import type { Location } from '@bananos/types';
 import * as _ from 'lodash';
 import { DbApi } from '../../../services';
 import { WalkingType } from '../../../types/CharacterRespawn';
@@ -19,13 +20,14 @@ export interface MonsterTemplateDb {
     dropSchema: any;
     quotesEvents: any;
     monsterRespawns: {
-        id: string;
+        id: string,
         location: {
-            x: number;
-            y: number;
+            x: number,
+            y: number,
         },
-        time: number;
-        walkingType: WalkingType
+        time: number,
+        walkingType: WalkingType,
+        patrolPath?: Location[]
     }[]
 }
 

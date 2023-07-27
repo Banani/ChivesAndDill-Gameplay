@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"log"
 )
 
 type MonsterTemplateDbApi struct {
@@ -81,15 +82,16 @@ func (m *MonsterTemplateDbApi) updateMonster(monster Monster) {
 	collection := dbClient.db.Collection("monsterTemplates")
 
 	objectId, _ := primitive.ObjectIDFromHex(monster.MonsterTemplateId)
-	collection.UpdateMany(context.TODO(),
+	collection.UpdateOne(context.TODO(),
 		bson.M{
-			"_id":                 objectId,
-			"monsterRespawns._id": monster.Id,
+			"_id":                objectId,
+			"monsterRespawns.id": monster.Id,
 		},
 		bson.M{
 			"$set": bson.M{
 				"monsterRespawns.$.time":        monster.Time,
 				"monsterRespawns.$.walkingType": monster.WalkingType,
+				"monsterRespawns.$.patrolPath":  monster.PatrolPath,
 			},
 		})
 }

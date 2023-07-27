@@ -3,7 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridRenderCellParams } from "@mui/x-data-grid";
 import _ from 'lodash';
-import { FunctionComponent, useContext, useState } from "react";
+import { FunctionComponent, useContext } from "react";
 import { Label } from "../../../components";
 import { MapContext } from '../../components';
 import { CharacterContext } from '../../monsterPanel/CharacterContextProvider';
@@ -22,10 +22,8 @@ interface SelectedCharacterProps {
 }
 
 export const SelectedCharacterPanel: FunctionComponent<SelectedCharacterProps> = ({ characters, templateIdFieldName }) => {
-    const { activeCharacterTemplate, setHighlightedCharacterId, deleteCharacter, updateCharacter } = useContext(CharacterContext);
+    const { activeCharacterTemplate, setHighlightedCharacterId, deleteCharacter, updateCharacter, activeCharacter, setActiveCharacter } = useContext(CharacterContext);
     const { centerAt } = useContext(MapContext);
-
-    const [activeCharacter, setActiveCharacter] = useState<null | any>(null);
 
     const matchedInstances = _
         .chain(characters)

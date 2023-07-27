@@ -48,11 +48,12 @@ type MonsterHolder struct {
 }
 
 type Monster struct {
-	Id                string   `json:"id" bson:"id"`
-	Location          Location `json:"location" bson:"location"`
-	MonsterTemplateId string   `json:"monsterTemplateId" bson:"-"`
-	Time              int32    `json:"time" bson:"time"`
-	WalkingType       string   `json:"walkingType" bson:"walkingType"`
+	Id                string     `json:"id" bson:"id"`
+	Location          Location   `json:"location" bson:"location"`
+	MonsterTemplateId string     `json:"monsterTemplateId" bson:"-"`
+	Time              int32      `json:"time" bson:"time"`
+	WalkingType       string     `json:"walkingType" bson:"walkingType"`
+	PatrolPath        []Location `json:"patrolPath" bson:"patrolPath"`
 }
 
 type MonsterTemplateService struct {

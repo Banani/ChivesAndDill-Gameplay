@@ -2,6 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PanToolIcon from '@mui/icons-material/PanTool';
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import RouteIcon from '@mui/icons-material/Route';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { useContext, useEffect, useState } from 'react';
@@ -50,26 +51,35 @@ export const CharacterActions = () => {
             },
         });
 
+        keyBoardContext.addKeyHandler({
+            id: 'route',
+            matchRegex: 'r',
+            keydown: () => {
+                setCurrentCharacterAction(CharacterActionsList.Route);
+            },
+        });
+
         return () => {
             keyBoardContext.removeKeyHandler('translation');
             keyBoardContext.removeKeyHandler('delete');
             keyBoardContext.removeKeyHandler('adding');
+            keyBoardContext.removeKeyHandler('patrol');
         };
     }, [currentCharacterAction, prevState, isTranslationKeyDown]);
 
     return (
         <div className={styles['mapActionList']}>
-            {
-                <Tooltip title="Adding (A)" placement="right">
-                    <Button
-                        onClick={() => setCurrentCharacterAction(CharacterActionsList.Adding)}
-                        variant={currentCharacterAction === CharacterActionsList.Adding ? 'contained' : 'outlined'}
-                        className={styles['button']}
-                    >
-                        <AddIcon />
-                    </Button>
-                </Tooltip>
-            }
+
+            <Tooltip title="Adding (A)" placement="right">
+                <Button
+                    onClick={() => setCurrentCharacterAction(CharacterActionsList.Adding)}
+                    variant={currentCharacterAction === CharacterActionsList.Adding ? 'contained' : 'outlined'}
+                    className={styles['button']}
+                >
+                    <AddIcon />
+                </Button>
+            </Tooltip>
+
             <Tooltip title="Translation (T)" placement="right">
                 <Button
                     onClick={() => setCurrentCharacterAction(CharacterActionsList.Translate)}
@@ -79,17 +89,27 @@ export const CharacterActions = () => {
                     <PanToolIcon />
                 </Button>
             </Tooltip>
-            {
-                <Tooltip title="Delete (D)" placement="right">
-                    <Button
-                        onClick={() => setCurrentCharacterAction(CharacterActionsList.Delete)}
-                        variant={currentCharacterAction === CharacterActionsList.Delete ? 'contained' : 'outlined'}
-                        className={styles['button']}
-                    >
-                        <DeleteForeverIcon />
-                    </Button>
-                </Tooltip>
-            }
+
+            <Tooltip title="Delete (D)" placement="right">
+                <Button
+                    onClick={() => setCurrentCharacterAction(CharacterActionsList.Delete)}
+                    variant={currentCharacterAction === CharacterActionsList.Delete ? 'contained' : 'outlined'}
+                    className={styles['button']}
+                >
+                    <DeleteForeverIcon />
+                </Button>
+            </Tooltip>
+
+            <Tooltip title="Route (R)" placement="right">
+                <Button
+                    onClick={() => setCurrentCharacterAction(CharacterActionsList.Route)}
+                    variant={currentCharacterAction === CharacterActionsList.Route ? 'contained' : 'outlined'}
+                    className={styles['button']}
+                >
+                    <RouteIcon />
+                </Button>
+            </Tooltip>
+
         </div>
     );
 };

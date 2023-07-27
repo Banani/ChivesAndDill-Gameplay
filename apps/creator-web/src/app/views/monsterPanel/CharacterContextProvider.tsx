@@ -9,6 +9,7 @@ export enum CharacterActionsList {
     Adding = 'Adding',
     Translate = 'Translate',
     Delete = 'Delete',
+    Route = 'Route'
 }
 
 // JUZ TAKI JEST W engine, Ale dziala na referenecjach a nie template id, trzbea zmienic
@@ -48,6 +49,8 @@ interface CharacterContextProps {
     setCurrentCharacterAction: any;
     highlightedCharacterId: string | null;
     setHighlightedCharacterId: (id: string | null) => void;
+    activeCharacter: any | null,
+    setActiveCharacter: React.Dispatch<React.SetStateAction<any | null>>;
 }
 
 interface CharacterContextProviderProps {
@@ -61,6 +64,7 @@ export const CharacterContextProvider: FunctionComponent<CharacterContextProvide
     const [activeCharacterTemplate, setActiveCharacterTemplate] = useState<any | null>(null);
     const [currentCharacterAction, setCurrentCharacterAction] = useState(CharacterActionsList.Adding);
     const [highlightedCharacterId, setHighlightedCharacterId] = useState<string | null>(null);
+    const [activeCharacter, setActiveCharacter] = useState<null | any>(null);
 
     useEffect(() => {
         if (highlightedCharacterId && !characters[highlightedCharacterId]) {
@@ -115,6 +119,7 @@ export const CharacterContextProvider: FunctionComponent<CharacterContextProvide
 
     const updateCharacter = useCallback(
         (character: any) => {
+            console.log(character);
             socket.send(JSON.stringify({ actionType: characterTemplateActions.UPDATE_CHARACTER, character }));
         },
         [socket]
@@ -135,7 +140,9 @@ export const CharacterContextProvider: FunctionComponent<CharacterContextProvide
                 deleteCharacter,
                 updateCharacter,
                 highlightedCharacterId,
-                setHighlightedCharacterId
+                setHighlightedCharacterId,
+                activeCharacter,
+                setActiveCharacter
             }}
         >
             {children}
