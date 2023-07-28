@@ -14,8 +14,6 @@ export const useItemTemplateProvider = ({ itemTemplateIds }: ItemTemplateProvide
     const { requestItemTemplates } = context;
     const [wasRequested, setWasRequested] = useState(false);
 
-    useEffect(() => { console.log(itemTemplates) }, [lastUpdateTime]);
-
     useEffect(() => {
         if (wasRequested) {
             return;

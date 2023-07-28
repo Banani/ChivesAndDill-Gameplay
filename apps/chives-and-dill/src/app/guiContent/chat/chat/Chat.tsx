@@ -1,8 +1,9 @@
-import { ChannelChatMessage, ChannelType, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage, SystemChatMessage } from '@bananos/types';
+import { ChannelChatMessage, ChannelType, ChatChannel, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage, SystemChatMessage } from '@bananos/types';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
+import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
-import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { setActiveTarget } from 'apps/chives-and-dill/src/stores';
 import { map } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -34,12 +35,28 @@ const RangeChannelInputTest = {
     yell: 'Yell: ',
 };
 
+interface ChatInternalProps {
+    lastUpdateTime: string,
+    characters: Record<string, any>,
+    chatChannels: Record<string, ChatChannel>,
+    chatMessages: Record<string, ChatMessage>,
+}
+
 export const Chat = () => {
-    const [requestedItems, setRequestedItems] = useState([]);
-    const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: requestedItems });
-    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
-    const { data: chatChannels } = useEngineModuleReader(GlobalStoreModule.CHAT_CHANNEL);
-    const { data: chatMessages } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
+    const { data: characters, lastUpdateTime: lastUpdateTimeCharacters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+    const { data: chatChannels, lastUpdateTime: lastUpdateTimeChatChannels } = useEngineModuleReader(GlobalStoreModule.CHAT_CHANNEL);
+    const { data: chatMessages, lastUpdateTime: lastUpdateTimeChatMessages } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
+
+    return <ChatInternal
+        lastUpdateTime={lastUpdateTimeCharacters + "#" + lastUpdateTimeChatChannels + "#" + lastUpdateTimeChatMessages}
+        characters={characters}
+        chatChannels={chatChannels as Record<string, ChatChannel>}
+        chatMessages={chatMessages as Record<string, ChatMessage>}
+    />
+}
+
+const ChatInternal = React.memo(({ characters, chatChannels, chatMessages }: ChatInternalProps) => {
+    const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
 
     const keyBoardContext = useContext(KeyBoardContext);
     const channelNumeratorContext = useContext(ChannelNumeratorContext);
@@ -74,8 +91,8 @@ export const Chat = () => {
         ),
         [ChannelType.System]: (message: SystemChatMessage) => {
             if (message.itemId) {
-                if (!itemTemplates[message.itemId] && requestedItems.indexOf(message.itemId) === -1) {
-                    setRequestedItems(prev => [...prev, message.itemId]);
+                if (!itemTemplates[message.itemId]) {
+                    requestItemTemplate(message.itemId);
                 }
                 if (!itemTemplates[message.itemId]) {
                     return <span className={styles.itemReceiveMessage}>Loading...</span>
@@ -206,4 +223,6 @@ export const Chat = () => {
             </div>
         </div>
     );
-};
+},
+    (oldProps, newProps) => oldProps.lastUpdateTime === newProps.lastUpdateTime
+);
