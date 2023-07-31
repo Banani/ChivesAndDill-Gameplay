@@ -14,7 +14,7 @@
       left: 15px;
       top: 33px;
       color: white;
-      text-shadow: 0 0 4px black;
+      text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
       width: 30px;
       text-align: end;
    }
@@ -50,7 +50,7 @@
    &:hover {
       box-shadow: inset 0 0 7px 3px #1ba9fd;
 
-      .ItemPreviewTooltip{
+      .ItemPreviewTooltip {
          visibility: visible;
       }
    }

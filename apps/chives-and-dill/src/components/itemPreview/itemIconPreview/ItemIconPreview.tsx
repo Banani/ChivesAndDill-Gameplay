@@ -24,7 +24,7 @@ export const ItemIconPreview = ({ itemData, highlight }) => {
                     {checkIfStatIsAvailable(itemData.stamina, 'Stamina')}
                 </div>
             </div>
-            <div className={styles.Stack}>{itemData.stack}</div>
+            {itemData.stack > 1 ? <div className={styles.Stack}>{itemData.stack}</div> : null}
         </div>
     )
 }
