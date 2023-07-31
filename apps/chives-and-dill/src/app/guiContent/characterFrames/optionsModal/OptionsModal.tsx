@@ -41,7 +41,7 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
   return (
     <div className={styles.OptionsModal}>
 
-      {checkifActivePlayerIsLeader() && playerId !== activeCharacterId ?
+      {checkifActivePlayerIsLeader() && playerId !== activeCharacterId && checkIfTargetIsInYourParty(playerId) ?
         <>
           <div className={styles.Option} onClick={() => partyAction(GroupClientMessages.PromoteToLeader)}>Pass leader</div>
           <div className={styles.Option} onClick={() => partyAction(GroupClientMessages.UninviteFromParty)}>Uninvite</div>
