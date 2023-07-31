@@ -104,16 +104,6 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
          }
       }, [charactersMovements, currentHp, charactersMovements[player.id].isInMove, getDirection]);
 
-      useEffect(() => {
-         keyBoardContext.addKeyHandler({
-            id: 'TargetManagerEscape',
-            matchRegex: 'Escape',
-            keydown: () => dispatch(setActiveTarget({ characterId: null })),
-         });
-
-         return () => keyBoardContext.removeKeyHandler('TargetManagerEscape');
-      }, []);
-
       const handleNpcClick = () => {
          if (player.type !== 'Npc') {
             return;
@@ -167,7 +157,6 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
                   mouseover={() => handlePlayerHover()}
                   cursor={cursorImage}
                   zIndex={1}
-                  
                />
             )}
             {currentHp <= 0 ? null : (

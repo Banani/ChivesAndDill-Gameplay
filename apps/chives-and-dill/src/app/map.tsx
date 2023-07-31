@@ -27,6 +27,8 @@ import { FloatingNumbersManager } from './mapContent/FloatingNumbersManager';
 import { NextLevelManager } from './mapContent/NextLevelManager';
 import { RenderPlayersManager } from './mapContent/RenderPlayersManager';
 import { MapWrapper } from './mapContent/mapManager/MapWrapper';
+import { PartyModal } from './guiContent/party/Party';
+import { QueryModalManager } from './guiContent/QueryModalManager';
 
 const Map = () => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
@@ -95,6 +97,8 @@ const Map = () => {
                 activeLoot={activeLoot[Object.keys(activeLoot ?? {})?.[0]]} /> : null}
             {activeNpc ? <NpcModal questDefinition={questDefinition as Record<string, QuestSchema>} activeNpc={activeNpc} /> : null}
             <Details />
+            <PartyModal />
+            <QueryModalManager />
             <KeyBoardContext.Consumer>
                 {(keyBoardContext) => (
                     <PackageContext.Consumer>

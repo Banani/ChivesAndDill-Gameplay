@@ -1,10 +1,19 @@
 import { GlobalStoreModule } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { GetAbsorbsValue } from '../../../player/GetPlayerAbsorbs';
 import styles from './PlayerIcon.module.scss';
+import { OptionsModal } from '../optionsModal/OptionsModal';
+import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import { useDispatch } from 'react-redux';
+import { setActiveTarget } from 'apps/chives-and-dill/src/stores';
 
 export const PlayerIcon = ({ playerId }) => {
+
+   const ref = useRef<HTMLDivElement>(null);
+   const keyBoardContext = useContext(KeyBoardContext);
+   const dispatch = useDispatch();
+
    const { data: experience } = useEngineModuleReader(GlobalStoreModule.EXPERIENCE);
    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
    const { data: characterPowerPoints } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
@@ -15,9 +24,11 @@ export const PlayerIcon = ({ playerId }) => {
    const { name, avatar } = player;
    const playerAbsorb = GetAbsorbsValue(playerId);
    const [absorbBarWidth, setAbsorbBarWidth] = useState(0);
+   const [optionsVisible, setOptionsVisible] = useState(false);
 
    const playerPoints = characterPowerPoints[playerId];
    const HolyPower = powerStacks?.[playerId]?.HolyPower;
+   const { maxHp, currentHp, currentSpellPower, maxSpellPower } = playerPoints;
 
    useEffect(() => {
       if (!playerPoints) {
@@ -38,13 +49,48 @@ export const PlayerIcon = ({ playerId }) => {
       return Array.from(Array(amount).keys()).map((i) => <div className={styles.powerStackCircle} />);
    };
 
-   const { maxHp, currentHp, currentSpellPower, maxSpellPower } = playerPoints;
+   const avatarClick = (e) => {
+      e.preventDefault();
+      setOptionsVisible(prevState => !prevState);
+   }
+
+   const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+         setOptionsVisible(false);
+      }
+   };
+
+   const handleEscape = () => {
+      if (optionsVisible) {
+         setOptionsVisible(false);
+      } else {
+         dispatch(setActiveTarget({ characterId: null }))
+      }
+   };
+
+   useEffect(() => {
+      keyBoardContext.addKeyHandler({
+         id: 'ExitOptions',
+         matchRegex: 'Escape',
+         keydown: () => handleEscape(),
+      });
+
+      return () => keyBoardContext.removeKeyHandler('ExitOptions');
+
+   }, [optionsVisible]);
+
+   useEffect(() => {
+      document.addEventListener('mousedown', handleClickOutside, true);
+
+      return () => {
+         document.removeEventListener('mousedown', handleClickOutside, true);
+      };
+   }, []);
 
    return (
-      <div>
+      <div ref={ref}>
          <div className={styles.playerIconContainer}>
-
-            <div className={styles.playerAvatar + " " + (combatState[playerId] ? styles.combatBorder : "")} style={{ backgroundImage: `url(${avatar})` }}></div>
+            <div onContextMenu={(e) => avatarClick(e)} className={styles.playerAvatar + " " + (combatState[playerId] ? styles.combatBorder : "")} style={{ backgroundImage: `url(${avatar})` }}></div>
             <div className={styles.combatSwords} style={combatState[playerId] ? { visibility: "visible", opacity: '1' } : null}></div>
             <div className={styles.playerLvl}>{experience[playerId].level}</div>
             <div className={styles.playerRole} />
@@ -64,6 +110,7 @@ export const PlayerIcon = ({ playerId }) => {
                <div className={styles.powerStacks}>{renderPowerStacks('HolyPower', HolyPower)}</div>
             </div>
          </div>
+         {optionsVisible ? <OptionsModal setOptionsVisible={setOptionsVisible} playerId={playerId} /> : null}
       </div>
    );
 };
