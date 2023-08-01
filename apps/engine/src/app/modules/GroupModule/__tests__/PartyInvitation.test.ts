@@ -278,6 +278,41 @@ describe('Group module - Party Invitation', () => {
         });
     });
 
+    it('Party leader should be able to invite many mambers before any of them accepts', () => {
+        const { engineManager, players } = setupEngine();
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['2'].characterId
+        });
+
+        engineManager.callPlayerAction(players['1'].socketId, {
+            type: GroupClientMessages.InviteToParty,
+            characterId: players['3'].characterId
+        });
+
+        engineManager.callPlayerAction(players['2'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        let dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
+            type: GroupClientMessages.AcceptInvite
+        });
+
+        checkIfPackageIsValid(GlobalStoreModule.PARTY, dataPackage, {
+            data: {
+                '1': {
+                    leader: players['1'].characterId,
+                    membersIds: {
+                        playerCharacter_1: true,
+                        playerCharacter_2: true,
+                        playerCharacter_3: true,
+                    }
+                }
+            },
+        });
+    });
+
     it('When party is removed before someone accepts the invite, he should join the leader to a new party', () => {
         const { engineManager, players } = setupEngine();
 

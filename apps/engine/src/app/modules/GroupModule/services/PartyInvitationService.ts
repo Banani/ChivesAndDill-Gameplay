@@ -28,7 +28,6 @@ export class PartyInvitationService extends EventParser {
 
     handlePlayerTriesToInviteChracterToParty: EngineEventHandler<PlayerTriesToInviteChracterToPartyEvent> = ({ event, services }) => {
         const character = services.characterService.getAllCharacters()[event.characterId];
-        // a co jesli party zostanie usuniete zanim gracz zaakceptuje
 
         if (event.characterId === event.requestingCharacterId) {
             this.sendErrorMessage(event.requestingCharacterId, 'You cannot add yourself to the group.');
@@ -89,13 +88,20 @@ export class PartyInvitationService extends EventParser {
             return;
         }
 
+
         const invitation = this.invitations[event.requestingCharacterId];
+        const inviterParty = services.partyService.getCharacterParty(invitation.inviterId);
         delete this.invitations[event.requestingCharacterId];
+
+        let partyId = invitation.partyId;
+        if (!partyId && inviterParty) {
+            partyId = inviterParty.id
+        }
 
         this.engineEventCrator.asyncCeateEvent<PlayerAcceptedInviteEvent>({
             type: GroupEngineEvents.PlayerAcceptedInvite,
             inviterId: invitation.inviterId,
-            partyId: invitation.partyId,
+            partyId: partyId,
             characterId: event.requestingCharacterId,
         });
     };
