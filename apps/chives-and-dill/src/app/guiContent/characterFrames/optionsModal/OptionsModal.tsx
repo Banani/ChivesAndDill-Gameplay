@@ -12,6 +12,7 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
   const { socket } = context;
 
   const partyAction = (type) => {
+    setOptionsVisible(false);
     socket?.emit(type, {
       characterId: playerId,
     });
@@ -38,6 +39,11 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
     }
   }
 
+  const leaveParty = () => {
+    setOptionsVisible(false);
+    socket?.emit(GroupClientMessages.LeaveParty);
+  }
+
   return (
     <div className={styles.OptionsModal}>
 
@@ -48,7 +54,7 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
         </> : null}
 
       {checkIfActivePlayerIsInParty() && playerId === activeCharacterId ?
-        <div className={styles.Option} onClick={() => socket?.emit(GroupClientMessages.LeaveParty)}>Leave Party</div>
+        <div className={styles.Option} onClick={() => leaveParty()}>Leave Party</div>
         : null}
 
       {playerId !== activeCharacterId && !checkIfTargetIsInYourParty(playerId) ?

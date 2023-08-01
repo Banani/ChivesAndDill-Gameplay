@@ -25,18 +25,14 @@ export const PartyModal = () => {
   }, [party])
 
   const findActivePlayerGroup = () => {
+    setActiveGroup({});
     for (const key in party) {
       const group = party[key];
       if (group['membersIds'][activeCharacterId]) {
         setActiveGroup(group);
-        return group;
       }
     }
   };
-
-  useEffect(() => {
-
-  }, [charactersMovements])
 
   const calculateDistance = (player1, player2) => {
     const deltaX = player2.x - player1.x;
@@ -64,13 +60,13 @@ export const PartyModal = () => {
         className={styles.PartyMember}
         onClick={() => dispatch(setActiveTarget({ characterId: playerId }))}
         style={{
-          border: activeTargetId === playerId ? '1px solid gold' : '',
+          border: activeTargetId === playerId ? '1px solid #ffc506' : '',
         }}
       >
         <div
           style={{
             width: `${(powerPoints.currentHp / powerPoints.maxHp) * 100}%`,
-            backgroundColor: checkIfPlayerIsFarAway(playerId) ? 'rgb(0, 80, 0)' : 'rgb(0, 130, 0)',
+            background: checkIfPlayerIsFarAway(playerId) ? 'rgb(0, 80, 0)' : 'linear-gradient(90deg, rgba(0, 255, 119, 0.5) 0%, rgba(5, 61, 0, 0.8) 100%)',
           }}
           className={styles.PartyMemberColorBar}></div>
         <div className={styles.PartyMemberData}>

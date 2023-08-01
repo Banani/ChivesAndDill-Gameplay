@@ -123,7 +123,7 @@ const Map = () => {
                                                                         <MapWrapper />
                                                                         <AreasSpellsEffectsManager />
 
-                                                                        <RenderPlayersManager keyBoardContext={keyBoardContext} />
+                                                                        <RenderPlayersManager />
                                                                         {renderSpells()}
                                                                         <FloatingNumbersManager />
                                                                         <BlinkSpellEffect />

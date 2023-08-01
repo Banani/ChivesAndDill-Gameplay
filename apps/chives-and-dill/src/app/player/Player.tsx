@@ -15,8 +15,8 @@ import defaultCursor from '../../assets/spritesheets/cursors/defaultCursor.png';
 import { PlayerName } from '../player/PlayerName';
 import { PlayerBars } from '../player/PlayerBars';
 
-const Player = React.memo<{ player: any, characterViewsSettings: any, charactersMovements: any, characterPowerPoints: any, keyBoardContext }>(
-   ({ player, characterViewsSettings, charactersMovements, characterPowerPoints, keyBoardContext }) => {
+const Player = React.memo<{ player: any, characterViewsSettings: any, charactersMovements: any, characterPowerPoints: any }>(
+   ({ player, characterViewsSettings, charactersMovements, characterPowerPoints }) => {
       const [timer, setTimer] = useState(0);
       const [playerSheet, setPlayerSheet] = useState({});
       const [characterStatus, setCharacterStatus] = useState('standingDown');
