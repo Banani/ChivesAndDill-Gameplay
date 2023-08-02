@@ -1,19 +1,18 @@
-import React from 'react';
-import { PlayerIcon } from '../playerIcon/PlayerIcon';
-import { selectActiveTargetId } from '../../../../stores';
-import { useSelector } from "react-redux";
-import styles from "./TargetIcon.module.scss";
+import React, { useContext } from 'react';
 import { TimeEffectsbar } from '../../timeEffectsBar/TimeEffectsBar';
+import { CharacterFramesContext } from '../CharacterFrames';
+import { PlayerIcon } from '../playerIcon/PlayerIcon';
+import styles from "./TargetIcon.module.scss";
 
 export const TargetIcon = () => {
+    const { activeTargetId } = useContext(CharacterFramesContext);
 
-  const activeTargetId = useSelector(selectActiveTargetId);
-  return (
-    <div className={styles.TargetFrame}>
-      {activeTargetId ? <PlayerIcon playerId={activeTargetId} /> : null}
-      <div className={styles.activePlayerTimeEffects}>
-        <TimeEffectsbar playerId={activeTargetId} />
-      </div>
-    </div>
-  )
+    return (
+        <div className={styles.TargetFrame}>
+            {activeTargetId ? <PlayerIcon playerId={activeTargetId} /> : null}
+            <div className={styles.activePlayerTimeEffects}>
+                <TimeEffectsbar playerId={activeTargetId} />
+            </div>
+        </div>
+    )
 }

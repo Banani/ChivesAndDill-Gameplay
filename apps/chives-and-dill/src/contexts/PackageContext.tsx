@@ -1,10 +1,10 @@
-import { Module } from '@bananos/socket-store';
 import { GlobalStore, GlobalStoreModule, PartialEnginePackage, RecursivePartial } from '@bananos/types';
-import { forEach, mapValues, now } from 'lodash';
-import React, { FunctionComponent, useState } from 'react';
+import { forEach, now } from 'lodash';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 
 interface PackageContextReturns {
     updatePackage: (enginePackage: RecursivePartial<GlobalStore>) => void;
+    state: Record<GlobalStoreModule, any>;
 }
 
 export const PackageContext = React.createContext<PackageContextReturns>(null);
@@ -79,60 +79,66 @@ export const customMerge = (data: any, pathToUpdate: any) => {
     return data;
 };
 
+const internalState = {};
+for (let i in EngineContexts) {
+    internalState[i] = {
+        data: {},
+        recentData: {},
+        events: [],
+        lastUpdateTime: 0,
+        lastEventUpdateTime: 0
+    }
+}
+
 export const PackageContextProvider: FunctionComponent = ({ children }) => {
-    const states = mapValues(EngineContexts, (_, key: GlobalStoreModule) => {
-        const [state, setState] = useState({
-            data: {},
-            events: [],
-            lastUpdateTime: 0,
-            lastEventUpdateTime: 0,
-            recentData: {},
-        });
-        return { state, setState };
-    });
+    const [state, setState] = useState(null);
+
+    // CZY TO NA PEWNO POPRAWIA PERFORMANCE? 
+    // init state
+    useEffect(() => {
+        setState({ internalState });
+    }, []);
+
 
     const updatePackage = (payload: any) => {
         forEach(payload, (module: PartialEnginePackage<any>, moduleName: string) => {
-            let events = [];
-            let lastEventUpdateTime = states[moduleName].state.lastEventUpdateTime;
-
+            const currentTime = now();
             if (module.events) {
-                events = module.events;
-                lastEventUpdateTime = now();
+                internalState[moduleName].events = module.events;
+                internalState[moduleName].lastEventUpdateTime = currentTime;
             }
 
-            let newState: Record<string, Module> = {};
-            // copy object
-            customMerge(newState, states[moduleName].state.data);
+            customMerge(internalState[moduleName].data, module.data);
+            // for (let i in module.data) {
+            //     if (typeof internalState[moduleName].data[i] === "object") {
+            //         internalState[moduleName].data[i].lastUpdate = currentTime;
+            //     }
+            // }
+            deleteRequestedFields(internalState[moduleName].data, module.toDelete);
 
-            customMerge(newState, module.data);
-            deleteRequestedFields(newState, module.toDelete);
-
-            states[moduleName].setState({
-                events,
-                data: newState,
-                lastUpdateTime: now(),
-                recentData: module.data,
-                lastEventUpdateTime
-            });
+            internalState[moduleName].lastUpdateTime = currentTime;
+            internalState[moduleName].recentData = module.data;
         });
+
+        setState({ internalState });
+
+        (window as any).engineState = internalState;
     };
 
-    let output = <>{children}</>;
-
-    forEach(EngineContexts, (Context, key: GlobalStoreModule) => {
-        output = <Context.Provider value={states[key].state}>{output}</Context.Provider>;
-    });
+    if (!state) {
+        return null;
+    }
 
     return (
         <PackageContext.Provider
             value={
                 {
+                    state: state.internalState,
                     updatePackage,
                 } as PackageContextReturns
             }
         >
-            {output}
+            {children}
         </PackageContext.Provider>
     );
 };

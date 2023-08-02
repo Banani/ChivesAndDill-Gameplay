@@ -1,15 +1,15 @@
 import type { GlobalStore, GlobalStoreModule } from '@bananos/types';
 import { useContext } from 'react';
-import { EngineContexts } from '../contexts/PackageContext';
+import { PackageContext } from '../contexts/PackageContext';
 
 export const useEngineModuleReader = (moduleName: GlobalStoreModule) => {
-   const context = useContext(EngineContexts[moduleName]);
+    const state = useContext(PackageContext).state[moduleName];
 
-   return {
-      data: context?.data,
-      events: context?.events,
-      recentData: context?.recentData,
-      lastUpdateTime: context?.lastUpdateTime,
-      lastUpdateEventTime: context?.lastUpdateEventTime,
-   } as GlobalStore[typeof moduleName];
+    return {
+        data: state.data,
+        events: state.events,
+        recentData: state.recentData,
+        lastUpdateTime: state.lastUpdateTime,
+        lastUpdateEventTime: state.lastUpdateEventTime,
+    } as GlobalStore[typeof moduleName];
 };

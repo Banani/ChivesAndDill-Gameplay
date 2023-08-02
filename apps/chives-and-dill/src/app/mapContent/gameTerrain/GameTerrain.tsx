@@ -1,10 +1,23 @@
+import { GlobalStoreModule } from '@bananos/types';
 import { BLOCK_SIZE, BOTTOM_UP_BLOCKS_AMOUNT, SIDE_BLOCKS_AMOUNT } from 'apps/chives-and-dill/src/consts/consts';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import React, { useEffect, useState } from 'react';
 import { MapField } from './MapField';
 
-export const MapManager = React.memo<{ mapSchema: any; location: { x: number; y: number }, lastUpdateTime: string }>(
+export const GameTerrain = () => {
+    const activeCharacterId = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER)?.data?.activeCharacterId;
+    const { data: mapSchema, lastUpdateTime: mapSchemaLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.MAP_SCHEMA);
+    const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
+
+    return <GameTerrainInternal
+        mapSchema={mapSchema} location={characterMovements[activeCharacterId as any]?.location}
+        lastUpdateTime={mapSchemaLastUpdateTime.toString()}
+    />;
+};
+
+const GameTerrainInternal = React.memo<{ mapSchema: any; location: { x: number; y: number }, lastUpdateTime: string }>(
     ({ mapSchema, location }) => {
         const [texturesMap, setTexturesMap] = useState({});
 

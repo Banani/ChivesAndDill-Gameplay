@@ -1,11 +1,11 @@
 import { CommonClientMessages, GlobalStoreModule, SpellClientMessages } from '@bananos/types';
 import React, { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { KeyBoardContext } from '../../contexts/KeyBoardContext';
 import { useEngineModuleReader } from '../../hooks';
+import { selectActiveTargetId } from '../../stores';
 import { SocketContext } from '../gameController/socketContext';
 import { GameControllerContext } from './gameControllerContext';
-import { useSelector } from 'react-redux';
-import { selectActiveTargetId } from '../../stores';
 
 const keyMovementMap = {
     w: { y: -1 },
@@ -74,9 +74,9 @@ const GameController = ({ children }) => {
     };
 
     useEffect(() => {
-        window.addEventListener('mousemove', updateMousePosition);
+        // window.addEventListener('mousemove', updateMousePosition);
 
-        return () => window.removeEventListener('mousemove', updateMousePosition);
+        // return () => window.removeEventListener('mousemove', updateMousePosition);
     }, []);
 
     return (
