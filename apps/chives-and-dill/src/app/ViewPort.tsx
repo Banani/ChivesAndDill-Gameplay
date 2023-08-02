@@ -1,7 +1,9 @@
-import _, { forEach } from 'lodash';
+import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import { Application } from 'pixi.js';
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { PlayerNameRenderer, ProjectileRenderer } from './renderer';
+import { Renderer } from './renderer/Renderer';
 
 
 export const ViewPort = React.memo(() => {
@@ -23,6 +25,11 @@ export const ViewPort = React.memo(() => {
             application.stage.addChild(container);
 
             const engineState = (window as any).engineState;
+
+            const renderers: Renderer[] = [
+                new ProjectileRenderer(container),
+                new PlayerNameRenderer(container)
+            ];
 
             const output = {};
             _.forEach(engineState.mapSchema.data.mapSchema, (mapElement, key) => {
@@ -53,48 +60,10 @@ export const ViewPort = React.memo(() => {
                 })
             })
 
-            const names: Record<string, PIXI.Text> = {};
-
-            // Co jak pojawia sie nowi gracze, albo stare sie usuna
-            forEach(engineState.character.data, character => {
-                names[character.id] = new PIXI.Text(character.name, new PIXI.TextStyle({
-                    fontSize: 15,
-                    fill: 'green',
-                    fontWeight: 'bold',
-                    lineJoin: 'round',
-                    strokeThickness: 4,
-                    fontFamily: 'Septimus',
-                }));
-
-                const location = engineState.characterMovements.data[character.id].location;
-                names[character.id].x = location.x;
-                // 48 is a sprite height
-                names[character.id].y = location.y - 48 / 1.5;
-                names[character.id].anchor.set(0.5, 1.3)
-                container.addChild(names[character.id]);
-            })
-
-            const projectiles: Record<string, PIXI.Sprite> = {};
-
+            // Nie ma chyba potrzeby zeby to bylo 60 razy na sekunde
             application.ticker.add(() => {
-                forEach(engineState.projectileMovements.data, (projectile, projectileId) => {
-                    if (projectiles[projectileId]) {
-                        return;
-                    }
-
-                    projectiles[projectileId] = PIXI.Sprite.from("../assets/spritesheets/spells/mage/spellsView/fireball.png");
-                    projectiles[projectileId].x = projectile.location.x;
-                    projectiles[projectileId].y = projectile.location.y;
-                    projectiles[projectileId].rotation = projectile.angle + 1.5
-                    projectiles[projectileId].scale = { x: 1, y: 1 };
-                    container.addChild(projectiles[projectileId])
-                });
-
-                forEach(projectiles, (projectile, projectileId) => {
-                    if (!engineState.projectileMovements.data[projectileId]) {
-                        container.removeChild(projectiles[projectileId])
-                        delete projectile[projectileId];
-                    }
+                renderers.forEach(renderer => {
+                    renderer.updateScene(engineState);
                 })
             });
 
@@ -104,17 +73,9 @@ export const ViewPort = React.memo(() => {
                 container.x = -location.x + gameSize.width / 2;
                 container.y = -location.y + gameSize.height / 2;
 
-                forEach(engineState.characterMovements.data, (movement, characterId) => {
-                    names[characterId].x = movement.location.x;
-                    // 48 is a sprite height
-                    names[characterId].y = movement.location.y - 48 / 1.5;
-                });
-
-                forEach(engineState.projectileMovements.data, (projectile, projectileId) => {
-                    projectiles[projectileId].x = projectile.location.x;
-                    projectiles[projectileId].y = projectile.location.y;
-                    projectiles[projectileId].rotation = projectile.angle + 1.5
-                });
+                renderers.forEach(renderer => {
+                    renderer.render(engineState);
+                })
             });
         }
 
