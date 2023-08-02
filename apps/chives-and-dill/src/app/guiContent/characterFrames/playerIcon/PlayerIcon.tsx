@@ -104,8 +104,7 @@ export const PlayerIcon = ({ playerId }) => {
                     <div className={styles.powerStacks}>{renderPowerStacks('HolyPower', HolyPower)}</div>
                 </div>
             </div>
-        </div>
-         { optionsVisible && player.type === 'Player' ? <OptionsModal setOptionsVisible={setOptionsVisible} playerId={playerId} /> : null }
-      </div >
-   );
+            {optionsVisible && player.type === 'Player' ? <OptionsModal setOptionsVisible={setOptionsVisible} playerId={playerId} /> : null}
+        </div >
+    );
 };

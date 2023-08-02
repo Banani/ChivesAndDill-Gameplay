@@ -74,6 +74,30 @@ export const ViewPort = React.memo(() => {
                 container.addChild(names[character.id]);
             })
 
+            const projectiles: Record<string, PIXI.Sprite> = {};
+
+            application.ticker.add(() => {
+                forEach(engineState.projectileMovements.data, (projectile, projectileId) => {
+                    if (projectiles[projectileId]) {
+                        return;
+                    }
+
+                    projectiles[projectileId] = PIXI.Sprite.from("../assets/spritesheets/spells/mage/spellsView/fireball.png");
+                    projectiles[projectileId].x = projectile.location.x;
+                    projectiles[projectileId].y = projectile.location.y;
+                    projectiles[projectileId].rotation = projectile.angle + 1.5
+                    projectiles[projectileId].scale = { x: 1, y: 1 };
+                    container.addChild(projectiles[projectileId])
+                });
+
+                forEach(projectiles, (projectile, projectileId) => {
+                    if (!engineState.projectileMovements.data[projectileId]) {
+                        container.removeChild(projectiles[projectileId])
+                        delete projectile[projectileId];
+                    }
+                })
+            });
+
             application.ticker.add(() => {
                 const { activeCharacterId } = engineState.activeCharacter.data;
                 const location = engineState.characterMovements.data[activeCharacterId].location;
@@ -84,6 +108,12 @@ export const ViewPort = React.memo(() => {
                     names[characterId].x = movement.location.x;
                     // 48 is a sprite height
                     names[characterId].y = movement.location.y - 48 / 1.5;
+                });
+
+                forEach(engineState.projectileMovements.data, (projectile, projectileId) => {
+                    projectiles[projectileId].x = projectile.location.x;
+                    projectiles[projectileId].y = projectile.location.y;
+                    projectiles[projectileId].rotation = projectile.angle + 1.5
                 });
             });
         }
@@ -134,17 +164,3 @@ export const ViewPort = React.memo(() => {
     {/* <NextLevelManager experienceEvents={experienceEvents} />
     <ErrorMessages /> */}
 }, () => true);
-// const renderSpells = useCallback(
-    //     () =>
-    //         _.map(projectileMovements, (spell, i) => (
-    //             <Sprite
-    //                 rotation={spell.angle + 1.5}
-    //                 scale={2}
-    //                 key={i}
-    //                 image="../assets/spritesheets/spells/mage/spellsView/fireball.png"
-    //                 x={spell.location.x}
-    //                 y={spell.location.y}
-    //             ></Sprite>
-    //         )),
-    //     [projectileMovements]
-    // );

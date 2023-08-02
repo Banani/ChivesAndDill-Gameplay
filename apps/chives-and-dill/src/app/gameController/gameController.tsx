@@ -1,5 +1,6 @@
 import { CommonClientMessages, GlobalStoreModule, SpellClientMessages } from '@bananos/types';
-import React, { useContext, useEffect, useState } from 'react';
+import _ from 'lodash';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { KeyBoardContext } from '../../contexts/KeyBoardContext';
 import { useEngineModuleReader } from '../../hooks';
@@ -69,14 +70,14 @@ const GameController = ({ children }) => {
         }
     };
 
-    const updateMousePosition = (e) => {
+    const updateMousePosition = useMemo(() => _.throttle((e: MouseEvent) => {
         setMousePosition({ x: e.offsetX, y: e.offsetY });
-    };
+    }, 100), []);
 
     useEffect(() => {
-        // window.addEventListener('mousemove', updateMousePosition);
+        window.addEventListener('mousemove', updateMousePosition);
 
-        // return () => window.removeEventListener('mousemove', updateMousePosition);
+        return () => window.removeEventListener('mousemove', updateMousePosition);
     }, []);
 
     return (

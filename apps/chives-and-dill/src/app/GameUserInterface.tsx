@@ -1,26 +1,28 @@
-import { Details } from '@mui/icons-material';
+
 import React from 'react';
-import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
-import { ChatManager } from './guiContent/chat';
+import { BottomBar } from './guiContent/bottomBar/BottomBar';
+import { Details } from './guiContent/details/Details';
 
 export function GameUserInterface() {
 
 
-    /* {activeCharacterId ? <BottomBar /> : null}
-            {activeCharacterId ? <ActivePlayerTimeEffects playerId={activeCharacterId} /> : null}
-            <QuestManager />
+    /*      {activeCharacterId ? <ActivePlayerTimeEffects playerId={activeCharacterId} /> : null}
             {!_.isEmpty(activeLoot[Object.keys(activeLoot ?? {})?.[0]]) ? <LootModal
                 monsterId={Object.keys(activeLoot ?? {})?.[0]}
                 activeLoot={activeLoot[Object.keys(activeLoot ?? {})?.[0]]} /> : null}
             {activeNpc ? <NpcModal questDefinition={questDefinition as Record<string, QuestSchema>} activeNpc={activeNpc} /> : null}
-            <PartyModal />
-            <QueryModalManager /> */
+         */
 
+    // pamietac o spowolnieniu
     return (
         <>
-            <CharacterFrames />
-            <ChatManager />
+            {/* <CharacterFrames /> */}
+            {/* <ChatManager /> */}
             <Details />
+            {/* <QueryModalManager /> */}
+            {/* <QuestManager /> */}
+            {/* <PartyModal /> */}
+            <BottomBar />
         </>
     );
 }
