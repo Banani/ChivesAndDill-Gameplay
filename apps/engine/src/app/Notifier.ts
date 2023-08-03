@@ -26,6 +26,7 @@ export abstract class Notifier<T = never> extends EventParser {
     private objectsToDelete: Record<string, Partial<T> | T> = {};
     private events: EnginePackageEvent[] = [];
     private multicast: MulticastPackage<T>;
+    private eventId = 0;
 
     constructor(notifierProps: NotifierProps) {
         super();
@@ -69,7 +70,10 @@ export abstract class Notifier<T = never> extends EventParser {
         }
 
         if (events.length) {
-            packageToSend.events = events;
+            packageToSend.events = events.map(event => ({
+                ...event,
+                id: this.eventId++
+            }));
         }
 
         return packageToSend;

@@ -2,15 +2,12 @@ import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import { Application } from 'pixi.js';
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { PlayerNameRenderer, ProjectileRenderer } from './renderer';
+import { FloatingNumbersRenderer, PlayerNameRenderer, ProjectileRenderer } from './renderer';
 import { Renderer } from './renderer/Renderer';
 
 
 export const ViewPort = React.memo(() => {
     const canvasRef = useRef(null);
-    // const { data: activeCharacterIdData, lastUpdateTime: activeCharacterLastUpdateTime, } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER);
-    // const { data: characterMovements, lastUpdateTime: characterMovementsLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
-    // const activeCharacterId = activeCharacterIdData['activeCharacterId'];
     const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
@@ -28,7 +25,8 @@ export const ViewPort = React.memo(() => {
 
             const renderers: Renderer[] = [
                 new ProjectileRenderer(container),
-                new PlayerNameRenderer(container)
+                new PlayerNameRenderer(container),
+                new FloatingNumbersRenderer(container)
             ];
 
             const output = {};

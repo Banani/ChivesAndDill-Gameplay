@@ -42,7 +42,7 @@ export enum GlobalStoreModule {
     ERROR_MESSAGES = 'errorMessages',
     CHAT_CHANNEL = 'chatChannel',
     CHAT_MESSAGES = 'chatMessages',
-    EQUIPMENT = 'Equipment',
+    EQUIPMENT = 'equipment',
     BACKPACK_SCHEMA = 'backpackSchema',
     BACKPACK_ITEMS = 'backpackItems',
     ITEMS = 'items',
@@ -235,6 +235,7 @@ export enum EngineEventType {
     CharacterLostHp = 'CharacterLostHp',
     DamageAbsorbed = 'DamageAbsorbed',
     LevelChanged = 'LevelChanged',
+    ExperienceGain = "ExperienceGain",
     ErrorMessage = 'ErrorMessage',
 
     CreateCharacter = 'CreateCharacter',

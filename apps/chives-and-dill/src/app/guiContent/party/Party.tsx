@@ -51,7 +51,9 @@ export const PartyModal = () => {
     return calculateDistance(activePlayerLocation, targetLocation) > 1000 ? true : false;
   }
 
-  const partyMembers = _.map(activeGroup['membersIds'], (value, playerId) => {
+  return (
+    <div className={styles.PartyContainer}>
+      {_.map(activeGroup['membersIds'], (value, playerId) => {
     const player = character[playerId];
     const powerPoints = characterPowerPoints[playerId];
 
@@ -75,11 +77,7 @@ export const PartyModal = () => {
         </div>
       </div>
     )
-  })
-
-  return (
-    <div className={styles.PartyContainer}>
-      {partyMembers}
+  })}
     </div>
   )
 }
