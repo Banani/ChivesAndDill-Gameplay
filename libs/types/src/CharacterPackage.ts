@@ -1,5 +1,11 @@
 import { Location } from './shared';
 
+export enum CharacterType {
+    Player = 'Player',
+    Monster = 'Monster',
+    Npc = 'Npc',
+}
+
 export enum Attribute {
     Stamina = "stamina",
     Agility = "agility",
