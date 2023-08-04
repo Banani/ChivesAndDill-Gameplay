@@ -3,5 +3,6 @@ export * from "./FloatingNumbersRenderer";
 export * from "./NpcQuestMarkRenderer";
 export * from "./PlayerBarRenderer";
 export * from "./PlayerNameRenderer";
+export * from "./PlayerRenderer";
 export * from "./ProjectileRenderer";
 

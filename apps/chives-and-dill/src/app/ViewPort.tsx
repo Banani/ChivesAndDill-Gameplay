@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js';
 import { Application } from 'pixi.js';
 import React, { useEffect, useRef } from "react";
 import { useGameSize } from './hooks';
-import { DialogRenderer, FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerBarRenderer, PlayerNameRenderer, ProjectileRenderer } from './renderer';
+import { DialogRenderer, FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerBarRenderer, PlayerNameRenderer, PlayerRenderer, ProjectileRenderer } from './renderer';
 import { Renderer } from './renderer/Renderer';
 
 export const ViewPort = React.memo(() => {
@@ -24,6 +24,7 @@ export const ViewPort = React.memo(() => {
             const engineState = (window as any).engineState;
 
             const renderers: Renderer[] = [
+                new PlayerRenderer(container),
                 new ProjectileRenderer(container),
                 new PlayerNameRenderer(container),
                 new PlayerBarRenderer(container),
