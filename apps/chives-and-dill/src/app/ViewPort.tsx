@@ -1,14 +1,14 @@
 import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import { Application } from 'pixi.js';
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerBarRenderer, PlayerNameRenderer, ProjectileRenderer } from './renderer';
+import React, { useEffect, useRef } from "react";
+import { useGameSize } from './hooks';
+import { DialogRenderer, FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerBarRenderer, PlayerNameRenderer, ProjectileRenderer } from './renderer';
 import { Renderer } from './renderer/Renderer';
-
 
 export const ViewPort = React.memo(() => {
     const canvasRef = useRef(null);
-    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
+    const { gameSize } = useGameSize();
 
     useEffect(() => {
         if (gameSize.width !== 0) {
@@ -28,7 +28,8 @@ export const ViewPort = React.memo(() => {
                 new PlayerNameRenderer(container),
                 new PlayerBarRenderer(container),
                 new FloatingNumbersRenderer(container),
-                new NpcQuestMarkRenderer(container)
+                new NpcQuestMarkRenderer(container),
+                new DialogRenderer(container)
             ];
 
             const output = {};
@@ -78,31 +79,7 @@ export const ViewPort = React.memo(() => {
                 })
             });
         }
-
     }, [gameSize]);
-
-    const resizeGame = useCallback(() => {
-        let gameWidth = window.innerWidth;
-        let gameHeight = window.innerHeight;
-        const ratio = 16 / 9;
-
-        if (gameHeight < gameWidth / ratio) {
-            gameWidth = gameHeight * ratio;
-        } else {
-            gameHeight = gameWidth / ratio;
-        }
-
-        setGameSize({ width: gameWidth, height: gameHeight });
-    }, []);
-
-    useEffect(() => {
-        resizeGame();
-        window.addEventListener('resize', resizeGame);
-
-        return () => {
-            window.removeEventListener('resize', resizeGame);
-        };
-    }, []);
 
     return <>
         <canvas
@@ -111,17 +88,4 @@ export const ViewPort = React.memo(() => {
             ref={canvasRef}
         />
     </>
-    {/*     <AreasSpellsEffectsManager />*/ }
-
-    {/* <RenderPlayersManager /> */ }
-    {/* {renderSpells()}
-            <FloatingNumbersManager />
-            <BlinkSpellEffect />
-            <BloodPoolManager />
-            <DialogsManager />
-            <CastBarsManager location={characterMovements[activeCharacterId]?.location} spellChannels={spellChannels} /> */}
-
-
-    {/* <NextLevelManager experienceEvents={experienceEvents} />
-    <ErrorMessages /> */}
 }, () => true);

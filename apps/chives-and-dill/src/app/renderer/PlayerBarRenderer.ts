@@ -9,18 +9,23 @@ export class PlayerBarRenderer implements Renderer {
 
     constructor(container: PIXI.Container) {
         this.container = container;
-        this.bars = new PIXI.Graphics();
     }
 
-    updateScene(store: GlobalStore) { }
+    updateScene(store: GlobalStore) {
+        if (!this.bars) {
+            this.bars = new PIXI.Graphics();
+            this.container.addChild(this.bars);
+        }
+    }
 
     render(store: GlobalStore) {
+        this.bars.clear();
         const barWidth = 50;
         const borderWidth = 1;
-        this.bars.clear();
+        const spriteHeight = 48;
+
         forEach(store.character.data, (character, characterId) => {
             const location = store.characterMovements.data[characterId].location;
-            const spriteHeight = 48;
             const barPositionY = location.y - spriteHeight + 7 + borderWidth;
             const barPositionX = location.x - (barWidth / 2)
 
@@ -53,7 +58,5 @@ export class PlayerBarRenderer implements Renderer {
             );
             this.bars.endFill();
         });
-
-        this.container.addChild(this.bars);
     }
 }
