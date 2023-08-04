@@ -1,0 +1,28 @@
+.messageHolder {
+    display: flex;
+    border: 2px solid grey;
+    align-items: center;
+
+    &.active {
+        border: 2px solid white;
+    }
+
+    .channelName {
+        color: white;
+        padding-left: 8px;
+    }
+
+    .chatInput {
+        flex: 1;
+        padding: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        border: none;
+        padding: 5px;
+        box-sizing: border-box;
+        color: white;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}

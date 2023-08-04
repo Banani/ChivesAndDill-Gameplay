@@ -1,38 +1,19 @@
 import { ChannelChatMessage, ChannelType, ChatChannel, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage, SystemChatMessage } from '@bananos/types';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
-import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { setActiveTarget } from 'apps/chives-and-dill/src/stores';
 import { map } from 'lodash';
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { ChannelNumeratorContext } from '../contexts';
 import styles from './Chat.module.scss';
-
-interface CurrentChannel {
-    id: string;
-    channelType: ChannelType;
-}
-
-const rangeChannelCommands = ['say', 's', 'yell', 'y'];
-
-const commandMapper = {
-    say: 'say',
-    s: 'say',
-    yell: 'yell',
-    y: 'yell',
-};
+import { MessageInput } from './components';
 
 const RangeChannelsMessageMapper = {
     say: 'says: ',
     yell: 'yells: ',
-};
-
-const RangeChannelInputTest = {
-    say: 'Say: ',
-    yell: 'Yell: ',
 };
 
 interface ChatInternalProps {
@@ -40,9 +21,11 @@ interface ChatInternalProps {
     characters: Record<string, any>,
     chatChannels: Record<string, ChatChannel>,
     chatMessages: Record<string, ChatMessage>,
+    getChannelNumberById: (channelId: string) => string;
 }
 
 export const Chat = () => {
+    const channelNumeratorContext = useContext(ChannelNumeratorContext);
     const { data: characters, lastUpdateTime: lastUpdateTimeCharacters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
     const { data: chatChannels, lastUpdateTime: lastUpdateTimeChatChannels } = useEngineModuleReader(GlobalStoreModule.CHAT_CHANNEL);
     const { data: chatMessages, lastUpdateTime: lastUpdateTimeChatMessages } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
@@ -52,23 +35,16 @@ export const Chat = () => {
         characters={characters}
         chatChannels={chatChannels as Record<string, ChatChannel>}
         chatMessages={chatMessages as Record<string, ChatMessage>}
+        getChannelNumberById={channelNumeratorContext.getNumberById}
     />
 }
 
-const ChatInternal = React.memo(({ characters, chatChannels, chatMessages }: ChatInternalProps) => {
+const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getChannelNumberById, lastUpdateTime }: ChatInternalProps) => {
     const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
 
-    const keyBoardContext = useContext(KeyBoardContext);
-    const channelNumeratorContext = useContext(ChannelNumeratorContext);
     const engineApiContext = useContext(EngineApiContext);
     const menuContext = useContext(MenuContext);
     const dispatch = useDispatch();
-
-    const [activeChannel, setActiveChannel] = useState<CurrentChannel>({ id: 'say', channelType: ChannelType.Range });
-    const [message, setMessage] = useState('');
-    const [lastKeyDown, setLastKeyDown] = useState(null);
-
-    const messageInput = useRef(null);
     const lastMessage = useRef(null);
 
     const modes = ['General', 'Combat Log', 'Global'];
@@ -120,7 +96,7 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages }: Cha
                         ]);
                     }}
                 >
-                    {`[${channelNumeratorContext.getNumberById(message.chatChannelId)}. ${chatChannels[message.chatChannelId].name}]`}
+                    {`[${getChannelNumberById(message.chatChannelId)}. ${chatChannels[message.chatChannelId].name}]`}
                 </span>
                 {characterName(characters[message.authorId])}
                 {`: ${message.message}`}
@@ -128,69 +104,9 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages }: Cha
         ),
     };
 
-    const currentChannelInputText = useMemo(() => {
-        if (activeChannel.channelType === ChannelType.Range) {
-            return RangeChannelInputTest[activeChannel.id];
-        }
-
-        if (activeChannel.channelType === ChannelType.Custom) {
-            const channel = chatChannels[activeChannel.id];
-
-            return `[${channelNumeratorContext.getNumberById(activeChannel.id)}. ${channel.name}]`;
-        }
-
-        return 'Not supported';
-    }, [chatChannels, channelNumeratorContext]);
-
-    const messageChanged = (e) => {
-        const message = e.target.value;
-        const command = message.match('/(.*?) ')?.[1];
-        if (command) {
-            if (!isNaN(command) && channelNumeratorContext.channelNumerations[command]) {
-                setActiveChannel({ id: channelNumeratorContext.channelNumerations[command], channelType: ChannelType.Custom });
-                setMessage('');
-            } else if (rangeChannelCommands.indexOf(command) != -1) {
-                setActiveChannel({ id: commandMapper[command], channelType: ChannelType.Range });
-                setMessage('');
-            }
-        } else {
-            setMessage(message);
-        }
-    };
-
-    useEffect(() => {
-        if (lastKeyDown === 'Enter') {
-            if (message !== '') {
-                engineApiContext.sendChatMessage({ message, chatChannelId: activeChannel.id, channelType: activeChannel.channelType });
-            }
-            messageInput.current.blur();
-        }
-    }, [lastKeyDown, activeChannel]);
-
-    const cancelMessage = useCallback(() => {
-        keyBoardContext.removeKeyHandler('ChatBlockAll');
-        keyBoardContext.removeKeyHandler('ChatEscape');
-        setMessage('');
-        setLastKeyDown(null);
-    }, []);
-
-    useEffect(() => {
-        keyBoardContext.addKeyHandler({
-            id: 'ChatEnter',
-            matchRegex: 'Enter',
-            keydown: () => messageInput.current.focus(),
-        });
-
-        return () => {
-            keyBoardContext.removeKeyHandler('ChatBlockAll');
-            keyBoardContext.removeKeyHandler('ChatEnter');
-            keyBoardContext.removeKeyHandler('ChatEscape');
-        };
-    }, []);
-
     useEffect(() => {
         lastMessage.current.scrollIntoView();
-    }, [chatMessages]);
+    }, [chatMessages, lastUpdateTime]);
 
     return (
         <div className={styles.chatContainer}>
@@ -203,24 +119,7 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages }: Cha
                     <div ref={lastMessage}></div>
                 </div>
             </div>
-            <div className={`${styles.messageHolder} ${document.activeElement === messageInput.current ? styles.active : ''}`}>
-                {document.activeElement === messageInput.current && <div className={styles.channelName}>{currentChannelInputText}</div>}
-                <input
-                    ref={messageInput}
-                    className={styles.chatInput}
-                    onChange={messageChanged}
-                    value={message}
-                    onFocus={() => {
-                        keyBoardContext.addKeyHandler({ id: 'ChatBlockAll', matchRegex: '.*', keydown: setLastKeyDown });
-                        keyBoardContext.addKeyHandler({
-                            id: 'ChatEscape',
-                            matchRegex: 'Escape',
-                            keydown: () => messageInput.current.blur(),
-                        });
-                    }}
-                    onBlur={cancelMessage}
-                />
-            </div>
+            <MessageInput chatChannels={chatChannels} />
         </div>
     );
 },

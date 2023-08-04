@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { BottomBar } from './guiContent/bottomBar/BottomBar';
+import { ChatManager } from './guiContent/chat';
 import { Details } from './guiContent/details/Details';
 
 export function GameUserInterface() {
@@ -17,7 +18,7 @@ export function GameUserInterface() {
     return (
         <>
             {/* <CharacterFrames /> */}
-            {/* <ChatManager /> */}
+            <ChatManager />
             <Details />
             {/* <QueryModalManager /> */}
             {/* <QuestManager /> */}

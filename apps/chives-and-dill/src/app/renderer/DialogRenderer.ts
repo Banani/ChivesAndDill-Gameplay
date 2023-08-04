@@ -52,7 +52,7 @@ export class DialogRenderer implements Renderer {
             const character = store.character.data[message.authorId];
             const location = store.characterMovements.data[message.authorId].location
             this.dialogTimestamps[message.id] = currentTimestamp;
-            this.dialogs[message.id] = new PIXI.Text(character.name + ": " + message.message, this.textStyles[character.type])
+            this.dialogs[message.id] = new PIXI.Text(character.name + ": \n" + message.message, this.textStyles[character.type])
             this.dialogs[message.id].x = location.x + ((Math.random() - 0.5) * 25);
             this.dialogs[message.id].y = location.y - 48 - 40;
             this.dialogs[message.id].anchor.set(0.5, 0);
