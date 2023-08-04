@@ -2,7 +2,7 @@ import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import { Application } from 'pixi.js';
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerNameRenderer, ProjectileRenderer } from './renderer';
+import { FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerBarRenderer, PlayerNameRenderer, ProjectileRenderer } from './renderer';
 import { Renderer } from './renderer/Renderer';
 
 
@@ -26,6 +26,7 @@ export const ViewPort = React.memo(() => {
             const renderers: Renderer[] = [
                 new ProjectileRenderer(container),
                 new PlayerNameRenderer(container),
+                new PlayerBarRenderer(container),
                 new FloatingNumbersRenderer(container),
                 new NpcQuestMarkRenderer(container)
             ];
