@@ -72,7 +72,6 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
 
         useEffect(() => {
             // Powinien byc jakis zbiorczy store na assety
-            console.log(123);
             const newPlayerSheets = {
                 movementDown: [],
                 movementUp: [],
