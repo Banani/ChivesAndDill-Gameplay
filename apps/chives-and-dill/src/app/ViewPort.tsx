@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import { Application } from 'pixi.js';
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useGameSize } from './hooks';
 import { DialogRenderer, FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerBarRenderer, PlayerNameRenderer, PlayerRenderer, ProjectileRenderer } from './renderer';
 import { Renderer } from './renderer/Renderer';
@@ -9,17 +9,24 @@ import { Renderer } from './renderer/Renderer';
 export const ViewPort = React.memo(() => {
     const canvasRef = useRef(null);
     const { gameSize } = useGameSize();
+    const [application, setApplication] = useState<Application | null>(null);
+    const [container, setContainer] = useState<PIXI.Container | null>(null);
 
     useEffect(() => {
-        if (gameSize.width !== 0) {
+        if (gameSize.width !== 0 && !application) {
             const application = new Application({
                 width: gameSize.width,
                 height: gameSize.height,
                 view: canvasRef.current,
                 backgroundColor: 0x000000
             });
+
+            setApplication(application);
+
             const container = new PIXI.Container();
             application.stage.addChild(container);
+
+            setContainer(container);
 
             const engineState = (window as any).engineState;
 
@@ -72,21 +79,23 @@ export const ViewPort = React.memo(() => {
             application.ticker.add(() => {
                 const { activeCharacterId } = engineState.activeCharacter.data;
                 const location = engineState.characterMovements.data[activeCharacterId].location;
-                container.x = -location.x + gameSize.width / 2;
-                container.y = -location.y + gameSize.height / 2;
+                container.x = -location.x;// + gameSize.width / 2;
+                container.y = -location.y;// + gameSize.height / 2;
 
                 renderers.forEach(renderer => {
                     renderer.render(engineState);
                 })
             });
         }
-    }, [gameSize]);
+    }, [gameSize, application]);
 
-    return <>
-        <canvas
-            width={gameSize.width}
-            height={gameSize.height}
-            ref={canvasRef}
-        />
-    </>
+    useEffect(() => {
+        if (application) {
+            application.view.width = gameSize.width;
+            application.view.height = gameSize.height;
+            container.pivot.set(-gameSize.width / 2, -gameSize.height / 2);
+        }
+    }, [gameSize, application]);
+
+    return <canvas ref={canvasRef} />
 }, () => true);
