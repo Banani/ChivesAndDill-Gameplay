@@ -2,6 +2,7 @@ import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import { Application } from 'pixi.js';
 import React, { useEffect, useRef, useState } from "react";
+import { GameApi } from './game';
 import { useGameSize } from './hooks';
 import { DialogRenderer, FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerBarRenderer, PlayerNameRenderer, PlayerRenderer, ProjectileRenderer } from './renderer';
 import { Renderer } from './renderer/Renderer';
@@ -29,6 +30,7 @@ export const ViewPort = React.memo(() => {
             setContainer(container);
 
             const engineState = (window as any).engineState;
+            const gameApi: GameApi = (window as any).gameApi;
 
             const renderers: Renderer[] = [
                 new PlayerRenderer(container),
@@ -72,15 +74,15 @@ export const ViewPort = React.memo(() => {
             // Nie ma chyba potrzeby zeby to bylo 60 razy na sekunde
             application.ticker.add(() => {
                 renderers.forEach(renderer => {
-                    renderer.updateScene(engineState);
+                    renderer.updateScene(engineState, gameApi);
                 })
             });
 
             application.ticker.add(() => {
                 const { activeCharacterId } = engineState.activeCharacter.data;
                 const location = engineState.characterMovements.data[activeCharacterId].location;
-                container.x = -location.x;// + gameSize.width / 2;
-                container.y = -location.y;// + gameSize.height / 2;
+                container.x = -location.x;
+                container.y = -location.y;
 
                 renderers.forEach(renderer => {
                     renderer.render(engineState);

@@ -109,11 +109,6 @@ export const PackageContextProvider: FunctionComponent = ({ children }) => {
             }
 
             customMerge(internalState[moduleName].data, module.data);
-            // for (let i in module.data) {
-            //     if (typeof internalState[moduleName].data[i] === "object") {
-            //         internalState[moduleName].data[i].lastUpdate = currentTime;
-            //     }
-            // }
             deleteRequestedFields(internalState[moduleName].data, module.toDelete);
 
             internalState[moduleName].lastUpdateTime = currentTime;

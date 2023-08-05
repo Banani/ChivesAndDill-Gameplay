@@ -2,6 +2,7 @@ import { CharacterDirection, CharacterMovement, GlobalStore } from "@bananos/typ
 import _, { forEach, now } from "lodash";
 import * as PIXI from 'pixi.js';
 import { BLOCK_SIZE } from "../../consts/consts";
+import { GameApi } from "../game";
 import { Renderer } from "./Renderer";
 
 const defaultViewSettings = (spriteHeight, spriteWidth, image) => ({
@@ -122,7 +123,7 @@ export class PlayerRenderer implements Renderer {
         })
     }
 
-    updateScene(store: GlobalStore) {
+    updateScene(store: GlobalStore, gameApi: GameApi) {
         forEach(store.character.data, (character, characterId) => {
             if (this.characters[characterId]) {
                 return;
@@ -134,6 +135,8 @@ export class PlayerRenderer implements Renderer {
             this.characters[characterId].y = location.y - this.sprites[character.sprites].height / 2;
             this.characters[characterId].height = BLOCK_SIZE;
             this.characters[characterId].width = BLOCK_SIZE;
+            this.characters[characterId].interactive = true;
+            this.characters[characterId].on('pointerdown', () => gameApi.setActiveTarget(characterId));
             this.container.addChild(this.characters[characterId])
         });
 
