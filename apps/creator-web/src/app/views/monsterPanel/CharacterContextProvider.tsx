@@ -119,7 +119,6 @@ export const CharacterContextProvider: FunctionComponent<CharacterContextProvide
 
     const updateCharacter = useCallback(
         (character: any) => {
-            console.log(character);
             socket.send(JSON.stringify({ actionType: characterTemplateActions.UPDATE_CHARACTER, character }));
         },
         [socket]

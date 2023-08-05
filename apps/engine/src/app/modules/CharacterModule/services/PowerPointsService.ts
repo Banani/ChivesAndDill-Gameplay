@@ -12,6 +12,7 @@ import type {
     CharacterLostSpellPowerEvent,
     NewCharacterCreatedEvent,
     NewPowerTrackCreatedEvent,
+    RemoveCharacterEvent,
     ResetCharacterEvent,
     TakeCharacterHealthPointsEvent,
     TakeCharacterSpellPowerEvent,
@@ -30,6 +31,7 @@ export class PowerPointsService extends EventParser {
             [CharacterEngineEvents.TakeCharacterSpellPower]: this.handleTakeCharacterSpellPower,
             [CharacterEngineEvents.AddCharacterSpellPower]: this.handleAddCharacterSpellPower,
             [CharacterEngineEvents.ResetCharacter]: this.handleResetCharacter,
+            [CharacterEngineEvents.RemoveCharacter]: this.handleRemoveCharacter,
         };
     }
 
@@ -87,6 +89,7 @@ export class PowerPointsService extends EventParser {
                 spellId: event.spellId
             });
             if (this.powerPoints[event.characterId].currentHp === 0) {
+                delete this.powerPoints[event.characterId];
                 this.engineEventCrator.asyncCeateEvent<CharacterDiedEvent>({
                     type: EngineEvents.CharacterDied,
                     character: services.characterService.getAllCharacters()[event.characterId],
@@ -161,6 +164,10 @@ export class PowerPointsService extends EventParser {
             spellId: null,
             healerId: null
         });
+    };
+
+    handleRemoveCharacter: EngineEventHandler<RemoveCharacterEvent> = ({ event }) => {
+        delete this.powerPoints[event.character.id];
     };
 
     getAllPowerTracks = () => this.powerPoints;

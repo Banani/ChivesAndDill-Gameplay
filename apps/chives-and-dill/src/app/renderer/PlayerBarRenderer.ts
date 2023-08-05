@@ -24,7 +24,7 @@ export class PlayerBarRenderer implements Renderer {
         const borderWidth = 1;
         const spriteHeight = 48;
 
-        forEach(store.character.data, (character, characterId) => {
+        forEach(store.characterPowerPoints.data, (characterPowerPoints, characterId) => {
             const location = store.characterMovements.data[characterId].location;
             const barPositionY = location.y - spriteHeight + 7 + borderWidth;
             const barPositionX = location.x - (barWidth / 2)
@@ -38,7 +38,6 @@ export class PlayerBarRenderer implements Renderer {
             );
             this.bars.endFill();
 
-            const characterPowerPoints = store.characterPowerPoints.data[characterId];
             const healthWidth = characterPowerPoints.currentHp / characterPowerPoints.maxHp;
             this.bars.beginFill(0x00ff00);
             this.bars.drawRect(

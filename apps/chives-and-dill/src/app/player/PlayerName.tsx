@@ -5,7 +5,6 @@ import React, { useMemo } from 'react';
 export const PlayerName = ({ player, charactersMovements, h }) => {
 
     const textStyle = useMemo(() => {
-        console.log(123);
         return new PIXI.TextStyle({
             // fontSize: 15,
             // fill: 'green',
