@@ -4,7 +4,7 @@ export interface Monster extends Character {
     type: CharacterType.Monster;
     division?: string;
     respawnId: string;
-    characterTemplateId: string;
+    templateId: string;
     sightRange: number;
     desiredRange: number;
     escapeRange: number;

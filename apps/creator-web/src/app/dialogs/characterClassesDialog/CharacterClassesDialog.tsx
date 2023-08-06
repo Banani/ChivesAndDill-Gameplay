@@ -25,8 +25,8 @@ const DefaultCharacterClass: CharacterClass = {
     name: "",
     iconImage: "https://static.wikia.nocookie.net/wowwiki/images/0/0c/Ability_dualwieldspecialization.png",
     spells: {},
-    maxHp: 100,
-    maxSpellPower: 100,
+    healthPoints: 100,
+    spellPower: 100,
     color: "#000000"
 } as CharacterClass
 
@@ -52,17 +52,17 @@ export const CharacterClassesDialog = () => {
                 conditions: [{ type: FormFieldConditions.Required }],
                 defaultValue: defaultCharacterClass.name
             },
-            maxHp: {
+            healthPoints: {
                 label: "Health Points",
                 type: SchemaFieldType.Number,
                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.PositiveNumber },],
-                defaultValue: defaultCharacterClass.maxHp
+                defaultValue: defaultCharacterClass.healthPoints
             },
-            maxSpellPower: {
+            spellPower: {
                 label: "Spell Power",
                 type: SchemaFieldType.Number,
                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.PositiveNumber },],
-                defaultValue: defaultCharacterClass.maxSpellPower
+                defaultValue: defaultCharacterClass.spellPower
             },
             color: {
                 label: "Color",

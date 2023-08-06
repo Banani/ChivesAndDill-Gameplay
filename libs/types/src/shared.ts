@@ -97,8 +97,8 @@ export interface CharacterClass {
     id: string;
     name: string;
     iconImage: string;
-    maxHp: number,
-    maxSpellPower: number,
+    healthPoints: number,
+    spellPower: number,
     spells: Record<string, CharacterClassSpellAssignment>;
     color: string;
 }

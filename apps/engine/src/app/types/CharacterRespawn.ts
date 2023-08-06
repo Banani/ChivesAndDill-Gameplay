@@ -9,7 +9,7 @@ export enum WalkingType {
 export interface CharacterRespawn {
     location: Location;
     // characterType: "",
-    characterTemplateId: string;
+    templateId: string;
     time: number;
     id: string;
     walkingType: WalkingType;

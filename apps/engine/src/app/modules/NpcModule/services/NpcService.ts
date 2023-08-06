@@ -27,11 +27,11 @@ export class NpcService extends EventParser {
             this.npcs[id] = {
                 type: CharacterType.Npc,
                 //TODO: niech to sie odwoluje do npc template, zamiast przekopiowac go calego
-                ...services.npcTemplateService.getData()[npcRespawn.characterTemplateId],
+                ...services.npcTemplateService.getData()[npcRespawn.templateId],
                 location: npcRespawn.location,
                 isDead: false,
                 respawnId: npcRespawn.id,
-                templateId: npcRespawn.characterTemplateId,
+                templateId: npcRespawn.templateId,
                 id,
                 spells: {}
             };

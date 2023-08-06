@@ -18,35 +18,35 @@ export const MonsterRespawns: Record<string, CharacterRespawn> = {
     '2': {
         id: '2',
         location: { x: 300, y: 400 },
-        characterTemplateId: MonsterTemplates['Orc'].id,
+        templateId: MonsterTemplates['Orc'].id,
         time: 4000,
         walkingType: WalkingType.None,
     },
     '3': {
         id: '3',
         location: { x: 400, y: 400 },
-        characterTemplateId: MonsterTemplates['Orc'].id,
+        templateId: MonsterTemplates['Orc'].id,
         time: 5000,
         walkingType: WalkingType.None,
     },
     '4': {
         id: '4',
         location: { x: 400, y: 500 },
-        characterTemplateId: MonsterTemplates['Orc'].id,
+        templateId: MonsterTemplates['Orc'].id,
         time: 6000,
         walkingType: WalkingType.None,
     },
     '5': {
         id: '5',
         location: { x: 300, y: 500 },
-        characterTemplateId: MonsterTemplates['Orc'].id,
+        templateId: MonsterTemplates['Orc'].id,
         time: 7000,
         walkingType: WalkingType.None,
     },
     '6': {
         id: '6',
         location: { x: 1300, y: 850 },
-        characterTemplateId: MonsterTemplates['OrcSpearman'].id,
+        templateId: MonsterTemplates['OrcSpearman'].id,
         walkingType: WalkingType.Patrol,
         patrolPath: [
             { x: 1100, y: 950 },
@@ -57,7 +57,7 @@ export const MonsterRespawns: Record<string, CharacterRespawn> = {
     '7': {
         id: '7',
         location: { x: 1450, y: 850 },
-        characterTemplateId: MonsterTemplates['OrcSpearman'].id,
+        templateId: MonsterTemplates['OrcSpearman'].id,
         walkingType: WalkingType.Patrol,
         patrolPath: [
             { x: 1100, y: 950 },
@@ -68,7 +68,7 @@ export const MonsterRespawns: Record<string, CharacterRespawn> = {
     '8': {
         id: '8',
         location: { x: 1450, y: 1000 },
-        characterTemplateId: MonsterTemplates['OrcSpearman'].id,
+        templateId: MonsterTemplates['OrcSpearman'].id,
         walkingType: WalkingType.Patrol,
         patrolPath: [
             { x: 1100, y: 950 },
@@ -116,7 +116,7 @@ export const MonsterRespawns: Record<string, CharacterRespawn> = {
     '11': {
         id: '11',
         location: { x: 1300, y: 900 },
-        characterTemplateId: MonsterTemplates['OrcSpearman'].id,
+        templateId: MonsterTemplates['OrcSpearman'].id,
         time: 2000,
         walkingType: WalkingType.Patrol,
         patrolPath: [
