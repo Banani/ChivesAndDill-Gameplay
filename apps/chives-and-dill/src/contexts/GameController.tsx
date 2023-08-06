@@ -16,6 +16,7 @@ interface GameController {
     activeTargetId: string,
     setActiveTarget: (targetId: string) => void,
     mousePosition: Location,
+    activeCharacterId: string;
 }
 
 export const GameControllerContext = React.createContext<GameController>(null);
@@ -86,7 +87,7 @@ export const GameController = ({ children }) => {
     }, []);
 
     return (
-        <GameControllerContext.Provider value={{ mousePosition, activeTargetId, setActiveTarget: setActiveTargetId }}>
+        <GameControllerContext.Provider value={{ mousePosition, activeTargetId, setActiveTarget: setActiveTargetId, activeCharacterId }}>
             <div onKeyDown={(event) => keyPressHandler(event)} tabIndex={0}>
                 {children}
             </div>

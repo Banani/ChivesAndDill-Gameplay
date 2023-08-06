@@ -1,4 +1,4 @@
-import { CharacterDirection, CharacterMovement, GlobalStore } from "@bananos/types";
+import { CharacterDirection, CharacterMovement, CharacterType, GlobalStore } from "@bananos/types";
 import _, { forEach, now } from "lodash";
 import * as PIXI from 'pixi.js';
 import { BLOCK_SIZE } from "../../consts/consts";
@@ -136,7 +136,14 @@ export class PlayerRenderer implements Renderer {
             this.characters[characterId].height = BLOCK_SIZE;
             this.characters[characterId].width = BLOCK_SIZE;
             this.characters[characterId].interactive = true;
-            this.characters[characterId].on('pointerdown', () => gameApi.setActiveTarget(characterId));
+            this.characters[characterId].on('pointerdown', () => {
+                gameApi.setActiveTarget(characterId);
+
+                if (character.type === CharacterType.Npc) {
+                    gameApi.openNpcDialog(characterId);
+
+                }
+            });
             this.container.addChild(this.characters[characterId])
         });
 
