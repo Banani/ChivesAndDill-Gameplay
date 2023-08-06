@@ -1,10 +1,10 @@
 import { GlobalStoreModule } from '@bananos/types';
 import React, { useContext, useEffect } from 'react';
+import { GameControllerContext } from '../contexts/GameController';
 import { ModalsManagerContextProvider } from '../contexts/ModalsManagerContext';
 import { useEngineModuleReader } from '../hooks/useEngineModuleReader';
 import { GameUserInterface } from './GameUserInterface';
 import { ViewPort } from './ViewPort';
-import { GameControllerContext } from './gameController/gameController';
 import { ClassesModal } from './guiContent/classesModal/classesModal';
 
 export interface GameApi {

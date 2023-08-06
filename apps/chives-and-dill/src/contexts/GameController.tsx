@@ -1,9 +1,9 @@
 import { CommonClientMessages, GlobalStoreModule, Location, SpellClientMessages } from '@bananos/types';
 import _ from 'lodash';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { KeyBoardContext } from '../../contexts/KeyBoardContext';
-import { useEngineModuleReader } from '../../hooks';
-import { SocketContext } from './socketCommunicator';
+import { useEngineModuleReader } from '../hooks';
+import { KeyBoardContext } from './KeyBoardContext';
+import { SocketContext } from './SocketCommunicator';
 
 const keyMovementMap = {
     w: { y: -1 },

@@ -1,7 +1,7 @@
 import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
+import { SocketContext } from 'apps/chives-and-dill/src/contexts/SocketCommunicator';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { useContext } from 'react';
-import { SocketContext } from '../../../gameController/socketCommunicator';
 import styles from './OptionsModal.module.scss';
 
 export const OptionsModal = ({ setOptionsVisible, playerId }) => {

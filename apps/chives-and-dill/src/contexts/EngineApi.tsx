@@ -1,6 +1,6 @@
 import { ChatChannelClientMessages, ItemClientMessages, NpcClientMessages, SpellClientMessages } from '@bananos/types';
 import React, { useContext } from 'react';
-import { SocketContext } from '../app/gameController/socketCommunicator';
+import { SocketContext } from './SocketCommunicator';
 
 interface EngineApiMethods {
     requestItemTemplates: (itemTemplateIds: string[]) => void;

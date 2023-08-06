@@ -1,13 +1,13 @@
 import React from 'react';
 import { ContextMenu } from '../components';
 import { EngineApi } from '../contexts/EngineApi';
+import { GameController } from '../contexts/GameController';
 import { ItemTemplateContextProvider } from '../contexts/ItemTemplateContext';
 import { KeyBoardContextProvider } from '../contexts/KeyBoardContext';
 import { MenuContextProvider } from '../contexts/MenuContext';
 import { PackageContextProvider } from '../contexts/PackageContext';
+import { SocketCommunicator } from '../contexts/SocketCommunicator';
 import { Game } from './game';
-import { GameController } from './gameController/gameController';
-import { SocketCommunicator } from './gameController/socketCommunicator';
 
 export default function App() {
     return (

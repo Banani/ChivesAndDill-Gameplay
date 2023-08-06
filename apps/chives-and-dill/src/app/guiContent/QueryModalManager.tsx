@@ -2,7 +2,7 @@ import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useContext } from 'react';
-import { SocketContext } from '../gameController/socketCommunicator';
+import { SocketContext } from '../../contexts/SocketCommunicator';
 import { QueryModal } from './components/queryModal/QueryModal';
 
 export const QueryModalManager = () => {

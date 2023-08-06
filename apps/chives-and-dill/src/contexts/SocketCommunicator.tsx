@@ -1,8 +1,8 @@
 import { EngineMessages } from '@bananos/types';
 import React, { useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import { PackageContext } from '../../contexts/PackageContext';
-import { environment } from '../../environments/environment';
+import { environment } from '../environments/environment';
+import { PackageContext } from './PackageContext';
 
 export const SocketContext = React.createContext(null);
 

@@ -1,10 +1,10 @@
 import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { SocketContext } from 'apps/chives-and-dill/src/app/gameController/socketCommunicator';
 import { ItemPreview } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import { SocketContext } from 'apps/chives-and-dill/src/contexts/SocketCommunicator';
 import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
 import { usePagination } from 'apps/creator-web/src/app/views/components/pagination/usePagination';
 import _ from 'lodash';

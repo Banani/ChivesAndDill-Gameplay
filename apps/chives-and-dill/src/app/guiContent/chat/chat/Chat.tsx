@@ -5,7 +5,7 @@ import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { map } from 'lodash';
 import React, { useContext, useEffect, useRef } from 'react';
-import { GameControllerContext } from '../../../gameController/gameController';
+import { GameControllerContext } from '../../../../contexts/GameController';
 import { ChannelNumeratorContext } from '../contexts';
 import styles from './Chat.module.scss';
 import { MessageInput } from './components';

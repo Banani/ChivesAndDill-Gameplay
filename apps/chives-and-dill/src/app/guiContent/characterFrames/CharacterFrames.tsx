@@ -1,7 +1,7 @@
 import { AbsorbShieldTrack, ExperienceExternalTrack, GlobalStoreModule, PowerPointsTrack, PowerStackType, TimeEffect } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { useContext } from 'react';
-import { GameControllerContext } from '../../gameController/gameController';
+import { GameControllerContext } from '../../../contexts/GameController';
 import styles from './CharacterFrames.module.scss';
 import { PlayerIcon } from './playerIcon/PlayerIcon';
 import { TargetIcon } from './targetIcon/TargetIcon';

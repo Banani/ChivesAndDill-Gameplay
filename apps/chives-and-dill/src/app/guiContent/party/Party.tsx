@@ -3,7 +3,7 @@ import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import leaderIcon from '../../../assets/spritesheets/icons/leaderIcon.png';
-import { GameControllerContext } from '../../gameController/gameController';
+import { GameControllerContext } from '../../../contexts/GameController';
 import styles from './Party.module.scss';
 
 export const PartyModal = () => {

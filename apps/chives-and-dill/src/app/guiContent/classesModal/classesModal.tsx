@@ -1,8 +1,8 @@
 import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
+import { SocketContext } from 'apps/chives-and-dill/src/contexts/SocketCommunicator';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { SocketContext } from '../../gameController/socketCommunicator';
 import { RectangleButton } from '../components/rectangleButton/RectangleButton';
 import styles from './classesModal.module.scss';
 
