@@ -1,6 +1,8 @@
 import { CharacterDirection, CharacterMovement, CharacterType, GlobalStore } from "@bananos/types";
 import _, { forEach, now } from "lodash";
 import * as PIXI from 'pixi.js';
+import cursorSpeak from '../../assets/spritesheets/cursors/speakCursor.png';
+import cursorSword from '../../assets/spritesheets/cursors/swordCursor.png';
 import { BLOCK_SIZE } from "../../consts/consts";
 import { GameApi } from "../game";
 import { Renderer } from "./Renderer";
@@ -136,6 +138,13 @@ export class PlayerRenderer implements Renderer {
             this.characters[characterId].height = BLOCK_SIZE;
             this.characters[characterId].width = BLOCK_SIZE;
             this.characters[characterId].interactive = true;
+
+            if (character.type === CharacterType.Npc) {
+                this.characters[characterId].cursor = `url(${cursorSpeak}), auto`;
+            } else if (character.type === CharacterType.Monster) {
+                this.characters[characterId].cursor = `url(${cursorSword}), auto`;
+            }
+
             this.characters[characterId].on('pointerdown', () => {
                 gameApi.setActiveTarget(characterId);
 
