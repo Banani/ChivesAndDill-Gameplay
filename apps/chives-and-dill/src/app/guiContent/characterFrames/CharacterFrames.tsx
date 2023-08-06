@@ -1,8 +1,7 @@
 import { AbsorbShieldTrack, ExperienceExternalTrack, GlobalStoreModule, PowerPointsTrack, PowerStackType, TimeEffect } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
-import { selectActiveTargetId } from 'apps/chives-and-dill/src/stores';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import { GameControllerContext } from '../../gameController/gameController';
 import styles from './CharacterFrames.module.scss';
 import { PlayerIcon } from './playerIcon/PlayerIcon';
 import { TargetIcon } from './targetIcon/TargetIcon';
@@ -31,7 +30,7 @@ export const CharacterFrames = () => {
     const { data: combatState, lastUpdateTime: combatStateLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.COMBAT_STATE);
     const { data: timeEffects, lastUpdateTime: timeEffectsLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.TIME_EFFECTS);
     const { data: absorbShields, lastUpdateTime: absorbShieldsLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.ABSORB_SHIELDS);
-    const activeTargetId = useSelector(selectActiveTargetId);
+    const { activeTargetId } = useContext(GameControllerContext);
 
     return <CharacterFramesInternal
         activeTargetId={activeTargetId}

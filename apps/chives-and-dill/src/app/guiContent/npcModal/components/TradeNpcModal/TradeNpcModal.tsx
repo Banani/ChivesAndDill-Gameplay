@@ -1,18 +1,18 @@
 import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { SocketContext } from 'apps/chives-and-dill/src/app/gameController/socketCommunicator';
+import { ItemPreview } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
 import { usePagination } from 'apps/creator-web/src/app/views/components/pagination/usePagination';
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
-import { SocketContext } from '../../../../gameController/socketContext';
+import { ItemPreviewHighlight } from '../../../../../components/itemPreview/ItemPreview';
 import { MoneyBar } from '../../../../guiContent/moneyBar/MoneyBar';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
 import styles from './TradeNpcModal.module.scss';
-import { ItemPreview } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
-import { ItemPreviewHighlight } from '../../../../../components/itemPreview/ItemPreview';
 
 export const TradeNpcModal = ({ closeNpcModal }) => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
@@ -23,8 +23,7 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
     const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
     const [itemsAmount, updateItemsAmount] = useState(0);
 
-    const context = useContext(SocketContext);
-    const { socket } = context;
+    const { socket } = useContext(SocketContext);
 
     const { start, end, prevPage, nextPage, page, allPagesCount } = usePagination({
         pageSize: 10,

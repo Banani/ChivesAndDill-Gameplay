@@ -1,12 +1,9 @@
-import { CommonClientMessages, GlobalStoreModule, SpellClientMessages } from '@bananos/types';
+import { CommonClientMessages, GlobalStoreModule, Location, SpellClientMessages } from '@bananos/types';
 import _ from 'lodash';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { KeyBoardContext } from '../../contexts/KeyBoardContext';
 import { useEngineModuleReader } from '../../hooks';
-import { selectActiveTargetId } from '../../stores';
-import { SocketContext } from '../gameController/socketContext';
-import { GameControllerContext } from './gameControllerContext';
+import { SocketContext } from './socketCommunicator';
 
 const keyMovementMap = {
     w: { y: -1 },
@@ -15,15 +12,23 @@ const keyMovementMap = {
     d: { x: 1 },
 };
 
-const GameController = ({ children }) => {
+interface GameController {
+    activeTargetId: string,
+    setActiveTarget: (targetId: string) => void,
+    mousePosition: Location,
+}
+
+export const GameControllerContext = React.createContext<GameController>(null);
+
+export const GameController = ({ children }) => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
     const { data: characterMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
     const { data: availableSpells } = useEngineModuleReader(GlobalStoreModule.AVAILABLE_SPELLS);
-    const keyBoardContext = useContext(KeyBoardContext);
-    const activeTargetId = useSelector(selectActiveTargetId);
 
-    const context = useContext(SocketContext);
-    const { socket } = context;
+    const keyBoardContext = useContext(KeyBoardContext);
+    const { socket } = useContext(SocketContext);
+
+    const [activeTargetId, setActiveTargetId] = useState<string | null>(null)
     const [mousePosition, setMousePosition] = useState({ x: null, y: null });
 
     let gameWidth = window.innerWidth;
@@ -47,7 +52,7 @@ const GameController = ({ children }) => {
         return () => {
             keyBoardContext.removeKeyHandler('ConfirmationDialogEnter');
         };
-    }, []);
+    }, [socket]);
 
     const keyPressHandler = (event) => {
         const key = event.key.toLowerCase();
@@ -81,12 +86,10 @@ const GameController = ({ children }) => {
     }, []);
 
     return (
-        <GameControllerContext.Provider value={{ mousePosition }}>
+        <GameControllerContext.Provider value={{ mousePosition, activeTargetId, setActiveTarget: setActiveTargetId }}>
             <div onKeyDown={(event) => keyPressHandler(event)} tabIndex={0}>
                 {children}
             </div>
         </GameControllerContext.Provider>
     );
 };
-
-export default GameController;

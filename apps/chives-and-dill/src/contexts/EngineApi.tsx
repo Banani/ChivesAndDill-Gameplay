@@ -1,6 +1,6 @@
 import { ChatChannelClientMessages, ItemClientMessages, NpcClientMessages, SpellClientMessages } from '@bananos/types';
 import React, { useContext } from 'react';
-import { SocketContext } from '../app/gameController/socketContext';
+import { SocketContext } from '../app/gameController/socketCommunicator';
 
 interface EngineApiMethods {
     requestItemTemplates: (itemTemplateIds: string[]) => void;
@@ -20,8 +20,7 @@ interface EngineApiMethods {
 export const EngineApiContext = React.createContext<EngineApiMethods>(null);
 
 export const EngineApi = ({ children }) => {
-    const context = useContext(SocketContext);
-    const { socket } = context;
+    const { socket } = useContext(SocketContext);
 
     return (
         <EngineApiContext.Provider

@@ -1,15 +1,14 @@
 import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { useContext } from 'react';
-import { SocketContext } from '../../../gameController/socketContext';
+import { SocketContext } from '../../../gameController/socketCommunicator';
 import styles from './OptionsModal.module.scss';
 
 export const OptionsModal = ({ setOptionsVisible, playerId }) => {
     const { data: party } = useEngineModuleReader(GlobalStoreModule.PARTY);
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data
 
-    const context = useContext(SocketContext);
-    const { socket } = context;
+    const { socket } = useContext(SocketContext);
 
     const partyAction = (type) => {
         setOptionsVisible(false);

@@ -3,15 +3,14 @@ import { Sprite } from '@inlet/react-pixi';
 import _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import defaultCursor from '../../assets/spritesheets/cursors/defaultCursor.png';
 import cursorLoot from '../../assets/spritesheets/cursors/lootCursor.png';
 import cursorSpeak from '../../assets/spritesheets/cursors/speakCursor.png';
 import cursorSword from '../../assets/spritesheets/cursors/swordCursor.png';
 import { BLOCK_SIZE } from '../../consts/consts';
 import { KeyBoardContext } from '../../contexts/KeyBoardContext';
-import { setActiveTarget } from '../../stores';
-import { SocketContext } from '../gameController/socketContext';
+import { GameControllerContext } from '../gameController/gameController';
+import { SocketContext } from '../gameController/socketCommunicator';
 import { PlayerBars } from './PlayerBars';
 import { PlayerName } from './PlayerName';
 
@@ -22,13 +21,13 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
         const [characterStatus, setCharacterStatus] = useState('standingDown');
         const [cursorImage, setCursorImage] = useState(`url(${defaultCursor}), auto`);
         const keyBoardContext = useContext(KeyBoardContext);
+        const { setActiveTarget } = useContext(GameControllerContext);
 
         const playerSprite = characterViewsSettings[player.sprites];
         const w = playerSprite.spriteWidth;
         const h = playerSprite.spriteHeight;
         const playerPoints = characterPowerPoints[player.id] ?? { maxHp: 0, currentHp: 0 };
         const { currentHp } = playerPoints;
-        const dispatch = useDispatch();
 
         const { socket } = useContext(SocketContext);
 
@@ -123,7 +122,7 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
         };
 
         const handlePlayerClick = () => {
-            dispatch(setActiveTarget({ characterId: player.id }));
+            setActiveTarget(player.id);
             handleNpcClick();
             handleMonsterClick();
         };

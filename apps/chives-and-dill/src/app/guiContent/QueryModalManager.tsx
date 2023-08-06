@@ -2,15 +2,14 @@ import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useContext } from 'react';
-import { SocketContext } from '../gameController/socketContext';
+import { SocketContext } from '../gameController/socketCommunicator';
 import { QueryModal } from './components/queryModal/QueryModal';
 
 export const QueryModalManager = () => {
     const { data: partyInvitation } = useEngineModuleReader(GlobalStoreModule.PARTY_INVITATION);
     const { data: character } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
 
-    const context = useContext(SocketContext);
-    const { socket } = context;
+    const { socket } = useContext(SocketContext);
 
     const handleInvite = (type) => {
         socket?.emit(type);

@@ -1,15 +1,15 @@
 import { CommonClientMessages } from '@bananos/types';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { ItemPreview, ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 import { useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { usePagination } from '../../../components/pagination/usePagination';
-import { SocketContext } from '../../gameController/socketContext';
+import { SocketContext } from '../../gameController/socketCommunicator';
 import { RectangleButton } from '../components/rectangleButton/RectangleButton';
 import { CalculateCurrenty } from '../moneyBar/CalculateCurrency';
 import styles from "./LootModal.module.scss";
-import { ItemPreview, ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 
 interface Item {
     amount: number,
@@ -22,8 +22,7 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     const [itemsAmount, updateItemsAmount] = useState(0);
     const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
 
-    const context = useContext(SocketContext);
-    const { socket } = context;
+    const { socket } = useContext(SocketContext);
 
     const { start, end, prevPage, nextPage, page, allPagesCount } = usePagination({
         pageSize: 3,

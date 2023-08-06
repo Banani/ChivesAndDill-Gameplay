@@ -3,10 +3,9 @@ import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
-import { setActiveTarget } from 'apps/chives-and-dill/src/stores';
 import { map } from 'lodash';
 import React, { useContext, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { GameControllerContext } from '../../../gameController/gameController';
 import { ChannelNumeratorContext } from '../contexts';
 import styles from './Chat.module.scss';
 import { MessageInput } from './components';
@@ -44,14 +43,14 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
 
     const engineApiContext = useContext(EngineApiContext);
     const menuContext = useContext(MenuContext);
-    const dispatch = useDispatch();
+    const { setActiveTarget } = useContext(GameControllerContext);
     const lastMessage = useRef(null);
 
     const modes = ['General', 'Combat Log', 'Global'];
 
     const mapChannels = modes.map((channel) => <div className={styles.channel}>{channel}</div>);
 
-    const characterName = (character) => <span onClick={() => dispatch(setActiveTarget({ characterId: character.id }))}>[{character.name}]</span>;
+    const characterName = (character) => <span onClick={() => setActiveTarget(character.id)}>[{character.name}]</span>;
 
     const MessageMappers: Record<ChannelType, (message: ChatMessage) => JSX.Element> = {
         [ChannelType.Range]: (message: RangeChatMessage) => (

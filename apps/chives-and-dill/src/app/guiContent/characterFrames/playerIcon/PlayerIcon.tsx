@@ -1,7 +1,6 @@
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
-import { setActiveTarget } from 'apps/chives-and-dill/src/stores';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { GameControllerContext } from '../../../gameController/gameController';
 import { GetAbsorbsValue } from '../../../player/GetPlayerAbsorbs';
 import { CharacterFramesContext } from '../CharacterFrames';
 import { OptionsModal } from '../optionsModal/OptionsModal';
@@ -12,7 +11,7 @@ export const PlayerIcon = ({ playerId }) => {
 
     const ref = useRef<HTMLDivElement>(null);
     const keyBoardContext = useContext(KeyBoardContext);
-    const dispatch = useDispatch();
+    const { setActiveTarget } = useContext(GameControllerContext);
 
     const player = characters[playerId];
     const { name, avatar } = player;
@@ -58,7 +57,7 @@ export const PlayerIcon = ({ playerId }) => {
         if (optionsVisible) {
             setOptionsVisible(false);
         } else {
-            dispatch(setActiveTarget({ characterId: null }))
+            setActiveTarget(null);
         }
     };
 

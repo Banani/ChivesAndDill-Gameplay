@@ -2,16 +2,15 @@ import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { SocketContext } from '../../gameController/socketContext';
-import styles from './classesModal.module.scss';
+import { SocketContext } from '../../gameController/socketCommunicator';
 import { RectangleButton } from '../components/rectangleButton/RectangleButton';
+import styles from './classesModal.module.scss';
 
 export const ClassesModal = () => {
     const { data: characterClasses } = useEngineModuleReader(GlobalStoreModule.CHARACTER_CLASS);
     const [selectedCharacterClass, setSelectedCharacterClass] = useState(null);
     const [nick, setNick] = useState('Kamil');
-    const context = useContext(SocketContext);
-    const { socket } = context;
+    const { socket } = useContext(SocketContext);
 
     const getBorderColor = (characterClassId) => {
         if (selectedCharacterClass === characterClassId) {
