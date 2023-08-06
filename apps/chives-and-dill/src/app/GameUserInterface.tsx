@@ -12,8 +12,7 @@ import { QuestManager } from './guiContent/quests';
 
 export function GameUserInterface() {
 
-    /*      {activeCharacterId ? <ActivePlayerTimeEffects playerId={activeCharacterId} /> : null}
-            {!_.isEmpty(activeLoot[Object.keys(activeLoot ?? {})?.[0]]) ? <LootModal
+    /* {!_.isEmpty(activeLoot[Object.keys(activeLoot ?? {})?.[0]]) ? <LootModal
                 monsterId={Object.keys(activeLoot ?? {})?.[0]}
                 activeLoot={activeLoot[Object.keys(activeLoot ?? {})?.[0]]} /> : null}
          */

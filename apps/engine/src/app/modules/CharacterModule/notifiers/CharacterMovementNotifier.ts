@@ -11,11 +11,11 @@ import type {
     PlayerStopedMovementVectorEvent,
     PlayerTriesToStartedMovementEvent,
 } from '../../../types';
-import { CharacterEngineEvents, NewCharacterCreatedEvent } from '../../CharacterModule/Events';
-import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
+import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
+import { CharacterEngineEvents, NewCharacterCreatedEvent } from '../Events';
 
 // TODO: wrong type, it should not be Character
-export class PlayerMovementNotifier extends Notifier<Character> {
+export class CharacterMovementNotifier extends Notifier<Character> {
     constructor() {
         super({ key: GlobalStoreModule.CHARACTER_MOVEMENTS });
         this.eventsToHandlersMap = {
