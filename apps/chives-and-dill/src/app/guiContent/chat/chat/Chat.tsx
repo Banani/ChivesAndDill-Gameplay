@@ -3,7 +3,7 @@ import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
-import { map } from 'lodash';
+import { forEach, map } from 'lodash';
 import React, { useContext, useEffect, useRef } from 'react';
 import { GameControllerContext } from '../../../../contexts/GameController';
 import { ChannelNumeratorContext } from '../contexts';
@@ -40,16 +40,13 @@ export const Chat = () => {
 
 const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getChannelNumberById, lastUpdateTime }: ChatInternalProps) => {
     const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
-
     const engineApiContext = useContext(EngineApiContext);
     const menuContext = useContext(MenuContext);
     const { setActiveTarget } = useContext(GameControllerContext);
+
     const lastMessage = useRef(null);
-
     const modes = ['General', 'Combat Log', 'Global'];
-
-    const mapChannels = modes.map((channel) => <div className={styles.channel}>{channel}</div>);
-
+    const mapChannels = modes.map((channel, id) => <div key={id} className={styles.channel}>{channel}</div>);
     const characterName = (character) => <span onClick={() => setActiveTarget(character.id)}>[{character.name}]</span>;
 
     const MessageMappers: Record<ChannelType, (message: ChatMessage) => JSX.Element> = {
@@ -66,9 +63,6 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
         ),
         [ChannelType.System]: (message: SystemChatMessage) => {
             if (message.itemId) {
-                if (!itemTemplates[message.itemId]) {
-                    requestItemTemplate(message.itemId);
-                }
                 if (!itemTemplates[message.itemId]) {
                     return <span className={styles.itemReceiveMessage}>Loading...</span>
                 }
@@ -104,6 +98,14 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
     };
 
     useEffect(() => {
+        forEach(chatMessages, message => {
+            if (message.channelType === ChannelType.System && message.itemId && !itemTemplates[message.itemId]) {
+                requestItemTemplate(message.itemId);
+            }
+        });
+    }, [chatMessages]);
+
+    useEffect(() => {
         lastMessage.current.scrollIntoView();
     }, [chatMessages, lastUpdateTime]);
 
@@ -112,8 +114,8 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
             <div className={styles.channelsContainer}>{mapChannels}</div>
             <div className={styles.chatContent}>
                 <div className={styles.messagesHolder}>
-                    {map(chatMessages, (message) => (
-                        <div className={styles.message}>{MessageMappers[message.channelType](message)}</div>
+                    {map(chatMessages, (message, id) => (
+                        <div key={id} className={styles.message}>{MessageMappers[message.channelType](message)}</div>
                     ))}
                     <div ref={lastMessage}></div>
                 </div>

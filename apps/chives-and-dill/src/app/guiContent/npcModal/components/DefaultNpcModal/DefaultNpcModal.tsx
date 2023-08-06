@@ -43,6 +43,7 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
 
     const questItem = (questId) => (
         <div
+            key={questId}
             className={styles.questName}
             onClick={() => {
                 openQuest(questId);
