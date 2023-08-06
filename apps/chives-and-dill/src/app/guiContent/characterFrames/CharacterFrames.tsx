@@ -60,7 +60,7 @@ const CharacterFramesInternal = React.memo((characterFramesData: CharacterFrames
     return (
         <CharacterFramesContext.Provider value={characterFramesData}>
             <div className={styles.CharacterFrames}>
-                {characterFramesData.activeCharacterId ? <PlayerIcon playerId={characterFramesData.activeCharacterId}></PlayerIcon> : null}
+                {characterFramesData.activeCharacterId ? <PlayerIcon playerId={characterFramesData.activeCharacterId} /> : null}
                 <TargetIcon />
             </div>
         </CharacterFramesContext.Provider >

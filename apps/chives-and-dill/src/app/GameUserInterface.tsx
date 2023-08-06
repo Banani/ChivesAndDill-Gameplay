@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { QueryModalManager } from './guiContent/QueryModalManager';
+import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
 import { BottomBar } from './guiContent/bottomBar/BottomBar';
 import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
 import { ChatManager } from './guiContent/chat';
@@ -27,6 +28,7 @@ export function GameUserInterface() {
             <PartyModal />
             <BottomBar />
             <NpcModal />
+            <ActivePlayerTimeEffects />
         </>
     );
 }
