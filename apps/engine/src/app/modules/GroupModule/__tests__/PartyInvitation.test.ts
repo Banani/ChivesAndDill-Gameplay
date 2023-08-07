@@ -1,4 +1,4 @@
-import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
+import { GlobalStoreModule, GroupClientActions } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { merge } from 'lodash';
 import { MAX_PARTY_SIZE } from '../services';
@@ -26,7 +26,7 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['2'].characterId
         });
 
@@ -43,13 +43,13 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['3'].characterId
         });
 
 
         let dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['3'].characterId
         });
 
@@ -60,13 +60,13 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['3'].characterId
         });
 
 
         let dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['1'].characterId
         });
 
@@ -77,7 +77,7 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: "SOME_RANDOM_ID"
         });
 
@@ -88,13 +88,13 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['2'].characterId
         });
 
 
         let dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.DeclineInvite
+            type: GroupClientActions.DeclineInvite
         });
 
         checkIfPackageIsValid(GlobalStoreModule.PARTY_INVITATION, dataPackage, {
@@ -109,13 +109,13 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['2'].characterId
         });
 
 
         let dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         checkIfPackageIsValid(GlobalStoreModule.PARTY_INVITATION, dataPackage, {
@@ -129,13 +129,13 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['3'].characterId
         });
 
 
         let dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['1'].characterId
         });
 
@@ -146,7 +146,7 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         checkIfErrorWasHandled(GlobalStoreModule.PARTY_INVITATION, 'You do not have pending invitation.', dataPackage);
@@ -156,16 +156,16 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['2'].characterId
         });
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         let dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['2'].characterId
         });
 
@@ -176,7 +176,7 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['1'].characterId
         });
 
@@ -187,16 +187,16 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['2'].characterId
         });
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         let dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['3'].characterId
         });
 
@@ -212,17 +212,17 @@ describe('Group module - Party Invitation', () => {
 
         for (let i = 2; i < MAX_PARTY_SIZE + 1; i++) {
             engineManager.callPlayerAction(players['1'].socketId, {
-                type: GroupClientMessages.InviteToParty,
+                type: GroupClientActions.InviteToParty,
                 characterId: players[i].characterId
             });
 
             engineManager.callPlayerAction(players[i].socketId, {
-                type: GroupClientMessages.AcceptInvite
+                type: GroupClientActions.AcceptInvite
             });
         }
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['41'].characterId
         });
 
@@ -234,34 +234,34 @@ describe('Group module - Party Invitation', () => {
         players['4'] = engineManager.preparePlayerWithCharacter({ name: 'character_4' })
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['2'].characterId
         });
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['3'].characterId
         });
 
         engineManager.callPlayerAction(players['3'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['4'].characterId
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.LeaveParty
+            type: GroupClientActions.LeaveParty
         });
 
         let dataPackage = engineManager.callPlayerAction(players['4'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         checkIfPackageIsValid(GlobalStoreModule.PARTY, dataPackage, {
@@ -282,21 +282,21 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['2'].characterId
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['3'].characterId
         });
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         let dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         checkIfPackageIsValid(GlobalStoreModule.PARTY, dataPackage, {
@@ -317,25 +317,25 @@ describe('Group module - Party Invitation', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['2'].characterId
         });
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.InviteToParty,
+            type: GroupClientActions.InviteToParty,
             characterId: players['3'].characterId
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: GroupClientMessages.LeaveParty
+            type: GroupClientActions.LeaveParty
         });
 
         const dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
-            type: GroupClientMessages.AcceptInvite
+            type: GroupClientActions.AcceptInvite
         });
 
         checkIfPackageIsValid(GlobalStoreModule.PARTY, dataPackage, {

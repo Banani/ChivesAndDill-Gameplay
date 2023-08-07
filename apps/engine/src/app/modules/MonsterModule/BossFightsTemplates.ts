@@ -1,4 +1,4 @@
-import type { Spell } from '../SpellModule/types/SpellTypes';
+import { Spell } from "@bananos/types";
 
 export enum SpellAttackType {
     DirectRandomTarget = 'DirectRandomTarget',

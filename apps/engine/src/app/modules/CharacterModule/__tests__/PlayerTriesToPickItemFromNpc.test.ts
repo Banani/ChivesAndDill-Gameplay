@@ -1,4 +1,4 @@
-import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule, PlayerClientActions } from '@bananos/types';
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { CharacterDiedEvent, CharacterType } from 'apps/engine/src/app/types';
@@ -26,7 +26,7 @@ const setupEngine = () => {
             'respawn_1': {
                 id: 'respawn_1',
                 location: { x: 150, y: 100 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
@@ -71,7 +71,7 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
@@ -79,7 +79,7 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PickItemFromCorpse,
+            type: PlayerClientActions.PickItemFromCorpse,
             corpseId,
             itemId,
         });
@@ -118,12 +118,12 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PickItemFromCorpse,
+            type: PlayerClientActions.PickItemFromCorpse,
             corpseId,
             itemId: 'Some_random_id',
         });
@@ -151,7 +151,7 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
@@ -159,7 +159,7 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: CommonClientMessages.PickItemFromCorpse,
+            type: PlayerClientActions.PickItemFromCorpse,
             corpseId,
             itemId,
         });
@@ -187,7 +187,7 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
@@ -195,7 +195,7 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PickItemFromCorpse,
+            type: PlayerClientActions.PickItemFromCorpse,
             corpseId,
             itemId,
         });
@@ -231,7 +231,7 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
@@ -239,12 +239,12 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PickItemFromCorpse,
+            type: PlayerClientActions.PickItemFromCorpse,
             corpseId,
             itemId,
         });
@@ -280,7 +280,7 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
@@ -288,12 +288,12 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PickItemFromCorpse,
+            type: PlayerClientActions.PickItemFromCorpse,
             corpseId,
             itemId,
         });
@@ -321,7 +321,7 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
@@ -331,17 +331,17 @@ describe('PlayerTriesToPickItemFromNpc', () => {
         const itemId2 = Object.keys(dataPackage.activeLoot.data[corpseId].items)[1];
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PickItemFromCorpse,
+            type: PlayerClientActions.PickItemFromCorpse,
             corpseId,
             itemId: itemId1,
         });
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PickItemFromCorpse,
+            type: PlayerClientActions.PickItemFromCorpse,
             corpseId,
             itemId: itemId2,
         });

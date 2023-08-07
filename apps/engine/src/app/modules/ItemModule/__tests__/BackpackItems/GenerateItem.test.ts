@@ -1,4 +1,4 @@
-import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
+import { GlobalStoreModule, ItemClientActions } from '@bananos/types';
 import { MockedItemTemplates } from 'apps/engine/src/app/mocks';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from '../../../../testUtilities';
 import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../Events';
@@ -118,7 +118,7 @@ describe('GenerateItem', () => {
         let itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.MoveItemInBag,
+            type: ItemClientActions.MoveItemInBag,
             itemId,
             directionLocation: {
                 backpack: '1',
@@ -226,21 +226,21 @@ describe('GenerateItem', () => {
         let itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.SplitItemStackInBag,
+            type: ItemClientActions.SplitItemStackInBag,
             itemId,
             amount: 5,
             directionLocation: { backpack: '1', spot: '3' },
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.SplitItemStackInBag,
+            type: ItemClientActions.SplitItemStackInBag,
             itemId,
             amount: 5,
             directionLocation: { backpack: '1', spot: '5' },
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.SplitItemStackInBag,
+            type: ItemClientActions.SplitItemStackInBag,
             itemId,
             amount: 5,
             directionLocation: { backpack: '1', spot: '6' },

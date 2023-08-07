@@ -1,3 +1,4 @@
+import { SpellType } from '@bananos/types';
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
 import { EngineEventHandler } from 'apps/engine/src/app/types';
@@ -11,7 +12,6 @@ import {
     SpellReachedTargetEvent,
     SubSpellCastedEvent,
 } from '../../Events';
-import { SpellType } from '../../types/SpellTypes';
 import { filterCharactersBaseOnSpellImpact } from '../utils';
 
 export class DirectInstantSpellService extends EventParser {

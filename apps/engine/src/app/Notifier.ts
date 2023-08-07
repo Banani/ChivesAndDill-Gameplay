@@ -72,7 +72,7 @@ export abstract class Notifier<T = never> extends EventParser {
         if (events.length) {
             packageToSend.events = events.map(event => ({
                 ...event,
-                id: this.eventId++
+                id: (++this.eventId).toString()
             }));
         }
 
@@ -83,6 +83,12 @@ export abstract class Notifier<T = never> extends EventParser {
         const tempMulticast = this.multicast;
 
         forEach(tempMulticast.messages, (dataPackage, receiver) => {
+            if (dataPackage.events.length) {
+                dataPackage.events = dataPackage.events.map(event => ({
+                    ...event,
+                    id: (++this.eventId).toString()
+                }));
+            }
             forEach(dataPackage, (dataPackage, updateType) => {
                 if (Object.keys(tempMulticast.messages[receiver][updateType]).length === 0) {
                     delete tempMulticast.messages[receiver][updateType];

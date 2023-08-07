@@ -1,11 +1,10 @@
-import { Attribute, DamageEffect, GlobalStoreModule, Location, RecursivePartial } from '@bananos/types';
+import { Attribute, DamageEffect, GlobalStoreModule, Location, RecursivePartial, SpellEffectType } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { MockedMonsterTemplates } from '../../../mocks';
 import { Character, CharacterType } from '../../../types';
 import { WalkingType } from '../../../types/CharacterRespawn';
 import { CharacterUnion } from '../../../types/CharacterUnion';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
-import { SpellEffectType } from '../../SpellModule/types/SpellTypes';
 import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../Events';
 import { MonsterTemplate } from '../MonsterTemplates';
 import { MonsterRespawnTemplateService, MonsterTemplateService } from '../services';
@@ -24,14 +23,14 @@ const setupEngine = ({ monsterTemplates, startingLocation }: RecursivePartial<{ 
             'respawn_1': {
                 id: 'respawn_1',
                 location: startingLocation ?? { x: 150, y: 100 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
             'respawn_2': {
                 id: 'respawn_2',
                 location: startingLocation ?? { x: 150, y: 100 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },

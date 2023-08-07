@@ -1,4 +1,4 @@
-import { ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
+import { ChatChannelClientActions, GlobalStoreModule } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from '../../../../testUtilities';
 
 interface setupEngineProps {
@@ -16,7 +16,7 @@ const setupEngine = ({ chatChannelName }: setupEngineProps = { chatChannelName: 
         '3': engineManager.preparePlayerWithCharacter({ name: 'character_3' }),
     };
 
-    const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientMessages.CreateChatChannel, chatChannelName });
+    const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientActions.CreateChatChannel, chatChannelName });
 
     const recentlyCreatedChatChannelId = Object.keys(dataPackage.chatChannel.data)[0];
 
@@ -28,13 +28,13 @@ describe('Chat channel - remove player character from channel action', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.RemovePlayerCharacterFromChatChannel,
+            type: ChatChannelClientActions.RemovePlayerCharacterFromChatChannel,
             characterId: players['2'].characterId,
             chatChannelId: recentlyCreatedChatChannelId,
         });
@@ -48,19 +48,19 @@ describe('Chat channel - remove player character from channel action', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['3'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
-            type: ChatChannelClientMessages.RemovePlayerCharacterFromChatChannel,
+            type: ChatChannelClientActions.RemovePlayerCharacterFromChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterId: players['2'].characterId,
         });
@@ -74,7 +74,7 @@ describe('Chat channel - remove player character from channel action', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.RemovePlayerCharacterFromChatChannel,
+            type: ChatChannelClientActions.RemovePlayerCharacterFromChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterId: players['2'].characterId,
         });

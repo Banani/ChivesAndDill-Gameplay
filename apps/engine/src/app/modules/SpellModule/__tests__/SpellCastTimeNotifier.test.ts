@@ -1,4 +1,4 @@
-import { GlobalStoreModule, SpellClientMessages } from '@bananos/types';
+import { GlobalStoreModule, PlayerClientActions } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { now } from 'lodash';
 import { MockedMonsterTemplates } from '../../../mocks';
@@ -18,7 +18,7 @@ const setupEngine = () => {
             'respawn_1': {
                 id: 'respawn_1',
                 location: { x: 150, y: 100 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
@@ -51,7 +51,7 @@ describe('Spell Cast Time Notifier', () => {
         const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: { x: 150, y: 100 },
             spellId: '1',
             targetId: monster.id

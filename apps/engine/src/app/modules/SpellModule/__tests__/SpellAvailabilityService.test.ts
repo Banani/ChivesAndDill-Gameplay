@@ -1,4 +1,4 @@
-import { EngineEventType, GlobalStoreModule, SpellClientMessages } from '@bananos/types';
+import { CharacterClientEvents, GlobalStoreModule, PlayerClientActions } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { MockedMonsterTemplates, MockedSpells } from '../../../mocks';
 import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
@@ -28,7 +28,7 @@ const setupEngine = () => {
             'respawn_1': {
                 id: 'respawn_1',
                 location: { x: 150, y: 100 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
@@ -58,7 +58,7 @@ describe('Spell availability service', () => {
         const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: { x: 150, y: 100 },
             spellId: '1',
             targetId: monster.id
@@ -77,11 +77,12 @@ describe('Spell availability service', () => {
             },
             events: [
                 {
+                    id: "1",
                     amount: 21,
                     characterId: "monster_0",
                     attackerId: 'playerCharacter_1',
                     spellId: '1',
-                    type: EngineEventType.CharacterLostHp,
+                    type: CharacterClientEvents.CharacterLostHp,
                 },
             ],
         });
@@ -93,7 +94,7 @@ describe('Spell availability service', () => {
         const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: { x: 150, y: 100 },
             spellId: '2',
             targetId: monster.id

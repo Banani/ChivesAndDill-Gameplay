@@ -19,6 +19,12 @@ import type {
     CharacterEvent,
     CharacterMovement,
     CorpseLoot,
+    EngineCharacterAction,
+    EngineGroupAction,
+    EngineItemAction,
+    EngineNpcAction,
+    EnginePlayerAction,
+    EngineSpellAction,
     ExperienceExternalTrack,
     GroupClientActions,
     ItemClientActions,
@@ -33,7 +39,7 @@ import type {
     SpellEvent,
     TimeEffect
 } from './modules';
-import type { ChatChannel, ChatChannelClientActions } from './modules/ChatPackage';
+import type { ChatChannel, ChatChannelClientActions, EngineChatAction } from './modules/ChatPackage';
 import { MapDefinition, MapSchema } from './modules/MapPackage';
 import { ExternalQuestProgress, QuestSchema } from './modules/QuestPackage';
 
@@ -174,11 +180,21 @@ export type EnginePackageEvent = CharacterEvent |
     SpellEvent |
     PlayerEvent;
 
-export type EngineAction = CharacterClientActions |
+export type ReceivedEnginePackageEvent = EnginePackageEvent & { id: string };
+
+export type EngineClientAction = CharacterClientActions |
     ChatChannelClientActions |
     GroupClientActions |
     ItemClientActions |
     NpcClientActions |
     PlayerClientActions |
     SpellClientActions;
+
+export type EngineAction = EngineCharacterAction |
+    EngineChatAction |
+    EngineGroupAction |
+    EngineItemAction |
+    EngineNpcAction |
+    EnginePlayerAction |
+    EngineSpellAction;
 

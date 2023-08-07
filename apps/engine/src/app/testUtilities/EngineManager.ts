@@ -1,4 +1,4 @@
-import { ClientMessages, CommonClientMessages, EngineAction, EnginePackage } from '@bananos/types';
+import { EngineAction, EngineClientAction, EnginePackage, PlayerClientActions } from '@bananos/types';
 import { MainEngine } from '../engines/MainEngine';
 import { MockedCharacterClasses, MockedItemTemplates, MockedMonsterTemplates, MockedNpcTemplates, MockedQuests, MockedSpells } from '../mocks';
 import {
@@ -162,7 +162,7 @@ export class EngineManager {
     private playerSocketIdIncrement = 0;
     private playerSockets = {};
     // socketId => action_name = callback
-    private playerActionHandlers: Record<string, Partial<Record<ClientMessages, (a?: any) => {}>>> = {};
+    private playerActionHandlers: Record<string, Partial<Record<EngineClientAction, (a?: any) => {}>>> = {};
 
     constructor({ watchForErrors } = { watchForErrors: false }) {
         this.watchForErrors = watchForErrors;
@@ -230,7 +230,7 @@ export class EngineManager {
 
     preparePlayerWithCharacter: (character: { name: string; characterClassId?: string }) => PlayerCharacterForTesting = (character) => {
         const id = this.addNewPlayer();
-        this.callPlayerAction(id, { type: CommonClientMessages.CreateCharacter, characterClassId: '1', ...character });
+        this.callPlayerAction(id, { type: PlayerClientActions.CreateCharacter, characterClassId: '1', ...character });
         const dataPackage = this.getLatestPlayerDataPackage(id);
 
         return {

@@ -1,3 +1,5 @@
+import { Location } from "../shared";
+
 export interface CharacterClass {
     id: string;
     name: string;
@@ -35,7 +37,8 @@ export enum PlayerClientActions {
 
 export interface CreateCharacter {
     type: PlayerClientActions.CreateCharacter;
-    npcId: string;
+    name: string;
+    characterClassId: string;
 }
 
 export interface CastSpell {

@@ -1,4 +1,4 @@
-import { DirectInstantSpell, EngineEventType, GlobalStoreModule, Location, RecursivePartial, SpellClientMessages } from '@bananos/types';
+import { CharacterClientEvents, DirectInstantSpell, GlobalStoreModule, Location, PlayerClientActions, RecursivePartial } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { MockedMonsterTemplates, MockedSpells } from '../../../mocks';
 import { CharacterType } from '../../../types';
@@ -29,7 +29,7 @@ const setupEngine = ({ monsterLocation, spell, amountOfPlayers }: RecursiveParti
             'monster_respawn_1': {
                 id: 'monster_respawn_1',
                 location: monsterLocation ?? { x: 150, y: 100 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
@@ -41,7 +41,7 @@ const setupEngine = ({ monsterLocation, spell, amountOfPlayers }: RecursiveParti
         'npc_respawn_1': {
             id: 'npc_respawn_1',
             location: { x: 100, y: 100 },
-            characterTemplateId: "1",
+            templateId: "1",
             time: 4000,
             walkingType: WalkingType.None,
         },
@@ -79,7 +79,7 @@ describe('Guided Projectile spell', () => {
         const monster: Monster = _.find(monsterDataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: monster.location,
             spellId: '3',
             targetId: monster.id
@@ -99,11 +99,12 @@ describe('Guided Projectile spell', () => {
             },
             events: [
                 {
+                    id: "1",
                     amount: 21,
                     attackerId: "playerCharacter_1",
                     characterId: "monster_0",
                     spellId: "3",
-                    type: EngineEventType.CharacterLostHp,
+                    type: CharacterClientEvents.CharacterLostHp,
                 },
             ]
         });
@@ -114,7 +115,7 @@ describe('Guided Projectile spell', () => {
         const monster: Monster = _.find(monsterDataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: monster.location,
             spellId: '3',
             targetId: null
@@ -130,7 +131,7 @@ describe('Guided Projectile spell', () => {
         const monster: Monster = _.find(monsterDataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: monster.location,
             spellId: '3',
             targetId: monster.id
@@ -146,7 +147,7 @@ describe('Guided Projectile spell', () => {
         const monster: Monster = _.find(monsterDataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: monster.location,
             spellId: '3',
             targetId: monster.id
@@ -161,7 +162,7 @@ describe('Guided Projectile spell', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: players['1'].character.location,
             spellId: '3',
             targetId: players['1'].character.id
@@ -177,11 +178,12 @@ describe('Guided Projectile spell', () => {
             },
             events: [
                 {
+                    id: "1",
                     amount: 21,
                     attackerId: "playerCharacter_1",
                     characterId: "playerCharacter_1",
                     spellId: "3",
-                    type: EngineEventType.CharacterLostHp,
+                    type: CharacterClientEvents.CharacterLostHp,
                 },
             ]
         });
@@ -191,7 +193,7 @@ describe('Guided Projectile spell', () => {
         const { players, engineManager } = setupEngine({ spell: { casterImpact: false } });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: players['1'].character.location,
             spellId: '3',
             targetId: players['1'].character.id
@@ -206,7 +208,7 @@ describe('Guided Projectile spell', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: players['2'].character.location,
             spellId: '3',
             targetId: players['2'].character.id
@@ -224,11 +226,12 @@ describe('Guided Projectile spell', () => {
             },
             events: [
                 {
+                    id: "1",
                     amount: 21,
                     attackerId: "playerCharacter_1",
                     characterId: "playerCharacter_2",
                     spellId: "3",
-                    type: EngineEventType.CharacterLostHp,
+                    type: CharacterClientEvents.CharacterLostHp,
                 },
             ]
         });
@@ -239,7 +242,7 @@ describe('Guided Projectile spell', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: players['1'].character.location,
             spellId: '3',
             targetId: players['1'].character.id
@@ -255,7 +258,7 @@ describe('Guided Projectile spell', () => {
         const npc: Npc = _.find(npcDataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Npc);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: SpellClientMessages.CastSpell,
+            type: PlayerClientActions.CastSpell,
             directionLocation: npc.location,
             spellId: '3',
             targetId: npc.id

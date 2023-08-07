@@ -1,4 +1,4 @@
-import { CommonClientMessages, GlobalStoreModule, RecursivePartial } from '@bananos/types';
+import { GlobalStoreModule, PlayerClientActions, RecursivePartial } from '@bananos/types';
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { CharacterDiedEvent, CharacterType } from 'apps/engine/src/app/types';
@@ -22,7 +22,7 @@ const setupEngine = ({ monsterTemplates }: RecursivePartial<{ monsterTemplates: 
             'respawn_1': {
                 id: 'respawn_1',
                 location: { x: 150, y: 100 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
@@ -115,7 +115,7 @@ describe('CorpseDrop', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
         });
 

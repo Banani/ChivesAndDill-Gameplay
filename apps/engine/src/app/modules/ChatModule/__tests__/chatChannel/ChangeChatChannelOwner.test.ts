@@ -1,4 +1,4 @@
-import { ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
+import { ChatChannelClientActions, GlobalStoreModule } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from '../../../../testUtilities';
 
 interface setupEngineProps {
@@ -16,7 +16,7 @@ const setupEngine = ({ chatChannelName }: setupEngineProps = { chatChannelName: 
         '3': engineManager.preparePlayerWithCharacter({ name: 'character_3' }),
     };
 
-    const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientMessages.CreateChatChannel, chatChannelName });
+    const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientActions.CreateChatChannel, chatChannelName });
 
     const recentlyCreatedChatChannelId = Object.keys(dataPackage.chatChannel.data)[0];
 
@@ -28,13 +28,13 @@ describe('Chat channel - change chat channel owner', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.ChangeChatChannelOwner,
+            type: ChatChannelClientActions.ChangeChatChannelOwner,
             chatChannelId: recentlyCreatedChatChannelId,
             newOwnerId: players['2'].characterId,
         });
@@ -48,13 +48,13 @@ describe('Chat channel - change chat channel owner', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.ChangeChatChannelOwner,
+            type: ChatChannelClientActions.ChangeChatChannelOwner,
             chatChannelId: 'SOME_RANDOM_CHANNEL_ID',
             newOwnerId: players['2'].characterId,
         });
@@ -66,7 +66,7 @@ describe('Chat channel - change chat channel owner', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.ChangeChatChannelOwner,
+            type: ChatChannelClientActions.ChangeChatChannelOwner,
             chatChannelId: recentlyCreatedChatChannelId,
             newOwnerId: players['2'].characterId,
         });
@@ -78,19 +78,19 @@ describe('Chat channel - change chat channel owner', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['3'].character.name,
         });
 
         const dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.ChangeChatChannelOwner,
+            type: ChatChannelClientActions.ChangeChatChannelOwner,
             chatChannelId: recentlyCreatedChatChannelId,
             newOwnerId: players['3'].characterId,
         });
@@ -102,13 +102,13 @@ describe('Chat channel - change chat channel owner', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.ChangeChatChannelOwner,
+            type: ChatChannelClientActions.ChangeChatChannelOwner,
             chatChannelId: recentlyCreatedChatChannelId,
             newOwnerId: players['1'].characterId,
         });

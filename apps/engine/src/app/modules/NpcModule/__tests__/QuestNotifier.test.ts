@@ -19,7 +19,7 @@ const setupEngine = () => {
         'respawn_1': {
             id: 'respawn_1',
             location: { x: 100, y: 100 },
-            characterTemplateId: "1",
+            templateId: "1",
             time: 4000,
             walkingType: WalkingType.None,
         },

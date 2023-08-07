@@ -1,4 +1,4 @@
-import { CommonClientMessages, GlobalStoreModule, Location, RecursivePartial } from '@bananos/types';
+import { GlobalStoreModule, Location, PlayerClientActions, RecursivePartial } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { } from '../../';
 import { EngineEvents } from '../../../EngineEvents';
@@ -26,14 +26,14 @@ const setupEngine = (setupProps: RecursivePartial<SetupProps> = {}) => {
             'respawn_1': {
                 id: 'respawn_1',
                 location: setupProps.monsterLocation ?? { x: 300, y: 400 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
             'respawn_2': {
                 id: 'respawn_2',
                 location: setupProps.monsterLocation ?? { x: 350, y: 400 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
@@ -74,7 +74,7 @@ describe('PlayerTriesToOpenLoot', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
         });
 
@@ -103,7 +103,7 @@ describe('PlayerTriesToOpenLoot', () => {
         const { engineManager, players } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId: 'Some_random_id',
         });
 
@@ -128,7 +128,7 @@ describe('PlayerTriesToOpenLoot', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
         });
 
@@ -153,7 +153,7 @@ describe('PlayerTriesToOpenLoot', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
         });
 
@@ -167,7 +167,7 @@ describe('PlayerTriesToOpenLoot', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
         });
 

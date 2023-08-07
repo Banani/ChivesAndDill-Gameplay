@@ -1,4 +1,4 @@
-import { CharacterClientEvents, EngineEventType, ExperienceGainSource, GlobalStoreModule } from '@bananos/types';
+import { CharacterClientEvents, ExperienceGainSource, GlobalStoreModule } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { QuestCompletedEvent, QuestEngineEvents, StartQuestEvent } from '../../QuestModule/Events';
 import { AddExperienceEvent, CharacterEngineEvents } from '../Events';
@@ -57,6 +57,7 @@ describe('Character experience', () => {
             data: { playerCharacter_1: { experienceAmount: 100 } },
             events: [
                 {
+                    id: "1",
                     amount: 100,
                     characterId: 'playerCharacter_1',
                     type: CharacterClientEvents.ExperienceGain,
@@ -124,11 +125,13 @@ describe('Character experience', () => {
             data: { playerCharacter_1: { experienceAmount: 50, level: 2, toNextLevel: 655 } },
             events: [
                 {
-                    type: EngineEventType.LevelChanged,
+                    id: "1",
+                    type: CharacterClientEvents.LevelChanged,
                     characterId: 'playerCharacter_1',
                     level: 2,
                 },
                 {
+                    id: "2",
                     amount: 300,
                     characterId: 'playerCharacter_1',
                     type: CharacterClientEvents.ExperienceGain,
@@ -160,16 +163,19 @@ describe('Character experience', () => {
             data: { playerCharacter_1: { experienceAmount: 95, level: 3, toNextLevel: 1265 } },
             events: [
                 {
-                    type: EngineEventType.LevelChanged,
+                    id: "1",
+                    type: CharacterClientEvents.LevelChanged,
                     characterId: 'playerCharacter_1',
                     level: 2,
                 },
                 {
-                    type: EngineEventType.LevelChanged,
+                    id: "2",
+                    type: CharacterClientEvents.LevelChanged,
                     characterId: 'playerCharacter_1',
                     level: 3,
                 },
                 {
+                    id: "3",
                     amount: 1000,
                     characterId: 'playerCharacter_1',
                     type: CharacterClientEvents.ExperienceGain,
@@ -209,6 +215,7 @@ describe('Character experience', () => {
             },
             events: [
                 {
+                    id: "1",
                     amount: 120,
                     characterId: 'playerCharacter_1',
                     experienceGainDetails: {

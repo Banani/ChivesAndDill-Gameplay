@@ -1,4 +1,4 @@
-import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
+import { GlobalStoreModule, NpcClientActions } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { MockedNpcTemplates } from '../../../mocks';
@@ -33,13 +33,13 @@ const setupEngine = () => {
         'respawn_1': {
             id: 'respawn_1',
             location: { x: 100, y: 100 },
-            characterTemplateId: "1",
+            templateId: "1",
             time: 4000,
             walkingType: WalkingType.None,
         }, 'respawn_2': {
             id: 'respawn_2',
             location: { x: 80, y: 100 },
-            characterTemplateId: "2",
+            templateId: "2",
             time: 4000,
             walkingType: WalkingType.None,
         },
@@ -70,7 +70,7 @@ describe('Npc Stock', () => {
         const { players, engineManager, npcs } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId: npcs['Manczur'].id,
         });
 
@@ -100,7 +100,7 @@ describe('Npc Stock', () => {
         const { players, engineManager, npcs } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId: npcs['KretonPL'].id,
         });
 

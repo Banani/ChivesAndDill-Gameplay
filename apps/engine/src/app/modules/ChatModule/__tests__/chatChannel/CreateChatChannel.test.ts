@@ -1,4 +1,4 @@
-import { ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
+import { ChatChannelClientActions, GlobalStoreModule } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from '../../../../testUtilities';
 
 interface setupEngineProps {
@@ -15,7 +15,7 @@ const setupEngine = ({ chatChannelName }: setupEngineProps = { chatChannelName: 
         '2': engineManager.preparePlayerWithCharacter({ name: 'character_2' }),
     };
 
-    engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientMessages.CreateChatChannel, chatChannelName });
+    engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientActions.CreateChatChannel, chatChannelName });
 
     return { engineManager, players, chatChannelName };
 };
@@ -62,7 +62,7 @@ describe('Chat channel create action', () => {
     it('Player should get the error message when he tries to create a channel with a name that already exists', () => {
         const { engineManager, players, chatChannelName } = setupEngine();
 
-        engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientMessages.CreateChatChannel, chatChannelName });
+        engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientActions.CreateChatChannel, chatChannelName });
         const dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         checkIfErrorWasHandled(GlobalStoreModule.CHAT_CHANNEL, 'Chat channel with that name already exist.', dataPackage);

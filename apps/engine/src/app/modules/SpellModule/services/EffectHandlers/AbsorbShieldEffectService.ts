@@ -1,3 +1,4 @@
+import { AbsorbShieldEffect, SpellEffectType } from '@bananos/types';
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { NestedMap } from 'apps/engine/src/app/dataStructures/NestedMap';
 import { map, sum } from 'lodash';
@@ -11,7 +12,6 @@ import {
     SpellEngineEvents,
     TakeAbsorbShieldValueEvent,
 } from '../../Events';
-import { AbsorbShieldEffect, SpellEffectType } from '../../types/SpellTypes';
 
 interface AbsorbEffectNavigation {
     targetId: string;

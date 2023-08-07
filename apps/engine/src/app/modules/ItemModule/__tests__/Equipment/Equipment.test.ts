@@ -1,4 +1,4 @@
-import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
+import { GlobalStoreModule, ItemClientActions } from '@bananos/types';
 import { MockedItemTemplates } from 'apps/engine/src/app/mocks';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from '../../../../testUtilities';
 import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../Events';
@@ -86,7 +86,7 @@ describe('Equipment', () => {
     it('Player should get error if tries to equip item that he does not have', () => {
         const { players, engineManager } = setupEngine();
 
-        const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: 'SOME_ITEM_ID' });
+        const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: 'SOME_ITEM_ID' });
 
         checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'Item does not exist.', dataPackage);
     });
@@ -104,7 +104,7 @@ describe('Equipment', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['2'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+        dataPackage = engineManager.callPlayerAction(players['2'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId });
 
         checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'Item does not exist.', dataPackage);
     });
@@ -122,7 +122,7 @@ describe('Equipment', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId });
 
         checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'You cannot equip that.', dataPackage);
     });
@@ -140,7 +140,7 @@ describe('Equipment', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId });
 
         checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
             data: {
@@ -162,7 +162,7 @@ describe('Equipment', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId });
 
         checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
             toDelete: {
@@ -196,8 +196,8 @@ describe('Equipment', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId2 = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId1 });
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId2 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId1 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId2 });
 
         checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
             data: {
@@ -234,8 +234,8 @@ describe('Equipment', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId2 = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId1 });
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId2 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId1 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId2 });
 
         checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
             data: {
@@ -282,9 +282,9 @@ describe('Equipment', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId3 = dataPackage.backpackItems.data[players['1'].characterId]['1']['2'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId1 });
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId2 });
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId3 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId1 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId2 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId3 });
 
         checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
             data: {
@@ -301,7 +301,7 @@ describe('Equipment', () => {
     it('Player should get error if tries to strip item that does not exist', () => {
         const { players, engineManager } = setupEngine();
 
-        const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.StripItem, itemInstanceId: 'SOME_RANDOM_ID' });
+        const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.StripItem, itemInstanceId: 'SOME_RANDOM_ID' });
 
         checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'Item does not exist.', dataPackage);
     });
@@ -319,7 +319,7 @@ describe('Equipment', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['2'].socketId, { type: ItemClientMessages.StripItem, itemInstanceId: itemId });
+        dataPackage = engineManager.callPlayerAction(players['2'].socketId, { type: ItemClientActions.StripItem, itemInstanceId: itemId });
 
         checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'Item does not exist.', dataPackage);
     });
@@ -337,7 +337,7 @@ describe('Equipment', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.StripItem, itemInstanceId: itemId });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.StripItem, itemInstanceId: itemId });
 
         checkIfErrorWasHandled(GlobalStoreModule.EQUIPMENT, 'You do not wear that.', dataPackage);
     });
@@ -355,8 +355,8 @@ describe('Equipment', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.StripItem, itemInstanceId: itemId });
+        engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.StripItem, itemInstanceId: itemId });
 
         checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
             toDelete: {
@@ -378,9 +378,9 @@ describe('Equipment', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+        engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId });
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.StripItem,
+            type: ItemClientActions.StripItem,
             itemInstanceId: itemId,
             desiredLocation: {
                 backpack: '1',
@@ -415,9 +415,9 @@ describe('Equipment', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+        engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId });
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.StripItem,
+            type: ItemClientActions.StripItem,
             itemInstanceId: itemId,
         });
 

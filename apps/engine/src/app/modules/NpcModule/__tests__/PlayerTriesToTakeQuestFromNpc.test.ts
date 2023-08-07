@@ -1,4 +1,4 @@
-import { GlobalStoreModule, Location, NpcClientMessages, QuestType, RecursivePartial } from '@bananos/types';
+import { GlobalStoreModule, Location, NpcClientActions, QuestType, RecursivePartial } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { MockedNpcTemplates } from '../../../mocks';
@@ -17,7 +17,7 @@ const setupEngine = ({ respawnLocation }: RecursivePartial<{ respawnLocation: Lo
         'respawn_1': {
             id: 'respawn_1',
             location: respawnLocation ?? { x: 100, y: 100 },
-            characterTemplateId: "1",
+            templateId: "1",
             time: 4000,
             walkingType: WalkingType.None,
         },
@@ -45,7 +45,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.TakeQuestFromNpc,
+            type: NpcClientActions.TakeQuestFromNpc,
             npcId,
             questId: Object.keys(NpcTemplates['Manczur'].quests)[0],
         });
@@ -77,7 +77,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.TakeQuestFromNpc,
+            type: NpcClientActions.TakeQuestFromNpc,
             npcId: 'some_random_npc',
             questId: 'random_id',
         });
@@ -94,7 +94,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.TakeQuestFromNpc,
+            type: NpcClientActions.TakeQuestFromNpc,
             npcId,
             questId: 'random_id',
         });
@@ -109,7 +109,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.TakeQuestFromNpc,
+            type: NpcClientActions.TakeQuestFromNpc,
             npcId,
             questId: 'random_id',
         });
@@ -124,13 +124,13 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.TakeQuestFromNpc,
+            type: NpcClientActions.TakeQuestFromNpc,
             npcId,
             questId: Object.keys(NpcTemplates['Manczur'].quests)[0],
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.TakeQuestFromNpc,
+            type: NpcClientActions.TakeQuestFromNpc,
             npcId,
             questId: Object.keys(NpcTemplates['Manczur'].quests)[0],
         });

@@ -1,4 +1,4 @@
-import { ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
+import { ChatChannelClientActions, GlobalStoreModule } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from '../../../../testUtilities';
 
 interface setupEngineProps {
@@ -15,7 +15,7 @@ const setupEngine = ({ chatChannelName }: setupEngineProps = { chatChannelName: 
         '2': engineManager.preparePlayerWithCharacter({ name: 'character_2' }),
     };
 
-    const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientMessages.CreateChatChannel, chatChannelName });
+    const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientActions.CreateChatChannel, chatChannelName });
 
     const recentlyCreatedChatChannelId = Object.keys(dataPackage.chatChannel.data)[0];
 
@@ -27,7 +27,7 @@ describe('Chat channel delete action', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.DeleteChatChannel,
+            type: ChatChannelClientActions.DeleteChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
         });
 
@@ -46,13 +46,13 @@ describe('Chat channel delete action', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.DeleteChatChannel,
+            type: ChatChannelClientActions.DeleteChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
         });
         dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
@@ -72,7 +72,7 @@ describe('Chat channel delete action', () => {
         const { engineManager, players } = setupEngine();
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.DeleteChatChannel,
+            type: ChatChannelClientActions.DeleteChatChannel,
             chatChannelId: 'SOME_RANDOM_ID',
         });
 
@@ -83,7 +83,7 @@ describe('Chat channel delete action', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         const dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.DeleteChatChannel,
+            type: ChatChannelClientActions.DeleteChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
         });
 

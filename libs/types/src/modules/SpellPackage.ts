@@ -259,7 +259,7 @@ export interface RequestSpellDefinitions {
     spellIds: string[];
 }
 
-export type EngineSpellActions = RequestSpellDefinitions;
+export type EngineSpellAction = RequestSpellDefinitions;
 
 export enum SpellClientEvent {
     PlayerCreated = 'PlayerCreated',

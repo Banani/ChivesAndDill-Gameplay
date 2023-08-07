@@ -1,19 +1,19 @@
-import { EngineEventType, EnginePackage, GlobalStoreModule, PartialEnginePackage } from '@bananos/types';
-import { merge } from 'lodash';
+import { EnginePackage, GlobalStoreModule, PartialEnginePackage, PlayerClientEvents } from '@bananos/types';
+import { merge, omit } from 'lodash';
 
 export const checkIfErrorWasHandled = (moduleName: GlobalStoreModule, message: string, enginePackage: EnginePackage) => {
-   if (!enginePackage.errorMessages) {
-      throw new Error('Error message was not sent.');
-   }
-   expect(enginePackage.errorMessages.events).toStrictEqual([{ message, type: EngineEventType.ErrorMessage }]);
-   expect(enginePackage[moduleName]).toBeUndefined();
+    if (!enginePackage.errorMessages) {
+        throw new Error('Error message was not sent.');
+    }
+    expect(enginePackage.errorMessages.events.map(event => omit(event, "id"))).toStrictEqual([{ message, type: PlayerClientEvents.ErrorMessage }]);
+    expect(enginePackage[moduleName]).toBeUndefined();
 };
 
 export const checkIfPackageIsValid = (moduleName: GlobalStoreModule, enginePackage: EnginePackage, expectedPackage: Partial<PartialEnginePackage<any>>) => {
-   expect(enginePackage.errorMessages?.events ?? []).toStrictEqual([]);
-   if (expectedPackage) {
-      expect(enginePackage[moduleName]).toStrictEqual(merge(expectedPackage, { key: moduleName }));
-   } else {
-      expect(enginePackage[moduleName]).toBeUndefined();
-   }
+    expect(enginePackage.errorMessages?.events ?? []).toStrictEqual([]);
+    if (expectedPackage) {
+        expect(enginePackage[moduleName]).toStrictEqual(merge(expectedPackage, { key: moduleName }));
+    } else {
+        expect(enginePackage[moduleName]).toBeUndefined();
+    }
 };

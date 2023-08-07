@@ -1,9 +1,8 @@
-import { HealthPointsSource } from '@bananos/types';
+import { HealEffect, HealthPointsSource, SpellEffectType } from '@bananos/types';
 import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
 import { AddCharacterHealthPointsEvent, CharacterEngineEvents } from '../../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../Events';
-import { HealEffect, SpellEffectType } from '../../types/SpellTypes';
 
 export class HealEffectService extends EventParser {
     constructor() {

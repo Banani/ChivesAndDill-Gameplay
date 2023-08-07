@@ -1,3 +1,4 @@
+import { DamageEffect, SpellEffectType } from '@bananos/types';
 import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
@@ -7,7 +8,6 @@ import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../
 import { Services } from '../../../types/Services';
 import { CharacterEngineEvents, CharacterRemovedEvent } from '../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
-import { DamageEffect, SpellEffectType } from '../../SpellModule/types/SpellTypes';
 import {
     MonsterEngineEvents,
     MonsterLostAggroEvent,

@@ -1,4 +1,4 @@
-import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule, PlayerClientActions } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { } from '../..';
 import { EngineEvents } from '../../../EngineEvents';
@@ -22,7 +22,7 @@ const setupEngine = () => {
             'respawn_1': {
                 id: 'respawn_1',
                 location: { x: 150, y: 100 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
@@ -64,12 +64,12 @@ describe('PlayerTriesToCloseLoot', () => {
         const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.OpenLoot,
+            type: PlayerClientActions.OpenLoot,
             corpseId,
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.CloseLoot,
+            type: PlayerClientActions.CloseLoot,
         });
 
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);

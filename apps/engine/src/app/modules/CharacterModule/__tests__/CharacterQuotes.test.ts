@@ -31,7 +31,7 @@ const setupEngine = ({ respawnServiceProps, monsterTemplate }: RecursivePartial<
                 'respawn_1': {
                     id: 'respawn_1',
                     location: { x: 250, y: 200 },
-                    characterTemplateId: "1",
+                    templateId: "1",
                     time: 4000,
                     walkingType: WalkingType.None,
                 },
@@ -359,7 +359,6 @@ describe('CharacterQuotes', () => {
         (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
-        const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
         engineManager.doEngineAction();
 
@@ -375,7 +374,7 @@ describe('CharacterQuotes', () => {
                 'respawn_1': {
                     id: 'respawn_1',
                     location: { x: 1350, y: 200 },
-                    characterTemplateId: "1",
+                    templateId: "1",
                     time: 4000,
                     walkingType: WalkingType.None,
                 }

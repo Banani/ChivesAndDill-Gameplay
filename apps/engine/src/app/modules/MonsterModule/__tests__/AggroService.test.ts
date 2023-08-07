@@ -1,4 +1,4 @@
-import { CommonClientMessages, GlobalStoreModule, Location, RecursivePartial } from '@bananos/types';
+import { Attribute, CharacterClientActions, GlobalStoreModule, Location, RecursivePartial, SpellEffectType } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { times } from 'lodash';
 import { MockedMonsterTemplates } from '../../../mocks';
@@ -7,7 +7,6 @@ import { WalkingType } from '../../../types/CharacterRespawn';
 import { CharacterUnion } from '../../../types/CharacterUnion';
 import { CharacterEngineEvents, TakeCharacterHealthPointsEvent } from '../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
-import { SpellEffect, SpellEffectType } from '../../SpellModule/types/SpellTypes';
 import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../Events';
 import { MonsterTemplate } from '../MonsterTemplates';
 import { MonsterRespawnTemplateService, MonsterTemplateService } from '../services';
@@ -26,7 +25,7 @@ const setupEngine = ({ monsterTemplates, startingLocation }: RecursivePartial<{ 
             'respawn_1': {
                 id: 'respawn_1',
                 location: startingLocation ?? { x: 150, y: 100 },
-                characterTemplateId: "1",
+                templateId: "1",
                 time: 4000,
                 walkingType: WalkingType.None,
             },
@@ -103,7 +102,7 @@ describe('Aggro service', () => {
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PlayerStartMove,
+            type: CharacterClientActions.PlayerStartMove,
             x: 1,
             source: 'D',
         });
@@ -113,7 +112,7 @@ describe('Aggro service', () => {
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PlayerStopMove,
+            type: CharacterClientActions.PlayerStopMove,
             source: 'D',
         });
 
@@ -142,7 +141,7 @@ describe('Aggro service', () => {
         engineManager.doEngineAction();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PlayerStartMove,
+            type: CharacterClientActions.PlayerStartMove,
             x: -1,
             source: 'D',
         });
@@ -151,7 +150,7 @@ describe('Aggro service', () => {
         engineManager.doEngineAction();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: CommonClientMessages.PlayerStopMove,
+            type: CharacterClientActions.PlayerStopMove,
             source: 'D',
         });
 
@@ -204,7 +203,7 @@ describe('Aggro service', () => {
 
     it('Monster should start chasing when is beeing hit by player character', () => {
         const startingLocation = { x: 100, y: 100 };
-        const { players, engineManager, monsterTemplates } = setupEngine({
+        const { players, engineManager } = setupEngine({
             startingLocation,
             monsterTemplates: { '1': { sightRange: 25, desiredRange: 1 } },
         });
@@ -216,10 +215,12 @@ describe('Aggro service', () => {
             caster: { id: players['1'].characterId } as Character,
             target: monster,
             effect: {
+                id: '1',
                 type: SpellEffectType.Damage,
                 amount: 10,
+                attribute: Attribute.Strength,
                 spellId: "SPELL_ID"
-            } as SpellEffect,
+            },
         });
 
         engineManager.doEngineAction();
