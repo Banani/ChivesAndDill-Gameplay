@@ -1,4 +1,4 @@
-import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
+import { GlobalStoreModule, GroupClientActions } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
@@ -23,7 +23,7 @@ export class PartyInvitationNotifier extends Notifier<string> {
 
         const currentSocket = services.socketConnectionService.getSocketById(receiverId);
 
-        currentSocket.on(GroupClientMessages.InviteToParty, ({ characterId }) => {
+        currentSocket.on(GroupClientActions.InviteToParty, ({ characterId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToInviteChracterToPartyEvent>({
                 type: GroupEngineEvents.PlayerTriesToInviteChracterToParty,
                 requestingCharacterId: event.playerCharacter.id,
@@ -31,7 +31,7 @@ export class PartyInvitationNotifier extends Notifier<string> {
             });
         });
 
-        currentSocket.on(GroupClientMessages.DeclineInvite, () => {
+        currentSocket.on(GroupClientActions.DeclineInvite, () => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToDeclineInviteEvent>({
                 type: GroupEngineEvents.PlayerTriesToDeclineInvite,
                 requestingCharacterId: event.playerCharacter.id
@@ -39,7 +39,7 @@ export class PartyInvitationNotifier extends Notifier<string> {
         });
 
 
-        currentSocket.on(GroupClientMessages.AcceptInvite, () => {
+        currentSocket.on(GroupClientActions.AcceptInvite, () => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToAcceptInviteEvent>({
                 type: GroupEngineEvents.PlayerTriesToAcceptInvite,
                 requestingCharacterId: event.playerCharacter.id

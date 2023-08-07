@@ -1,4 +1,4 @@
-import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule, PlayerClientActions } from '@bananos/types';
 import { SocketContext } from 'apps/chives-and-dill/src/contexts/SocketCommunicator';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
@@ -34,7 +34,7 @@ export const ClassesModal = () => {
     const onSubmit = useCallback(
         (e) => {
             e.preventDefault();
-            socket?.emit(CommonClientMessages.CreateCharacter, {
+            socket?.emit(PlayerClientActions.CreateCharacter, {
                 name: nick,
                 characterClassId: selectedCharacterClass,
             });

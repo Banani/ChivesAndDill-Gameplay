@@ -1,4 +1,4 @@
-import { CommonClientMessages, NpcClientMessages } from '@bananos/types';
+import { NpcClientActions, PlayerClientActions } from '@bananos/types';
 import { Sprite } from '@inlet/react-pixi';
 import _ from 'lodash';
 import * as PIXI from 'pixi.js';
@@ -107,7 +107,7 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
                 return;
             }
 
-            socket?.emit(NpcClientMessages.OpenNpcConversationDialog, {
+            socket?.emit(NpcClientActions.OpenNpcConversationDialog, {
                 npcId: player.id,
             });
         };
@@ -116,7 +116,7 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
             if (player.type !== 'Monster') {
                 return;
             }
-            socket?.emit(CommonClientMessages.OpenLoot, {
+            socket?.emit(PlayerClientActions.OpenLoot, {
                 corpseId: player.id,
             });
         };

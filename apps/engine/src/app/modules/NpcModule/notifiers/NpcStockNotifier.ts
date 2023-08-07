@@ -1,4 +1,4 @@
-import { ActiveNpcConversation, GlobalStoreModule, NpcClientMessages } from '@bananos/types';
+import { ActiveNpcConversation, GlobalStoreModule, NpcClientActions } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
@@ -17,7 +17,7 @@ export class NpcStockNotifier extends Notifier<ActiveNpcConversation> {
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-        currentSocket.on(NpcClientMessages.BuyItemFromNpc, ({ npcId, itemTemplateId, amount, desiredLocation }) => {
+        currentSocket.on(NpcClientActions.BuyItemFromNpc, ({ npcId, itemTemplateId, amount, desiredLocation }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToBuyItemFromNpcEvent>({
                 type: NpcEngineEvents.PlayerTriesToBuyItemFromNpc,
                 requestingCharacterId: event.playerCharacter.id,
@@ -28,7 +28,7 @@ export class NpcStockNotifier extends Notifier<ActiveNpcConversation> {
             });
         });
 
-        currentSocket.on(NpcClientMessages.SellItemToNpc, ({ npcId, itemId }) => {
+        currentSocket.on(NpcClientActions.SellItemToNpc, ({ npcId, itemId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToSellItemToNpcEvent>({
                 type: NpcEngineEvents.PlayerTriesToSellItemToNpc,
                 requestingCharacterId: event.playerCharacter.id,

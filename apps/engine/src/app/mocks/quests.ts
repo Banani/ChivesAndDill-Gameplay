@@ -1,6 +1,4 @@
-import { KillingQuestStagePartComparison } from '@bananos/types';
-import type { QuestSchema } from 'libs/types/src/QuestPackage';
-import { QuestType } from 'libs/types/src/QuestPackage';
+import { KillingQuestStagePartComparison, QuestSchema, QuestType } from '@bananos/types';
 
 export const MockedQuests: Record<string, QuestSchema> = {
     '1': {

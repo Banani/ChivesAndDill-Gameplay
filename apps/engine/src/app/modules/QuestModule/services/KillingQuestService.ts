@@ -1,5 +1,4 @@
-import { KillingQuestStagePartComparison } from '@bananos/types';
-import { KillingQuestStagePartStatus, QuestResetEvent, QuestType } from 'libs/types/src/QuestPackage';
+import { KillingQuestStagePartComparison, KillingQuestStagePartStatus, QuestResetEvent, QuestType } from '@bananos/types';
 import { find, forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';

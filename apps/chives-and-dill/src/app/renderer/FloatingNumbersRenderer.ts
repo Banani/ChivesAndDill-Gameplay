@@ -1,4 +1,4 @@
-import { CharacterClientEvents, EngineEventType, GlobalStore, HealthPointsSource, Location } from "@bananos/types";
+import { CharacterClientEvents, GlobalStore, HealthPointsSource, Location } from "@bananos/types";
 import { forEach, now } from "lodash";
 import * as PIXI from 'pixi.js';
 import { Renderer } from "./Renderer";
@@ -21,19 +21,19 @@ export class FloatingNumbersRenderer implements Renderer {
         const fontSize = 20;
 
         this.textStyles = {
-            [EngineEventType.ExperienceGain]: new PIXI.TextStyle({
+            [CharacterClientEvents.ExperienceGain]: new PIXI.TextStyle({
                 fontSize,
                 fill: 'purple'
             }),
-            [EngineEventType.DamageAbsorbed]: new PIXI.TextStyle({
+            [CharacterClientEvents.DamageAbsorbed]: new PIXI.TextStyle({
                 fontSize,
                 fill: 'silver'
             }),
-            [EngineEventType.CharacterLostHp]: new PIXI.TextStyle({
+            [CharacterClientEvents.CharacterLostHp]: new PIXI.TextStyle({
                 fontSize,
                 fill: 'red'
             }),
-            [EngineEventType.CharacterGotHp]: new PIXI.TextStyle({
+            [CharacterClientEvents.CharacterGotHp]: new PIXI.TextStyle({
                 fontSize,
                 fill: 'green'
             }),
@@ -47,7 +47,7 @@ export class FloatingNumbersRenderer implements Renderer {
                 return;
             }
 
-            if (event.type === EngineEventType.CharacterLostHp) {
+            if (event.type === CharacterClientEvents.CharacterLostHp) {
                 this.createFloatingNumber({
                     eventId,
                     eventType: event.type,
@@ -56,7 +56,7 @@ export class FloatingNumbersRenderer implements Renderer {
                 })
             }
 
-            if (event.type === EngineEventType.CharacterGotHp) {
+            if (event.type === CharacterClientEvents.CharacterGotHp) {
                 if (event.source === HealthPointsSource.Regeneration) {
                     return;
                 }
@@ -92,7 +92,7 @@ export class FloatingNumbersRenderer implements Renderer {
                 return;
             }
 
-            if (event.type === EngineEventType.DamageAbsorbed) {
+            if (event.type === CharacterClientEvents.DamageAbsorbed) {
                 this.createFloatingNumber({
                     eventId,
                     eventType: event.type,

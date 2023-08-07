@@ -1,4 +1,5 @@
-import { QuestProgress, QuestSchema } from 'libs/types/src/QuestPackage';
+
+import { QuestProgress, QuestSchema } from '@bananos/types';
 import { filter, forEach, keyBy, mapValues } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';

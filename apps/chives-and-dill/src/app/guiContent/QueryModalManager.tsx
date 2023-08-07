@@ -1,4 +1,4 @@
-import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
+import { GlobalStoreModule, GroupClientActions } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useContext } from 'react';
@@ -20,8 +20,8 @@ export const QueryModalManager = () => {
         const InviterName = character[inviter].name
         return (
             <QueryModal
-                accept={() => handleInvite(GroupClientMessages.AcceptInvite)}
-                decline={() => handleInvite(GroupClientMessages.DeclineInvite)}
+                accept={() => handleInvite(GroupClientActions.AcceptInvite)}
+                decline={() => handleInvite(GroupClientActions.DeclineInvite)}
                 text={`${InviterName} invites you to join a group.`}
             />
         )

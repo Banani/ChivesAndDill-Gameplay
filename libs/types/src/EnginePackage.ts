@@ -3,22 +3,39 @@ import type {
     BackpackItemsSpot,
     BackpackTrack,
     ChatMessage,
-    EngineGroupAction,
-    EngineItemMessages,
-    EngineNpcAction,
-    EngineSpellMessages,
     EquipmentTrack,
     ItemTemplate,
     NpcStock,
     Party,
-    SpellDefinition,
+    SpellDefinition
 } from '.';
-import type { Attributes, CharacterEvents, MonsterCorpse } from './CharacterPackage';
-import type { ChatChannel, EngineChatAction } from './ChatPackage';
-import type { Location } from './common/Location';
-import { CommonClientActions, CommonClientMessages, CreateCharacter } from './engineEvents';
-import { ExternalQuestProgress, QuestSchema } from './QuestPackage';
-import type { CharacterClassPreview, CharacterDirection } from './shared';
+import type {
+    AbsorbShieldTrack,
+    AreaTimeEffect,
+    Attributes,
+    ChannelingTrack,
+    CharacterClassPreview,
+    CharacterClientActions,
+    CharacterEvent,
+    CharacterMovement,
+    CorpseLoot,
+    ExperienceExternalTrack,
+    GroupClientActions,
+    ItemClientActions,
+    MonsterCorpse,
+    NpcClientActions,
+    PlayerClientActions,
+    PlayerEvent,
+    PowerPointsTrack,
+    PowerStackType,
+    ProjectileMovement,
+    SpellClientActions,
+    SpellEvent,
+    TimeEffect
+} from './modules';
+import type { ChatChannel, ChatChannelClientActions } from './modules/ChatPackage';
+import { MapDefinition, MapSchema } from './modules/MapPackage';
+import { ExternalQuestProgress, QuestSchema } from './modules/QuestPackage';
 
 export enum GlobalStoreModule {
     CHARACTER = 'character',
@@ -153,215 +170,15 @@ export interface GlobalStore {
     [GlobalStoreModule.PARTY_INVITATION]: StoreModule<string>;
 }
 
-export interface ActiveCharacterStorePart {
-    activeCharacterId: string;
-}
+export type EnginePackageEvent = CharacterEvent |
+    SpellEvent |
+    PlayerEvent;
 
-export interface CharacterMovement {
-    location: Location;
-    isInMove: boolean;
-    direction: CharacterDirection;
-}
+export type EngineAction = CharacterClientActions |
+    ChatChannelClientActions |
+    GroupClientActions |
+    ItemClientActions |
+    NpcClientActions |
+    PlayerClientActions |
+    SpellClientActions;
 
-export interface ProjectileMovement {
-    location: Location;
-    angle: number;
-    spellName: string;
-}
-
-export interface ChannelingTrack {
-    channelId: string;
-    casterId: string;
-    castingStartedTimestamp: number;
-    timeToCast: number;
-}
-
-export interface PowerPointsTrack {
-    currentHp: number;
-    maxHp: number;
-    currentSpellPower: number;
-    maxSpellPower: number;
-}
-
-export enum TimeEffectType {
-    BUFF = 'BUFF',
-    DEBUFF = 'DEBUFF',
-}
-
-export interface TimeEffect {
-    id: string;
-    period: number;
-    name: string;
-    description: string;
-    timeEffectType: TimeEffectType;
-    iconImage: string;
-    creationTime: number;
-    targetId: string;
-}
-
-export interface AreaTimeEffect {
-    id: string;
-    name: string;
-    location: Location;
-    radius: number;
-}
-
-export interface ExperienceExternalTrack {
-    experienceAmount: number;
-    level: number;
-    toNextLevel: number;
-}
-
-export interface CorpseDroppedItemStack {
-    amount: number;
-    itemTemplateId: string;
-}
-
-export interface CorpseDropTrack {
-    corpse: MonsterCorpse;
-    loot: CorpseLoot;
-}
-
-export interface CorpseLoot {
-    coins?: number;
-    items?: Record<string, CorpseDroppedItemStack>;
-}
-
-export enum EngineEventType {
-    PlayerCreated = 'PlayerCreated',
-    SpellLanded = 'SpellLanded',
-    SpellCasted = 'SpellCasted',
-    CharacterGotHp = 'CharacterGotHp',
-    CharacterLostHp = 'CharacterLostHp',
-    DamageAbsorbed = 'DamageAbsorbed',
-    LevelChanged = 'LevelChanged',
-    ExperienceGain = "ExperienceGain",
-    ErrorMessage = 'ErrorMessage',
-
-    CreateCharacter = 'CreateCharacter',
-}
-
-export interface PlayerCreatedEvent {
-    type: EngineEventType.PlayerCreated;
-}
-
-export interface SpellLandedEvent {
-    type: EngineEventType.SpellLanded;
-    spell: any;
-    angle: number;
-    castLocation: Location;
-    directionLocation: Location;
-}
-
-export interface SpellCastedEvent {
-    type: EngineEventType.SpellCasted;
-    spell: any;
-    casterId: string;
-}
-
-export interface CharacterGotHpEvent {
-    type: EngineEventType.CharacterGotHp;
-    characterId: string;
-    source: HealthPointsSource;
-    amount: number;
-    healerId: string;
-    spellId: string;
-}
-
-export interface CharacterLostHpEvent {
-    type: EngineEventType.CharacterLostHp;
-    characterId: string;
-    amount: number;
-    spellId: string;
-    attackerId: string;
-}
-
-export interface DamageAbsorbedEvent {
-    type: EngineEventType.DamageAbsorbed;
-    characterId: string;
-}
-
-export interface LevelChangedEvent {
-    type: EngineEventType.LevelChanged;
-    characterId: string;
-    level: number;
-}
-
-export type MapSchema = Record<
-    string,
-    {
-        path: string;
-        location: Location;
-        collision: boolean;
-    }
->;
-
-export interface MapDefinition {
-    [key: string]: {
-        upperSpriteId?: string;
-        bottomSpriteId?: string;
-    };
-}
-
-export interface ErrorMessage {
-    type: EngineEventType.ErrorMessage;
-    message: string;
-}
-
-export interface PlayerStartMoveAction {
-    type: CommonClientMessages.PlayerStartMove;
-    y?: number;
-    x?: number;
-    source: string;
-}
-
-export interface PlayerStopMoveAction {
-    type: CommonClientMessages.PlayerStopMove;
-    source: string;
-}
-
-export type EnginePackageEvent =
-    | SpellLandedEvent
-    | SpellCastedEvent
-    | CharacterGotHpEvent
-    | CharacterLostHpEvent
-    | DamageAbsorbedEvent
-    | PlayerCreatedEvent
-    | PlayerStartMoveAction
-    | PlayerStopMoveAction
-    | LevelChangedEvent
-    | ErrorMessage
-    | CreateCharacter
-    | EngineChatAction // nie wiem czemu to tu jest, ale raczej nie powinno
-    | EngineItemMessages
-    | CharacterEvents
-    | EngineNpcAction // nie wiem czemu to tu jest, ale raczej nie powinno
-    | CommonClientActions; // nie wiem czemu to tu jest, ale raczej nie powinno
-
-export type EnginePackageActions = EngineSpellMessages | CommonClientActions | EngineNpcAction | EngineChatAction | EngineItemMessages | EngineGroupAction;
-
-export enum HealthPointsSource {
-    Healing = 'Healing',
-    Regeneration = 'Regeneration',
-    CharacterReset = 'CharacterReset',
-}
-
-export interface PowerStackTrack {
-    powerStackType: PowerStackType;
-    amount: number;
-}
-
-export enum PowerStackType {
-    HolyPower = 'HolyPower',
-}
-
-export interface AbsorbShieldTrack {
-    id: string;
-    name: string;
-    ownerId: string;
-    value: number;
-    timeEffectType: TimeEffectType;
-    period: number;
-    iconImage: string;
-    creationTime: number;
-}

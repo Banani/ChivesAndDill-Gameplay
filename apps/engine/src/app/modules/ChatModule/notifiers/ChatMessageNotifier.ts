@@ -1,4 +1,4 @@
-import { ChannelType, ChatChannelClientMessages, ChatMessage, GlobalStoreModule, RangeChatMessage } from '@bananos/types';
+import { ChannelType, ChatChannelClientActions, ChatMessage, GlobalStoreModule, RangeChatMessage } from '@bananos/types';
 import { keyBy, map, mapValues, pickBy } from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { distanceBetweenTwoPoints } from '../../../math';
@@ -21,7 +21,7 @@ export class ChatMessageNotifier extends Notifier<ChatMessage> {
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-        currentSocket.on(ChatChannelClientMessages.SendChatMessage, ({ chatChannelId, message, channelType }) => {
+        currentSocket.on(ChatChannelClientActions.SendChatMessage, ({ chatChannelId, message, channelType }) => {
             const character = services.characterService.getAllCharacters()[event.playerCharacter.id];
             this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
                 type: ChatEngineEvents.SendChatMessage,

@@ -1,4 +1,4 @@
-import { EngineMessages } from '@bananos/types';
+import { PlayerClientActions } from '@bananos/types';
 import React, { useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { environment } from '../environments/environment';
@@ -20,8 +20,8 @@ export const SocketCommunicator = ({ children }) => {
 
     useEffect(() => {
         if (context.socket) {
-            context.socket.off(EngineMessages.Package);
-            context.socket.on(EngineMessages.Package, (enginePackage) => {
+            context.socket.off(PlayerClientActions.Package);
+            context.socket.on(PlayerClientActions.Package, (enginePackage) => {
                 packageContext.updatePackage(enginePackage);
             });
         }

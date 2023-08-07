@@ -1,4 +1,4 @@
-import { CommonClientMessages, GlobalStoreModule, SpellClientMessages } from '@bananos/types';
+import { GlobalStoreModule, PlayerClientActions } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import type { EngineEventHandler } from '../../../types';
 import { PlayerTriesToCastASpellEvent, SpellEngineEvents } from '../../SpellModule/Events';
@@ -16,7 +16,7 @@ export class PlayerNotifier extends Notifier {
     handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerId);
 
-        currentSocket.on(CommonClientMessages.CreateCharacter, (character) => {
+        currentSocket.on(PlayerClientActions.CreateCharacter, (character) => {
             this.engineEventCrator.asyncCeateEvent<CreatePlayerCharacterEvent>({
                 type: PlayerEngineEvents.CreatePlayerCharacter,
                 playerOwnerId: event.playerId,
@@ -26,10 +26,11 @@ export class PlayerNotifier extends Notifier {
         });
     };
 
+    //TODO: Przeniesc to do spell modulu
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-        currentSocket.on(SpellClientMessages.CastSpell, ({ directionLocation, spellId, targetId }) => {
+        currentSocket.on(PlayerClientActions.CastSpell, ({ directionLocation, spellId, targetId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToCastASpellEvent>({
                 type: SpellEngineEvents.PlayerTriesToCastASpell,
                 spellData: {

@@ -1,4 +1,4 @@
-import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
+import { GlobalStoreModule, GroupClientActions } from '@bananos/types';
 import { SocketContext } from 'apps/chives-and-dill/src/contexts/SocketCommunicator';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { useContext } from 'react';
@@ -40,7 +40,7 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
 
     const leaveParty = () => {
         setOptionsVisible(false);
-        socket?.emit(GroupClientMessages.LeaveParty);
+        socket?.emit(GroupClientActions.LeaveParty);
     }
 
     return (
@@ -48,8 +48,8 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
 
             {checkifActivePlayerIsLeader() && playerId !== activeCharacterId && checkIfTargetIsInYourParty(playerId) ?
                 <>
-                    <div className={styles.Option} onClick={() => partyAction(GroupClientMessages.PromoteToLeader)}>Pass leader</div>
-                    <div className={styles.Option} onClick={() => partyAction(GroupClientMessages.UninviteFromParty)}>Uninvite</div>
+                    <div className={styles.Option} onClick={() => partyAction(GroupClientActions.PromoteToLeader)}>Pass leader</div>
+                    <div className={styles.Option} onClick={() => partyAction(GroupClientActions.UninviteFromParty)}>Uninvite</div>
                 </> : null}
 
             {checkIfActivePlayerIsInParty() && playerId === activeCharacterId ?
@@ -58,7 +58,7 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
 
             {playerId !== activeCharacterId && !checkIfTargetIsInYourParty(playerId) ?
                 <>
-                    <div className={styles.Option} onClick={() => partyAction(GroupClientMessages.InviteToParty)}>Invite to group</div>
+                    <div className={styles.Option} onClick={() => partyAction(GroupClientActions.InviteToParty)}>Invite to group</div>
                 </> : null}
 
             <div className={styles.Option} onClick={() => setOptionsVisible(false)}>Cancel</div>

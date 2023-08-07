@@ -1,4 +1,4 @@
-import { GlobalStoreModule, SpellClientMessages, SpellDefinition } from '@bananos/types';
+import { GlobalStoreModule, SpellClientActions, SpellDefinition } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
@@ -17,7 +17,7 @@ export class SpellDefinitionNotifier extends Notifier<SpellDefinition> {
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-        currentSocket.on(SpellClientMessages.RequestSpellDefinitions, ({ spellIds }) => {
+        currentSocket.on(SpellClientActions.RequestSpellDefinitions, ({ spellIds }) => {
             const allSpells = services.spellService.getData();
             const spellDefinitions = _.chain(spellIds)
                 .map((id) => ({ id }))

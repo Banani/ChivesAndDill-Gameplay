@@ -1,4 +1,4 @@
-import { ClientMessages, CommonClientMessages, EnginePackage, EnginePackageActions } from '@bananos/types';
+import { ClientMessages, CommonClientMessages, EngineAction, EnginePackage } from '@bananos/types';
 import { MainEngine } from '../engines/MainEngine';
 import { MockedCharacterClasses, MockedItemTemplates, MockedMonsterTemplates, MockedNpcTemplates, MockedQuests, MockedSpells } from '../mocks';
 import {
@@ -214,7 +214,7 @@ export class EngineManager {
         throw new Error('IO is not ready yet.');
     }
 
-    callPlayerAction(playerId: string, action: EnginePackageActions) {
+    callPlayerAction(playerId: string, action: EngineAction) {
         if (!this.playerActionHandlers[playerId]) {
             throw new Error('Unknown playerId: ' + playerId);
         }

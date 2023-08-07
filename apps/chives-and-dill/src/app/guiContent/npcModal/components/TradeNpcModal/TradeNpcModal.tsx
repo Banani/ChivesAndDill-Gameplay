@@ -1,4 +1,4 @@
-import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
+import { GlobalStoreModule, NpcClientActions } from '@bananos/types';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ItemPreview } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
@@ -79,7 +79,7 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
     };
 
     const buyItem = (item, npc) => {
-        socket?.emit(NpcClientMessages.BuyItemFromNpc, {
+        socket?.emit(NpcClientActions.BuyItemFromNpc, {
             npcId: npc.id,
             itemTemplateId: item.id,
         });

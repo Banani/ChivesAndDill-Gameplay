@@ -1,4 +1,4 @@
-import { ChatChannelClientMessages, ItemClientMessages, NpcClientMessages, SpellClientMessages } from '@bananos/types';
+import { ChatChannelClientActions, ItemClientActions, NpcClientActions, SpellClientActions } from '@bananos/types';
 import React, { useContext } from 'react';
 import { SocketContext } from './SocketCommunicator';
 
@@ -26,52 +26,52 @@ export const EngineApi = ({ children }) => {
         <EngineApiContext.Provider
             value={{
                 requestItemTemplates: (itemTemplateIds: string[]) => {
-                    socket?.emit(ItemClientMessages.RequestItemTemplates, {
+                    socket?.emit(ItemClientActions.RequestItemTemplates, {
                         itemTemplateIds,
                     });
                 },
                 requestSpellDefinitions: (spellIds: string[]) => {
-                    socket?.emit(SpellClientMessages.RequestSpellDefinitions, {
+                    socket?.emit(SpellClientActions.RequestSpellDefinitions, {
                         spellIds,
                     });
                 },
                 takeQuestFromNpc: ({ npcId, questId }) => {
-                    socket?.emit(NpcClientMessages.TakeQuestFromNpc, {
+                    socket?.emit(NpcClientActions.TakeQuestFromNpc, {
                         npcId,
                         questId,
                     });
                 },
                 finalizeQuestWithNpc: ({ npcId, questId }) => {
-                    socket?.emit(NpcClientMessages.FinalizeQuestWithNpc, {
+                    socket?.emit(NpcClientActions.FinalizeQuestWithNpc, {
                         npcId,
                         questId,
                     });
                 },
 
                 createChatChannel: ({ chatChannelName }) => {
-                    socket?.emit(ChatChannelClientMessages.CreateChatChannel, { chatChannelName });
+                    socket?.emit(ChatChannelClientActions.CreateChatChannel, { chatChannelName });
                 },
                 invitePlayerCharacterToChatChannel: ({ chatChannelId, characterName }) => {
-                    socket?.emit(ChatChannelClientMessages.InvitePlayerCharacterToChatChannel, { chatChannelId, characterName });
+                    socket?.emit(ChatChannelClientActions.InvitePlayerCharacterToChatChannel, { chatChannelId, characterName });
                 },
                 leaveChatChannel: ({ chatChannelId }) => {
-                    socket?.emit(ChatChannelClientMessages.LeaveChatChannel, { chatChannelId });
+                    socket?.emit(ChatChannelClientActions.LeaveChatChannel, { chatChannelId });
                 },
                 deleteChatChannel: ({ chatChannelId }) => {
-                    socket?.emit(ChatChannelClientMessages.DeleteChatChannel, { chatChannelId });
+                    socket?.emit(ChatChannelClientActions.DeleteChatChannel, { chatChannelId });
                 },
                 sendChatMessage: ({ chatChannelId, message, channelType }) => {
-                    socket?.emit(ChatChannelClientMessages.SendChatMessage, { chatChannelId, message, channelType });
+                    socket?.emit(ChatChannelClientActions.SendChatMessage, { chatChannelId, message, channelType });
                 },
                 removePlayerCharacterFromChatChannel: ({ chatChannelId, characterId }) => {
-                    socket?.emit(ChatChannelClientMessages.RemovePlayerCharacterFromChatChannel, { chatChannelId, characterId });
+                    socket?.emit(ChatChannelClientActions.RemovePlayerCharacterFromChatChannel, { chatChannelId, characterId });
                 },
                 changeChatChannelOwner: ({ chatChannelId, newOwnerId }) => {
-                    socket?.emit(ChatChannelClientMessages.ChangeChatChannelOwner, { chatChannelId, newOwnerId });
+                    socket?.emit(ChatChannelClientActions.ChangeChatChannelOwner, { chatChannelId, newOwnerId });
                 },
 
                 closeNpcConversationDialog: () => {
-                    socket?.emit(NpcClientMessages.CloseNpcConversationDialog);
+                    socket?.emit(NpcClientActions.CloseNpcConversationDialog);
                 },
             }}
         >

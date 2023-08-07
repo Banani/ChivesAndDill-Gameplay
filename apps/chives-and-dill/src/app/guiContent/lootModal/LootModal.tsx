@@ -1,4 +1,4 @@
-import { CommonClientMessages } from '@bananos/types';
+import { PlayerClientActions } from '@bananos/types';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ItemPreview, ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
@@ -64,14 +64,14 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: _.map(activeLoot.items, (item) => item.itemTemplateId) ?? [] });
 
     const handleItemClick = (corpseId, itemId) => {
-        socket?.emit(CommonClientMessages.PickItemFromCorpse, {
+        socket?.emit(PlayerClientActions.PickItemFromCorpse, {
             corpseId,
             itemId
         });
     };
 
     const handleCoinsClick = (corpseId) => {
-        socket?.emit(CommonClientMessages.PickCoinsFromCorpse, {
+        socket?.emit(PlayerClientActions.PickCoinsFromCorpse, {
             corpseId
         });
     };
@@ -138,7 +138,7 @@ export const LootModal = ({ activeLoot, monsterId }) => {
                 <div className={styles.LootModal} style={{ top: `${mousePosition.y}px`, left: `${mousePosition.x}px` }}>
                     <div className={styles.LootModalButton}>
                         <RectangleButton className={styles.closeButton} onClick={() => {
-                            socket?.emit(CommonClientMessages.CloseLoot, {});
+                            socket?.emit(PlayerClientActions.CloseLoot, {});
                         }}>
                             X
                         </RectangleButton>

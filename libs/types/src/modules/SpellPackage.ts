@@ -1,8 +1,5 @@
-// TODO: JUST COPPIED 
-
-
-import type { Attribute, Location, TimeEffectType } from '@bananos/types';
-import { PowerStackType } from '@bananos/types';
+import type { Attribute } from '@bananos/types';
+import { Location } from "../shared";
 
 export enum SpellType {
     Projectile = 'Projectile',
@@ -27,6 +24,15 @@ export enum SpellEffectType {
     GainPowerStack = 'GetPowerStack',
     LosePowerStack = 'LosePowerStack',
     AbsorbShield = 'AbsorbShield',
+}
+
+export interface PowerStackTrack {
+    powerStackType: PowerStackType;
+    amount: number;
+}
+
+export enum PowerStackType {
+    HolyPower = 'HolyPower',
 }
 
 export const PowerStackLimit: Record<PowerStackType, number> = {
@@ -196,21 +202,87 @@ export interface SpellDefinition {
     requiredPowerStacks?: PowerStackRequirement[];
 }
 
-export enum SpellClientMessages {
-    RequestSpellDefinitions = 'RequestSpellDefinitions',
-    CastSpell = 'CastSpell',
+export interface AbsorbShieldTrack {
+    id: string;
+    name: string;
+    ownerId: string;
+    value: number;
+    timeEffectType: TimeEffectType;
+    period: number;
+    iconImage: string;
+    creationTime: number;
 }
 
-export interface RequestSpellDefinitions {
-    type: SpellClientMessages.RequestSpellDefinitions;
-    spellIds: string[];
+
+export interface ProjectileMovement {
+    location: Location;
+    angle: number;
+    spellName: string;
 }
 
-export interface CastSpell {
-    type: SpellClientMessages.CastSpell;
-    directionLocation: Location;
-    spellId: string;
+export interface ChannelingTrack {
+    channelId: string;
+    casterId: string;
+    castingStartedTimestamp: number;
+    timeToCast: number;
+}
+
+export enum TimeEffectType {
+    BUFF = 'BUFF',
+    DEBUFF = 'DEBUFF',
+}
+
+export interface TimeEffect {
+    id: string;
+    period: number;
+    name: string;
+    description: string;
+    timeEffectType: TimeEffectType;
+    iconImage: string;
+    creationTime: number;
     targetId: string;
 }
 
-export type EngineSpellMessages = RequestSpellDefinitions | CastSpell;
+export interface AreaTimeEffect {
+    id: string;
+    name: string;
+    location: Location;
+    radius: number;
+}
+
+export enum SpellClientActions {
+    RequestSpellDefinitions = 'RequestSpellDefinitions',
+}
+
+export interface RequestSpellDefinitions {
+    type: SpellClientActions.RequestSpellDefinitions;
+    spellIds: string[];
+}
+
+export type EngineSpellActions = RequestSpellDefinitions;
+
+export enum SpellClientEvent {
+    PlayerCreated = 'PlayerCreated',
+    SpellLanded = 'SpellLanded',
+    SpellCasted = 'SpellCasted',
+}
+
+export interface PlayerCreatedEvent {
+    type: SpellClientEvent.PlayerCreated;
+}
+
+export interface SpellLandedEvent {
+    type: SpellClientEvent.SpellLanded;
+    spell: any;
+    angle: number;
+    castLocation: Location;
+    directionLocation: Location;
+}
+
+export interface SpellCastedEvent {
+    type: SpellClientEvent.SpellCasted;
+    spell: any;
+    casterId: string;
+}
+
+export type SpellEvent = SpellLandedEvent | SpellCastedEvent;

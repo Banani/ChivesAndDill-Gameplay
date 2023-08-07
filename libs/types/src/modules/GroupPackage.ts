@@ -1,11 +1,10 @@
-
 export interface Party {
     id: string;
     leader: string;
     membersIds: Record<string, boolean>;
 }
 
-export enum GroupClientMessages {
+export enum GroupClientActions {
     InviteToParty = 'InviteToParty',
     PromoteToLeader = "PromoteToLeader",
     UninviteFromParty = "UninviteFromParty",
@@ -15,30 +14,30 @@ export enum GroupClientMessages {
 }
 
 export interface InviteToParty {
-    type: GroupClientMessages.InviteToParty;
+    type: GroupClientActions.InviteToParty;
     characterId: string;
 }
 
 export interface PromoteToLeader {
-    type: GroupClientMessages.PromoteToLeader;
+    type: GroupClientActions.PromoteToLeader;
     characterId: string;
 }
 
 export interface UninviteFromParty {
-    type: GroupClientMessages.UninviteFromParty;
+    type: GroupClientActions.UninviteFromParty;
     characterId: string;
 }
 
 export interface AcceptInvite {
-    type: GroupClientMessages.AcceptInvite;
+    type: GroupClientActions.AcceptInvite;
 }
 
 export interface DeclineInvite {
-    type: GroupClientMessages.DeclineInvite;
+    type: GroupClientActions.DeclineInvite;
 }
 
 export interface LeaveParty {
-    type: GroupClientMessages.LeaveParty;
+    type: GroupClientActions.LeaveParty;
 }
 
 export type EngineGroupAction = InviteToParty | PromoteToLeader | UninviteFromParty | AcceptInvite | DeclineInvite | LeaveParty;

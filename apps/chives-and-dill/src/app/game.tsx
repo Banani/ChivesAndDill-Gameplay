@@ -1,4 +1,4 @@
-import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
+import { GlobalStoreModule, NpcClientActions } from '@bananos/types';
 import React, { useContext, useEffect } from 'react';
 import { GameControllerContext } from '../contexts/GameController';
 import { ModalsManagerContextProvider } from '../contexts/ModalsManagerContext';
@@ -21,7 +21,7 @@ export function Game() {
     useEffect(() => {
         const gameApi: GameApi = {
             setActiveTarget: (characterId: string) => setActiveTarget(characterId),
-            openNpcDialog: (npcId: string) => socket?.emit(NpcClientMessages.OpenNpcConversationDialog, { npcId })
+            openNpcDialog: (npcId: string) => socket?.emit(NpcClientActions.OpenNpcConversationDialog, { npcId })
         };
         (window as any).gameApi = gameApi;
     }, [socket]);

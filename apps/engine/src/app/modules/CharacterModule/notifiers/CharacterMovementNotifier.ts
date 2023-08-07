@@ -1,4 +1,4 @@
-import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
+import { CharacterClientActions, GlobalStoreModule } from '@bananos/types';
 import { mapValues } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { Notifier } from '../../../Notifier';
@@ -50,7 +50,7 @@ export class CharacterMovementNotifier extends Notifier<Character> {
             },
         });
 
-        currentSocket.on(CommonClientMessages.PlayerStartMove, (movement) => {
+        currentSocket.on(CharacterClientActions.PlayerStartMove, (movement) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToStartedMovementEvent>({
                 type: EngineEvents.PlayerTriesToStartedMovement,
                 characterId: event.playerCharacter.id,
@@ -58,7 +58,7 @@ export class CharacterMovementNotifier extends Notifier<Character> {
             });
         });
 
-        currentSocket.on(CommonClientMessages.PlayerStopMove, (movement) => {
+        currentSocket.on(CharacterClientActions.PlayerStopMove, (movement) => {
             this.engineEventCrator.asyncCeateEvent<PlayerStopedMovementVectorEvent>({
                 type: EngineEvents.PlayerStopedMovementVector,
                 characterId: event.playerCharacter.id,
