@@ -1,8 +1,14 @@
-import { Module } from '@bananos/socket-store';
 import { clone, forEach, mapValues, merge, pickBy } from 'lodash';
 import React, { FunctionComponent, useState } from 'react';
 
 export const PackageContext = React.createContext<any>(null);
+
+export interface Module {
+    data: Record<string, any>;
+    recentData: Record<string, any>;
+    events: [];
+    lastUpdateTime: number;
+}
 
 const deleteRequestedFields = (data: any, pathToDelete: any) => {
     forEach(pathToDelete, (toDelete, key) => {

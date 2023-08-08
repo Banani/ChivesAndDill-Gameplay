@@ -42,7 +42,7 @@ export class CorpseDropService extends EventParser {
 
         if (monster) {
             const respawn = monsterRespawns[monster.respawnId];
-            const characterTemplate = services.monsterTemplateService.getData()[respawn.characterTemplateId];
+            const characterTemplate = services.monsterTemplateService.getData()[respawn.templateId];
 
             if (!characterTemplate.dropSchema) {
                 return;

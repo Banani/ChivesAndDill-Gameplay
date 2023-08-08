@@ -29,13 +29,13 @@ export class RandomQuoteEngine extends Engine {
 
             if (character.type === CharacterType.Monster) {
                 const respawn = this.services.monsterRespawnTemplateService.getData()[character.respawnId];
-                const npcTemplate = this.services.monsterTemplateService.getData()[respawn.characterTemplateId];
+                const npcTemplate = this.services.monsterTemplateService.getData()[respawn.templateId];
                 quotesObject = npcTemplate.quotesEvents?.standard;
             }
 
             if (character.type === CharacterType.Npc) {
                 const respawn = this.services.npcRespawnTemplateService.getData()[character.respawnId];
-                const npcTemplate = this.services.npcTemplateService.getData()[respawn.characterTemplateId];
+                const npcTemplate = this.services.npcTemplateService.getData()[respawn.templateId];
                 quotesObject = npcTemplate.quotesEvents?.standard;
             }
 

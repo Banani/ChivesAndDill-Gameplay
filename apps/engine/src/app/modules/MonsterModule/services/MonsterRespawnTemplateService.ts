@@ -27,7 +27,7 @@ export class MonsterRespawnTemplateService extends EventParser {
             for (let respawn of monsterTemplate.monsterRespawns) {
                 this.monsterRespawns[respawn.id] = {
                     id: respawn.id,
-                    characterTemplateId: monsterTemplate._id.toString(),
+                    templateId: monsterTemplate._id.toString(),
                     location: { x: respawn.location.x * BLOCK_SIZE, y: respawn.location.y * BLOCK_SIZE },
                     time: respawn.time,
                     walkingType: respawn.walkingType,

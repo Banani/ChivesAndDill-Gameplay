@@ -3,6 +3,8 @@ import { HealthPointsSource } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
+import { CharacterUnion } from '../../../types/CharacterUnion';
+import { Services } from '../../../types/Services';
 import type {
     AddCharacterHealthPointsEvent,
     AddCharacterSpellPowerEvent,
@@ -18,6 +20,11 @@ import type {
     TakeCharacterSpellPowerEvent,
 } from '../Events';
 import { CharacterEngineEvents } from '../Events';
+
+interface PowerPoints {
+    healthPoints: number,
+    spellPower: number,
+}
 
 export class PowerPointsService extends EventParser {
     private powerPoints: Record<string, PowerPointsTrack> = {};
@@ -35,40 +42,29 @@ export class PowerPointsService extends EventParser {
         };
     }
 
+    getCharacterPowerPointsStats = (character: CharacterUnion, services: Services) => {
+        if (character.type === CharacterType.Player) {
+            return services.characterClassService.getData()[character.characterClassId];
+        }
+
+        if (character.type === CharacterType.Monster) {
+            return services.monsterTemplateService.getData()[character.templateId];
+        }
+
+        if (character.type === CharacterType.Npc) {
+            return services.npcTemplateService.getData()[character.templateId];
+        }
+    }
+
     handleNewCharacterCreated: EngineEventHandler<NewCharacterCreatedEvent> = ({ event, services }) => {
-        if (event.character.type === CharacterType.Player) {
-            const characterClass = services.characterClassService.getData()[event.character.characterClassId];
+        const powerPoints: PowerPoints = this.getCharacterPowerPointsStats(event.character, services);
 
-            this.powerPoints[event.character.id] = {
-                currentHp: characterClass.maxHp,
-                maxHp: characterClass.maxHp,
-                currentSpellPower: characterClass.maxSpellPower,
-                maxSpellPower: characterClass.maxSpellPower,
-            };
-        }
-
-        if (event.character.type === CharacterType.Monster) {
-            const monsterRespawn = services.monsterRespawnTemplateService.getData()[event.character.respawnId];
-            const monsterTemplate = services.monsterTemplateService.getData()[monsterRespawn.characterTemplateId];
-
-            this.powerPoints[event.character.id] = {
-                currentHp: monsterTemplate.healthPoints,
-                maxHp: monsterTemplate.healthPoints,
-                currentSpellPower: monsterTemplate.spellPower,
-                maxSpellPower: monsterTemplate.spellPower,
-            };
-        }
-        // TODO: powinno byc jakies wspolne rozwiazanie dla wszystkich
-        if (event.character.type === CharacterType.Npc) {
-            const template = services.npcTemplateService.getData()[event.character.templateId];
-
-            this.powerPoints[event.character.id] = {
-                currentHp: template.healthPoints,
-                maxHp: template.healthPoints,
-                currentSpellPower: template.spellPower,
-                maxSpellPower: template.spellPower,
-            };
-        }
+        this.powerPoints[event.character.id] = {
+            currentHp: powerPoints.healthPoints,
+            maxHp: powerPoints.healthPoints,
+            currentSpellPower: powerPoints.spellPower,
+            maxSpellPower: powerPoints.spellPower,
+        };
 
         this.engineEventCrator.asyncCeateEvent<NewPowerTrackCreatedEvent>({
             type: CharacterEngineEvents.NewPowerTrackCreated,
@@ -80,6 +76,7 @@ export class PowerPointsService extends EventParser {
     handleTakeCharacterHealthPoints: EngineEventHandler<TakeCharacterHealthPointsEvent> = ({ event, services }) => {
         if (this.powerPoints[event.characterId]) {
             this.powerPoints[event.characterId].currentHp = Math.max(this.powerPoints[event.characterId].currentHp - event.amount, 0);
+
             this.engineEventCrator.asyncCeateEvent<CharacterLostHpEvent>({
                 type: CharacterEngineEvents.CharacterLostHp,
                 characterId: event.characterId,
@@ -88,6 +85,7 @@ export class PowerPointsService extends EventParser {
                 attackerId: event.attackerId,
                 spellId: event.spellId
             });
+
             if (this.powerPoints[event.characterId].currentHp === 0) {
                 delete this.powerPoints[event.characterId];
                 this.engineEventCrator.asyncCeateEvent<CharacterDiedEvent>({

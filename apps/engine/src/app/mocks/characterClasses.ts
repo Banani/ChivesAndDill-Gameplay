@@ -5,8 +5,8 @@ export const MockedCharacterClasses: Record<string, CharacterClass> = {
         id: '1',
         name: "Tank",
         iconImage: "",
-        maxHp: 200,
-        maxSpellPower: 100,
+        healthPoints: 200,
+        spellPower: 100,
         spells: {
             '1': {
                 spellId: "1",

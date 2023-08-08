@@ -59,14 +59,14 @@ export class MonsterService extends EventParser {
 
     handleCreateNewMonster: EngineEventHandler<CreateNewMonsterEvent> = ({ event, services }) => {
         const id = `monster_${(this.increment++).toString()}`;
-        const monsterTemplate = services.monsterTemplateService.getData()[event.monsterRespawn.characterTemplateId];
+        const monsterTemplate = services.monsterTemplateService.getData()[event.monsterRespawn.templateId];
 
         //TODO: Te rzeczy powinny byc w npcTemplate tylko
         this.monsters[id] = {
             type: CharacterType.Monster,
             id,
             isDead: false,
-            characterTemplateId: monsterTemplate.id,
+            templateId: monsterTemplate.id,
             name: monsterTemplate.name,
             location: event.monsterRespawn.location,
             sprites: monsterTemplate.sprites,

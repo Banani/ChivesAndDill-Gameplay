@@ -65,7 +65,7 @@ export class MonsterAttackEngine extends Engine {
             }
 
             const monsterRespawn = this.services.monsterRespawnTemplateService.getData()[monster.respawnId];
-            const monsterTemplate = this.services.monsterTemplateService.getData()[monsterRespawn.characterTemplateId];
+            const monsterTemplate = this.services.monsterTemplateService.getData()[monsterRespawn.templateId];
 
             if (this.scheduledAttacks[monsterId]) {
                 const scheduledAttack = this.scheduledAttacks[monsterId].pop();

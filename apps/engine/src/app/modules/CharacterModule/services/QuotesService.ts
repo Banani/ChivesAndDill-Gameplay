@@ -51,7 +51,7 @@ export class QuotesService extends EventParser {
 
     handleMonsterPulled: EngineEventHandler<MonsterPulledEvent> = ({ event, services }) => {
         const respawn = services.monsterRespawnTemplateService.getData()[event.monster.respawnId];
-        const monsterTemplate = services.monsterTemplateService.getData()[respawn.characterTemplateId];
+        const monsterTemplate = services.monsterTemplateService.getData()[respawn.templateId];
         const onPulling = monsterTemplate.quotesEvents?.onPulling;
 
         if (this.quotesTimeStamps[event.monster.id] > now() - this.QUOTE_COOLDOWN) {
@@ -107,7 +107,7 @@ export class QuotesService extends EventParser {
         }
 
         const respawn = services.monsterRespawnTemplateService.getData()[monster.respawnId];
-        const monsterTemplate = services.monsterTemplateService.getData()[respawn.characterTemplateId];
+        const monsterTemplate = services.monsterTemplateService.getData()[respawn.templateId];
         const quotes = monsterTemplate.quotesEvents?.[quotesType];
 
         if (this.quotesTimeStamps[characterId] > now() - this.QUOTE_COOLDOWN) {

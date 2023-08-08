@@ -27,7 +27,7 @@ export class NpcRespawnTemplateService extends EventParser {
             for (let respawn of npcTemplate.npcRespawns) {
                 this.npcRespawns[respawn._id] = {
                     id: respawn._id,
-                    characterTemplateId: npcTemplate._id.toString(),
+                    templateId: npcTemplate._id.toString(),
                     location: { x: respawn.location.x * BLOCK_SIZE, y: respawn.location.y * BLOCK_SIZE },
                     time: respawn.time,
                     walkingType: respawn.walkingType

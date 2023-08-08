@@ -1,7 +1,7 @@
 import { AbsorbShieldTrack, ExperienceExternalTrack, GlobalStoreModule, PowerPointsTrack, PowerStackType, TimeEffect } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { useContext } from 'react';
-import { GameControllerContext } from '../../gameController/gameController';
+import { GameControllerContext } from '../../../contexts/GameController';
 import styles from './CharacterFrames.module.scss';
 import { PlayerIcon } from './playerIcon/PlayerIcon';
 import { TargetIcon } from './targetIcon/TargetIcon';
@@ -60,7 +60,7 @@ const CharacterFramesInternal = React.memo((characterFramesData: CharacterFrames
     return (
         <CharacterFramesContext.Provider value={characterFramesData}>
             <div className={styles.CharacterFrames}>
-                {characterFramesData.activeCharacterId ? <PlayerIcon playerId={characterFramesData.activeCharacterId}></PlayerIcon> : null}
+                {characterFramesData.activeCharacterId ? <PlayerIcon playerId={characterFramesData.activeCharacterId} /> : null}
                 <TargetIcon />
             </div>
         </CharacterFramesContext.Provider >

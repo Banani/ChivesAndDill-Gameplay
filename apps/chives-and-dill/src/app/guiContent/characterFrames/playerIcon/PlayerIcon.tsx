@@ -1,6 +1,6 @@
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { GameControllerContext } from '../../../gameController/gameController';
+import { GameControllerContext } from '../../../../contexts/GameController';
 import { GetAbsorbsValue } from '../../../player/GetPlayerAbsorbs';
 import { CharacterFramesContext } from '../CharacterFrames';
 import { OptionsModal } from '../optionsModal/OptionsModal';

@@ -8,9 +8,9 @@ import cursorLoot from '../../assets/spritesheets/cursors/lootCursor.png';
 import cursorSpeak from '../../assets/spritesheets/cursors/speakCursor.png';
 import cursorSword from '../../assets/spritesheets/cursors/swordCursor.png';
 import { BLOCK_SIZE } from '../../consts/consts';
+import { GameControllerContext } from '../../contexts/GameController';
 import { KeyBoardContext } from '../../contexts/KeyBoardContext';
-import { GameControllerContext } from '../gameController/gameController';
-import { SocketContext } from '../gameController/socketCommunicator';
+import { SocketContext } from '../../contexts/SocketCommunicator';
 import { PlayerBars } from './PlayerBars';
 import { PlayerName } from './PlayerName';
 

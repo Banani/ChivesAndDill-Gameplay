@@ -3,9 +3,13 @@ import { each, filter, pickBy } from 'lodash';
 import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints, getCrossingPointsWithWalls, getTheClosestObject, isSegmentIntersectingWithACircle } from '../../../math';
 import { Character } from '../../../types';
-import { ProjectileIntersection } from '../../PlayerModule/engines/types';
 import { Projectile, ProjectileMovedEvent, RemoveProjectileEvent, SpellEngineEvents, SpellLandedEvent, SpellReachedTargetEvent } from '../Events';
 import { filterCharactersBaseOnSpellImpact } from '../services/utils';
+
+enum ProjectileIntersection {
+    WALL,
+    CHARACTER,
+}
 
 export class ProjectileMovement extends Engine {
     calculateAngles(projectile) {
