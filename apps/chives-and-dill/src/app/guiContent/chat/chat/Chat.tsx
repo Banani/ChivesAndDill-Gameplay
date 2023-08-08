@@ -1,5 +1,5 @@
-import { ChannelChatMessage, ChannelType, ChatChannel, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage, SystemChatMessage } from '@bananos/types';
-import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
+import { ChannelChatMessage, ChannelType, ChatChannel, ChatChannelClientActions, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage, SystemChatMessage } from '@bananos/types';
+import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
@@ -40,9 +40,9 @@ export const Chat = () => {
 
 const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getChannelNumberById, lastUpdateTime }: ChatInternalProps) => {
     const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
-    const engineApiContext = useContext(EngineApiContext);
     const menuContext = useContext(MenuContext);
     const { setActiveTarget } = useContext(GameControllerContext);
+    const { callEngineAction } = useContext(EngineContext);
 
     const lastMessage = useRef(null);
     const modes = ['General', 'Combat Log', 'Global'];
@@ -84,7 +84,10 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
                         menuContext.setActions([
                             {
                                 label: 'Leave Channel',
-                                action: () => engineApiContext.leaveChatChannel({ chatChannelId: message.chatChannelId }),
+                                action: () => callEngineAction({
+                                    type: ChatChannelClientActions.LeaveChatChannel,
+                                    chatChannelId: message.chatChannelId
+                                }),
                             },
                         ]);
                     }}

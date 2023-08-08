@@ -2,8 +2,8 @@ import { CharacterClientActions, GlobalStoreModule, Location, PlayerClientAction
 import _ from 'lodash';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useEngineModuleReader } from '../hooks';
+import { EngineContext } from './EngineApiContext';
 import { KeyBoardContext } from './KeyBoardContext';
-import { SocketContext } from './SocketCommunicator';
 
 const keyMovementMap = {
     w: { y: -1 },
@@ -27,7 +27,7 @@ export const GameController = ({ children }) => {
     const { data: availableSpells } = useEngineModuleReader(GlobalStoreModule.AVAILABLE_SPELLS);
 
     const keyBoardContext = useContext(KeyBoardContext);
-    const { socket } = useContext(SocketContext);
+    const { callEngineAction } = useContext(EngineContext);
 
     const [activeTargetId, setActiveTargetId] = useState<string | null>(null)
     const [mousePosition, setMousePosition] = useState({ x: null, y: null });
@@ -46,14 +46,14 @@ export const GameController = ({ children }) => {
         keyBoardContext.addKeyHandler({
             id: 'gameControllerWASD',
             matchRegex: '[wasd]',
-            keydown: (key) => socket?.emit(CharacterClientActions.PlayerStartMove, { source: key, ...keyMovementMap[key] }),
-            keyup: (key) => socket?.emit(CharacterClientActions.PlayerStopMove, { source: key }),
+            keydown: (key) => callEngineAction({ type: CharacterClientActions.PlayerStartMove, source: key, ...keyMovementMap[key] }),
+            keyup: (key) => callEngineAction({ type: CharacterClientActions.PlayerStopMove, source: key }),
         });
 
         return () => {
             keyBoardContext.removeKeyHandler('ConfirmationDialogEnter');
         };
-    }, [socket]);
+    }, [callEngineAction]);
 
     const keyPressHandler = (event) => {
         const key = event.key.toLowerCase();
@@ -65,7 +65,8 @@ export const GameController = ({ children }) => {
         }
 
         if (keyBinds[key]) {
-            socket?.emit(PlayerClientActions.CastSpell, {
+            callEngineAction({
+                type: PlayerClientActions.CastSpell,
                 targetId: activeTargetId,
                 directionLocation: {
                     x: characterMovements[activeCharacterId].location.x + mousePosition.x - gameWidth / 2,

@@ -1,5 +1,5 @@
-import { GlobalStoreModule } from '@bananos/types';
-import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
+import { GlobalStoreModule, NpcClientActions } from '@bananos/types';
+import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
@@ -27,13 +27,13 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
     const activeNpcQuests = npcQuests[activeNpc?.templateId];
 
     const keyBoardContext = useContext(KeyBoardContext);
-    const engineApiContext = useContext(EngineApiContext);
+    const { callEngineAction } = useContext(EngineContext);
 
     useEffect(() => {
         keyBoardContext.addKeyHandler({
             id: 'DefaultNpcModalEscape',
             matchRegex: 'Escape',
-            keydown: engineApiContext.closeNpcConversationDialog,
+            keydown: () => callEngineAction({ type: NpcClientActions.CloseNpcConversationDialog }),
         });
 
         return () => {

@@ -23,7 +23,6 @@ export interface OpenNpcConversationDialog {
 
 export interface CloseNpcConversationDialog {
     type: NpcClientActions.CloseNpcConversationDialog;
-    npcId: string;
 }
 
 export interface BuyItemFromNpc {

@@ -1,7 +1,7 @@
-import { GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule, SpellClientActions } from '@bananos/types';
 import _ from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { EngineApiContext } from '../contexts/EngineApi';
+import { EngineContext } from '../contexts/EngineApiContext';
 import { useEngineModuleReader } from './useEngineModuleReader';
 
 interface SpellDefinitionProviderProps {
@@ -11,8 +11,7 @@ interface SpellDefinitionProviderProps {
 export const useSpellDefinitionProvider = ({ spellDefinitionIds }: SpellDefinitionProviderProps) => {
     const { data: spellDefinitions } = useEngineModuleReader(GlobalStoreModule.SPELL_DEFINITION);
 
-    const context = useContext(EngineApiContext);
-    const { requestSpellDefinitions } = context;
+    const { callEngineAction } = useContext(EngineContext);
     const [wasRequested, setWasRequested] = useState(false);
 
     useEffect(() => {
@@ -22,7 +21,10 @@ export const useSpellDefinitionProvider = ({ spellDefinitionIds }: SpellDefiniti
 
         const requiredSpellDefinitions = spellDefinitionIds.filter((id) => !spellDefinitions[id]);
         if (requiredSpellDefinitions.length > 0) {
-            requestSpellDefinitions(requiredSpellDefinitions);
+            callEngineAction({
+                type: SpellClientActions.RequestSpellDefinitions,
+                spellIds: requiredSpellDefinitions
+            })
             setWasRequested(true);
         }
     }, [spellDefinitionIds, wasRequested, spellDefinitions]);

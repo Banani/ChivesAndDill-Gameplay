@@ -14,7 +14,6 @@ export interface Character {
     isInMove: boolean;
     healthPointsRegeneration: number;
     spellPowerRegeneration: number;
-    spells: Record<string, boolean>;
 }
 
 export enum CharacterType {

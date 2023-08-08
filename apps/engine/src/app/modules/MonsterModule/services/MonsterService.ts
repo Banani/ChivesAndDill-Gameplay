@@ -80,7 +80,6 @@ export class MonsterService extends EventParser {
             movementSpeed: monsterTemplate.movementSpeed,
             desiredRange: monsterTemplate.desiredRange,
             escapeRange: monsterTemplate.escapeRange,
-            spells: {},
             attackFrequency: monsterTemplate.attackFrequency,
             healthPointsRegeneration: monsterTemplate.spellPowerRegeneration,
             spellPowerRegeneration: monsterTemplate.spellPowerRegeneration,

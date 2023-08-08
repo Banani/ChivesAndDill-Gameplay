@@ -1,5 +1,5 @@
 import { GlobalStoreModule, GroupClientActions } from '@bananos/types';
-import { SocketContext } from 'apps/chives-and-dill/src/contexts/SocketCommunicator';
+import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { useContext } from 'react';
 import styles from './OptionsModal.module.scss';
@@ -8,11 +8,12 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
     const { data: party } = useEngineModuleReader(GlobalStoreModule.PARTY);
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data
 
-    const { socket } = useContext(SocketContext);
+    const { callEngineAction } = useContext(EngineContext);
 
     const partyAction = (type) => {
         setOptionsVisible(false);
-        socket?.emit(type, {
+        callEngineAction({
+            type,
             characterId: playerId,
         });
     };
@@ -40,7 +41,7 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
 
     const leaveParty = () => {
         setOptionsVisible(false);
-        socket?.emit(GroupClientActions.LeaveParty);
+        callEngineAction({ type: GroupClientActions.LeaveParty });
     }
 
     return (

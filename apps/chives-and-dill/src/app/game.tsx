@@ -1,8 +1,8 @@
 import { GlobalStoreModule, NpcClientActions } from '@bananos/types';
 import React, { useContext, useEffect } from 'react';
+import { EngineContext } from '../contexts/EngineApiContext';
 import { GameControllerContext } from '../contexts/GameController';
 import { ModalsManagerContextProvider } from '../contexts/ModalsManagerContext';
-import { SocketContext } from '../contexts/SocketCommunicator';
 import { useEngineModuleReader } from '../hooks/useEngineModuleReader';
 import { GameUserInterface } from './GameUserInterface';
 import { ViewPort } from './ViewPort';
@@ -16,15 +16,15 @@ export interface GameApi {
 export function Game() {
     const activeCharacterId = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER)?.data?.activeCharacterId;
     const { setActiveTarget } = useContext(GameControllerContext);
-    const { socket } = useContext(SocketContext);
+    const { callEngineAction } = useContext(EngineContext);
 
     useEffect(() => {
         const gameApi: GameApi = {
             setActiveTarget: (characterId: string) => setActiveTarget(characterId),
-            openNpcDialog: (npcId: string) => socket?.emit(NpcClientActions.OpenNpcConversationDialog, { npcId })
+            openNpcDialog: (npcId: string) => callEngineAction({ type: NpcClientActions.OpenNpcConversationDialog, npcId })
         };
         (window as any).gameApi = gameApi;
-    }, [socket]);
+    }, [callEngineAction]);
 
     return (
         <>

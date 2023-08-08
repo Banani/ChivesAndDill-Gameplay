@@ -2,9 +2,8 @@ import { GlobalStoreModule, NpcClientActions } from '@bananos/types';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ItemPreview } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
-import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
+import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
-import { SocketContext } from 'apps/chives-and-dill/src/contexts/SocketCommunicator';
 import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
 import { usePagination } from 'apps/creator-web/src/app/views/components/pagination/usePagination';
 import _ from 'lodash';
@@ -23,7 +22,7 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
     const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
     const [itemsAmount, updateItemsAmount] = useState(0);
 
-    const { socket } = useContext(SocketContext);
+    const { callEngineAction } = useContext(EngineContext);
 
     const { start, end, prevPage, nextPage, page, allPagesCount } = usePagination({
         pageSize: 10,
@@ -34,7 +33,6 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
         setPaginationRange({ start, end });
     }, [start, end]);
 
-    const engineApiContext = useContext(EngineApiContext);
     const keyBoardContext = useContext(KeyBoardContext);
     const activeNpc = characters[activeConversation[activeCharacterId]?.npcId];
     const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: Object.keys(activeNpc.stock) });
@@ -43,7 +41,7 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
         keyBoardContext.addKeyHandler({
             id: 'TradeNpcModalEscape',
             matchRegex: 'Escape',
-            keydown: engineApiContext.closeNpcConversationDialog,
+            keydown: () => callEngineAction({ type: NpcClientActions.CloseNpcConversationDialog }),
         });
 
         return () => {
@@ -79,7 +77,8 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
     };
 
     const buyItem = (item, npc) => {
-        socket?.emit(NpcClientActions.BuyItemFromNpc, {
+        callEngineAction({
+            type: NpcClientActions.BuyItemFromNpc,
             npcId: npc.id,
             itemTemplateId: item.id,
         });

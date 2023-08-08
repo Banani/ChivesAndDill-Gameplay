@@ -1,8 +1,8 @@
-import { GlobalStoreModule, ItemTemplate } from '@bananos/types';
+import { GlobalStoreModule, ItemClientActions, ItemTemplate } from '@bananos/types';
 import { filter } from 'lodash';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useEngineModuleReader } from '../hooks';
-import { EngineApiContext } from './EngineApi';
+import { EngineContext } from './EngineApiContext';
 
 interface ItemTemplateContextReturns {
     itemTemplates: Record<string, ItemTemplate>,
@@ -14,7 +14,7 @@ export const ItemTemplateContext = React.createContext<ItemTemplateContextReturn
 export const ItemTemplateContextProvider = ({ children }) => {
     const [requestedItemsIds, setRequestedItemsIds] = useState<string[]>([]);
     const { data: itemTemplates, lastUpdateTime } = useEngineModuleReader(GlobalStoreModule.ITEMS);
-    const { requestItemTemplates } = useContext(EngineApiContext);
+    const { callEngineAction } = useContext(EngineContext);
     const [wasRequested, setWasRequested] = useState(false);
 
     useEffect(() => {
@@ -35,7 +35,10 @@ export const ItemTemplateContextProvider = ({ children }) => {
     const requestRequiredItemTemplates = () => {
         const requiredItemTemplates = filter(requestedItemsIds, (id) => !itemTemplates[id]);
         if (requiredItemTemplates.length > 0) {
-            requestItemTemplates(requiredItemTemplates);
+            callEngineAction({
+                type: ItemClientActions.RequestItemTemplates,
+                itemTemplateIds: requiredItemTemplates
+            });
             setRequestedItemsIds((prev: string[]) => prev.filter(id => requestedItemsIds.indexOf(id) !== -1));
             setWasRequested(true);
         }
