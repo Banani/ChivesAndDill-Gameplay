@@ -19,8 +19,8 @@ export const PlayerIcon = ({ playerId }) => {
     const [absorbBarWidth, setAbsorbBarWidth] = useState(0);
     const [optionsVisible, setOptionsVisible] = useState(false);
 
-    const playerPoints = characterPowerPoints[playerId];
     const HolyPower = powerStacks?.[playerId]?.HolyPower;
+    const playerPoints = characterPowerPoints[playerId] ?? { maxHp: 0, currentHp: 0, currentSpellPower: 0, maxSpellPower: 0 };
     const { maxHp, currentHp, currentSpellPower, maxSpellPower } = playerPoints;
 
     useEffect(() => {
@@ -85,7 +85,7 @@ export const PlayerIcon = ({ playerId }) => {
             <div className={styles.playerIconContainer}>
                 <div onContextMenu={(e) => avatarClick(e)} className={styles.playerAvatar + " " + (combatState[playerId] ? styles.combatBorder : "")} style={{ backgroundImage: `url(${avatar})` }}></div>
                 <div className={styles.combatSwords} style={combatState[playerId] ? { visibility: "visible", opacity: '1' } : null}></div>
-                <div className={styles.playerLvl}>{experience[playerId].level}</div>
+                <div className={styles.playerLvl}>{experience[playerId]?.level}</div>
                 <div className={styles.playerRole} />
                 <div>
                     <div className={styles.barsContainer + " " + (combatState[playerId] ? styles.combatBorder : "")}>
