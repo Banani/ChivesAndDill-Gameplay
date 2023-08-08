@@ -4,7 +4,7 @@ import { Application } from 'pixi.js';
 import React, { useEffect, useRef, useState } from "react";
 import { GameApi } from './game';
 import { useGameSize } from './hooks';
-import { DialogRenderer, FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerBarRenderer, PlayerNameRenderer, PlayerRenderer, ProjectileRenderer } from './renderer';
+import { DialogRenderer, ErrorMessageRenderer, FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerBarRenderer, PlayerNameRenderer, PlayerRenderer, ProjectileRenderer } from './renderer';
 import { Renderer } from './renderer/Renderer';
 
 export const ViewPort = React.memo(() => {
@@ -39,7 +39,8 @@ export const ViewPort = React.memo(() => {
                 new PlayerBarRenderer(container),
                 new FloatingNumbersRenderer(container),
                 new NpcQuestMarkRenderer(container),
-                new DialogRenderer(container)
+                new DialogRenderer(container),
+                new ErrorMessageRenderer(container)
             ];
 
             const output = {};
@@ -73,8 +74,10 @@ export const ViewPort = React.memo(() => {
 
             // Nie ma chyba potrzeby zeby to bylo 60 razy na sekunde
             application.ticker.add(() => {
+                const settings = (window as any).gameSettings;
+
                 renderers.forEach(renderer => {
-                    renderer.updateScene(engineState, gameApi);
+                    renderer.updateScene(engineState, gameApi, settings);
                 })
             });
 
@@ -96,6 +99,7 @@ export const ViewPort = React.memo(() => {
             application.view.width = gameSize.width;
             application.view.height = gameSize.height;
             container.pivot.set(-gameSize.width / 2, -gameSize.height / 2);
+            (window as any).gameSettings = { gameSize };
         }
     }, [gameSize, application]);
 

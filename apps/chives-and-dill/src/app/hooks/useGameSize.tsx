@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 
+export interface GameSize {
+    width: number;
+    height: number;
+}
+
 export const useGameSize = () => {
-    const [gameSize, setGameSize] = useState({ width: 0, height: 0 });
+    const [gameSize, setGameSize] = useState<GameSize>({ width: 0, height: 0 });
 
     const resizeGame = useCallback(() => {
         let gameWidth = window.innerWidth;
