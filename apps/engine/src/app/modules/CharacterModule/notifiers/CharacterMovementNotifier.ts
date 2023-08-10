@@ -1,4 +1,4 @@
-import { Character, CharacterClientActions, GlobalStoreModule } from '@bananos/types';
+import { Character, CharacterClientActions, CharacterMovement, GlobalStoreModule } from '@bananos/types';
 import { mapValues } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { Notifier } from '../../../Notifier';
@@ -13,14 +13,13 @@ import type {
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import { CharacterEngineEvents, NewCharacterCreatedEvent } from '../Events';
 
-// TODO: wrong type, it should not be Character
-export class CharacterMovementNotifier extends Notifier<Character> {
+export class CharacterMovementNotifier extends Notifier<CharacterMovement> {
     constructor() {
         super({ key: GlobalStoreModule.CHARACTER_MOVEMENTS });
         this.eventsToHandlersMap = {
             [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
             [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
-            [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+            [EngineEvents.CharacterMoved]: this.handlePlayerMoved,
             [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
             [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
         };

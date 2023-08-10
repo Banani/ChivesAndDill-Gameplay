@@ -91,14 +91,14 @@ export class PlayersMovement extends Engine {
 
                 if (this.canMove(movementSegment, areas)) {
                     this.eventCrator.createEvent<PlayerMovedEvent>({
-                        type: EngineEvents.PlayerMoved,
+                        type: EngineEvents.CharacterMoved,
                         characterId: player.id,
                         newCharacterDirection: this.getNewDirection(lastMovement),
                         newLocation,
                     });
                 } else {
                     this.eventCrator.createEvent<PlayerMovedEvent>({
-                        type: EngineEvents.PlayerMoved,
+                        type: EngineEvents.CharacterMoved,
                         characterId: player.id,
                         newCharacterDirection: this.getNewDirection(lastMovement),
                         newLocation: player.location,

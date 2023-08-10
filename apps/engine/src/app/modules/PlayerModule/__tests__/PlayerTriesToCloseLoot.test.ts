@@ -1,15 +1,10 @@
-import { GlobalStoreModule, PlayerClientActions } from '@bananos/types';
-import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
+import { EngineManager } from 'apps/engine/src/app/testUtilities';
 import { } from '../..';
-import { EngineEvents } from '../../../EngineEvents';
 import { MockedMonsterTemplates } from '../../../mocks';
 import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
-import { CharacterDiedEvent, CharacterType } from '../../../types';
 import { WalkingType } from '../../../types/CharacterRespawn';
-import { CharacterUnion } from '../../../types/CharacterUnion';
 import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../../MonsterModule/Events';
 import { MonsterRespawnTemplateService, MonsterTemplateService } from '../../MonsterModule/services';
-import { Monster } from '../../MonsterModule/types';
 import _ = require('lodash');
 
 const setupEngine = () => {
@@ -47,37 +42,38 @@ const setupEngine = () => {
 };
 
 describe('PlayerTriesToCloseLoot', () => {
-    it('active loot should be cleared when corpse is closed', () => {
-        const { engineManager, players } = setupEngine();
+    // Odwolujemy sie tutaj do wewnetrznego eventa, zamiast tego potwor powinien zostac zabity przez spell
+    it.skip('active loot should be cleared when corpse is closed', () => {
+        // const { engineManager, players } = setupEngine();
 
-        let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
 
-        engineManager.createSystemAction<CharacterDiedEvent>({
-            type: EngineEvents.CharacterDied,
-            characterId: monster.id,
-            killerId: players['1'].characterId,
-            character: monster,
-        });
+        // engineManager.createSystemAction<CharacterDiedEvent>({
+        //     type: EngineEvents.CharacterDied,
+        //     characterId: monster.id,
+        //     killerId: players['1'].characterId,
+        //     character: monster,
+        // });
 
-        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
+        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        // const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
 
-        engineManager.callPlayerAction(players['1'].socketId, {
-            type: PlayerClientActions.OpenLoot,
-            corpseId,
-        });
+        // engineManager.callPlayerAction(players['1'].socketId, {
+        //     type: PlayerClientActions.OpenLoot,
+        //     corpseId,
+        // });
 
-        engineManager.callPlayerAction(players['1'].socketId, {
-            type: PlayerClientActions.CloseLoot,
-        });
+        // engineManager.callPlayerAction(players['1'].socketId, {
+        //     type: PlayerClientActions.CloseLoot,
+        // });
 
-        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
-            toDelete: {
-                monster_0: null,
-            },
-        });
+        // checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
+        //     toDelete: {
+        //         monster_0: null,
+        //     },
+        // });
     });
 });

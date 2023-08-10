@@ -18,7 +18,7 @@ export class ActiveNpcConversationService extends EventParser {
         super();
         this.eventsToHandlersMap = {
             [NpcEngineEvents.PlayerTriesToStartConversation]: this.handlePlayerTriesToStartConversation,
-            [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+            [EngineEvents.CharacterMoved]: this.handlePlayerMoved,
             [NpcEngineEvents.PlayerTriesToFinishConversation]: this.handlePlayerTriesToFinishConversation,
         };
     }

@@ -13,7 +13,7 @@ export class MovementQuestService extends EventParser {
         super();
         this.eventsToHandlersMap = {
             [QuestEngineEvents.StartNewQuestStagePart]: this.handleStartNewQuestStagePart,
-            [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+            [EngineEvents.CharacterMoved]: this.handlePlayerMoved,
         };
     }
 

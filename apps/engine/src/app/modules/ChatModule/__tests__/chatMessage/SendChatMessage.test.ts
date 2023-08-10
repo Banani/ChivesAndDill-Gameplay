@@ -262,7 +262,7 @@ describe('Chat module - Send chat message action', () => {
         const message = 'Hello there.';
 
         engineManager.createSystemAction<PlayerMovedEvent>({
-            type: EngineEvents.PlayerMoved,
+            type: EngineEvents.CharacterMoved,
             characterId: players['3'].characterId,
             newCharacterDirection: CharacterDirection.DOWN,
             newLocation: { x: 1500, y: 1500 },
@@ -285,7 +285,7 @@ describe('Chat module - Send chat message action', () => {
         const message = 'Hello there.';
 
         engineManager.createSystemAction<PlayerMovedEvent>({
-            type: EngineEvents.PlayerMoved,
+            type: EngineEvents.CharacterMoved,
             characterId: players['3'].characterId,
             newCharacterDirection: CharacterDirection.DOWN,
             newLocation: { x: 1500, y: 1500 },
@@ -323,7 +323,7 @@ describe('Chat module - Send chat message action', () => {
         const message = 'Hello there.';
 
         engineManager.createSystemAction<PlayerMovedEvent>({
-            type: EngineEvents.PlayerMoved,
+            type: EngineEvents.CharacterMoved,
             characterId: players['3'].characterId,
             newCharacterDirection: CharacterDirection.DOWN,
             newLocation: { x: 10000, y: 10000 },

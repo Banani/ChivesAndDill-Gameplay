@@ -37,7 +37,7 @@ export class ChannelService extends EventParser {
         this.eventsToHandlersMap = {
             [SpellEngineEvents.PlayerCastSpell]: this.handlePlayerCastSpell,
             [SpellEngineEvents.SpellChannelingFinished]: this.handleSpellChannelingFinished,
-            [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+            [EngineEvents.CharacterMoved]: this.handlePlayerMoved,
 
             // TODO: after migration the channel should be stopped both for caster and target, when one of them is dead
             [EngineEvents.CharacterDied]: this.handleCharacterDied,

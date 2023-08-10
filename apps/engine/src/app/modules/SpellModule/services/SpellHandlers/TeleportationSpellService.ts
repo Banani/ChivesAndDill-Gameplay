@@ -58,7 +58,7 @@ export class TeleportationSpellService extends EventParser {
             });
 
             this.engineEventCrator.asyncCeateEvent<PlayerMovedEvent>({
-                type: EngineEvents.PlayerMoved,
+                type: EngineEvents.CharacterMoved,
                 characterId: caster.id,
                 newCharacterDirection: CharacterDirection.DOWN,
                 newLocation: event.directionLocation,

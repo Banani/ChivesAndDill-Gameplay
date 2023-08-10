@@ -20,7 +20,7 @@ export class MonsterService extends EventParser {
             [MonsterEngineEvents.MonsterLostTarget]: this.test2,
             [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
             [EngineEvents.CharacterDied]: this.handleCharacterDied,
-            [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+            [EngineEvents.CharacterMoved]: this.handlePlayerMoved,
             [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
             [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
         };

@@ -14,6 +14,7 @@ import type {
     AreaTimeEffect,
     Attributes,
     ChannelingTrack,
+    Character,
     CharacterClassPreview,
     CharacterClientActions,
     CharacterEvent,
@@ -86,7 +87,7 @@ export enum GlobalStoreModule {
 export interface PartialEnginePackage<Data> {
     data: Record<string, Data>;
     toDelete: {};
-    events: EnginePackageEvent[];
+    events: ReceivedEnginePackageEvent[];
 }
 
 export interface EnginePackage {
@@ -100,7 +101,7 @@ export interface EnginePackage {
     [GlobalStoreModule.SPELLS]: PartialEnginePackage<null>;
     [GlobalStoreModule.POWER_STACKS]: PartialEnginePackage<Partial<Record<PowerStackType, number>>>;
     [GlobalStoreModule.ABSORB_SHIELDS]: PartialEnginePackage<AbsorbShieldTrack>;
-    [GlobalStoreModule.CHARACTER]: PartialEnginePackage<any>; // TODO: PlayerCharacter
+    [GlobalStoreModule.CHARACTER]: PartialEnginePackage<Character>;
     [GlobalStoreModule.ACTIVE_CHARACTER]: PartialEnginePackage<string>;
     [GlobalStoreModule.MAP_SCHEMA]: PartialEnginePackage<MapSchema | MapDefinition>;
     [GlobalStoreModule.ACTIVE_LOOT]: PartialEnginePackage<CorpseLoot>;
@@ -148,7 +149,7 @@ export interface GlobalStore {
     [GlobalStoreModule.POWER_STACKS]: StoreModule<Partial<Record<PowerStackType, number>>>;
     [GlobalStoreModule.ABSORB_SHIELDS]: StoreModule<AbsorbShieldTrack>;
     [GlobalStoreModule.PLAYER]: StoreModule<undefined>;
-    [GlobalStoreModule.CHARACTER]: StoreModule<any>; // TODO: PlayerCharacter
+    [GlobalStoreModule.CHARACTER]: StoreModule<Character>;
     [GlobalStoreModule.ACTIVE_CHARACTER]: StoreModule<string>;
     [GlobalStoreModule.MAP_SCHEMA]: StoreModule<MapSchema | MapDefinition>;
     [GlobalStoreModule.ACTIVE_LOOT]: StoreModule<CorpseLoot>;
