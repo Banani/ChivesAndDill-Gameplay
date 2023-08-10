@@ -1,6 +1,6 @@
-import { GlobalStoreModule, PlayerClientEvents } from '@bananos/types';
+import { CharacterType, GlobalStoreModule, PlayerClientEvents } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { PlayerEngineEvents, SendErrorMessageEvent } from '../Events';
 
 export class ErrorMessagesNotifier extends Notifier {

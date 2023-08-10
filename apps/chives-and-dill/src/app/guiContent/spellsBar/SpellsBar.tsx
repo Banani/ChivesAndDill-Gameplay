@@ -1,4 +1,4 @@
-import { GlobalStoreModule, Player, PowerPointsTrack } from '@bananos/types';
+import { GlobalStoreModule, PowerPointsTrack } from '@bananos/types';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { useEngineModuleReader, useSpellDefinitionProvider } from 'apps/chives-and-dill/src/hooks';
 import classnames from 'classnames';
@@ -13,7 +13,6 @@ interface SpellsBarProps {
     spellCastTime: Record<string, number>;
     characterPowerPoints: Record<string, PowerPointsTrack>;
     activeCharacterId: string;
-    characters: Record<string, Player>;
 }
 
 export const SpellsBar = () => {
@@ -21,7 +20,6 @@ export const SpellsBar = () => {
     const { data: spellCastTime, lastUpdateTime: spellCastTimeUpdateTime } = useEngineModuleReader(GlobalStoreModule.SPELL_CAST_TIME);
     const { data: characterPowerPoints, lastUpdateTime: characterPowerPointsTime } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
-    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
 
     return <InternalSpellsBar
         lastUpdateTime={availableSpellsUpdateTime.toString() + spellCastTimeUpdateTime.toString() + characterPowerPointsTime.toString()}
@@ -29,11 +27,10 @@ export const SpellsBar = () => {
         spellCastTime={spellCastTime as Record<string, number>}
         characterPowerPoints={characterPowerPoints as Record<string, PowerPointsTrack>}
         activeCharacterId={activeCharacterId}
-        characters={characters as Record<string, Player>}
     />
 }
 
-const InternalSpellsBar: React.FunctionComponent<SpellsBarProps> = React.memo(({ availableSpells, spellCastTime, characterPowerPoints, activeCharacterId, characters }) => {
+const InternalSpellsBar: React.FunctionComponent<SpellsBarProps> = React.memo(({ availableSpells, spellCastTime, characterPowerPoints, activeCharacterId }) => {
     const keyBoardContext = useContext(KeyBoardContext);
     const { spellDefinitions } = useSpellDefinitionProvider({ spellDefinitionIds: Object.keys(availableSpells) });
     const [clickedKey, setClickedKey] = useState('');

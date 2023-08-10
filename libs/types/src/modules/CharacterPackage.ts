@@ -13,6 +13,22 @@ export enum CharacterDirection {
     RIGHT,
 }
 
+export interface Character {
+    type: CharacterType;
+    id: string;
+    name: string;
+    sprites: string; // Should be an object
+    size: number; // Should be in that object
+    avatar: string;
+    location: Location;
+    direction: CharacterDirection;
+    movementSpeed: number;
+    isDead: boolean;
+    isInMove: boolean;
+    healthPointsRegeneration: number;
+    spellPowerRegeneration: number;
+}
+
 export interface CharacterMovement {
     location: Location;
     isInMove: boolean;

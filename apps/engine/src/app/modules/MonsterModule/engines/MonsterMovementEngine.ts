@@ -134,8 +134,9 @@ export class MonsterMovementEngine extends Engine {
 
     chasing(monster: Monster, targetId: string) {
         const allCharacters = { ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() };
+        const monsterTemplate = this.services.monsterTemplateService.getData()[monster.templateId];
 
-        if (distanceBetweenTwoPoints(allCharacters[targetId].location, monster.location) <= monster.desiredRange) {
+        if (distanceBetweenTwoPoints(allCharacters[targetId].location, monster.location) <= monsterTemplate.desiredRange) {
             this.eventCrator.createEvent<PlayerStopedAllMovementVectorsEvent>({
                 type: EngineEvents.PlayerStopedAllMovementVectors,
                 characterId: monster.id,

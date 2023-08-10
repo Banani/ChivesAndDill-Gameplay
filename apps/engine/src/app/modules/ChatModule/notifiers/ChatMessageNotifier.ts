@@ -1,8 +1,8 @@
-import { ChannelType, ChatChannelClientActions, ChatMessage, GlobalStoreModule, RangeChatMessage } from '@bananos/types';
+import { ChannelType, CharacterType, ChatChannelClientActions, ChatMessage, GlobalStoreModule, RangeChatMessage } from '@bananos/types';
 import { keyBy, map, mapValues, pickBy } from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import { ChatEngineEvents, ChatMessageSentEvent, ChatMessagesDeletedEvent, SendChatMessageEvent } from '../Events';

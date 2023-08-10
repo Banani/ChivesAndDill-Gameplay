@@ -1,9 +1,8 @@
-import { HealthPointsSource } from '@bananos/types';
+import { Character, HealthPointsSource } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import {
     CancelScheduledActionEvent,
-    Character,
     CharacterDiedEvent,
     EngineEventHandler,
     ScheduleActionEvent,

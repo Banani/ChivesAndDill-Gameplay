@@ -1,6 +1,6 @@
-import { EquipmentTrack, GlobalStoreModule, ItemClientActions } from '@bananos/types';
+import { CharacterType, EquipmentTrack, GlobalStoreModule, ItemClientActions } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
     EquipmentTrackCreatedEvent,

@@ -1,6 +1,5 @@
-import { Spell } from "@bananos/types";
+import { Character, CharacterType, Spell } from "@bananos/types";
 import { omit, pickBy } from "lodash";
-import { Character, CharacterType } from "../../../types";
 
 export const filterCharactersBaseOnSpellImpact = (allCharacters: Record<string, Character>, spell: Spell, casterId: string) => {
     allCharacters = pickBy(allCharacters, character => character.type !== CharacterType.Npc);

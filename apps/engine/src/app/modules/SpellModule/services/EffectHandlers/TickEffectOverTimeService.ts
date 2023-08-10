@@ -1,7 +1,7 @@
-import { SpellEffectType, TickOverTimeEffect } from '@bananos/types';
+import { Character, SpellEffectType, TickOverTimeEffect } from '@bananos/types';
 import { forEach } from 'lodash';
 import { EventParser } from '../../../../EventParser';
-import { Character, EngineEventHandler } from '../../../../types';
+import { EngineEventHandler } from '../../../../types';
 import { MonsterEngineEvents, MonsterLostAggroEvent } from '../../../MonsterModule/Events';
 import { Monster } from '../../../MonsterModule/types';
 import { ApplyTargetSpellEffectEvent, RemoveTickOverTimeEffectEvent, SpellEngineEvents, TimeEffectCreatedEvent, TimeEffectRemovedEvent } from '../../Events';

@@ -1,10 +1,10 @@
-import { DamageEffect, SpellEffectType } from '@bananos/types';
+import { CharacterType, DamageEffect, SpellEffectType } from '@bananos/types';
 import { forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { Services } from '../../../types/Services';
 import { CharacterEngineEvents, CharacterRemovedEvent } from '../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../SpellModule/Events';
@@ -185,7 +185,8 @@ export class AggroService extends EventParser {
 
     handleMonsterTargetChanged: EngineEventHandler<MonsterTargetChangedEvent> = ({ event, services }) => {
         forEach(services.monsterService.getAllCharacters(), (monster) => {
-            if (!this.monsterAggro[monster.id] && distanceBetweenTwoPoints(monster.location, event.monster.location) < monster.sightRange) {
+            const monsterTemplate = services.monsterTemplateService.getData()[monster.templateId];
+            if (!this.monsterAggro[monster.id] && distanceBetweenTwoPoints(monster.location, event.monster.location) < monsterTemplate.sightRange) {
                 this.addInitialAgrro(monster, event.newTargetId);
             }
         });

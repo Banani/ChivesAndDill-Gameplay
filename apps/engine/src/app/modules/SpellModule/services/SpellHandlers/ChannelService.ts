@@ -1,9 +1,9 @@
-import { ChannelSpell, Location, SpellType } from '@bananos/types';
+import { ChannelSpell, Character, Location, SpellType } from '@bananos/types';
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { distanceBetweenTwoPoints } from 'apps/engine/src/app/math';
 import { omit } from 'lodash';
-import { Character, CharacterDiedEvent, EngineEventHandler, PlayerMovedEvent } from '../../../../types';
+import { CharacterDiedEvent, EngineEventHandler, PlayerMovedEvent } from '../../../../types';
 import { MonsterDiedEvent } from '../../../MonsterModule/Events';
 import { Monster } from '../../../MonsterModule/types';
 import {

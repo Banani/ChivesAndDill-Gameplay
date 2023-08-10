@@ -1,6 +1,7 @@
+import { CharacterType } from '@bananos/types';
 import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { CharacterEngineEvents, CreateCharacterEvent } from '../../CharacterModule/Events';
 import { NpcEngineEvents, NpcRespawnsUpdatedEvent } from '../Events';
 import type { Npc } from '../types';

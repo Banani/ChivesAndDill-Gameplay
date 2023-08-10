@@ -1,7 +1,6 @@
-import { EnginePackageEvent, GlobalStoreModule, RecursivePartial } from '@bananos/types';
+import { CharacterType, EnginePackageEvent, GlobalStoreModule, RecursivePartial } from '@bananos/types';
 import { forEach, merge } from 'lodash';
 import { EventParser } from './EventParser';
-import { CharacterType } from './types';
 import { Services } from './types/Services';
 
 export interface ModulePackage<T> {

@@ -1,7 +1,7 @@
-import { BackpackItemsSpot, GlobalStoreModule, ItemClientActions } from '@bananos/types';
+import { BackpackItemsSpot, CharacterType, GlobalStoreModule, ItemClientActions } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
     BackpackItemsContainmentUpdatedEvent,

@@ -1,9 +1,8 @@
-import { CharacterClientActions, GlobalStoreModule } from '@bananos/types';
+import { Character, CharacterClientActions, GlobalStoreModule } from '@bananos/types';
 import { mapValues } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { Notifier } from '../../../Notifier';
 import type {
-    Character,
     EngineEventHandler,
     PlayerMovedEvent,
     PlayerStartedMovementEvent,

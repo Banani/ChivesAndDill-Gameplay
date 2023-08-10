@@ -1,6 +1,6 @@
-import { CorpseLoot, GlobalStoreModule, PlayerClientActions } from '@bananos/types';
+import { CharacterType, CorpseLoot, GlobalStoreModule, PlayerClientActions } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { Services } from '../../../types/Services';
 import {

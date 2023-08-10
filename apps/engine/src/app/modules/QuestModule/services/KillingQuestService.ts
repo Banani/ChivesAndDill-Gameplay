@@ -1,8 +1,8 @@
-import { KillingQuestStagePartComparison, KillingQuestStagePartStatus, QuestResetEvent, QuestType } from '@bananos/types';
+import { Character, KillingQuestStagePartComparison, KillingQuestStagePartStatus, QuestResetEvent, QuestType } from '@bananos/types';
 import { find, forEach } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { Character, CharacterDiedEvent, EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { CharacterEngineEvents, CharacterLostHpEvent } from '../../CharacterModule/Events';
 import { KillingStagePartProgressEvent, QuestEngineEvents, StagePartCompletedEvent, StartNewQuestStagePartEvent } from '../Events';
 

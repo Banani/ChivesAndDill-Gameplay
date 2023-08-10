@@ -1,7 +1,7 @@
-import { CharacterClientEvents, ExperienceExternalTrack, GlobalStoreModule } from '@bananos/types';
+import { CharacterClientEvents, CharacterType, ExperienceExternalTrack, GlobalStoreModule } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import type { CharacterGainExperienceEvent, CharacterLevelChangedEvent, ExperienceTrackCreatedEvent, ExperienceTrackRemovedEvent } from '../Events';
 import { CharacterEngineEvents } from '../Events';

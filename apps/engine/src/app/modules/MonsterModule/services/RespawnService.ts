@@ -1,8 +1,9 @@
+import { CharacterType } from '@bananos/types';
 import * as _ from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { CreateNewMonsterEvent, MonsterEngineEvents, MonsterRespawnsUpdatedEvent, RespawnMonsterEvent } from '../Events';
 import { RespawnMonsterEngine } from '../engines';
 

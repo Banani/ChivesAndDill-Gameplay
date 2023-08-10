@@ -1,7 +1,7 @@
-import { ChatChannel, ChatChannelClientActions, GlobalStoreModule } from '@bananos/types';
+import { CharacterType, ChatChannel, ChatChannelClientActions, GlobalStoreModule } from '@bananos/types';
 import { map, pickBy } from 'lodash';
 import { Notifier } from '../../../Notifier';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
