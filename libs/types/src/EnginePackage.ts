@@ -282,9 +282,9 @@ export interface DamageAbsorbedEvent {
 }
 
 export interface LevelChangedEvent {
-    type: EngineEventType.LevelChanged;
-    characterId: string;
-    level: number;
+   type: EngineEventType.LevelChanged;
+   characterId: string;
+   level: number;
 }
 
 export type MapSchema = Record<
