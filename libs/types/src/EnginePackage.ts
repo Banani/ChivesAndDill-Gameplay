@@ -198,4 +198,3 @@ export type EngineAction = EngineCharacterAction |
     EngineNpcAction |
     EnginePlayerAction |
     EngineSpellAction;
-

@@ -4,7 +4,18 @@ import { Application } from 'pixi.js';
 import React, { useEffect, useRef, useState } from "react";
 import { GameApi } from './game';
 import { useGameSize } from './hooks';
-import { DialogRenderer, ErrorMessageRenderer, FloatingNumbersRenderer, NpcQuestMarkRenderer, PlayerBarRenderer, PlayerNameRenderer, PlayerRenderer, ProjectileRenderer } from './renderer';
+import {
+    BloodPoolsRenderer,
+    DialogRenderer,
+    ErrorMessageRenderer,
+    FloatingNumbersRenderer,
+    NextLevelRenderer,
+    NpcQuestMarkRenderer,
+    PlayerBarRenderer,
+    PlayerNameRenderer,
+    PlayerRenderer,
+    ProjectileRenderer
+} from './renderer';
 import { Renderer } from './renderer/Renderer';
 
 export const ViewPort = React.memo(() => {
@@ -40,7 +51,9 @@ export const ViewPort = React.memo(() => {
                 new FloatingNumbersRenderer(container),
                 new NpcQuestMarkRenderer(container),
                 new DialogRenderer(container),
-                new ErrorMessageRenderer(container)
+                new ErrorMessageRenderer(container),
+                new NextLevelRenderer(container),
+                new BloodPoolsRenderer(container)
             ];
 
             const output = {};
