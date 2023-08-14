@@ -19,4 +19,3 @@ npm run start -- --project=creator-web
 cd apps/creator/src
 
 go run .
-
