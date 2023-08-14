@@ -1,4 +1,4 @@
-import { EngineEventType, GlobalStore } from '@bananos/types';
+import { CharacterClientEvents, GlobalStore } from '@bananos/types';
 import { forEach, now } from 'lodash';
 import * as PIXI from 'pixi.js';
 import { GameSettings, Renderer } from './Renderer';
@@ -46,7 +46,7 @@ export class NextLevelRenderer implements Renderer {
 
    updateScene(store: GlobalStore, _, settings: GameSettings) {
       forEach(store.experience.events, (event: any, i) => {
-         if (event.type === EngineEventType.LevelChanged) {
+         if (event.type === CharacterClientEvents.LevelChanged) {
             const eventId = event.id;
             if (this.numberTimestamps[eventId]) {
                return;

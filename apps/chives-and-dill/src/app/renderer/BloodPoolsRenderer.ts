@@ -1,4 +1,4 @@
-import { GlobalStore } from '@bananos/types';
+import { CharacterClientEvents, GlobalStore } from '@bananos/types';
 import { forEach, now } from 'lodash';
 import * as PIXI from 'pixi.js';
 import boodPoolImage from '../../assets/spritesheets/player/bloodPool.png';
@@ -15,7 +15,7 @@ export class BloodPoolsRenderer implements Renderer {
 
    updateScene(store: GlobalStore, _, settings: GameSettings) {
       forEach(store.characterPowerPoints.events, (event, i) => {
-         if (event.type === 'CharacterLostHp') {
+         if (event.type === CharacterClientEvents.CharacterLostHp) {
             const eventId = (event as any).id;
             if (this.numberTimestamps[eventId]) {
                return;
