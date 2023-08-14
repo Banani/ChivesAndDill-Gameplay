@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GameApi } from './game';
 import { useGameSize } from './hooks';
 import {
+    BloodPoolsRenderer,
     DialogRenderer,
     ErrorMessageRenderer,
     FloatingNumbersRenderer,
@@ -51,7 +52,8 @@ export const ViewPort = React.memo(() => {
                 new NpcQuestMarkRenderer(container),
                 new DialogRenderer(container),
                 new ErrorMessageRenderer(container),
-                new NextLevelRenderer(container)
+                new NextLevelRenderer(container),
+                new BloodPoolsRenderer(container)
             ];
 
             const output = {};
