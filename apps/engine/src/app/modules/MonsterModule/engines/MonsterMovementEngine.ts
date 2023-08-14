@@ -44,7 +44,7 @@ export class MonsterMovementEngine extends Engine {
         if (distanceBetweenTwoPoints(monster.location, respawn.location) <= monster.movementSpeed) {
             // TODO: TO sie wysyla nawet jak potwor stoi w miejscu
             this.eventCrator.createEvent<PlayerMovedEvent>({
-                type: EngineEvents.PlayerMoved,
+                type: EngineEvents.CharacterMoved,
                 characterId: monster.id,
                 newCharacterDirection: CharacterDirection.DOWN,
                 newLocation: respawn.location,
@@ -67,7 +67,7 @@ export class MonsterMovementEngine extends Engine {
             };
 
             this.eventCrator.createEvent<PlayerMovedEvent>({
-                type: EngineEvents.PlayerMoved,
+                type: EngineEvents.CharacterMoved,
                 characterId: monster.id,
                 newCharacterDirection: this.getNewDirection(offset),
                 newLocation,
@@ -114,7 +114,7 @@ export class MonsterMovementEngine extends Engine {
         }
 
         this.eventCrator.createEvent<PlayerMovedEvent>({
-            type: EngineEvents.PlayerMoved,
+            type: EngineEvents.CharacterMoved,
             characterId: monster.id,
             newCharacterDirection: newDirection,
             newLocation,
@@ -134,8 +134,9 @@ export class MonsterMovementEngine extends Engine {
 
     chasing(monster: Monster, targetId: string) {
         const allCharacters = { ...this.services.characterService.getAllCharacters(), ...this.services.monsterService.getAllCharacters() };
+        const monsterTemplate = this.services.monsterTemplateService.getData()[monster.templateId];
 
-        if (distanceBetweenTwoPoints(allCharacters[targetId].location, monster.location) <= monster.desiredRange) {
+        if (distanceBetweenTwoPoints(allCharacters[targetId].location, monster.location) <= monsterTemplate.desiredRange) {
             this.eventCrator.createEvent<PlayerStopedAllMovementVectorsEvent>({
                 type: EngineEvents.PlayerStopedAllMovementVectors,
                 characterId: monster.id,
@@ -164,7 +165,7 @@ export class MonsterMovementEngine extends Engine {
             };
 
             this.eventCrator.createEvent<PlayerMovedEvent>({
-                type: EngineEvents.PlayerMoved,
+                type: EngineEvents.CharacterMoved,
                 characterId: monster.id,
                 newCharacterDirection: this.getNewDirection(offset),
                 newLocation: {

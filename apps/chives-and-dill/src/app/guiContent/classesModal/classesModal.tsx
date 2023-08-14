@@ -1,5 +1,5 @@
-import { CommonClientMessages, GlobalStoreModule } from '@bananos/types';
-import { SocketContext } from 'apps/chives-and-dill/src/contexts/SocketCommunicator';
+import { GlobalStoreModule, PlayerClientActions } from '@bananos/types';
+import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ export const ClassesModal = () => {
     const { data: characterClasses } = useEngineModuleReader(GlobalStoreModule.CHARACTER_CLASS);
     const [selectedCharacterClass, setSelectedCharacterClass] = useState(null);
     const [nick, setNick] = useState('Kamil');
-    const { socket } = useContext(SocketContext);
+    const { callEngineAction } = useContext(EngineContext);
 
     const getBorderColor = (characterClassId) => {
         if (selectedCharacterClass === characterClassId) {
@@ -34,12 +34,13 @@ export const ClassesModal = () => {
     const onSubmit = useCallback(
         (e) => {
             e.preventDefault();
-            socket?.emit(CommonClientMessages.CreateCharacter, {
+            callEngineAction({
+                type: PlayerClientActions.CreateCharacter,
                 name: nick,
                 characterClassId: selectedCharacterClass,
             });
         },
-        [nick, selectedCharacterClass, socket]
+        [nick, selectedCharacterClass, callEngineAction]
     );
 
     const submitOnEnter = useCallback(

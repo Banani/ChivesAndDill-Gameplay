@@ -1,8 +1,8 @@
+import { GenerateSpellPowerEffect, SpellEffectType } from '@bananos/types';
 import { EventParser } from '../../../../EventParser';
 import { EngineEventHandler } from '../../../../types';
 import { AddCharacterSpellPowerEvent, CharacterEngineEvents } from '../../../CharacterModule/Events';
 import { ApplyTargetSpellEffectEvent, SpellEngineEvents } from '../../Events';
-import { GenerateSpellPowerEffect, SpellEffectType } from '../../types/SpellTypes';
 
 export class GenerateSpellPowerEffectService extends EventParser {
     constructor() {

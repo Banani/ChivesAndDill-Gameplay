@@ -9,6 +9,7 @@ import { Details } from './guiContent/details/Details';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
 import { PartyModal } from './guiContent/party/Party';
 import { QuestManager } from './guiContent/quests';
+import { CharacterEq } from './guiContent/characterEq/CharacterEq';
 
 export function GameUserInterface() {
 
@@ -28,6 +29,7 @@ export function GameUserInterface() {
             <BottomBar />
             <NpcModal />
             <ActivePlayerTimeEffects />
+            <CharacterEq />
         </>
     );
 }

@@ -1,4 +1,4 @@
-import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
+import { GlobalStoreModule, NpcClientActions } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { MockedItemTemplates, MockedNpcTemplates } from '../../../mocks';
@@ -22,7 +22,7 @@ const setupEngine = () => {
         'respawn_1': {
             id: 'respawn_1',
             location: { x: 100, y: 100 },
-            characterTemplateId: "1",
+            templateId: "1",
             time: 4000,
             walkingType: WalkingType.None,
         },
@@ -50,12 +50,12 @@ describe('BuyItemFromNpc action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.BuyItemFromNpc,
+            type: NpcClientActions.BuyItemFromNpc,
             itemTemplateId: '1',
             amount: 1,
             npcId,
@@ -82,12 +82,12 @@ describe('BuyItemFromNpc action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.BuyItemFromNpc,
+            type: NpcClientActions.BuyItemFromNpc,
             itemTemplateId: '4',
             amount: 3,
             npcId,
@@ -107,12 +107,12 @@ describe('BuyItemFromNpc action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.BuyItemFromNpc,
+            type: NpcClientActions.BuyItemFromNpc,
             itemTemplateId: '5',
             amount: 3,
             npcId,
@@ -128,12 +128,12 @@ describe('BuyItemFromNpc action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.BuyItemFromNpc,
+            type: NpcClientActions.BuyItemFromNpc,
             itemTemplateId: '1',
             amount: 1,
             npcId,
@@ -161,7 +161,7 @@ describe('BuyItemFromNpc action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.BuyItemFromNpc,
+            type: NpcClientActions.BuyItemFromNpc,
             itemTemplateId: '1',
             amount: 1,
             npcId,
@@ -178,12 +178,12 @@ describe('BuyItemFromNpc action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.BuyItemFromNpc,
+            type: NpcClientActions.BuyItemFromNpc,
             itemTemplateId: 'some_random_id',
             amount: 1,
             npcId,
@@ -208,12 +208,12 @@ describe('BuyItemFromNpc action', () => {
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.BuyItemFromNpc,
+            type: NpcClientActions.BuyItemFromNpc,
             itemTemplateId: '1',
             amount: 1,
             npcId,
@@ -238,12 +238,12 @@ describe('BuyItemFromNpc action', () => {
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.BuyItemFromNpc,
+            type: NpcClientActions.BuyItemFromNpc,
             itemTemplateId: '4',
             amount: 1,
             npcId,

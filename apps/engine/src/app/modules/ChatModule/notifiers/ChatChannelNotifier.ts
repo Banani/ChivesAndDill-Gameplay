@@ -1,7 +1,7 @@
-import { ChatChannel, ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
+import { CharacterType, ChatChannel, ChatChannelClientActions, GlobalStoreModule } from '@bananos/types';
 import { map, pickBy } from 'lodash';
 import { Notifier } from '../../../Notifier';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
@@ -67,7 +67,7 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-        currentSocket.on(ChatChannelClientMessages.CreateChatChannel, ({ chatChannelName }) => {
+        currentSocket.on(ChatChannelClientActions.CreateChatChannel, ({ chatChannelName }) => {
             this.engineEventCrator.asyncCeateEvent<CreateChatChannelEvent>({
                 type: ChatEngineEvents.CreateChatChannel,
                 requestingCharacterId: event.playerCharacter.id,
@@ -79,7 +79,7 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
             });
         });
 
-        currentSocket.on(ChatChannelClientMessages.DeleteChatChannel, ({ chatChannelId }) => {
+        currentSocket.on(ChatChannelClientActions.DeleteChatChannel, ({ chatChannelId }) => {
             const chatChannel = services.chatChannelService.getChatChannelById(chatChannelId);
 
             this.engineEventCrator.asyncCeateEvent<DeleteChatChannelEvent>({
@@ -89,7 +89,7 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
             });
         });
 
-        currentSocket.on(ChatChannelClientMessages.InvitePlayerCharacterToChatChannel, ({ chatChannelId, characterName }) => {
+        currentSocket.on(ChatChannelClientActions.InvitePlayerCharacterToChatChannel, ({ chatChannelId, characterName }) => {
             this.engineEventCrator.asyncCeateEvent<AddPlayerCharacterToChatEvent>({
                 type: ChatEngineEvents.AddPlayerCharacterToChat,
                 requestingCharacterId: event.playerCharacter.id,
@@ -98,7 +98,7 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
             });
         });
 
-        currentSocket.on(ChatChannelClientMessages.RemovePlayerCharacterFromChatChannel, ({ chatChannelId, characterId }) => {
+        currentSocket.on(ChatChannelClientActions.RemovePlayerCharacterFromChatChannel, ({ chatChannelId, characterId }) => {
             this.engineEventCrator.asyncCeateEvent<RemovePlayerCharacterFromChatChannelEvent>({
                 type: ChatEngineEvents.RemovePlayerCharacterFromChatChannel,
                 requestingCharacterId: event.playerCharacter.id,
@@ -107,7 +107,7 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
             });
         });
 
-        currentSocket.on(ChatChannelClientMessages.LeaveChatChannel, ({ chatChannelId }) => {
+        currentSocket.on(ChatChannelClientActions.LeaveChatChannel, ({ chatChannelId }) => {
             this.engineEventCrator.asyncCeateEvent<LeaveChatChannelEvent>({
                 type: ChatEngineEvents.LeaveChatChannel,
                 requestingCharacterId: event.playerCharacter.id,
@@ -115,7 +115,7 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
             });
         });
 
-        currentSocket.on(ChatChannelClientMessages.ChangeChatChannelOwner, ({ chatChannelId, newOwnerId }) => {
+        currentSocket.on(ChatChannelClientActions.ChangeChatChannelOwner, ({ chatChannelId, newOwnerId }) => {
             this.engineEventCrator.asyncCeateEvent<ChangeChatChannelOwnerEvent>({
                 type: ChatEngineEvents.ChangeChatChannelOwner,
                 requestingCharacterId: event.playerCharacter.id,

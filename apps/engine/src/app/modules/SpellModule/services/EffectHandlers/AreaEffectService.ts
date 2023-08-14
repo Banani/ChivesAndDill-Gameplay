@@ -1,6 +1,6 @@
-import { AreaEffect, Location, SpellEffectType } from '@bananos/types';
+import { AreaEffect, Character, Location, SpellEffectType } from '@bananos/types';
 import { EventParser } from '../../../../EventParser';
-import { Character, EngineEventHandler } from '../../../../types';
+import { EngineEventHandler } from '../../../../types';
 import { Monster } from '../../../MonsterModule/types';
 import {
     ApplyLocationSpellEffectEvent,

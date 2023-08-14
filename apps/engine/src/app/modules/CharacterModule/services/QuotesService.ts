@@ -1,9 +1,9 @@
-import { ChannelType } from '@bananos/types';
+import { ChannelType, CharacterType } from '@bananos/types';
 import { now } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { ChatEngineEvents, SendChatMessageEvent } from '../../ChatModule/Events';
 import { MonsterEngineEvents, MonsterPulledEvent } from '../../MonsterModule/Events';
 import { Monster } from '../../MonsterModule/types';

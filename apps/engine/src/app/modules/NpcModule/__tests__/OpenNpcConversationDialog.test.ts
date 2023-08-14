@@ -1,4 +1,4 @@
-import { GlobalStoreModule, Location, NpcClientMessages, QuestType, RecursivePartial } from '@bananos/types';
+import { GlobalStoreModule, Location, NpcClientActions, QuestType, RecursivePartial } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { MockedNpcTemplates, MockedQuests } from '../../../mocks';
@@ -23,7 +23,7 @@ const setupEngine = ({ respawnLocation }: RecursivePartial<SetupProps> = {}) => 
         'respawn_1': {
             id: 'respawn_1',
             location: respawnLocation ?? { x: 100, y: 100 },
-            characterTemplateId: "1",
+            templateId: "1",
             time: 4000,
             walkingType: WalkingType.None,
         },
@@ -51,7 +51,7 @@ describe('OpenNpcConversationDialog action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 
@@ -64,7 +64,7 @@ describe('OpenNpcConversationDialog action', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId: 'some_random_npc',
         });
 
@@ -72,14 +72,14 @@ describe('OpenNpcConversationDialog action', () => {
     });
 
     it('Player should get error if he tries to start conversation with npc that is too far away', () => {
-        const respawnLocation: Location = { x: 151, y: 100 }
+        const respawnLocation: Location = { x: 251, y: 100 }
         const { players, engineManager } = setupEngine({ respawnLocation });
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 
@@ -93,7 +93,7 @@ describe('OpenNpcConversationDialog action', () => {
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 
@@ -141,7 +141,7 @@ describe('OpenNpcConversationDialog action', () => {
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientMessages.OpenNpcConversationDialog,
+            type: NpcClientActions.OpenNpcConversationDialog,
             npcId,
         });
 

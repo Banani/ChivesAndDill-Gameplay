@@ -1,4 +1,4 @@
-import { ChannelType, CharacterDirection, ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
+import { ChannelType, CharacterDirection, ChatChannelClientActions, GlobalStoreModule } from '@bananos/types';
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { PlayerMovedEvent } from 'apps/engine/src/app/types';
@@ -24,12 +24,12 @@ const setupEngine = (props: Partial<setupEngineProps> = {}) => {
         '3': engineManager.preparePlayerWithCharacter({ name: 'character_3' }),
     };
 
-    let dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientMessages.CreateChatChannel, chatChannelName });
+    let dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientActions.CreateChatChannel, chatChannelName });
 
     const recentlyCreatedChatChannelId = Object.keys(dataPackage.chatChannel.data)[0];
 
     dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-        type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+        type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
         chatChannelId: recentlyCreatedChatChannelId,
         characterName: players['2'].character.name,
     });
@@ -46,7 +46,7 @@ describe('Chat module - Send chat message action', () => {
         (now as jest.Mock).mockReturnValue(currentTime);
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
             channelType: ChannelType.Custom,
             message,
@@ -80,7 +80,7 @@ describe('Chat module - Send chat message action', () => {
         (now as jest.Mock).mockReturnValue(currentTime);
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
             channelType: ChannelType.Custom,
             message,
@@ -112,7 +112,7 @@ describe('Chat module - Send chat message action', () => {
         (now as jest.Mock).mockReturnValue(currentTime);
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
             channelType: ChannelType.Custom,
             message,
@@ -128,7 +128,7 @@ describe('Chat module - Send chat message action', () => {
         const message = 'Hello there.';
 
         let dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: 'SOME_RANDOM_ID',
             channelType: ChannelType.Custom,
             message,
@@ -142,7 +142,7 @@ describe('Chat module - Send chat message action', () => {
         const message = 'Hello there.';
 
         let dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
             channelType: ChannelType.Custom,
             message,
@@ -157,21 +157,21 @@ describe('Chat module - Send chat message action', () => {
         const message2 = 'General PeePeePooPoo.';
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
             channelType: ChannelType.Custom,
             message: message1,
         });
 
         dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
             channelType: ChannelType.Custom,
             message: message2,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.DeleteChatChannel,
+            type: ChatChannelClientActions.DeleteChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
         });
 
@@ -186,40 +186,40 @@ describe('Chat module - Send chat message action', () => {
         const message2 = 'General PeePeePooPoo.';
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
             channelType: ChannelType.Custom,
             message: message1,
         });
 
         dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
             channelType: ChannelType.Custom,
             message: message2,
         });
 
         dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.CreateChatChannel,
+            type: ChatChannelClientActions.CreateChatChannel,
             chatChannelName: 'some_name',
         });
         const secChatChannelId = Object.keys(dataPackage.chatChannel.data)[0];
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             characterName: players['1'].character.name,
             chatChannelId: secChatChannelId,
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: secChatChannelId,
             channelType: ChannelType.Custom,
             message: 'Siema',
         });
 
         dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.DeleteChatChannel,
+            type: ChatChannelClientActions.DeleteChatChannel,
             chatChannelId: secChatChannelId,
         });
 
@@ -233,7 +233,7 @@ describe('Chat module - Send chat message action', () => {
         const message = 'Hello there.';
 
         let dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: 'say',
             channelType: ChannelType.Range,
             message,
@@ -262,14 +262,14 @@ describe('Chat module - Send chat message action', () => {
         const message = 'Hello there.';
 
         engineManager.createSystemAction<PlayerMovedEvent>({
-            type: EngineEvents.PlayerMoved,
+            type: EngineEvents.CharacterMoved,
             characterId: players['3'].characterId,
             newCharacterDirection: CharacterDirection.DOWN,
             newLocation: { x: 1500, y: 1500 },
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: 'say',
             channelType: ChannelType.Range,
             message,
@@ -285,14 +285,14 @@ describe('Chat module - Send chat message action', () => {
         const message = 'Hello there.';
 
         engineManager.createSystemAction<PlayerMovedEvent>({
-            type: EngineEvents.PlayerMoved,
+            type: EngineEvents.CharacterMoved,
             characterId: players['3'].characterId,
             newCharacterDirection: CharacterDirection.DOWN,
             newLocation: { x: 1500, y: 1500 },
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: 'yell',
             channelType: ChannelType.Range,
             message,
@@ -323,14 +323,14 @@ describe('Chat module - Send chat message action', () => {
         const message = 'Hello there.';
 
         engineManager.createSystemAction<PlayerMovedEvent>({
-            type: EngineEvents.PlayerMoved,
+            type: EngineEvents.CharacterMoved,
             characterId: players['3'].characterId,
             newCharacterDirection: CharacterDirection.DOWN,
             newLocation: { x: 10000, y: 10000 },
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.SendChatMessage,
+            type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: 'yell',
             channelType: ChannelType.Range,
             message,

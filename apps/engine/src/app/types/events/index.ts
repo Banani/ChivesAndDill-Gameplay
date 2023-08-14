@@ -114,7 +114,7 @@ export interface EngineEventsMap {
     [EngineEvents.PlayerTriesToStartedMovement]: EngineEventHandler<PlayerTriesToStartedMovementEvent>;
     [EngineEvents.PlayerStopedAllMovementVectors]: EngineEventHandler<PlayerStopedAllMovementVectorsEvent>;
     [EngineEvents.PlayerStopedMovementVector]: EngineEventHandler<PlayerStopedMovementVectorEvent>;
-    [EngineEvents.PlayerMoved]: EngineEventHandler<PlayerMovedEvent>;
+    [EngineEvents.CharacterMoved]: EngineEventHandler<PlayerMovedEvent>;
 
     [EngineEvents.CreatePath]: EngineEventHandler<CreatePathEvent>;
     [EngineEvents.UpdatePath]: EngineEventHandler<UpdatePathEvent>;

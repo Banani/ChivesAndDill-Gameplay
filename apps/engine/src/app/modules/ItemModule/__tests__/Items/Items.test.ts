@@ -1,4 +1,4 @@
-import { EquipmentSlot, GlobalStoreModule, ItemClientMessages, ItemTemplateType } from '@bananos/types';
+import { EquipmentSlot, GlobalStoreModule, ItemClientActions, ItemTemplateType } from '@bananos/types';
 import { MockedItemTemplates } from 'apps/engine/src/app/mocks';
 import { EngineManager, checkIfPackageIsValid } from '../../../../testUtilities';
 import { ItemTemplateService } from '../../services/ItemTemplateService';
@@ -24,7 +24,7 @@ describe('Items', () => {
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.RequestItemTemplates, itemTemplateIds: ['1', '3'] });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.RequestItemTemplates, itemTemplateIds: ['1', '3'] });
 
         checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
             data: {
@@ -54,7 +54,7 @@ describe('Items', () => {
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.RequestItemTemplates, itemTemplateIds: [RANDOM_ID] });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.RequestItemTemplates, itemTemplateIds: [RANDOM_ID] });
 
         checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
             data: {

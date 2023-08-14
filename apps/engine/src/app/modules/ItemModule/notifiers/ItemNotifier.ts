@@ -1,4 +1,4 @@
-import { GlobalStoreModule, ItemClientMessages, ItemTemplate } from '@bananos/types';
+import { GlobalStoreModule, ItemClientActions, ItemTemplate } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
@@ -16,7 +16,7 @@ export class ItemNotifier extends Notifier<ItemTemplate> {
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-        currentSocket.on(ItemClientMessages.Deleteitem, ({ itemId }) => {
+        currentSocket.on(ItemClientActions.Deleteitem, ({ itemId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToDeleteItemEvent>({
                 type: ItemEngineEvents.PlayerTriesToDeleteItem,
                 requestingCharacterId: event.playerCharacter.id,
@@ -24,7 +24,7 @@ export class ItemNotifier extends Notifier<ItemTemplate> {
             });
         });
 
-        currentSocket.on(ItemClientMessages.RequestItemTemplates, ({ itemTemplateIds }) => {
+        currentSocket.on(ItemClientActions.RequestItemTemplates, ({ itemTemplateIds }) => {
             const allItemTemplates = services.itemTemplateService.getData();
             const itemTemplates = _.chain(itemTemplateIds)
                 .map((id) => ({ id }))

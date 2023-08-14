@@ -1,5 +1,21 @@
-import { AllEffects, AreaEffect, ChannelSpell, GuidedProjectileSpell, GuidedProjectileSubSpell, Location, PowerStackType, ProjectileSpell, ProjectileSubSpell, Spell, SpellEffect, SubSpell, TimeEffect, TimeEffectType } from '@bananos/types';
-import { Character, EngineEvent, EngineEventHandler } from '../../types';
+import {
+    AllEffects,
+    AreaEffect,
+    ChannelSpell,
+    Character,
+    GuidedProjectileSpell,
+    GuidedProjectileSubSpell,
+    Location,
+    PowerStackType,
+    ProjectileSpell,
+    ProjectileSubSpell,
+    Spell,
+    SpellEffect,
+    SubSpell,
+    TimeEffect,
+    TimeEffectType
+} from '@bananos/types';
+import { EngineEvent, EngineEventHandler } from '../../types';
 import { Vector } from '../../types/Vector';
 import { Monster } from '../MonsterModule/types';
 

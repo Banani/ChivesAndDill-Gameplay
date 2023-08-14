@@ -1,5 +1,5 @@
 import type { PowerPointsTrack } from '@bananos/types';
-import { EngineEventType, GlobalStoreModule, HealthPointsSource } from '@bananos/types';
+import { CharacterClientEvents, GlobalStoreModule, HealthPointsSource } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { Notifier } from '../../../Notifier';
 import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
@@ -52,7 +52,7 @@ export class PowerPointsNotifier extends Notifier<PowerPointsTrack> {
         this.broadcastEvents({
             events: [
                 {
-                    type: EngineEventType.CharacterLostHp,
+                    type: CharacterClientEvents.CharacterLostHp,
                     characterId: event.characterId,
                     amount: event.amount,
                     attackerId: event.attackerId,
@@ -70,7 +70,7 @@ export class PowerPointsNotifier extends Notifier<PowerPointsTrack> {
             this.broadcastEvents({
                 events: [
                     {
-                        type: EngineEventType.CharacterGotHp,
+                        type: CharacterClientEvents.CharacterGotHp,
                         characterId: event.characterId,
                         amount: event.amount,
                         source: event.source,

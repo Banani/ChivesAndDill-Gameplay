@@ -1,3 +1,4 @@
+import { SpellType } from '@bananos/types';
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { EngineEventHandler } from 'apps/engine/src/app/types';
 import {
@@ -13,7 +14,6 @@ import {
     SubSpellCastedEvent,
 } from '../../Events';
 import { ProjectileMovement } from '../../engines';
-import { SpellType } from '../../types/SpellTypes';
 
 export class ProjectilesService extends EventParser {
     projectileEngine: ProjectileMovement;

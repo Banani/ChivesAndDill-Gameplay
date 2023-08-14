@@ -1,4 +1,4 @@
-import { EngineEventType, GlobalStoreModule, SpellLandedEvent } from '@bananos/types';
+import { GlobalStoreModule, SpellClientEvent, SpellLandedEvent } from '@bananos/types';
 import { Graphics } from '@inlet/react-pixi';
 import { filter, forEach, map } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -46,7 +46,7 @@ export const BlinkSpellEffect = () => {
         (g) => {
             g.clear();
             const spellLanded = map(
-                filter(activeShapes, (shape) => shape.event.type === EngineEventType.SpellLanded),
+                filter(activeShapes, (shape) => shape.event.type === SpellClientEvent.SpellLanded),
                 (shape) => shape.event
             ) as SpellLandedEvent[];
 

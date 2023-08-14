@@ -1,8 +1,8 @@
-import { CommonClientMessages } from '@bananos/types';
+import { PlayerClientActions } from '@bananos/types';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ItemPreview, ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
-import { SocketContext } from 'apps/chives-and-dill/src/contexts/SocketCommunicator';
+import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
 import _ from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
@@ -22,7 +22,7 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     const [itemsAmount, updateItemsAmount] = useState(0);
     const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
 
-    const { socket } = useContext(SocketContext);
+    const { callEngineAction } = useContext(EngineContext);
 
     const { start, end, prevPage, nextPage, page, allPagesCount } = usePagination({
         pageSize: 3,
@@ -64,14 +64,16 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: _.map(activeLoot.items, (item) => item.itemTemplateId) ?? [] });
 
     const handleItemClick = (corpseId, itemId) => {
-        socket?.emit(CommonClientMessages.PickItemFromCorpse, {
+        callEngineAction({
+            type: PlayerClientActions.PickItemFromCorpse,
             corpseId,
             itemId
         });
     };
 
     const handleCoinsClick = (corpseId) => {
-        socket?.emit(CommonClientMessages.PickCoinsFromCorpse, {
+        callEngineAction({
+            type: PlayerClientActions.PickCoinsFromCorpse,
             corpseId
         });
     };
@@ -138,7 +140,7 @@ export const LootModal = ({ activeLoot, monsterId }) => {
                 <div className={styles.LootModal} style={{ top: `${mousePosition.y}px`, left: `${mousePosition.x}px` }}>
                     <div className={styles.LootModalButton}>
                         <RectangleButton className={styles.closeButton} onClick={() => {
-                            socket?.emit(CommonClientMessages.CloseLoot, {});
+                            callEngineAction({ type: PlayerClientActions.CloseLoot });
                         }}>
                             X
                         </RectangleButton>

@@ -1,5 +1,5 @@
-import { GlobalStoreModule } from '@bananos/types';
-import { EngineApiContext } from 'apps/chives-and-dill/src/contexts/EngineApi';
+import { GlobalStoreModule, NpcClientActions } from '@bananos/types';
+import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { GameControllerContext } from 'apps/chives-and-dill/src/contexts/GameController';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import type { FunctionComponent } from 'react';
@@ -21,27 +21,35 @@ export const NpcModal: FunctionComponent = () => {
     const { data: questDefinition } = useEngineModuleReader(GlobalStoreModule.QUEST_DEFINITION);
     const activeNpc = characters[activeConversation[activeCharacterId]?.npcId];
 
+    const { callEngineAction } = useContext(EngineContext);
     const [currentModal, setCurrentModal] = useState(NpcModalView.Default);
     const [activeQuestId, setActiveQuestId] = useState(null);
-    const context = useContext(EngineApiContext);
 
     const acceptQuest = useCallback(() => {
-        context.takeQuestFromNpc({ npcId: activeNpc.id, questId: activeQuestId });
+        callEngineAction({
+            type: NpcClientActions.TakeQuestFromNpc,
+            npcId: activeNpc.id,
+            questId: activeQuestId
+        });
         setCurrentModal(NpcModalView.Default);
         setActiveQuestId(null);
-    }, [activeNpc?.id, activeQuestId, context]);
+    }, [activeNpc?.id, activeQuestId, callEngineAction]);
 
     const completeQuest = useCallback(() => {
-        context.finalizeQuestWithNpc({ npcId: activeNpc.id, questId: activeQuestId });
+        callEngineAction({
+            type: NpcClientActions.FinalizeQuestWithNpc,
+            npcId: activeNpc.id,
+            questId: activeQuestId
+        });
         setCurrentModal(NpcModalView.Default);
         setActiveQuestId(null);
-    }, [activeNpc?.id, activeQuestId, context]);
+    }, [activeNpc?.id, activeQuestId, callEngineAction]);
 
     const closeNpcModal = () => {
         if (currentModal !== NpcModalView.Default && currentModal !== NpcModalView.Trade) {
             setCurrentModal(NpcModalView.Default);
         } else {
-            context.closeNpcConversationDialog();
+            callEngineAction({ type: NpcClientActions.CloseNpcConversationDialog })
         }
     };
 

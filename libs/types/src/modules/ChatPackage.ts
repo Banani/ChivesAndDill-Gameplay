@@ -1,10 +1,17 @@
-import { Location } from "./shared";
+import { Location } from "../shared";
 
 export interface ChatChannel {
     id?: string;
     name: string;
     characterOwnerId: string | null;
     membersIds: Record<string, boolean>;
+}
+
+export enum ChannelType {
+    Custom = 'Custom',
+    Range = 'Range',
+    Quotes = 'Quotes',
+    System = "System"
 }
 
 export interface CommonChatMessage {
@@ -43,14 +50,7 @@ export interface ChannelChatMessage extends CommonChatMessage {
 
 export type ChatMessage = ChannelChatMessage | RangeChatMessage | QuoteChatMessage | SystemChatMessage;
 
-export enum ChannelType {
-    Custom = 'Custom',
-    Range = 'Range',
-    Quotes = 'Quotes',
-    System = "System"
-}
-
-export enum ChatChannelClientMessages {
+export enum ChatChannelClientActions {
     CreateChatChannel = 'CreateChatChannel',
     DeleteChatChannel = 'DeleteChatChannel',
     InvitePlayerCharacterToChatChannel = 'InvitePlayerCharacterToChatChannel',
@@ -61,40 +61,40 @@ export enum ChatChannelClientMessages {
 }
 
 export interface CreateChatChannel {
-    type: ChatChannelClientMessages.CreateChatChannel;
+    type: ChatChannelClientActions.CreateChatChannel;
     chatChannelName: string;
 }
 
 export interface DeleteChatChannel {
-    type: ChatChannelClientMessages.DeleteChatChannel;
+    type: ChatChannelClientActions.DeleteChatChannel;
     chatChannelId: string;
 }
 
 export interface InvitePlayerCharacterToChatChannel {
-    type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel;
+    type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel;
     chatChannelId: string;
     characterName: string;
 }
 
 export interface RemovePlayerCharacterFromChatChannel {
-    type: ChatChannelClientMessages.RemovePlayerCharacterFromChatChannel;
+    type: ChatChannelClientActions.RemovePlayerCharacterFromChatChannel;
     chatChannelId: string;
     characterId: string;
 }
 
 export interface LeaveChatChannel {
-    type: ChatChannelClientMessages.LeaveChatChannel;
+    type: ChatChannelClientActions.LeaveChatChannel;
     chatChannelId: string;
 }
 
 export interface ChangeChatChannelOwner {
-    type: ChatChannelClientMessages.ChangeChatChannelOwner;
+    type: ChatChannelClientActions.ChangeChatChannelOwner;
     chatChannelId: string;
     newOwnerId: string;
 }
 
 export interface SendChatMessage {
-    type: ChatChannelClientMessages.SendChatMessage;
+    type: ChatChannelClientActions.SendChatMessage;
     chatChannelId: string;
     message: string;
     channelType: ChannelType;

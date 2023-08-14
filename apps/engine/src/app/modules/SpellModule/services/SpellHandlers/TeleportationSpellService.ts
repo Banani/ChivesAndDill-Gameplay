@@ -1,10 +1,9 @@
-import { CharacterDirection, Location } from '@bananos/types';
+import { CharacterDirection, Location, SpellType } from '@bananos/types';
 import { EngineEvents } from 'apps/engine/src/app/EngineEvents';
 import { EventParser } from 'apps/engine/src/app/EventParser';
 import { distanceBetweenTwoPoints, getCrossingPointsWithWalls } from 'apps/engine/src/app/math';
 import { EngineEventHandler, PlayerMovedEvent } from 'apps/engine/src/app/types';
 import { PlayerCastSpellEvent, PlayerCastedSpellEvent, SpellEngineEvents, SpellLandedEvent, SpellReachedTargetEvent } from '../../Events';
-import { SpellType } from '../../types/SpellTypes';
 
 export class TeleportationSpellService extends EventParser {
     constructor() {
@@ -59,7 +58,7 @@ export class TeleportationSpellService extends EventParser {
             });
 
             this.engineEventCrator.asyncCeateEvent<PlayerMovedEvent>({
-                type: EngineEvents.PlayerMoved,
+                type: EngineEvents.CharacterMoved,
                 characterId: caster.id,
                 newCharacterDirection: CharacterDirection.DOWN,
                 newLocation: event.directionLocation,

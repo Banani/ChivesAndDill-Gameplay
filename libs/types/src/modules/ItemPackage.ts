@@ -94,7 +94,7 @@ export interface ItemLocationInBag {
 
 export type BackpackItemsSpot = Record<string, Record<string, ItemInstance>>;
 
-export enum ItemClientMessages {
+export enum ItemClientActions {
     Deleteitem = 'DeleteItem',
     MoveItemInBag = 'MoveItemInBag',
     SplitItemStackInBag = 'SplitItemStackInBag',
@@ -105,37 +105,37 @@ export enum ItemClientMessages {
 }
 
 export interface DeleteItem {
-    type: ItemClientMessages.Deleteitem;
+    type: ItemClientActions.Deleteitem;
     itemId: string;
 }
 
 export interface MoveItemInBag {
-    type: ItemClientMessages.MoveItemInBag;
+    type: ItemClientActions.MoveItemInBag;
     itemId: string;
     directionLocation: { backpack: string; spot: string };
 }
 
 export interface SplitItemStackInBag {
-    type: ItemClientMessages.SplitItemStackInBag;
+    type: ItemClientActions.SplitItemStackInBag;
     itemId: string;
     amount: number;
     directionLocation: { backpack: string; spot: string };
 }
 
 export interface RequestItemTemplates {
-    type: ItemClientMessages.RequestItemTemplates;
+    type: ItemClientActions.RequestItemTemplates;
     itemTemplateIds: string[];
 }
 
 export interface EquipItem {
-    type: ItemClientMessages.EquipItem;
+    type: ItemClientActions.EquipItem;
     itemInstanceId: string;
 }
 
 export interface StripItem {
-    type: ItemClientMessages.StripItem;
+    type: ItemClientActions.StripItem;
     itemInstanceId: string;
     desiredLocation?: ItemLocationInBag;
 }
 
-export type EngineItemMessages = DeleteItem | MoveItemInBag | SplitItemStackInBag | RequestItemTemplates | EquipItem | StripItem;
+export type EngineItemAction = DeleteItem | MoveItemInBag | SplitItemStackInBag | RequestItemTemplates | EquipItem | StripItem;

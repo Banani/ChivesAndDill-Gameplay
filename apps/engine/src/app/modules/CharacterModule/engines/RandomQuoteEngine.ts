@@ -1,6 +1,6 @@
+import { CharacterType } from '@bananos/types';
 import { forEach } from 'lodash';
 import { Engine } from '../../../Engine';
-import { CharacterType } from '../../../types';
 import { CharacterEngineEvents, SendQuoteMessageEvent } from '../Events';
 
 export class RandomQuoteEngine extends Engine {

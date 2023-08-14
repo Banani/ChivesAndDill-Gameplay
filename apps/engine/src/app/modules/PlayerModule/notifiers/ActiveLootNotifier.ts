@@ -1,6 +1,6 @@
-import { CommonClientMessages, CorpseLoot, GlobalStoreModule } from '@bananos/types';
+import { CharacterType, CorpseLoot, GlobalStoreModule, PlayerClientActions } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
-import { CharacterType, EngineEventHandler } from '../../../types';
+import { EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { Services } from '../../../types/Services';
 import {
@@ -36,7 +36,7 @@ export class ActiveLootNotifier extends Notifier<CorpseLoot> {
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-        currentSocket.on(CommonClientMessages.OpenLoot, ({ corpseId }) => {
+        currentSocket.on(PlayerClientActions.OpenLoot, ({ corpseId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToOpenLootEvent>({
                 type: PlayerEngineEvents.PlayerTriesToOpenLoot,
                 requestingCharacterId: event.playerCharacter.id,
@@ -45,7 +45,7 @@ export class ActiveLootNotifier extends Notifier<CorpseLoot> {
             });
         });
 
-        currentSocket.on(CommonClientMessages.PickItemFromCorpse, ({ corpseId, itemId }) => {
+        currentSocket.on(PlayerClientActions.PickItemFromCorpse, ({ corpseId, itemId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToPickItemFromCorpseEvent>({
                 type: PlayerEngineEvents.PlayerTriesToPickItemFromCorpse,
                 requestingCharacterId: event.playerCharacter.id,
@@ -54,7 +54,7 @@ export class ActiveLootNotifier extends Notifier<CorpseLoot> {
             });
         });
 
-        currentSocket.on(CommonClientMessages.PickCoinsFromCorpse, ({ corpseId }) => {
+        currentSocket.on(PlayerClientActions.PickCoinsFromCorpse, ({ corpseId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToPickCoinsFromCorpseEvent>({
                 type: PlayerEngineEvents.PlayerTriesToPickCoinsFromCorpse,
                 requestingCharacterId: event.playerCharacter.id,
@@ -62,7 +62,7 @@ export class ActiveLootNotifier extends Notifier<CorpseLoot> {
             });
         });
 
-        currentSocket.on(CommonClientMessages.CloseLoot, () => {
+        currentSocket.on(PlayerClientActions.CloseLoot, () => {
             this.engineEventCrator.asyncCeateEvent<CloseLootEvent>({
                 type: PlayerEngineEvents.CloseLoot,
                 requestingCharacterId: event.playerCharacter.id,

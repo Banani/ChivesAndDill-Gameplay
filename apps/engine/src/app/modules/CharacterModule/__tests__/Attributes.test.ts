@@ -1,4 +1,4 @@
-import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
+import { GlobalStoreModule, ItemClientActions } from '@bananos/types';
 import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { } from '..';
 import { MockedItemTemplates } from '../../../mocks';
@@ -52,7 +52,7 @@ describe('Attributes', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId });
 
         checkIfPackageIsValid(GlobalStoreModule.ATTRIBUTES, dataPackage, {
             data: {
@@ -81,7 +81,7 @@ describe('Attributes', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId1 = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId1 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId1 });
 
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
@@ -93,7 +93,7 @@ describe('Attributes', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId2 = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId2 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId2 });
 
         checkIfPackageIsValid(GlobalStoreModule.ATTRIBUTES, dataPackage, {
             data: {
@@ -122,7 +122,7 @@ describe('Attributes', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId1 = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId1 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId1 });
 
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
@@ -134,7 +134,7 @@ describe('Attributes', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId2 = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId2 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId2 });
 
         checkIfPackageIsValid(GlobalStoreModule.ATTRIBUTES, dataPackage, {
             data: {
@@ -163,7 +163,7 @@ describe('Attributes', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId1 = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId1 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId1 });
 
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
@@ -175,8 +175,8 @@ describe('Attributes', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId2 = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.EquipItem, itemInstanceId: itemId2 });
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientMessages.StripItem, itemInstanceId: itemId1 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.EquipItem, itemInstanceId: itemId2 });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.StripItem, itemInstanceId: itemId1 });
 
         checkIfPackageIsValid(GlobalStoreModule.ATTRIBUTES, dataPackage, {
             data: {

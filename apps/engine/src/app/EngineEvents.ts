@@ -2,7 +2,7 @@ export enum EngineEvents {
     PlayerStartedMovement = 'PlayerStartedMovement',
     PlayerStopedMovementVector = 'PlayerStopedMovementVector',
     PlayerStopedAllMovementVectors = 'PlayerStopedAllMovementVectors',
-    PlayerMoved = 'PlayerMoved',
+    CharacterMoved = 'PlayerMoved',
     PlayerTriesToStartedMovement = 'PlayerTriesToStartedMovement',
 
     CharacterDied = 'CharacterDied',

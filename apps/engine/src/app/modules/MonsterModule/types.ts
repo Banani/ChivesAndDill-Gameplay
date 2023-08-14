@@ -1,12 +1,8 @@
-import type { Character, CharacterType } from '../../types';
+import { Character, CharacterType } from '@bananos/types';
 
 export interface Monster extends Character {
     type: CharacterType.Monster;
-    division?: string;
     respawnId: string;
     templateId: string;
-    sightRange: number;
-    desiredRange: number;
-    escapeRange: number;
     attackFrequency: number;
 }

@@ -1,7 +1,7 @@
-import { CharacterDirection } from '@bananos/types';
+import { CharacterDirection, CharacterType } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { CharacterEngineEvents, CreateCharacterEvent, NewCharacterCreatedEvent, RemoveCharacterEvent } from '../../CharacterModule/Events';
 import { CreatePlayerCharacterEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';

@@ -1,4 +1,4 @@
-import { GlobalStoreModule, ItemClientMessages } from '@bananos/types';
+import { GlobalStoreModule, ItemClientActions } from '@bananos/types';
 import { MockedItemTemplates } from 'apps/engine/src/app/mocks';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from '../../../../testUtilities';
 import { GenerateItemForCharacterEvent, ItemEngineEvents, PlayerTriesToSplitItemStackEvent } from '../../Events';
@@ -38,7 +38,7 @@ describe('MoveItemInBag', () => {
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.MoveItemInBag,
+            type: ItemClientActions.MoveItemInBag,
             itemId,
             directionLocation: {
                 backpack: '1',
@@ -80,7 +80,7 @@ describe('MoveItemInBag', () => {
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.MoveItemInBag,
+            type: ItemClientActions.MoveItemInBag,
             itemId,
             directionLocation: {
                 backpack: '1',
@@ -106,7 +106,7 @@ describe('MoveItemInBag', () => {
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.MoveItemInBag,
+            type: ItemClientActions.MoveItemInBag,
             itemId,
             directionLocation: {
                 backpack: '2',
@@ -138,7 +138,7 @@ describe('MoveItemInBag', () => {
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.MoveItemInBag,
+            type: ItemClientActions.MoveItemInBag,
             itemId,
             directionLocation: {
                 backpack: '1',
@@ -190,7 +190,7 @@ describe('MoveItemInBag', () => {
         itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.MoveItemInBag,
+            type: ItemClientActions.MoveItemInBag,
             itemId,
             directionLocation: {
                 backpack: '1',
@@ -238,7 +238,7 @@ describe('MoveItemInBag', () => {
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.MoveItemInBag,
+            type: ItemClientActions.MoveItemInBag,
             itemId,
             directionLocation: {
                 backpack: '1',
@@ -283,7 +283,7 @@ describe('MoveItemInBag', () => {
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['1'].itemId;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ItemClientMessages.MoveItemInBag,
+            type: ItemClientActions.MoveItemInBag,
             itemId,
             directionLocation: {
                 backpack: '1',

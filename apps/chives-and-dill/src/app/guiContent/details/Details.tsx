@@ -1,4 +1,4 @@
-import { CharacterClass, CharacterLostHpEvent, EngineEventType, GlobalStoreModule } from '@bananos/types';
+import { CharacterClass, CharacterClientEvents, CharacterLostHpEvent, GlobalStoreModule } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { now } from 'lodash';
 import React, { useEffect, useState } from 'react';
@@ -52,9 +52,9 @@ export const Details = () => {
 export const DetailsInternal = React.memo(
     ({ characterPowerPointsEvents, characters, combatState, activeCharacterId, characterClasses }: DetailsInternalProps) => {
 
-        const { detailsStats: damageStats, clearDetailsStats: clearDamage } = useDetailsStats({ characterPowerPointsEvents, eventPropertyId: 'attackerId', eventType: EngineEventType.CharacterLostHp });
-        const { detailsStats: damageTakenStats, clearDetailsStats: clearDamageTaken } = useDetailsStats({ characterPowerPointsEvents, eventPropertyId: 'characterId', eventType: EngineEventType.CharacterLostHp });
-        const { detailsStats: healStats, clearDetailsStats: clearHeal } = useDetailsStats({ characterPowerPointsEvents, eventPropertyId: 'healerId', eventType: EngineEventType.CharacterGotHp });
+        const { detailsStats: damageStats, clearDetailsStats: clearDamage } = useDetailsStats({ characterPowerPointsEvents, eventPropertyId: 'attackerId', eventType: CharacterClientEvents.CharacterLostHp });
+        const { detailsStats: damageTakenStats, clearDetailsStats: clearDamageTaken } = useDetailsStats({ characterPowerPointsEvents, eventPropertyId: 'characterId', eventType: CharacterClientEvents.CharacterLostHp });
+        const { detailsStats: healStats, clearDetailsStats: clearHeal } = useDetailsStats({ characterPowerPointsEvents, eventPropertyId: 'healerId', eventType: CharacterClientEvents.CharacterGotHp });
 
         const { addFightsStats, fightHistory } = useStatsAgregator();
 

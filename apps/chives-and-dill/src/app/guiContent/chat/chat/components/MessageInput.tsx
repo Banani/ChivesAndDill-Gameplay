@@ -1,5 +1,5 @@
-import { ChannelType, ChatChannel } from "@bananos/types";
-import { EngineApiContext } from "apps/chives-and-dill/src/contexts/EngineApi";
+import { ChannelType, ChatChannel, ChatChannelClientActions } from "@bananos/types";
+import { EngineContext } from "apps/chives-and-dill/src/contexts/EngineApiContext";
 import { KeyBoardContext } from "apps/chives-and-dill/src/contexts/KeyBoardContext";
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ChannelNumeratorContext } from "../../contexts";
@@ -30,8 +30,8 @@ interface MessageInputProps {
 
 export const MessageInput = ({ chatChannels }: MessageInputProps) => {
     const keyBoardContext = useContext(KeyBoardContext);
-    const engineApiContext = useContext(EngineApiContext);
     const channelNumeratorContext = useContext(ChannelNumeratorContext);
+    const { callEngineAction } = useContext(EngineContext);
     const [activeChannel, setActiveChannel] = useState<CurrentChannel>({ id: 'say', channelType: ChannelType.Range });
     const [message, setMessage] = useState('');
     const [lastKeyDown, setLastKeyDown] = useState(null);
@@ -41,7 +41,12 @@ export const MessageInput = ({ chatChannels }: MessageInputProps) => {
     useEffect(() => {
         if (lastKeyDown === 'Enter') {
             if (message !== '') {
-                engineApiContext.sendChatMessage({ message, chatChannelId: activeChannel.id, channelType: activeChannel.channelType });
+                callEngineAction({
+                    type: ChatChannelClientActions.SendChatMessage,
+                    message,
+                    chatChannelId: activeChannel.id,
+                    channelType: activeChannel.channelType
+                });
             }
             messageInput.current.blur();
         }

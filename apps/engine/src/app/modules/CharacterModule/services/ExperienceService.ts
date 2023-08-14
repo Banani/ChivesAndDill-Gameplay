@@ -1,8 +1,7 @@
-import { ExperienceGainSource } from '@bananos/types';
+import { CharacterType, ExperienceGainSource } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
-import { CharacterType } from '../../../types';
 import { QuestCompletedEvent, QuestEngineEvents } from '../../QuestModule/Events';
 import type {
     AddExperienceEvent,

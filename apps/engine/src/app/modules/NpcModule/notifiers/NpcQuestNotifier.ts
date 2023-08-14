@@ -1,4 +1,4 @@
-import { GlobalStoreModule, NpcClientMessages } from '@bananos/types';
+import { GlobalStoreModule, NpcClientActions } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
@@ -34,7 +34,7 @@ export class NpcQuestNotifier extends Notifier<Record<string, boolean>> {
             this.multicastMultipleObjectsUpdate([{ receiverId: event.playerCharacter.ownerId, objects: questMap }]);
         }
 
-        currentSocket.on(NpcClientMessages.TakeQuestFromNpc, ({ npcId, questId }) => {
+        currentSocket.on(NpcClientActions.TakeQuestFromNpc, ({ npcId, questId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToTakeQuestFromNpcEvent>({
                 type: NpcEngineEvents.PlayerTriesToTakeQuestFromNpc,
                 requestingCharacterId: event.playerCharacter.id,
@@ -43,7 +43,7 @@ export class NpcQuestNotifier extends Notifier<Record<string, boolean>> {
             });
         });
 
-        currentSocket.on(NpcClientMessages.FinalizeQuestWithNpc, ({ npcId, questId }) => {
+        currentSocket.on(NpcClientActions.FinalizeQuestWithNpc, ({ npcId, questId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToFinalizeQuestWithNpcEvent>({
                 type: NpcEngineEvents.PlayerTriesToFinalizeQuestWithNpc,
                 requestingCharacterId: event.playerCharacter.id,

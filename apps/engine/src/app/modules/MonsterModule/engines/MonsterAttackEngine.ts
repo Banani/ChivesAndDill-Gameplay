@@ -1,9 +1,8 @@
-import { Spell } from '@bananos/types';
+import { Character, Spell } from '@bananos/types';
 import * as _ from 'lodash';
 import { filter, forEach } from 'lodash';
 import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints, isSegementCrossingWithAnyWall } from '../../../math';
-import { Character } from '../../../types';
 import { PlayerCastSpellEvent, PlayerTriesToCastASpellEvent, SpellEngineEvents } from '../../SpellModule/Events';
 import { Monster } from '../types';
 

@@ -1,8 +1,7 @@
-import { CharacterDirection } from '@bananos/types';
+import { CharacterDirection, CharacterType } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import type { CharacterDiedEvent, EngineEventHandler, PlayerMovedEvent, PlayerStartedMovementEvent, PlayerStopedAllMovementVectorsEvent } from '../../../types';
-import { CharacterType } from '../../../types';
 import type { CreateCharacterEvent, ResetCharacterEvent } from '../../CharacterModule/Events';
 import { CharacterEngineEvents } from '../../CharacterModule/Events';
 import type { CreateNewMonsterEvent, MonsterLostAggroEvent, MonsterLostTargetEvent, MonsterTargetChangedEvent, NewMonsterCreatedEvent } from '../Events';
@@ -21,7 +20,7 @@ export class MonsterService extends EventParser {
             [MonsterEngineEvents.MonsterLostTarget]: this.test2,
             [MonsterEngineEvents.MonsterLostAggro]: this.handleMonsterLostAggro,
             [EngineEvents.CharacterDied]: this.handleCharacterDied,
-            [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+            [EngineEvents.CharacterMoved]: this.handlePlayerMoved,
             [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
             [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
         };
@@ -73,14 +72,9 @@ export class MonsterService extends EventParser {
             avatar: monsterTemplate.avatar,
             size: monsterTemplate.size,
             direction: CharacterDirection.DOWN,
-            division: monsterTemplate.division,
             isInMove: false,
             respawnId: event.monsterRespawn.id,
-            sightRange: monsterTemplate.sightRange,
             movementSpeed: monsterTemplate.movementSpeed,
-            desiredRange: monsterTemplate.desiredRange,
-            escapeRange: monsterTemplate.escapeRange,
-            spells: {},
             attackFrequency: monsterTemplate.attackFrequency,
             healthPointsRegeneration: monsterTemplate.spellPowerRegeneration,
             spellPowerRegeneration: monsterTemplate.spellPowerRegeneration,

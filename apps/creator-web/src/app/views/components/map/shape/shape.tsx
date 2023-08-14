@@ -1,5 +1,5 @@
+import { Location } from '@bananos/types';
 import { Graphics } from '@inlet/react-pixi';
-import { Location } from 'libs/types/src/common/Location';
 import { FunctionComponent, useCallback } from 'react';
 
 interface ShapeProps {

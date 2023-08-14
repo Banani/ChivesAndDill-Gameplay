@@ -1,4 +1,4 @@
-import { GlobalStoreModule, GroupClientMessages, Party } from '@bananos/types';
+import { GlobalStoreModule, GroupClientActions, Party } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
@@ -26,7 +26,7 @@ export class PartyNotifier extends Notifier<Party> {
 
         const currentSocket = services.socketConnectionService.getSocketById(receiverId);
 
-        currentSocket.on(GroupClientMessages.PromoteToLeader, ({ characterId }) => {
+        currentSocket.on(GroupClientActions.PromoteToLeader, ({ characterId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToPassLeaderEvent>({
                 type: GroupEngineEvents.PlayerTriesToPassLeader,
                 requestingCharacterId: event.playerCharacter.id,
@@ -34,14 +34,14 @@ export class PartyNotifier extends Notifier<Party> {
             });
         });
 
-        currentSocket.on(GroupClientMessages.LeaveParty, () => {
+        currentSocket.on(GroupClientActions.LeaveParty, () => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToLeavePartyEvent>({
                 type: GroupEngineEvents.PlayerTriesToLeaveParty,
                 requestingCharacterId: event.playerCharacter.id
             });
         });
 
-        currentSocket.on(GroupClientMessages.UninviteFromParty, ({ characterId }) => {
+        currentSocket.on(GroupClientActions.UninviteFromParty, ({ characterId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToUninviteFromPartyEvent>({
                 type: GroupEngineEvents.PlayerTriesToUninviteFromParty,
                 requestingCharacterId: event.playerCharacter.id,

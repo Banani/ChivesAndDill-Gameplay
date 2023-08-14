@@ -1,5 +1,5 @@
 import type { DamageAbsorbedEvent, ExperienceGainEvent } from '@bananos/types';
-import { CharacterClientEvents, EngineEventType, GlobalStoreModule, HealthPointsSource } from '@bananos/types';
+import { CharacterClientEvents, GlobalStoreModule, HealthPointsSource } from '@bananos/types';
 import { Text } from '@inlet/react-pixi';
 import { chain, filter, forEach, map } from 'lodash';
 import * as PIXI from 'pixi.js';
@@ -26,7 +26,7 @@ export const FloatingNumbersManager = () => {
         setActiveShapes((prev) => [
             ...prev,
             ...chain(characterPowerPointsEvents)
-                .filter((event) => (event.type === EngineEventType.CharacterGotHp && event.source !== HealthPointsSource.Regeneration) || event.type === EngineEventType.CharacterLostHp)
+                .filter((event) => (event.type === CharacterClientEvents.CharacterGotHp && event.source !== HealthPointsSource.Regeneration) || event.type === CharacterClientEvents.CharacterLostHp)
                 .map((event) => ({ creationTime: Date.now(), y: 3.5, x: randomNumber(1.5, -1.5), event }))
                 .value(),
         ]);
@@ -36,7 +36,7 @@ export const FloatingNumbersManager = () => {
         setActiveShapes((prev) => [
             ...prev,
             ...chain(absorbShieldEvents)
-                .filter((event) => event.type === EngineEventType.DamageAbsorbed)
+                .filter((event) => event.type === CharacterClientEvents.DamageAbsorbed)
                 .map((event: DamageAbsorbedEvent) => ({
                     creationTime: Date.now(),
                     y: 3.5,

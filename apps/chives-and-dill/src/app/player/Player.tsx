@@ -1,4 +1,4 @@
-import { CommonClientMessages, NpcClientMessages } from '@bananos/types';
+import { NpcClientActions, PlayerClientActions } from '@bananos/types';
 import { Sprite } from '@inlet/react-pixi';
 import _ from 'lodash';
 import * as PIXI from 'pixi.js';
@@ -8,9 +8,9 @@ import cursorLoot from '../../assets/spritesheets/cursors/lootCursor.png';
 import cursorSpeak from '../../assets/spritesheets/cursors/speakCursor.png';
 import cursorSword from '../../assets/spritesheets/cursors/swordCursor.png';
 import { BLOCK_SIZE } from '../../consts/consts';
+import { EngineContext } from '../../contexts/EngineApiContext';
 import { GameControllerContext } from '../../contexts/GameController';
 import { KeyBoardContext } from '../../contexts/KeyBoardContext';
-import { SocketContext } from '../../contexts/SocketCommunicator';
 import { PlayerBars } from './PlayerBars';
 import { PlayerName } from './PlayerName';
 
@@ -29,7 +29,7 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
         const playerPoints = characterPowerPoints[player.id] ?? { maxHp: 0, currentHp: 0 };
         const { currentHp } = playerPoints;
 
-        const { socket } = useContext(SocketContext);
+        const { callEngineAction } = useContext(EngineContext);
 
         const setDirection = (direction) => {
             if (!charactersMovements[player.id].isInMove) {
@@ -107,7 +107,8 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
                 return;
             }
 
-            socket?.emit(NpcClientMessages.OpenNpcConversationDialog, {
+            callEngineAction({
+                type: NpcClientActions.OpenNpcConversationDialog,
                 npcId: player.id,
             });
         };
@@ -116,7 +117,8 @@ const Player = React.memo<{ player: any, characterViewsSettings: any, characters
             if (player.type !== 'Monster') {
                 return;
             }
-            socket?.emit(CommonClientMessages.OpenLoot, {
+            callEngineAction({
+                type: PlayerClientActions.OpenLoot,
                 corpseId: player.id,
             });
         };

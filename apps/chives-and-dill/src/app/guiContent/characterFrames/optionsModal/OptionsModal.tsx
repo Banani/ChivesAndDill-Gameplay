@@ -1,5 +1,5 @@
-import { GlobalStoreModule, GroupClientMessages } from '@bananos/types';
-import { SocketContext } from 'apps/chives-and-dill/src/contexts/SocketCommunicator';
+import { GlobalStoreModule, GroupClientActions } from '@bananos/types';
+import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { useContext } from 'react';
 import styles from './OptionsModal.module.scss';
@@ -8,11 +8,12 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
     const { data: party } = useEngineModuleReader(GlobalStoreModule.PARTY);
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data
 
-    const { socket } = useContext(SocketContext);
+    const { callEngineAction } = useContext(EngineContext);
 
     const partyAction = (type) => {
         setOptionsVisible(false);
-        socket?.emit(type, {
+        callEngineAction({
+            type,
             characterId: playerId,
         });
     };
@@ -40,7 +41,7 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
 
     const leaveParty = () => {
         setOptionsVisible(false);
-        socket?.emit(GroupClientMessages.LeaveParty);
+        callEngineAction({ type: GroupClientActions.LeaveParty });
     }
 
     return (
@@ -48,8 +49,8 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
 
             {checkifActivePlayerIsLeader() && playerId !== activeCharacterId && checkIfTargetIsInYourParty(playerId) ?
                 <>
-                    <div className={styles.Option} onClick={() => partyAction(GroupClientMessages.PromoteToLeader)}>Pass leader</div>
-                    <div className={styles.Option} onClick={() => partyAction(GroupClientMessages.UninviteFromParty)}>Uninvite</div>
+                    <div className={styles.Option} onClick={() => partyAction(GroupClientActions.PromoteToLeader)}>Pass leader</div>
+                    <div className={styles.Option} onClick={() => partyAction(GroupClientActions.UninviteFromParty)}>Uninvite</div>
                 </> : null}
 
             {checkIfActivePlayerIsInParty() && playerId === activeCharacterId ?
@@ -58,7 +59,7 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
 
             {playerId !== activeCharacterId && !checkIfTargetIsInYourParty(playerId) ?
                 <>
-                    <div className={styles.Option} onClick={() => partyAction(GroupClientMessages.InviteToParty)}>Invite to group</div>
+                    <div className={styles.Option} onClick={() => partyAction(GroupClientActions.InviteToParty)}>Invite to group</div>
                 </> : null}
 
             <div className={styles.Option} onClick={() => setOptionsVisible(false)}>Cancel</div>

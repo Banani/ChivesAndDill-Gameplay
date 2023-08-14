@@ -1,4 +1,4 @@
-import { ChatChannelClientMessages, GlobalStoreModule } from '@bananos/types';
+import { ChatChannelClientActions, GlobalStoreModule } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 
 interface setupEngineProps {
@@ -16,7 +16,7 @@ const setupEngine = ({ chatChannelName }: setupEngineProps = { chatChannelName: 
         '3': engineManager.preparePlayerWithCharacter({ name: 'character_3' }),
     };
 
-    const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientMessages.CreateChatChannel, chatChannelName });
+    const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ChatChannelClientActions.CreateChatChannel, chatChannelName });
 
     const recentlyCreatedChatChannelId = Object.keys(dataPackage.chatChannel.data)[0];
 
@@ -28,13 +28,13 @@ describe('Leave chat channel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.LeaveChatChannel,
+            type: ChatChannelClientActions.LeaveChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
         });
 
@@ -53,13 +53,13 @@ describe('Leave chat channel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.LeaveChatChannel,
+            type: ChatChannelClientActions.LeaveChatChannel,
             chatChannelId: 'SOME_RANDOM_ID',
         });
 
@@ -70,7 +70,7 @@ describe('Leave chat channel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         const dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.LeaveChatChannel,
+            type: ChatChannelClientActions.LeaveChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
         });
 
@@ -81,13 +81,13 @@ describe('Leave chat channel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientMessages.LeaveChatChannel,
+            type: ChatChannelClientActions.LeaveChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
         });
 
@@ -102,13 +102,13 @@ describe('Leave chat channel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.LeaveChatChannel,
+            type: ChatChannelClientActions.LeaveChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
         });
 
@@ -124,19 +124,19 @@ describe('Leave chat channel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['3'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientMessages.LeaveChatChannel,
+            type: ChatChannelClientActions.LeaveChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
         });
 

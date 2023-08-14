@@ -1,8 +1,8 @@
 import type { PowerPointsTrack } from '@bananos/types';
-import { HealthPointsSource } from '@bananos/types';
+import { CharacterType, HealthPointsSource } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { CharacterDiedEvent, CharacterType, EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
 import { CharacterUnion } from '../../../types/CharacterUnion';
 import { Services } from '../../../types/Services';
 import type {

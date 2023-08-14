@@ -1,4 +1,4 @@
-import { ActiveNpcConversation, GlobalStoreModule, NpcClientMessages } from '@bananos/types';
+import { ActiveNpcConversation, GlobalStoreModule, NpcClientActions } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
@@ -23,7 +23,7 @@ export class ActiveNpcConversationNotifier extends Notifier<ActiveNpcConversatio
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
 
-        currentSocket.on(NpcClientMessages.OpenNpcConversationDialog, ({ npcId }) => {
+        currentSocket.on(NpcClientActions.OpenNpcConversationDialog, ({ npcId }) => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToStartConversationEvent>({
                 type: NpcEngineEvents.PlayerTriesToStartConversation,
                 requestingCharacterId: event.playerCharacter.id,
@@ -31,7 +31,7 @@ export class ActiveNpcConversationNotifier extends Notifier<ActiveNpcConversatio
             });
         });
 
-        currentSocket.on(NpcClientMessages.CloseNpcConversationDialog, () => {
+        currentSocket.on(NpcClientActions.CloseNpcConversationDialog, () => {
             this.engineEventCrator.asyncCeateEvent<PlayerTriesToFinishConversationEvent>({
                 type: NpcEngineEvents.PlayerTriesToFinishConversation,
                 requestingCharacterId: event.playerCharacter.id,

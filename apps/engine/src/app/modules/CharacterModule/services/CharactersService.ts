@@ -15,7 +15,7 @@ export class CharactersService extends EventParser {
             [CharacterEngineEvents.CreateCharacter]: this.handleCreateCharacter,
             [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
             [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
-            [EngineEvents.PlayerMoved]: this.handlePlayerMoved,
+            [EngineEvents.CharacterMoved]: this.handlePlayerMoved,
             [EngineEvents.CharacterDied]: this.handleCharacterDied,
         };
     }

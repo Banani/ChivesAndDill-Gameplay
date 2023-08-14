@@ -1,8 +1,7 @@
-import { Location, ProjectileSpell } from '@bananos/types';
+import { Character, Location, ProjectileSpell } from '@bananos/types';
 import { each, filter, pickBy } from 'lodash';
 import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints, getCrossingPointsWithWalls, getTheClosestObject, isSegmentIntersectingWithACircle } from '../../../math';
-import { Character } from '../../../types';
 import { Projectile, ProjectileMovedEvent, RemoveProjectileEvent, SpellEngineEvents, SpellLandedEvent, SpellReachedTargetEvent } from '../Events';
 import { filterCharactersBaseOnSpellImpact } from '../services/utils';
 

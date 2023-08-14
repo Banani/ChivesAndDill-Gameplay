@@ -1,4 +1,4 @@
-import type { GlobalStore, GlobalStoreModule } from '@bananos/types';
+import type { GlobalStoreModule } from '@bananos/types';
 import { useContext } from 'react';
 import { PackageContext } from '../contexts/PackageContext';
 
@@ -11,5 +11,5 @@ export const useEngineModuleReader = (moduleName: GlobalStoreModule) => {
         recentData: state.recentData,
         lastUpdateTime: state.lastUpdateTime,
         lastUpdateEventTime: state.lastUpdateEventTime,
-    } as GlobalStore[typeof moduleName];
+    } as any;
 };

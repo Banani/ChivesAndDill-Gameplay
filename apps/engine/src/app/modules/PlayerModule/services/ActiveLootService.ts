@@ -16,7 +16,7 @@ export class ActiveLootService extends EventParser {
             [PlayerEngineEvents.PlayerTriesToOpenLoot]: this.handlePlayerTriesToOpenLoot,
             [PlayerEngineEvents.CloseLoot]: this.handleCloseLoot,
             [CharacterEngineEvents.CorpseDropTrackRemoved]: this.handleCorpseDropTrackRemoved,
-            [EngineEvents.PlayerMoved]: this.handlePlayerMoved, // TODO: ten event powinien byc odpalany tylko dla characterow w activeLoots
+            [EngineEvents.CharacterMoved]: this.handlePlayerMoved, // TODO: ten event powinien byc odpalany tylko dla characterow w activeLoots
         };
     }
 

@@ -1,4 +1,4 @@
-import { EngineEventType, ErrorMessage, GlobalStoreModule } from '@bananos/types';
+import { ErrorMessageEvent, GlobalStoreModule, PlayerClientEvents } from '@bananos/types';
 import { Text } from '@inlet/react-pixi';
 import { chain, filter, map } from 'lodash';
 import * as PIXI from 'pixi.js';
@@ -8,19 +8,19 @@ import { useEngineModuleReader, useMessageCenter } from '../../hooks';
 export const ErrorMessages = () => {
     const { events: errorMessagesEvents, lastUpdateTime } = useEngineModuleReader(GlobalStoreModule.ERROR_MESSAGES);
 
-    return <ErrorMessagesInternal errorMessages={errorMessagesEvents as ErrorMessage[]} lastUpdateTime={lastUpdateTime} />
+    return <ErrorMessagesInternal errorMessages={errorMessagesEvents as ErrorMessageEvent[]} lastUpdateTime={lastUpdateTime} />
 }
 
 const ErrorMessagesInternal = React.memo(
-    ({ errorMessages }: { errorMessages: ErrorMessage[], lastUpdateTime: number }) => {
+    ({ errorMessages }: { errorMessages: ErrorMessageEvent[], lastUpdateTime: number }) => {
         const [activeShapes, setActiveShapes] = useState([]);
         const { messageLocation } = useMessageCenter();
 
         useEffect(() => {
             setActiveShapes((prev) => [
                 ...chain(errorMessages)
-                    .filter((event) => event.type === EngineEventType.ErrorMessage)
-                    .map((event: ErrorMessage) => ({
+                    .filter((event) => event.type === PlayerClientEvents.ErrorMessage)
+                    .map((event: ErrorMessageEvent) => ({
                         id: Date.now(),
                         event: {
                             type: event.type,

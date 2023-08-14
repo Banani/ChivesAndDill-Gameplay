@@ -1,5 +1,4 @@
-import { GlobalStoreModule } from '@bananos/types';
-import { AllQuestStagePart, ExternalQuestStagePart, KillingQuestStagePart, MovementQuestStagePart, QuestSchema, QuestType } from 'libs/types/src/QuestPackage';
+import { AllQuestStagePart, ExternalQuestStagePart, GlobalStoreModule, KillingQuestStagePart, MovementQuestStagePart, QuestSchema, QuestType } from '@bananos/types';
 import * as _ from 'lodash';
 import { mapValues } from 'lodash';
 import { Notifier } from '../../../Notifier';
