@@ -4,6 +4,7 @@ export * from './ErrorMessagesRenderer';
 export * from './FloatingNumbersRenderer';
 export * from './NextLevelRenderer';
 export * from './NpcQuestMarkRenderer';
+export * from './PlayerAbsorbBarRenderer';
 export * from './PlayerBarRenderer';
 export * from './PlayerNameRenderer';
 export * from './PlayerRenderer';

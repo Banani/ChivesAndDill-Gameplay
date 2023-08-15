@@ -11,6 +11,7 @@ import {
     FloatingNumbersRenderer,
     NextLevelRenderer,
     NpcQuestMarkRenderer,
+    PlayerAbsorbBarRenderer,
     PlayerBarRenderer,
     PlayerNameRenderer,
     PlayerRenderer,
@@ -53,7 +54,8 @@ export const ViewPort = React.memo(() => {
                 new DialogRenderer(container),
                 new ErrorMessageRenderer(container),
                 new NextLevelRenderer(container),
-                new BloodPoolsRenderer(container)
+                new BloodPoolsRenderer(container),
+                new PlayerAbsorbBarRenderer(container),
             ];
 
             const output = {};
