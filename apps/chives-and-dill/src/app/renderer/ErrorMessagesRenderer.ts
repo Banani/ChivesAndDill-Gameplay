@@ -43,11 +43,11 @@ export class ErrorMessageRenderer implements Renderer {
 
     render(store: GlobalStore) {
         _.forEach(this.errorMessages, (event, index) => {
-            const location = store.characterMovements.data[store.activeCharacter.data.activeCharacterId].location;
-            const eventId = (event as any).id;
-
-            this.errorMessages[eventId].x = location.x;
-            this.errorMessages[eventId].y = location.y + 1 * 22 - 150;
+           const location = store.characterMovements.data[store.activeCharacter.data.activeCharacterId].location;
+           const eventId = index;
+           //TODO change to event.id
+           this.errorMessages[eventId].x = location.x;
+           this.errorMessages[eventId].y = location.y + 1 * 22 - 150;
         });
     }
 }
