@@ -272,11 +272,11 @@ export interface PlayerCreatedEvent {
 }
 
 export interface SpellLandedEvent {
-    type: SpellClientEvent.SpellLanded;
-    spell: any;
-    angle: number;
-    castLocation: Location;
-    directionLocation: Location;
+   type: SpellClientEvent.SpellLanded;
+   spell: any;
+   angle: number;
+   castLocation: Location;
+   directionLocation: Location;
 }
 
 export interface SpellCastedEvent {

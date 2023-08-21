@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GameApi } from './game';
 import { useGameSize } from './hooks';
 import {
+    BlinkSpellEffectRenderer,
     BloodPoolsRenderer,
     DialogRenderer,
     ErrorMessageRenderer,
@@ -56,6 +57,7 @@ export const ViewPort = React.memo(() => {
                 new NextLevelRenderer(container),
                 new BloodPoolsRenderer(container),
                 new PlayerAbsorbBarRenderer(container),
+                new BlinkSpellEffectRenderer(container),
             ];
 
             const output = {};

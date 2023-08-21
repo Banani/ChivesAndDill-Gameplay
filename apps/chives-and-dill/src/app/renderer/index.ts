@@ -1,3 +1,4 @@
+export * from './BlinkSpellEffectRenderer';
 export * from './BloodPoolsRenderer';
 export * from './DialogRenderer';
 export * from './ErrorMessagesRenderer';
