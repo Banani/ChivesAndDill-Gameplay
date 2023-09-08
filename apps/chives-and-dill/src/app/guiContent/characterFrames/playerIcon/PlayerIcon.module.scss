@@ -102,13 +102,15 @@
          }
 
          .barText {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             visibility: hidden;
             position: absolute;
             height: 100%;
             width: 100%;
             color: gold;
             z-index: 9;
-            text-align: center;
             text-shadow: 0 0 5px black;
          }
 
