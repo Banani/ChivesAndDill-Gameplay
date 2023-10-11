@@ -1,4 +1,4 @@
-import { GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule, ItemClientActions } from '@bananos/types';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
 import React, { useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ import { SquareButton } from '../components/squareButton/SquareButton';
 import CloseIcon from '@mui/icons-material/Close';
 import _ from 'lodash';
 import { ItemIconPreview } from 'apps/chives-and-dill/src/components/itemPreview/itemIconPreview/ItemIconPreview';
+import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 
 interface EquipmentItem {
     id: string;
@@ -41,7 +42,8 @@ export const CharacterEq = () => {
     const activePlayerAttributes = attributes[activeCharacterId];
 
     const keyBoardContext = useContext(KeyBoardContext);
-    
+    const { callEngineAction } = useContext(EngineContext);
+
     const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: _.map(equipment, (item) => item.itemTemplateId) ?? [] });
 
     useEffect(() => {
@@ -65,13 +67,38 @@ export const CharacterEq = () => {
           const item = items[itemId];
           const slot = item.slot;
           itemsBySlot[slot] = item;
-        }
-      
+        };
         return itemsBySlot;
+    };
+
+    const getEqItemId = (itemInstanceId) => {
+        callEngineAction({
+            type: ItemClientActions.StripItem,
+            itemInstanceId
+        });
     }
-      
+
+    const renderItem = (itemSlot) => {
+        if(Object.keys(itemSlot).length) {
+            return (
+                <div className={styles.EqColumnsItem} onContextMenu={(e) => {
+                        e.preventDefault();
+                        getEqItemId(itemSlot.id);
+                    }}
+                >
+                    <ItemIconPreview itemData={itemSlot} highlight={false} />
+                </div>
+            )
+        } else {
+            return (
+                <div className={styles.EqColumnsItem}></div> 
+            );
+        };   
+    };
+
     const itemsBySlot: EquipmentBySlot = restructureItemsBySlot(itemTemplates);
-     return (
+    
+    return (
         modalStatus ? <div className={styles.CharacterEqContainer}>
             <img className={styles.CharacterEqIcon} src={characterClass.iconImage}/>
             <div className={styles.CharacterEqName}>{activePlayer.name}</div>
@@ -82,50 +109,28 @@ export const CharacterEq = () => {
             { !_.isEmpty(itemsBySlot) ? <div className={styles.CharacterEqMain}>
                 <div className={styles.EquipmentContainer}>
                     <div className={styles.EqColumns}>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.head} highlight={false} />
-                        </div>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.neck} highlight={false} />
-                        </div>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.shoulder} highlight={false} />
-                        </div>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.chest} highlight={false} />
-                        </div>
-                        <div className={styles.EqColumnsItem}></div>
-                        <div className={styles.EqColumnsItem}></div>
-                        <div className={styles.EqColumnsItem}></div>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.wrist} highlight={false} />
-                        </div>
+                        {renderItem(itemsBySlot.head)}
+                        {renderItem(itemsBySlot.neck)}
+                        {renderItem(itemsBySlot.shoulder)}
+                        {renderItem(itemsBySlot.chest)}
+                        {renderItem(itemsBySlot)}
+                        {renderItem(itemsBySlot)}
+                        {renderItem(itemsBySlot)}
+                        {renderItem(itemsBySlot.wrist)}
                     </div>
                     <div className={styles.EqColumns}>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.hands} highlight={false} />
-                        </div>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.waist} highlight={false} />
-                        </div>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.legs} highlight={false} />
-                        </div>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.feet} highlight={false} />
-                        </div>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.finger} highlight={false} />
-                        </div>
-                        <div className={styles.EqColumnsItem}></div>
-                        <div className={styles.EqColumnsItem}>
-                            <ItemIconPreview itemData={itemsBySlot.trinket} highlight={false} />
-                        </div>
-                        <div className={styles.EqColumnsItem}></div>
+                        {renderItem(itemsBySlot.hands)}
+                        {renderItem(itemsBySlot.waist)}
+                        {renderItem(itemsBySlot.legs)}
+                        {renderItem(itemsBySlot.feet)}
+                        {renderItem(itemsBySlot.finger)}
+                        {renderItem(itemsBySlot)}
+                        {renderItem(itemsBySlot.trinket)}
+                        {renderItem(itemsBySlot)}
                     </div>
                     <div className={styles.EqColumns + ' ' + styles.BottomColumn}>
-                        <div className={styles.EqColumnsItem}></div>
-                        <div className={styles.EqColumnsItem}></div>
+                        {renderItem(itemsBySlot)}
+                        {renderItem(itemsBySlot)}
                     </div>
                 </div>
                 <div className={styles.AttributesContainer}>
