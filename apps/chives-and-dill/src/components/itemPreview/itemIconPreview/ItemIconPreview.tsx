@@ -4,13 +4,20 @@ import styles from '../itemIconPreview/ItemIconPreview.module.scss';
 export const ItemIconPreview = ({ itemData, highlight }) => {
 
     const checkIfStatIsAvailable = (stat, type) => {
-        return stat !== 0 && stat !== undefined ? <div>{type + ': ' + stat}</div> : null;
-    }
-
+        if(stat !== 0 && stat !== undefined && type !== 'Armor') {
+            return (<div>{'+ ' + stat + ' ' + type}</div>)
+        } else if(stat !== 0 && stat !== undefined && type === 'Armor') {
+            return (<div>{stat + ' ' + type}</div>)
+        } else {
+            return null;
+        };
+    };
+    
     return (
         <div style={{ backgroundImage: `url(${itemData.image})` }} className={styles.ItemImage + ` ${highlight ? styles.highlight : null}`} >
             <div className={styles.ItemPreviewTooltip}>
                 <div className={styles.ItemPrevTooltipName}>{itemData.name}</div>
+                <div className={styles.ItemPrevTooltipLevel}>Item Level 1</div>
                 <div className={styles.ItemPrevTooltipSlot}>
                     <div>{itemData.slot}</div>
                     <div>Cloth</div>

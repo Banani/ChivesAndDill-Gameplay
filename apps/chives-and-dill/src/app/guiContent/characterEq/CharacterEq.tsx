@@ -9,6 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import _ from 'lodash';
 import { ItemIconPreview } from 'apps/chives-and-dill/src/components/itemPreview/itemIconPreview/ItemIconPreview';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
+import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 
 interface EquipmentItem {
     id: string;
@@ -86,9 +87,9 @@ export const CharacterEq = () => {
                         getEqItemId(itemSlot.id);
                     }}
                 >
-                    <ItemIconPreview itemData={itemSlot} highlight={false} />
+                    <ItemIconPreview itemData={itemSlot} highlight={ItemPreviewHighlight.icon} />
                 </div>
-            )
+            );
         } else {
             return (
                 <div className={styles.EqColumnsItem}></div> 
@@ -113,9 +114,9 @@ export const CharacterEq = () => {
                         {renderItem(itemsBySlot.neck)}
                         {renderItem(itemsBySlot.shoulder)}
                         {renderItem(itemsBySlot.chest)}
-                        {renderItem(itemsBySlot)}
-                        {renderItem(itemsBySlot)}
-                        {renderItem(itemsBySlot)}
+                        {renderItem({})}
+                        {renderItem({})}
+                        {renderItem({})}
                         {renderItem(itemsBySlot.wrist)}
                     </div>
                     <div className={styles.EqColumns}>
@@ -124,13 +125,13 @@ export const CharacterEq = () => {
                         {renderItem(itemsBySlot.legs)}
                         {renderItem(itemsBySlot.feet)}
                         {renderItem(itemsBySlot.finger)}
-                        {renderItem(itemsBySlot)}
+                        {renderItem({})}
                         {renderItem(itemsBySlot.trinket)}
-                        {renderItem(itemsBySlot)}
+                        {renderItem({})}
                     </div>
                     <div className={styles.EqColumns + ' ' + styles.BottomColumn}>
-                        {renderItem(itemsBySlot)}
-                        {renderItem(itemsBySlot)}
+                        {renderItem({})}
+                        {renderItem({})}
                     </div>
                 </div>
                 <div className={styles.AttributesContainer}>
