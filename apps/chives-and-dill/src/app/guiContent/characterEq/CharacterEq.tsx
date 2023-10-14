@@ -87,7 +87,7 @@ export const CharacterEq = () => {
                         getEqItemId(itemSlot.id);
                     }}
                 >
-                    <ItemIconPreview itemData={itemSlot} highlight={ItemPreviewHighlight.icon} />
+                    <ItemIconPreview itemData={itemSlot} highlight={ItemPreviewHighlight.icon} showMoney={true} />
                 </div>
             );
         } else {

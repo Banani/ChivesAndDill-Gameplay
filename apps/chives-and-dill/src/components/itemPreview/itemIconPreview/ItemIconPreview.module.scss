@@ -23,7 +23,7 @@
       position: absolute;
       bottom: 53px;
       left: 100%;
-      width: 145px;
+      width: 160px;
       margin: 0 auto;
       padding: 5px;
       background-color: rgba(0, 0, 0, 0.8);
@@ -44,7 +44,8 @@
          color: gold;
       }
 
-      .ItemPrevTooltipSlot {
+      .ItemPrevTooltipSlot,
+      .ItemPrevTooltipPrice {
          display: flex;
          justify-content: space-between;
       }
