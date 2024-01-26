@@ -8,6 +8,7 @@
    background-size: contain;
    background-repeat: no-repeat;
    min-width: 50px;
+   transition: all .3s;
 
    .Stack {
       position: absolute;
@@ -18,46 +19,10 @@
       width: 30px;
       text-align: end;
    }
-
-   .ItemPreviewTooltip {
-      position: absolute;
-      bottom: 53px;
-      left: 100%;
-      width: 160px;
-      margin: 0 auto;
-      padding: 5px;
-      background-color: rgba(0, 0, 0, 0.8);
-      border: 2px solid silver;
-      border-radius: 5px;
-      visibility: hidden;
-      z-index: 10;
-      color: white;
-      text-transform: capitalize;
-      font-size: 15px;
-
-      .ItemPrevTooltipName {
-         font-size: 17px;
-         color: #70ce49;
-      }
-
-      .ItemPrevTooltipLevel {
-         color: gold;
-      }
-
-      .ItemPrevTooltipSlot,
-      .ItemPrevTooltipPrice {
-         display: flex;
-         justify-content: space-between;
-      }
-   }
 }
 
-.highlight {
+.highlight { 
    &:hover {
       box-shadow: inset 0 0 7px 3px #1ba9fd;
-
-      .ItemPreviewTooltip {
-         visibility: visible;
-      }
    }
 }

@@ -11,7 +11,7 @@ import { ItemIconPreview } from 'apps/chives-and-dill/src/components/itemPreview
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 
-interface EquipmentItem {
+export interface EquipmentItem {
     id: string;
     type: string;
     name: string;
@@ -23,6 +23,9 @@ interface EquipmentItem {
     armor?: number;
     stamina?: number;
     strength?: number;
+    agility?: number;
+    intelect?: number;
+    spirit?: number;
   }
   
   interface EquipmentBySlot {
@@ -154,4 +157,4 @@ export const CharacterEq = () => {
             : null }
        </div> : null
     )
-}
+};
