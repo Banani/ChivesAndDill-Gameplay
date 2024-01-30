@@ -18,7 +18,7 @@ export const ItemIconPreview: React.FC<ItemPreviewProps> = ({ itemData, highligh
                     itemData={itemData} 
                 />
             : null}
-            {itemData.stack > 1 ? 
+            {itemData.stack ? 
                 <div className={styles.Stack}>
                     {itemData.stack}
                 </div> 
