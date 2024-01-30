@@ -7,7 +7,7 @@
    justify-content: right;
    align-items: center;
 
-   .backpack {
+   .backpackIcon {
       height: 30px;
       width: 30px;
       background-image: url(https://wotlk.evowow.com/static/images/wow/icons/large/inv_misc_bag_08.jpg);
@@ -47,3 +47,71 @@
    bottom: 30px;
    color: #dab744;
 }
+
+.backpackContainer {
+   background-color: #3F3229;
+   width: 230px;
+   position: absolute;
+   right: 0;
+   bottom: 30px;
+   display: flex;
+   flex-direction: column;
+   border: 1px solid #878683;
+   border-radius: 2px;
+
+   .backpackHeader {
+      display: flex;
+      padding: 3px;
+      justify-content: flex-end;
+      background-color: #171616;
+
+      .headerImage {
+         background-image: url(https://wotlk.evowow.com/static/images/wow/icons/large/inv_misc_bag_08.jpg);
+         border-radius: 50%;
+         border: 3px solid gold;
+         width: 45px;
+         height: 45px;
+         position: absolute;
+         top: -15px;
+         left: -15px;
+         background-size: contain;
+      }
+   }
+
+   .slot {
+      width: 50px;
+      height: 50px;
+      border-radius: 5px;
+      background-color: #dab744;
+      z-index: 1;
+   }
+
+   .slotsBackgroundContainer {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 3px;
+
+      .itemSlotsContainer {
+         position: absolute;
+         top: 36px;
+         left: 0;
+         margin: 3px;
+         flex-wrap: wrap;
+         display: flex;
+
+         .slot {
+            margin: 3px;
+         }
+      }
+
+      .slotBackground {
+         width: 50px;
+         height: 50px;
+         border-radius: 5px;
+         background: black;
+         opacity: 0.5;
+         margin: 3px;
+      }
+   }
+}
+

@@ -1,15 +1,14 @@
 import { GlobalStoreModule, ItemClientActions } from '@bananos/types';
-import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
-import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
-import React, { useEffect, useState } from 'react';
-import { useContext } from 'react';
-import styles from './CharacterEq.module.scss'
-import { SquareButton } from '../components/squareButton/SquareButton';
 import CloseIcon from '@mui/icons-material/Close';
-import _ from 'lodash';
+import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 import { ItemIconPreview } from 'apps/chives-and-dill/src/components/itemPreview/itemIconPreview/ItemIconPreview';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
-import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
+import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
+import _ from 'lodash';
+import React, { useContext, useEffect, useState } from 'react';
+import { SquareButton } from '../components/squareButton/SquareButton';
+import styles from './CharacterEq.module.scss';
 
 interface EquipmentItem {
     id: string;

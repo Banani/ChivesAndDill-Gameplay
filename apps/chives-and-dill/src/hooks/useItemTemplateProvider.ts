@@ -19,13 +19,15 @@ export const useItemTemplateProvider = ({ itemTemplateIds }: ItemTemplateProvide
         }
 
         const requiredItemTemplates = itemTemplateIds.filter((id) => !itemTemplates[id]);
+        console.log(itemTemplateIds);
         if (requiredItemTemplates.length > 0) {
-            callEngineAction({
-                type: ItemClientActions.RequestItemTemplates,
-                itemTemplateIds: requiredItemTemplates
-            });
-            setWasRequested(true);
+           callEngineAction({
+              type: ItemClientActions.RequestItemTemplates,
+              itemTemplateIds: requiredItemTemplates,
+           });
+           setWasRequested(true);
         }
+        console.log(itemTemplateIds);
     }, [itemTemplateIds, wasRequested]);
 
     useEffect(() => {
