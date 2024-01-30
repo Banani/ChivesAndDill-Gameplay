@@ -5,7 +5,7 @@ import styles from './ItemPreviewTooltip.module.scss';
 
 export const ItemPreviewTooltip: React.FC<ItemPreviewProps> = ({ showMoney, itemData }) => {
 
-    const renderPrimatyStat = (stat, type) => {
+    const renderPrimaryStat = (stat, type) => {
         return stat ? <div>{'+ ' + stat + ' ' + type}</div> : null;
     };
 
@@ -23,11 +23,11 @@ export const ItemPreviewTooltip: React.FC<ItemPreviewProps> = ({ showMoney, item
             </div>
             <div className={styles.ItemPrevTooltipStat}>
                 {renderSecondaryStat(itemData.armor, 'Armor')}
-                {renderPrimatyStat(itemData.agility, 'Agility')}
-                {renderPrimatyStat(itemData.intelect, 'Intelect')}
-                {renderPrimatyStat(itemData.strength, 'Strength')}
-                {renderPrimatyStat(itemData.spirit, 'Spirit')}
-                {renderPrimatyStat(itemData.stamina, 'Stamina')}
+                {renderPrimaryStat(itemData.agility, 'Agility')}
+                {renderPrimaryStat(itemData.intelect, 'Intelect')}
+                {renderPrimaryStat(itemData.strength, 'Strength')}
+                {renderPrimaryStat(itemData.spirit, 'Spirit')}
+                {renderPrimaryStat(itemData.stamina, 'Stamina')}
             </div>
             {showMoney ? 
                 <div className={styles.ItemPrevTooltipPrice}>
