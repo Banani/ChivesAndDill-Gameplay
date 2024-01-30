@@ -1,20 +1,18 @@
-import React from "react";
-import styles from './ItemPreviewTooltip.module.scss';
 import { MoneyBar } from "apps/chives-and-dill/src/app/guiContent/moneyBar/MoneyBar";
+import React from "react";
 import { ItemPreviewProps } from "../ItemPreview";
+import styles from './ItemPreviewTooltip.module.scss';
 
 export const ItemPreviewTooltip: React.FC<ItemPreviewProps> = ({ showMoney, itemData }) => {
-    
-    const checkIfStatIsAvailable = (stat, type) => {
-        if(stat !== 0 && stat !== undefined && type !== 'Armor') {
-            return (<div>{'+ ' + stat + ' ' + type}</div>)
-        } else if(stat !== 0 && stat !== undefined && type === 'Armor') {
-            return (<div>{stat + ' ' + type}</div>)
-        } else {
-            return null;
-        };
+
+    const renderPrimaryStat = (stat, type) => {
+        return stat ? <div>{'+ ' + stat + ' ' + type}</div> : null;
     };
-    
+
+    const renderSecondaryStat = (stat, type) => {
+        return stat ? <div>{stat + " " + type}</div> : null;
+    };
+
     return (
         <div className={styles.ItemPreviewTooltip}>
             <div className={styles.ItemPrevTooltipName}>{itemData.name}</div>
@@ -24,12 +22,12 @@ export const ItemPreviewTooltip: React.FC<ItemPreviewProps> = ({ showMoney, item
                 <div>Cloth</div>
             </div>
             <div className={styles.ItemPrevTooltipStat}>
-                {checkIfStatIsAvailable(itemData.armor, 'Armor')}
-                {checkIfStatIsAvailable(itemData.agility, 'Agility')}
-                {checkIfStatIsAvailable(itemData.intelect, 'Intelect')}
-                {checkIfStatIsAvailable(itemData.strength, 'Strength')}
-                {checkIfStatIsAvailable(itemData.spirit, 'Spirit')}
-                {checkIfStatIsAvailable(itemData.stamina, 'Stamina')}
+                {renderSecondaryStat(itemData.armor, 'Armor')}
+                {renderPrimaryStat(itemData.agility, 'Agility')}
+                {renderPrimaryStat(itemData.intelect, 'Intelect')}
+                {renderPrimaryStat(itemData.strength, 'Strength')}
+                {renderPrimaryStat(itemData.spirit, 'Spirit')}
+                {renderPrimaryStat(itemData.stamina, 'Stamina')}
             </div>
             {showMoney ? 
                 <div className={styles.ItemPrevTooltipPrice}>

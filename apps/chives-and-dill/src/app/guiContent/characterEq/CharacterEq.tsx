@@ -1,17 +1,24 @@
 import { GlobalStoreModule, ItemClientActions } from '@bananos/types';
-import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
-import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
-import React, { useEffect, useState } from 'react';
-import { useContext } from 'react';
-import styles from './CharacterEq.module.scss'
-import { SquareButton } from '../components/squareButton/SquareButton';
 import CloseIcon from '@mui/icons-material/Close';
-import _ from 'lodash';
+import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 import { ItemIconPreview } from 'apps/chives-and-dill/src/components/itemPreview/itemIconPreview/ItemIconPreview';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
-import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
+import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
+import _ from 'lodash';
+import React, { useContext, useEffect, useState } from 'react';
+import { SquareButton } from '../components/squareButton/SquareButton';
+import styles from './CharacterEq.module.scss';
 
-export interface EquipmentItem {
+export interface Stats {
+    armor?: number;
+    stamina?: number;
+    strength?: number;
+    agility?: number;
+    intelect?: number;
+    spirit?: number;
+}
+export interface EquipmentItem extends Stats {
     id: string;
     type: string;
     name: string;
@@ -20,17 +27,11 @@ export interface EquipmentItem {
     stack: number;
     value: number;
     slot: string;
-    armor?: number;
-    stamina?: number;
-    strength?: number;
-    agility?: number;
-    intelect?: number;
-    spirit?: number;
-  }
+}
   
-  interface EquipmentBySlot {
+interface EquipmentBySlot {
     [slot: string]: EquipmentItem;
-  }
+}
 
 export const CharacterEq = () => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
