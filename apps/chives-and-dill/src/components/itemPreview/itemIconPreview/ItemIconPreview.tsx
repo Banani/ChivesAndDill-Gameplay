@@ -3,7 +3,7 @@ import styles from '../itemIconPreview/ItemIconPreview.module.scss';
 import { ItemPreviewTooltip } from '../itemPreviewTooltip/ItemPreviewTooltip';
 import { ItemPreviewProps } from '../ItemPreview';
 
-export const ItemIconPreview: React.FC<ItemPreviewProps> = ({ itemData, highlight }) => {
+export const ItemIconPreview: React.FC<ItemPreviewProps> = ({ itemData, highlight, showMoney }) => {
     const [isTooltipVisible, setTooltipVisible] = useState(false);
 
     return (
@@ -16,6 +16,8 @@ export const ItemIconPreview: React.FC<ItemPreviewProps> = ({ itemData, highligh
             {isTooltipVisible ? 
                 <ItemPreviewTooltip 
                     itemData={itemData} 
+                    showMoney={showMoney}
+                    highlight={highlight}
                 />
             : null}
             {itemData.stack ? 

@@ -10,6 +10,7 @@ import { ChannelNumeratorContext } from '../contexts';
 import styles from './Chat.module.scss';
 import { MessageInput } from './components';
 import { ItemPreviewTooltip } from 'apps/chives-and-dill/src/components/itemPreview/itemPreviewTooltip/ItemPreviewTooltip';
+import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 
 const RangeChannelsMessageMapper = {
     say: 'says: ',
@@ -158,6 +159,8 @@ const ChatInternal = React.memo(({
                 <div className={styles.ItemPreviewTooltipContainer} ref={itemModalRef}>
                     <ItemPreviewTooltip 
                         itemData={itemModal}
+                        showMoney={true}
+                        highlight={ItemPreviewHighlight.full}
                     />
                 </div>
             : null}

@@ -12,8 +12,8 @@ export enum ItemPreviewHighlight {
 
 export interface ItemPreviewProps {
   itemData: EquipmentItem,
-  showMoney?: boolean,
-  highlight?: ItemPreviewHighlight | boolean,
+  showMoney: boolean,
+  highlight: ItemPreviewHighlight,
   handleItemClick?: () => void,
 };
 
@@ -26,7 +26,7 @@ export const ItemPreview: FunctionComponent<ItemPreviewProps> = ({ itemData, han
     >
       <ItemIconPreview 
         itemData={itemData} 
-        highlight={highlight === ItemPreviewHighlight.icon} 
+        highlight={ItemPreviewHighlight.icon} 
         showMoney={false} 
       />
       <div className={styles.ItemInfoWrapper}>
