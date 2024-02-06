@@ -11,151 +11,160 @@ import { SquareButton } from '../components/squareButton/SquareButton';
 import styles from './CharacterEq.module.scss';
 
 export interface Stats {
-    armor?: number;
-    stamina?: number;
-    strength?: number;
-    agility?: number;
-    intelect?: number;
-    spirit?: number;
+   armor?: number;
+   stamina?: number;
+   strength?: number;
+   agility?: number;
+   intelect?: number;
+   spirit?: number;
 }
 export interface EquipmentItem extends Stats {
-    id: string;
-    type: string;
-    name: string;
-    description: string;
-    image: string;
-    stack: number;
-    value: number;
-    slot: string;
+   id: string;
+   type: string;
+   name: string;
+   description: string;
+   image: string;
+   stack: number;
+   value: number;
+   slot: string;
 }
-  
+
 interface EquipmentBySlot {
-    [slot: string]: EquipmentItem;
+   [slot: string]: EquipmentItem;
 }
 
 export const CharacterEq = () => {
-    const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
-    const { data: equipment } = useEngineModuleReader(GlobalStoreModule.EQUIPMENT);
-    const { data: experience } = useEngineModuleReader(GlobalStoreModule.EXPERIENCE);
-    const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
-    const { data: characterClasses } = useEngineModuleReader(GlobalStoreModule.CHARACTER_CLASS);
-    const { data: attributes } = useEngineModuleReader(GlobalStoreModule.ATTRIBUTES);
-    const [modalStatus, setModalStatus] = useState(false);
-    const activePlayer = characters[activeCharacterId];
-    const level = experience[activeCharacterId].level;
-    const characterClass = characterClasses[activePlayer.characterClassId];
-    const activePlayerAttributes = attributes[activeCharacterId];
+   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
+   const { data: equipment } = useEngineModuleReader(GlobalStoreModule.EQUIPMENT);
+   const { data: experience } = useEngineModuleReader(GlobalStoreModule.EXPERIENCE);
+   const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+   const { data: characterClasses } = useEngineModuleReader(GlobalStoreModule.CHARACTER_CLASS);
+   const { data: attributes } = useEngineModuleReader(GlobalStoreModule.ATTRIBUTES);
+   const [modalStatus, setModalStatus] = useState(false);
+   const activePlayer = characters[activeCharacterId];
+   const level = experience[activeCharacterId].level;
+   const characterClass = characterClasses[activePlayer.characterClassId];
+   const activePlayerAttributes = attributes[activeCharacterId];
 
-    const keyBoardContext = useContext(KeyBoardContext);
-    const { callEngineAction } = useContext(EngineContext);
+   const keyBoardContext = useContext(KeyBoardContext);
+   const { callEngineAction } = useContext(EngineContext);
 
-    const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: _.map(equipment, (item) => item.itemTemplateId) ?? [] });
+   const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: _.map(equipment, (item) => item.itemTemplateId) ?? [] });
 
-    useEffect(() => {
-        keyBoardContext.addKeyHandler({
-           id: 'CharacterEq',
-           matchRegex: 'c',
-           keydown: () => setModalStatus(prevState => !prevState),
-        });
+   useEffect(() => {
+      keyBoardContext.addKeyHandler({
+         id: 'CharacterEq',
+         matchRegex: 'c',
+         keydown: () => setModalStatus((prevState) => !prevState),
+      });
 
-        return () => keyBoardContext.removeKeyHandler('CharacterEq');
-     }, []);
+      return () => keyBoardContext.removeKeyHandler('CharacterEq');
+   }, []);
 
-    const stats = _.map(activePlayerAttributes, (value, key) => {
-        return <p key={key}><span className={styles.ChangeColor}>{`${key}: `}</span>{value}</p>
-    });
+   const stats = _.map(activePlayerAttributes, (value, key) => {
+      return (
+         <p key={key}>
+            <span className={styles.ChangeColor}>{`${key}: `}</span>
+            {value}
+         </p>
+      );
+   });
 
-    const restructureItemsBySlot = (items) => {
-        const itemsBySlot = {};
-      
-        for (const itemId in items) {
-          const item = items[itemId];
-          const slot = item.slot;
-          itemsBySlot[slot] = item;
-        };
-        return itemsBySlot;
-    };
+   const restructureItemsBySlot = (items) => {
+      const itemsBySlot = {};
 
-    const getEqItemId = (itemInstanceId) => {
-        callEngineAction({
-            type: ItemClientActions.StripItem,
-            itemInstanceId
-        });
-    }
+      for (const itemId in items) {
+         const item = items[itemId];
+         const slot = item.slot;
+         itemsBySlot[slot] = item;
+      }
+      return itemsBySlot;
+   };
 
-    const renderItem = (itemSlot) => {
-        if(Object.keys(itemSlot).length) {
-            return (
-                <div className={styles.EqColumnsItem} onContextMenu={(e) => {
-                        e.preventDefault();
-                        getEqItemId(itemSlot.id);
-                    }}
-                >
-                    <ItemIconPreview itemData={itemSlot} highlight={ItemPreviewHighlight.icon} showMoney={true} />
-                </div>
-            );
-        } else {
-            return (
-                <div className={styles.EqColumnsItem}></div> 
-            );
-        };   
-    };
+   const getEqItemId = (itemInstanceId) => {
+      callEngineAction({
+         type: ItemClientActions.StripItem,
+         itemInstanceId,
+      });
+   };
 
-    const itemsBySlot: EquipmentBySlot = restructureItemsBySlot(itemTemplates);
-    
-    return (
-        modalStatus ? <div className={styles.CharacterEqContainer}>
-            <img className={styles.CharacterEqIcon} src={characterClass.iconImage}/>
-            <div className={styles.CharacterEqName}>{activePlayer.name}</div>
-            <div className={styles.ButtonContainer}>
-                <SquareButton onClick={() => setModalStatus(false)}><CloseIcon /></SquareButton>
+   const renderItem = (itemSlot) => {
+      if (Object.keys(itemSlot).length) {
+         return (
+            <div
+               className={styles.EqColumnsItem}
+               onContextMenu={(e) => {
+                  e.preventDefault();
+                  getEqItemId(itemSlot.id);
+               }}
+            >
+               <ItemIconPreview itemData={itemSlot} highlight={ItemPreviewHighlight.icon} showMoney={true} selectModal={'characterEq'} />
             </div>
-            <div className={styles.CharacterEqExpierence}>Level: {level}<span style={{'color': characterClass.color}}>{characterClass.name}</span></div>
-            { !_.isEmpty(itemsBySlot) ? <div className={styles.CharacterEqMain}>
-                <div className={styles.EquipmentContainer}>
-                    <div className={styles.EqColumns}>
-                        {renderItem(itemsBySlot.head)}
-                        {renderItem(itemsBySlot.neck)}
-                        {renderItem(itemsBySlot.shoulder)}
-                        {renderItem(itemsBySlot.chest)}
-                        {renderItem({})}
-                        {renderItem({})}
-                        {renderItem({})}
-                        {renderItem(itemsBySlot.wrist)}
-                    </div>
-                    <div className={styles.EqColumns}>
-                        {renderItem(itemsBySlot.hands)}
-                        {renderItem(itemsBySlot.waist)}
-                        {renderItem(itemsBySlot.legs)}
-                        {renderItem(itemsBySlot.feet)}
-                        {renderItem(itemsBySlot.finger)}
-                        {renderItem({})}
-                        {renderItem(itemsBySlot.trinket)}
-                        {renderItem({})}
-                    </div>
-                    <div className={styles.EqColumns + ' ' + styles.BottomColumn}>
-                        {renderItem({})}
-                        {renderItem({})}
-                    </div>
-                </div>
-                <div className={styles.AttributesContainer}>
-                    <div className={styles.EqLevelContainer}>
-                        <div className={styles.HeaderLevel + ' ' + styles.EqHeader}>Item Level</div>
-                        <div className={styles.NumberLevel}>0</div>
-                    </div>
-                    <div className={styles.EqAttributesContainer}>
-                        <div className={styles.HeaderAtt + ' ' + styles.EqHeader}>Attributes</div>
-                        <div className={styles.AttributesItems}>
-                            {stats}
-                        </div>
-                    </div>
-                    <div className={styles.EqEnhancementsContainer}>
-                        <div className={styles.HeaderEnh + ' ' + styles.EqHeader}>Enhancements</div>
-                        <div className={styles.EnhancementsItems}></div>
-                    </div>
-                </div>
+         );
+      } else {
+         return <div className={styles.EqColumnsItem}></div>;
+      }
+   };
+
+   const itemsBySlot: EquipmentBySlot = restructureItemsBySlot(itemTemplates);
+
+   return modalStatus ? (
+      <div className={styles.CharacterEqContainer}>
+         <img className={styles.CharacterEqIcon} src={characterClass.iconImage} />
+         <div className={styles.CharacterEqName}>{activePlayer.name}</div>
+         <div className={styles.ButtonContainer}>
+            <SquareButton onClick={() => setModalStatus(false)}>
+               <CloseIcon />
+            </SquareButton>
+         </div>
+         <div className={styles.CharacterEqExpierence}>
+            Level: {level}
+            <span style={{ color: characterClass.color }}>{characterClass.name}</span>
+         </div>
+         {!_.isEmpty(itemsBySlot) ? (
+            <div className={styles.CharacterEqMain}>
+               <div className={styles.EquipmentContainer}>
+                  <div className={styles.EqColumns}>
+                     {renderItem(itemsBySlot.head)}
+                     {renderItem(itemsBySlot.neck)}
+                     {renderItem(itemsBySlot.shoulder)}
+                     {renderItem(itemsBySlot.chest)}
+                     {renderItem({})}
+                     {renderItem({})}
+                     {renderItem({})}
+                     {renderItem(itemsBySlot.wrist)}
+                  </div>
+                  <div className={styles.EqColumns}>
+                     {renderItem(itemsBySlot.hands)}
+                     {renderItem(itemsBySlot.waist)}
+                     {renderItem(itemsBySlot.legs)}
+                     {renderItem(itemsBySlot.feet)}
+                     {renderItem(itemsBySlot.finger)}
+                     {renderItem({})}
+                     {renderItem(itemsBySlot.trinket)}
+                     {renderItem({})}
+                  </div>
+                  <div className={styles.EqColumns + ' ' + styles.BottomColumn}>
+                     {renderItem({})}
+                     {renderItem({})}
+                  </div>
+               </div>
+               <div className={styles.AttributesContainer}>
+                  <div className={styles.EqLevelContainer}>
+                     <div className={styles.HeaderLevel + ' ' + styles.EqHeader}>Item Level</div>
+                     <div className={styles.NumberLevel}>0</div>
+                  </div>
+                  <div className={styles.EqAttributesContainer}>
+                     <div className={styles.HeaderAtt + ' ' + styles.EqHeader}>Attributes</div>
+                     <div className={styles.AttributesItems}>{stats}</div>
+                  </div>
+                  <div className={styles.EqEnhancementsContainer}>
+                     <div className={styles.HeaderEnh + ' ' + styles.EqHeader}>Enhancements</div>
+                     <div className={styles.EnhancementsItems}></div>
+                  </div>
+               </div>
             </div>
-            : null }
-       </div> : null
-    )
+         ) : null}
+      </div>
+   ) : null;
 };
