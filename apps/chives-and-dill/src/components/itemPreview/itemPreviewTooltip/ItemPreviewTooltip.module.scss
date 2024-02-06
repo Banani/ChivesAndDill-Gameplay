@@ -1,8 +1,10 @@
 .ItemPreviewTooltip {
    position: absolute;
+   top: auto;
    bottom: 53px;
    left: 100%;
    width: 160px;
+   height: auto;
    margin: 0 auto;
    padding: 5px;
    background-color: rgba(0, 0, 0, 0.8);
