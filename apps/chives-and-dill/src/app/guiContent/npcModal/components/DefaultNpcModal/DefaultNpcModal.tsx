@@ -8,9 +8,7 @@ import React, { useContext, useEffect } from 'react';
 import { NpcModalView } from '../../NpcModal';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
 import styles from './DefaultNpcModal.module.scss';
-import questionMarkGray from '../../../../../assets/spritesheets/questNpc/questionMarkGray.png';
-import exclamationMark from '../../../../../assets/spritesheets/questNpc/exclamationMark.png';
-import questionMark from '../../../../../assets/spritesheets/questNpc/questionMark.png';
+
 interface DefaultNpcModalProps {
     openQuest: (questId: string) => void;
     setCurrentModal: any;
@@ -43,44 +41,25 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
         };
     }, []);
 
-    const questItem = (questId) => {
-        let icon;
-        if (questProgress?.[questId]) {
-            icon = <img src={questionMarkGray} alt="currentQuests" />;
-        }
-        if (!questProgress?.[questId]) {
-            icon = <img src={exclamationMark} alt="availableQuests" />;
-        }
-        if (questProgress?.[questId]?.allStagesCompleted) {
-            icon = <img src={questionMark} alt="completeQuest" />;
-        };
-    
-        return (
-            <div
-                key={questId}
-                className={styles.QuestName}
-                onClick={() => {
-                    openQuest(questId);
-                }}
-            >
-                {icon}
-                {questDefinition[questId]?.name}
-            </div>
-        );
-    };
+    const questItem = (questId) => (
+        <div
+            key={questId}
+            className={styles.questName}
+            onClick={() => {
+                openQuest(questId);
+            }}
+        >
+            {questDefinition[questId]?.name}
+        </div>
+    );
 
     const currentQuests = _.chain(activeNpcQuests)
-        .pickBy((_, questId) => questProgress?.[questId] && !questProgress?.[questId]?.allStagesCompleted)
+        .pickBy((_, questId) => questProgress?.[questId])
         .map((_, questId) => questItem(questId))
         .value();
 
     const availableQuests = _.chain(activeNpcQuests)
         .pickBy((_, questId) => !questProgress?.[questId])
-        .map((_, questId) => questItem(questId))
-        .value();
-
-    const completeQuest = _.chain(activeNpcQuests)
-        .pickBy((_, questId) => questProgress?.[questId]?.allStagesCompleted)
         .map((_, questId) => questItem(questId))
         .value();
 
@@ -95,14 +74,9 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
                         <div className={styles.TradeModal}>Show me your wares.</div>
                     </div>
                 ) : null}
-                {completeQuest.length > 0 ? <h3 className={styles.SectionHeader}>Complete Quests</h3> 
-                : null}
-                <div className={styles.SectionQuests}>{completeQuest}</div>
-                {currentQuests.length > 0 ? <h3 className={styles.SectionHeader}>Current Quests</h3>
-                : null} 
+                {currentQuests.length > 0 ? <h3 className={styles.SectionHeader}>Current Quests</h3> : null}
                 <div className={styles.SectionQuests}>{currentQuests}</div>
-                {availableQuests.length > 0 ? <h3 className={styles.SectionHeader}>Available Quests</h3> 
-                : null}
+                {availableQuests.length > 0 ? <h3 className={styles.SectionHeader}>Available Quests</h3> : null}
                 <div className={styles.SectionQuests}>{availableQuests}</div>
             </div>
         </div>

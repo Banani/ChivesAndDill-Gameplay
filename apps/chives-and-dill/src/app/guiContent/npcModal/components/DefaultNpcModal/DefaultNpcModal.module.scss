@@ -15,35 +15,25 @@
       flex: 1;
       margin-bottom: 30px;
 
-      .TradeModalContainer,
-      .SectionQuests {
+      .TradeModalContainer {
          display: flex;
          margin-top: 16px;
          align-items: center;
          cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
-         transition: all 0.3s;
-         
+
+         &:hover {
+            background-image: linear-gradient(to right, rgb(255, 250, 94, 0.1), rgb(255, 250, 94, 1), rgb(255, 250, 94, 0.1));
+         }
+
          img {
-            margin: 2px 10px 0;
+            margin-right: 5px;
+            margin-top: 2px;
             height: 16px;
          }
 
-         .TradeModal,
-         .QuestName {
-            width: 100%;
+         .TradeModal {
             font-size: 18px;
             cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
-         }
-      }
-
-      .TradeModalContainer:hover {
-         background-image: linear-gradient(to right, rgb(255, 250, 94, 0.1), rgb(255, 250, 94, 1), rgb(255, 250, 94, 0.1));
-      }
-
-      .SectionQuests {
-         flex-wrap: wrap;
-         .QuestName:hover {
-            background-image: linear-gradient(to right, rgb(255, 250, 94, 0.1), rgb(255, 250, 94, 1), rgb(255, 250, 94, 0.1));
          }
       }
 
@@ -55,6 +45,16 @@
          font-size: 22px;
          font-family: 'Morpheus';
          margin: 10px 0;
+      }
+
+      .SectionQuests {
+         div {
+            margin-bottom: 5px;
+            cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
+            &:hover {
+               background-image: linear-gradient(to right, rgb(255, 250, 94, 0.1), rgb(255, 250, 94, 1), rgb(255, 250, 94, 0.1));
+            }
+         }
       }
    }
 }
