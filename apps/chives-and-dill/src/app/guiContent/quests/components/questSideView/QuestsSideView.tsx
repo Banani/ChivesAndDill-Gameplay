@@ -25,27 +25,38 @@ export const QuestsSideView = () => {
       return (
          <div className={styles.questMainContainer} key={questId}>
             {currentQuestProgress.allStagesCompleted ? (
-               <div className={styles.questionMarkContainer}>
+               <div className={styles.questionMarkContainer} onClick={() => setSelectedQuestId(questId)}>
                   <img src={questionMark} className={styles.questionMark} />
                </div>
             ) : (
-               <div className={styles.questionMarkContainer}>{questsCounter}</div>
+               <div className={styles.questionMarkContainer} onClick={() => setSelectedQuestId(questId)}>
+                  {questsCounter}
+               </div>
             )}
             <div className={styles.questDefinitionContainer}>
                <div className={styles.questTitle} onClick={() => setSelectedQuestId(questId)}>
                   {questDefinition[questId]?.name}
                </div>
                <div className={styles.questDesc}>
-                  {_.map(questStage?.stageParts, (stagePart, stagePartId) => (
-                     <div className={currentQuestProgress.stagesProgress[currentQuestProgress.activeStage][stagePartId].isDone ? styles.stagePartDone : ''}>
-                        <QuestStagePart
-                           questStagePart={stagePart}
-                           stagePartProgress={currentQuestProgress.stagesProgress[currentQuestProgress.activeStage][stagePartId]}
-                        />
-                     </div>
-                  ))}
+                  {!currentQuestProgress.allStagesCompleted ? (
+                     _.map(questStage?.stageParts, (stagePart, stagePartId) => (
+                        <div>
+                           <QuestStagePart
+                              questStagePart={stagePart}
+                              stagePartProgress={currentQuestProgress.stagesProgress[currentQuestProgress.activeStage][stagePartId]}
+                           />
+                        </div>
+                     ))
+                  ) : (
+                     <div className={styles.stagePartDone}>Ready for turn-in</div>
+                  )}
                </div>
             </div>
+            {currentQuestProgress.allStagesCompleted ? (
+               <div className={styles.questionMarkRightContainer}>
+                  <img src={questionMark} className={styles.questionMark} />
+               </div>
+            ) : null}
          </div>
       );
    });
@@ -58,7 +69,6 @@ export const QuestsSideView = () => {
                {showQuestsView ? '-' : '+'}
             </button>
          </div>
-
          {showQuestsView ? renderQuests : null}
       </div>
    );
