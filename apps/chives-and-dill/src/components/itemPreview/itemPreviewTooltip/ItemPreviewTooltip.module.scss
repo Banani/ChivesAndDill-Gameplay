@@ -1,0 +1,32 @@
+.ItemPreviewTooltip {
+   position: absolute;
+   top: auto;
+   bottom: 53px;
+   left: 100%;
+   width: 160px;
+   height: auto;
+   margin: 0 auto;
+   padding: 5px;
+   background-color: rgba(0, 0, 0, 0.8);
+   border: 2px solid silver;
+   border-radius: 5px;
+   z-index: 10;
+   color: white;
+   text-transform: capitalize;
+   font-size: 15px;
+
+   .ItemPrevTooltipName {
+      font-size: 17px;
+      color: #70ce49;
+   }
+
+   .ItemPrevTooltipLevel {
+      color: gold;
+   }
+
+   .ItemPrevTooltipSlot,
+   .ItemPrevTooltipPrice {
+      display: flex;
+      justify-content: space-between;
+   }
+}

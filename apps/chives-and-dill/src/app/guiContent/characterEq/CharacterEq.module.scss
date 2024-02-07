@@ -1,176 +1,173 @@
 @use '../../../constants/Constants.module.scss' as variables;
 
 .CharacterEqContainer {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 800px;
-    height: variables.$modal-height;
-    background-image: url('../../../assets/spritesheets/backgrounds/characterView.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    z-index: 10;
-    color: white;
-    text-transform: capitalize;
+   position: absolute;
+   top: 50px;
+   left: 10px;
+   width: 800px;
+   height: variables.$modal-height;
+   background-image: url('../../../assets/spritesheets/backgrounds/characterView.png');
+   background-repeat: no-repeat;
+   background-size: contain;
+   z-index: 10;
+   color: white;
+   text-transform: capitalize;
 
-    .CharacterEqIcon {
-        position: absolute;
-        top: 9px;
-        left: 7px;
-        height: 83px;
-        width: 83px;
-        border-radius: 50%;
-    }
+   .CharacterEqIcon {
+      position: absolute;
+      top: 9px;
+      left: 7px;
+      height: 83px;
+      width: 83px;
+      border-radius: 50%;
+   }
 
-    .CharacterEqName{
-        position: absolute;
-        top: 28px;
-        left: 50%;
-        transform: translateX(-50%);
-        
-    }
+   .CharacterEqName {
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+   }
 
-    .ButtonContainer {
-        position: absolute;
-        top: 18px;
-        right: 2px;
-    }
+   .ButtonContainer {
+      position: absolute;
+      top: 18px;
+      right: 2px;
+   }
 
-    .CharacterEqExpierence {
-        position: absolute;
-        top: 70px;
-        left: 50%;
-        transform: translateX(-50%);
+   .CharacterEqExpierence {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
 
-        span {
-            margin-left: 5px;
-        }
-    }
+      span {
+         margin-left: 5px;
+      }
+   }
 
-    .CharacterEqMain {
-        display: flex;
-        position: absolute;
-        bottom: 20px;
-        left: 16px;
-        width: 100%;
-        height: 520px;
+   .CharacterEqMain {
+      display: flex;
+      position: absolute;
+      bottom: 20px;
+      left: 16px;
+      width: 100%;
+      height: 520px;
 
-        .EquipmentContainer {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            position: relative;
-            width: 60%;
+      .EquipmentContainer {
+         display: flex;
+         flex-wrap: wrap;
+         justify-content: space-between;
+         position: relative;
+         width: 60%;
 
-            .EqColumns {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                width: 14%;
-
-                .EqColumnsItem {
-                    margin-bottom: 10px;
-                    width: 50px;
-                    height: 50px;
-                }
-            }
-
-            .BottomColumn {
-                flex-direction: row;
-                justify-content: space-evenly;
-                position: absolute;
-                left: 50%;
-                bottom: 8px;
-                transform: translateX(-50%);
-                width: 25%;
-
-                .EqColumnsItem {
-                    margin-left: 4px;
-                }
-            }
-        }
-
-        .AttributesContainer {
+         .EqColumns {
             display: flex;
             flex-direction: column;
-            width: 38%;
-            height: 100%;
+            align-items: center;
+            width: 14%;
 
-            .EqHeader {
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
+            .EqColumnsItem {
+               margin-bottom: 10px;
+               width: 50px;
+               height: 50px;
+            }
+         }
+
+         .BottomColumn {
+            flex-direction: row;
+            justify-content: space-evenly;
+            position: absolute;
+            left: 50%;
+            bottom: 8px;
+            transform: translateX(-50%);
+            width: 25%;
+
+            .EqColumnsItem {
+               margin-left: 4px;
+            }
+         }
+      }
+
+      .AttributesContainer {
+         display: flex;
+         flex-direction: column;
+         width: 38%;
+         height: 100%;
+
+         .EqHeader {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+         }
+
+         .EqLevelContainer {
+            position: relative;
+            height: 20%;
+
+            .HeaderLevel {
+               top: 22%;
             }
 
-            .EqLevelContainer {
-                position: relative;
-                height: 20%;
+            .NumberLevel {
+               position: absolute;
+               top: 76%;
+               left: 50%;
+               transform: translate(-50%, -50%);
+               font-size: 20px;
+               padding: 7px 80px 7px 80px;
+               background: radial-gradient(circle, rgba(128, 111, 81, 0.5) 0%, rgba(176, 156, 82, 0) 100%);
+               border-width: 2px 0 2px 0;
+               border-style: solid;
+               border-image: radial-gradient(rgb(178, 177, 164), transparent) 1;
+            }
+         }
 
-                .HeaderLevel {
-                    top: 22%;
-                }
+         .EqAttributesContainer {
+            position: relative;
+            height: 26%;
 
-                .NumberLevel{
-                    position: absolute;
-                    top: 76%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    font-size: 20px;
-                    padding: 7px 80px 7px 80px;
-                    background: radial-gradient(circle, rgba(128, 111, 81, 0.5) 0%, rgba(176,156,82,0) 100%);
-                    border-width: 2px 0 2px 0;
-                    border-style: solid;
-                    border-image: radial-gradient(rgb(178, 177, 164), transparent) 1;
-                }
-                
+            .HeaderAtt {
+               top: 16%;
             }
 
-            .EqAttributesContainer {
-                position: relative;
-                height: 26%;
+            .AttributesItems {
+               display: flex;
+               flex-flow: column;
+               align-items: center;
+               position: absolute;
+               top: 85%;
+               left: 0;
+               transform: translateY(-50%);
+               width: 100%;
 
-                .HeaderAtt{
-                    top: 16%;
-                }
+               p {
+                  display: flex;
+                  justify-content: space-between;
+                  margin: 0;
+                  width: 80%;
 
-                .AttributesItems{
-                    display: flex;
-                    flex-flow: column;
-                    align-items: center;
-                    position: absolute;
-                    top: 85%;
-                    left: 0;
-                    transform: translateY(-50%);
-                    width: 100%;
-
-                    p {
-                        display: flex;
-                        justify-content: space-between;
-                        margin: 0;
-                        width: 80%;
-
-                        .ChangeColor {
-                            color: gold;
-                        }
-                    }
-                    p:nth-child(2n) {
-                        background: radial-gradient(circle, rgba(128, 111, 81, 0.5) 0%, rgba(176,156,82,0) 100%);
-                        border-width: 2px 0 2px 0;
-                        border-style: solid;
-                        border-image: radial-gradient(rgb(178, 177, 164), transparent) 1;
-                    }
-                }
+                  .ChangeColor {
+                     color: gold;
+                  }
+               }
+               p:nth-child(2n) {
+                  background: radial-gradient(circle, rgba(128, 111, 81, 0.5) 0%, rgba(176, 156, 82, 0) 100%);
+                  border-width: 2px 0 2px 0;
+                  border-style: solid;
+                  border-image: radial-gradient(rgb(178, 177, 164), transparent) 1;
+               }
             }
+         }
 
-            .EqEnhancementsContainer {
-                position: relative;
-                height: 30%;
+         .EqEnhancementsContainer {
+            position: relative;
+            height: 30%;
 
-                .HeaderEnh {
-                    top: 7%;
-                }
+            .HeaderEnh {
+               top: 7%;
             }
-
-        }
-    }
+         }
+      }
+   }
 }
