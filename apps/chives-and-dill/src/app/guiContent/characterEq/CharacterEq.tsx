@@ -98,7 +98,7 @@ export const CharacterEq = () => {
                   getEqItemId(itemSlot.id);
                }}
             >
-               <ItemIconPreview itemData={itemSlot} highlight={ItemPreviewHighlight.icon} showMoney={true} selectModal={'characterEq'} />
+               <ItemIconPreview itemData={itemSlot} highlight={ItemPreviewHighlight.icon} showMoney={true} showStackSize={false} />
             </div>
          );
       } else {
