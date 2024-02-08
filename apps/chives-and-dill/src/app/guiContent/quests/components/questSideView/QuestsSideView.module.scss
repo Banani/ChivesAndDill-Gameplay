@@ -18,7 +18,6 @@
       }
 
       .questViewToggle {
-         color: rgb(168, 0, 0);
          padding: 0.3em;
          height: 25px;
          width: 25px;
@@ -28,15 +27,37 @@
          display: flex;
          align-items: center;
          justify-content: center;
+         cursor: url(../../../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
 
          &:focus {
             outline: 0;
+         }
+
+         .ToggleTriangleUp {
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 5px solid #ffc506;
+         }
+         .ToggleTriangleDown {
+            border-bottom: none;
+            border-top: 5px solid #ffc506;
          }
       }
    }
 
    .questMainContainer {
       display: flex;
+      position: relative;
+
+      &:hover .questionMarkContainer {
+         box-shadow: inset 0 0 5px #ffc506;
+      }
+
+      &:hover .questDefinitionContainer .questTitle {
+         opacity: 0.8;
+      }
 
       .questionMarkContainer {
          margin-top: 10px;
@@ -50,10 +71,7 @@
          text-align: center;
          line-height: 15px;
          font-size: 10px;
-
-         &:hover {
-            box-shadow: inset 0 0 5px #ffc506;
-         }
+         transition: all 0.3s;
 
          .questionMark {
             height: 10px;
@@ -67,17 +85,27 @@
 
          .questTitle {
             color: #ffc506;
-
-            &:hover {
-               color: #c09508;
-            }
+            transition: all 0.3s;
          }
          .questDesc {
             color: rgb(241, 241, 241);
 
             .stagePartDone {
                color: grey;
+               &::before {
+                  content: '-';
+                  margin-right: 2px;
+               }
             }
+         }
+      }
+      .questionMarkRightContainer {
+         position: absolute;
+         right: 15px;
+         top: 15px;
+         .questionMark {
+            height: 15px;
+            width: auto;
          }
       }
    }
