@@ -11,6 +11,7 @@ import styles from './DefaultNpcModal.module.scss';
 import questionMarkGray from '../../../../../assets/spritesheets/questNpc/questionMarkGray.png';
 import exclamationMark from '../../../../../assets/spritesheets/questNpc/exclamationMark.png';
 import questionMark from '../../../../../assets/spritesheets/questNpc/questionMark.png';
+import tradeIcon from '../../../../../assets/spritesheets/icons/tradeIcon.png';
 
 interface DefaultNpcModalProps {
    openQuest: (questId: string) => void;
@@ -40,11 +41,11 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
       });
 
       return () => {
-         keyBoardContext.removeKeyHandler('AvailableQuestNpcModalEscape');
+         keyBoardContext.removeKeyHandler('DefaultNpcModalEscape');
       };
    }, []);
 
-   const questItem = (questId) => {
+   const quest = (questId) => {
       let icon;
       if (questProgress?.[questId]) {
          icon = <img src={questionMarkGray} alt="currentQuests" />;
@@ -71,18 +72,27 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
 
    const currentQuests = _.chain(activeNpcQuests)
       .pickBy((_, questId) => questProgress?.[questId] && !questProgress?.[questId]?.allStagesCompleted)
-      .map((_, questId) => questItem(questId))
+      .map((_, questId) => quest(questId))
       .value();
 
    const availableQuests = _.chain(activeNpcQuests)
       .pickBy((_, questId) => !questProgress?.[questId])
-      .map((_, questId) => questItem(questId))
+      .map((_, questId) => quest(questId))
       .value();
 
    const completeQuest = _.chain(activeNpcQuests)
       .pickBy((_, questId) => questProgress?.[questId]?.allStagesCompleted)
-      .map((_, questId) => questItem(questId))
+      .map((_, questId) => quest(questId))
       .value();
+
+   const renderSectionQuests = (header, quests) => {
+      return quests.length ? (
+         <>
+            <h3 className={styles.SectionHeader}>{header}</h3>
+            <div className={styles.SectionQuests}>{quests}</div>
+         </>
+      ) : null;
+   };
 
    return activeNpc ? (
       <div className={styles.NpcModal}>
@@ -91,16 +101,13 @@ export const DefaultNpcModal: FunctionComponent<DefaultNpcModalProps> = ({ openQ
             <div className={styles.SectionText}>Cześć!</div>
             {!_.isEmpty(activeNpc.stock) ? (
                <div className={styles.TradeModalContainer} onClick={() => setCurrentModal(NpcModalView.Trade)}>
-                  <img src="../../../../../assets/spritesheets/icons/tradeIcon.png" />
+                  <img src={tradeIcon} />
                   <div className={styles.TradeModal}>Show me your wares.</div>
                </div>
             ) : null}
-            {completeQuest.length ? <h3 className={styles.SectionHeader}>Complete Quests</h3> : null}
-            <div className={styles.SectionQuests}>{completeQuest}</div>
-            {currentQuests.length ? <h3 className={styles.SectionHeader}>Current Quests</h3> : null}
-            <div className={styles.SectionQuests}>{currentQuests}</div>
-            {availableQuests.length ? <h3 className={styles.SectionHeader}>Available Quests</h3> : null}
-            <div className={styles.SectionQuests}>{availableQuests}</div>
+            {renderSectionQuests('Complete Quests', completeQuest)}
+            {renderSectionQuests('Current Quests', currentQuests)}
+            {renderSectionQuests('Available Quests', availableQuests)}
          </div>
       </div>
    ) : null;
