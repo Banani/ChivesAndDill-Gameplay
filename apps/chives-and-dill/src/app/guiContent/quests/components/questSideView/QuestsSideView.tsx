@@ -66,7 +66,7 @@ export const QuestsSideView = () => {
          <div className={styles.sectionTitleContainer}>
             <div className={styles.sectionTitle}>Quests</div>
             <button className={styles.questViewToggle} onClick={() => updateShowQuestsView(!showQuestsView)}>
-               {showQuestsView ? '-' : '+'}
+               <span className={`${styles.ToggleTriangleUp} ${showQuestsView ? '' : styles.ToggleTriangleDown}`}></span>
             </button>
          </div>
          {showQuestsView ? renderQuests : null}
