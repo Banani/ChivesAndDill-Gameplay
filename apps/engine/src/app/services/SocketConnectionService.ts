@@ -1,11 +1,11 @@
-import { PlayerClientActions } from '@bananos/types';
+import { CharacterClientActions, ChatChannelClientActions, NpcClientActions, PlayerClientActions } from '@bananos/types';
 import * as _ from 'lodash';
-import { filter, forEach, mergeWith } from 'lodash';
+import { filter, find, forEach, mergeWith } from 'lodash';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
 import { Notifier } from '../Notifier';
 import { CreateNewPlayerEvent, NewPlayerCreatedEvent, PlayerDisconnectedEvent, PlayerEngineEvents } from '../modules/PlayerModule/Events';
-import type { EngineEventHandler } from '../types';
+import type { EngineEvent, EngineEventHandler } from '../types';
 
 function customizer(objValue, srcValue) {
     if (_.isArray(objValue)) {
@@ -24,7 +24,7 @@ export class SocketConnectionService extends EventParser {
         this.notifiers = notifiers;
 
         this.eventsToHandlersMap = {
-            [PlayerEngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated,
+            [PlayerEngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated
         };
     }
 
@@ -71,6 +71,33 @@ export class SocketConnectionService extends EventParser {
 
     handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event, services }) => {
         this.sockets[event.playerId] = event.socket;
+
+        // Upewnic sie ze ktos zlosliwy nie rzuci internalowego eventu
+        event.socket.onAny((type, args) => {
+
+            if (type != CharacterClientActions.PlayerStartMove &&
+                type != CharacterClientActions.PlayerStopMove &&
+                type != PlayerClientActions.CreatePlayerCharacter &&
+                type != ChatChannelClientActions.CreateChatChannel &&
+                type != ChatChannelClientActions.DeleteChatChannel &&
+                type != ChatChannelClientActions.AddPlayerCharacterToChatChannel &&
+                type != NpcClientActions.OpenNpcConversationDialog &&
+                type != NpcClientActions.CloseNpcConversationDialog &&
+                type != NpcClientActions.BuyItemFromNpc &&
+                type != NpcClientActions.SellItemToNpc) {
+                return;
+            }
+
+            const playerCharacter = find(services.playerCharacterService.getAllCharacters(), playerCharacter => playerCharacter.ownerId === event.playerId);
+            // TODO: Fajnie by było sprawdzic czy wszystkie wymagane pola sa uzupełnione.
+            this.engineEventCrator.asyncCeateEvent<EngineEvent>({
+                type,
+                // Create Character nie ma ustawionego requestingCharacterId
+                ownerId: event.playerId,
+                requestingCharacterId: playerCharacter?.id,
+                ...args,
+            });
+        });
 
         event.socket.on('disconnect', () => {
             this.engineEventCrator.asyncCeateEvent<PlayerDisconnectedEvent>({

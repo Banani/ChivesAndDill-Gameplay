@@ -1,3 +1,4 @@
+import { EngineActionsMap } from './EngineActions';
 import { EngineEventCrator } from './EngineEventsCreator';
 import { CharacterEngineEventsMap } from './modules/CharacterModule/Events';
 import { ChatEngineEventsMap } from './modules/ChatModule/Events';
@@ -15,6 +16,7 @@ import { Services } from './types/Services';
 export abstract class EventParser {
     engineEventCrator: EngineEventCrator;
     eventsToHandlersMap: Partial<
+        EngineActionsMap &
         EngineEventsMap &
         QuestEngineEventsMap &
         MonsterEngineEventsMap &

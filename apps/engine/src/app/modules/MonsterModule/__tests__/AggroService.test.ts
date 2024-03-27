@@ -98,8 +98,10 @@ describe('Aggro service', () => {
 
         engineManager.callPlayerAction(players['1'].socketId, {
             type: CharacterClientActions.PlayerStartMove,
-            x: 1,
-            source: 'D',
+            movement: {
+                x: 1,
+                source: 'D',
+            }
         });
 
         times(12, () => {
@@ -128,7 +130,7 @@ describe('Aggro service', () => {
 
     it('Monster should go back to his respawn when player character ran to far away', () => {
         const startingLocation = { x: 52, y: 100 };
-        const { players, engineManager, monsterTemplates } = setupEngine({
+        const { players, engineManager } = setupEngine({
             startingLocation,
             monsterTemplates: { '1': { sightRange: 2, movementSpeed: 1, desiredRange: 1 } },
         });
@@ -137,8 +139,10 @@ describe('Aggro service', () => {
 
         engineManager.callPlayerAction(players['1'].socketId, {
             type: CharacterClientActions.PlayerStartMove,
-            x: -1,
-            source: 'D',
+            movement: {
+                x: -1,
+                source: 'D',
+            }
         });
 
         engineManager.doEngineAction();

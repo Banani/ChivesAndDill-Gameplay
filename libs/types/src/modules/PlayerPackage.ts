@@ -23,7 +23,7 @@ export interface CharacterClassSpellAssignment {
 }
 
 export enum PlayerClientActions {
-    CreateCharacter = "CreateCharacter",
+    CreatePlayerCharacter = "CreatePlayerCharacter",
     OpenLoot = 'OpenLoot',
     CloseLoot = 'CloseLoot',
     PickItemFromCorpse = 'PickItemFromCorpse',
@@ -36,7 +36,7 @@ export enum PlayerClientActions {
 }
 
 export interface CreateCharacter {
-    type: PlayerClientActions.CreateCharacter;
+    type: PlayerClientActions.CreatePlayerCharacter;
     name: string;
     characterClassId: string;
 }

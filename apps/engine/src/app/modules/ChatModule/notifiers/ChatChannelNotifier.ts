@@ -5,19 +5,16 @@ import { EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
-    AddPlayerCharacterToChatEvent,
     ChangeChatChannelOwnerEvent,
     CharacterAddedToChatEvent,
     ChatChannelCreatedEvent,
     ChatChannelDeletedEvent,
     ChatChannelOwnerChangedEvent,
     ChatEngineEvents,
-    CreateChatChannelEvent,
-    DeleteChatChannelEvent,
     LeaveChatChannelEvent,
     PlayerCharacterRemovedFromChatChannelEvent,
     PlayerLeftChatChannelEvent,
-    RemovePlayerCharacterFromChatChannelEvent,
+    RemovePlayerCharacterFromChatChannelEvent
 } from '../Events';
 
 export class ChatChannelNotifier extends Notifier<ChatChannel> {
@@ -40,7 +37,7 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
             return;
         }
 
-        this.multicastMultipleObjectsUpdate([{ receiverId, objects: { [event.channelId]: event.chatChannel } }]);
+        this.multicastMultipleObjectsUpdate([{ receiverId, objects: { [event.chatChannel.id]: event.chatChannel } }]);
     };
 
     handleChatChannelDeleted: EngineEventHandler<ChatChannelDeletedEvent> = ({ event, services }) => {
@@ -66,37 +63,6 @@ export class ChatChannelNotifier extends Notifier<ChatChannel> {
 
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
         const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
-
-        currentSocket.on(ChatChannelClientActions.CreateChatChannel, ({ chatChannelName }) => {
-            this.engineEventCrator.asyncCeateEvent<CreateChatChannelEvent>({
-                type: ChatEngineEvents.CreateChatChannel,
-                requestingCharacterId: event.playerCharacter.id,
-                chatChannel: {
-                    name: chatChannelName,
-                    characterOwnerId: event.playerCharacter.id,
-                    membersIds: {},
-                },
-            });
-        });
-
-        currentSocket.on(ChatChannelClientActions.DeleteChatChannel, ({ chatChannelId }) => {
-            const chatChannel = services.chatChannelService.getChatChannelById(chatChannelId);
-
-            this.engineEventCrator.asyncCeateEvent<DeleteChatChannelEvent>({
-                type: ChatEngineEvents.DeleteChatChannel,
-                requestingCharacterId: event.playerCharacter.id,
-                chatChannel,
-            });
-        });
-
-        currentSocket.on(ChatChannelClientActions.InvitePlayerCharacterToChatChannel, ({ chatChannelId, characterName }) => {
-            this.engineEventCrator.asyncCeateEvent<AddPlayerCharacterToChatEvent>({
-                type: ChatEngineEvents.AddPlayerCharacterToChat,
-                requestingCharacterId: event.playerCharacter.id,
-                characterName,
-                chatChannelId,
-            });
-        });
 
         currentSocket.on(ChatChannelClientActions.RemovePlayerCharacterFromChatChannel, ({ chatChannelId, characterId }) => {
             this.engineEventCrator.asyncCeateEvent<RemovePlayerCharacterFromChatChannelEvent>({

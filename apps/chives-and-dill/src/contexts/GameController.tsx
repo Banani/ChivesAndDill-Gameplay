@@ -46,7 +46,7 @@ export const GameController = ({ children }) => {
         keyBoardContext.addKeyHandler({
             id: 'gameControllerWASD',
             matchRegex: '[wasd]',
-            keydown: (key) => callEngineAction({ type: CharacterClientActions.PlayerStartMove, source: key, ...keyMovementMap[key] }),
+            keydown: (key) => callEngineAction({ type: CharacterClientActions.PlayerStartMove, movement: { source: key, ...keyMovementMap[key] } }),
             keyup: (key) => callEngineAction({ type: CharacterClientActions.PlayerStopMove, source: key }),
         });
 

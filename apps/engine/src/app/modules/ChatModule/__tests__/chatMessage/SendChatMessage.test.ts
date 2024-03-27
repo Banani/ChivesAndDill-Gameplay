@@ -29,7 +29,7 @@ const setupEngine = (props: Partial<setupEngineProps> = {}) => {
     const recentlyCreatedChatChannelId = Object.keys(dataPackage.chatChannel.data)[0];
 
     dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-        type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+        type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
         chatChannelId: recentlyCreatedChatChannelId,
         characterName: players['2'].character.name,
     });
@@ -206,7 +206,7 @@ describe('Chat module - Send chat message action', () => {
         const secChatChannelId = Object.keys(dataPackage.chatChannel.data)[0];
 
         engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             characterName: players['1'].character.name,
             chatChannelId: secChatChannelId,
         });

@@ -1,7 +1,7 @@
 import { Location } from "../shared";
 
 export interface ChatChannel {
-    id?: string;
+    id: string;
     name: string;
     characterOwnerId: string | null;
     membersIds: Record<string, boolean>;
@@ -51,13 +51,14 @@ export interface ChannelChatMessage extends CommonChatMessage {
 export type ChatMessage = ChannelChatMessage | RangeChatMessage | QuoteChatMessage | SystemChatMessage;
 
 export enum ChatChannelClientActions {
-    CreateChatChannel = 'CreateChatChannel',
-    DeleteChatChannel = 'DeleteChatChannel',
-    InvitePlayerCharacterToChatChannel = 'InvitePlayerCharacterToChatChannel',
-    RemovePlayerCharacterFromChatChannel = 'RemovePlayerCharacterFromChatChannel',
-    LeaveChatChannel = 'LeaveChatChannel',
-    ChangeChatChannelOwner = 'ChangeChatChannelOwner',
-    SendChatMessage = 'SendChatMessage',
+    CreateChatChannel = 'Player_CreateChatChannel',
+    DeleteChatChannel = 'Player_DeleteChatChannel',
+    AddPlayerCharacterToChatChannel = 'Player_InvitePlayerCharacterToChatChannel',
+    RemovePlayerCharacterFromChatChannel = 'Player_RemovePlayerCharacterFromChatChannel',
+    LeaveChatChannel = 'Player_LeaveChatChannel',
+    ChangeChatChannelOwner = 'Player_ChangeChatChannelOwner',
+
+    SendChatMessage = 'Player_SendChatMessage',
 }
 
 export interface CreateChatChannel {
@@ -70,8 +71,8 @@ export interface DeleteChatChannel {
     chatChannelId: string;
 }
 
-export interface InvitePlayerCharacterToChatChannel {
-    type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel;
+export interface AddPlayerCharacterToChatChannel {
+    type: ChatChannelClientActions.AddPlayerCharacterToChatChannel;
     chatChannelId: string;
     characterName: string;
 }
@@ -103,7 +104,7 @@ export interface SendChatMessage {
 export type EngineChatAction =
     | CreateChatChannel
     | DeleteChatChannel
-    | InvitePlayerCharacterToChatChannel
+    | AddPlayerCharacterToChatChannel
     | RemovePlayerCharacterFromChatChannel
     | LeaveChatChannel
     | ChangeChatChannelOwner

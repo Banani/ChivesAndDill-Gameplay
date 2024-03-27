@@ -163,6 +163,7 @@ export class EngineManager {
     private playerSockets = {};
     // socketId => action_name = callback
     private playerActionHandlers: Record<string, Partial<Record<EngineClientAction, (a?: any) => {}>>> = {};
+    private allPlayerActionsHandler = {};
 
     constructor({ watchForErrors } = { watchForErrors: false }) {
         this.watchForErrors = watchForErrors;
@@ -203,6 +204,10 @@ export class EngineManager {
                 on: jest.fn().mockImplementation((action, callback) => {
                     this.playerActionHandlers[id][action] = callback;
                 }),
+                onAny: jest.fn().mockImplementation((callback) => {
+                    // this.playerActionHandlers[id][action] = callback;
+                    this.allPlayerActionsHandler[id] = callback;
+                }),
             };
 
             this.ioHandler['connection'](this.playerSockets[id]);
@@ -220,24 +225,26 @@ export class EngineManager {
         }
 
         if (!this.playerActionHandlers[playerId][action.type]) {
-            throw new Error(`Action: [${action.type}] is not handled by Engine for playerId: [${playerId}]`);
+            this.allPlayerActionsHandler[playerId](action.type, action);
+            // throw new Error(`Action: [${action.type}] is not handled by Engine for playerId: [${playerId}]`);
+        } else {
+            this.playerActionHandlers[playerId][action.type](action);
         }
 
-        this.playerActionHandlers[playerId][action.type](action);
         this.doEngineAction();
         return this.getLatestPlayerDataPackage(playerId);
     }
 
     preparePlayerWithCharacter: (character: { name: string; characterClassId?: string }) => PlayerCharacterForTesting = (character) => {
         const id = this.addNewPlayer();
-        this.callPlayerAction(id, { type: PlayerClientActions.CreateCharacter, characterClassId: '1', ...character });
+        this.callPlayerAction(id, { type: PlayerClientActions.CreatePlayerCharacter, characterClassId: '1', ...character });
         const dataPackage = this.getLatestPlayerDataPackage(id);
 
         return {
             socketId: id,
             character: dataPackage.character.data[dataPackage.activeCharacter.data.activeCharacterId],
-            characterId: dataPackage.activeCharacter.data.activeCharacterId,
-        };
+            characterId: dataPackage.activeCharacter.data.activeCharacterId as unknown as PlayerCharacter,
+        } as any;
     }
 
     getLatestPlayerDataPackage(playerId: string): EnginePackage {

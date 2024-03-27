@@ -1,4 +1,4 @@
-import { CharacterDirection, Location } from '@bananos/types';
+import { CharacterDirection, Location, PlayerMovement } from '@bananos/types';
 import { EngineEvents } from '../../EngineEvents';
 import { CharacterEngineEvents } from '../../modules/CharacterModule/Events';
 import { ChatEngineEvents } from '../../modules/ChatModule/Events';
@@ -13,8 +13,7 @@ import { SpellEngineEvents } from '../../modules/SpellModule/Events';
 import { CharacterUnion } from '../CharacterUnion';
 import { Services } from '../Services';
 
-export interface EngineEvent {
-    type:
+type EngineEventType =
     | EngineEvents
     | QuestEngineEvents
     | MonsterEngineEvents
@@ -27,6 +26,9 @@ export interface EngineEvent {
     | MapEvents
     | GroupEngineEvents;
 
+export interface EngineEvent {
+    type: EngineEventType;
+    ownerId?: string;
     requestingCharacterId?: string;
 }
 
@@ -41,14 +43,7 @@ export interface PlayerStartedMovementEvent extends EngineEvent {
 }
 
 export interface PlayerTriesToStartedMovementEvent extends EngineEvent {
-    characterId: string;
     movement: PlayerMovement;
-}
-
-export interface PlayerMovement {
-    y?: number;
-    x?: number;
-    source: string;
 }
 
 export interface PlayerStopedAllMovementVectorsEvent extends EngineEvent {
@@ -62,10 +57,7 @@ export interface PlayerMovedEvent extends EngineEvent {
 }
 
 export interface PlayerStopedMovementVectorEvent extends EngineEvent {
-    characterId: string;
-    movement: {
-        source: string;
-    };
+    source: string;
 }
 
 export interface CreatePathEvent extends EngineEvent {
@@ -107,6 +99,7 @@ export interface CancelScheduledActionEvent extends EngineEvent {
 }
 
 export type EngineEventHandler<T> = ({ event, services }: { event: T; services: Services }) => void;
+export type EngineActionHandler<T> = ({ event, services }: { event: T & { requestingCharacterId: string, ownerId: string }; services: Services }) => void;
 
 export interface EngineEventsMap {
     [EngineEvents.CharacterDied]: EngineEventHandler<CharacterDiedEvent>;
@@ -119,6 +112,7 @@ export interface EngineEventsMap {
     [EngineEvents.CreatePath]: EngineEventHandler<CreatePathEvent>;
     [EngineEvents.UpdatePath]: EngineEventHandler<UpdatePathEvent>;
     [EngineEvents.DeletePath]: EngineEventHandler<DeletePathEvent>;
+
     [EngineEvents.ScheduleAction]: EngineEventHandler<ScheduleActionEvent>;
     [EngineEvents.ScheduleActionTriggered]: EngineEventHandler<ScheduleActionTriggeredEvent>;
     [EngineEvents.ScheduleActionFinished]: EngineEventHandler<ScheduleActionFinishedEvent>;

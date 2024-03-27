@@ -2,7 +2,6 @@ import { ChannelType, ChatChannel, Location } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 
 export enum ChatEngineEvents {
-    CreateChatChannel = 'CreateChatChannel',
     ChatChannelCreated = 'ChatChannelCreated',
 
     DeleteChatChannel = 'DeleteChatChannel',
@@ -25,15 +24,9 @@ export enum ChatEngineEvents {
     ChatMessagesDeleted = 'ChatMessagesDeleted',
 }
 
-export interface CreateChatChannelEvent extends EngineEvent {
-    type: ChatEngineEvents.CreateChatChannel;
-    chatChannel: ChatChannel;
-}
-
 export interface ChatChannelCreatedEvent extends EngineEvent {
     type: ChatEngineEvents.ChatChannelCreated;
     chatChannel: ChatChannel;
-    channelId: string;
 }
 
 export interface DeleteChatChannelEvent extends EngineEvent {
@@ -50,7 +43,7 @@ export interface ChatChannelDeletedEvent extends EngineEvent {
 export interface AddPlayerCharacterToChatEvent extends EngineEvent {
     type: ChatEngineEvents.AddPlayerCharacterToChat;
     chatChannelId: string;
-    characterName: string;
+    characterId: string;
 }
 
 export interface CharacterAddedToChatEvent extends EngineEvent {
@@ -144,7 +137,6 @@ export interface ChatMessagesDeletedEvent extends EngineEvent {
 }
 
 export interface ChatEngineEventsMap {
-    [ChatEngineEvents.CreateChatChannel]: EngineEventHandler<CreateChatChannelEvent>;
     [ChatEngineEvents.ChatChannelCreated]: EngineEventHandler<ChatChannelCreatedEvent>;
 
     [ChatEngineEvents.DeleteChatChannel]: EngineEventHandler<DeleteChatChannelEvent>;

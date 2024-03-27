@@ -1,7 +1,8 @@
+import { CharacterClientActions, PlayerStartMove, PlayerStopMove } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EngineEventCrator } from '../../../EngineEventsCreator';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler, PlayerStartedMovementEvent, PlayerStopedMovementVectorEvent, PlayerTriesToStartedMovementEvent } from '../../../types';
+import { EngineActionHandler, PlayerStartedMovementEvent } from '../../../types';
 import { PlayersMovement } from '../engines';
 
 export class CharacterMovementService extends EventParser {
@@ -11,8 +12,8 @@ export class CharacterMovementService extends EventParser {
         super();
         this.movementEngine = movementEngine;
         this.eventsToHandlersMap = {
-            [EngineEvents.PlayerTriesToStartedMovement]: this.PlayerTriesToStartedMovement,
-            [EngineEvents.PlayerStopedMovementVector]: this.handlePlayerStopedMovementVector,
+            [CharacterClientActions.PlayerStartMove]: this.handlePlayerStartMove,
+            [CharacterClientActions.PlayerStopMove]: this.handlePlayerStopMove,
         };
     }
 
@@ -21,18 +22,18 @@ export class CharacterMovementService extends EventParser {
         this.movementEngine.init(engineEventCrator, services);
     }
 
-    PlayerTriesToStartedMovement: EngineEventHandler<PlayerTriesToStartedMovementEvent> = ({ event, services }) => {
-        if (services.characterService.getCharacterById(event.characterId)) {
-            this.movementEngine.startNewMovement(event.characterId, event.movement);
+    handlePlayerStartMove: EngineActionHandler<PlayerStartMove> = ({ event, services }) => {
+        if (services.characterService.getCharacterById(event.requestingCharacterId)) {
+            this.movementEngine.startNewMovement(event.requestingCharacterId, event.movement);
 
             this.engineEventCrator.asyncCeateEvent<PlayerStartedMovementEvent>({
                 type: EngineEvents.PlayerStartedMovement,
-                characterId: event.characterId,
+                characterId: event.requestingCharacterId,
             });
         }
     };
 
-    handlePlayerStopedMovementVector: EngineEventHandler<PlayerStopedMovementVectorEvent> = ({ event }) => {
-        this.movementEngine.stopMovement(event.characterId, event.movement);
+    handlePlayerStopMove: EngineActionHandler<PlayerStopMove> = ({ event }) => {
+        this.movementEngine.stopMovement(event.requestingCharacterId, event.source);
     };
 }

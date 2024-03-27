@@ -35,7 +35,7 @@ export const ClassesModal = () => {
         (e) => {
             e.preventDefault();
             callEngineAction({
-                type: PlayerClientActions.CreateCharacter,
+                type: PlayerClientActions.CreatePlayerCharacter,
                 name: nick,
                 characterClassId: selectedCharacterClass,
             });

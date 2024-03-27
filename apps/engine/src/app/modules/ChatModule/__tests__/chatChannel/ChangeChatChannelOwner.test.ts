@@ -28,7 +28,7 @@ describe('Chat channel - change chat channel owner', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
@@ -48,7 +48,7 @@ describe('Chat channel - change chat channel owner', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
@@ -78,13 +78,13 @@ describe('Chat channel - change chat channel owner', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['3'].character.name,
         });
@@ -102,7 +102,7 @@ describe('Chat channel - change chat channel owner', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });

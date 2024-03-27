@@ -52,8 +52,7 @@ describe('CloseNpcConversationDialog action', () => {
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientActions.CloseNpcConversationDialog,
-            npcId,
+            type: NpcClientActions.CloseNpcConversationDialog
         });
 
         checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
@@ -65,11 +64,9 @@ describe('CloseNpcConversationDialog action', () => {
         const { players, engineManager } = setupEngine();
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: NpcClientActions.CloseNpcConversationDialog,
-            npcId,
+            type: NpcClientActions.CloseNpcConversationDialog
         });
 
         checkIfErrorWasHandled(CURRENT_MODULE, 'You are not talking with anyone.', dataPackage);

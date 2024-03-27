@@ -6,7 +6,6 @@ export enum PlayerEngineEvents {
     CreateNewPlayer = 'CreateNewPlayer',
     NewPlayerCreated = 'NewPlayerCreated',
     PlayerDisconnected = 'PlayerDisconnected',
-    CreatePlayerCharacter = 'CreatePlayerCharacter',
     PlayerCharacterCreated = 'PlayerCharacterCreated',
 
     PlayerTriesToOpenLoot = 'PlayerTriesToOpenLoot',
@@ -34,13 +33,6 @@ export interface NewPlayerCreatedEvent extends EngineEvent {
 export interface PlayerDisconnectedEvent extends EngineEvent {
     type: PlayerEngineEvents.PlayerDisconnected;
     playerId: string;
-}
-
-export interface CreatePlayerCharacterEvent extends EngineEvent {
-    type: PlayerEngineEvents.CreatePlayerCharacter;
-    playerOwnerId: string;
-    name: string;
-    characterClassId: string;
 }
 
 export interface PlayerCharacterCreatedEvent extends EngineEvent {
@@ -98,7 +90,6 @@ export interface PlayerEngineEventsMap {
     [PlayerEngineEvents.CreateNewPlayer]: EngineEventHandler<CreateNewPlayerEvent>;
     [PlayerEngineEvents.NewPlayerCreated]: EngineEventHandler<NewPlayerCreatedEvent>;
     [PlayerEngineEvents.PlayerDisconnected]: EngineEventHandler<PlayerDisconnectedEvent>;
-    [PlayerEngineEvents.CreatePlayerCharacter]: EngineEventHandler<CreatePlayerCharacterEvent>;
     [PlayerEngineEvents.PlayerCharacterCreated]: EngineEventHandler<PlayerCharacterCreatedEvent>;
 
     [PlayerEngineEvents.PlayerTriesToOpenLoot]: EngineEventHandler<PlayerTriesToOpenLootEvent>;

@@ -46,7 +46,7 @@ describe('Chat channel delete action', () => {
         const { engineManager, players, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
