@@ -1,4 +1,4 @@
-import { AddPlayerCharacterToChatChannel, ChatChannel, ChatChannelClientActions, CreateChatChannel, DeleteChatChannel } from '@bananos/types';
+import { AddPlayerCharacterToChatChannel, ChangeChatChannelOwner, ChatChannel, ChatChannelClientActions, CreateChatChannel, DeleteChatChannel, LeaveChatChannel, RemovePlayerCharacterFromChatChannel } from '@bananos/types';
 import { find } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineActionHandler, EngineEventHandler } from '../../../types';
@@ -11,10 +11,8 @@ import {
     ChatChannelOwnerChangedEvent,
     ChatEngineEvents,
     DeleteChatChannelEvent,
-    LeaveChatChannelEvent,
     PlayerCharacterRemovedFromChatChannelEvent,
-    PlayerLeftChatChannelEvent,
-    RemovePlayerCharacterFromChatChannelEvent,
+    PlayerLeftChatChannelEvent
 } from '../Events';
 
 export class ChatChannelService extends EventParser {
@@ -27,10 +25,11 @@ export class ChatChannelService extends EventParser {
             [ChatChannelClientActions.CreateChatChannel]: this.handlePlayerCreateChannel,
             [ChatChannelClientActions.DeleteChatChannel]: this.handlePlayerDeleteChatChannel,
             [ChatChannelClientActions.AddPlayerCharacterToChatChannel]: this.handlePlayerAddPlayerCharacterToChat,
+            [ChatChannelClientActions.RemovePlayerCharacterFromChatChannel]: this.handlePlayerRemovePlayerCharacterFromChatChannel,
             [ChatEngineEvents.AddPlayerCharacterToChat]: this.handleAddPlayerCharacterToChat,
             [ChatEngineEvents.DeleteChatChannel]: this.handleDeleteChatChannel,
-            [ChatEngineEvents.RemovePlayerCharacterFromChatChannel]: this.handleRemovePlayerCharacterFromChatChannel,
-            [ChatEngineEvents.LeaveChatChannel]: this.handleLeaveChatChannel,
+            [ChatChannelClientActions.LeaveChatChannel]: this.handleLeaveChatChannel,
+            [ChatChannelClientActions.ChangeChatChannelOwner]: this.handlePlayerChangeChatChannelOwner,
             [ChatEngineEvents.ChangeChatChannelOwner]: this.handleChangeChatChannelOwner,
         };
     }
@@ -156,8 +155,9 @@ export class ChatChannelService extends EventParser {
         });
     };
 
-    handleRemovePlayerCharacterFromChatChannel: EngineEventHandler<RemovePlayerCharacterFromChatChannelEvent> = ({ event }) => {
-        if (this.wasRequestedByPlayer(event) && event.requestingCharacterId !== this.channels[event.chatChannelId].characterOwnerId) {
+    handlePlayerRemovePlayerCharacterFromChatChannel: EngineActionHandler<RemovePlayerCharacterFromChatChannel> = ({ event }) => {
+        //TODO: Co jesli chat channel nie istnieje? 
+        if (event.requestingCharacterId !== this.channels[event.chatChannelId].characterOwnerId) {
             this.sendErrorMessage(event.requestingCharacterId, 'Only the owner is allowed to remove members from the chat channel.');
             return;
         }
@@ -174,9 +174,9 @@ export class ChatChannelService extends EventParser {
             characterId: event.characterId,
             chatChannel: this.channels[event.chatChannelId],
         });
-    };
+    }
 
-    handleLeaveChatChannel: EngineEventHandler<LeaveChatChannelEvent> = ({ event }) => {
+    handleLeaveChatChannel: EngineActionHandler<LeaveChatChannel> = ({ event }) => {
         if (!this.channels[event.chatChannelId]) {
             this.sendErrorMessage(event.requestingCharacterId, 'Chat channel does not exist.');
             return;
@@ -213,7 +213,7 @@ export class ChatChannelService extends EventParser {
         }
     };
 
-    handleChangeChatChannelOwner: EngineEventHandler<ChangeChatChannelOwnerEvent> = ({ event }) => {
+    handlePlayerChangeChatChannelOwner: EngineActionHandler<ChangeChatChannelOwner> = ({ event }) => {
         if (!this.channels[event.chatChannelId]) {
             this.sendErrorMessage(event.requestingCharacterId, 'Chat channel does not exist.');
             return;
@@ -224,13 +224,38 @@ export class ChatChannelService extends EventParser {
             return;
         }
 
-        if (this.wasRequestedByPlayer(event) && event.requestingCharacterId !== this.channels[event.chatChannelId].characterOwnerId) {
+        if (event.requestingCharacterId !== this.channels[event.chatChannelId].characterOwnerId) {
             this.sendErrorMessage(event.requestingCharacterId, 'Only the owner is allowed promote a member to be a new owner.');
             return;
         }
 
-        if (this.wasRequestedByPlayer(event) && event.newOwnerId === this.channels[event.chatChannelId].characterOwnerId) {
+        if (event.newOwnerId === this.channels[event.chatChannelId].characterOwnerId) {
             this.sendErrorMessage(event.requestingCharacterId, 'You are already the owner of this chat channel.');
+            return;
+        }
+
+        this.channels[event.chatChannelId].characterOwnerId = event.newOwnerId;
+
+        this.engineEventCrator.asyncCeateEvent<ChatChannelOwnerChangedEvent>({
+            type: ChatEngineEvents.ChatChannelOwnerChanged,
+            chatChannel: this.channels[event.chatChannelId],
+            newOwnerId: this.channels[event.chatChannelId].characterOwnerId,
+        });
+    };
+
+    handleChangeChatChannelOwner: EngineEventHandler<ChangeChatChannelOwnerEvent> = ({ event }) => {
+        // 'Chat channel does not exist.'
+        if (!this.channels[event.chatChannelId]) {
+            return;
+        }
+
+        // 'This character is not a member.'
+        if (!this.channels[event.chatChannelId].membersIds[event.newOwnerId]) {
+            return;
+        }
+
+        // 'You are already the owner of this chat channel.'
+        if (this.wasRequestedByPlayer(event) && event.newOwnerId === this.channels[event.chatChannelId].characterOwnerId) {
             return;
         }
 

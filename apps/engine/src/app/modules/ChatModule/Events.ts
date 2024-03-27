@@ -10,9 +10,7 @@ export enum ChatEngineEvents {
     AddPlayerCharacterToChat = 'AddPlayerCharacterToChat',
     CharacterAddedToChat = 'CharacterAddedToChat',
 
-    RemovePlayerCharacterFromChatChannel = 'RemovePlayerCharacterFromChatChannel',
     PlayerCharacterRemovedFromChatChannel = 'PlayerCharacterRemovedFromChatChannel',
-    LeaveChatChannel = 'LeaveChatChannel',
     PlayerLeftChatChannel = 'PlayerLeftCharChannel',
 
     ChangeChatChannelOwner = 'ChangeChatChannelOwner',
@@ -52,21 +50,10 @@ export interface CharacterAddedToChatEvent extends EngineEvent {
     characterId: string;
 }
 
-export interface RemovePlayerCharacterFromChatChannelEvent extends EngineEvent {
-    type: ChatEngineEvents.RemovePlayerCharacterFromChatChannel;
-    chatChannelId: string;
-    characterId: string;
-}
-
 export interface PlayerCharacterRemovedFromChatChannelEvent extends EngineEvent {
     type: ChatEngineEvents.PlayerCharacterRemovedFromChatChannel;
     chatChannel: ChatChannel;
     characterId: string;
-}
-
-export interface LeaveChatChannelEvent extends EngineEvent {
-    type: ChatEngineEvents.LeaveChatChannel;
-    chatChannelId: string;
 }
 
 export interface PlayerLeftChatChannelEvent extends EngineEvent {
@@ -145,9 +132,7 @@ export interface ChatEngineEventsMap {
     [ChatEngineEvents.AddPlayerCharacterToChat]: EngineEventHandler<AddPlayerCharacterToChatEvent>;
     [ChatEngineEvents.CharacterAddedToChat]: EngineEventHandler<CharacterAddedToChatEvent>;
 
-    [ChatEngineEvents.RemovePlayerCharacterFromChatChannel]: EngineEventHandler<RemovePlayerCharacterFromChatChannelEvent>;
     [ChatEngineEvents.PlayerCharacterRemovedFromChatChannel]: EngineEventHandler<PlayerCharacterRemovedFromChatChannelEvent>;
-    [ChatEngineEvents.LeaveChatChannel]: EngineEventHandler<LeaveChatChannelEvent>;
     [ChatEngineEvents.PlayerLeftChatChannel]: EngineEventHandler<PlayerLeftChatChannelEvent>;
 
     [ChatEngineEvents.ChangeChatChannelOwner]: EngineEventHandler<ChangeChatChannelOwnerEvent>;

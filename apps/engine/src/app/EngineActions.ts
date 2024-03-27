@@ -1,4 +1,22 @@
-import { AddPlayerCharacterToChatChannel, BuyItemFromNpc, CharacterClientActions, ChatChannelClientActions, CloseNpcConversationDialog, CreateCharacter, CreateChatChannel, DeleteChatChannel, NpcClientActions, OpenNpcConversationDialog, PlayerClientActions, PlayerStartMove, PlayerStopMove, SellItemToNpc } from "@bananos/types";
+import {
+    AddPlayerCharacterToChatChannel,
+    BuyItemFromNpc,
+    ChangeChatChannelOwner,
+    CharacterClientActions,
+    ChatChannelClientActions,
+    CloseNpcConversationDialog,
+    CreateCharacter,
+    CreateChatChannel,
+    DeleteChatChannel,
+    LeaveChatChannel,
+    NpcClientActions,
+    OpenNpcConversationDialog,
+    PlayerClientActions,
+    PlayerStartMove,
+    PlayerStopMove,
+    RemovePlayerCharacterFromChatChannel,
+    SellItemToNpc
+} from "@bananos/types";
 import { EngineActionHandler } from "./types";
 
 export interface CharacterActionsMap {
@@ -15,6 +33,9 @@ export interface ChatActionsMap {
     [ChatChannelClientActions.CreateChatChannel]: EngineActionHandler<CreateChatChannel>;
     [ChatChannelClientActions.DeleteChatChannel]: EngineActionHandler<DeleteChatChannel>;
     [ChatChannelClientActions.AddPlayerCharacterToChatChannel]: EngineActionHandler<AddPlayerCharacterToChatChannel>;
+    [ChatChannelClientActions.RemovePlayerCharacterFromChatChannel]: EngineActionHandler<RemovePlayerCharacterFromChatChannel>;
+    [ChatChannelClientActions.LeaveChatChannel]: EngineActionHandler<LeaveChatChannel>;
+    [ChatChannelClientActions.ChangeChatChannelOwner]: EngineActionHandler<ChangeChatChannelOwner>;
 }
 
 export interface NpcActionsMap {
