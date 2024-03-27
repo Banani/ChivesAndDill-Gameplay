@@ -39,7 +39,7 @@ export interface SellItemToNpc {
     itemId: string;
 }
 
-export interface PlayerTriesToTakeQuestFromNpc {
+export interface TakeQuestFromNpc {
     type: NpcClientActions.TakeQuestFromNpc;
     npcId: string;
     questId: string;
@@ -56,5 +56,5 @@ export type EngineNpcAction =
     | CloseNpcConversationDialog
     | BuyItemFromNpc
     | SellItemToNpc
-    | PlayerTriesToTakeQuestFromNpc
+    | TakeQuestFromNpc
     | FinalizeQuestWithNpc;

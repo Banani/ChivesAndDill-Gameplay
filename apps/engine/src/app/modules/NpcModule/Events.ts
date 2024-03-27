@@ -8,9 +8,6 @@ export enum NpcEngineEvents {
     ConversationWithNpcStarted = 'ConversationWithNpcStarted',
     ConversationWithNpcEnded = 'ConversationWithNpcEnded',
 
-    PlayerTriesToTakeQuestFromNpc = 'PlayerTriesToTakeQuestFromNpc',
-    PlayerTriesToFinalizeQuestWithNpc = 'PlayerTriesToFinalizeQuestWithNpc',
-
     NpcTemplateFetchedFromDb = "NpcTemplateFetchedFromDb",
     NpcRespawnsUpdated = "NpcRespawnsUpdated"
 }
@@ -31,18 +28,6 @@ export interface ConversationWithNpcEndedEvent extends EngineEvent {
     characterId: string;
 }
 
-export interface PlayerTriesToTakeQuestFromNpcEvent extends EngineEvent {
-    type: NpcEngineEvents.PlayerTriesToTakeQuestFromNpc;
-    npcId: string;
-    questId: string;
-}
-
-export interface PlayerTriesToFinalizeQuestWithNpcEvent extends EngineEvent {
-    type: NpcEngineEvents.PlayerTriesToFinalizeQuestWithNpc;
-    npcId: string;
-    questId: string;
-}
-
 export interface NpcRespawnsUpdatedEvent extends EngineEvent {
     type: NpcEngineEvents.NpcRespawnsUpdated;
     respawnIds: string[];
@@ -58,9 +43,6 @@ export interface NpcEngineEventsMap {
 
     [NpcEngineEvents.ConversationWithNpcStarted]: EngineEventHandler<ConversationWithNpcStartedEvent>;
     [NpcEngineEvents.ConversationWithNpcEnded]: EngineEventHandler<ConversationWithNpcEndedEvent>;
-
-    [NpcEngineEvents.PlayerTriesToTakeQuestFromNpc]: EngineEventHandler<PlayerTriesToTakeQuestFromNpcEvent>;
-    [NpcEngineEvents.PlayerTriesToFinalizeQuestWithNpc]: EngineEventHandler<PlayerTriesToFinalizeQuestWithNpcEvent>;
 
     [NpcEngineEvents.NpcTemplateFetchedFromDb]: EngineEventHandler<NpcTemplateFetchedFromDbEvent>;
     [NpcEngineEvents.NpcRespawnsUpdated]: EngineEventHandler<NpcRespawnsUpdatedEvent>;

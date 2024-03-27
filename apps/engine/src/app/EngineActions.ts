@@ -8,6 +8,7 @@ import {
     CreateCharacter,
     CreateChatChannel,
     DeleteChatChannel,
+    FinalizeQuestWithNpc,
     LeaveChatChannel,
     NpcClientActions,
     OpenNpcConversationDialog,
@@ -15,7 +16,8 @@ import {
     PlayerStartMove,
     PlayerStopMove,
     RemovePlayerCharacterFromChatChannel,
-    SellItemToNpc
+    SellItemToNpc,
+    TakeQuestFromNpc
 } from "@bananos/types";
 import { EngineActionHandler } from "./types";
 
@@ -43,6 +45,8 @@ export interface NpcActionsMap {
     [NpcClientActions.CloseNpcConversationDialog]: EngineActionHandler<CloseNpcConversationDialog>;
     [NpcClientActions.BuyItemFromNpc]: EngineActionHandler<BuyItemFromNpc>;
     [NpcClientActions.SellItemToNpc]: EngineActionHandler<SellItemToNpc>;
+    [NpcClientActions.TakeQuestFromNpc]: EngineActionHandler<TakeQuestFromNpc>
+    [NpcClientActions.FinalizeQuestWithNpc]: EngineActionHandler<FinalizeQuestWithNpc>
 }
 
 export type EngineActionsMap = CharacterActionsMap & PlayerActionsMap & ChatActionsMap & NpcActionsMap;

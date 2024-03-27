@@ -86,6 +86,7 @@ export class SocketConnectionService extends EventParser {
                 type != ChatChannelClientActions.ChangeChatChannelOwner &&
                 type != NpcClientActions.OpenNpcConversationDialog &&
                 type != NpcClientActions.CloseNpcConversationDialog &&
+                type != NpcClientActions.TakeQuestFromNpc &&
                 type != NpcClientActions.BuyItemFromNpc &&
                 type != NpcClientActions.SellItemToNpc) {
                 return;
