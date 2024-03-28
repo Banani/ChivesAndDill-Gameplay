@@ -78,6 +78,10 @@ export class SocketConnectionService extends EventParser {
             if (type != CharacterClientActions.PlayerStartMove &&
                 type != CharacterClientActions.PlayerStopMove &&
                 type != PlayerClientActions.CreatePlayerCharacter &&
+                type != PlayerClientActions.OpenLoot &&
+                type != PlayerClientActions.CloseLoot &&
+                type != PlayerClientActions.PickCoinsFromCorpse &&
+                type != PlayerClientActions.PickItemFromCorpse &&
                 type != ChatChannelClientActions.CreateChatChannel &&
                 type != ChatChannelClientActions.DeleteChatChannel &&
                 type != ChatChannelClientActions.AddPlayerCharacterToChatChannel &&
@@ -86,6 +90,7 @@ export class SocketConnectionService extends EventParser {
                 type != ChatChannelClientActions.ChangeChatChannelOwner &&
                 type != NpcClientActions.OpenNpcConversationDialog &&
                 type != NpcClientActions.CloseNpcConversationDialog &&
+                type != NpcClientActions.FinalizeQuestWithNpc &&
                 type != NpcClientActions.TakeQuestFromNpc &&
                 type != NpcClientActions.BuyItemFromNpc &&
                 type != NpcClientActions.SellItemToNpc) {

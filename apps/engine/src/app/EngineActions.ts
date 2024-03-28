@@ -4,6 +4,7 @@ import {
     ChangeChatChannelOwner,
     CharacterClientActions,
     ChatChannelClientActions,
+    CloseLoot,
     CloseNpcConversationDialog,
     CreateCharacter,
     CreateChatChannel,
@@ -11,7 +12,10 @@ import {
     FinalizeQuestWithNpc,
     LeaveChatChannel,
     NpcClientActions,
+    OpenLoot,
     OpenNpcConversationDialog,
+    PickCoinsFromCorpse,
+    PickItemFromCorpse,
     PlayerClientActions,
     PlayerStartMove,
     PlayerStopMove,
@@ -28,6 +32,10 @@ export interface CharacterActionsMap {
 
 export interface PlayerActionsMap {
     [PlayerClientActions.CreatePlayerCharacter]: EngineActionHandler<CreateCharacter>;
+    [PlayerClientActions.OpenLoot]: EngineActionHandler<OpenLoot>;
+    [PlayerClientActions.CloseLoot]: EngineActionHandler<CloseLoot>;
+    [PlayerClientActions.PickCoinsFromCorpse]: EngineActionHandler<PickCoinsFromCorpse>;
+    [PlayerClientActions.PickItemFromCorpse]: EngineActionHandler<PickItemFromCorpse>;
 }
 
 export interface ChatActionsMap {

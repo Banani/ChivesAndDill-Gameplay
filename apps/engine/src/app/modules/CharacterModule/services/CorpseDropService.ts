@@ -1,13 +1,11 @@
-import type { CorpseDropTrack } from '@bananos/types';
+import { PickCoinsFromCorpse, PickItemFromCorpse, PlayerClientActions, type CorpseDropTrack } from '@bananos/types';
 import * as _ from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import type { CharacterDiedEvent, EngineEventHandler } from '../../../types';
+import type { CharacterDiedEvent, EngineActionHandler, EngineEventHandler } from '../../../types';
 import type { AddCurrencyToCharacterEvent, GenerateItemForCharacterEvent } from '../../ItemModule/Events';
 import { ItemEngineEvents } from '../../ItemModule/Events';
 import type { Monster } from '../../MonsterModule/types';
-import type { PlayerTriesToPickCoinsFromCorpseEvent, PlayerTriesToPickItemFromCorpseEvent } from '../../PlayerModule/Events';
-import { PlayerEngineEvents } from '../../PlayerModule/Events';
 import type {
     AllItemsWerePickedFromCorpseEvent,
     CoinsWerePickedFromCorpseEvent,
@@ -28,8 +26,8 @@ export class CorpseDropService extends EventParser {
         super();
         this.eventsToHandlersMap = {
             [EngineEvents.CharacterDied]: this.handleCharacterDied,
-            [PlayerEngineEvents.PlayerTriesToPickItemFromCorpse]: this.handlePlayerTriesToPickItemFromCorpse,
-            [PlayerEngineEvents.PlayerTriesToPickCoinsFromCorpse]: this.handlePlayerTriesToPickCoinsFromCorpse,
+            [PlayerClientActions.PickItemFromCorpse]: this.handlePlayerTriesToPickItemFromCorpse,
+            [PlayerClientActions.PickCoinsFromCorpse]: this.handlePlayerTriesToPickCoinsFromCorpse,
             [CharacterEngineEvents.ItemWasPickedFromCorpse]: this.handleItemWasPickedFromCorpse,
             [CharacterEngineEvents.AllItemsWerePickedFromCorpse]: this.handleAllItemsWerePickedFromCorpse,
             [CharacterEngineEvents.CoinsWerePickedFromCorpse]: this.handleCoinsWerePickedFromCorpse,
@@ -94,7 +92,7 @@ export class CorpseDropService extends EventParser {
         }
     };
 
-    handlePlayerTriesToPickItemFromCorpse: EngineEventHandler<PlayerTriesToPickItemFromCorpseEvent> = ({ event, services }) => {
+    handlePlayerTriesToPickItemFromCorpse: EngineActionHandler<PickItemFromCorpse> = ({ event, services }) => {
         const activeLoot = services.activeLootService.getCharacterActiveLoot(event.requestingCharacterId);
 
         if (!activeLoot) {
@@ -125,7 +123,7 @@ export class CorpseDropService extends EventParser {
         });
     };
 
-    handlePlayerTriesToPickCoinsFromCorpse: EngineEventHandler<PlayerTriesToPickCoinsFromCorpseEvent> = ({ event, services }) => {
+    handlePlayerTriesToPickCoinsFromCorpse: EngineActionHandler<PickCoinsFromCorpse> = ({ event, services }) => {
         const activeLoot = services.activeLootService.getCharacterActiveLoot(event.requestingCharacterId);
 
         if (!activeLoot) {

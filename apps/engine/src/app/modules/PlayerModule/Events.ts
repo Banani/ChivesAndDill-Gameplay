@@ -8,11 +8,7 @@ export enum PlayerEngineEvents {
     PlayerDisconnected = 'PlayerDisconnected',
     PlayerCharacterCreated = 'PlayerCharacterCreated',
 
-    PlayerTriesToOpenLoot = 'PlayerTriesToOpenLoot',
     LootOpened = 'LootOpened',
-    PlayerTriesToPickItemFromCorpse = 'PlayerTriesToPickItemFromCorpse',
-    PlayerTriesToPickCoinsFromCorpse = 'PlayerTriesToPickCoinsFromCorpse',
-    CloseLoot = 'CloseLoot',
     LootClosed = 'LootClosed',
 
     SendErrorMessage = 'SendErrorMessage',
@@ -40,33 +36,11 @@ export interface PlayerCharacterCreatedEvent extends EngineEvent {
     playerCharacter: PlayerCharacter;
 }
 
-export interface PlayerTriesToOpenLootEvent extends EngineEvent {
-    type: PlayerEngineEvents.PlayerTriesToOpenLoot;
-    characterId: string;
-    corpseId: string;
-}
-
 export interface LootOpenedEvent extends EngineEvent {
     type: PlayerEngineEvents.LootOpened;
     characterId: string;
     corpseDropTrack: CorpseDropTrack;
     corpseId: string;
-}
-
-export interface PlayerTriesToPickItemFromCorpseEvent extends EngineEvent {
-    type: PlayerEngineEvents.PlayerTriesToPickItemFromCorpse;
-    corpseId: string;
-    itemId: string;
-}
-
-export interface PlayerTriesToPickCoinsFromCorpseEvent extends EngineEvent {
-    type: PlayerEngineEvents.PlayerTriesToPickCoinsFromCorpse;
-    corpseId: string;
-}
-
-export interface CloseLootEvent extends EngineEvent {
-    type: PlayerEngineEvents.CloseLoot;
-    characterId: string;
 }
 
 export interface LootClosedEvent extends EngineEvent {
@@ -92,11 +66,7 @@ export interface PlayerEngineEventsMap {
     [PlayerEngineEvents.PlayerDisconnected]: EngineEventHandler<PlayerDisconnectedEvent>;
     [PlayerEngineEvents.PlayerCharacterCreated]: EngineEventHandler<PlayerCharacterCreatedEvent>;
 
-    [PlayerEngineEvents.PlayerTriesToOpenLoot]: EngineEventHandler<PlayerTriesToOpenLootEvent>;
     [PlayerEngineEvents.LootOpened]: EngineEventHandler<LootOpenedEvent>;
-    [PlayerEngineEvents.PlayerTriesToPickItemFromCorpse]: EngineEventHandler<PlayerTriesToPickItemFromCorpseEvent>;
-    [PlayerEngineEvents.PlayerTriesToPickCoinsFromCorpse]: EngineEventHandler<PlayerTriesToPickCoinsFromCorpseEvent>;
-    [PlayerEngineEvents.CloseLoot]: EngineEventHandler<CloseLootEvent>;
     [PlayerEngineEvents.LootClosed]: EngineEventHandler<LootClosedEvent>;
 
     [PlayerEngineEvents.SendErrorMessage]: EngineEventHandler<SendErrorMessageEvent>;
