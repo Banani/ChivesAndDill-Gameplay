@@ -1,4 +1,5 @@
 import {
+    AcceptInvite,
     AddPlayerCharacterToChatChannel,
     BuyItemFromNpc,
     ChangeChatChannelOwner,
@@ -8,9 +9,13 @@ import {
     CloseNpcConversationDialog,
     CreateCharacter,
     CreateChatChannel,
+    DeclineInvite,
     DeleteChatChannel,
     FinalizeQuestWithNpc,
+    GroupClientActions,
+    InviteToParty,
     LeaveChatChannel,
+    LeaveParty,
     NpcClientActions,
     OpenLoot,
     OpenNpcConversationDialog,
@@ -19,9 +24,11 @@ import {
     PlayerClientActions,
     PlayerStartMove,
     PlayerStopMove,
+    PromoteToLeader,
     RemovePlayerCharacterFromChatChannel,
     SellItemToNpc,
-    TakeQuestFromNpc
+    TakeQuestFromNpc,
+    UninviteFromParty
 } from "@bananos/types";
 import { EngineActionHandler } from "./types";
 
@@ -57,4 +64,13 @@ export interface NpcActionsMap {
     [NpcClientActions.FinalizeQuestWithNpc]: EngineActionHandler<FinalizeQuestWithNpc>
 }
 
-export type EngineActionsMap = CharacterActionsMap & PlayerActionsMap & ChatActionsMap & NpcActionsMap;
+export interface GroupActionsMap {
+    [GroupClientActions.InviteToParty]: EngineActionHandler<InviteToParty>;
+    [GroupClientActions.PromoteToLeader]: EngineActionHandler<PromoteToLeader>;
+    [GroupClientActions.UninviteFromParty]: EngineActionHandler<UninviteFromParty>;
+    [GroupClientActions.AcceptInvite]: EngineActionHandler<AcceptInvite>;
+    [GroupClientActions.DeclineInvite]: EngineActionHandler<DeclineInvite>
+    [GroupClientActions.LeaveParty]: EngineActionHandler<LeaveParty>
+}
+
+export type EngineActionsMap = CharacterActionsMap & PlayerActionsMap & ChatActionsMap & NpcActionsMap & GroupActionsMap;

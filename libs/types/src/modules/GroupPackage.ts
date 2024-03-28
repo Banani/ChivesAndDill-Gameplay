@@ -5,12 +5,12 @@ export interface Party {
 }
 
 export enum GroupClientActions {
-    InviteToParty = 'InviteToParty',
-    PromoteToLeader = "PromoteToLeader",
-    UninviteFromParty = "UninviteFromParty",
-    AcceptInvite = "AcceptInvite",
-    DeclineInvite = "DeclineInvite",
-    LeaveParty = "LeaveParty"
+    InviteToParty = 'Player_InviteToParty',
+    PromoteToLeader = "Player_PromoteToLeader",
+    UninviteFromParty = "Player_UninviteFromParty",
+    AcceptInvite = "Player_AcceptInvite",
+    DeclineInvite = "Player_DeclineInvite",
+    LeaveParty = "Player_LeaveParty"
 }
 
 export interface InviteToParty {

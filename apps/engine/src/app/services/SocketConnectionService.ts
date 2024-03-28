@@ -1,4 +1,4 @@
-import { CharacterClientActions, ChatChannelClientActions, NpcClientActions, PlayerClientActions } from '@bananos/types';
+import { CharacterClientActions, ChatChannelClientActions, GroupClientActions, NpcClientActions, PlayerClientActions } from '@bananos/types';
 import * as _ from 'lodash';
 import { filter, find, forEach, mergeWith } from 'lodash';
 import type { EngineEventCrator } from '../EngineEventsCreator';
@@ -77,17 +77,27 @@ export class SocketConnectionService extends EventParser {
 
             if (type != CharacterClientActions.PlayerStartMove &&
                 type != CharacterClientActions.PlayerStopMove &&
+
                 type != PlayerClientActions.CreatePlayerCharacter &&
                 type != PlayerClientActions.OpenLoot &&
                 type != PlayerClientActions.CloseLoot &&
                 type != PlayerClientActions.PickCoinsFromCorpse &&
                 type != PlayerClientActions.PickItemFromCorpse &&
+
                 type != ChatChannelClientActions.CreateChatChannel &&
                 type != ChatChannelClientActions.DeleteChatChannel &&
                 type != ChatChannelClientActions.AddPlayerCharacterToChatChannel &&
                 type != ChatChannelClientActions.RemovePlayerCharacterFromChatChannel &&
                 type != ChatChannelClientActions.LeaveChatChannel &&
                 type != ChatChannelClientActions.ChangeChatChannelOwner &&
+
+                type != GroupClientActions.InviteToParty &&
+                type != GroupClientActions.PromoteToLeader &&
+                type != GroupClientActions.UninviteFromParty &&
+                type != GroupClientActions.AcceptInvite &&
+                type != GroupClientActions.DeclineInvite &&
+                type != GroupClientActions.LeaveParty &&
+
                 type != NpcClientActions.OpenNpcConversationDialog &&
                 type != NpcClientActions.CloseNpcConversationDialog &&
                 type != NpcClientActions.FinalizeQuestWithNpc &&
