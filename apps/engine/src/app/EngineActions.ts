@@ -11,11 +11,15 @@ import {
     CreateChatChannel,
     DeclineInvite,
     DeleteChatChannel,
+    DeleteItem,
+    EquipItem,
     FinalizeQuestWithNpc,
     GroupClientActions,
     InviteToParty,
+    ItemClientActions,
     LeaveChatChannel,
     LeaveParty,
+    MoveItemInBag,
     NpcClientActions,
     OpenLoot,
     OpenNpcConversationDialog,
@@ -26,7 +30,10 @@ import {
     PlayerStopMove,
     PromoteToLeader,
     RemovePlayerCharacterFromChatChannel,
+    RequestItemTemplates,
     SellItemToNpc,
+    SplitItemStackInBag,
+    StripItem,
     TakeQuestFromNpc,
     UninviteFromParty
 } from "@bananos/types";
@@ -73,4 +80,13 @@ export interface GroupActionsMap {
     [GroupClientActions.LeaveParty]: EngineActionHandler<LeaveParty>
 }
 
-export type EngineActionsMap = CharacterActionsMap & PlayerActionsMap & ChatActionsMap & NpcActionsMap & GroupActionsMap;
+export interface ItemActionsMap {
+    [ItemClientActions.DeleteItem]: EngineActionHandler<DeleteItem>;
+    [ItemClientActions.EquipItem]: EngineActionHandler<EquipItem>;
+    [ItemClientActions.MoveItemInBag]: EngineActionHandler<MoveItemInBag>;
+    [ItemClientActions.RequestItemTemplates]: EngineActionHandler<RequestItemTemplates>;
+    [ItemClientActions.SplitItemStackInBag]: EngineActionHandler<SplitItemStackInBag>
+    [ItemClientActions.StripItem]: EngineActionHandler<StripItem>
+}
+
+export type EngineActionsMap = CharacterActionsMap & PlayerActionsMap & ChatActionsMap & NpcActionsMap & GroupActionsMap & ItemActionsMap;

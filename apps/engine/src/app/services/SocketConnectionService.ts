@@ -1,4 +1,4 @@
-import { CharacterClientActions, ChatChannelClientActions, GroupClientActions, NpcClientActions, PlayerClientActions } from '@bananos/types';
+import { CharacterClientActions, ChatChannelClientActions, GroupClientActions, ItemClientActions, NpcClientActions, PlayerClientActions } from '@bananos/types';
 import * as _ from 'lodash';
 import { filter, find, forEach, mergeWith } from 'lodash';
 import type { EngineEventCrator } from '../EngineEventsCreator';
@@ -97,6 +97,13 @@ export class SocketConnectionService extends EventParser {
                 type != GroupClientActions.AcceptInvite &&
                 type != GroupClientActions.DeclineInvite &&
                 type != GroupClientActions.LeaveParty &&
+
+                type != ItemClientActions.DeleteItem &&
+                type != ItemClientActions.EquipItem &&
+                type != ItemClientActions.MoveItemInBag &&
+                type != ItemClientActions.RequestItemTemplates &&
+                type != ItemClientActions.SplitItemStackInBag &&
+                type != ItemClientActions.StripItem &&
 
                 type != NpcClientActions.OpenNpcConversationDialog &&
                 type != NpcClientActions.CloseNpcConversationDialog &&
