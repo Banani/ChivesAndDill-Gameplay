@@ -1,4 +1,3 @@
-import { Location } from "../shared";
 
 export interface CharacterClass {
     id: string;
@@ -29,23 +28,13 @@ export enum PlayerClientActions {
     PickItemFromCorpse = 'PickItemFromCorpse',
     PickCoinsFromCorpse = 'PickCoinsFromCorpse',
 
-    Package = 'Package',
-
-    //TODO: to do spell module
-    CastSpell = "CastSpell",
+    Package = 'Package'
 }
 
 export interface CreateCharacter {
     type: PlayerClientActions.CreatePlayerCharacter;
     name: string;
     characterClassId: string;
-}
-
-export interface CastSpell {
-    type: PlayerClientActions.CastSpell;
-    directionLocation: Location;
-    spellId: string;
-    targetId: string;
 }
 
 export interface OpenLoot {
@@ -67,7 +56,7 @@ export interface PickCoinsFromCorpse {
     corpseId: string;
 }
 
-export type EnginePlayerAction = CreateCharacter | CastSpell | OpenLoot | CloseLoot | PickItemFromCorpse | PickCoinsFromCorpse;
+export type EnginePlayerAction = CreateCharacter | OpenLoot | CloseLoot | PickItemFromCorpse | PickCoinsFromCorpse;
 
 export enum PlayerClientEvents {
     ErrorMessage = 'ErrorMessage',

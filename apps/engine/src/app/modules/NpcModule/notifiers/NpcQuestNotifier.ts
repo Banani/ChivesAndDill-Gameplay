@@ -15,7 +15,6 @@ export class NpcQuestNotifier extends Notifier<Record<string, boolean>> {
     }
 
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
-        const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
         const completedQuests = services.archivedQuestService.getCompletedQuests(event.playerCharacter.id);
         // npc => quest => boolean
         const questMap: Record<string, Record<string, boolean>> = _.chain(services.npcTemplateService.getData())

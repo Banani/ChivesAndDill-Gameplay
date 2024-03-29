@@ -2,6 +2,7 @@ import {
     AcceptInvite,
     AddPlayerCharacterToChatChannel,
     BuyItemFromNpc,
+    CastSpell,
     ChangeChatChannelOwner,
     CharacterClientActions,
     ChatChannelClientActions,
@@ -31,7 +32,9 @@ import {
     PromoteToLeader,
     RemovePlayerCharacterFromChatChannel,
     RequestItemTemplates,
+    RequestSpellDefinitions,
     SellItemToNpc,
+    SpellClientActions,
     SplitItemStackInBag,
     StripItem,
     TakeQuestFromNpc,
@@ -42,6 +45,11 @@ import { EngineActionHandler } from "./types";
 export interface CharacterActionsMap {
     [CharacterClientActions.PlayerStartMove]: EngineActionHandler<PlayerStartMove>;
     [CharacterClientActions.PlayerStopMove]: EngineActionHandler<PlayerStopMove>;
+}
+
+export interface SpellActionsMap {
+    [SpellClientActions.CastSpell]: EngineActionHandler<CastSpell>;
+    [SpellClientActions.RequestSpellDefinitions]: EngineActionHandler<RequestSpellDefinitions>;
 }
 
 export interface PlayerActionsMap {
@@ -89,4 +97,4 @@ export interface ItemActionsMap {
     [ItemClientActions.StripItem]: EngineActionHandler<StripItem>
 }
 
-export type EngineActionsMap = CharacterActionsMap & PlayerActionsMap & ChatActionsMap & NpcActionsMap & GroupActionsMap & ItemActionsMap;
+export type EngineActionsMap = CharacterActionsMap & PlayerActionsMap & ChatActionsMap & NpcActionsMap & GroupActionsMap & ItemActionsMap & SpellActionsMap;

@@ -57,7 +57,6 @@ export enum GlobalStoreModule {
     SPELLS = 'spells',
     POWER_STACKS = 'powerStacks',
     ABSORB_SHIELDS = 'absorbShields',
-    PLAYER = 'player',
     MAP_SCHEMA = 'mapSchema',
     EXPERIENCE = 'experience',
     CURRENCY = 'currency',
@@ -148,7 +147,6 @@ export interface GlobalStore {
     [GlobalStoreModule.SPELLS]: StoreModule<null>;
     [GlobalStoreModule.POWER_STACKS]: StoreModule<Partial<Record<PowerStackType, number>>>;
     [GlobalStoreModule.ABSORB_SHIELDS]: StoreModule<AbsorbShieldTrack>;
-    [GlobalStoreModule.PLAYER]: StoreModule<undefined>;
     [GlobalStoreModule.CHARACTER]: StoreModule<Character>;
     [GlobalStoreModule.ACTIVE_CHARACTER]: StoreModule<string>;
     [GlobalStoreModule.MAP_SCHEMA]: StoreModule<MapSchema | MapDefinition>;

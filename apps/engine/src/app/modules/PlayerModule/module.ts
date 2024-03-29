@@ -1,5 +1,5 @@
 import { EngineModule } from '../../types/EngineModule';
-import { ActiveCharacterNotifier, ActiveLootNotifier, PlayerNotifier } from './notifiers';
+import { ActiveCharacterNotifier, ActiveLootNotifier } from './notifiers';
 import { CharacterClassNotifier } from './notifiers/CharacterClassNotifier';
 import { ErrorMessagesNotifier } from './notifiers/ErrorMessagesNotifier';
 import { ActiveLootService, PlayerCharacterService, PlayerService } from './services';
@@ -16,7 +16,6 @@ export const getPlayerModule: () => EngineModule<PlayerModuleServices> = () => {
 
     return {
         notifiers: [
-            new PlayerNotifier(),
             new ActiveCharacterNotifier(),
             new ActiveLootNotifier(),
             new ErrorMessagesNotifier(),
