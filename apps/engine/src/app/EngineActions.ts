@@ -34,6 +34,7 @@ import {
     RequestItemTemplates,
     RequestSpellDefinitions,
     SellItemToNpc,
+    SendChatMessage,
     SpellClientActions,
     SplitItemStackInBag,
     StripItem,
@@ -61,7 +62,7 @@ export interface PlayerActionsMap {
 }
 
 export interface ChatActionsMap {
-    // [ChatChannelClientActions.SendChatMessage]: EngineActionHandler<SendChatMessage>;
+    [ChatChannelClientActions.SendChatMessage]: EngineActionHandler<SendChatMessage>;
     [ChatChannelClientActions.CreateChatChannel]: EngineActionHandler<CreateChatChannel>;
     [ChatChannelClientActions.DeleteChatChannel]: EngineActionHandler<DeleteChatChannel>;
     [ChatChannelClientActions.AddPlayerCharacterToChatChannel]: EngineActionHandler<AddPlayerCharacterToChatChannel>;

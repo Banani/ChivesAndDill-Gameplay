@@ -1,9 +1,9 @@
-import { BackpackTrack } from '@bananos/types';
+import { BackpackTrack, ItemClientActions } from '@bananos/types';
 import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { BackpackTrackCreatedEvent, GenerateItemForCharacterEvent, ItemEngineEvents, PlayerTriesToEquipItemEvent } from '../Events';
+import { BackpackTrackCreatedEvent, GenerateItemForCharacterEvent, ItemEngineEvents } from '../Events';
 
 export class BackpackService extends EventParser {
     // id usera => backpack spot => amount of spaces
@@ -57,8 +57,8 @@ export class BackpackService extends EventParser {
 
         setTimeout(() => {
             _.forEach(_.pickBy(services.itemService.getAllItems(), item => item.ownerId === event.playerCharacter.id), (item, key) => {
-                this.engineEventCrator.asyncCeateEvent<PlayerTriesToEquipItemEvent>({
-                    type: ItemEngineEvents.PlayerTriesToEquipItem,
+                this.engineEventCrator.asyncCeateEvent<any>({
+                    type: ItemClientActions.EquipItem,
                     requestingCharacterId: event.playerCharacter.id,
                     itemInstanceId: key,
                 });

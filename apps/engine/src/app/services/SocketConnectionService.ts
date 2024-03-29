@@ -84,6 +84,7 @@ export class SocketConnectionService extends EventParser {
                 type != PlayerClientActions.PickCoinsFromCorpse &&
                 type != PlayerClientActions.PickItemFromCorpse &&
 
+                type != ChatChannelClientActions.SendChatMessage &&
                 type != ChatChannelClientActions.CreateChatChannel &&
                 type != ChatChannelClientActions.DeleteChatChannel &&
                 type != ChatChannelClientActions.AddPlayerCharacterToChatChannel &&

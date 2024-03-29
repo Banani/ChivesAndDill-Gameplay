@@ -74,8 +74,8 @@ export interface ChatChannelOwnerChangedEvent extends EngineEvent {
     newOwnerId: string;
 }
 
-interface CustomMessageDetails {
-    channelType: ChannelType.Custom,
+interface PrivateMessageDetails {
+    channelType: ChannelType.Private,
     authorId: string;
     chatChannelId: string;
     location: Location;
@@ -101,7 +101,7 @@ interface SystemMessageDetails {
     amount?: number
 }
 
-type MessageDetails = CustomMessageDetails | RangeMessageDetails | QuoteMessageDetails | SystemMessageDetails;
+type MessageDetails = PrivateMessageDetails | RangeMessageDetails | QuoteMessageDetails | SystemMessageDetails;
 
 export interface SendChatMessageEvent extends EngineEvent {
     type: ChatEngineEvents.SendChatMessage;

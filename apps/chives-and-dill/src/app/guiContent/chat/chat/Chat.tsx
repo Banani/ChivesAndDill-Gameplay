@@ -76,7 +76,7 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
                 {message.message}
             </div>
         },
-        [ChannelType.Custom]: (message: ChannelChatMessage) => (
+        [ChannelType.Private]: (message: ChannelChatMessage) => (
             <>
                 <span
                     onContextMenu={(e) => {

@@ -1,4 +1,4 @@
-import { CharacterClientActions, GlobalStoreModule, Location, PlayerClientActions } from '@bananos/types';
+import { CharacterClientActions, GlobalStoreModule, Location, SpellClientActions } from '@bananos/types';
 import _ from 'lodash';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useEngineModuleReader } from '../hooks';
@@ -66,7 +66,7 @@ export const GameController = ({ children }) => {
 
         if (keyBinds[key]) {
             callEngineAction({
-                type: PlayerClientActions.CastSpell,
+                type: SpellClientActions.CastSpell,
                 targetId: activeTargetId,
                 directionLocation: {
                     x: characterMovements[activeCharacterId].location.x + mousePosition.x - gameWidth / 2,

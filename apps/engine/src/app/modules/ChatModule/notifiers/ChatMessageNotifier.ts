@@ -1,10 +1,9 @@
-import { ChannelType, CharacterType, ChatChannelClientActions, ChatMessage, GlobalStoreModule, RangeChatMessage } from '@bananos/types';
+import { ChannelType, CharacterType, ChatChannelClientActions, ChatMessage, GlobalStoreModule, RangeChatMessage, SendChatMessage } from '@bananos/types';
 import { keyBy, map, mapValues, pickBy } from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { EngineEventHandler } from '../../../types';
+import { EngineActionHandler, EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
-import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import { ChatEngineEvents, ChatMessageSentEvent, ChatMessagesDeletedEvent, SendChatMessageEvent } from '../Events';
 import { RangeChannels } from '../RangeChannels';
 
@@ -12,32 +11,48 @@ export class ChatMessageNotifier extends Notifier<ChatMessage> {
     constructor() {
         super({ key: GlobalStoreModule.CHAT_MESSAGES });
         this.eventsToHandlersMap = {
-            [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
+            [ChatChannelClientActions.SendChatMessage]: this.handlePlayerTriesToSendChatMessage,
             [ChatEngineEvents.ChatMessageSent]: this.handleChatMessageSent,
             [ChatEngineEvents.ChatMessagesDeleted]: this.handleChatMessagesDeleted,
         };
     }
 
-    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
-        const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
+    handlePlayerTriesToSendChatMessage: EngineActionHandler<SendChatMessage> = ({ event, services }) => {
+        const character = services.characterService.getAllCharacters()[event.requestingCharacterId];
 
-        currentSocket.on(ChatChannelClientActions.SendChatMessage, ({ chatChannelId, message, channelType }) => {
-            const character = services.characterService.getAllCharacters()[event.playerCharacter.id];
+        if (event.channelType === ChannelType.Private) {
             this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
                 type: ChatEngineEvents.SendChatMessage,
-                requestingCharacterId: event.playerCharacter.id,
-                message,
+                requestingCharacterId: event.requestingCharacterId,
+                message: event.message,
                 details: {
-                    chatChannelId,
-                    channelType,
+                    chatChannelId: event.chatChannelId,
+                    channelType: ChannelType.Private,
                     location: {
                         x: character.location.x,
                         y: character.location.y,
                     },
-                    authorId: character.id
+                    authorId: event.requestingCharacterId
                 }
             });
-        });
+        }
+
+        if (event.channelType === ChannelType.Range) {
+            this.engineEventCrator.asyncCeateEvent<SendChatMessageEvent>({
+                type: ChatEngineEvents.SendChatMessage,
+                requestingCharacterId: event.requestingCharacterId,
+                message: event.message,
+                details: {
+                    chatChannelId: event.chatChannelId,
+                    channelType: ChannelType.Range,
+                    location: {
+                        x: character.location.x,
+                        y: character.location.y,
+                    },
+                    authorId: event.requestingCharacterId
+                }
+            });
+        }
     };
 
     handleChatMessageSent: EngineEventHandler<ChatMessageSentEvent> = ({ event, services }) => {
@@ -48,11 +63,11 @@ export class ChatMessageNotifier extends Notifier<ChatMessage> {
             message: event.message
         } as ChatMessage;
 
-        if (event.chatMessage.channelType === ChannelType.Custom) {
+        if (event.chatMessage.channelType === ChannelType.Private) {
             const chatChannel = services.chatChannelService.getChatChannelById(event.chatMessage.chatChannelId);
             chatMessage = {
                 ...chatMessage,
-                channelType: ChannelType.Custom,
+                channelType: ChannelType.Private,
                 location: event.chatMessage.location,
                 chatChannelId: event.chatMessage.chatChannelId,
                 authorId: event.chatMessage.authorId

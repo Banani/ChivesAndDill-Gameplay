@@ -8,7 +8,7 @@ export interface ChatChannel {
 }
 
 export enum ChannelType {
-    Custom = 'Custom',
+    Private = 'Private',
     Range = 'Range',
     Quotes = 'Quotes',
     System = "System"
@@ -42,7 +42,7 @@ export interface RangeChatMessage extends CommonChatMessage {
 }
 
 export interface ChannelChatMessage extends CommonChatMessage {
-    channelType: ChannelType.Custom;
+    channelType: ChannelType.Private;
     authorId: string;
     chatChannelId: string;
     location: Location;

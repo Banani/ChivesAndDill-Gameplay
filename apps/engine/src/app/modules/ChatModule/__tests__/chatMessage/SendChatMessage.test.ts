@@ -48,7 +48,7 @@ describe('Chat module - Send chat message action', () => {
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
             type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             message,
         });
 
@@ -62,7 +62,7 @@ describe('Chat module - Send chat message action', () => {
                     id: 'chatMessage_0',
                     message,
                     time: currentTime,
-                    channelType: ChannelType.Custom,
+                    channelType: ChannelType.Private,
                     location: {
                         x: 50,
                         y: 100,
@@ -82,7 +82,7 @@ describe('Chat module - Send chat message action', () => {
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
             type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             message,
         });
 
@@ -94,7 +94,7 @@ describe('Chat module - Send chat message action', () => {
                     id: 'chatMessage_0',
                     message,
                     time: currentTime,
-                    channelType: ChannelType.Custom,
+                    channelType: ChannelType.Private,
                     location: {
                         x: 50,
                         y: 100,
@@ -114,7 +114,7 @@ describe('Chat module - Send chat message action', () => {
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
             type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             message,
         });
 
@@ -130,7 +130,7 @@ describe('Chat module - Send chat message action', () => {
         let dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
             type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: 'SOME_RANDOM_ID',
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             message,
         });
 
@@ -144,7 +144,7 @@ describe('Chat module - Send chat message action', () => {
         let dataPackage = engineManager.callPlayerAction(players['3'].socketId, {
             type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             message,
         });
 
@@ -159,14 +159,14 @@ describe('Chat module - Send chat message action', () => {
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
             type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             message: message1,
         });
 
         dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
             type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             message: message2,
         });
 
@@ -188,14 +188,14 @@ describe('Chat module - Send chat message action', () => {
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
             type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             message: message1,
         });
 
         dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
             type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: recentlyCreatedChatChannelId,
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             message: message2,
         });
 
@@ -214,7 +214,7 @@ describe('Chat module - Send chat message action', () => {
         engineManager.callPlayerAction(players['1'].socketId, {
             type: ChatChannelClientActions.SendChatMessage,
             chatChannelId: secChatChannelId,
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             message: 'Siema',
         });
 
