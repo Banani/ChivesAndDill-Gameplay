@@ -1,6 +1,7 @@
-import { CharacterClientActions, ChatChannelClientActions, GroupClientActions, ItemClientActions, NpcClientActions, PlayerClientActions, SpellClientActions } from '@bananos/types';
+import { PlayerClientActions } from '@bananos/types';
 import * as _ from 'lodash';
 import { filter, find, forEach, mergeWith } from 'lodash';
+import { AllowedClientActions } from '../EngineActions';
 import type { EngineEventCrator } from '../EngineEventsCreator';
 import { EventParser } from '../EventParser';
 import { Notifier } from '../Notifier';
@@ -27,9 +28,6 @@ export class SocketConnectionService extends EventParser {
             [PlayerEngineEvents.NewPlayerCreated]: this.handleNewPlayerCreated
         };
     }
-
-    // Not sure about it
-    getSocketById = (userId) => this.sockets[userId];
 
     sendMessages = () => {
         const commonPackage = {};
@@ -72,57 +70,15 @@ export class SocketConnectionService extends EventParser {
     handleNewPlayerCreated: EngineEventHandler<NewPlayerCreatedEvent> = ({ event, services }) => {
         this.sockets[event.playerId] = event.socket;
 
-        // Upewnic sie ze ktos zlosliwy nie rzuci internalowego eventu
         event.socket.onAny((type, args) => {
-
-            if (type != CharacterClientActions.PlayerStartMove &&
-                type != CharacterClientActions.PlayerStopMove &&
-
-                type != PlayerClientActions.CreatePlayerCharacter &&
-                type != PlayerClientActions.OpenLoot &&
-                type != PlayerClientActions.CloseLoot &&
-                type != PlayerClientActions.PickCoinsFromCorpse &&
-                type != PlayerClientActions.PickItemFromCorpse &&
-
-                type != ChatChannelClientActions.SendChatMessage &&
-                type != ChatChannelClientActions.CreateChatChannel &&
-                type != ChatChannelClientActions.DeleteChatChannel &&
-                type != ChatChannelClientActions.AddPlayerCharacterToChatChannel &&
-                type != ChatChannelClientActions.RemovePlayerCharacterFromChatChannel &&
-                type != ChatChannelClientActions.LeaveChatChannel &&
-                type != ChatChannelClientActions.ChangeChatChannelOwner &&
-
-                type != GroupClientActions.InviteToParty &&
-                type != GroupClientActions.PromoteToLeader &&
-                type != GroupClientActions.UninviteFromParty &&
-                type != GroupClientActions.AcceptInvite &&
-                type != GroupClientActions.DeclineInvite &&
-                type != GroupClientActions.LeaveParty &&
-
-                type != ItemClientActions.DeleteItem &&
-                type != ItemClientActions.EquipItem &&
-                type != ItemClientActions.MoveItemInBag &&
-                type != ItemClientActions.RequestItemTemplates &&
-                type != ItemClientActions.SplitItemStackInBag &&
-                type != ItemClientActions.StripItem &&
-
-                type != SpellClientActions.CastSpell &&
-                type != SpellClientActions.RequestSpellDefinitions &&
-
-                type != NpcClientActions.OpenNpcConversationDialog &&
-                type != NpcClientActions.CloseNpcConversationDialog &&
-                type != NpcClientActions.FinalizeQuestWithNpc &&
-                type != NpcClientActions.TakeQuestFromNpc &&
-                type != NpcClientActions.BuyItemFromNpc &&
-                type != NpcClientActions.SellItemToNpc) {
-                return;
+            if (!AllowedClientActions[type]) {
+                return
             }
 
             const playerCharacter = find(services.playerCharacterService.getAllCharacters(), playerCharacter => playerCharacter.ownerId === event.playerId);
             // TODO: Fajnie by było sprawdzic czy wszystkie wymagane pola sa uzupełnione.
             this.engineEventCrator.asyncCeateEvent<EngineEvent>({
                 type,
-                // Create Character nie ma ustawionego requestingCharacterId
                 ownerId: event.playerId,
                 requestingCharacterId: playerCharacter?.id,
                 ...args,

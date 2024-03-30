@@ -41,6 +41,7 @@ import {
     TakeQuestFromNpc,
     UninviteFromParty
 } from "@bananos/types";
+import * as _ from "lodash";
 import { EngineActionHandler } from "./types";
 
 export interface CharacterActionsMap {
@@ -99,3 +100,13 @@ export interface ItemActionsMap {
 }
 
 export type EngineActionsMap = CharacterActionsMap & PlayerActionsMap & ChatActionsMap & NpcActionsMap & GroupActionsMap & ItemActionsMap & SpellActionsMap;
+
+export const AllowedClientActions = _.invert({
+    ...CharacterClientActions,
+    ...SpellClientActions,
+    ...PlayerClientActions,
+    ...ChatChannelClientActions,
+    ...NpcClientActions,
+    ...GroupClientActions,
+    ...ItemClientActions
+});
