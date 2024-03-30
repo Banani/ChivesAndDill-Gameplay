@@ -97,7 +97,7 @@ interface QuoteMessageDetails {
 interface SystemMessageDetails {
     channelType: ChannelType.System,
     targetId: string,
-    itemId?: string,
+    itemTemplateId?: string,
     amount?: number
 }
 

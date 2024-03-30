@@ -115,8 +115,8 @@ export class ChatMessageNotifier extends Notifier<ChatMessage> {
                 chatMessage.amount = event.chatMessage.amount;
             }
 
-            if (event.chatMessage.itemId) {
-                chatMessage.itemId = event.chatMessage.itemId;
+            if (event.chatMessage.itemTemplateId) {
+                chatMessage.itemTemplateId = event.chatMessage.itemTemplateId;
             }
             chatMembers = { [event.chatMessage.targetId]: services.playerCharacterService.getAllCharacters()[event.chatMessage.targetId] }
         }

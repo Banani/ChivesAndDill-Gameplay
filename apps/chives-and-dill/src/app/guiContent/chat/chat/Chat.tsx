@@ -62,13 +62,13 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
             </div>
         ),
         [ChannelType.System]: (message: SystemChatMessage) => {
-            if (message.itemId) {
-                if (!itemTemplates[message.itemId]) {
+            if (message.itemTemplateId) {
+                if (!itemTemplates[message.itemTemplateId]) {
                     return <span className={styles.itemReceiveMessage}>Loading...</span>
                 }
 
                 return <div>
-                    <span className={styles.itemReceiveMessage}>You receive item: </span>[{itemTemplates[message.itemId].name}]
+                    <span className={styles.itemReceiveMessage}>You receive item: </span>[{itemTemplates[message.itemTemplateId].name}]
                 </div>
             }
 
@@ -102,8 +102,8 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
 
     useEffect(() => {
         forEach(chatMessages, message => {
-            if (message.channelType === ChannelType.System && message.itemId && !itemTemplates[message.itemId]) {
-                requestItemTemplate(message.itemId);
+            if (message.channelType === ChannelType.System && message.itemTemplateId && !itemTemplates[message.itemTemplateId]) {
+                requestItemTemplate(message.itemTemplateId);
             }
         });
     }, [chatMessages]);
