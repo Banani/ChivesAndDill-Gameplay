@@ -1,13 +1,12 @@
+import { CloseNpcConversationDialog, NpcClientActions, OpenNpcConversationDialog } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { EngineEventHandler, PlayerMovedEvent } from '../../../types';
+import { EngineActionHandler, EngineEventHandler, PlayerMovedEvent } from '../../../types';
 import {
     ConversationWithNpcEndedEvent,
     ConversationWithNpcStartedEvent,
-    NpcEngineEvents,
-    PlayerTriesToFinishConversationEvent,
-    PlayerTriesToStartConversationEvent,
+    NpcEngineEvents
 } from '../Events';
 
 export class ActiveNpcConversationService extends EventParser {
@@ -17,13 +16,13 @@ export class ActiveNpcConversationService extends EventParser {
     constructor() {
         super();
         this.eventsToHandlersMap = {
-            [NpcEngineEvents.PlayerTriesToStartConversation]: this.handlePlayerTriesToStartConversation,
+            [NpcClientActions.OpenNpcConversationDialog]: this.handlePlayerTriesToStartConversation,
             [EngineEvents.CharacterMoved]: this.handlePlayerMoved,
-            [NpcEngineEvents.PlayerTriesToFinishConversation]: this.handlePlayerTriesToFinishConversation,
+            [NpcClientActions.CloseNpcConversationDialog]: this.handlePlayerTriesToFinishConversation,
         };
     }
 
-    handlePlayerTriesToStartConversation: EngineEventHandler<PlayerTriesToStartConversationEvent> = ({ event, services }) => {
+    handlePlayerTriesToStartConversation: EngineActionHandler<OpenNpcConversationDialog> = ({ event, services }) => {
         const npc = services.npcService.getNpcById(event.npcId);
         if (!npc) {
             this.sendErrorMessage(event.requestingCharacterId, 'That npc does not exist.');
@@ -51,7 +50,7 @@ export class ActiveNpcConversationService extends EventParser {
         }
     };
 
-    handlePlayerTriesToFinishConversation: EngineEventHandler<PlayerTriesToFinishConversationEvent> = ({ event }) => {
+    handlePlayerTriesToFinishConversation: EngineActionHandler<CloseNpcConversationDialog> = ({ event }) => {
         if (this.activeDialogs[event.requestingCharacterId]) {
             this.closeConversationDialog(event.requestingCharacterId);
         } else {

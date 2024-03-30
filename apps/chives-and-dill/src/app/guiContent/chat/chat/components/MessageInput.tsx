@@ -57,7 +57,7 @@ export const MessageInput = ({ chatChannels }: MessageInputProps) => {
             return RangeChannelInputTest[activeChannel.id];
         }
 
-        if (activeChannel.channelType === ChannelType.Custom) {
+        if (activeChannel.channelType === ChannelType.Private) {
             const channel = chatChannels[activeChannel.id];
 
             return `[${channelNumeratorContext.getNumberById(activeChannel.id)}. ${channel.name}]`;
@@ -71,7 +71,7 @@ export const MessageInput = ({ chatChannels }: MessageInputProps) => {
         const command = message.match('/(.*?) ')?.[1];
         if (command) {
             if (!isNaN(command) && channelNumeratorContext.channelNumerations[command]) {
-                setActiveChannel({ id: channelNumeratorContext.channelNumerations[command], channelType: ChannelType.Custom });
+                setActiveChannel({ id: channelNumeratorContext.channelNumerations[command], channelType: ChannelType.Private });
                 setMessage('');
             } else if (rangeChannelCommands.indexOf(command) != -1) {
                 setActiveChannel({ id: commandMapper[command], channelType: ChannelType.Range });

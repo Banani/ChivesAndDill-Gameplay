@@ -1,4 +1,4 @@
-import { CharacterType, CorpseLoot, GlobalStoreModule, PlayerClientActions } from '@bananos/types';
+import { CharacterType, CorpseLoot, GlobalStoreModule } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
@@ -10,21 +10,15 @@ import {
     ItemWasPickedFromCorpseEvent,
 } from '../../CharacterModule/Events';
 import {
-    CloseLootEvent,
     LootClosedEvent,
     LootOpenedEvent,
-    PlayerCharacterCreatedEvent,
-    PlayerEngineEvents,
-    PlayerTriesToOpenLootEvent,
-    PlayerTriesToPickCoinsFromCorpseEvent,
-    PlayerTriesToPickItemFromCorpseEvent,
+    PlayerEngineEvents
 } from '../Events';
 
 export class ActiveLootNotifier extends Notifier<CorpseLoot> {
     constructor() {
         super({ key: GlobalStoreModule.ACTIVE_LOOT });
         this.eventsToHandlersMap = {
-            [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
             [PlayerEngineEvents.LootOpened]: this.handleLootOpened,
             [PlayerEngineEvents.LootClosed]: this.handleLootClosed,
             [CharacterEngineEvents.ItemWasPickedFromCorpse]: this.handleItemWasPickedFromCorpse,
@@ -32,44 +26,6 @@ export class ActiveLootNotifier extends Notifier<CorpseLoot> {
             [CharacterEngineEvents.CoinsWerePickedFromCorpse]: this.handleCoinsWerePickedFromCorpse,
         };
     }
-
-    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
-        const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
-
-        currentSocket.on(PlayerClientActions.OpenLoot, ({ corpseId }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToOpenLootEvent>({
-                type: PlayerEngineEvents.PlayerTriesToOpenLoot,
-                requestingCharacterId: event.playerCharacter.id,
-                characterId: event.playerCharacter.id,
-                corpseId,
-            });
-        });
-
-        currentSocket.on(PlayerClientActions.PickItemFromCorpse, ({ corpseId, itemId }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToPickItemFromCorpseEvent>({
-                type: PlayerEngineEvents.PlayerTriesToPickItemFromCorpse,
-                requestingCharacterId: event.playerCharacter.id,
-                corpseId,
-                itemId,
-            });
-        });
-
-        currentSocket.on(PlayerClientActions.PickCoinsFromCorpse, ({ corpseId }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToPickCoinsFromCorpseEvent>({
-                type: PlayerEngineEvents.PlayerTriesToPickCoinsFromCorpse,
-                requestingCharacterId: event.playerCharacter.id,
-                corpseId,
-            });
-        });
-
-        currentSocket.on(PlayerClientActions.CloseLoot, () => {
-            this.engineEventCrator.asyncCeateEvent<CloseLootEvent>({
-                type: PlayerEngineEvents.CloseLoot,
-                requestingCharacterId: event.playerCharacter.id,
-                characterId: event.playerCharacter.id,
-            });
-        });
-    };
 
     handleLootOpened: EngineEventHandler<LootOpenedEvent> = ({ event, services }) => {
         const receiverId = this.getReceiverId(event.characterId, services);

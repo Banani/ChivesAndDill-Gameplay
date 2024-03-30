@@ -170,11 +170,15 @@ export enum CharacterClientActions {
     PlayerStopMove = 'PlayerStopMove',
 }
 
-export interface PlayerStartMove {
-    type: CharacterClientActions.PlayerStartMove;
+export interface PlayerMovement {
     y?: number;
     x?: number;
     source: string;
+}
+
+export interface PlayerStartMove {
+    type: CharacterClientActions.PlayerStartMove;
+    movement: PlayerMovement;
 }
 
 export interface PlayerStopMove {

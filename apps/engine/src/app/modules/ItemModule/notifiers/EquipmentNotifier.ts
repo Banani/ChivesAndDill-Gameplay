@@ -1,14 +1,11 @@
-import { CharacterType, EquipmentTrack, GlobalStoreModule, ItemClientActions } from '@bananos/types';
+import { CharacterType, EquipmentTrack, GlobalStoreModule } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
-import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
     EquipmentTrackCreatedEvent,
     ItemEngineEvents,
     ItemEquippedEvent,
-    ItemStrippedEvent,
-    PlayerTriesToEquipItemEvent,
-    PlayerTriesToStripItemEvent,
+    ItemStrippedEvent
 } from '../Events';
 
 export class EquipmentNotifier extends Notifier<EquipmentTrack> {
@@ -18,30 +15,8 @@ export class EquipmentNotifier extends Notifier<EquipmentTrack> {
             [ItemEngineEvents.EquipmentTrackCreated]: this.handleEquipmentTrackCreated,
             [ItemEngineEvents.ItemEquipped]: this.handleItemEquipped,
             [ItemEngineEvents.ItemStripped]: this.handleItemStripped,
-            [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
         };
     }
-
-    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
-        const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
-
-        currentSocket.on(ItemClientActions.EquipItem, ({ itemInstanceId }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToEquipItemEvent>({
-                type: ItemEngineEvents.PlayerTriesToEquipItem,
-                requestingCharacterId: event.playerCharacter.id,
-                itemInstanceId,
-            });
-        });
-
-        currentSocket.on(ItemClientActions.StripItem, ({ itemInstanceId, desiredLocation }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToStripItemEvent>({
-                type: ItemEngineEvents.PlayerTriesToStripItem,
-                requestingCharacterId: event.playerCharacter.id,
-                desiredLocation,
-                itemInstanceId,
-            });
-        });
-    };
 
     handleItemEquipped: EngineEventHandler<ItemEquippedEvent> = ({ event, services }) => {
         const player = services.characterService.getCharacterById(event.characterId);

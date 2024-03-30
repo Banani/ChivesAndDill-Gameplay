@@ -1,15 +1,13 @@
+import { AcceptInvite, DeclineInvite, GroupClientActions, InviteToParty } from '@bananos/types';
 import { find } from 'lodash';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler } from '../../../types';
+import { EngineActionHandler } from '../../../types';
 import {
     GroupEngineEvents,
     PartyInvitation,
     PlayerAcceptedInviteEvent,
     PlayerCharacterWasInvitedToAPartyEvent,
-    PlayerDeclinedInvitationEvent,
-    PlayerTriesToAcceptInviteEvent,
-    PlayerTriesToDeclineInviteEvent,
-    PlayerTriesToInviteChracterToPartyEvent
+    PlayerDeclinedInvitationEvent
 } from '../Events';
 import { MAX_PARTY_SIZE } from './PartyService';
 
@@ -20,13 +18,13 @@ export class PartyInvitationService extends EventParser {
     constructor() {
         super();
         this.eventsToHandlersMap = {
-            [GroupEngineEvents.PlayerTriesToInviteChracterToParty]: this.handlePlayerTriesToInviteChracterToParty,
-            [GroupEngineEvents.PlayerTriesToDeclineInvite]: this.handlePlayerTriesToDeclineInvite,
-            [GroupEngineEvents.PlayerTriesToAcceptInvite]: this.handlePlayerTriesToAcceptInvite,
+            [GroupClientActions.InviteToParty]: this.handlePlayerTriesToInviteChracterToParty,
+            [GroupClientActions.DeclineInvite]: this.handlePlayerTriesToDeclineInvite,
+            [GroupClientActions.AcceptInvite]: this.handlePlayerTriesToAcceptInvite,
         };
     }
 
-    handlePlayerTriesToInviteChracterToParty: EngineEventHandler<PlayerTriesToInviteChracterToPartyEvent> = ({ event, services }) => {
+    handlePlayerTriesToInviteChracterToParty: EngineActionHandler<InviteToParty> = ({ event, services }) => {
         const character = services.characterService.getAllCharacters()[event.characterId];
 
         if (event.characterId === event.requestingCharacterId) {
@@ -73,7 +71,7 @@ export class PartyInvitationService extends EventParser {
         });
     };
 
-    handlePlayerTriesToDeclineInvite: EngineEventHandler<PlayerTriesToDeclineInviteEvent> = ({ event, services }) => {
+    handlePlayerTriesToDeclineInvite: EngineActionHandler<DeclineInvite> = ({ event, services }) => {
         delete this.invitations[event.requestingCharacterId];
 
         this.engineEventCrator.asyncCeateEvent<PlayerDeclinedInvitationEvent>({
@@ -82,7 +80,7 @@ export class PartyInvitationService extends EventParser {
         });
     };
 
-    handlePlayerTriesToAcceptInvite: EngineEventHandler<PlayerTriesToAcceptInviteEvent> = ({ event, services }) => {
+    handlePlayerTriesToAcceptInvite: EngineActionHandler<AcceptInvite> = ({ event, services }) => {
         if (!this.invitations[event.requestingCharacterId]) {
             this.sendErrorMessage(event.requestingCharacterId, 'You do not have pending invitation.');
             return;

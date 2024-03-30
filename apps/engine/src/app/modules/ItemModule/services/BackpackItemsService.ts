@@ -1,7 +1,7 @@
-import { BackpackItemsSpot, ItemLocationInBag } from '@bananos/types';
+import { BackpackItemsSpot, ItemClientActions, ItemLocationInBag, MoveItemInBag, SplitItemStackInBag } from '@bananos/types';
 import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler } from '../../../types';
+import { EngineActionHandler, EngineEventHandler } from '../../../types';
 import { Services } from '../../../types/Services';
 import { QuestCompletedEvent, QuestEngineEvents } from '../../QuestModule/Events';
 import {
@@ -17,8 +17,7 @@ import {
     ItemRemovedFromBagEvent,
     ItemStrippedEvent,
     ItemsMovedInBagEvent,
-    PlayerTriesToMoveItemInBagEvent,
-    PlayerTriesToSplitItemStackEvent,
+    MoveItemInBagEvent,
 } from '../Events';
 
 export class BackpackItemsService extends EventParser {
@@ -33,9 +32,10 @@ export class BackpackItemsService extends EventParser {
             [ItemEngineEvents.ItemStripped]: this.handleItemStripped,
             [ItemEngineEvents.ItemDeleted]: this.handleItemDeleted,
             [ItemEngineEvents.ItemEquipped]: this.handleItemEquipped,
-            [ItemEngineEvents.PlayerTriesToMoveItemInBag]: this.handlePlayerTriesToMoveItemInBag,
-            [ItemEngineEvents.PlayerTriesToSplitItemStack]: this.handlePlayerTriesToSplitItemStack,
             [QuestEngineEvents.QuestCompleted]: this.handleQuestCompleted,
+            [ItemEngineEvents.MoveItemInBag]: this.handleMoveItemInBag,
+            [ItemClientActions.MoveItemInBag]: this.handlePlayerTriesToMoveItemInBag,
+            [ItemClientActions.SplitItemStackInBag]: this.handlePlayerTriesToSplitItemStack,
         };
     }
 
@@ -264,7 +264,7 @@ export class BackpackItemsService extends EventParser {
         });
     };
 
-    handlePlayerTriesToSplitItemStack: EngineEventHandler<PlayerTriesToSplitItemStackEvent> = ({ event, services }) => {
+    handlePlayerTriesToSplitItemStack: EngineActionHandler<SplitItemStackInBag> = ({ event, services }) => {
         const { backpack, spot } = this.findItemLocationInBag(event.requestingCharacterId, event.itemId);
         if (!backpack || !spot) {
             this.sendErrorMessage(event.requestingCharacterId, 'You does not have that item.');
@@ -284,10 +284,10 @@ export class BackpackItemsService extends EventParser {
         }
 
         if (bagSpot.amount === event.amount) {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToMoveItemInBagEvent>({
-                type: ItemEngineEvents.PlayerTriesToMoveItemInBag,
+            this.engineEventCrator.asyncCeateEvent<MoveItemInBagEvent>({
+                type: ItemEngineEvents.MoveItemInBag,
                 directionLocation: event.directionLocation,
-                requestingCharacterId: event.requestingCharacterId,
+                characterId: event.requestingCharacterId,
                 itemId: event.itemId,
             });
             return;
@@ -332,23 +332,21 @@ export class BackpackItemsService extends EventParser {
         return { backpack, spot };
     };
 
-    handlePlayerTriesToMoveItemInBag: EngineEventHandler<PlayerTriesToMoveItemInBagEvent> = ({ event, services }) => {
-        const characterId = event.requestingCharacterId;
-        const { backpack, spot } = this.findItemLocationInBag(characterId, event.itemId);
+    moveItemInBag = (services, characterId, itemId, directionLocation) => {
+        const { backpack, spot } = this.findItemLocationInBag(characterId, itemId);
         const backpackSizes = services.backpackService.getBackpackSizes(characterId);
 
         if (!backpack) {
             return;
         }
 
-        if (!backpackSizes[event.directionLocation.backpack] || backpackSizes[event.directionLocation.backpack] <= event.directionLocation.spot) {
+        if (!backpackSizes[directionLocation.backpack] || backpackSizes[directionLocation.backpack] <= directionLocation.spot) {
             this.sendErrorMessage(characterId, 'Invalid backpack location.');
             return;
         }
 
         const items = [];
         const characterItems = this.itemsPositions[characterId];
-        const { directionLocation } = event;
         const itemToMove = characterItems[backpack][spot];
         const itemOnDirectionSpot = this.getItemFromSpot(characterId, directionLocation);
 
@@ -394,6 +392,14 @@ export class BackpackItemsService extends EventParser {
             characterId,
             items,
         });
+    }
+
+    handleMoveItemInBag: EngineEventHandler<MoveItemInBagEvent> = ({ event, services }) => {
+        this.moveItemInBag(services, event.characterId, event.itemId, event.directionLocation);
+    }
+
+    handlePlayerTriesToMoveItemInBag: EngineActionHandler<MoveItemInBag> = ({ event, services }) => {
+        this.moveItemInBag(services, event.requestingCharacterId, event.itemId, event.directionLocation)
     };
 
     getItemFromSpot = (characterId: string, location: ItemLocationInBag) => this.itemsPositions[characterId][location.backpack][location.spot];

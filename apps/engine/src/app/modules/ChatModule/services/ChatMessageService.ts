@@ -17,7 +17,7 @@ export class ChatMessageService extends EventParser {
     }
 
     handleSendChatMessage: EngineEventHandler<SendChatMessageEvent> = ({ event, services }) => {
-        if (event.details.channelType !== ChannelType.Custom) {
+        if (event.details.channelType !== ChannelType.Private) {
             return;
         }
 
@@ -40,7 +40,7 @@ export class ChatMessageService extends EventParser {
             authorId: event.requestingCharacterId,
             time: now(),
             chatChannelId: event.details.chatChannelId,
-            channelType: ChannelType.Custom,
+            channelType: ChannelType.Private,
             location: event.details.location
         };
 

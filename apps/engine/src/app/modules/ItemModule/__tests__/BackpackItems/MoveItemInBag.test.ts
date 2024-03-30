@@ -1,7 +1,7 @@
 import { GlobalStoreModule, ItemClientActions } from '@bananos/types';
 import { MockedItemTemplates } from 'apps/engine/src/app/mocks';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from '../../../../testUtilities';
-import { GenerateItemForCharacterEvent, ItemEngineEvents, PlayerTriesToSplitItemStackEvent } from '../../Events';
+import { GenerateItemForCharacterEvent, ItemEngineEvents } from '../../Events';
 import { ItemTemplateService } from '../../services/ItemTemplateService';
 import _ = require('lodash');
 
@@ -178,9 +178,8 @@ describe('MoveItemInBag', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         let itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        engineManager.createSystemAction<PlayerTriesToSplitItemStackEvent>({
-            type: ItemEngineEvents.PlayerTriesToSplitItemStack,
-            requestingCharacterId: players['1'].characterId,
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
+            type: ItemClientActions.SplitItemStackInBag,
             directionLocation: { backpack: '1', spot: '1' },
             itemId,
             amount: 6,

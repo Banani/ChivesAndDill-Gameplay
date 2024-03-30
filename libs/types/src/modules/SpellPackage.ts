@@ -251,7 +251,8 @@ export interface AreaTimeEffect {
 }
 
 export enum SpellClientActions {
-    RequestSpellDefinitions = 'RequestSpellDefinitions',
+    RequestSpellDefinitions = 'Player_RequestSpellDefinitions',
+    CastSpell = "Player_CastSpell",
 }
 
 export interface RequestSpellDefinitions {
@@ -259,7 +260,14 @@ export interface RequestSpellDefinitions {
     spellIds: string[];
 }
 
-export type EngineSpellAction = RequestSpellDefinitions;
+export interface CastSpell {
+    type: SpellClientActions.CastSpell;
+    directionLocation: Location;
+    spellId: string;
+    targetId: string;
+}
+
+export type EngineSpellAction = RequestSpellDefinitions | CastSpell;
 
 export enum SpellClientEvent {
     PlayerCreated = 'PlayerCreated',
@@ -272,11 +280,11 @@ export interface PlayerCreatedEvent {
 }
 
 export interface SpellLandedEvent {
-   type: SpellClientEvent.SpellLanded;
-   spell: any;
-   angle: number;
-   castLocation: Location;
-   directionLocation: Location;
+    type: SpellClientEvent.SpellLanded;
+    spell: any;
+    angle: number;
+    castLocation: Location;
+    directionLocation: Location;
 }
 
 export interface SpellCastedEvent {

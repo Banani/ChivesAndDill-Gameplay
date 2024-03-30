@@ -20,7 +20,7 @@ export class ItemMessagesService extends EventParser {
             details: {
                 channelType: ChannelType.System,
                 targetId: event.characterId,
-                itemId: event.itemTemplateId,
+                itemTemplateId: event.itemTemplateId,
                 amount: event.amount
             }
         });

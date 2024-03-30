@@ -95,17 +95,16 @@ export interface ItemLocationInBag {
 export type BackpackItemsSpot = Record<string, Record<string, ItemInstance>>;
 
 export enum ItemClientActions {
-    Deleteitem = 'DeleteItem',
-    MoveItemInBag = 'MoveItemInBag',
-    SplitItemStackInBag = 'SplitItemStackInBag',
-    RequestItemTemplates = 'RequestItemTemplates',
-
-    EquipItem = 'EquipItem',
-    StripItem = 'StripItem',
+    DeleteItem = 'Player_DeleteItem',
+    MoveItemInBag = 'Player_MoveItemInBag',
+    SplitItemStackInBag = 'Player_SplitItemStackInBag',
+    RequestItemTemplates = 'Player_RequestItemTemplates',
+    EquipItem = 'Player_EquipItem',
+    StripItem = 'Player_StripItem',
 }
 
 export interface DeleteItem {
-    type: ItemClientActions.Deleteitem;
+    type: ItemClientActions.DeleteItem;
     itemId: string;
 }
 

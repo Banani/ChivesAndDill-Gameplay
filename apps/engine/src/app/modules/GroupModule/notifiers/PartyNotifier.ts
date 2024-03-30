@@ -1,15 +1,13 @@
-import { GlobalStoreModule, GroupClientActions, Party } from '@bananos/types';
+import { GlobalStoreModule, Party } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
-import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { GroupEngineEvents, PartyCreatedEvent, PartyLeaderChangedEvent, PartyRemovedEvent, PlayerJoinedThePartyEvent, PlayerLeftThePartyEvent, PlayerTriesToLeavePartyEvent, PlayerTriesToPassLeaderEvent, PlayerTriesToUninviteFromPartyEvent } from '../Events';
+import { GroupEngineEvents, PartyCreatedEvent, PartyLeaderChangedEvent, PartyRemovedEvent, PlayerJoinedThePartyEvent, PlayerLeftThePartyEvent } from '../Events';
 
 export class PartyNotifier extends Notifier<Party> {
     constructor() {
         super({ key: GlobalStoreModule.PARTY });
         this.eventsToHandlersMap = {
-            [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
             [GroupEngineEvents.PartyCreated]: this.handlePartyCreated,
             [GroupEngineEvents.PartyRemoved]: this.handlePartyRemoved,
             [GroupEngineEvents.PlayerJoinedTheParty]: this.handlePlayerJoinedTheParty,
@@ -17,38 +15,6 @@ export class PartyNotifier extends Notifier<Party> {
             [GroupEngineEvents.PlayerLeftTheParty]: this.handlePlayerLeftTheParty
         };
     }
-
-    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
-        const receiverId = this.getReceiverId(event.playerCharacter.id, services);
-        if (!receiverId) {
-            return;
-        }
-
-        const currentSocket = services.socketConnectionService.getSocketById(receiverId);
-
-        currentSocket.on(GroupClientActions.PromoteToLeader, ({ characterId }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToPassLeaderEvent>({
-                type: GroupEngineEvents.PlayerTriesToPassLeader,
-                requestingCharacterId: event.playerCharacter.id,
-                characterId
-            });
-        });
-
-        currentSocket.on(GroupClientActions.LeaveParty, () => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToLeavePartyEvent>({
-                type: GroupEngineEvents.PlayerTriesToLeaveParty,
-                requestingCharacterId: event.playerCharacter.id
-            });
-        });
-
-        currentSocket.on(GroupClientActions.UninviteFromParty, ({ characterId }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToUninviteFromPartyEvent>({
-                type: GroupEngineEvents.PlayerTriesToUninviteFromParty,
-                requestingCharacterId: event.playerCharacter.id,
-                characterId
-            });
-        });
-    };
 
     handlePartyCreated: EngineEventHandler<PartyCreatedEvent> = ({ event, services }) => {
         const toUpdate = [];

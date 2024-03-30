@@ -1,10 +1,12 @@
 import { ChannelChatMessage, ChannelType, ChatChannel, ChatChannelClientActions, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage, SystemChatMessage } from '@bananos/types';
+import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
+import { ItemPreviewTooltip } from 'apps/chives-and-dill/src/components/itemPreview/itemPreviewTooltip/ItemPreviewTooltip';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { forEach, map } from 'lodash';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { GameControllerContext } from '../../../../contexts/GameController';
 import { ChannelNumeratorContext } from '../contexts';
 import styles from './Chat.module.scss';
@@ -38,11 +40,20 @@ export const Chat = () => {
     />
 }
 
-const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getChannelNumberById, lastUpdateTime }: ChatInternalProps) => {
+const ChatInternal = React.memo(({
+    characters,
+    chatChannels,
+    chatMessages,
+    getChannelNumberById,
+    lastUpdateTime,
+}: ChatInternalProps) => {
     const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
     const menuContext = useContext(MenuContext);
     const { setActiveTarget } = useContext(GameControllerContext);
     const { callEngineAction } = useContext(EngineContext);
+
+    const [itemModal, setItemModal] = useState(null);
+    const itemModalRef = useRef(null);
 
     const lastMessage = useRef(null);
     const modes = ['General', 'Combat Log', 'Global'];
@@ -62,21 +73,26 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
             </div>
         ),
         [ChannelType.System]: (message: SystemChatMessage) => {
-            if (message.itemId) {
-                if (!itemTemplates[message.itemId]) {
+            if (message.itemTemplateId) {
+                if (!itemTemplates[message.itemTemplateId]) {
                     return <span className={styles.itemReceiveMessage}>Loading...</span>
                 }
 
                 return <div>
-                    <span className={styles.itemReceiveMessage}>You receive item: </span>[{itemTemplates[message.itemId].name}]
-                </div>
+                    <span className={styles.itemReceiveMessage}>You receive item: </span>
+                    <span
+                        onClick={() => setItemModal(itemTemplates[message.itemTemplateId])}
+                    >
+                        [{itemTemplates[message.itemTemplateId].name}]
+                    </span>
+                </div >
             }
 
             return <div className={styles.systemMessage}>
                 {message.message}
             </div>
         },
-        [ChannelType.Custom]: (message: ChannelChatMessage) => (
+        [ChannelType.Private]: (message: ChannelChatMessage) => (
             <>
                 <span
                     onContextMenu={(e) => {
@@ -102,8 +118,8 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
 
     useEffect(() => {
         forEach(chatMessages, message => {
-            if (message.channelType === ChannelType.System && message.itemId && !itemTemplates[message.itemId]) {
-                requestItemTemplate(message.itemId);
+            if (message.channelType === ChannelType.System && message.itemTemplateId && !itemTemplates[message.itemTemplateId]) {
+                requestItemTemplate(message.itemTemplateId);
             }
         });
     }, [chatMessages]);
@@ -112,19 +128,43 @@ const ChatInternal = React.memo(({ characters, chatChannels, chatMessages, getCh
         lastMessage.current.scrollIntoView();
     }, [chatMessages, lastUpdateTime]);
 
+    useEffect(() => {
+        const handleOutsideClick = (e) => {
+            if (itemModalRef.current && !itemModalRef.current.contains(e.target)) {
+                setItemModal(null);
+            };
+        };
+        document.addEventListener('mousedown', handleOutsideClick);
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, []);
+
     return (
-        <div className={styles.chatContainer}>
-            <div className={styles.channelsContainer}>{mapChannels}</div>
-            <div className={styles.chatContent}>
-                <div className={styles.messagesHolder}>
-                    {map(chatMessages, (message, id) => (
-                        <div key={id} className={styles.message}>{MessageMappers[message.channelType](message)}</div>
-                    ))}
-                    <div ref={lastMessage}></div>
+        <>
+            <div className={styles.chatContainer}>
+                <div className={styles.channelsContainer}>{mapChannels}</div>
+                <div className={styles.chatContent}>
+                    <div className={styles.messagesHolder}>
+                        {map(chatMessages, (message, id) => (
+                            <div key={id} className={styles.message}>{MessageMappers[message.channelType](message)}</div>
+                        ))}
+                        <div ref={lastMessage}></div>
+                    </div>
                 </div>
+                <MessageInput chatChannels={chatChannels} />
             </div>
-            <MessageInput chatChannels={chatChannels} />
-        </div>
+            {itemModal ?
+                <div className={styles.ItemPreviewTooltipContainer} ref={itemModalRef}>
+                    <ItemPreviewTooltip
+                        itemData={itemModal}
+                        showMoney={true}
+                        highlight={ItemPreviewHighlight.full}
+                    />
+                </div>
+                : null}
+        </>
     );
 },
     (oldProps, newProps) => oldProps.lastUpdateTime === newProps.lastUpdateTime

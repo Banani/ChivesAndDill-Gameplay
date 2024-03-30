@@ -1,7 +1,7 @@
-import { Party } from '@bananos/types';
+import { GroupClientActions, LeaveParty, Party, PromoteToLeader, UninviteFromParty } from '@bananos/types';
 import { find } from 'lodash';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler } from '../../../types';
+import { EngineActionHandler, EngineEventHandler } from '../../../types';
 import {
     GroupEngineEvents,
     PartyCreatedEvent,
@@ -9,10 +9,7 @@ import {
     PartyRemovedEvent,
     PlayerAcceptedInviteEvent,
     PlayerJoinedThePartyEvent,
-    PlayerLeftThePartyEvent,
-    PlayerTriesToLeavePartyEvent,
-    PlayerTriesToPassLeaderEvent,
-    PlayerTriesToUninviteFromPartyEvent
+    PlayerLeftThePartyEvent
 } from '../Events';
 
 export const MAX_PARTY_SIZE = 40;
@@ -25,9 +22,9 @@ export class PartyService extends EventParser {
         super();
         this.eventsToHandlersMap = {
             [GroupEngineEvents.PlayerAcceptedInvite]: this.handlePlayerAcceptedInvite,
-            [GroupEngineEvents.PlayerTriesToPassLeader]: this.handlePlayerTriesToPassLeader,
-            [GroupEngineEvents.PlayerTriesToLeaveParty]: this.handlePlayerTriesToLeaveParty,
-            [GroupEngineEvents.PlayerTriesToUninviteFromParty]: this.handlePlayerTriesToUninviteFromParty
+            [GroupClientActions.PromoteToLeader]: this.handlePlayerTriesToPassLeader,
+            [GroupClientActions.LeaveParty]: this.handlePlayerTriesToLeaveParty,
+            [GroupClientActions.UninviteFromParty]: this.handlePlayerTriesToUninviteFromParty
         };
     }
 
@@ -68,7 +65,7 @@ export class PartyService extends EventParser {
         });
     };
 
-    handlePlayerTriesToPassLeader: EngineEventHandler<PlayerTriesToPassLeaderEvent> = ({ event, services }) => {
+    handlePlayerTriesToPassLeader: EngineActionHandler<PromoteToLeader> = ({ event, services }) => {
         const party = this.getCharacterParty(event.requestingCharacterId);
 
         if (!party) {
@@ -99,7 +96,7 @@ export class PartyService extends EventParser {
         });
     }
 
-    handlePlayerTriesToLeaveParty: EngineEventHandler<PlayerTriesToLeavePartyEvent> = ({ event, services }) => {
+    handlePlayerTriesToLeaveParty: EngineActionHandler<LeaveParty> = ({ event, services }) => {
         const party = this.getCharacterParty(event.requestingCharacterId);
 
         if (!party) {
@@ -110,7 +107,7 @@ export class PartyService extends EventParser {
         this.removePlayerFromParty(party.id, event.requestingCharacterId);
     }
 
-    handlePlayerTriesToUninviteFromParty: EngineEventHandler<PlayerTriesToUninviteFromPartyEvent> = ({ event, services }) => {
+    handlePlayerTriesToUninviteFromParty: EngineActionHandler<UninviteFromParty> = ({ event, services }) => {
         const party = this.getCharacterParty(event.requestingCharacterId);
 
         if (!party) {

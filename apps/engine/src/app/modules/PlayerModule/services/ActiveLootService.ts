@@ -1,10 +1,11 @@
+import { CloseLoot, OpenLoot, PlayerClientActions } from '@bananos/types';
 import * as _ from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
-import { EngineEventHandler, PlayerMovedEvent } from '../../../types';
+import { EngineActionHandler, EngineEventHandler, PlayerMovedEvent } from '../../../types';
 import { CharacterEngineEvents, CorpseDropTrackRemovedEvent } from '../../CharacterModule/Events';
-import { CloseLootEvent, LootClosedEvent, LootOpenedEvent, PlayerEngineEvents, PlayerTriesToOpenLootEvent } from '../Events';
+import { LootClosedEvent, LootOpenedEvent, PlayerEngineEvents } from '../Events';
 
 export class ActiveLootService extends EventParser {
     // character_id => corpse_id
@@ -13,14 +14,14 @@ export class ActiveLootService extends EventParser {
     constructor() {
         super();
         this.eventsToHandlersMap = {
-            [PlayerEngineEvents.PlayerTriesToOpenLoot]: this.handlePlayerTriesToOpenLoot,
-            [PlayerEngineEvents.CloseLoot]: this.handleCloseLoot,
+            [PlayerClientActions.OpenLoot]: this.handlePlayerTriesToOpenLoot,
+            [PlayerClientActions.CloseLoot]: this.handlePlayerTriesToCloseLoot,
             [CharacterEngineEvents.CorpseDropTrackRemoved]: this.handleCorpseDropTrackRemoved,
             [EngineEvents.CharacterMoved]: this.handlePlayerMoved, // TODO: ten event powinien byc odpalany tylko dla characterow w activeLoots
         };
     }
 
-    handlePlayerTriesToOpenLoot: EngineEventHandler<PlayerTriesToOpenLootEvent> = ({ event, services }) => {
+    handlePlayerTriesToOpenLoot: EngineActionHandler<OpenLoot> = ({ event, services }) => {
         const corpse = services.corpseDropService.getCorpseDropTrackById(event.corpseId);
         if (!corpse) {
             this.sendErrorMessage(event.requestingCharacterId, 'This corpse does not exist.');
@@ -33,17 +34,17 @@ export class ActiveLootService extends EventParser {
             return;
         }
 
-        if (this.activeLoots[event.characterId]) {
-            this.closeLoot(event.characterId);
+        if (this.activeLoots[event.requestingCharacterId]) {
+            this.closeLoot(event.requestingCharacterId);
         }
 
-        this.activeLoots[event.characterId] = event.corpseId;
+        this.activeLoots[event.requestingCharacterId] = event.corpseId;
         const items = services.corpseDropService.getCorpseDropTrackById(event.corpseId);
 
         if (items) {
             this.engineEventCrator.asyncCeateEvent<LootOpenedEvent>({
                 type: PlayerEngineEvents.LootOpened,
-                characterId: event.characterId,
+                characterId: event.requestingCharacterId,
                 corpseId: event.corpseId,
                 corpseDropTrack: items,
             });
@@ -56,8 +57,8 @@ export class ActiveLootService extends EventParser {
         }
     };
 
-    handleCloseLoot: EngineEventHandler<CloseLootEvent> = ({ event }) => {
-        this.closeLoot(event.characterId);
+    handlePlayerTriesToCloseLoot: EngineActionHandler<CloseLoot> = ({ event }) => {
+        this.closeLoot(event.requestingCharacterId);
     };
 
     closeLoot = (characterId: string) => {
