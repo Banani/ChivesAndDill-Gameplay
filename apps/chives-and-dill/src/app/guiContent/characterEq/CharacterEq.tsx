@@ -62,12 +62,14 @@ export const CharacterEq = () => {
    }, []);
 
    const stats = _.map(activePlayerAttributes, (value, key) => {
-      return (
-         <p key={key}>
-            <span className={styles.ChangeColor}>{`${key}: `}</span>
-            {value}
-         </p>
-      );
+      if (value > 0) {
+         return (
+            <p key={key}>
+               <span className={styles.ChangeColor}>{`${key}: `}</span>
+               {value}
+            </p>
+         );
+      }
    });
 
    const restructureItemsBySlot = (items) => {
