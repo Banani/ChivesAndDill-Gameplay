@@ -208,7 +208,15 @@ describe('Equipment', () => {
         });
         checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
             data: {
-                playerCharacter_1: { '1': { '1': { amount: 1, itemId: itemId1 } } },
+                playerCharacter_1: {
+                    '1': {
+                        '1': {
+                            amount: 1,
+                            itemId: itemId1,
+                            itemTemplateId: "6",
+                        }
+                    }
+                },
             },
         });
     });
@@ -297,7 +305,15 @@ describe('Equipment', () => {
         });
         checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
             data: {
-                playerCharacter_1: { '1': { '2': { amount: 1, itemId: itemId1 } } },
+                playerCharacter_1: {
+                    '1': {
+                        '2': {
+                            amount: 1,
+                            itemId: itemId1,
+                            itemTemplateId: "8",
+                        }
+                    }
+                },
             },
         });
     });
@@ -399,6 +415,7 @@ describe('Equipment', () => {
                         '3': {
                             amount: 1,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "6",
                         },
                     },
                 },
@@ -432,6 +449,7 @@ describe('Equipment', () => {
                         '0': {
                             amount: 1,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "6",
                         },
                     },
                 },

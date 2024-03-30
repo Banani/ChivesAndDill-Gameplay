@@ -1,4 +1,4 @@
-import { BackpackItemsSpot, CharacterType, GlobalStoreModule } from '@bananos/types';
+import { BackpackItemsSpotReference, CharacterType, GlobalStoreModule } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
@@ -10,7 +10,7 @@ import {
     ItemsMovedInBagEvent,
 } from '../Events';
 
-export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
+export class BackpackItemsNotifier extends Notifier<BackpackItemsSpotReference> {
     constructor() {
         super({ key: GlobalStoreModule.BACKPACK_ITEMS });
         this.eventsToHandlersMap = {
@@ -41,6 +41,8 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
             return;
         }
 
+        const item = services.itemService.getItemById(event.itemId);
+
         this.multicastMultipleObjectsUpdate([
             {
                 receiverId: player.ownerId,
@@ -49,7 +51,8 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
                         [event.position.backpack]: {
                             [event.position.spot]: {
                                 amount: event.amount,
-                                itemId: event.itemId,
+                                itemId: item.itemId,
+                                itemTemplateId: item.itemTemplateId
                             },
                         },
                     },
@@ -93,8 +96,12 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
                 toUpdate[item.newLocation.backpack] = {};
             }
 
+            const itemDefinition = services.itemService.getItemById(item.itemInstance.itemId);
             delete toDelete[item.newLocation.backpack][item.newLocation.spot];
-            toUpdate[item.newLocation.backpack][item.newLocation.spot] = item.itemInstance;
+            toUpdate[item.newLocation.backpack][item.newLocation.spot] = {
+                ...item.itemInstance,
+                itemTemplateId: itemDefinition.itemTemplateId
+            };
         });
 
         _.forEach(toDelete, (backpack, keys) => {

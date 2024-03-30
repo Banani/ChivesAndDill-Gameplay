@@ -53,6 +53,7 @@ describe('MoveItemInBag', () => {
                         '2': {
                             amount: 1,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "1",
                         },
                     },
                 },
@@ -153,10 +154,12 @@ describe('MoveItemInBag', () => {
                         '0': {
                             amount: 1,
                             itemId: 'ItemInstance_1',
+                            itemTemplateId: "2",
                         },
                         '1': {
                             amount: 1,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "1",
                         },
                     },
                 },
@@ -204,6 +207,7 @@ describe('MoveItemInBag', () => {
                         '0': {
                             amount: 11,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "3",
                         },
                     },
                 },
@@ -252,10 +256,12 @@ describe('MoveItemInBag', () => {
                         '0': {
                             amount: 20,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "3",
                         },
                         '1': {
                             amount: 8,
                             itemId: 'ItemInstance_1',
+                            itemTemplateId: "3",
                         },
                     },
                 },
@@ -297,10 +303,12 @@ describe('MoveItemInBag', () => {
                         '0': {
                             amount: 1,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "1",
                         },
                         '1': {
                             amount: 1,
                             itemId: 'ItemInstance_1',
+                            itemTemplateId: "1",
                         },
                     },
                 },

@@ -53,6 +53,7 @@ export const CharacterEq = () => {
             return;
         }
 
+
         forEach(equipment[activeCharacterId], (itemReference) => {
             if (!itemReference) {
                 return;
@@ -85,7 +86,7 @@ export const CharacterEq = () => {
         .value();
 
     const renderItem = (itemSlot) => {
-        if (itemSlot) {
+        if (itemSlot && itemTemplates[itemSlot.itemTemplateId]) {
             return (
                 <div
                     className={styles.EqColumnsItem}

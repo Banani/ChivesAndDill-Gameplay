@@ -1,6 +1,5 @@
 import type {
     ActiveNpcConversation,
-    BackpackItemsSpot,
     BackpackTrack,
     ChatMessage,
     ItemTemplate,
@@ -12,6 +11,7 @@ import type {
     AbsorbShieldTrack,
     AreaTimeEffect,
     Attributes,
+    BackpackItemsSpotReference,
     ChannelingTrack,
     Character,
     CharacterClassPreview,
@@ -110,7 +110,7 @@ export interface EnginePackage {
     [GlobalStoreModule.EXPERIENCE]: PartialEnginePackage<ExperienceExternalTrack>;
     [GlobalStoreModule.CURRENCY]: PartialEnginePackage<number>;
     [GlobalStoreModule.BACKPACK_SCHEMA]: PartialEnginePackage<BackpackTrack>;
-    [GlobalStoreModule.BACKPACK_ITEMS]: PartialEnginePackage<BackpackItemsSpot>;
+    [GlobalStoreModule.BACKPACK_ITEMS]: PartialEnginePackage<BackpackItemsSpotReference>;
     [GlobalStoreModule.ITEMS]: PartialEnginePackage<ItemTemplate>;
     [GlobalStoreModule.NPC_CONVERSATION]: PartialEnginePackage<ActiveNpcConversation>;
     [GlobalStoreModule.NPC_STOCK]: PartialEnginePackage<NpcStock>;
@@ -157,7 +157,7 @@ export interface GlobalStore {
     [GlobalStoreModule.EXPERIENCE]: StoreModule<ExperienceExternalTrack>;
     [GlobalStoreModule.CURRENCY]: StoreModule<number>;
     [GlobalStoreModule.BACKPACK_SCHEMA]: StoreModule<BackpackTrack>;
-    [GlobalStoreModule.BACKPACK_ITEMS]: StoreModule<BackpackItemsSpot>;
+    [GlobalStoreModule.BACKPACK_ITEMS]: StoreModule<BackpackItemsSpotReference>;
     [GlobalStoreModule.ITEMS]: StoreModule<ItemTemplate>;
     [GlobalStoreModule.NPC_CONVERSATION]: StoreModule<ActiveNpcConversation>;
     [GlobalStoreModule.NPC_STOCK]: StoreModule<NpcStock>;

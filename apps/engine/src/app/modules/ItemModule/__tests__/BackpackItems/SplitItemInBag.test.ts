@@ -54,6 +54,7 @@ describe('SplitItemInBag', () => {
                         '1': {
                             itemId: 'ItemInstance_1',
                             amount: 5,
+                            itemTemplateId: "3",
                         },
                     },
                 },
@@ -127,6 +128,7 @@ describe('SplitItemInBag', () => {
                         '1': {
                             itemId: 'ItemInstance_0',
                             amount: 20,
+                            itemTemplateId: "3",
                         },
                     },
                 },

@@ -43,6 +43,7 @@ describe('GenerateItem', () => {
                         '0': {
                             amount: 1,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "1",
                         },
                     },
                 },
@@ -142,6 +143,7 @@ describe('GenerateItem', () => {
                         '0': {
                             amount: 1,
                             itemId: 'ItemInstance_1',
+                            itemTemplateId: "1",
                         },
                     },
                 },
@@ -169,10 +171,12 @@ describe('GenerateItem', () => {
                         '0': {
                             itemId: 'ItemInstance_0',
                             amount: 1,
+                            itemTemplateId: "1",
                         },
                         '1': {
                             itemId: 'ItemInstance_1',
                             amount: 1,
+                            itemTemplateId: "1",
                         },
                     },
                 },
@@ -200,10 +204,12 @@ describe('GenerateItem', () => {
                         '0': {
                             itemId: 'ItemInstance_0',
                             amount: 20,
+                            itemTemplateId: "3",
                         },
                         '1': {
                             itemId: 'ItemInstance_1',
                             amount: 15,
+                            itemTemplateId: "3",
                         },
                     },
                 },
@@ -265,6 +271,7 @@ describe('GenerateItem', () => {
                         '1': {
                             itemId: 'ItemInstance_7',
                             amount: 5,
+                            itemTemplateId: "3",
                         },
                         '3': {
                             amount: 20,
@@ -308,6 +315,7 @@ describe('GenerateItem', () => {
                         '1': {
                             itemId: 'ItemInstance_1',
                             amount: 5,
+                            itemTemplateId: "4",
                         },
                     },
                 },

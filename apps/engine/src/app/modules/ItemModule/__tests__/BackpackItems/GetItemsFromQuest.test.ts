@@ -47,10 +47,12 @@ describe('GetItemsFromQuest', () => {
                         '0': {
                             amount: 1,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "1",
                         },
                         '1': {
                             amount: 5,
                             itemId: 'ItemInstance_1',
+                            itemTemplateId: "3",
                         },
                     },
                 },

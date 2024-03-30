@@ -57,6 +57,12 @@ export interface ItemInstance {
     amount: number;
 }
 
+export interface ItemInstanceReference {
+    itemId: string;
+    amount: number;
+    itemTemplateId: string;
+}
+
 export enum ItemTemplateType {
     Equipment = 'equipment',
     Generic = 'generic',
@@ -95,6 +101,7 @@ export interface ItemLocationInBag {
 }
 
 export type BackpackItemsSpot = Record<string, Record<string, ItemInstance>>;
+export type BackpackItemsSpotReference = Record<string, Record<string, ItemInstanceReference>>;
 
 export enum ItemClientActions {
     DeleteItem = 'Player_DeleteItem',

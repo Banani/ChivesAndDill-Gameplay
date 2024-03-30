@@ -68,6 +68,7 @@ describe('BuyItemFromNpc action', () => {
                         '0': {
                             amount: 1,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "1",
                         },
                     },
                 },
@@ -147,6 +148,7 @@ describe('BuyItemFromNpc action', () => {
                         '10': {
                             amount: 1,
                             itemId: 'ItemInstance_0',
+                            itemTemplateId: "1",
                         },
                     },
                 },
