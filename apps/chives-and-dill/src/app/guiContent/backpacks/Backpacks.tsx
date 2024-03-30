@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 import { ItemIconPreview } from 'apps/chives-and-dill/src/components/itemPreview/itemIconPreview/ItemIconPreview';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
-import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import { GlobalModal, ModalsManagerContext } from 'apps/chives-and-dill/src/contexts/ModalsManagerContext';
 import _, { forEach } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { useEngineModuleReader } from '../../../hooks';
@@ -13,20 +13,19 @@ import { SquareButton } from '../components/squareButton/SquareButton';
 import styles from './Backpacks.module.scss';
 
 export const Backpacks = () => {
-
     const { data: backpackSchema } = useEngineModuleReader(GlobalStoreModule.BACKPACK_SCHEMA);
     const { data: backpackItems, lastUpdateTime: lastBackpackItemsUpdateTime } = useEngineModuleReader(GlobalStoreModule.BACKPACK_ITEMS);
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
 
     const [backpacksVisibility, changeBackpacksVisibility] = useState(true);
-    const keyBoardContext = useContext(KeyBoardContext);
+    const { activeGlobalModal, setActiveGlobalModal } = useContext(ModalsManagerContext);
 
     const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
 
     useEffect(() => {
-        // if (!modalStatus) {
-        //     return;
-        // }
+        if (activeGlobalModal !== GlobalModal.Backpack) {
+            return;
+        }
 
         forEach(backpackItems[activeCharacterId], (backpack) => {
             forEach(backpack, backpackSlot => {
@@ -35,7 +34,7 @@ export const Backpacks = () => {
                 }
             })
         });
-    }, [itemTemplates, lastBackpackItemsUpdateTime, requestItemTemplate]);
+    }, [itemTemplates, lastBackpackItemsUpdateTime, requestItemTemplate, activeGlobalModal]);
 
     const renderBackpackContent = (backpack, bagSize) => {
         return _.range(bagSize).map(index => {
@@ -51,16 +50,6 @@ export const Backpacks = () => {
         });
     }
 
-    useEffect(() => {
-        keyBoardContext.addKeyHandler({
-            id: 'backpacks',
-            matchRegex: 'b',
-            keydown: () => changeBackpacksVisibility(prevState => !prevState),
-        });
-
-        return () => keyBoardContext.removeKeyHandler('backpacks');
-    }, []);
-
     const backpackIcons = _.map(backpackSchema[activeCharacterId], (backpack, key) => (
         <div key={key} className={styles.backpackIcon}></div>
     ));
@@ -74,7 +63,7 @@ export const Backpacks = () => {
             <button className={styles.expandBackpacksIcon} onClick={() => changeBackpacksVisibility(!backpacksVisibility) as any}>
                 {backpacksVisibility === true ? <ArrowRightIcon /> : <ArrowLeftIcon />}
             </button>
-            <div className={styles.backpackContainer}>
+            {activeGlobalModal === GlobalModal.Backpack ? <div className={styles.backpackContainer}>
                 <div className={styles.backpackHeader}>
                     <div className={styles.headerImage}></div>
                     <SquareButton onClick={() => { }}><CloseIcon /></SquareButton>
@@ -87,7 +76,7 @@ export const Backpacks = () => {
                         return renderBackpackContent(backpack, backpackSchema[activeCharacterId][bagSlot]);
                     })}
                 </div>
-            </div>
+            </div> : null}
         </div>
     )
 }
