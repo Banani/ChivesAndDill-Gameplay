@@ -49,3 +49,11 @@
 .systemMessage {
     color: #ffff00;
 }
+
+.ItemPreviewTooltipContainer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-100%);        
+    z-index: 10;
+}
