@@ -3,10 +3,11 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ItemPreview } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
+import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
-import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { usePagination } from 'apps/creator-web/src/app/views/components/pagination/usePagination';
-import _ from 'lodash';
+import _, { forEach } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { ItemPreviewHighlight } from '../../../../../components/itemPreview/ItemPreview';
 import { MoneyBar } from '../../../../guiContent/moneyBar/MoneyBar';
@@ -34,8 +35,16 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
     }, [start, end]);
 
     const keyBoardContext = useContext(KeyBoardContext);
+    const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
     const activeNpc = characters[activeConversation[activeCharacterId]?.npcId];
-    const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: Object.keys(activeNpc.stock) });
+
+    useEffect(() => {
+        forEach(Object.keys(activeNpc.stock), (itemTemplateId) => {
+            if (!itemTemplates[itemTemplateId]) {
+                requestItemTemplate(itemTemplateId);
+            }
+        });
+    }, [itemTemplates, requestItemTemplate, activeNpc.stock]);
 
     useEffect(() => {
         keyBoardContext.addKeyHandler({
@@ -49,12 +58,12 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
         };
     }, []);
 
-    const allItems = _.map(activeNpc.stock, (_, itemId) =>
-        itemTemplates[itemId] ? (
-            <div className={styles.ItemContainer}>
+    const allItems = _.map(activeNpc.stock, (_, itemTemplateId) =>
+        itemTemplates[itemTemplateId] ? (
+            <div className={styles.ItemContainer} key={itemTemplateId}>
                 <ItemPreview
-                    itemData={itemTemplates[itemId]}
-                    handleItemClick={() => buyItem(itemTemplates[itemId], activeNpc)}
+                    itemData={itemTemplates[itemTemplateId] as any}
+                    handleItemClick={() => buyItem(itemTemplates[itemTemplateId], activeNpc)}
                     showMoney={true}
                     highlight={ItemPreviewHighlight.icon}
                 />

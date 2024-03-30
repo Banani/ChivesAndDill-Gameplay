@@ -1,13 +1,15 @@
-import { EquipItem, EquipmentSlot, EquipmentTrack, ItemClientActions, ItemTemplateType, PossibleEquipmentPlaces, StripItem } from '@bananos/types';
+import { EquipItem, EquipmentSlot, ItemClientActions, ItemTemplateType, StripItem } from '@bananos/types';
 import { findKey } from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineActionHandler, EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
+    EquipmentTrack,
     EquipmentTrackCreatedEvent,
     ItemEngineEvents,
     ItemEquippedEvent,
-    ItemStrippedEvent
+    ItemStrippedEvent,
+    PossibleEquipmentPlaces
 } from '../Events';
 
 const EquipmentSpotMap: Record<EquipmentSlot, PossibleEquipmentPlaces | PossibleEquipmentPlaces[]> = {
@@ -86,7 +88,7 @@ export class EquipmentService extends EventParser {
             type: ItemEngineEvents.ItemEquipped,
             characterId: event.requestingCharacterId,
             slot: targetSlot,
-            itemInstanceId: item.itemId,
+            itemInstanceId: item.itemId
         });
     };
 

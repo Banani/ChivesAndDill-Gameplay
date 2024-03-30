@@ -3,7 +3,6 @@ import type {
     BackpackItemsSpot,
     BackpackTrack,
     ChatMessage,
-    EquipmentTrack,
     ItemTemplate,
     NpcStock,
     Party,
@@ -26,6 +25,7 @@ import type {
     EngineNpcAction,
     EnginePlayerAction,
     EngineSpellAction,
+    EquipmentReferenceTrack,
     ExperienceExternalTrack,
     GroupClientActions,
     ItemClientActions,
@@ -118,7 +118,7 @@ export interface EnginePackage {
     [GlobalStoreModule.NPC_QUESTS]: PartialEnginePackage<Record<string, boolean>>;
     [GlobalStoreModule.QUEST_PROGRESS]: PartialEnginePackage<ExternalQuestProgress>;
     [GlobalStoreModule.CORPSE_DROP]: PartialEnginePackage<MonsterCorpse>;
-    [GlobalStoreModule.EQUIPMENT]: PartialEnginePackage<EquipmentTrack>;
+    [GlobalStoreModule.EQUIPMENT]: PartialEnginePackage<EquipmentReferenceTrack>;
     [GlobalStoreModule.ATTRIBUTES]: PartialEnginePackage<Attributes>;
     [GlobalStoreModule.COMBAT_STATE]: PartialEnginePackage<boolean>;
     [GlobalStoreModule.AVAILABLE_SPELLS]: PartialEnginePackage<boolean>;
@@ -165,7 +165,7 @@ export interface GlobalStore {
     [GlobalStoreModule.NPC_QUESTS]: StoreModule<Record<string, boolean>>;
     [GlobalStoreModule.QUEST_PROGRESS]: StoreModule<ExternalQuestProgress>;
     [GlobalStoreModule.CORPSE_DROP]: StoreModule<MonsterCorpse>;
-    [GlobalStoreModule.EQUIPMENT]: StoreModule<EquipmentTrack>;
+    [GlobalStoreModule.EQUIPMENT]: StoreModule<EquipmentReferenceTrack>;
     [GlobalStoreModule.ATTRIBUTES]: StoreModule<Attributes>;
     [GlobalStoreModule.COMBAT_STATE]: StoreModule<boolean>;
     [GlobalStoreModule.AVAILABLE_SPELLS]: StoreModule<boolean>;

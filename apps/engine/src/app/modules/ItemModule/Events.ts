@@ -1,4 +1,4 @@
-import { BackpackItemsSpot, BackpackTrack, EquipmentTrack, ItemInstance, ItemLocationInBag, PossibleEquipmentPlaces, RecursivePartial } from '@bananos/types';
+import { BackpackItemsSpot, BackpackTrack, ItemInstance, ItemLocationInBag, RecursivePartial } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 
 export enum ItemEngineEvents {
@@ -24,6 +24,32 @@ export enum ItemEngineEvents {
     MoveItemInBag = "MoveItemInBag",
     ItemsMovedInBag = 'ItemsMovedInBag',
 }
+
+// place => itemInstanceId
+export interface EquipmentTrack {
+    head: string | null;
+    neck: string | null;
+    shoulder: string | null;
+    back: string | null;
+    chest: string | null;
+    shirt: string | null;
+    tabard: string | null;
+    wrist: string | null;
+
+    hands: string | null;
+    waist: string | null;
+    legs: string | null;
+    feet: string | null;
+    finger1: string | null;
+    finger2: string | null;
+    trinket1: string | null;
+    trinket2: string | null;
+
+    mainHand: string | null;
+    offHand: string | null;
+}
+
+export type PossibleEquipmentPlaces = keyof EquipmentTrack;
 
 export interface CurrencyAmountUpdatedEvent extends EngineEvent {
     type: ItemEngineEvents.CurrencyAmountUpdated;

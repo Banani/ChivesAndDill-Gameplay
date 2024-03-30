@@ -1,4 +1,5 @@
-import { CharacterType, EquipmentTrack, GlobalStoreModule } from '@bananos/types';
+import { CharacterType, EquipmentReferenceTrack, GlobalStoreModule } from '@bananos/types';
+import { mapValues } from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
 import {
@@ -8,7 +9,7 @@ import {
     ItemStrippedEvent
 } from '../Events';
 
-export class EquipmentNotifier extends Notifier<EquipmentTrack> {
+export class EquipmentNotifier extends Notifier<EquipmentReferenceTrack> {
     constructor() {
         super({ key: GlobalStoreModule.EQUIPMENT });
         this.eventsToHandlersMap = {
@@ -24,7 +25,18 @@ export class EquipmentNotifier extends Notifier<EquipmentTrack> {
             return;
         }
 
-        this.broadcastObjectsUpdate({ objects: { [event.characterId]: { [event.slot]: event.itemInstanceId } } });
+        const item = services.itemService.getItemById(event.itemInstanceId);
+
+        this.broadcastObjectsUpdate({
+            objects: {
+                [event.characterId]: {
+                    [event.slot]: {
+                        itemInstanceId: event.itemInstanceId,
+                        itemTemplateId: item.itemTemplateId
+                    }
+                }
+            }
+        });
     };
 
     handleItemStripped: EngineEventHandler<ItemStrippedEvent> = ({ event, services }) => {
@@ -42,8 +54,22 @@ export class EquipmentNotifier extends Notifier<EquipmentTrack> {
             return;
         }
 
+        const eqTrack: EquipmentReferenceTrack = mapValues(event.equipmentTrack, itemInstanceId => {
+            if (itemInstanceId === null) {
+                return null;
+            }
+
+            const item = services.itemService.getItemById(itemInstanceId);
+
+            return {
+                itemInstanceId,
+                itemTemplateId: item.itemTemplateId
+            }
+        })
+
+
         this.broadcastObjectsUpdate({
-            objects: { [event.characterId]: event.equipmentTrack },
+            objects: { [event.characterId]: eqTrack },
         });
     };
 }
