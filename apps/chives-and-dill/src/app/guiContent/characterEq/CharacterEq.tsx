@@ -61,16 +61,15 @@ export const CharacterEq = () => {
       return () => keyBoardContext.removeKeyHandler('CharacterEq');
    }, []);
 
-   const stats = _.map(activePlayerAttributes, (value, key) => {
-      if (value > 0) {
-         return (
-            <p key={key}>
-               <span className={styles.ChangeColor}>{`${key}: `}</span>
-               {value}
-            </p>
-         );
-      }
-   });
+   const stats = _.chain(activePlayerAttributes)
+      .pickBy((value, key) => value > 0)
+      .map((value, key) => (
+         <p key={key}>
+            <span className={styles.ChangeColor}>{`${key}: `}</span>
+            {value}
+         </p>
+      ))
+      .value();
 
    const restructureItemsBySlot = (items) => {
       const itemsBySlot = {};
