@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, MutableRefObject } from 'react';
+import { EquipmentItem } from '../../app/guiContent/characterEq/CharacterEq';
+import { MoneyBar } from '../../app/guiContent/moneyBar/MoneyBar';
 import styles from './ItemPreview.module.scss';
 import { ItemIconPreview } from './itemIconPreview/ItemIconPreview';
-import { MoneyBar } from '../../app/guiContent/moneyBar/MoneyBar';
-import { EquipmentItem } from '../../app/guiContent/characterEq/CharacterEq';
 
 export enum ItemPreviewHighlight {
    none = 'none',
@@ -16,6 +16,7 @@ export interface ItemPreviewProps {
    highlight: ItemPreviewHighlight;
    handleItemClick?: () => void;
    showStackSize?: boolean;
+   tooltipContainer?: MutableRefObject<HTMLDivElement | null>;
 }
 
 export const ItemPreview: FunctionComponent<ItemPreviewProps> = ({ itemData, handleItemClick, showMoney, highlight }) => {

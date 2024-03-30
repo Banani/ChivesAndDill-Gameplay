@@ -1,9 +1,17 @@
 import { MoneyBar } from 'apps/chives-and-dill/src/app/guiContent/moneyBar/MoneyBar';
-import React from 'react';
+import React, { useRef } from 'react';
 import { ItemPreviewProps } from '../ItemPreview';
 import styles from './ItemPreviewTooltip.module.scss';
 
-export const ItemPreviewTooltip: React.FC<ItemPreviewProps> = ({ showMoney, itemData }) => {
+enum Dimension {
+   HEIGHT = "height",
+   WIDTH = "width"
+};
+
+export const ItemPreviewTooltip: React.FC<ItemPreviewProps> = ({ showMoney, itemData, tooltipContainer }) => {
+
+   const tooltip = useRef<HTMLDivElement>(null);
+
    const renderPrimaryStat = (value, name) => {
       return value ? <div>{'+ ' + value + ' ' + name}</div> : null;
    };
@@ -12,8 +20,41 @@ export const ItemPreviewTooltip: React.FC<ItemPreviewProps> = ({ showMoney, item
       return value ? <div>{value + ' ' + name}</div> : null;
    };
 
+   const checkIfObjectIsInScreen = (dimension: Dimension, tooltip) => {
+      const { x, y } = tooltipContainer.current?.getBoundingClientRect() || {};
+      const { width, height } = tooltip.current?.getBoundingClientRect() || {};
+
+      const positionOfContainer = dimension === Dimension.HEIGHT ? y : x;
+      const sizeOfObject = dimension === Dimension.HEIGHT ? height : width;
+
+      const windowDimension = dimension === Dimension.HEIGHT ? window.innerHeight : window.outerWidth;
+
+      //tutaj dodać kod dla innych przypadków
+      return positionOfContainer - sizeOfObject > 0 && positionOfContainer + sizeOfObject < windowDimension;
+   };
+
+   const getPositionForElement = (dimension: Dimension, tooltip) => {
+      const { height: containerHeight, width: containerWidth } = tooltipContainer?.current?.getBoundingClientRect() || {};
+      const { height: tooltipHeight, width: tooltipWidth } = tooltip?.current?.getBoundingClientRect() || {};
+      const containerSize = dimension === Dimension.HEIGHT ? containerHeight : containerWidth;
+      const tooltipSize = dimension === Dimension.HEIGHT ? tooltipHeight : tooltipWidth;
+
+      if (checkIfObjectIsInScreen(dimension, tooltip)) {
+         return containerSize;
+      }
+
+      return -tooltipSize;
+   };
+
+
    return (
-      <div className={styles.ItemPreviewTooltip}>
+      <div className={styles.ItemPreviewTooltip}
+         ref={tooltip}
+         style={{
+            left: getPositionForElement(Dimension.WIDTH, tooltip),
+            bottom: getPositionForElement(Dimension.HEIGHT, tooltip),
+         }}
+      >
          <div className={styles.ItemPrevTooltipName}>{itemData.name}</div>
          <div className={styles.ItemPrevTooltipLevel}>Item Level 1</div>
          <div className={styles.ItemPrevTooltipSlot}>
