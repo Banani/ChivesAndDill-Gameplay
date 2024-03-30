@@ -48,7 +48,7 @@ describe('Items', () => {
         });
     });
 
-    it('Player should get requested item templates', () => {
+    it('Player should get undefined, if such item does not exist', () => {
         const { players, engineManager } = setupEngine();
         const RANDOM_ID = 'RANDOM_ID';
 

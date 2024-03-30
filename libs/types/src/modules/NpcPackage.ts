@@ -8,12 +8,12 @@ export interface ActiveNpcConversation {
 export type NpcStock = Record<string, boolean>;
 
 export enum NpcClientActions {
-    OpenNpcConversationDialog = 'OpenNpcConversationDialog',
-    CloseNpcConversationDialog = 'CloseNpcConversationDialog',
-    BuyItemFromNpc = 'BuyItemFromNpc',
-    SellItemToNpc = 'SellItemToNpc',
-    TakeQuestFromNpc = 'TakeQuestFromNpc',
-    FinalizeQuestWithNpc = 'FinalizeQuestWithNpc',
+    OpenNpcConversationDialog = 'Player_OpenNpcConversationDialog',
+    CloseNpcConversationDialog = 'Player_CloseNpcConversationDialog',
+    BuyItemFromNpc = 'Player_BuyItemFromNpc',
+    SellItemToNpc = 'Player_SellItemToNpc',
+    TakeQuestFromNpc = 'Player_TakeQuestFromNpc',
+    FinalizeQuestWithNpc = 'Player_FinalizeQuestWithNpc',
 }
 
 export interface OpenNpcConversationDialog {
@@ -39,7 +39,7 @@ export interface SellItemToNpc {
     itemId: string;
 }
 
-export interface PlayerTriesToTakeQuestFromNpc {
+export interface TakeQuestFromNpc {
     type: NpcClientActions.TakeQuestFromNpc;
     npcId: string;
     questId: string;
@@ -56,5 +56,5 @@ export type EngineNpcAction =
     | CloseNpcConversationDialog
     | BuyItemFromNpc
     | SellItemToNpc
-    | PlayerTriesToTakeQuestFromNpc
+    | TakeQuestFromNpc
     | FinalizeQuestWithNpc;

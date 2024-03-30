@@ -1,16 +1,13 @@
-import { BackpackItemsSpot, CharacterType, GlobalStoreModule, ItemClientActions } from '@bananos/types';
+import { BackpackItemsSpot, CharacterType, GlobalStoreModule } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
-import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
     BackpackItemsContainmentUpdatedEvent,
     ItemAddedToCharacterEvent,
     ItemEngineEvents,
     ItemRemovedFromBagEvent,
     ItemsMovedInBagEvent,
-    PlayerTriesToMoveItemInBagEvent,
-    PlayerTriesToSplitItemStackEvent,
 } from '../Events';
 
 export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
@@ -20,33 +17,9 @@ export class BackpackItemsNotifier extends Notifier<BackpackItemsSpot> {
             [ItemEngineEvents.BackpackItemsContainmentUpdated]: this.handleBackpackItemsContainmentUpdated,
             [ItemEngineEvents.ItemAddedToCharacter]: this.handleItemAddedToCharacter,
             [ItemEngineEvents.ItemRemovedFromBag]: this.handleItemRemovedFromBag,
-            [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
             [ItemEngineEvents.ItemsMovedInBag]: this.handleItemsMovedInBag,
         };
     }
-
-    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
-        const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
-
-        currentSocket.on(ItemClientActions.MoveItemInBag, ({ itemId, directionLocation }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToMoveItemInBagEvent>({
-                type: ItemEngineEvents.PlayerTriesToMoveItemInBag,
-                requestingCharacterId: event.playerCharacter.id,
-                itemId,
-                directionLocation,
-            });
-        });
-
-        currentSocket.on(ItemClientActions.SplitItemStackInBag, ({ itemId, directionLocation, amount }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToSplitItemStackEvent>({
-                type: ItemEngineEvents.PlayerTriesToSplitItemStack,
-                requestingCharacterId: event.playerCharacter.id,
-                itemId,
-                amount,
-                directionLocation,
-            });
-        });
-    };
 
     handleBackpackItemsContainmentUpdated: EngineEventHandler<BackpackItemsContainmentUpdatedEvent> = ({ event, services }) => {
         const player = services.characterService.getCharacterById(event.characterId);

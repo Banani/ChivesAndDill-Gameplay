@@ -57,9 +57,9 @@ describe('Attributes', () => {
         checkIfPackageIsValid(GlobalStoreModule.ATTRIBUTES, dataPackage, {
             data: {
                 playerCharacter_1: {
-                    agility: 20,
-                    armor: 49,
-                    intelect: 20,
+                    agility: 0,
+                    armor: 69,
+                    intelect: 0,
                     spirit: 20,
                     stamina: 22,
                     strength: 23,
@@ -98,9 +98,9 @@ describe('Attributes', () => {
         checkIfPackageIsValid(GlobalStoreModule.ATTRIBUTES, dataPackage, {
             data: {
                 playerCharacter_1: {
-                    agility: 22,
-                    armor: 49,
-                    intelect: 20,
+                    agility: 2,
+                    armor: 69,
+                    intelect: 0,
                     spirit: 20,
                     stamina: 23,
                     strength: 23,
@@ -139,9 +139,9 @@ describe('Attributes', () => {
         checkIfPackageIsValid(GlobalStoreModule.ATTRIBUTES, dataPackage, {
             data: {
                 playerCharacter_1: {
-                    agility: 20,
-                    armor: 49,
-                    intelect: 20,
+                    agility: 0,
+                    armor: 69,
+                    intelect: 0,
                     spirit: 20,
                     stamina: 22,
                     strength: 23,
@@ -181,9 +181,9 @@ describe('Attributes', () => {
         checkIfPackageIsValid(GlobalStoreModule.ATTRIBUTES, dataPackage, {
             data: {
                 playerCharacter_1: {
-                    agility: 22,
-                    armor: 0,
-                    intelect: 20,
+                    agility: 2,
+                    armor: 20,
+                    intelect: 0,
                     spirit: 20,
                     stamina: 21,
                     strength: 20,

@@ -1,43 +1,34 @@
-import { GlobalStoreModule, ItemClientActions, ItemTemplate } from '@bananos/types';
+import { CharacterType, GlobalStoreModule, ItemClientActions, ItemTemplate, RequestItemTemplates } from '@bananos/types';
 import * as _ from 'lodash';
 import { Notifier } from '../../../Notifier';
-import { EngineEventHandler } from '../../../types';
-import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { ItemEngineEvents, PlayerTriesToDeleteItemEvent } from '../Events';
+import { EngineActionHandler } from '../../../types';
 
 export class ItemNotifier extends Notifier<ItemTemplate> {
     constructor() {
         super({ key: GlobalStoreModule.ITEMS });
         this.eventsToHandlersMap = {
-            [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
+            [ItemClientActions.RequestItemTemplates]: this.handlePlayerTriesToRequestItemTemplates
         };
     }
 
-    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
-        const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
+    handlePlayerTriesToRequestItemTemplates: EngineActionHandler<RequestItemTemplates> = ({ event, services }) => {
+        const character = services.characterService.getCharacterById(event.requestingCharacterId);
+        if (character.type !== CharacterType.Player) {
+            return;
+        }
 
-        currentSocket.on(ItemClientActions.Deleteitem, ({ itemId }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToDeleteItemEvent>({
-                type: ItemEngineEvents.PlayerTriesToDeleteItem,
-                requestingCharacterId: event.playerCharacter.id,
-                itemId,
-            });
-        });
+        const allItemTemplates = services.itemTemplateService.getData();
+        const itemTemplates = _.chain(event.itemTemplateIds)
+            .map((id) => ({ id }))
+            .keyBy('id')
+            .mapValues(({ id }) => allItemTemplates[id])
+            .value();
 
-        currentSocket.on(ItemClientActions.RequestItemTemplates, ({ itemTemplateIds }) => {
-            const allItemTemplates = services.itemTemplateService.getData();
-            const itemTemplates = _.chain(itemTemplateIds)
-                .map((id) => ({ id }))
-                .keyBy('id')
-                .mapValues(({ id }) => allItemTemplates[id])
-                .value();
-
-            this.multicastMultipleObjectsUpdate([
-                {
-                    receiverId: event.playerCharacter.ownerId,
-                    objects: itemTemplates,
-                },
-            ]);
-        });
-    };
+        this.multicastMultipleObjectsUpdate([
+            {
+                receiverId: character.ownerId,
+                objects: itemTemplates,
+            },
+        ]);
+    }
 }

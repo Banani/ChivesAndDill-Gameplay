@@ -3,14 +3,23 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 import { ItemIconPreview } from 'apps/chives-and-dill/src/components/itemPreview/itemIconPreview/ItemIconPreview';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
+import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
-import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
-import _ from 'lodash';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
+import _, { forEach } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { SquareButton } from '../components/squareButton/SquareButton';
 import styles from './CharacterEq.module.scss';
 
-interface EquipmentItem {
+export interface Stats {
+    armor?: number;
+    stamina?: number;
+    strength?: number;
+    agility?: number;
+    intelect?: number;
+    spirit?: number;
+}
+export interface EquipmentItem extends Stats {
     id: string;
     type: string;
     name: string;
@@ -19,18 +28,11 @@ interface EquipmentItem {
     stack: number;
     value: number;
     slot: string;
-    armor?: number;
-    stamina?: number;
-    strength?: number;
-  }
-  
-  interface EquipmentBySlot {
-    [slot: string]: EquipmentItem;
-  }
+}
 
 export const CharacterEq = () => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
-    const { data: equipment } = useEngineModuleReader(GlobalStoreModule.EQUIPMENT);
+    const { data: equipment, lastUpdateTime: equipmentLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.EQUIPMENT);
     const { data: experience } = useEngineModuleReader(GlobalStoreModule.EXPERIENCE);
     const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
     const { data: characterClasses } = useEngineModuleReader(GlobalStoreModule.CHARACTER_CLASS);
@@ -44,93 +46,108 @@ export const CharacterEq = () => {
     const keyBoardContext = useContext(KeyBoardContext);
     const { callEngineAction } = useContext(EngineContext);
 
-    const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: _.map(equipment, (item) => item.itemTemplateId) ?? [] });
+    const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
+
+    useEffect(() => {
+        if (!modalStatus) {
+            return;
+        }
+
+        forEach(equipment[activeCharacterId], (itemReference) => {
+            if (!itemReference) {
+                return;
+            }
+
+            if (!itemTemplates[itemReference.itemTemplateId]) {
+                requestItemTemplate(itemReference.itemTemplateId);
+            }
+        });
+    }, [itemTemplates, equipmentLastUpdateTime, modalStatus, requestItemTemplate]);
 
     useEffect(() => {
         keyBoardContext.addKeyHandler({
-           id: 'CharacterEq',
-           matchRegex: 'c',
-           keydown: () => setModalStatus(prevState => !prevState),
+            id: 'CharacterEq',
+            matchRegex: 'c',
+            keydown: () => setModalStatus((prevState) => !prevState),
         });
 
         return () => keyBoardContext.removeKeyHandler('CharacterEq');
-     }, []);
+    }, []);
 
-    const stats = _.map(activePlayerAttributes, (value, key) => {
-        return <p key={key}><span className={styles.ChangeColor}>{`${key}: `}</span>{value}</p>
-    });
-
-    const restructureItemsBySlot = (items) => {
-        const itemsBySlot = {};
-      
-        for (const itemId in items) {
-          const item = items[itemId];
-          const slot = item.slot;
-          itemsBySlot[slot] = item;
-        };
-        return itemsBySlot;
-    };
-
-    const getEqItemId = (itemInstanceId) => {
-        callEngineAction({
-            type: ItemClientActions.StripItem,
-            itemInstanceId
-        });
-    }
+    const stats = _.chain(activePlayerAttributes)
+        .pickBy((value, key) => value > 0)
+        .map((value, key) => (
+            <p key={key}>
+                <span className={styles.ChangeColor}>{`${key}: `}</span>
+                {value}
+            </p>
+        ))
+        .value();
 
     const renderItem = (itemSlot) => {
-        if(Object.keys(itemSlot).length) {
+        if (itemSlot) {
             return (
-                <div className={styles.EqColumnsItem} onContextMenu={(e) => {
+                <div
+                    className={styles.EqColumnsItem}
+                    onContextMenu={(e) => {
                         e.preventDefault();
-                        getEqItemId(itemSlot.id);
+                        callEngineAction({
+                            type: ItemClientActions.StripItem,
+                            itemInstanceId: itemSlot.itemInstanceId,
+                        });
                     }}
                 >
-                    <ItemIconPreview itemData={itemSlot} highlight={ItemPreviewHighlight.icon} showMoney={true} />
+                    <ItemIconPreview
+                        itemData={itemTemplates[itemSlot.itemTemplateId] as any}
+                        highlight={ItemPreviewHighlight.icon}
+                        showMoney={true}
+                        showStackSize={false}
+                    />
                 </div>
             );
         } else {
-            return (
-                <div className={styles.EqColumnsItem}></div> 
-            );
-        };   
+            return <div className={styles.EqColumnsItem}></div>;
+        }
     };
 
-    const itemsBySlot: EquipmentBySlot = restructureItemsBySlot(itemTemplates);
-    
-    return (
-        modalStatus ? <div className={styles.CharacterEqContainer}>
-            <img className={styles.CharacterEqIcon} src={characterClass.iconImage}/>
+    return modalStatus ? (
+        <div className={styles.CharacterEqContainer}>
+            <img className={styles.CharacterEqIcon} src={characterClass.iconImage} />
             <div className={styles.CharacterEqName}>{activePlayer.name}</div>
             <div className={styles.ButtonContainer}>
-                <SquareButton onClick={() => setModalStatus(false)}><CloseIcon /></SquareButton>
+                <SquareButton onClick={() => setModalStatus(false)}>
+                    <CloseIcon />
+                </SquareButton>
             </div>
-            <div className={styles.CharacterEqExpierence}>Level: {level}<span style={{'color': characterClass.color}}>{characterClass.name}</span></div>
-            { !_.isEmpty(itemsBySlot) ? <div className={styles.CharacterEqMain}>
+            <div className={styles.CharacterEqExpierence}>
+                Level: {level}
+                <span style={{ color: characterClass.color }}>{characterClass.name}</span>
+            </div>
+            <div className={styles.CharacterEqMain}>
                 <div className={styles.EquipmentContainer}>
                     <div className={styles.EqColumns}>
-                        {renderItem(itemsBySlot.head)}
-                        {renderItem(itemsBySlot.neck)}
-                        {renderItem(itemsBySlot.shoulder)}
-                        {renderItem(itemsBySlot.chest)}
-                        {renderItem({})}
-                        {renderItem({})}
-                        {renderItem({})}
-                        {renderItem(itemsBySlot.wrist)}
+                        {renderItem(equipment[activeCharacterId].head)}
+                        {renderItem(equipment[activeCharacterId].neck)}
+                        {renderItem(equipment[activeCharacterId].shoulder)}
+                        {renderItem(equipment[activeCharacterId].chest)}
+                        {renderItem(null)}
+                        {renderItem(null)}
+                        {renderItem(null)}
+                        {renderItem(equipment[activeCharacterId].wrist)}
                     </div>
                     <div className={styles.EqColumns}>
-                        {renderItem(itemsBySlot.hands)}
-                        {renderItem(itemsBySlot.waist)}
-                        {renderItem(itemsBySlot.legs)}
-                        {renderItem(itemsBySlot.feet)}
-                        {renderItem(itemsBySlot.finger)}
-                        {renderItem({})}
-                        {renderItem(itemsBySlot.trinket)}
-                        {renderItem({})}
+                        {renderItem(equipment[activeCharacterId].hands)}
+                        {renderItem(equipment[activeCharacterId].waist)}
+                        {renderItem(equipment[activeCharacterId].legs)}
+                        {renderItem(equipment[activeCharacterId].feet)}
+                        {renderItem(equipment[activeCharacterId].finger1)}
+                        {renderItem(equipment[activeCharacterId].finger2)}
+                        {renderItem(equipment[activeCharacterId].trinket1)}
+                        {renderItem(equipment[activeCharacterId].trinket2)}
                     </div>
                     <div className={styles.EqColumns + ' ' + styles.BottomColumn}>
-                        {renderItem({})}
-                        {renderItem({})}
+                        {renderItem(null)}
+                        {renderItem(null)}
                     </div>
                 </div>
                 <div className={styles.AttributesContainer}>
@@ -140,9 +157,7 @@ export const CharacterEq = () => {
                     </div>
                     <div className={styles.EqAttributesContainer}>
                         <div className={styles.HeaderAtt + ' ' + styles.EqHeader}>Attributes</div>
-                        <div className={styles.AttributesItems}>
-                            {stats}
-                        </div>
+                        <div className={styles.AttributesItems}>{stats}</div>
                     </div>
                     <div className={styles.EqEnhancementsContainer}>
                         <div className={styles.HeaderEnh + ' ' + styles.EqHeader}>Enhancements</div>
@@ -150,7 +165,6 @@ export const CharacterEq = () => {
                     </div>
                 </div>
             </div>
-            : null }
-       </div> : null
-    )
-}
+        </div>
+    ) : null;
+};

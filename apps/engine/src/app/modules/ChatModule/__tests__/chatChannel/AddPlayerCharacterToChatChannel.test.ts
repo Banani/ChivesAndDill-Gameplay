@@ -23,12 +23,12 @@ const setupEngine = ({ chatChannelName }: setupEngineProps = { chatChannelName: 
     return { engineManager, players, chatChannelName, recentlyCreatedChatChannelId };
 };
 
-describe('Chat channel InvitePlayerCharacterToChatChannel action', () => {
+describe('Chat channel AddPlayerCharacterToChatChannel action', () => {
     it('Player should be able to invite other players to his chat', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
@@ -42,7 +42,7 @@ describe('Chat channel InvitePlayerCharacterToChatChannel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: 'WRONG_NAME',
         });
@@ -54,13 +54,13 @@ describe('Chat channel InvitePlayerCharacterToChatChannel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
@@ -72,7 +72,7 @@ describe('Chat channel InvitePlayerCharacterToChatChannel action', () => {
         const { players, engineManager } = setupEngine();
 
         const dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: 'SOME_RANDOM_ID',
             characterName: players['2'].character.name,
         });
@@ -84,13 +84,13 @@ describe('Chat channel InvitePlayerCharacterToChatChannel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['2'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['3'].character.name,
         });
@@ -102,13 +102,13 @@ describe('Chat channel InvitePlayerCharacterToChatChannel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['3'].character.name,
         });
@@ -124,7 +124,7 @@ describe('Chat channel InvitePlayerCharacterToChatChannel action', () => {
         const { players, engineManager, recentlyCreatedChatChannelId, chatChannelName } = setupEngine();
 
         let dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
-            type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+            type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
             chatChannelId: recentlyCreatedChatChannelId,
             characterName: players['2'].character.name,
         });

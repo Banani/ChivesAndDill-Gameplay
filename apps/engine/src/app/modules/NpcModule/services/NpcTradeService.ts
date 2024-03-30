@@ -1,5 +1,6 @@
+import { BuyItemFromNpc, NpcClientActions, SellItemToNpc } from '@bananos/types';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler } from '../../../types';
+import { EngineActionHandler } from '../../../types';
 import {
     AddCurrencyToCharacterEvent,
     DeleteItemEvent,
@@ -7,18 +8,17 @@ import {
     ItemEngineEvents,
     RemoveCurrencyFromCharacterEvent,
 } from '../../ItemModule/Events';
-import { NpcEngineEvents, PlayerTriesToBuyItemFromNpcEvent, PlayerTriesToSellItemToNpcEvent } from '../Events';
 
 export class NpcTradeService extends EventParser {
     constructor() {
         super();
         this.eventsToHandlersMap = {
-            [NpcEngineEvents.PlayerTriesToBuyItemFromNpc]: this.handlePlayerTriesToBuyItemFromNpc,
-            [NpcEngineEvents.PlayerTriesToSellItemToNpc]: this.handlePlayerTriesToSellItemToNpc,
+            [NpcClientActions.BuyItemFromNpc]: this.handlePlayerTriesToBuyItemFromNpc,
+            [NpcClientActions.SellItemToNpc]: this.handlePlayerTriesToSellItemToNpc,
         };
     }
 
-    handlePlayerTriesToBuyItemFromNpc: EngineEventHandler<PlayerTriesToBuyItemFromNpcEvent> = ({ event, services }) => {
+    handlePlayerTriesToBuyItemFromNpc: EngineActionHandler<BuyItemFromNpc> = ({ event, services }) => {
         const npcIdThatCharacterIsTalkingWith = services.activeNpcConversationService.getConversationById(event.requestingCharacterId);
         if (npcIdThatCharacterIsTalkingWith !== event.npcId) {
             this.sendErrorMessage(event.requestingCharacterId, 'You are not talking with that NPC.');
@@ -61,7 +61,7 @@ export class NpcTradeService extends EventParser {
         });
     };
 
-    handlePlayerTriesToSellItemToNpc: EngineEventHandler<PlayerTriesToSellItemToNpcEvent> = ({ event, services }) => {
+    handlePlayerTriesToSellItemToNpc: EngineActionHandler<SellItemToNpc> = ({ event, services }) => {
         const npcIdThatCharacterIsTalkingWith = services.activeNpcConversationService.getConversationById(event.requestingCharacterId);
         if (npcIdThatCharacterIsTalkingWith !== event.npcId) {
             this.sendErrorMessage(event.requestingCharacterId, 'You are not talking with that NPC.');

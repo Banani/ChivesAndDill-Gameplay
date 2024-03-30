@@ -20,7 +20,6 @@ export const EngineContexts: Record<GlobalStoreModule, React.Context<any>> = {
     [GlobalStoreModule.SPELLS]: React.createContext<GlobalStore[GlobalStoreModule.SPELLS]>(null),
     [GlobalStoreModule.POWER_STACKS]: React.createContext<GlobalStore[GlobalStoreModule.POWER_STACKS]>(null),
     [GlobalStoreModule.ABSORB_SHIELDS]: React.createContext<GlobalStore[GlobalStoreModule.ABSORB_SHIELDS]>(null),
-    [GlobalStoreModule.PLAYER]: React.createContext<GlobalStore[GlobalStoreModule.PLAYER]>(null),
     [GlobalStoreModule.CHARACTER]: React.createContext<GlobalStore[GlobalStoreModule.CHARACTER]>(null),
     [GlobalStoreModule.ACTIVE_CHARACTER]: React.createContext<GlobalStore[GlobalStoreModule.ACTIVE_CHARACTER]>(null),
     [GlobalStoreModule.MAP_SCHEMA]: React.createContext<GlobalStore[GlobalStoreModule.MAP_SCHEMA]>(null),

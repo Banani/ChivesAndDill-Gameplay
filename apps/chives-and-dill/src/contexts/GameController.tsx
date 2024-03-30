@@ -1,4 +1,4 @@
-import { CharacterClientActions, GlobalStoreModule, Location, PlayerClientActions } from '@bananos/types';
+import { CharacterClientActions, GlobalStoreModule, Location, SpellClientActions } from '@bananos/types';
 import _ from 'lodash';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useEngineModuleReader } from '../hooks';
@@ -46,7 +46,7 @@ export const GameController = ({ children }) => {
         keyBoardContext.addKeyHandler({
             id: 'gameControllerWASD',
             matchRegex: '[wasd]',
-            keydown: (key) => callEngineAction({ type: CharacterClientActions.PlayerStartMove, source: key, ...keyMovementMap[key] }),
+            keydown: (key) => callEngineAction({ type: CharacterClientActions.PlayerStartMove, movement: { source: key, ...keyMovementMap[key] } }),
             keyup: (key) => callEngineAction({ type: CharacterClientActions.PlayerStopMove, source: key }),
         });
 
@@ -66,7 +66,7 @@ export const GameController = ({ children }) => {
 
         if (keyBinds[key]) {
             callEngineAction({
-                type: PlayerClientActions.CastSpell,
+                type: SpellClientActions.CastSpell,
                 targetId: activeTargetId,
                 directionLocation: {
                     x: characterMovements[activeCharacterId].location.x + mousePosition.x - gameWidth / 2,

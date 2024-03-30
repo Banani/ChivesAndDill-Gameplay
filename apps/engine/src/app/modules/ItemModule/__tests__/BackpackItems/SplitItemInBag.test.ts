@@ -99,7 +99,7 @@ describe('SplitItemInBag', () => {
         checkIfErrorWasHandled(CURRENT_MODULE, 'You does not have that many items.', dataPackage);
     });
 
-    it('if players tries to split all items from stack to another place then the items should be just moved', () => {
+    it('if players tries to split all items from stack to another place then the items should be moved', () => {
         const { players, engineManager } = setupEngine();
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 

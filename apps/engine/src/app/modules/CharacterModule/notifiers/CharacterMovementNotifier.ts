@@ -1,4 +1,4 @@
-import { Character, CharacterClientActions, CharacterMovement, GlobalStoreModule } from '@bananos/types';
+import { Character, CharacterMovement, GlobalStoreModule } from '@bananos/types';
 import { mapValues } from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { Notifier } from '../../../Notifier';
@@ -6,9 +6,7 @@ import type {
     EngineEventHandler,
     PlayerMovedEvent,
     PlayerStartedMovementEvent,
-    PlayerStopedAllMovementVectorsEvent,
-    PlayerStopedMovementVectorEvent,
-    PlayerTriesToStartedMovementEvent,
+    PlayerStopedAllMovementVectorsEvent
 } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import { CharacterEngineEvents, NewCharacterCreatedEvent } from '../Events';
@@ -26,7 +24,6 @@ export class CharacterMovementNotifier extends Notifier<CharacterMovement> {
     }
 
     handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
-        const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
         this.multicastMultipleObjectsUpdate([
             {
                 receiverId: event.playerCharacter.ownerId,
@@ -46,22 +43,6 @@ export class CharacterMovementNotifier extends Notifier<CharacterMovement> {
                     direction: event.playerCharacter.direction,
                 },
             },
-        });
-
-        currentSocket.on(CharacterClientActions.PlayerStartMove, (movement) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToStartedMovementEvent>({
-                type: EngineEvents.PlayerTriesToStartedMovement,
-                characterId: event.playerCharacter.id,
-                movement,
-            });
-        });
-
-        currentSocket.on(CharacterClientActions.PlayerStopMove, (movement) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerStopedMovementVectorEvent>({
-                type: EngineEvents.PlayerStopedMovementVector,
-                characterId: event.playerCharacter.id,
-                movement,
-            });
         });
     };
 

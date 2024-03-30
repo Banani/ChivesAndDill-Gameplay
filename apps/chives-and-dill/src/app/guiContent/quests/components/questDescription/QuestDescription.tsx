@@ -1,22 +1,31 @@
 import { GlobalStoreModule, type QuestSchema } from '@bananos/types';
-import { useEngineModuleReader, useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
-import { map } from 'lodash';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
+import { forEach, map } from 'lodash';
 import type { FunctionComponent } from 'react';
-import React, { useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { MoneyBar } from '../../../moneyBar/MoneyBar';
 import { QuestStagePart } from '../questStagePart';
 
-import styles from './QuestDescription.module.scss';
 import { ItemPreview, ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
+import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import _ from 'lodash';
+import styles from './QuestDescription.module.scss';
 
 interface QuestDescriptionProps {
     questSchema: QuestSchema;
 }
 
 export const QuestDescription: FunctionComponent<QuestDescriptionProps> = ({ questSchema }) => {
-    const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: map(questSchema.questReward.items, (item) => item.itemTemplateId) ?? [] });
+    const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
     const { data: questProgress } = useEngineModuleReader(GlobalStoreModule.QUEST_PROGRESS);
+
+    useEffect(() => {
+        forEach(questSchema.questReward.items, ({ itemTemplateId }) => {
+            if (!itemTemplates[itemTemplateId]) {
+                requestItemTemplate(itemTemplateId);
+            }
+        });
+    }, [itemTemplates, requestItemTemplate, questSchema.questReward.items]);
 
     const items = useMemo(
         () =>
@@ -26,7 +35,7 @@ export const QuestDescription: FunctionComponent<QuestDescriptionProps> = ({ que
                     return (
                         <div className={styles.ItemContainer}>
                             <ItemPreview
-                                itemData={itemData}
+                                itemData={itemData as any}
                                 showMoney={false}
                                 highlight={ItemPreviewHighlight.none}
                             />

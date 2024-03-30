@@ -139,7 +139,7 @@ export const ChatChannels = () => {
                 message={`Who would you like to invite to ${chatChannels?.[selectedChannelId]?.name}`}
                 mainAction={(characterName) => {
                     callEngineAction({
-                        type: ChatChannelClientActions.InvitePlayerCharacterToChatChannel,
+                        type: ChatChannelClientActions.AddPlayerCharacterToChatChannel,
                         chatChannelId: selectedChannelId,
                         characterName
                     });

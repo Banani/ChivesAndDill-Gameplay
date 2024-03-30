@@ -3,7 +3,6 @@ import type {
     BackpackItemsSpot,
     BackpackTrack,
     ChatMessage,
-    EquipmentTrack,
     ItemTemplate,
     NpcStock,
     Party,
@@ -26,6 +25,7 @@ import type {
     EngineNpcAction,
     EnginePlayerAction,
     EngineSpellAction,
+    EquipmentReferenceTrack,
     ExperienceExternalTrack,
     GroupClientActions,
     ItemClientActions,
@@ -57,7 +57,6 @@ export enum GlobalStoreModule {
     SPELLS = 'spells',
     POWER_STACKS = 'powerStacks',
     ABSORB_SHIELDS = 'absorbShields',
-    PLAYER = 'player',
     MAP_SCHEMA = 'mapSchema',
     EXPERIENCE = 'experience',
     CURRENCY = 'currency',
@@ -119,7 +118,7 @@ export interface EnginePackage {
     [GlobalStoreModule.NPC_QUESTS]: PartialEnginePackage<Record<string, boolean>>;
     [GlobalStoreModule.QUEST_PROGRESS]: PartialEnginePackage<ExternalQuestProgress>;
     [GlobalStoreModule.CORPSE_DROP]: PartialEnginePackage<MonsterCorpse>;
-    [GlobalStoreModule.EQUIPMENT]: PartialEnginePackage<EquipmentTrack>;
+    [GlobalStoreModule.EQUIPMENT]: PartialEnginePackage<EquipmentReferenceTrack>;
     [GlobalStoreModule.ATTRIBUTES]: PartialEnginePackage<Attributes>;
     [GlobalStoreModule.COMBAT_STATE]: PartialEnginePackage<boolean>;
     [GlobalStoreModule.AVAILABLE_SPELLS]: PartialEnginePackage<boolean>;
@@ -148,7 +147,6 @@ export interface GlobalStore {
     [GlobalStoreModule.SPELLS]: StoreModule<null>;
     [GlobalStoreModule.POWER_STACKS]: StoreModule<Partial<Record<PowerStackType, number>>>;
     [GlobalStoreModule.ABSORB_SHIELDS]: StoreModule<AbsorbShieldTrack>;
-    [GlobalStoreModule.PLAYER]: StoreModule<undefined>;
     [GlobalStoreModule.CHARACTER]: StoreModule<Character>;
     [GlobalStoreModule.ACTIVE_CHARACTER]: StoreModule<string>;
     [GlobalStoreModule.MAP_SCHEMA]: StoreModule<MapSchema | MapDefinition>;
@@ -167,7 +165,7 @@ export interface GlobalStore {
     [GlobalStoreModule.NPC_QUESTS]: StoreModule<Record<string, boolean>>;
     [GlobalStoreModule.QUEST_PROGRESS]: StoreModule<ExternalQuestProgress>;
     [GlobalStoreModule.CORPSE_DROP]: StoreModule<MonsterCorpse>;
-    [GlobalStoreModule.EQUIPMENT]: StoreModule<EquipmentTrack>;
+    [GlobalStoreModule.EQUIPMENT]: StoreModule<EquipmentReferenceTrack>;
     [GlobalStoreModule.ATTRIBUTES]: StoreModule<Attributes>;
     [GlobalStoreModule.COMBAT_STATE]: StoreModule<boolean>;
     [GlobalStoreModule.AVAILABLE_SPELLS]: StoreModule<boolean>;

@@ -1,28 +1,30 @@
-// place => itemInstanceId
-export interface EquipmentTrack {
-    head: string | null;
-    neck: string | null;
-    shoulder: string | null;
-    back: string | null;
-    chest: string | null;
-    shirt: string | null;
-    tabard: string | null;
-    wrist: string | null;
-
-    hands: string | null;
-    waist: string | null;
-    legs: string | null;
-    feet: string | null;
-    finger1: string | null;
-    finger2: string | null;
-    trinket1: string | null;
-    trinket2: string | null;
-
-    mainHand: string | null;
-    offHand: string | null;
+interface ItemReference {
+    itemInstanceId: string;
+    itemTemplateId: string;
 }
 
-export type PossibleEquipmentPlaces = keyof EquipmentTrack;
+export interface EquipmentReferenceTrack {
+    head: ItemReference | null;
+    neck: ItemReference | null;
+    shoulder: ItemReference | null;
+    back: ItemReference | null;
+    chest: ItemReference | null;
+    shirt: ItemReference | null;
+    tabard: ItemReference | null;
+    wrist: ItemReference | null;
+
+    hands: ItemReference | null;
+    waist: ItemReference | null;
+    legs: ItemReference | null;
+    feet: ItemReference | null;
+    finger1: ItemReference | null;
+    finger2: ItemReference | null;
+    trinket1: ItemReference | null;
+    trinket2: ItemReference | null;
+
+    mainHand: ItemReference | null;
+    offHand: ItemReference | null;
+}
 
 export enum EquipmentSlot {
     Head = 'head',
@@ -95,17 +97,16 @@ export interface ItemLocationInBag {
 export type BackpackItemsSpot = Record<string, Record<string, ItemInstance>>;
 
 export enum ItemClientActions {
-    Deleteitem = 'DeleteItem',
-    MoveItemInBag = 'MoveItemInBag',
-    SplitItemStackInBag = 'SplitItemStackInBag',
-    RequestItemTemplates = 'RequestItemTemplates',
-
-    EquipItem = 'EquipItem',
-    StripItem = 'StripItem',
+    DeleteItem = 'Player_DeleteItem',
+    MoveItemInBag = 'Player_MoveItemInBag',
+    SplitItemStackInBag = 'Player_SplitItemStackInBag',
+    RequestItemTemplates = 'Player_RequestItemTemplates',
+    EquipItem = 'Player_EquipItem',
+    StripItem = 'Player_StripItem',
 }
 
 export interface DeleteItem {
-    type: ItemClientActions.Deleteitem;
+    type: ItemClientActions.DeleteItem;
     itemId: string;
 }
 

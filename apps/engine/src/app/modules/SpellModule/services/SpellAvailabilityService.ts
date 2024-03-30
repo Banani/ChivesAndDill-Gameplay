@@ -1,15 +1,15 @@
-import { CharacterType, Spell } from '@bananos/types';
+import { CastSpell, CharacterType, Spell, SpellClientActions } from '@bananos/types';
 import { EventParser } from '../../../EventParser';
-import { EngineEventHandler } from '../../../types';
+import { EngineActionHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { Services } from '../../../types/Services';
-import { PlayerCastSpellEvent, PlayerTriesToCastASpellEvent, SpellEngineEvents } from '../Events';
+import { PlayerCastSpellEvent, SpellEngineEvents } from '../Events';
 
 export class SpellAvailabilityService extends EventParser {
     constructor() {
         super();
         this.eventsToHandlersMap = {
-            [SpellEngineEvents.PlayerTriesToCastASpell]: this.handlePlayerTriesToCastASpell,
+            [SpellClientActions.CastSpell]: this.handlePlayerTriesToCastASpell,
         };
     }
 
@@ -26,14 +26,14 @@ export class SpellAvailabilityService extends EventParser {
         return true;
     };
 
-    handlePlayerTriesToCastASpell: EngineEventHandler<PlayerTriesToCastASpellEvent> = ({ event, services }) => {
-        const character = services.characterService.getCharacterById(event.spellData.characterId) as PlayerCharacter;
+    handlePlayerTriesToCastASpell: EngineActionHandler<CastSpell> = ({ event, services }) => {
+        const character = services.characterService.getCharacterById(event.requestingCharacterId) as PlayerCharacter;
 
         if (!character) {
             return;
         }
 
-        const spell = services.spellService.getData()[event.spellData.spellId];
+        const spell = services.spellService.getData()[event.spellId];
 
         if (character.type == CharacterType.Player) {
             const characterClass = services.characterClassService.getData()[character.characterClassId];
@@ -54,10 +54,10 @@ export class SpellAvailabilityService extends EventParser {
         if (services.cooldownService.isSpellAvailable(character.id, spell.id)) {
             this.engineEventCrator.asyncCeateEvent<PlayerCastSpellEvent>({
                 type: SpellEngineEvents.PlayerCastSpell,
-                casterId: event.spellData.characterId,
+                casterId: event.requestingCharacterId,
                 spell,
-                directionLocation: event.spellData.directionLocation,
-                targetId: event.spellData.targetId
+                directionLocation: event.directionLocation,
+                targetId: event.targetId
             });
         }
     };

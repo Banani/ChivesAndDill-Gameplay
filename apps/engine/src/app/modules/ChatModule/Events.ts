@@ -2,7 +2,6 @@ import { ChannelType, ChatChannel, Location } from '@bananos/types';
 import { EngineEvent, EngineEventHandler } from '../../types';
 
 export enum ChatEngineEvents {
-    CreateChatChannel = 'CreateChatChannel',
     ChatChannelCreated = 'ChatChannelCreated',
 
     DeleteChatChannel = 'DeleteChatChannel',
@@ -11,9 +10,7 @@ export enum ChatEngineEvents {
     AddPlayerCharacterToChat = 'AddPlayerCharacterToChat',
     CharacterAddedToChat = 'CharacterAddedToChat',
 
-    RemovePlayerCharacterFromChatChannel = 'RemovePlayerCharacterFromChatChannel',
     PlayerCharacterRemovedFromChatChannel = 'PlayerCharacterRemovedFromChatChannel',
-    LeaveChatChannel = 'LeaveChatChannel',
     PlayerLeftChatChannel = 'PlayerLeftCharChannel',
 
     ChangeChatChannelOwner = 'ChangeChatChannelOwner',
@@ -25,15 +22,9 @@ export enum ChatEngineEvents {
     ChatMessagesDeleted = 'ChatMessagesDeleted',
 }
 
-export interface CreateChatChannelEvent extends EngineEvent {
-    type: ChatEngineEvents.CreateChatChannel;
-    chatChannel: ChatChannel;
-}
-
 export interface ChatChannelCreatedEvent extends EngineEvent {
     type: ChatEngineEvents.ChatChannelCreated;
     chatChannel: ChatChannel;
-    channelId: string;
 }
 
 export interface DeleteChatChannelEvent extends EngineEvent {
@@ -50,7 +41,7 @@ export interface ChatChannelDeletedEvent extends EngineEvent {
 export interface AddPlayerCharacterToChatEvent extends EngineEvent {
     type: ChatEngineEvents.AddPlayerCharacterToChat;
     chatChannelId: string;
-    characterName: string;
+    characterId: string;
 }
 
 export interface CharacterAddedToChatEvent extends EngineEvent {
@@ -59,21 +50,10 @@ export interface CharacterAddedToChatEvent extends EngineEvent {
     characterId: string;
 }
 
-export interface RemovePlayerCharacterFromChatChannelEvent extends EngineEvent {
-    type: ChatEngineEvents.RemovePlayerCharacterFromChatChannel;
-    chatChannelId: string;
-    characterId: string;
-}
-
 export interface PlayerCharacterRemovedFromChatChannelEvent extends EngineEvent {
     type: ChatEngineEvents.PlayerCharacterRemovedFromChatChannel;
     chatChannel: ChatChannel;
     characterId: string;
-}
-
-export interface LeaveChatChannelEvent extends EngineEvent {
-    type: ChatEngineEvents.LeaveChatChannel;
-    chatChannelId: string;
 }
 
 export interface PlayerLeftChatChannelEvent extends EngineEvent {
@@ -94,8 +74,8 @@ export interface ChatChannelOwnerChangedEvent extends EngineEvent {
     newOwnerId: string;
 }
 
-interface CustomMessageDetails {
-    channelType: ChannelType.Custom,
+interface PrivateMessageDetails {
+    channelType: ChannelType.Private,
     authorId: string;
     chatChannelId: string;
     location: Location;
@@ -117,11 +97,11 @@ interface QuoteMessageDetails {
 interface SystemMessageDetails {
     channelType: ChannelType.System,
     targetId: string,
-    itemId?: string,
+    itemTemplateId?: string,
     amount?: number
 }
 
-type MessageDetails = CustomMessageDetails | RangeMessageDetails | QuoteMessageDetails | SystemMessageDetails;
+type MessageDetails = PrivateMessageDetails | RangeMessageDetails | QuoteMessageDetails | SystemMessageDetails;
 
 export interface SendChatMessageEvent extends EngineEvent {
     type: ChatEngineEvents.SendChatMessage;
@@ -144,7 +124,6 @@ export interface ChatMessagesDeletedEvent extends EngineEvent {
 }
 
 export interface ChatEngineEventsMap {
-    [ChatEngineEvents.CreateChatChannel]: EngineEventHandler<CreateChatChannelEvent>;
     [ChatEngineEvents.ChatChannelCreated]: EngineEventHandler<ChatChannelCreatedEvent>;
 
     [ChatEngineEvents.DeleteChatChannel]: EngineEventHandler<DeleteChatChannelEvent>;
@@ -153,9 +132,7 @@ export interface ChatEngineEventsMap {
     [ChatEngineEvents.AddPlayerCharacterToChat]: EngineEventHandler<AddPlayerCharacterToChatEvent>;
     [ChatEngineEvents.CharacterAddedToChat]: EngineEventHandler<CharacterAddedToChatEvent>;
 
-    [ChatEngineEvents.RemovePlayerCharacterFromChatChannel]: EngineEventHandler<RemovePlayerCharacterFromChatChannelEvent>;
     [ChatEngineEvents.PlayerCharacterRemovedFromChatChannel]: EngineEventHandler<PlayerCharacterRemovedFromChatChannelEvent>;
-    [ChatEngineEvents.LeaveChatChannel]: EngineEventHandler<LeaveChatChannelEvent>;
     [ChatEngineEvents.PlayerLeftChatChannel]: EngineEventHandler<PlayerLeftChatChannelEvent>;
 
     [ChatEngineEvents.ChangeChatChannelOwner]: EngineEventHandler<ChangeChatChannelOwnerEvent>;

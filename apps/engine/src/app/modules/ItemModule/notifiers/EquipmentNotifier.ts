@@ -1,47 +1,23 @@
-import { CharacterType, EquipmentTrack, GlobalStoreModule, ItemClientActions } from '@bananos/types';
+import { CharacterType, EquipmentReferenceTrack, GlobalStoreModule } from '@bananos/types';
+import { mapValues } from 'lodash';
 import { Notifier } from '../../../Notifier';
 import { EngineEventHandler } from '../../../types';
-import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
 import {
     EquipmentTrackCreatedEvent,
     ItemEngineEvents,
     ItemEquippedEvent,
-    ItemStrippedEvent,
-    PlayerTriesToEquipItemEvent,
-    PlayerTriesToStripItemEvent,
+    ItemStrippedEvent
 } from '../Events';
 
-export class EquipmentNotifier extends Notifier<EquipmentTrack> {
+export class EquipmentNotifier extends Notifier<EquipmentReferenceTrack> {
     constructor() {
         super({ key: GlobalStoreModule.EQUIPMENT });
         this.eventsToHandlersMap = {
             [ItemEngineEvents.EquipmentTrackCreated]: this.handleEquipmentTrackCreated,
             [ItemEngineEvents.ItemEquipped]: this.handleItemEquipped,
             [ItemEngineEvents.ItemStripped]: this.handleItemStripped,
-            [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
         };
     }
-
-    handlePlayerCharacterCreated: EngineEventHandler<PlayerCharacterCreatedEvent> = ({ event, services }) => {
-        const currentSocket = services.socketConnectionService.getSocketById(event.playerCharacter.ownerId);
-
-        currentSocket.on(ItemClientActions.EquipItem, ({ itemInstanceId }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToEquipItemEvent>({
-                type: ItemEngineEvents.PlayerTriesToEquipItem,
-                requestingCharacterId: event.playerCharacter.id,
-                itemInstanceId,
-            });
-        });
-
-        currentSocket.on(ItemClientActions.StripItem, ({ itemInstanceId, desiredLocation }) => {
-            this.engineEventCrator.asyncCeateEvent<PlayerTriesToStripItemEvent>({
-                type: ItemEngineEvents.PlayerTriesToStripItem,
-                requestingCharacterId: event.playerCharacter.id,
-                desiredLocation,
-                itemInstanceId,
-            });
-        });
-    };
 
     handleItemEquipped: EngineEventHandler<ItemEquippedEvent> = ({ event, services }) => {
         const player = services.characterService.getCharacterById(event.characterId);
@@ -49,7 +25,18 @@ export class EquipmentNotifier extends Notifier<EquipmentTrack> {
             return;
         }
 
-        this.broadcastObjectsUpdate({ objects: { [event.characterId]: { [event.slot]: event.itemInstanceId } } });
+        const item = services.itemService.getItemById(event.itemInstanceId);
+
+        this.broadcastObjectsUpdate({
+            objects: {
+                [event.characterId]: {
+                    [event.slot]: {
+                        itemInstanceId: event.itemInstanceId,
+                        itemTemplateId: item.itemTemplateId
+                    }
+                }
+            }
+        });
     };
 
     handleItemStripped: EngineEventHandler<ItemStrippedEvent> = ({ event, services }) => {
@@ -67,8 +54,22 @@ export class EquipmentNotifier extends Notifier<EquipmentTrack> {
             return;
         }
 
+        const eqTrack: EquipmentReferenceTrack = mapValues(event.equipmentTrack, itemInstanceId => {
+            if (itemInstanceId === null) {
+                return null;
+            }
+
+            const item = services.itemService.getItemById(itemInstanceId);
+
+            return {
+                itemInstanceId,
+                itemTemplateId: item.itemTemplateId
+            }
+        })
+
+
         this.broadcastObjectsUpdate({
-            objects: { [event.characterId]: event.equipmentTrack },
+            objects: { [event.characterId]: eqTrack },
         });
     };
 }

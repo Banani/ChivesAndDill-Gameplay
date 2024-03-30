@@ -129,11 +129,12 @@ describe('Equipment', () => {
 
     it('Player should be notified when equips the item', () => {
         const { players, engineManager } = setupEngine();
+        const itemTemplateId = '6';
 
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
             characterId: players['1'].characterId,
-            itemTemplateId: '6',
+            itemTemplateId,
             amount: 1,
         });
 
@@ -144,7 +145,7 @@ describe('Equipment', () => {
 
         checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
             data: {
-                playerCharacter_1: { chest: 'ItemInstance_0' },
+                playerCharacter_1: { chest: { itemInstanceId: itemId, itemTemplateId } },
             },
         });
     });
@@ -175,11 +176,12 @@ describe('Equipment', () => {
 
     it('Player should have item replaced if something else is already taking that spot', () => {
         const { players, engineManager } = setupEngine();
+        const itemTemplateId = "6";
 
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
             characterId: players['1'].characterId,
-            itemTemplateId: '6',
+            itemTemplateId,
             amount: 1,
         });
 
@@ -189,7 +191,7 @@ describe('Equipment', () => {
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
             characterId: players['1'].characterId,
-            itemTemplateId: '6',
+            itemTemplateId,
             amount: 1,
         });
 
@@ -201,7 +203,7 @@ describe('Equipment', () => {
 
         checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
             data: {
-                playerCharacter_1: { chest: itemId2 },
+                playerCharacter_1: { chest: { itemInstanceId: itemId2, itemTemplateId } },
             },
         });
         checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
@@ -213,11 +215,12 @@ describe('Equipment', () => {
 
     it('Player should have item place on second empty spot, if it is available for that item type', () => {
         const { players, engineManager } = setupEngine();
+        const itemTemplateId = "8";
 
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
             characterId: players['1'].characterId,
-            itemTemplateId: '8',
+            itemTemplateId,
             amount: 1,
         });
 
@@ -227,7 +230,7 @@ describe('Equipment', () => {
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
             characterId: players['1'].characterId,
-            itemTemplateId: '8',
+            itemTemplateId,
             amount: 1,
         });
 
@@ -239,7 +242,7 @@ describe('Equipment', () => {
 
         checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
             data: {
-                playerCharacter_1: { finger2: itemId2 },
+                playerCharacter_1: { finger2: { itemInstanceId: itemId2, itemTemplateId } },
             },
         });
         checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
@@ -251,11 +254,12 @@ describe('Equipment', () => {
 
     it('Player should have first spot replaced if all spot of that type are already taken', () => {
         const { players, engineManager } = setupEngine();
+        const itemTemplateId = "8";
 
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
             characterId: players['1'].characterId,
-            itemTemplateId: '8',
+            itemTemplateId,
             amount: 1,
         });
 
@@ -265,7 +269,7 @@ describe('Equipment', () => {
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
             characterId: players['1'].characterId,
-            itemTemplateId: '8',
+            itemTemplateId,
             amount: 1,
         });
 
@@ -275,7 +279,7 @@ describe('Equipment', () => {
         engineManager.createSystemAction<GenerateItemForCharacterEvent>({
             type: ItemEngineEvents.GenerateItemForCharacter,
             characterId: players['1'].characterId,
-            itemTemplateId: '8',
+            itemTemplateId,
             amount: 1,
         });
 
@@ -288,7 +292,7 @@ describe('Equipment', () => {
 
         checkIfPackageIsValid(GlobalStoreModule.EQUIPMENT, dataPackage, {
             data: {
-                playerCharacter_1: { finger1: itemId3 },
+                playerCharacter_1: { finger1: { itemInstanceId: itemId3, itemTemplateId } },
             },
         });
         checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {

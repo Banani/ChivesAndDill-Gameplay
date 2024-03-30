@@ -1,10 +1,10 @@
-import { CharacterDirection, CharacterType } from '@bananos/types';
+import { CharacterDirection, CharacterType, CreateCharacter, PlayerClientActions } from '@bananos/types';
 import { EngineEvents } from '../../../EngineEvents';
 import { EventParser } from '../../../EventParser';
-import { CharacterDiedEvent, EngineEventHandler } from '../../../types';
+import { CharacterDiedEvent, EngineActionHandler, EngineEventHandler } from '../../../types';
 import { PlayerCharacter } from '../../../types/PlayerCharacter';
 import { CharacterEngineEvents, CreateCharacterEvent, NewCharacterCreatedEvent, RemoveCharacterEvent } from '../../CharacterModule/Events';
-import { CreatePlayerCharacterEvent, PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
+import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../Events';
 
 export class PlayerCharacterService extends EventParser {
     increment: number = 0;
@@ -15,13 +15,13 @@ export class PlayerCharacterService extends EventParser {
         this.eventsToHandlersMap = {
             [EngineEvents.CharacterDied]: this.handleCharacterDied,
             [CharacterEngineEvents.RemoveCharacter]: this.handleRemoveCharacter,
-            [PlayerEngineEvents.CreatePlayerCharacter]: this.handleCreatePlayerCharacter,
+            [PlayerClientActions.CreatePlayerCharacter]: this.handleCreatePlayerCharacter,
             [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
         };
     }
 
-    handleCreatePlayerCharacter: EngineEventHandler<CreatePlayerCharacterEvent> = ({ event }) => {
-        const newCharacter = this.generateCharacter({ name: event.name, characterClassId: event.characterClassId, ownerId: event.playerOwnerId });
+    handleCreatePlayerCharacter: EngineActionHandler<CreateCharacter> = ({ event }) => {
+        const newCharacter = this.generateCharacter({ name: event.name, characterClassId: event.characterClassId, ownerId: event.ownerId });
 
         this.engineEventCrator.asyncCeateEvent<CreateCharacterEvent>({
             type: CharacterEngineEvents.CreateCharacter,

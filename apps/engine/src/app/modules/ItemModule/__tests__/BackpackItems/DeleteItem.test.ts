@@ -37,7 +37,7 @@ describe('DeleteItem', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.Deleteitem, itemId });
+        dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.DeleteItem, itemId });
 
         checkIfPackageIsValid(CURRENT_MODULE, dataPackage, { toDelete: { [players['1'].characterId]: { '1': { '0': null } } } });
     });
@@ -45,7 +45,7 @@ describe('DeleteItem', () => {
     it('Player should get error when tries to delete item that does not exist', () => {
         const { players, engineManager } = setupEngine();
 
-        const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.Deleteitem, itemId: 'SOME_ITEM_ID' });
+        const dataPackage = engineManager.callPlayerAction(players['1'].socketId, { type: ItemClientActions.DeleteItem, itemId: 'SOME_ITEM_ID' });
 
         checkIfErrorWasHandled(CURRENT_MODULE, 'Item does not exist.', dataPackage);
     });
@@ -64,7 +64,7 @@ describe('DeleteItem', () => {
         dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const itemId = dataPackage.backpackItems.data[players['1'].characterId]['1']['0'].itemId;
 
-        dataPackage = engineManager.callPlayerAction(players['2'].socketId, { type: ItemClientActions.Deleteitem, itemId });
+        dataPackage = engineManager.callPlayerAction(players['2'].socketId, { type: ItemClientActions.DeleteItem, itemId });
 
         checkIfErrorWasHandled(CURRENT_MODULE, 'Item does not exist.', dataPackage);
     });

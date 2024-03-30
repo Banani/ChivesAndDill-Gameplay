@@ -1,4 +1,4 @@
-import { CharacterClientEvents, DirectInstantSpell, GlobalStoreModule, Location, PlayerClientActions, RecursivePartial } from '@bananos/types';
+import { CharacterClientEvents, DirectInstantSpell, GlobalStoreModule, Location, RecursivePartial, SpellClientActions } from '@bananos/types';
 import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { MockedMonsterTemplates, MockedSpells } from '../../../mocks';
 import { WalkingType } from '../../../types/CharacterRespawn';
@@ -157,7 +157,7 @@ describe('Direct instant spell', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: PlayerClientActions.CastSpell,
+            type: SpellClientActions.CastSpell,
             directionLocation: players['1'].character.location,
             spellId: '1',
             targetId: players['1'].character.id
@@ -188,7 +188,7 @@ describe('Direct instant spell', () => {
         const { players, engineManager } = setupEngine({ spell: { casterImpact: false } });
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: PlayerClientActions.CastSpell,
+            type: SpellClientActions.CastSpell,
             directionLocation: players['1'].character.location,
             spellId: '1',
             targetId: players['1'].character.id
@@ -203,7 +203,7 @@ describe('Direct instant spell', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: PlayerClientActions.CastSpell,
+            type: SpellClientActions.CastSpell,
             directionLocation: players['2'].character.location,
             spellId: '1',
             targetId: players['2'].character.id
@@ -237,7 +237,7 @@ describe('Direct instant spell', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
 
         engineManager.callPlayerAction(players['1'].socketId, {
-            type: PlayerClientActions.CastSpell,
+            type: SpellClientActions.CastSpell,
             directionLocation: players['2'].character.location,
             spellId: '1',
             targetId: players['2'].character.id
