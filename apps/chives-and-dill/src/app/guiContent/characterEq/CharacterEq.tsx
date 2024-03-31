@@ -5,9 +5,10 @@ import { ItemIconPreview } from 'apps/chives-and-dill/src/components/itemPreview
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
+import { GlobalModal, ModalsManagerContext } from 'apps/chives-and-dill/src/contexts/ModalsManagerContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _, { forEach } from 'lodash';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { SquareButton } from '../components/squareButton/SquareButton';
 import styles from './CharacterEq.module.scss';
 
@@ -37,7 +38,6 @@ export const CharacterEq = () => {
     const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
     const { data: characterClasses } = useEngineModuleReader(GlobalStoreModule.CHARACTER_CLASS);
     const { data: attributes } = useEngineModuleReader(GlobalStoreModule.ATTRIBUTES);
-    const [modalStatus, setModalStatus] = useState(false);
     const activePlayer = characters[activeCharacterId];
     const level = experience[activeCharacterId].level;
     const characterClass = characterClasses[activePlayer.characterClassId];
@@ -45,14 +45,15 @@ export const CharacterEq = () => {
 
     const keyBoardContext = useContext(KeyBoardContext);
     const { callEngineAction } = useContext(EngineContext);
+    const { activeGlobalModal, setActiveGlobalModal } = useContext(ModalsManagerContext);
 
     const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
 
     useEffect(() => {
-        if (!modalStatus) {
+
+        if (activeGlobalModal !== GlobalModal.Equipment) {
             return;
         }
-
 
         forEach(equipment[activeCharacterId], (itemReference) => {
             if (!itemReference) {
@@ -63,17 +64,7 @@ export const CharacterEq = () => {
                 requestItemTemplate(itemReference.itemTemplateId);
             }
         });
-    }, [itemTemplates, equipmentLastUpdateTime, modalStatus, requestItemTemplate]);
-
-    useEffect(() => {
-        keyBoardContext.addKeyHandler({
-            id: 'CharacterEq',
-            matchRegex: 'c',
-            keydown: () => setModalStatus((prevState) => !prevState),
-        });
-
-        return () => keyBoardContext.removeKeyHandler('CharacterEq');
-    }, []);
+    }, [itemTemplates, equipmentLastUpdateTime, requestItemTemplate, activeGlobalModal]);
 
     const stats = _.chain(activePlayerAttributes)
         .pickBy((value, key) => value > 0)
@@ -111,12 +102,12 @@ export const CharacterEq = () => {
         }
     };
 
-    return modalStatus ? (
+    return activeGlobalModal === GlobalModal.Equipment ? (
         <div className={styles.CharacterEqContainer}>
             <img className={styles.CharacterEqIcon} src={characterClass.iconImage} />
             <div className={styles.CharacterEqName}>{activePlayer.name}</div>
             <div className={styles.ButtonContainer}>
-                <SquareButton onClick={() => setModalStatus(false)}>
+                <SquareButton onClick={() => setActiveGlobalModal(null)}>
                     <CloseIcon />
                 </SquareButton>
             </div>
