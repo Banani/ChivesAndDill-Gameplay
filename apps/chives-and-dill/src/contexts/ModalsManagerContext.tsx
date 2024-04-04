@@ -3,7 +3,8 @@ import { KeyBoardContext } from './KeyBoardContext';
 
 export enum GlobalModal {
     ChatChannelModal = 'ChatChannelModal',
-    Backpack = "Backpack"
+    Backpack = "Backpack",
+    Equipment = "Equipment"
 }
 
 interface ModalsManagerContextMethods {
@@ -33,11 +34,17 @@ export const ModalsManagerContextProvider = ({ children }) => {
             matchRegex: 'b',
             keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.Backpack ? null : GlobalModal.Backpack),
         });
+        keyBoardContext.addKeyHandler({
+            id: 'ModalsManagerC',
+            matchRegex: 'c',
+            keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.Equipment ? null : GlobalModal.Equipment),
+        });
 
         return () => {
             keyBoardContext.removeKeyHandler('ModalsManagerEscape');
             keyBoardContext.removeKeyHandler('ModalsManagerO');
             keyBoardContext.removeKeyHandler('ModalsManagerB');
+            keyBoardContext.removeKeyHandler('ModalsManagerC');
         }
     }, []);
 
