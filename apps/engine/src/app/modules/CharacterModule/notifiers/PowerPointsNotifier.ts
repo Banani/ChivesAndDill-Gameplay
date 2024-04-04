@@ -48,7 +48,9 @@ export class PowerPointsNotifier extends Notifier<PowerPointsTrack> {
         this.broadcastObjectsDeletion({ objects: { [event.characterId]: null } });
     };
 
-    handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event }) => {
+    handleCharacterLostHp: EngineEventHandler<CharacterLostHpEvent> = ({ event, services }) => {
+        const character = services.characterService.getCharacterById(event.characterId);
+
         this.broadcastEvents({
             events: [
                 {
@@ -56,7 +58,8 @@ export class PowerPointsNotifier extends Notifier<PowerPointsTrack> {
                     characterId: event.characterId,
                     amount: event.amount,
                     attackerId: event.attackerId,
-                    spellId: event.spellId
+                    spellId: event.spellId,
+                    location: { x: character.location.x, y: character.location.y }
                 },
             ],
         });
@@ -65,8 +68,10 @@ export class PowerPointsNotifier extends Notifier<PowerPointsTrack> {
         });
     };
 
-    handleCharacterGotHp: EngineEventHandler<CharacterGotHpEvent> = ({ event }) => {
+    handleCharacterGotHp: EngineEventHandler<CharacterGotHpEvent> = ({ event, services }) => {
         if (event.source !== HealthPointsSource.Regeneration) {
+            const character = services.characterService.getCharacterById(event.characterId);
+
             this.broadcastEvents({
                 events: [
                     {
@@ -75,7 +80,8 @@ export class PowerPointsNotifier extends Notifier<PowerPointsTrack> {
                         amount: event.amount,
                         source: event.source,
                         healerId: event.healerId,
-                        spellId: event.spellId
+                        spellId: event.spellId,
+                        location: { x: character.location.x, y: character.location.y }
                     },
                 ],
             });

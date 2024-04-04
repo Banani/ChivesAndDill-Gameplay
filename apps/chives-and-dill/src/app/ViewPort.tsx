@@ -7,6 +7,7 @@ import { useGameSize } from './hooks';
 import {
     BlinkSpellEffectRenderer,
     BloodPoolsRenderer,
+    CorpseRenderer,
     DialogRenderer,
     ErrorMessageRenderer,
     FloatingNumbersRenderer,
@@ -58,6 +59,7 @@ export const ViewPort = React.memo(() => {
                 new BloodPoolsRenderer(container),
                 new PlayerAbsorbBarRenderer(container),
                 new BlinkSpellEffectRenderer(container),
+                new CorpseRenderer(container)
             ];
 
             const output = {};

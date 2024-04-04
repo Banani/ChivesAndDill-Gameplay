@@ -1,14 +1,7 @@
-import { CharacterClientEvents, GlobalStore, HealthPointsSource, Location } from "@bananos/types";
+import { CharacterClientEvents, GlobalStore, HealthPointsSource } from "@bananos/types";
 import { forEach, now } from "lodash";
 import * as PIXI from 'pixi.js';
 import { Renderer } from "./Renderer";
-
-interface FloatingNumberProps {
-    eventType: string,
-    eventId: string,
-    location: Location,
-    text: string
-}
 
 export class FloatingNumbersRenderer implements Renderer {
     private numbers: Record<string, PIXI.Text> = {};
@@ -51,7 +44,7 @@ export class FloatingNumbersRenderer implements Renderer {
                 this.createFloatingNumber({
                     eventId,
                     eventType: event.type,
-                    location: store.characterMovements.data[event.characterId].location,
+                    location: event.location,
                     text: event.amount
                 })
             }
@@ -64,7 +57,7 @@ export class FloatingNumbersRenderer implements Renderer {
                 this.createFloatingNumber({
                     eventId,
                     eventType: event.type,
-                    location: store.characterMovements.data[event.characterId].location,
+                    location: event.location,
                     text: event.amount
                 })
             }

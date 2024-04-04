@@ -100,11 +100,15 @@ export class CorpseDropService extends EventParser {
             return;
         }
 
+        // TODO: handle case when corpseDropTrack does not exist.
+
         const item = this.corpsesDropTrack[event.corpseId].loot.items[event.itemId];
         if (!item) {
             this.sendErrorMessage(event.requestingCharacterId, 'This item is already taken.');
             return;
         }
+
+        // TODO: sprawdzac czy jest miejsce w plecaku 
 
         delete this.corpsesDropTrack[event.corpseId].loot.items[event.itemId];
 

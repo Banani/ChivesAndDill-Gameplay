@@ -8,19 +8,15 @@ import { CharacterEq } from './guiContent/characterEq/CharacterEq';
 import { CharacterFrames } from './guiContent/characterFrames/CharacterFrames';
 import { ChatManager } from './guiContent/chat';
 import { Details } from './guiContent/details/Details';
+import { LootModal } from './guiContent/lootModal/LootModal';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
 import { PartyModal } from './guiContent/party/Party';
 import { QuestManager } from './guiContent/quests';
 
 export function GameUserInterface() {
-
-    /* {!_.isEmpty(activeLoot[Object.keys(activeLoot ?? {})?.[0]]) ? <LootModal
-                monsterId={Object.keys(activeLoot ?? {})?.[0]}
-                activeLoot={activeLoot[Object.keys(activeLoot ?? {})?.[0]]} /> : null}
-         */
-
     return (
         <>
+            <LootModal />
             <CharacterFrames />
             <ChatManager />
             <Details />

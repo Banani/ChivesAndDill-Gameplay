@@ -3,7 +3,9 @@ import { useContext } from 'react';
 import { PackageContext } from '../contexts/PackageContext';
 
 export const useEngineModuleReader = (moduleName: GlobalStoreModule) => {
-    const state = useContext(PackageContext).state[moduleName];
+    const packageContext = useContext(PackageContext);
+    const state = packageContext.state[moduleName];
+    // console.log(packageContext)
 
     return {
         data: state.data,

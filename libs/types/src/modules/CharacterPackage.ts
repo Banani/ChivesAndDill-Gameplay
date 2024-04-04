@@ -142,6 +142,7 @@ export interface CharacterGotHpEvent {
     amount: number;
     healerId: string;
     spellId: string;
+    location: { x: number, y: number };
 }
 
 export interface CharacterLostHpEvent {
@@ -150,6 +151,7 @@ export interface CharacterLostHpEvent {
     amount: number;
     spellId: string;
     attackerId: string;
+    location: { x: number, y: number };
 }
 
 export interface DamageAbsorbedEvent {
