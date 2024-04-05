@@ -40,7 +40,7 @@ export const Backpacks = () => {
         return _.range(bagSize).map(index => {
             if (backpack[index] && itemTemplates[backpack[index].itemTemplateId]) {
                 return <ItemIconPreview
-                    itemData={itemTemplates[backpack[index].itemTemplateId] as any}
+                    itemTemplate={itemTemplates[backpack[index].itemTemplateId]}
                     highlight={ItemPreviewHighlight.icon}
                     showMoney={true}
                 />;

@@ -4,32 +4,12 @@ import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPr
 import { ItemIconPreview } from 'apps/chives-and-dill/src/components/itemPreview/itemIconPreview/ItemIconPreview';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
-import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { GlobalModal, ModalsManagerContext } from 'apps/chives-and-dill/src/contexts/ModalsManagerContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import _, { forEach } from 'lodash';
 import React, { useContext, useEffect } from 'react';
 import { SquareButton } from '../components/squareButton/SquareButton';
 import styles from './CharacterEq.module.scss';
-
-export interface Stats {
-    armor?: number;
-    stamina?: number;
-    strength?: number;
-    agility?: number;
-    intelect?: number;
-    spirit?: number;
-}
-export interface EquipmentItem extends Stats {
-    id: string;
-    type: string;
-    name: string;
-    description: string;
-    image: string;
-    stack: number;
-    value: number;
-    slot: string;
-}
 
 export const CharacterEq = () => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
@@ -43,7 +23,6 @@ export const CharacterEq = () => {
     const characterClass = characterClasses[activePlayer.characterClassId];
     const activePlayerAttributes = attributes[activeCharacterId];
 
-    const keyBoardContext = useContext(KeyBoardContext);
     const { callEngineAction } = useContext(EngineContext);
     const { activeGlobalModal, setActiveGlobalModal } = useContext(ModalsManagerContext);
 
@@ -90,7 +69,7 @@ export const CharacterEq = () => {
                     }}
                 >
                     <ItemIconPreview
-                        itemData={itemTemplates[itemSlot.itemTemplateId] as any}
+                        itemTemplate={itemTemplates[itemSlot.itemTemplateId]}
                         highlight={ItemPreviewHighlight.icon}
                         showMoney={true}
                         showStackSize={false}

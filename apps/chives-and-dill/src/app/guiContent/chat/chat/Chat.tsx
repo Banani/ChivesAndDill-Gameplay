@@ -1,5 +1,4 @@
-import { ChannelChatMessage, ChannelType, ChatChannel, ChatChannelClientActions, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage, SystemChatMessage } from '@bananos/types';
-import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
+import { ChannelChatMessage, ChannelType, ChatChannel, ChatChannelClientActions, ChatMessage, GlobalStoreModule, ItemTemplate, QuoteChatMessage, RangeChatMessage, SystemChatMessage } from '@bananos/types';
 import { ItemPreviewTooltip } from 'apps/chives-and-dill/src/components/itemPreview/itemPreviewTooltip/ItemPreviewTooltip';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
@@ -52,7 +51,7 @@ const ChatInternal = React.memo(({
     const { setActiveTarget } = useContext(GameControllerContext);
     const { callEngineAction } = useContext(EngineContext);
 
-    const [itemModal, setItemModal] = useState(null);
+    const [itemModal, setItemModal] = useState<ItemTemplate | null>(null);
     const itemModalRef = useRef(null);
 
     const lastMessage = useRef(null);
@@ -158,9 +157,8 @@ const ChatInternal = React.memo(({
             {itemModal ?
                 <div className={styles.ItemPreviewTooltipContainer} ref={itemModalRef}>
                     <ItemPreviewTooltip
-                        itemData={itemModal}
-                        showMoney={true}
-                        highlight={ItemPreviewHighlight.full}
+                        itemTemplate={itemModal}
+                        showMoney
                     />
                 </div>
                 : null}

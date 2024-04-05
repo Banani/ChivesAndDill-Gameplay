@@ -131,11 +131,11 @@ export const LootModal = () => {
             .pickBy(drop => itemTemplates[drop.itemTemplateId])
             .map((key, corpseItemId) => {
                 const item = activeLoot.items[corpseItemId];
-                const itemData = itemTemplates[item.itemTemplateId];
+                const itemTemplate = itemTemplates[item.itemTemplateId];
 
                 return <div className={styles.ItemContainer}>
                     <ItemPreview
-                        itemData={itemData as any}
+                        itemTemplate={itemTemplate}
                         handleItemClick={() => handleItemClick(corpseItemId)}
                         showMoney={false}
                         highlight={ItemPreviewHighlight.full}
