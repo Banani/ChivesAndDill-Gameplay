@@ -1,9 +1,10 @@
-import { GlobalStoreModule } from '@bananos/types';
+import { GlobalStoreModule, ItemClientActions, ItemTemplateType } from '@bananos/types';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import CloseIcon from '@mui/icons-material/Close';
 import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 import { ItemIconPreview } from 'apps/chives-and-dill/src/components/itemPreview/itemIconPreview/ItemIconPreview';
+import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import { GlobalModal, ModalsManagerContext } from 'apps/chives-and-dill/src/contexts/ModalsManagerContext';
 import _, { forEach } from 'lodash';
@@ -18,7 +19,8 @@ export const Backpacks = () => {
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
 
     const [backpacksVisibility, changeBackpacksVisibility] = useState(true);
-    const { activeGlobalModal, setActiveGlobalModal } = useContext(ModalsManagerContext);
+    const { activeGlobalModal } = useContext(ModalsManagerContext);
+    const { callEngineAction } = useContext(EngineContext);
 
     const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
 
@@ -40,6 +42,15 @@ export const Backpacks = () => {
         return _.range(bagSize).map(index => {
             if (backpack[index] && itemTemplates[backpack[index].itemTemplateId]) {
                 return <ItemIconPreview
+                    handleItemRightClick={() => {
+                        if (itemTemplates[backpack[index].itemTemplateId].type === ItemTemplateType.Equipment) {
+                            callEngineAction({
+                                type: ItemClientActions.EquipItem,
+                                itemInstanceId: backpack[index].itemId
+                            })
+                        }
+
+                    }}
                     itemTemplate={itemTemplates[backpack[index].itemTemplateId]}
                     highlight={ItemPreviewHighlight.icon}
                     showMoney={true}

@@ -8,11 +8,11 @@ export interface ItemIconPreviewProps {
     itemTemplate: ItemTemplate;
     showMoney: boolean;
     highlight: ItemPreviewHighlight;
-    handleItemClick?: () => void;
+    handleItemRightClick?: () => void;
     showStackSize?: boolean;
 }
 
-export const ItemIconPreview: React.FC<ItemIconPreviewProps> = ({ itemTemplate, highlight, showMoney, showStackSize = true }) => {
+export const ItemIconPreview: React.FC<ItemIconPreviewProps> = ({ itemTemplate, highlight, showMoney, handleItemRightClick, showStackSize = true }) => {
     const [isTooltipVisible, setTooltipVisible] = useState(false);
 
     return (
@@ -21,6 +21,10 @@ export const ItemIconPreview: React.FC<ItemIconPreviewProps> = ({ itemTemplate, 
             className={styles.ItemImage + ` ${highlight ? styles.highlight : ''}`}
             onMouseEnter={(): void => setTooltipVisible(true)}
             onMouseLeave={(): void => setTooltipVisible(false)}
+            onContextMenu={e => {
+                e.preventDefault();
+                handleItemRightClick?.()
+            }}
         >
             {isTooltipVisible ? <ItemPreviewTooltip itemTemplate={itemTemplate} showMoney={showMoney} /> : null}
             {itemTemplate.stack && showStackSize ? <div className={styles.Stack}>{itemTemplate.stack}</div> : null}
