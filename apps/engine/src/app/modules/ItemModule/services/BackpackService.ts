@@ -1,4 +1,4 @@
-import { BackpackTrack } from '@bananos/types';
+import { BackpackTrack, ItemClientActions } from '@bananos/types';
 import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
@@ -55,15 +55,15 @@ export class BackpackService extends EventParser {
             });
         })
 
-        // setTimeout(() => {
-        //     _.forEach(_.pickBy(services.itemService.getAllItems(), item => item.ownerId === event.playerCharacter.id), (item, key) => {
-        //         this.engineEventCrator.asyncCeateEvent<any>({
-        //             type: ItemClientActions.EquipItem,
-        //             requestingCharacterId: event.playerCharacter.id,
-        //             itemInstanceId: key,
-        //         });
-        //     });
-        // }, 0);
+        setTimeout(() => {
+            _.forEach(_.pickBy(services.itemService.getAllItems(), item => item.ownerId === event.playerCharacter.id), (item, key) => {
+                this.engineEventCrator.asyncCeateEvent<any>({
+                    type: ItemClientActions.EquipItem,
+                    requestingCharacterId: event.playerCharacter.id,
+                    itemInstanceId: key,
+                });
+            });
+        }, 0);
     };
 
     getBackpackSizes = (characterId: string) => this.backpacks[characterId];
