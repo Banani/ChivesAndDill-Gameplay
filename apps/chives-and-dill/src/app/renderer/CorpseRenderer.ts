@@ -130,10 +130,10 @@ export class CorpseRenderer implements Renderer {
                 return;
             }
 
-            // TODO: corpse powinien miec tez sprite
-            this.corpses[characterId] = PIXI.Sprite.from(this.sprites["orc"].spriteAssignment.dead[0]);
-            this.corpses[characterId].x = corpseDrop.location.x - this.sprites["orc"].width / 2;
-            this.corpses[characterId].y = corpseDrop.location.y - this.sprites["orc"].height / 2;
+            const spritesId = store.character.data[characterId].sprites;
+            this.corpses[characterId] = PIXI.Sprite.from(this.sprites[spritesId].spriteAssignment.dead[0]);
+            this.corpses[characterId].x = corpseDrop.location.x - this.sprites[spritesId].width / 2;
+            this.corpses[characterId].y = corpseDrop.location.y - this.sprites[spritesId].height / 2;
             this.corpses[characterId].height = BLOCK_SIZE;
             this.corpses[characterId].width = BLOCK_SIZE;
             this.corpses[characterId].interactive = true;
