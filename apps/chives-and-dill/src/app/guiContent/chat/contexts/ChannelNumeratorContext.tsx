@@ -71,7 +71,8 @@ const ChannelNumeratorContextDataSetter = () => {
     }, [activeCharacterLastUpdateTime]);
 
     useEffect(() => {
-        channelNumeratorContext.setChatChannels(chatChannels as Record<string, ChatChannel>);
+        // Object assign is here because the reference is not changed.
+        channelNumeratorContext.setChatChannels(Object.assign({}, chatChannels) as Record<string, ChatChannel>);
     }, [chatChannelsLastUpdateTime]);
 
     return null;
