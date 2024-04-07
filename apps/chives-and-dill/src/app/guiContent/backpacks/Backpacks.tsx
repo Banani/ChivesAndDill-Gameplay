@@ -54,6 +54,7 @@ export const Backpacks = () => {
                     itemTemplate={itemTemplates[backpack[index].itemTemplateId]}
                     highlight={ItemPreviewHighlight.icon}
                     showMoney={true}
+                    amount={backpack[index].amount}
                 />;
             }
 

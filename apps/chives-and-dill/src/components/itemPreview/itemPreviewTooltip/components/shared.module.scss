@@ -1,0 +1,14 @@
+.ItemPrevTooltipName {
+    font-size: 17px;
+    color: #70ce49;
+}
+
+.ItemPrevTooltipLevel {
+    color: gold;
+}
+
+.ItemPrevTooltipSlot,
+.ItemPrevTooltipPrice {
+    display: flex;
+    justify-content: space-between;
+}

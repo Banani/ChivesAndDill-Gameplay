@@ -72,7 +72,6 @@ export const CharacterEq = () => {
                         itemTemplate={itemTemplates[itemSlot.itemTemplateId]}
                         highlight={ItemPreviewHighlight.icon}
                         showMoney={true}
-                        showStackSize={false}
                     />
                 </div>
             );

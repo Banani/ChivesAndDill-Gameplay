@@ -1,4 +1,4 @@
-import { BackpackTrack, ItemClientActions } from '@bananos/types';
+import { BackpackTrack } from '@bananos/types';
 import * as _ from 'lodash';
 import { EventParser } from '../../../EventParser';
 import { EngineEventHandler } from '../../../types';
@@ -34,18 +34,7 @@ export class BackpackService extends EventParser {
         //TODO: remove this part after FE is done
         [
             "64c00c36c2db32c8e3389b0d",
-            "64c00ca0c2db32c8e3389b0e",
-            "64c00d25c2db32c8e3389b0f",
-            "64c00dbdc2db32c8e3389b10",
-            "64c00e03c2db32c8e3389b11",
-            "64c00e2bc2db32c8e3389b12",
-            "64c00e4fc2db32c8e3389b13",
-            "64c00e76c2db32c8e3389b14",
-            "64c00f3bc2db32c8e3389b15",
-            "64c00f99c2db32c8e3389b16",
-            "64c0103bc2db32c8e3389b17",
-            "64c010cec2db32c8e3389b18",
-            "64c010f4c2db32c8e3389b19"
+            "64c00ca0c2db32c8e3389b0e"
         ].forEach(itemTemplateId => {
             this.engineEventCrator.asyncCeateEvent<GenerateItemForCharacterEvent>({
                 type: ItemEngineEvents.GenerateItemForCharacter,
@@ -53,17 +42,28 @@ export class BackpackService extends EventParser {
                 itemTemplateId,
                 amount: 1,
             });
+        });
+
+        [
+            "66128255ba5b2c3edcd1e4c8",
+        ].forEach(itemTemplateId => {
+            this.engineEventCrator.asyncCeateEvent<GenerateItemForCharacterEvent>({
+                type: ItemEngineEvents.GenerateItemForCharacter,
+                characterId: event.playerCharacter.id,
+                itemTemplateId,
+                amount: 5,
+            });
         })
 
-        setTimeout(() => {
-            _.forEach(_.pickBy(services.itemService.getAllItems(), item => item.ownerId === event.playerCharacter.id), (item, key) => {
-                this.engineEventCrator.asyncCeateEvent<any>({
-                    type: ItemClientActions.EquipItem,
-                    requestingCharacterId: event.playerCharacter.id,
-                    itemInstanceId: key,
-                });
-            });
-        }, 0);
+        // setTimeout(() => {
+        //     _.forEach(_.pickBy(services.itemService.getAllItems(), item => item.ownerId === event.playerCharacter.id), (item, key) => {
+        //         this.engineEventCrator.asyncCeateEvent<any>({
+        //             type: ItemClientActions.EquipItem,
+        //             requestingCharacterId: event.playerCharacter.id,
+        //             itemInstanceId: key,
+        //         });
+        //     });
+        // }, 0);
     };
 
     getBackpackSizes = (characterId: string) => this.backpacks[characterId];

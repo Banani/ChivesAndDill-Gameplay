@@ -1,6 +1,6 @@
 
 import { CharacterType, PlayerClientActions } from '@bananos/types';
-import { EngineManager } from 'apps/engine/src/app/testUtilities';
+import { EngineManager } from 'apps/engine/src/app/testUtilities/index';
 import * as _ from 'lodash';
 import { EngineEvents } from '../../../EngineEvents';
 import { CharacterDiedEvent } from '../../../types';

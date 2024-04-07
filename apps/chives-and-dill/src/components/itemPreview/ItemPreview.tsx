@@ -15,7 +15,7 @@ export interface ItemPreviewProps {
     showMoney: boolean;
     highlight: ItemPreviewHighlight;
     handleItemClick?: () => void;
-    showStackSize?: boolean;
+    amount?: boolean;
 }
 
 export const ItemPreview: FunctionComponent<ItemPreviewProps> = ({ itemTemplate, handleItemClick, showMoney, highlight }) => {

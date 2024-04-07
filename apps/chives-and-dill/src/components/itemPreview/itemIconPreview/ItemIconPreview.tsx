@@ -9,10 +9,10 @@ export interface ItemIconPreviewProps {
     showMoney: boolean;
     highlight: ItemPreviewHighlight;
     handleItemRightClick?: () => void;
-    showStackSize?: boolean;
+    amount?: number;
 }
 
-export const ItemIconPreview: React.FC<ItemIconPreviewProps> = ({ itemTemplate, highlight, showMoney, handleItemRightClick, showStackSize = true }) => {
+export const ItemIconPreview: React.FC<ItemIconPreviewProps> = ({ itemTemplate, highlight, showMoney, handleItemRightClick, amount = 0 }) => {
     return (
         <ItemPreviewTooltip showMode={TooltipShowMode.Hover} itemTemplate={itemTemplate} showMoney={showMoney} >
             <div
@@ -23,7 +23,7 @@ export const ItemIconPreview: React.FC<ItemIconPreviewProps> = ({ itemTemplate, 
                     handleItemRightClick?.()
                 }}
             >
-                {itemTemplate.stack && showStackSize ? <div className={styles.Stack}>{itemTemplate.stack}</div> : null}
+                {amount && itemTemplate.stack > 1 ? <div className={styles.Stack}>{amount}</div> : null}
             </div>
         </ItemPreviewTooltip>
     );

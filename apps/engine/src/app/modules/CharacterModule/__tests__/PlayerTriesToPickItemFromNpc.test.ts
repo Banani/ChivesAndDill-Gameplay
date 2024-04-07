@@ -8,7 +8,7 @@ import { ItemTemplateService } from '../../ItemModule/services/ItemTemplateServi
 import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../../MonsterModule/Events';
 import { MonsterTemplate } from '../../MonsterModule/MonsterTemplates';
 import { MonsterRespawnTemplateService, MonsterTemplateService } from '../../MonsterModule/services';
-import { getDroppedItemIds, getNewestCorpseId, killAnyMonster, openAnyCorpse, pickOneItemFromCorpse } from '../features/corpse';
+import { getDroppedItemIds, getNewestCorpseId, killAnyMonster, openAnyCorpse, pickOneItemFromCorpse } from '../testUtilities/Corpse';
 import _ = require('lodash');
 
 const setupEngine = (monsterTemplates: Record<string, RecursivePartial<MonsterTemplate>> = {}) => {

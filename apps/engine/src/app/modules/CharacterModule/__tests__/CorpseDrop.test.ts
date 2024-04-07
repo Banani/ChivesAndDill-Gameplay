@@ -6,7 +6,7 @@ import { RandomGeneratorService } from '../../../services/RandomGeneratorService
 import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../../MonsterModule/Events';
 import { MonsterTemplate } from '../../MonsterModule/MonsterTemplates';
 import { MonsterRespawnTemplateService, MonsterTemplateService } from '../../MonsterModule/services';
-import { killAnyMonster, openAnyCorpse } from "../features/corpse";
+import { killAnyMonster, openAnyCorpse } from "../testUtilities/Corpse";
 import _ = require('lodash');
 
 const setupEngine = ({ monsterTemplates }: RecursivePartial<{ monsterTemplates: Record<string, MonsterTemplate> }> = {}) => {
