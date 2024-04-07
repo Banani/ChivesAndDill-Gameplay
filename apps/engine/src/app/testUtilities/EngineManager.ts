@@ -159,6 +159,7 @@ export class EngineManager {
     private ioHandler = {};
     private watchForErrors = false;
 
+    private players = {};
     private playerSocketIdIncrement = 0;
     private playerSockets = {};
     // socketId => action_name = callback
@@ -240,12 +241,16 @@ export class EngineManager {
         this.callPlayerAction(id, { type: PlayerClientActions.CreatePlayerCharacter, characterClassId: '1', ...character });
         const dataPackage = this.getLatestPlayerDataPackage(id);
 
-        return {
+        this.players[id] = {
             socketId: id,
             character: dataPackage.character.data[dataPackage.activeCharacter.data.activeCharacterId],
             characterId: dataPackage.activeCharacter.data.activeCharacterId as unknown as PlayerCharacter,
-        } as any;
+        }
+
+        return this.players[id];
     }
+
+    getPlayers = () => this.players;
 
     getLatestPlayerDataPackage(playerId: string): EnginePackage {
         if (!this.playerSockets[playerId]) {

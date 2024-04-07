@@ -66,14 +66,20 @@ export class CorpseDropService extends EventParser {
             }
 
             const itemsToDrop = {};
+
             _.filter(characterTemplate.dropSchema.items ?? {}, (dropItem) => dropItem.dropChance >= services.randomGeneratorService.generateNumber())
                 .forEach((dropItem) => {
-                    this.increment++;
                     const amountRange = dropItem.maxAmount - dropItem.minAmount;
-                    itemsToDrop['corpseItemId_' + this.increment] = {
-                        amount: dropItem.minAmount + Math.round(amountRange * services.randomGeneratorService.generateNumber()),
-                        itemTemplateId: dropItem.itemTemplateId,
-                    };
+                    const amount = dropItem.minAmount + Math.round(amountRange * services.randomGeneratorService.generateNumber());
+                    const stackSize = services.itemTemplateService.getData()[dropItem.itemTemplateId].stack ?? 1;
+
+                    for (let i = 0; i < amount / stackSize; i++) {
+                        this.increment++;
+                        itemsToDrop['corpseItemId_' + this.increment] = {
+                            amount: Math.min(amount - stackSize * i, stackSize),
+                            itemTemplateId: dropItem.itemTemplateId,
+                        };
+                    }
                 });
 
             if (Object.keys(itemsToDrop).length > 0) {
@@ -100,7 +106,10 @@ export class CorpseDropService extends EventParser {
             return;
         }
 
-        // TODO: handle case when corpseDropTrack does not exist.
+        if (!this.corpsesDropTrack[event.corpseId]) {
+            this.sendErrorMessage(event.requestingCharacterId, 'This corpse does not exist.');
+            return;
+        }
 
         const item = this.corpsesDropTrack[event.corpseId].loot.items[event.itemId];
         if (!item) {
@@ -108,7 +117,10 @@ export class CorpseDropService extends EventParser {
             return;
         }
 
-        // TODO: sprawdzac czy jest miejsce w plecaku 
+        if (!services.backpackItemsService.canAddThanManyItems(event.requestingCharacterId, item.itemTemplateId, item.amount, services)) {
+            this.sendErrorMessage(event.requestingCharacterId, 'Your backpack is full.');
+            return;
+        }
 
         delete this.corpsesDropTrack[event.corpseId].loot.items[event.itemId];
 

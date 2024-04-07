@@ -1,19 +1,22 @@
-import { EngineManager } from 'apps/engine/src/app/testUtilities';
+import { GlobalStoreModule, RecursivePartial } from '@bananos/types';
+import { EngineManager, checkIfErrorWasHandled, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { } from '..';
 import { MockedItemTemplates, MockedMonsterTemplates } from "../../../mocks";
 import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
 import { ItemTemplateService } from '../../ItemModule/services/ItemTemplateService';
 import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../../MonsterModule/Events';
+import { MonsterTemplate } from '../../MonsterModule/MonsterTemplates';
 import { MonsterRespawnTemplateService, MonsterTemplateService } from '../../MonsterModule/services';
+import { getDroppedItemIds, getNewestCorpseId, killAnyMonster, openAnyCorpse, pickOneItemFromCorpse } from '../features/corpse';
 import _ = require('lodash');
 
-const setupEngine = () => {
+const setupEngine = (monsterTemplates: Record<string, RecursivePartial<MonsterTemplate>> = {}) => {
     const itemTemplateService = new ItemTemplateService();
     (itemTemplateService.getData as jest.Mock).mockReturnValue(MockedItemTemplates)
 
     const monsterTemplateService = new MonsterTemplateService();
-    (monsterTemplateService.getData as jest.Mock).mockReturnValue(MockedMonsterTemplates)
+    (monsterTemplateService.getData as jest.Mock).mockReturnValue(_.merge({}, MockedMonsterTemplates, monsterTemplates))
 
     const respawnService = new MonsterRespawnTemplateService();
     (respawnService.getData as jest.Mock).mockReturnValue(
@@ -48,301 +51,178 @@ const setupEngine = () => {
 };
 
 describe('PlayerTriesToPickItemFromNpc', () => {
-    it.skip('Player should get item when he is picking it up', () => {
-        // const { engineManager, players, randomGeneratorService } = setupEngine();
-        // (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+    it('Player should get item when he is picking it up', () => {
+        const { engineManager, randomGeneratorService } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
-        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        killAnyMonster(engineManager, '1');
+        const { corpseId } = openAnyCorpse({ engineManager, playerId: '1' });
+        const { dataPackage } = pickOneItemFromCorpse({ engineManager, playerId: '1', corpseId });
 
-        // engineManager.createSystemAction<CharacterDiedEvent>({
-        //     type: EngineEvents.CharacterDied,
-        //     characterId: monster.id,
-        //     killerId: players['1'].characterId,
-        //     character: monster,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
-
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
-
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.PickItemFromCorpse,
-        //     corpseId,
-        //     itemId,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-        // checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
-        //     data: {
-        //         playerCharacter_1: {
-        //             '1': {
-        //                 '0': {
-        //                     amount: 1,
-        //                     itemId: 'ItemInstance_0',
-        //                 },
-        //             },
-        //         },
-        //     },
-        // });
+        checkIfPackageIsValid(GlobalStoreModule.BACKPACK_ITEMS, dataPackage, {
+            data: {
+                playerCharacter_1: {
+                    '1': {
+                        '0': {
+                            amount: 1,
+                            itemId: 'ItemInstance_0',
+                            itemTemplateId: '1'
+                        },
+                    },
+                },
+            },
+        });
     });
 
-    it.skip('Player should get error if item is already taken', () => {
-        // const { engineManager, players, randomGeneratorService } = setupEngine();
-        // (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+    it('Player should get error if itemId does not exist', () => {
+        const { engineManager, randomGeneratorService } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
-        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        killAnyMonster(engineManager, '1');
+        const { corpseId } = openAnyCorpse({ engineManager, playerId: '1' });
+        const { dataPackage } = pickOneItemFromCorpse({ engineManager, playerId: '1', corpseId, itemId: "Some_random_id" });
 
-        // engineManager.createSystemAction<CharacterDiedEvent>({
-        //     type: EngineEvents.CharacterDied,
-        //     characterId: monster.id,
-        //     killerId: players['1'].characterId,
-        //     character: monster,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
-
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId,
-        // });
-
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.PickItemFromCorpse,
-        //     corpseId,
-        //     itemId: 'Some_random_id',
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-        // checkIfErrorWasHandled(GlobalStoreModule.BACKPACK_ITEMS, 'This item is already taken.', dataPackage);
+        checkIfErrorWasHandled(GlobalStoreModule.BACKPACK_ITEMS, 'This item is already taken.', dataPackage);
     });
 
-    it.skip('Player should get error if tries to pick item from corpse that is not opened by him', () => {
-        // const { engineManager, players, randomGeneratorService } = setupEngine();
-        // (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+    it('Player should get error if item is already taken', () => {
+        const { engineManager, randomGeneratorService } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
-        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        killAnyMonster(engineManager, '1');
+        const { corpseId } = openAnyCorpse({ engineManager, playerId: '1' });
+        const [itemId] = getDroppedItemIds(engineManager, '1', corpseId);
+        pickOneItemFromCorpse({ engineManager, playerId: '1', corpseId, itemId });
+        const { dataPackage } = pickOneItemFromCorpse({ engineManager, playerId: '1', corpseId, itemId });
 
-        // engineManager.createSystemAction<CharacterDiedEvent>({
-        //     type: EngineEvents.CharacterDied,
-        //     characterId: monster.id,
-        //     killerId: players['1'].characterId,
-        //     character: monster,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
-
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
-
-        // engineManager.callPlayerAction(players['2'].socketId, {
-        //     type: PlayerClientActions.PickItemFromCorpse,
-        //     corpseId,
-        //     itemId,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
-
-        // checkIfErrorWasHandled(GlobalStoreModule.BACKPACK_ITEMS, 'You cannot take item from corpse that is not opened by you.', dataPackage);
+        checkIfErrorWasHandled(GlobalStoreModule.BACKPACK_ITEMS, 'This item is already taken.', dataPackage);
     });
 
-    it.skip('Player should get information that this item is no longer available', () => {
-        // const { engineManager, players, randomGeneratorService } = setupEngine();
-        // (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+    it('Player should get error if tries to pick item from corpse that is not opened by him', () => {
+        const { engineManager, randomGeneratorService } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
-        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        killAnyMonster(engineManager, '1');
+        const { corpseId } = openAnyCorpse({ engineManager, playerId: '1' });
+        const [itemId] = getDroppedItemIds(engineManager, '1', corpseId);
+        const { dataPackage } = pickOneItemFromCorpse({ engineManager, playerId: '2', corpseId, itemId });
 
-        // engineManager.createSystemAction<CharacterDiedEvent>({
-        //     type: EngineEvents.CharacterDied,
-        //     characterId: monster.id,
-        //     killerId: players['1'].characterId,
-        //     character: monster,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
-
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
-
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.PickItemFromCorpse,
-        //     corpseId,
-        //     itemId,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-        // checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
-        //     toDelete: {
-        //         monster_0: {
-        //             items: {
-        //                 corpseItemId_1: null,
-        //             },
-        //         },
-        //     },
-        // });
+        checkIfErrorWasHandled(GlobalStoreModule.BACKPACK_ITEMS, 'You cannot take item from corpse that is not opened by you.', dataPackage);
     });
 
-    it.skip('Other players should also get information that this item is no longer available', () => {
-        // const { engineManager, players, randomGeneratorService } = setupEngine();
-        // (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+    it('Player should get information that this item is no longer available', () => {
+        const { engineManager, randomGeneratorService } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
-        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        killAnyMonster(engineManager, '1');
+        const { corpseId } = openAnyCorpse({ engineManager, playerId: '1' });
+        const { dataPackage } = pickOneItemFromCorpse({ engineManager, playerId: '1', corpseId });
 
-        // engineManager.createSystemAction<CharacterDiedEvent>({
-        //     type: EngineEvents.CharacterDied,
-        //     characterId: monster.id,
-        //     killerId: players['1'].characterId,
-        //     character: monster,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
-
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
-
-        // engineManager.callPlayerAction(players['2'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId,
-        // });
-
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.PickItemFromCorpse,
-        //     corpseId,
-        //     itemId,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
-
-        // checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
-        //     toDelete: {
-        //         monster_0: {
-        //             items: {
-        //                 corpseItemId_1: null,
-        //             },
-        //         },
-        //     },
-        // });
+        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
+            toDelete: {
+                monster_0: {
+                    items: {
+                        corpseItemId_1: null,
+                    },
+                },
+            },
+        });
     });
 
-    it.skip('Players that do not have corpse opened should not get update about corpse state', () => {
-        // const { engineManager, players, randomGeneratorService } = setupEngine();
-        // (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+    it('Other players should also get information that this item is no longer available', () => {
+        const { engineManager, players, randomGeneratorService } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
-        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        killAnyMonster(engineManager, '1');
+        const corpseId = getNewestCorpseId(engineManager, '1')
 
-        // engineManager.createSystemAction<CharacterDiedEvent>({
-        //     type: EngineEvents.CharacterDied,
-        //     characterId: monster.id,
-        //     killerId: players['1'].characterId,
-        //     character: monster,
-        // });
+        openAnyCorpse({ engineManager, playerId: '1', corpseId });
+        openAnyCorpse({ engineManager, playerId: '2', corpseId });
 
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
+        const [itemId] = getDroppedItemIds(engineManager, '2', corpseId);
+        pickOneItemFromCorpse({ engineManager, playerId: '1', corpseId, itemId });
 
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId,
-        // });
+        const dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
 
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const itemId = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
-
-        // engineManager.callPlayerAction(players['2'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId,
-        // });
-
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.PickItemFromCorpse,
-        //     corpseId,
-        //     itemId,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
-
-        // checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, undefined);
+        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
+            toDelete: {
+                monster_0: {
+                    items: {
+                        corpseItemId_1: null,
+                    },
+                },
+            },
+        });
     });
 
-    it.skip('Players should have items deleted when all items were collected', () => {
-        // const { engineManager, players, randomGeneratorService } = setupEngine();
-        // (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.2);
+    it('Players that do not have corpse opened should not get update about corpse state', () => {
+        const { engineManager, players, randomGeneratorService } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['3'].socketId);
-        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        killAnyMonster(engineManager, '1');
+        const corpseId = getNewestCorpseId(engineManager, '1')
 
-        // engineManager.createSystemAction<CharacterDiedEvent>({
-        //     type: EngineEvents.CharacterDied,
-        //     characterId: monster.id,
-        //     killerId: players['1'].characterId,
-        //     character: monster,
-        // });
+        openAnyCorpse({ engineManager, playerId: '1', corpseId });
+        const [itemId] = getDroppedItemIds(engineManager, '1', corpseId);
+        pickOneItemFromCorpse({ engineManager, playerId: '1', corpseId, itemId });
 
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const corpseId = Object.keys(dataPackage.corpseDrop.data)[0];
+        const dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
 
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId,
-        // });
+        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, undefined);
+    });
 
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+    it('Players should have items deleted when all items were collected', () => {
+        const { engineManager, randomGeneratorService } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.2);
 
-        // const itemId1 = Object.keys(dataPackage.activeLoot.data[corpseId].items)[0];
-        // const itemId2 = Object.keys(dataPackage.activeLoot.data[corpseId].items)[1];
+        killAnyMonster(engineManager, '1');
+        const corpseId = getNewestCorpseId(engineManager, '1')
 
-        // engineManager.callPlayerAction(players['2'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId,
-        // });
+        openAnyCorpse({ engineManager, playerId: '1', corpseId });
+        const [itemId1, itemId2] = getDroppedItemIds(engineManager, '1', corpseId);
+        pickOneItemFromCorpse({ engineManager, playerId: '1', corpseId, itemId: itemId1 });
+        const { dataPackage } = pickOneItemFromCorpse({ engineManager, playerId: '1', corpseId, itemId: itemId2 });
 
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.PickItemFromCorpse,
-        //     corpseId,
-        //     itemId: itemId1,
-        // });
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.PickItemFromCorpse,
-        //     corpseId,
-        //     itemId: itemId2,
-        // });
+        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, { toDelete: { monster_0: { items: null } } });
+    });
 
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['2'].socketId);
+    it('Players should get error message if tries to pick up the item when the backpack is full', () => {
+        const { engineManager, randomGeneratorService } = setupEngine({
+            '1': {
+                dropSchema: {
+                    items: {
+                        '1': {
+                            itemTemplateId: '1',
+                            dropChance: 1,
+                            maxAmount: 21,
+                            minAmount: 21,
+                        },
+                    }
+                }
+            }
+        });
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.2);
 
-        // checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, { toDelete: { monster_0: { items: null } } });
+        killAnyMonster(engineManager, '1');
+        const corpseId = getNewestCorpseId(engineManager, '1')
+
+        openAnyCorpse({ engineManager, playerId: '1', corpseId });
+        const itemIds = getDroppedItemIds(engineManager, '1', corpseId);
+
+        let dataPackage;
+        _.forEach(itemIds, itemId => {
+            dataPackage = pickOneItemFromCorpse({ engineManager, playerId: '1', corpseId, itemId }).dataPackage;
+        })
+
+        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, undefined, true);
+        checkIfErrorWasHandled(GlobalStoreModule.BACKPACK_ITEMS, 'Your backpack is full.', dataPackage);
+    });
+
+    it('Players should get error if tries to open corpse which does not exist', () => {
+        const { engineManager } = setupEngine();
+
+        const { dataPackage } = openAnyCorpse({ engineManager, playerId: '1', corpseId: "Some_random_id" });
+
+        checkIfErrorWasHandled(GlobalStoreModule.BACKPACK_ITEMS, 'This corpse does not exist.', dataPackage);
     });
 });

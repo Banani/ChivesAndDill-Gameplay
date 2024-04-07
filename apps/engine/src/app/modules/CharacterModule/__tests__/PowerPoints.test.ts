@@ -151,7 +151,8 @@ describe('Power points service', () => {
                     healerId: "playerCharacter_1",
                     characterId: "playerCharacter_2",
                     spellId: "SPELL_ID",
-                    source: HealthPointsSource.Healing
+                    source: HealthPointsSource.Healing,
+                    location: { x: 50, y: 100 }
                 }
             ]
         });
