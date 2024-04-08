@@ -51,6 +51,36 @@ describe('GenerateItem', () => {
         });
     });
 
+    it('should allow to add 16 items to backpack', () => {
+        const { players, engineManager } = setupEngine();
+        let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+        _.range(0, 16).forEach(() => {
+            engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+                type: ItemEngineEvents.GenerateItemForCharacter,
+                characterId: players['1'].characterId,
+                itemTemplateId: '1',
+                amount: 1,
+            });
+        });
+
+        dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+
+        checkIfPackageIsValid(CURRENT_MODULE, dataPackage, {
+            data: {
+                playerCharacter_1: {
+                    "1": {
+                        "15": {
+                            amount: 1,
+                            itemId: "ItemInstance_15",
+                            itemTemplateId: "1"
+                        }
+                    }
+                }
+            }
+        });
+    });
+
     it('should return error message if backpack is full', () => {
         const { players, engineManager } = setupEngine();
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);

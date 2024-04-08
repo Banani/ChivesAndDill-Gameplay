@@ -230,13 +230,20 @@ describe('BuyItemFromNpc action', () => {
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
         const npcId = _.find(dataPackage.character.data, (character) => character.name == NpcTemplates['Manczur'].name).id;
 
-        _.range(0, 16).forEach(() => {
+        _.range(0, 15).forEach(() => {
             engineManager.createSystemAction<GenerateItemForCharacterEvent>({
                 type: ItemEngineEvents.GenerateItemForCharacter,
                 characterId: players['1'].characterId,
                 itemTemplateId: '4',
-                amount: 19,
+                amount: 20,
             });
+        });
+
+        engineManager.createSystemAction<GenerateItemForCharacterEvent>({
+            type: ItemEngineEvents.GenerateItemForCharacter,
+            characterId: players['1'].characterId,
+            itemTemplateId: '4',
+            amount: 7,
         });
 
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
@@ -244,10 +251,11 @@ describe('BuyItemFromNpc action', () => {
             npcId,
         });
 
+
         dataPackage = engineManager.callPlayerAction(players['1'].socketId, {
             type: NpcClientActions.BuyItemFromNpc,
             itemTemplateId: '4',
-            amount: 1,
+            amount: 4,
             npcId,
         });
 
@@ -256,7 +264,7 @@ describe('BuyItemFromNpc action', () => {
                 playerCharacter_1: {
                     '1': {
                         '15': {
-                            amount: 5,
+                            amount: 11,
                         },
                     },
                 },

@@ -110,7 +110,7 @@ export class BackpackItemsService extends EventParser {
             .sum()
             .value();
 
-        return amountOfFreeSpots * stackSize + amountOfSpacesInAlreadyExistingStacks > amount;
+        return amountOfFreeSpots * stackSize + amountOfSpacesInAlreadyExistingStacks >= amount;
     };
 
     findNextFreeSpot = (characterId: string, services: Services): ItemLocationInBag => {
