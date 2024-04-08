@@ -27,6 +27,10 @@ const DefaultItem = {
     intelect: 0,
     strength: 0,
     spirit: 0,
+    criticalStrike: 0,
+    haste: 0,
+    dodge: 0,
+    block: 0
 };
 
 export const ItemTemplateDialog = () => {
@@ -112,6 +116,30 @@ export const ItemTemplateDialog = () => {
                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
                 defaultValue: (defaultValues as EquipmentItemTemplate).strength,
                 prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            },
+            haste: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: (defaultValues as EquipmentItemTemplate).haste,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            },
+            criticalStrike: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: (defaultValues as EquipmentItemTemplate).criticalStrike,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            },
+            dodge: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: (defaultValues as EquipmentItemTemplate).dodge,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
+            },
+            block: {
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }],
+                defaultValue: (defaultValues as EquipmentItemTemplate).block,
+                prerequisite: ({ type }) => type === ItemTemplateType.Equipment
             }
         }
     }, [activeItemTemplate, DefaultItem])
@@ -164,6 +192,10 @@ const ItemTemplateDialogContent = () => {
                         <FormTextField propName="intelect" label="Intelect" />
                         <FormTextField propName="strength" label="Strength" />
                         <FormTextField propName="spirit" label="Spirit" />
+                        <FormTextField propName="haste" label="Haste" />
+                        <FormTextField propName="criticalStrike" label="Critical strike" />
+                        <FormTextField propName="dodge" label="Dodge" />
+                        <FormTextField propName="block" label="Block" />
                     </>
                 ) : null}
             </DialogContent>

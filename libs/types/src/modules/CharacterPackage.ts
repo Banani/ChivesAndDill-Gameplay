@@ -41,6 +41,10 @@ export enum Attribute {
     Intelect = "intelect",
     Strength = "strength",
     Spirit = "spirit",
+    Haste = "haste",
+    CriticalStrike = "criticalStrike",
+    Dodge = "dodge",
+    Block = "block",
 }
 
 export interface Attributes {
@@ -50,6 +54,10 @@ export interface Attributes {
     intelect: number;
     strength: number;
     spirit: number;
+    criticalStrike: number;
+    haste: number;
+    dodge: number;
+    block: number;
 }
 
 export interface QuotesEvents {
