@@ -143,7 +143,9 @@ export const LootModal = () => {
                 </div>
             }).value();
 
-        items = [coins(), ...items];
+        if (activeLoot?.coins) {
+            items = [coins(), ...items];
+        }
 
         if (itemsAmount > 3) {
             return Object.entries(items).slice(paginationRange.start, paginationRange.end).map(entry => entry[1]);
