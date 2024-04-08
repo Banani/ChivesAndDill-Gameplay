@@ -139,6 +139,7 @@ export const LootModal = () => {
                         handleItemClick={() => handleItemClick(corpseItemId)}
                         showMoney={false}
                         highlight={ItemPreviewHighlight.full}
+                        amount={item.amount}
                     />
                 </div>
             }).value();

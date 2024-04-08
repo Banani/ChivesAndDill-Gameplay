@@ -15,13 +15,13 @@ export interface ItemPreviewProps {
     showMoney: boolean;
     highlight: ItemPreviewHighlight;
     handleItemClick?: () => void;
-    amount?: boolean;
+    amount?: number;
 }
 
-export const ItemPreview: FunctionComponent<ItemPreviewProps> = ({ itemTemplate, handleItemClick, showMoney, highlight }) => {
+export const ItemPreview: FunctionComponent<ItemPreviewProps> = ({ itemTemplate, handleItemClick, showMoney, highlight, amount }) => {
     return (
         <div className={styles.Item + ` ${highlight === ItemPreviewHighlight.full ? styles.highlight : null}`} onClick={() => handleItemClick()}>
-            <ItemIconPreview itemTemplate={itemTemplate} highlight={ItemPreviewHighlight.icon} showMoney={false} />
+            <ItemIconPreview itemTemplate={itemTemplate} highlight={ItemPreviewHighlight.icon} showMoney={false} amount={amount} />
             <div className={styles.ItemInfoWrapper}>
                 <div className={styles.ItemText}>{itemTemplate.name}</div>
                 {showMoney ? <MoneyBar currency={itemTemplate.value} /> : null}
