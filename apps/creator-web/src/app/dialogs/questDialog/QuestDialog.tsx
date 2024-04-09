@@ -40,7 +40,7 @@ const DefaultKillingSubstage: KillingQuestStagePart = {
     type: QuestType.KILLING,
     monsterName: "",
     rule: [{
-        fieldName: "characterTemplateId",
+        fieldName: "templateId",
         comparison: KillingQuestStagePartComparison.equality,
         value: ""
     }],

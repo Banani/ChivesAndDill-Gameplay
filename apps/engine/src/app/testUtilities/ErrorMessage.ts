@@ -9,8 +9,10 @@ export const checkIfErrorWasHandled = (moduleName: GlobalStoreModule, message: s
     expect(enginePackage[moduleName]).toBeUndefined();
 };
 
-export const checkIfPackageIsValid = (moduleName: GlobalStoreModule, enginePackage: EnginePackage, expectedPackage: Partial<PartialEnginePackage<any>>) => {
-    expect(enginePackage.errorMessages?.events ?? []).toStrictEqual([]);
+export const checkIfPackageIsValid = (moduleName: GlobalStoreModule, enginePackage: EnginePackage, expectedPackage: Partial<PartialEnginePackage<any>>, skipErrorCheck: boolean = false) => {
+    if (!skipErrorCheck) {
+        expect(enginePackage.errorMessages?.events ?? []).toStrictEqual([]);
+    }
     if (expectedPackage) {
         expect(enginePackage[moduleName]).toStrictEqual(merge(expectedPackage, { key: moduleName }));
     } else {

@@ -1,4 +1,4 @@
-import { GlobalStoreModule, NpcClientActions } from '@bananos/types';
+import { GlobalStoreModule, NpcClientActions, PlayerClientActions } from '@bananos/types';
 import React, { useContext, useEffect } from 'react';
 import { EngineContext } from '../contexts/EngineApiContext';
 import { GameControllerContext } from '../contexts/GameController';
@@ -11,6 +11,7 @@ import { ClassesModal } from './guiContent/classesModal/classesModal';
 export interface GameApi {
     setActiveTarget: (characterId: string) => void;
     openNpcDialog: (npcId: string) => void;
+    openLootModal: (corpseId: string) => void;
 }
 
 export function Game() {
@@ -21,7 +22,14 @@ export function Game() {
     useEffect(() => {
         const gameApi: GameApi = {
             setActiveTarget: (characterId: string) => setActiveTarget(characterId),
-            openNpcDialog: (npcId: string) => callEngineAction({ type: NpcClientActions.OpenNpcConversationDialog, npcId })
+            openNpcDialog: (npcId: string) => callEngineAction({
+                type: NpcClientActions.OpenNpcConversationDialog,
+                npcId
+            }),
+            openLootModal: (corpseId: string) => callEngineAction({
+                type: PlayerClientActions.OpenLoot,
+                corpseId,
+            })
         };
         (window as any).gameApi = gameApi;
     }, [callEngineAction]);

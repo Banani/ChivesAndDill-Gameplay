@@ -1,12 +1,11 @@
 import { ChannelChatMessage, ChannelType, ChatChannel, ChatChannelClientActions, ChatMessage, GlobalStoreModule, QuoteChatMessage, RangeChatMessage, SystemChatMessage } from '@bananos/types';
-import { ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
-import { ItemPreviewTooltip } from 'apps/chives-and-dill/src/components/itemPreview/itemPreviewTooltip/ItemPreviewTooltip';
+import { ItemPreviewTooltip, TooltipShowMode } from 'apps/chives-and-dill/src/components/itemPreview/itemPreviewTooltip/ItemPreviewTooltip';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
 import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
 import { MenuContext } from 'apps/chives-and-dill/src/contexts/MenuContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import { forEach, map } from 'lodash';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { GameControllerContext } from '../../../../contexts/GameController';
 import { ChannelNumeratorContext } from '../contexts';
 import styles from './Chat.module.scss';
@@ -52,9 +51,6 @@ const ChatInternal = React.memo(({
     const { setActiveTarget } = useContext(GameControllerContext);
     const { callEngineAction } = useContext(EngineContext);
 
-    const [itemModal, setItemModal] = useState(null);
-    const itemModalRef = useRef(null);
-
     const lastMessage = useRef(null);
     const modes = ['General', 'Combat Log', 'Global'];
     const mapChannels = modes.map((channel, id) => <div key={id} className={styles.channel}>{channel}</div>);
@@ -80,11 +76,9 @@ const ChatInternal = React.memo(({
 
                 return <div>
                     <span className={styles.itemReceiveMessage}>You receive item: </span>
-                    <span
-                        onClick={() => setItemModal(itemTemplates[message.itemTemplateId])}
-                    >
+                    <ItemPreviewTooltip showMode={TooltipShowMode.Click} showMoney itemTemplate={itemTemplates[message.itemTemplateId]}>
                         [{itemTemplates[message.itemTemplateId].name}]
-                    </span>
+                    </ItemPreviewTooltip>
                 </div >
             }
 
@@ -128,19 +122,6 @@ const ChatInternal = React.memo(({
         lastMessage.current.scrollIntoView();
     }, [chatMessages, lastUpdateTime]);
 
-    useEffect(() => {
-        const handleOutsideClick = (e) => {
-            if (itemModalRef.current && !itemModalRef.current.contains(e.target)) {
-                setItemModal(null);
-            };
-        };
-        document.addEventListener('mousedown', handleOutsideClick);
-
-        return () => {
-            document.removeEventListener('mousedown', handleOutsideClick);
-        };
-    }, []);
-
     return (
         <>
             <div className={styles.chatContainer}>
@@ -155,15 +136,6 @@ const ChatInternal = React.memo(({
                 </div>
                 <MessageInput chatChannels={chatChannels} />
             </div>
-            {itemModal ?
-                <div className={styles.ItemPreviewTooltipContainer} ref={itemModalRef}>
-                    <ItemPreviewTooltip
-                        itemData={itemModal}
-                        showMoney={true}
-                        highlight={ItemPreviewHighlight.full}
-                    />
-                </div>
-                : null}
         </>
     );
 },

@@ -59,7 +59,10 @@ export class CharactersService extends EventParser {
     };
 
     handleCharacterDied: EngineEventHandler<CharacterDiedEvent> = ({ event }) => {
-        delete this.characters[event.characterId];
+        this.engineEventCrator.asyncCeateEvent<RemoveCharacterEvent>({
+            type: CharacterEngineEvents.RemoveCharacter,
+            character: this.characters[event.characterId]
+        })
     };
 
     getAllCharacters = () => this.characters;

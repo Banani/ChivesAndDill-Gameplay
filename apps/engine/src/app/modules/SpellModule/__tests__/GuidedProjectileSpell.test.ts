@@ -180,6 +180,7 @@ describe('Guided Projectile spell', () => {
                     characterId: "playerCharacter_1",
                     spellId: "3",
                     type: CharacterClientEvents.CharacterLostHp,
+                    location: { x: 50, y: 100 }
                 },
             ]
         });
@@ -228,6 +229,7 @@ describe('Guided Projectile spell', () => {
                     characterId: "playerCharacter_2",
                     spellId: "3",
                     type: CharacterClientEvents.CharacterLostHp,
+                    location: { x: 50, y: 100 }
                 },
             ]
         });

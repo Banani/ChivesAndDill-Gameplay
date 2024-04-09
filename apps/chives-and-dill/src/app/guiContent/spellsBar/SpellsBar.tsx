@@ -36,12 +36,12 @@ const InternalSpellsBar: React.FunctionComponent<SpellsBarProps> = React.memo(({
     const [clickedKey, setClickedKey] = useState('');
 
     const checkIfDisabled = useCallback((powerCost) => {
-        if (powerCost > characterPowerPoints[activeCharacterId].currentSpellPower) {
+        if (powerCost > characterPowerPoints[activeCharacterId]?.currentSpellPower) {
             return 'grayscale(70%)';
         }
 
         return '';
-    }, [characterPowerPoints[activeCharacterId].currentSpellPower]);
+    }, [characterPowerPoints[activeCharacterId]?.currentSpellPower]);
 
     useEffect(() => {
         keyBoardContext.addKeyHandler({

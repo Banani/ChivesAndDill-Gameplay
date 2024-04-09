@@ -87,6 +87,10 @@ export interface EquipmentItemTemplate extends BaseItemTemplate {
     intelect?: number;
     strength?: number;
     spirit?: number;
+    haste?: number;
+    criticalStrike?: number;
+    dodge?: number;
+    block?: number;
 }
 
 export interface GenericItemTemplate extends BaseItemTemplate {

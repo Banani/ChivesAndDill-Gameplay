@@ -127,7 +127,7 @@ export class PlayerRenderer implements Renderer {
 
     updateScene(store: GlobalStore, gameApi: GameApi) {
         forEach(store.character.data, (character, characterId) => {
-            if (this.characters[characterId]) {
+            if (this.characters[characterId] || !store.characterMovements.data[characterId]) {
                 return;
             }
 
@@ -157,20 +157,24 @@ export class PlayerRenderer implements Renderer {
         });
 
         forEach(this.characters, (_, characterId) => {
-            if (!store.character.data[characterId]) {
-                this.container.removeChild(this.characters[characterId])
-                delete this.characters[characterId];
+            if (store.character.data[characterId] && store.characterMovements.data[characterId]) {
+                return;
             }
+
+            this.container.removeChild(this.characters[characterId])
+            delete this.characters[characterId];
         })
     }
 
     render(store: GlobalStore) {
         const timeDifference = Math.floor((now() - this.creationTime) / 50);
-        forEach(store.characterMovements.data, (characterMovement, characterId) => {
+        forEach(this.characters, (characterSprite, characterId) => {
             const sprite = store.character.data[characterId].sprites;
+            const characterMovement = store.characterMovements.data[characterId];
+
             this.updateCharacterDirection(store.character.data[characterId], characterMovement, timeDifference);
-            this.characters[characterId].x = characterMovement.location.x - this.sprites[sprite].width / 2;
-            this.characters[characterId].y = characterMovement.location.y - this.sprites[sprite].height / 2;
+            characterSprite.x = characterMovement.location.x - this.sprites[sprite].width / 2;
+            characterSprite.y = characterMovement.location.y - this.sprites[sprite].height / 2;
         });
     }
 

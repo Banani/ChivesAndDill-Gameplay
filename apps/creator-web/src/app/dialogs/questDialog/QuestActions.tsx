@@ -36,7 +36,7 @@ export const QuestActions = () => {
                             return {
                                 ...stagePart,
                                 rule: [{
-                                    fieldName: "characterTemplateId",
+                                    fieldName: "templateId",
                                     comparison: KillingQuestStagePartComparison.equality,
                                     value: (stagePart as any).monsterTemplateId
                                 }]

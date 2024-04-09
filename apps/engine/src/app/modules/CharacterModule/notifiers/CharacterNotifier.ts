@@ -2,7 +2,7 @@ import { Character, GlobalStoreModule } from '@bananos/types';
 import { Notifier } from '../../../Notifier';
 import type { EngineEventHandler } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import type { CharacterRemovedEvent, NewCharacterCreatedEvent } from '../Events';
+import type { NewCharacterCreatedEvent } from '../Events';
 import { CharacterEngineEvents } from '../Events';
 
 export class CharacterNotifier extends Notifier<Character> {
@@ -10,7 +10,6 @@ export class CharacterNotifier extends Notifier<Character> {
         super({ key: GlobalStoreModule.CHARACTER });
         this.eventsToHandlersMap = {
             [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
-            [CharacterEngineEvents.CharacterRemoved]: this.handleCharacterRemoved,
             [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
         };
     }
@@ -28,11 +27,5 @@ export class CharacterNotifier extends Notifier<Character> {
                 objects: services.characterService.getAllCharacters(),
             },
         ]);
-    };
-
-    handleCharacterRemoved: EngineEventHandler<CharacterRemovedEvent> = ({ event }) => {
-        this.broadcastObjectsDeletion({
-            objects: { [event.character.id]: null },
-        });
     };
 }

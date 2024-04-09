@@ -1,20 +1,30 @@
-import React, { useState } from 'react';
+import { ItemTemplate } from '@bananos/types';
+import React from 'react';
+import { ItemPreviewHighlight } from '../ItemPreview';
 import styles from '../itemIconPreview/ItemIconPreview.module.scss';
-import { ItemPreviewTooltip } from '../itemPreviewTooltip/ItemPreviewTooltip';
-import { ItemPreviewProps } from '../ItemPreview';
+import { ItemPreviewTooltip, TooltipShowMode } from '../itemPreviewTooltip/ItemPreviewTooltip';
 
-export const ItemIconPreview: React.FC<ItemPreviewProps> = ({ itemData, highlight, showMoney, showStackSize = true }) => {
-   const [isTooltipVisible, setTooltipVisible] = useState(false);
+export interface ItemIconPreviewProps {
+    itemTemplate: ItemTemplate;
+    showMoney: boolean;
+    highlight: ItemPreviewHighlight;
+    handleItemRightClick?: () => void;
+    amount?: number;
+}
 
-   return (
-      <div
-         style={{ backgroundImage: `url(${itemData.image})` }}
-         className={styles.ItemImage + ` ${highlight ? styles.highlight : ''}`}
-         onMouseEnter={(): void => setTooltipVisible(true)}
-         onMouseLeave={(): void => setTooltipVisible(false)}
-      >
-         {isTooltipVisible ? <ItemPreviewTooltip itemData={itemData} showMoney={showMoney} highlight={highlight} /> : null}
-         {itemData.stack && showStackSize ? <div className={styles.Stack}>{itemData.stack}</div> : null}
-      </div>
-   );
+export const ItemIconPreview: React.FC<ItemIconPreviewProps> = ({ itemTemplate, highlight, showMoney, handleItemRightClick, amount = 0 }) => {
+    return (
+        <ItemPreviewTooltip showMode={TooltipShowMode.Hover} itemTemplate={itemTemplate} showMoney={showMoney} >
+            <div
+                style={{ backgroundImage: `url(${itemTemplate.image})` }}
+                className={styles.ItemImage + ` ${highlight ? styles.highlight : ''}`}
+                onContextMenu={e => {
+                    e.preventDefault();
+                    handleItemRightClick?.()
+                }}
+            >
+                {amount && itemTemplate.stack > 1 ? <div className={styles.Stack}>{amount}</div> : null}
+            </div>
+        </ItemPreviewTooltip>
+    );
 };

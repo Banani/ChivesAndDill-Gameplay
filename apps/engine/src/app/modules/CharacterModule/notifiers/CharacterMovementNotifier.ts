@@ -9,7 +9,7 @@ import type {
     PlayerStopedAllMovementVectorsEvent
 } from '../../../types';
 import { PlayerCharacterCreatedEvent, PlayerEngineEvents } from '../../PlayerModule/Events';
-import { CharacterEngineEvents, NewCharacterCreatedEvent } from '../Events';
+import { CharacterEngineEvents, CharacterRemovedEvent, NewCharacterCreatedEvent } from '../Events';
 
 export class CharacterMovementNotifier extends Notifier<CharacterMovement> {
     constructor() {
@@ -17,6 +17,7 @@ export class CharacterMovementNotifier extends Notifier<CharacterMovement> {
         this.eventsToHandlersMap = {
             [PlayerEngineEvents.PlayerCharacterCreated]: this.handlePlayerCharacterCreated,
             [CharacterEngineEvents.NewCharacterCreated]: this.handleNewCharacterCreated,
+            [CharacterEngineEvents.CharacterRemoved]: this.handleCharacterRemoved,
             [EngineEvents.CharacterMoved]: this.handlePlayerMoved,
             [EngineEvents.PlayerStopedAllMovementVectors]: this.handlePlayerStopedAllMovementVectors,
             [EngineEvents.PlayerStartedMovement]: this.handlePlayerStartedMovement,
@@ -54,6 +55,14 @@ export class CharacterMovementNotifier extends Notifier<CharacterMovement> {
                     location: event.character.location,
                     direction: event.character.direction
                 },
+            },
+        });
+    };
+
+    handleCharacterRemoved: EngineEventHandler<CharacterRemovedEvent> = ({ event, services }) => {
+        this.broadcastObjectsDeletion({
+            objects: {
+                [event.character.id]: null,
             },
         });
     };

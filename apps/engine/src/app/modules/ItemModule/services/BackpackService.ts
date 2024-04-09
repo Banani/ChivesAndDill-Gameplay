@@ -31,7 +31,17 @@ export class BackpackService extends EventParser {
             backpackTrack: this.backpacks[event.playerCharacter.id],
         });
 
-        //TODO: remove this part after FE is done
+        [
+            "66128255ba5b2c3edcd1e4c8",
+        ].forEach(itemTemplateId => {
+            this.engineEventCrator.asyncCeateEvent<GenerateItemForCharacterEvent>({
+                type: ItemEngineEvents.GenerateItemForCharacter,
+                characterId: event.playerCharacter.id,
+                itemTemplateId,
+                amount: 5,
+            });
+        });
+
         [
             "64c00c36c2db32c8e3389b0d",
             "64c00ca0c2db32c8e3389b0e",

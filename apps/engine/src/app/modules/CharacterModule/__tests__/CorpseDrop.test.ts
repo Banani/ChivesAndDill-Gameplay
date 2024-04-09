@@ -1,11 +1,12 @@
-import { RecursivePartial } from '@bananos/types';
-import { EngineManager } from 'apps/engine/src/app/testUtilities';
+import { GlobalStoreModule, RecursivePartial } from '@bananos/types';
+import { EngineManager, checkIfPackageIsValid } from 'apps/engine/src/app/testUtilities';
 import { WalkingType } from 'apps/engine/src/app/types/CharacterRespawn';
 import { MockedMonsterTemplates } from '../../../mocks';
 import { RandomGeneratorService } from '../../../services/RandomGeneratorService';
 import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../../MonsterModule/Events';
 import { MonsterTemplate } from '../../MonsterModule/MonsterTemplates';
 import { MonsterRespawnTemplateService, MonsterTemplateService } from '../../MonsterModule/services';
+import { killAnyMonster, openAnyCorpse } from "../testUtilities/Corpse";
 import _ = require('lodash');
 
 const setupEngine = ({ monsterTemplates }: RecursivePartial<{ monsterTemplates: Record<string, MonsterTemplate> }> = {}) => {
@@ -44,94 +45,152 @@ const setupEngine = ({ monsterTemplates }: RecursivePartial<{ monsterTemplates: 
 
 describe('CorpseDrop', () => {
     it('Player should be notified when items dropped', () => {
-        // const { engineManager, players, randomGeneratorService } = setupEngine();
-        // (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.5);
+        const { engineManager, randomGeneratorService } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0.5);
 
-        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        const { dataPackage, monster } = killAnyMonster(engineManager, '1');
 
-        // engineManager.createSystemAction<CharacterDiedEvent>({
-        //     type: EngineEvents.CharacterDied,
-        //     characterId: monster.id,
-        //     killerId: players['1'].characterId,
-        //     character: monster,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-        // checkIfPackageIsValid(GlobalStoreModule.CORPSE_DROP, dataPackage, { data: { monster_0: { location: monster.location, monsterTemplateId: '1' } } });
+        checkIfPackageIsValid(GlobalStoreModule.CORPSE_DROP, dataPackage, { data: { monster_0: { location: monster.location, monsterTemplateId: '1' } } });
     });
 
     it('Player should not get notification about the loot if nothing dropped', () => {
-        // const { engineManager, players, randomGeneratorService } = setupEngine({
-        //     monsterTemplates: {
-        //         '1': {
-        //             dropSchema: {
-        //                 coins: {
-        //                     dropChance: 0,
-        //                     maxAmount: 30,
-        //                     minAmount: 0,
-        //                 },
-        //                 items: {}
-        //             }
-        //         }
-        //     }
-        // });
-        // (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
+        const { engineManager, randomGeneratorService } = setupEngine({
+            monsterTemplates: {
+                '1': {
+                    dropSchema: {
+                        coins: {
+                            dropChance: 0,
+                            maxAmount: 30,
+                            minAmount: 0,
+                        },
+                        items: {}
+                    }
+                }
+            }
+        });
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
 
-        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        const { dataPackage } = killAnyMonster(engineManager, '1');
 
-        // engineManager.createSystemAction<CharacterDiedEvent>({
-        //     type: EngineEvents.CharacterDied,
-        //     characterId: monster.id,
-        //     killerId: players['1'].characterId,
-        //     character: monster,
-        // });
-
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-
-        // checkIfPackageIsValid(GlobalStoreModule.CORPSE_DROP, dataPackage, undefined);
+        checkIfPackageIsValid(GlobalStoreModule.CORPSE_DROP, dataPackage, undefined);
     });
 
-    it('corpse should drop items if random number is big enough', () => {
-        // const { engineManager, players, randomGeneratorService } = setupEngine();
-        // (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
+    it('Corpse should drop items if random number is big enough', () => {
+        const { engineManager, randomGeneratorService } = setupEngine();
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(0);
 
-        // let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
-        // const monster: Monster = _.find(dataPackage.character.data, (character: CharacterUnion) => character.type === CharacterType.Monster);
+        killAnyMonster(engineManager, '1');
+        const { dataPackage } = openAnyCorpse({ engineManager, playerId: '1' });
 
-        // engineManager.createSystemAction<CharacterDiedEvent>({
-        //     type: EngineEvents.CharacterDied,
-        //     characterId: monster.id,
-        //     killerId: players['1'].characterId,
-        //     character: monster,
-        // });
+        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
+            data: {
+                monster_0: {
+                    items: {
+                        corpseItemId_1: {
+                            amount: 1,
+                            itemTemplateId: '1',
+                        },
+                        corpseItemId_2: {
+                            amount: 1,
+                            itemTemplateId: '2',
+                        },
+                    },
+                },
+            },
+        });
+    });
 
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+    it('Items with stack size 1, should be placed in another stack', () => {
+        const { engineManager, randomGeneratorService } = setupEngine({
+            monsterTemplates: {
+                '1': {
+                    dropSchema: {
+                        items: {
+                            '1': {
+                                itemTemplateId: '1',
+                                dropChance: 1,
+                                maxAmount: 3,
+                                minAmount: 3,
+                            },
+                            '2': {
+                                itemTemplateId: '2',
+                                dropChance: 1,
+                                maxAmount: 1,
+                                minAmount: 1,
+                            },
+                        }
+                    }
+                }
+            }
+        });
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
 
-        // engineManager.callPlayerAction(players['1'].socketId, {
-        //     type: PlayerClientActions.OpenLoot,
-        //     corpseId: Object.keys(dataPackage.corpseDrop.data)[0],
-        // });
+        killAnyMonster(engineManager, '1');
+        const { dataPackage } = openAnyCorpse({ engineManager, playerId: '1' });
 
-        // dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);
+        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
+            data: {
+                monster_0: {
+                    items: {
+                        corpseItemId_1: {
+                            amount: 1,
+                            itemTemplateId: '1',
+                        },
+                        corpseItemId_2: {
+                            amount: 1,
+                            itemTemplateId: '1',
+                        },
+                        corpseItemId_3: {
+                            amount: 1,
+                            itemTemplateId: '1',
+                        },
+                        corpseItemId_4: {
+                            amount: 1,
+                            itemTemplateId: '2',
+                        },
+                    },
+                },
+            },
+        });
+    });
 
-        // checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
-        //     data: {
-        //         monster_0: {
-        //             items: {
-        //                 corpseItemId_1: {
-        //                     amount: 1,
-        //                     itemTemplateId: '1',
-        //                 },
-        //                 corpseItemId_2: {
-        //                     amount: 1,
-        //                     itemTemplateId: '2',
-        //                 },
-        //             },
-        //         },
-        //     },
-        // });
+    it('Item should be splited if amount is bigger then item stack size', () => {
+        const { engineManager, randomGeneratorService } = setupEngine({
+            monsterTemplates: {
+                '1': {
+                    dropSchema: {
+                        items: {
+                            '4': {
+                                itemTemplateId: '4',
+                                dropChance: 1,
+                                maxAmount: 30,
+                                minAmount: 30,
+                            },
+                        }
+                    }
+                }
+            }
+        });
+        (randomGeneratorService.generateNumber as jest.Mock).mockReturnValue(1);
+
+        killAnyMonster(engineManager, '1');
+        const { dataPackage } = openAnyCorpse({ engineManager, playerId: '1' });
+
+        checkIfPackageIsValid(GlobalStoreModule.ACTIVE_LOOT, dataPackage, {
+            data: {
+                monster_0: {
+                    items: {
+                        corpseItemId_1: {
+                            amount: 20,
+                            itemTemplateId: '4',
+                        },
+                        corpseItemId_2: {
+                            amount: 10,
+                            itemTemplateId: '4',
+                        },
+                    },
+                },
+            },
+        });
     });
 });

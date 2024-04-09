@@ -5,20 +5,24 @@ import (
 )
 
 type ItemTemplate struct {
-	Type        string `json:"type"`
-	Id          string `json:"id" bson:"-"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Image       string `json:"image"`
-	Stack       int32  `json:"stack"`
-	Value       int32  `json:"value"`
-	Slot        string `json:"slot,omitempty" bson:"slot,omitempty"`
-	Armor       int32  `json:"armor,omitempty" bson:"armor,omitempty"`
-	Stamina     int32  `json:"stamina,omitempty" bson:"stamina,omitempty"`
-	Agility     int32  `json:"agility,omitempty" bson:"agility,omitempty"`
-	Intelect    int32  `json:"intelect,omitempty" bson:"intelect,omitempty"`
-	Strength    int32  `json:"strength,omitempty" bson:"strength,omitempty"`
-	Spirit      int32  `json:"spirit,omitempty" bson:"spirit,omitempty"`
+	Type           string `json:"type"`
+	Id             string `json:"id" bson:"-"`
+	Name           string `json:"name"`
+	Description    string `json:"description"`
+	Image          string `json:"image"`
+	Stack          int32  `json:"stack"`
+	Value          int32  `json:"value"`
+	Slot           string `json:"slot,omitempty" bson:"slot,omitempty"`
+	Armor          int32  `json:"armor,omitempty" bson:"armor,omitempty"`
+	Stamina        int32  `json:"stamina,omitempty" bson:"stamina,omitempty"`
+	Agility        int32  `json:"agility,omitempty" bson:"agility,omitempty"`
+	Intelect       int32  `json:"intelect,omitempty" bson:"intelect,omitempty"`
+	Strength       int32  `json:"strength,omitempty" bson:"strength,omitempty"`
+	Spirit         int32  `json:"spirit,omitempty" bson:"spirit,omitempty"`
+	Haste          int32  `json:"haste,omitempty" bson:"haste,omitempty"`
+	CriticalStrike int32  `json:"criticalStrike,omitempty" bson:"criticalStrike,omitempty"`
+	Dodge          int32  `json:"dodge,omitempty" bson:"dodge,omitempty"`
+	Block          int32  `json:"block,omitempty" bson:"block,omitempty"`
 }
 
 type ItemsService struct {
@@ -52,7 +56,7 @@ func (service *ItemsService) serve() {
 			json.Unmarshal(action.Body, &createItemTemplateAction)
 
 			itemTemplate := createItemTemplateAction.ItemTemplate
-			
+
 			api := ItemsDbApi{application: service.application}
 			itemTemplate.Id = api.saveItemTemplate(itemTemplate)
 

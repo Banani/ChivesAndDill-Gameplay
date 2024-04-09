@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { filter, forEach } from 'lodash';
 import { Engine } from '../../../Engine';
 import { distanceBetweenTwoPoints, isSegementCrossingWithAnyWall } from '../../../math';
-import { PlayerCastSpellEvent, PlayerTriesToCastASpellEvent, SpellEngineEvents } from '../../SpellModule/Events';
+import { PlayerCastSpellEvent, SpellEngineEvents } from '../../SpellModule/Events';
 import { Monster } from '../types';
 
 interface ScheduledAttack {
@@ -92,16 +92,16 @@ export class MonsterAttackEngine extends Engine {
                 .value();
             const readySpellsWithRange = filter(readySpells, (spellId) => distanceBetweenTwoPoints(monster.location, character.location) <= spells[spellId].range);
 
+            // TODO: Wybrac taki, ktory ma mane
+
             if (readySpellsWithRange.length > 0) {
                 this.attacksHistory[monster.id] = Date.now();
-                this.eventCrator.createEvent<PlayerTriesToCastASpellEvent>({
-                    type: SpellEngineEvents.PlayerTriesToCastASpell,
-                    spellData: {
-                        spellId: readySpellsWithRange[Math.floor(Math.random() * readySpellsWithRange.length)],
-                        directionLocation: character.location,
-                        characterId: monster.id,
-                        targetId: character.id
-                    },
+                this.eventCrator.createEvent<PlayerCastSpellEvent>({
+                    type: SpellEngineEvents.PlayerCastSpell,
+                    casterId: monster.id,
+                    targetId: character.id,
+                    directionLocation: character.location,
+                    spell: spells[readySpellsWithRange[Math.floor(Math.random() * readySpellsWithRange.length)]]
                 });
             }
         });

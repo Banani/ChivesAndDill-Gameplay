@@ -62,7 +62,7 @@ export const TradeNpcModal = ({ closeNpcModal }) => {
         itemTemplates[itemTemplateId] ? (
             <div className={styles.ItemContainer} key={itemTemplateId}>
                 <ItemPreview
-                    itemData={itemTemplates[itemTemplateId] as any}
+                    itemTemplate={itemTemplates[itemTemplateId]}
                     handleItemClick={() => buyItem(itemTemplates[itemTemplateId], activeNpc)}
                     showMoney={true}
                     highlight={ItemPreviewHighlight.icon}

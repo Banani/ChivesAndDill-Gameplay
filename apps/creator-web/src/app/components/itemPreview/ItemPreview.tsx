@@ -17,6 +17,10 @@ const templateMap: RecursivePartial<Record<ItemTemplateType, any>> = {
             {itemTemplate.agility ? <>Agility: {itemTemplate.agility}<br /></> : null}
             {itemTemplate.intelect ? <>Intelect: {itemTemplate.intelect}<br /></> : null}
             {itemTemplate.spirit ? <>Spirit: {itemTemplate.spirit}<br /></> : null}
+            {itemTemplate.haste ? <>Haste: {itemTemplate.haste}<br /></> : null}
+            {itemTemplate.criticalStrike ? <>Critical Strike: {itemTemplate.criticalStrike}<br /></> : null}
+            {itemTemplate.dodge ? <>Dodge: {itemTemplate.dodge}<br /></> : null}
+            {itemTemplate.block ? <>Block: {itemTemplate.block}<br /></> : null}
         </>)
     }
 }

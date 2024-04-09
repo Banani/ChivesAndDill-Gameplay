@@ -9,24 +9,24 @@ import { NpcTemplateService } from './services/NpcTemplateService';
 import { NpcTradeService } from './services/NpcTradeService';
 
 export interface NpcModuleServices {
-   npcService: NpcService;
-   activeNpcConversationService: ActiveNpcConversationService;
-   npcTemplateService: NpcTemplateService;
-   npcRespawnTemplateService: NpcRespawnTemplateService;
-   npcTradeService: NpcTradeService;
-   npcQuestService: NpcQuestService;
+    npcService: NpcService;
+    activeNpcConversationService: ActiveNpcConversationService;
+    npcTemplateService: NpcTemplateService;
+    npcRespawnTemplateService: NpcRespawnTemplateService;
+    npcTradeService: NpcTradeService;
+    npcQuestService: NpcQuestService;
 }
 
 export const getNpcModule: () => EngineModule<NpcModuleServices> = () => {
-   return {
-      notifiers: [new ActiveNpcConversationNotifier(), new NpcStockNotifier(), new NpcQuestNotifier()],
-      services: {
-         npcService: new NpcService(),
-         activeNpcConversationService: new ActiveNpcConversationService(),
-         npcTemplateService: new NpcTemplateService(),
-         npcRespawnTemplateService: new NpcRespawnTemplateService(),
-         npcTradeService: new NpcTradeService(),
-         npcQuestService: new NpcQuestService(),
-      },
-   };
+    return {
+        notifiers: [new ActiveNpcConversationNotifier(), new NpcStockNotifier(), new NpcQuestNotifier()],
+        services: {
+            npcService: new NpcService(),
+            activeNpcConversationService: new ActiveNpcConversationService(),
+            npcTemplateService: new NpcTemplateService(),
+            npcRespawnTemplateService: new NpcRespawnTemplateService(),
+            npcTradeService: new NpcTradeService(),
+            npcQuestService: new NpcQuestService(),
+        },
+    };
 };

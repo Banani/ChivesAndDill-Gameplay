@@ -1,6 +1,6 @@
-import { AbsorbShieldTrack, ExperienceExternalTrack, GlobalStoreModule, PowerPointsTrack, PowerStackType, TimeEffect } from '@bananos/types';
+import { AbsorbShieldTrack, CharacterType, ExperienceExternalTrack, GlobalStoreModule, PowerPointsTrack, PowerStackType, TimeEffect } from '@bananos/types';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GameControllerContext } from '../../../contexts/GameController';
 import styles from './CharacterFrames.module.scss';
 import { PlayerIcon } from './playerIcon/PlayerIcon';
@@ -30,7 +30,32 @@ export const CharacterFrames = () => {
     const { data: combatState, lastUpdateTime: combatStateLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.COMBAT_STATE);
     const { data: timeEffects, lastUpdateTime: timeEffectsLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.TIME_EFFECTS);
     const { data: absorbShields, lastUpdateTime: absorbShieldsLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.ABSORB_SHIELDS);
-    const { activeTargetId } = useContext(GameControllerContext);
+    const { activeTargetId, setActiveTarget } = useContext(GameControllerContext);
+
+    // Player gets automatic focus, he clears the target, adn we don't want to set the target again if nothing in combat changed.
+    const [lastTargetUpdate, setLastTargetUpdate] = useState(0);
+
+    useEffect(() => {
+        if (activeTargetId || !Object.keys(combatState).length || lastTargetUpdate > combatStateLastUpdateTime) {
+            return;
+        }
+
+        for (let i in combatState) {
+            if (!combatState[i]) {
+                continue;
+            }
+
+            if (characters[i].type !== CharacterType.Monster) {
+                continue;
+            }
+
+            setLastTargetUpdate(Date.now())
+            setActiveTarget(i);
+            return;
+        }
+
+    }, [combatStateLastUpdateTime, activeTargetId, characters]);
+
 
     return <CharacterFramesInternal
         activeTargetId={activeTargetId}

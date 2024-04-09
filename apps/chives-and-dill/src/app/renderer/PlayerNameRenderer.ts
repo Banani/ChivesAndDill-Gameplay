@@ -22,7 +22,7 @@ export class PlayerNameRenderer implements Renderer {
 
     updateScene(store: GlobalStore) {
         forEach(store.character.data, (character, characterId) => {
-            if (this.names[characterId]) {
+            if (this.names[characterId] || !store.characterMovements.data[character.id]) {
                 return;
             }
 
@@ -36,20 +36,22 @@ export class PlayerNameRenderer implements Renderer {
         });
 
         forEach(this.names, (_, characterId) => {
-            if (!store.character.data[characterId]) {
-                this.container.removeChild(this.names[characterId])
-                delete this.names[characterId];
+            if (store.character.data[characterId] && store.characterMovements.data[characterId]) {
+                return;
             }
+
+            this.container.removeChild(this.names[characterId])
+            delete this.names[characterId];
         })
     }
 
     render(store: GlobalStore) {
-        forEach(store.character.data, character => {
-            const location = store.characterMovements.data[character.id].location;
+        forEach(this.names, (pixiText, characterId) => {
+            const location = store.characterMovements.data[characterId].location;
 
             // 48 is a sprite height
-            this.names[character.id].y = location.y - 48 / 1.5;
-            this.names[character.id].x = location.x;
+            pixiText.y = location.y - 48 / 1.5;
+            pixiText.x = location.x;
         })
     }
 }

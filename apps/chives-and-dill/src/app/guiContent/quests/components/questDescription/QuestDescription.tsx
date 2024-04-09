@@ -30,12 +30,12 @@ export const QuestDescription: FunctionComponent<QuestDescriptionProps> = ({ que
     const items = useMemo(
         () =>
             map(questSchema.questReward.items, (item) => {
-                const itemData = itemTemplates[item.itemTemplateId];
-                if (itemData) {
+                const itemTemplate = itemTemplates[item.itemTemplateId];
+                if (itemTemplate) {
                     return (
                         <div className={styles.ItemContainer}>
                             <ItemPreview
-                                itemData={itemData as any}
+                                itemTemplate={itemTemplate}
                                 showMoney={false}
                                 highlight={ItemPreviewHighlight.none}
                             />

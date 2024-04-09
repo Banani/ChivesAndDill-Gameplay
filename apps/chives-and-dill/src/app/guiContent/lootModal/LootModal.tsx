@@ -1,28 +1,29 @@
-import { PlayerClientActions } from '@bananos/types';
+import { GlobalStoreModule, PlayerClientActions } from '@bananos/types';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ItemPreview, ItemPreviewHighlight } from 'apps/chives-and-dill/src/components/itemPreview/ItemPreview';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
-import { useItemTemplateProvider } from 'apps/chives-and-dill/src/hooks';
-import _ from 'lodash';
+import { ItemTemplateContext } from 'apps/chives-and-dill/src/contexts/ItemTemplateContext';
+import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
+import _, { forEach } from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { usePagination } from '../../../components/pagination/usePagination';
 import { RectangleButton } from '../components/rectangleButton/RectangleButton';
 import { CalculateCurrenty } from '../moneyBar/CalculateCurrency';
 import styles from "./LootModal.module.scss";
 
-interface Item {
-    amount: number,
-    itemTemplateId: string,
-}
+export const LootModal = () => {
+    const { data: activeLootData } = useEngineModuleReader(GlobalStoreModule.ACTIVE_LOOT);
+    const activeCorpseId = Object.keys(activeLootData ?? {})?.[0]
+    const activeLoot = activeLootData[activeCorpseId];
+    const monsterId = Object.keys(activeLoot ?? {})?.[0];
 
-export const LootModal = ({ activeLoot, monsterId }) => {
     const [mousePosition, setMousePosition] = useState({ x: null, y: null });
-    const coinsTemplate = CalculateCurrenty(activeLoot.coins) as any;
     const [itemsAmount, updateItemsAmount] = useState(0);
     const [paginationRange, setPaginationRange] = useState({ start: 0, end: 0 });
 
     const { callEngineAction } = useContext(EngineContext);
+    const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
 
     const { start, end, prevPage, nextPage, page, allPagesCount } = usePagination({
         pageSize: 3,
@@ -30,16 +31,30 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     });
 
     useEffect(() => {
+        if (!activeLoot) {
+            return;
+        }
+
+        forEach(activeLoot.items, item => {
+            requestItemTemplate(item.itemTemplateId);
+        });
+    }, [activeLoot, itemTemplates]);
+
+    useEffect(() => {
         setPaginationRange({ start, end });
     }, [start, end]);
 
     useEffect(() => {
+        if (!activeLoot) {
+            return;
+        }
+
         if (activeLoot.coins) {
             updateItemsAmount(1 + _.size(activeLoot.items));
         } else {
             updateItemsAmount(_.size(activeLoot.items));
         }
-    }, [activeLoot.items, activeLoot.coins]);
+    }, [activeLoot?.items, activeLoot?.coins]);
 
     const updateMousePosition = useCallback(
         (e) => {
@@ -61,12 +76,10 @@ export const LootModal = ({ activeLoot, monsterId }) => {
         return () => window.removeEventListener('click', updateMousePosition);
     }, [activeLoot, updateMousePosition]);
 
-    const { itemTemplates } = useItemTemplateProvider({ itemTemplateIds: _.map(activeLoot.items, (item) => item.itemTemplateId) ?? [] });
-
-    const handleItemClick = (corpseId, itemId) => {
+    const handleItemClick = (itemId) => {
         callEngineAction({
             type: PlayerClientActions.PickItemFromCorpse,
-            corpseId,
+            corpseId: activeCorpseId,
             itemId
         });
     };
@@ -97,7 +110,9 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     };
 
     const coins = () => {
-        if (activeLoot.coins) {
+        if (activeLoot?.coins) {
+            const coinsTemplate = CalculateCurrenty(activeLoot.coins) as any;
+
             return (
                 <div className={styles.Item} onClick={() => handleCoinsClick(monsterId)}>
                     <img src={coinImage(coinsTemplate)} className={styles.ItemImage} alt=""></img>
@@ -112,20 +127,26 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     };
 
     const activeItems = () => {
-        let items = _.map(activeLoot.items, (key, id) => {
-            const item = activeLoot.items[id];
-            const itemData = itemTemplates[item.itemTemplateId];
-            return <div className={styles.ItemContainer}>
-                <ItemPreview
-                    itemData={itemData}
-                    handleItemClick={() => handleItemClick(monsterId, item)}
-                    showMoney={false}
-                    highlight={ItemPreviewHighlight.full}
-                />
-            </div>
-        });
+        let items = _.chain(activeLoot ? activeLoot.items : [])
+            .pickBy(drop => itemTemplates[drop.itemTemplateId])
+            .map((key, corpseItemId) => {
+                const item = activeLoot.items[corpseItemId];
+                const itemTemplate = itemTemplates[item.itemTemplateId];
 
-        items = [coins(), ...items];
+                return <div className={styles.ItemContainer}>
+                    <ItemPreview
+                        itemTemplate={itemTemplate}
+                        handleItemClick={() => handleItemClick(corpseItemId)}
+                        showMoney={false}
+                        highlight={ItemPreviewHighlight.full}
+                        amount={item.amount}
+                    />
+                </div>
+            }).value();
+
+        if (activeLoot?.coins) {
+            items = [coins(), ...items];
+        }
 
         if (itemsAmount > 3) {
             return Object.entries(items).slice(paginationRange.start, paginationRange.end).map(entry => entry[1]);
@@ -135,7 +156,7 @@ export const LootModal = ({ activeLoot, monsterId }) => {
     };
 
     return (
-        mousePosition.x !== null ?
+        activeLoot ?
             <div>
                 <div className={styles.LootModal} style={{ top: `${mousePosition.y}px`, left: `${mousePosition.x}px` }}>
                     <div className={styles.LootModalButton}>

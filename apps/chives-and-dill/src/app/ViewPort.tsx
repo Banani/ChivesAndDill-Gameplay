@@ -7,6 +7,7 @@ import { useGameSize } from './hooks';
 import {
     BlinkSpellEffectRenderer,
     BloodPoolsRenderer,
+    CorpseRenderer,
     DialogRenderer,
     ErrorMessageRenderer,
     FloatingNumbersRenderer,
@@ -58,6 +59,7 @@ export const ViewPort = React.memo(() => {
                 new BloodPoolsRenderer(container),
                 new PlayerAbsorbBarRenderer(container),
                 new BlinkSpellEffectRenderer(container),
+                new CorpseRenderer(container)
             ];
 
             const output = {};
@@ -100,9 +102,11 @@ export const ViewPort = React.memo(() => {
 
             application.ticker.add(() => {
                 const { activeCharacterId } = engineState.activeCharacter.data;
-                const location = engineState.characterMovements.data[activeCharacterId].location;
-                container.x = -location.x;
-                container.y = -location.y;
+                if (engineState.characterMovements.data[activeCharacterId]) {
+                    const location = engineState.characterMovements.data[activeCharacterId].location;
+                    container.x = -location.x;
+                    container.y = -location.y;
+                }
 
                 renderers.forEach(renderer => {
                     renderer.render(engineState);

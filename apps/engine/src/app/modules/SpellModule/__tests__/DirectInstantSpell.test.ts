@@ -179,6 +179,7 @@ describe('Direct instant spell', () => {
                     characterId: "playerCharacter_1",
                     spellId: "1",
                     type: CharacterClientEvents.CharacterLostHp,
+                    location: { x: 50, y: 100 }
                 },
             ]
         });
@@ -227,6 +228,7 @@ describe('Direct instant spell', () => {
                     characterId: "playerCharacter_2",
                     spellId: "1",
                     type: CharacterClientEvents.CharacterLostHp,
+                    location: { x: 50, y: 100 }
                 },
             ]
         });

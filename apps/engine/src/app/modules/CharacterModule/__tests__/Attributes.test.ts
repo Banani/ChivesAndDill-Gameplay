@@ -34,6 +34,10 @@ describe('Attributes', () => {
                     spirit: 20,
                     stamina: 20,
                     strength: 20,
+                    haste: 50,
+                    criticalStrike: 50,
+                    dodge: 50,
+                    block: 50
                 },
             },
         });
@@ -63,6 +67,10 @@ describe('Attributes', () => {
                     spirit: 20,
                     stamina: 22,
                     strength: 23,
+                    haste: 50,
+                    criticalStrike: 50,
+                    dodge: 50,
+                    block: 50
                 },
             },
         });
@@ -104,6 +112,10 @@ describe('Attributes', () => {
                     spirit: 20,
                     stamina: 23,
                     strength: 23,
+                    haste: 50,
+                    criticalStrike: 50,
+                    dodge: 50,
+                    block: 50
                 },
             },
         });
@@ -145,6 +157,10 @@ describe('Attributes', () => {
                     spirit: 20,
                     stamina: 22,
                     strength: 23,
+                    haste: 50,
+                    criticalStrike: 50,
+                    dodge: 50,
+                    block: 50
                 },
             },
         });
@@ -187,6 +203,10 @@ describe('Attributes', () => {
                     spirit: 20,
                     stamina: 21,
                     strength: 20,
+                    haste: 50,
+                    criticalStrike: 50,
+                    dodge: 50,
+                    block: 50
                 },
             },
         });
