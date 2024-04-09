@@ -1,6 +1,4 @@
-import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { GameControllerContext } from '../../../../contexts/GameController';
+import React, { useContext, useEffect, useState } from 'react';
 import { GetAbsorbsValue } from '../../../player/GetPlayerAbsorbs';
 import { CharacterFramesContext } from '../CharacterFrames';
 import { OptionsModal } from '../optionsModal/OptionsModal';
@@ -8,10 +6,6 @@ import styles from './PlayerIcon.module.scss';
 
 export const PlayerIcon = ({ playerId }) => {
     const { characters, characterPowerPoints, powerStacks, combatState, experience } = useContext(CharacterFramesContext);
-
-    const ref = useRef<HTMLDivElement>(null);
-    const keyBoardContext = useContext(KeyBoardContext);
-    const { setActiveTarget } = useContext(GameControllerContext);
 
     const player = characters[playerId];
     const { name, avatar } = player;
@@ -47,41 +41,8 @@ export const PlayerIcon = ({ playerId }) => {
         setOptionsVisible(prevState => !prevState);
     }
 
-    const handleClickOutside = (event: MouseEvent) => {
-        if (ref.current && !ref.current.contains(event.target as Node)) {
-            setOptionsVisible(false);
-        }
-    };
-
-    const handleEscape = () => {
-        if (optionsVisible) {
-            setOptionsVisible(false);
-        } else {
-            setActiveTarget(null);
-        }
-    };
-
-    useEffect(() => {
-        keyBoardContext.addKeyHandler({
-            id: 'ExitOptions',
-            matchRegex: 'Escape',
-            keydown: () => handleEscape(),
-        });
-
-        return () => keyBoardContext.removeKeyHandler('ExitOptions');
-
-    }, [optionsVisible]);
-
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside, true);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside, true);
-        };
-    }, []);
-
     return (
-        <div ref={ref}>
+        <div>
             <div className={styles.playerIconContainer}>
                 <div onContextMenu={(e) => avatarClick(e)} className={styles.playerAvatar + " " + (combatState[playerId] ? styles.combatBorder : "")} style={{ backgroundImage: `url(${avatar})` }}></div>
                 <div className={styles.combatSwords} style={combatState[playerId] ? { visibility: "visible", opacity: '1' } : null}></div>
@@ -103,7 +64,7 @@ export const PlayerIcon = ({ playerId }) => {
                     <div className={styles.powerStacks}>{renderPowerStacks('HolyPower', HolyPower)}</div>
                 </div>
             </div>
-            {optionsVisible && player.type === 'Player' ? <OptionsModal setOptionsVisible={setOptionsVisible} playerId={playerId} /> : null}
+            {optionsVisible && player.type === 'Player' ? <OptionsModal optionsVisible={optionsVisible} setOptionsVisible={setOptionsVisible} playerId={playerId} /> : null}
         </div >
     );
 };
