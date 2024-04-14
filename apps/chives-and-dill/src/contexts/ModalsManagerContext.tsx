@@ -21,11 +21,6 @@ export const ModalsManagerContextProvider = ({ children }) => {
 
     useEffect(() => {
         keyBoardContext.addKeyHandler({
-            id: 'ModalsManagerEscape',
-            matchRegex: '^Escape$',
-            keydown: () => setActiveGlobalModal(null),
-        });
-        keyBoardContext.addKeyHandler({
             id: 'ModalsManagerO',
             matchRegex: '^o$',
             keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.ChatChannelModal ? null : GlobalModal.ChatChannelModal),
@@ -47,13 +42,26 @@ export const ModalsManagerContextProvider = ({ children }) => {
         });
 
         return () => {
-            keyBoardContext.removeKeyHandler('ModalsManagerEscape');
             keyBoardContext.removeKeyHandler('ModalsManagerO');
             keyBoardContext.removeKeyHandler('ModalsManagerB');
             keyBoardContext.removeKeyHandler('ModalsManagerC');
             keyBoardContext.removeKeyHandler('ModalsManagerL');
         }
     }, []);
+
+    useEffect(() => {
+        if (activeGlobalModal !== null) {
+            keyBoardContext.addKeyHandler({
+                id: 'ModalsManagerEscape',
+                matchRegex: '^Escape$',
+                keydown: () => setActiveGlobalModal(null),
+            });
+        }
+
+        return () => {
+            keyBoardContext.removeKeyHandler('ModalsManagerEscape');
+        }
+    }, [activeGlobalModal])
 
     return (
         <ModalsManagerContext.Provider
