@@ -22,27 +22,27 @@ export const ModalsManagerContextProvider = ({ children }) => {
     useEffect(() => {
         keyBoardContext.addKeyHandler({
             id: 'ModalsManagerEscape',
-            matchRegex: 'Escape',
+            matchRegex: '^Escape$',
             keydown: () => setActiveGlobalModal(null),
         });
         keyBoardContext.addKeyHandler({
             id: 'ModalsManagerO',
-            matchRegex: 'o',
+            matchRegex: '^o$',
             keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.ChatChannelModal ? null : GlobalModal.ChatChannelModal),
         });
         keyBoardContext.addKeyHandler({
             id: 'ModalsManagerB',
-            matchRegex: 'b',
+            matchRegex: '^b$',
             keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.Backpack ? null : GlobalModal.Backpack),
         });
         keyBoardContext.addKeyHandler({
             id: 'ModalsManagerC',
-            matchRegex: 'c',
+            matchRegex: '^c$',
             keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.Equipment ? null : GlobalModal.Equipment),
         });
         keyBoardContext.addKeyHandler({
             id: 'ModalsManagerL',
-            matchRegex: 'l',
+            matchRegex: '^l$',
             keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.QuestLog ? null : GlobalModal.QuestLog),
         });
 
