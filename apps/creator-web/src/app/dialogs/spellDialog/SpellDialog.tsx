@@ -1,4 +1,4 @@
-import { AbsorbShieldEffect, AngleBlastSpell, AreaEffect, AreaType, Attribute, DamageEffect, DirectInstantSpell, GenerateSpellPowerEffect, GuidedProjectileSpell, HealEffect, ProjectileSpell, ProjectileSubSpell, Spell, SpellEffectType, SpellType, TeleportationSpell, TickOverTimeEffect, TimeEffectType } from '@bananos/types';
+import { AbsorbShieldEffect, AngleBlastSpell, AreaEffect, AreaSpell, AreaType, Attribute, DamageEffect, DirectInstantSpell, GenerateSpellPowerEffect, GuidedProjectileSpell, HealEffect, ProjectileSpell, ProjectileSubSpell, Spell, SpellEffectType, SpellType, TeleportationSpell, TickOverTimeEffect, TimeEffectType } from '@bananos/types';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -21,7 +21,6 @@ const DefaultSpell: Spell = {
     image: "https://static.wikia.nocookie.net/wowwiki/images/0/0c/Ability_dualwieldspecialization.png",
     range: 250,
     spellPowerCost: 100,
-    passThrough: false,
     cooldown: 1000,
     spellEffectsOnTarget: {},
     spellEffectsOnCasterOnSpellHit: {},
@@ -53,6 +52,14 @@ const DefaultAngleBlast: AngleBlastSpell = {
     type: SpellType.AngleBlast,
     angle: 1,
     effectSpread: false
+}
+
+const DefaultArea: AreaSpell = {
+    ...DefaultSpell,
+    type: SpellType.Area,
+    radius: 100,
+    passThrough: false,
+    areaType: AreaType.Circle,
 }
 
 const DefaultTeleportation: TeleportationSpell = {
@@ -335,6 +342,7 @@ export const SpellDialog = () => {
                     { label: "Projectile", value: SpellType.Projectile },
                     { label: "GuidedProjectile", value: SpellType.GuidedProjectile },
                     { label: "Angle Blast", value: SpellType.AngleBlast },
+                    { label: "Area", value: SpellType.Area },
                     { label: "Teleportation", value: SpellType.Teleportation }
                 ],
                 typeChanger: {
@@ -343,6 +351,7 @@ export const SpellDialog = () => {
                     [SpellType.GuidedProjectile]: DefaultGuidedProjectile,
                     [SpellType.AngleBlast]: DefaultAngleBlast,
                     [SpellType.Teleportation]: DefaultTeleportation,
+                    [SpellType.Area]: DefaultArea,
                 },
                 defaultValue: defaultSpell.type
             },
@@ -381,6 +390,22 @@ export const SpellDialog = () => {
                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber },],
                 defaultValue: defaultSpell.cooldown
             },
+            areaType: {
+                label: "Area type",
+                type: SchemaFieldType.Select,
+                options: [
+                    { label: "Circle", value: AreaType.Circle },
+                ],
+                defaultValue: (defaultSpell as AreaSpell).areaType,
+                prerequisite: ({ type }) => type === SpellType.Area
+            },
+            radius: {
+                label: "Area Radius",
+                type: SchemaFieldType.Number,
+                conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber },],
+                defaultValue: (defaultSpell as AreaSpell).radius,
+                prerequisite: ({ areaType }) => areaType === AreaType.Circle
+            },
             casterImpact: {
                 label: "Caster Impact",
                 type: SchemaFieldType.Boolean,
@@ -407,7 +432,7 @@ export const SpellDialog = () => {
                 label: "Pass through",
                 type: SchemaFieldType.Boolean,
                 defaultValue: (defaultSpell as ProjectileSubSpell).passThrough,
-                prerequisite: ({ type }) => type === SpellType.Projectile
+                prerequisite: ({ type }) => type === SpellType.Projectile || type === SpellType.Area
             },
             angle: {
                 label: "Angle (radians 0-3.14*2)",

@@ -94,6 +94,7 @@ export interface AreaSubSpell extends EffectHolders, BaseSubSpell {
     type: SpellType.Area;
     areaType: AreaType;
     radius: number;
+    passThrough: boolean;
 }
 
 export interface ChannelSubSpell extends EffectHolders, BaseSubSpell {

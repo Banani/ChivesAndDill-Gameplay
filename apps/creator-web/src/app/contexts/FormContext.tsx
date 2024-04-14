@@ -308,6 +308,7 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         const toSave = _.cloneDeep(values);
         let current = toSave;
         let valueToSet = value;
+        console.log(value, valueToSet);
 
         // During type changing, parent should be modified, not the field
         if (propertyDefintion.typeChanger) {
@@ -345,10 +346,10 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
             path.forEach(pathPart => {
                 current = current[pathPart];
             })
-
+            console.log(current[prop], valueToSet);
             current[prop] = valueToSet;
         }
-
+        console.log(toSave);
         setValues(toSave);
     }, [values, setDirty])
 
