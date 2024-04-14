@@ -1,14 +1,17 @@
+@use '../../../../../constants/Constants.module.scss' as variables;
+
 .NpcModal {
    position: absolute;
    width: 346px;
    height: 507px;
-   top: 15%;
+   top: variables.$modal-top;
    left: 5%;
    background: url('../../../../../assets/spritesheets/backgrounds/npcModal.png');
    background-repeat: no-repeat;
    display: flex;
    flex-direction: column;
-
+   z-index: variables.$modal-index;
+   
    .ContentWrapper {
       padding: 20px 40px 0 25px;
       flex: 1;
