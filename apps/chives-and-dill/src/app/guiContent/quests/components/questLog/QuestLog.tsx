@@ -17,10 +17,10 @@ export const QuestLog = () => {
     const { data: questDefinition } = useEngineModuleReader(GlobalStoreModule.QUEST_DEFINITION);
 
     const renderQuests = _.map(questProgress, (quest, questId) => (
-        <div key={questId}>
-            <div className={`${styles.QuestTitle} ${questId === selectedQuestId ? styles.ActiveTitle : ''}`} onClick={() => setSelectedQuestId(questId)}>
-                {questDefinition[questId]?.name}
-            </div>
+        <div key={questId}
+            className={`${styles.QuestTitle} ${questId === selectedQuestId ? styles.ActiveTitle : ''}`}
+            onClick={() => setSelectedQuestId(questId)}>
+            {questDefinition[questId]?.name}
         </div>
     ));
 
