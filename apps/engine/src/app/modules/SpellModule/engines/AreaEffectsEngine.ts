@@ -27,6 +27,7 @@ export class AreaEffectsEngine extends Engine {
                             caster: areaSpellEffectTrack.caster,
                             target: character,
                             effect,
+                            effectMultiplier: 1
                         });
                     });
                 }

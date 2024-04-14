@@ -22,9 +22,10 @@ export class DamageEffectService extends EventParser {
             }
 
             const RANDOM_RANGE = 10;
+            // It takes values from 0 to 0.05
             const randomNumber = services.randomGeneratorService.generateNumber() / RANDOM_RANGE - 0.05;
             let damage = (effect.amount / 100) * attributes[effect.attribute];
-            damage = Math.ceil(damage + damage * randomNumber);
+            damage = Math.ceil((damage + damage * randomNumber) * event.effectMultiplier);
 
             const absorbsValue = services.absorbShieldEffectService.getAbsorbShieldValue(event.target.id);
 

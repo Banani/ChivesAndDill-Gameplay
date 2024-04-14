@@ -87,6 +87,7 @@ export interface AngleBlastSpellSubSpell extends EffectHolders, BaseSubSpell {
     type: SpellType.AngleBlast;
     range: number;
     angle: number;
+    effectSpread: boolean;
 }
 
 export interface AreaSubSpell extends EffectHolders, BaseSubSpell {

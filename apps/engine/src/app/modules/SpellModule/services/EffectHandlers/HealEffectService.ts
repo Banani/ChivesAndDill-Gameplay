@@ -20,7 +20,7 @@ export class HealEffectService extends EventParser {
                 type: CharacterEngineEvents.AddCharacterHealthPoints,
                 casterId: event.caster.id,
                 characterId: event.target.id,
-                amount: effect.amount,
+                amount: Math.ceil(effect.amount * event.effectMultiplier),
                 source: HealthPointsSource.Healing,
                 spellId: effect.spellId
             });

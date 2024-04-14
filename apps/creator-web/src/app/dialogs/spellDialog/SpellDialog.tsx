@@ -51,7 +51,8 @@ const DefaultGuidedProjectile: GuidedProjectileSpell = {
 const DefaultAngleBlast: AngleBlastSpell = {
     ...DefaultSpell,
     type: SpellType.AngleBlast,
-    angle: 1
+    angle: 1,
+    effectSpread: false
 }
 
 const DefaultTeleportation: TeleportationSpell = {
@@ -411,11 +412,18 @@ export const SpellDialog = () => {
             angle: {
                 label: "Angle (radians 0-3.14*2)",
                 type: SchemaFieldType.Number,
+                defaultValue: (defaultSpell as AngleBlastSpell).angle,
                 conditions: [
                     { type: FormFieldConditions.Required },
                     { type: FormFieldConditions.Number },
                     { type: FormFieldConditions.Range, min: 0, max: 7.28 }
                 ],
+                prerequisite: ({ type }) => type === SpellType.AngleBlast
+            },
+            effectSpread: {
+                label: "Effect spread (if spell will hit more than one target, then the effect would be spread between them)",
+                defaultValue: (defaultSpell as AngleBlastSpell).effectSpread,
+                type: SchemaFieldType.Boolean,
                 prerequisite: ({ type }) => type === SpellType.AngleBlast
             },
             //requiredPowerStacks
