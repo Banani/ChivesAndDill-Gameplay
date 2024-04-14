@@ -8,10 +8,11 @@
    background-repeat: no-repeat;
    background-size: 100% 100%;
    position: absolute;
-   top: 200px;
+   top: variables.$modal-top;
    left: 200px;
    display: flex;
    flex-direction: column;
+   z-index: variables.$modal-index;
 
    .channelName {
       padding: 10px;

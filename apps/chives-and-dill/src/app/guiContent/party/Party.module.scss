@@ -7,39 +7,4 @@
    display: flex;
    flex-wrap: wrap;
    flex-direction: column;
-
-   .PartyMember {
-      color: white;
-      width: 100px;
-      height: 20%;
-      display: flex;
-      align-items: center;
-      box-sizing: border-box;
-      border: 1px solid #d3d3d3;
-
-      .PartyMemberColorBar {
-         background: linear-gradient(90deg, rgba(230, 230, 230, 0.1) 0%, rgba(50, 50, 50, 0.4) 100%);
-         width: 100%;
-         height: 100%;
-      }
-
-      .PartyMemberData {
-         display: flex;
-         align-items: center;
-         position: absolute;
-         left: 10px;
-
-         .PartyMemberName {
-            width: 75px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-         }
-
-         .LeaderIcon {
-            width: 11px;
-         }
-      }
-   }
 }

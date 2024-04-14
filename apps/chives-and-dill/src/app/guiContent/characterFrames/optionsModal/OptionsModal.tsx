@@ -1,14 +1,21 @@
 import { GlobalStoreModule, GroupClientActions } from '@bananos/types';
 import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContext';
+import { GameControllerContext } from 'apps/chives-and-dill/src/contexts/GameController';
+import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styles from './OptionsModal.module.scss';
 
-export const OptionsModal = ({ setOptionsVisible, playerId }) => {
+export const OptionsModal = ({ optionsVisible, setOptionsVisible, playerId }) => {
     const { data: party } = useEngineModuleReader(GlobalStoreModule.PARTY);
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data
 
     const { callEngineAction } = useContext(EngineContext);
+
+    const ref = useRef<HTMLDivElement>(null);
+
+    const keyBoardContext = useContext(KeyBoardContext);
+    const { setActiveTarget } = useContext(GameControllerContext);
 
     const partyAction = (type) => {
         setOptionsVisible(false);
@@ -44,8 +51,41 @@ export const OptionsModal = ({ setOptionsVisible, playerId }) => {
         callEngineAction({ type: GroupClientActions.LeaveParty });
     }
 
+    const handleClickOutside = (event: MouseEvent) => {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
+            setOptionsVisible(false);
+        }
+    };
+
+    const handleEscape = () => {
+        if (optionsVisible) {
+            setOptionsVisible(false);
+        } else {
+            setActiveTarget(null);
+        }
+    };
+
+    useEffect(() => {
+        keyBoardContext.addKeyHandler({
+            id: 'ExitOptions',
+            matchRegex: 'Escape',
+            keydown: () => handleEscape(),
+        });
+
+        return () => keyBoardContext.removeKeyHandler('ExitOptions');
+
+    }, [optionsVisible]);
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside, true);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside, true);
+        };
+    }, []);
+
     return (
-        <div className={styles.OptionsModal}>
+        <div ref={ref} className={styles.OptionsModal}>
 
             {checkifActivePlayerIsLeader() && playerId !== activeCharacterId && checkIfTargetIsInYourParty(playerId) ?
                 <>
