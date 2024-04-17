@@ -18,7 +18,7 @@ export const Backpacks = () => {
     const { data: backpackItems, lastUpdateTime: lastBackpackItemsUpdateTime } = useEngineModuleReader(GlobalStoreModule.BACKPACK_ITEMS);
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
 
-    const [backpacksVisibility, setBackpacksVisibility] = useState(false);
+    const [backpacksVisibility, setBackpacksVisibility] = useState(true);
     const { callEngineAction } = useContext(EngineContext);
     const { activeGlobalModal, setActiveGlobalModal } = useContext(ModalsManagerContext);
 
@@ -79,6 +79,10 @@ export const Backpacks = () => {
     }
 
     const backpackIcons = _.map(backpackSchema[activeCharacterId], (backpack, key) => {
+        if (key !== '1' && !backpacksVisibility) {
+            return;
+        };
+
         return <div
             key={key}
             className={styles.backpackIcon}
@@ -94,7 +98,7 @@ export const Backpacks = () => {
             </div>
             <p className={styles.availableSlots}>({availableSlotsAmount})</p>
             <button className={styles.expandBackpacksIcon} onClick={() => setBackpacksVisibility(!backpacksVisibility) as any}>
-                {backpacksVisibility === true ? <ArrowRightIcon /> : <ArrowLeftIcon />}
+                {backpacksVisibility === false ? <ArrowRightIcon /> : <ArrowLeftIcon />}
             </button>
             {activeGlobalModal === GlobalModal.Backpack ? <div className={styles.backpackContainer}>
                 <div className={styles.backpackHeader}>
