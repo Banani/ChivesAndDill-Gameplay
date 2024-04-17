@@ -29,7 +29,10 @@ export const PartyModal = () => {
         <div className={styles.PartyContainer}>
             {_.map(activeGroup['membersIds'], (value, playerId) => {
                 return (
-                    <PartyMember playerId={playerId} activeGroup={activeGroup} />
+                    <PartyMember
+                        playerId={playerId}
+                        activeGroup={activeGroup}
+                    />
                 )
             })}
         </div>

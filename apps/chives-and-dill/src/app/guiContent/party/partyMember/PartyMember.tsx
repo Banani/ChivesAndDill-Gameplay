@@ -15,10 +15,14 @@ export const PartyMember = ({ playerId, activeGroup }) => {
   const { data: characterPowerPoints } = useEngineModuleReader(GlobalStoreModule.CHARACTER_POWER_POINTS);
   const { data: charactersMovements } = useEngineModuleReader(GlobalStoreModule.CHARACTER_MOVEMENTS);
   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
+  const { data: characters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
+  const { data: characterClasses } = useEngineModuleReader(GlobalStoreModule.CHARACTER_CLASS);
 
   const ref = useRef<HTMLDivElement>(null);
   const player = character[playerId];
   const powerPoints = characterPowerPoints[playerId];
+
+  const classColor = characterClasses[characters[playerId].characterClassId].color;
 
   const calculateDistance = (player1, player2) => {
     const deltaX = player2.x - player1.x;
@@ -48,6 +52,7 @@ export const PartyMember = ({ playerId, activeGroup }) => {
         onClick={() => setActiveTarget(playerId)}
         style={{
           border: activeTargetId === playerId ? '2px solid #ffc506' : '',
+          backgroundColor: classColor,
         }}
         ref={ref}
         onContextMenu={(e) => memberClick(e)}
@@ -55,8 +60,7 @@ export const PartyMember = ({ playerId, activeGroup }) => {
         <div
           style={{
             width: `${(powerPoints.currentHp / powerPoints.maxHp) * 100}%`,
-            background: checkIfPlayerIsFarAway(playerId) ? 'rgb(0, 80, 0)' : 'linear-gradient(90deg, rgba(0, 255, 119, 0.5) 0%, rgba(5, 61, 0, 0.8) 100%)',
-
+            backgroundColor: checkIfPlayerIsFarAway(playerId) ? 'rgba(0, 0, 0, 0.5)' : '',
           }}
           className={styles.PartyMemberColorBar}>
         </div>
