@@ -79,7 +79,12 @@ export const Backpacks = () => {
     }
 
     const backpackIcons = _.map(backpackSchema[activeCharacterId], (backpack, key) => {
-        return <div key={key} className={styles.backpackIcon}></div>;
+        return <div
+            key={key}
+            className={styles.backpackIcon}
+            onClick={() => setActiveGlobalModal(activeGlobalModal === GlobalModal.Backpack ? null : GlobalModal.Backpack)}
+        >
+        </div>;
     });
 
     return (
