@@ -3,7 +3,7 @@ import { EngineContext } from 'apps/chives-and-dill/src/contexts/EngineApiContex
 import { GameControllerContext } from 'apps/chives-and-dill/src/contexts/GameController';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import type { FunctionComponent } from 'react';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { AvailableQuestNpcModal, CompleteQuestNpcModal, DefaultNpcModal, TradeNpcModal } from './components';
 
 export enum NpcModalView {
@@ -46,12 +46,16 @@ export const NpcModal: FunctionComponent = () => {
     }, [activeNpc?.id, activeQuestId, callEngineAction]);
 
     const closeNpcModal = () => {
-        if (currentModal !== NpcModalView.Default && currentModal !== NpcModalView.Trade) {
-            setCurrentModal(NpcModalView.Default);
-        } else {
+        if (currentModal === NpcModalView.Default || currentModal === NpcModalView.Trade) {
             callEngineAction({ type: NpcClientActions.CloseNpcConversationDialog })
+        } else {
+            setCurrentModal(NpcModalView.Default);
         }
     };
+
+    useEffect(() => {
+        setCurrentModal(NpcModalView.Default);
+    }, [activeNpc])
 
     if (!activeNpc) {
         return null;
