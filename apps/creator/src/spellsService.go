@@ -20,6 +20,8 @@ type Spell struct {
 	Speed                          int32                           `json:"speed,omitempty" bson:"speed,omitempty"`
 	EffectSpread                   bool                            `json:"effectSpread,omitempty" bson:"effectSpread,omitempty"`
 	Angle                          int32                           `json:"angle,omitempty" bson:"angle,omitempty"`
+	AreaType                       string                          `json:"areaType,omitempty" bson:"areaType,omitempty"`
+	Radius                         int32                           `json:"radius,omitempty" bson:"radius,omitempty"`
 	SpellEffectsOnTarget           map[string]SpellEffectsOnTarget `json:"spellEffectsOnTarget,omitempty" bson:"spellEffectsOnTarget,omitempty"`
 	SpellEffectsOnCasterOnSpellHit map[string]SpellEffectsOnTarget `json:"spellEffectsOnCasterOnSpellHit,omitempty" bson:"spellEffectsOnCasterOnSpellHit,omitempty"`
 }
