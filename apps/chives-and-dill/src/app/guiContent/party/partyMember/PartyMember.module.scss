@@ -6,9 +6,9 @@
    align-items: center;
    box-sizing: border-box;
    border: 1px solid #d3d3d3;
-
+   background: linear-gradient(90deg, rgba(230, 230, 230, 0.1) 0%, rgba(50, 50, 50, 0.4) 100%);
+   
    .PartyMemberColorBar {
-      background: linear-gradient(90deg, rgba(230, 230, 230, 0.1) 0%, rgba(50, 50, 50, 0.4) 100%);
       width: 100%;
       height: 100%;
    }

@@ -18,11 +18,13 @@ export const Backpacks = () => {
     const { data: backpackItems, lastUpdateTime: lastBackpackItemsUpdateTime } = useEngineModuleReader(GlobalStoreModule.BACKPACK_ITEMS);
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
 
-    const [backpacksVisibility, changeBackpacksVisibility] = useState(true);
-    const { activeGlobalModal } = useContext(ModalsManagerContext);
+    const [backpacksVisibility, setBackpacksVisibility] = useState(false);
     const { callEngineAction } = useContext(EngineContext);
+    const { activeGlobalModal, setActiveGlobalModal } = useContext(ModalsManagerContext);
 
     const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
+
+    const [availableSlotsAmount, setAvailableSlotsAmount] = useState(0);
 
     useEffect(() => {
         if (activeGlobalModal !== GlobalModal.Backpack) {
@@ -38,10 +40,23 @@ export const Backpacks = () => {
         });
     }, [itemTemplates, lastBackpackItemsUpdateTime, requestItemTemplate, activeGlobalModal]);
 
+    useEffect(() => {
+        let availableSlots = 0;
+        forEach(backpackSchema[activeCharacterId], (slots) => {
+            availableSlots += slots;
+        });
+        forEach(backpackItems[activeCharacterId], (backpack) => {
+
+            availableSlots -= Object.keys(backpack).length;
+        });
+        setAvailableSlotsAmount(availableSlots);
+    }, [lastBackpackItemsUpdateTime]);
+
     const renderBackpackContent = (backpack, bagSize) => {
         return _.range(bagSize).map(index => {
             if (backpack[index] && itemTemplates[backpack[index].itemTemplateId]) {
-                return <ItemIconPreview
+                return <div className={styles.slotBackground}>
+                    <ItemIconPreview
                     handleItemRightClick={() => {
                         if (itemTemplates[backpack[index].itemTemplateId].type === ItemTemplateType.Equipment) {
                             callEngineAction({
@@ -56,29 +71,35 @@ export const Backpacks = () => {
                     showMoney={true}
                     amount={backpack[index].amount}
                 />;
+                </div>
             }
 
-            return <div key={index} className={styles.slotBackground}></div>
+            return <div key={index} className={`${styles.slotBackground} ${styles.emptySlot}`}></div>
         });
     }
 
-    const backpackIcons = _.map(backpackSchema[activeCharacterId], (backpack, key) => (
-        <div key={key} className={styles.backpackIcon}></div>
-    ));
+    const backpackIcons = _.map(backpackSchema[activeCharacterId], (backpack, key) => {
+        return <div
+            key={key}
+            className={styles.backpackIcon}
+            onClick={() => setActiveGlobalModal(activeGlobalModal === GlobalModal.Backpack ? null : GlobalModal.Backpack)}
+        >
+        </div>;
+    });
 
     return (
         <div>
             <div className={styles.backpacksContainer}>
                 {backpackIcons}
             </div>
-            <p className={styles.availableSlots}>(100)</p>
-            <button className={styles.expandBackpacksIcon} onClick={() => changeBackpacksVisibility(!backpacksVisibility) as any}>
+            <p className={styles.availableSlots}>({availableSlotsAmount})</p>
+            <button className={styles.expandBackpacksIcon} onClick={() => setBackpacksVisibility(!backpacksVisibility) as any}>
                 {backpacksVisibility === true ? <ArrowRightIcon /> : <ArrowLeftIcon />}
             </button>
             {activeGlobalModal === GlobalModal.Backpack ? <div className={styles.backpackContainer}>
                 <div className={styles.backpackHeader}>
                     <div className={styles.headerImage}></div>
-                    <SquareButton onClick={() => { }}><CloseIcon /></SquareButton>
+                    <SquareButton onClick={() => setActiveGlobalModal(null)}><CloseIcon /></SquareButton>
                 </div>
                 <div className={styles.slotsBackgroundContainer}>
                     {_.map(backpackItems[activeCharacterId], (backpack, bagSlot) => {

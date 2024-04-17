@@ -32,10 +32,12 @@
 
 .availableSlots {
    position: absolute;
-   right: 10px;
+   right: 8px;
    bottom: 12px;
    color: #fff;
    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+   width: 40px;
+   text-align: center;
 }
 
 .expandBackpacksIcon {
@@ -53,7 +55,7 @@
    width: 230px;
    position: absolute;
    right: 0;
-   bottom: 30px;
+   bottom: 72px;
    display: flex;
    flex-direction: column;
    border: 1px solid #878683;
@@ -108,9 +110,13 @@
          width: 50px;
          height: 50px;
          border-radius: 5px;
-         background: black;
-         opacity: 0.5;
          margin: 3px;
+         background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .emptySlot {
+         opacity: 0.5;
+         background: black;
       }
    }
 }
