@@ -120,6 +120,7 @@ describe('Power points service', () => {
             caster: { id: players['1'].characterId } as Character,
             target: { id: players['2'].characterId } as Character,
             effect: damageEffect,
+            effectMultiplier: 1
         });
 
         const healingEffect: HealEffect = {
@@ -134,6 +135,7 @@ describe('Power points service', () => {
             caster: { id: players['1'].characterId } as Character,
             target: { id: players['2'].characterId } as Character,
             effect: healingEffect,
+            effectMultiplier: 1
         });
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);

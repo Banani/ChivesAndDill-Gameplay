@@ -1,4 +1,4 @@
-import { EngineAction, EngineClientAction, EnginePackage, PlayerClientActions } from '@bananos/types';
+import { EngineAction, EngineClientAction, EnginePackage, PlayerClientActions, RecursivePartial, Spell } from '@bananos/types';
 import { MainEngine } from '../engines/MainEngine';
 import { MockedCharacterClasses, MockedItemTemplates, MockedMonsterTemplates, MockedNpcTemplates, MockedQuests, MockedSpells } from '../mocks';
 import {
@@ -13,8 +13,13 @@ import {
     getQuestModule,
     getSpellModule,
 } from '../modules';
+import { MonsterEngineEvents, MonsterRespawnsUpdatedEvent } from '../modules/MonsterModule/Events';
+import { MonsterRespawnTemplateService } from '../modules/MonsterModule/services';
+import { SpellService } from '../modules/SpellModule/services';
+import { WalkingType } from '../types/CharacterRespawn';
 import { PlayerCharacter } from '../types/PlayerCharacter';
 import { EngineEvent } from '../types/events';
+import _ = require('lodash');
 
 jest.mock('lodash', () => ({
     ...(jest.requireActual('lodash') as any),
@@ -273,3 +278,45 @@ export class EngineManager {
 
     getNotifiers = () => this.mainEngine.getNotifiers();
 }
+
+interface PrepareEngineManagerProps {
+    monsterLocation: Location;
+    spells: Record<string, Partial<Spell>>;
+    amountOfPlayers: number;
+    amountOfMonsters: number;
+}
+
+export const prepareEngineManager = ({ monsterLocation, spells, amountOfPlayers, amountOfMonsters }: RecursivePartial<PrepareEngineManagerProps> = {}) => {
+    const spellService = new SpellService();
+    (spellService.getData as jest.Mock).mockReturnValue(_.merge({}, MockedSpells, spells))
+
+    const monsterRespawnService = new MonsterRespawnTemplateService();
+    (monsterRespawnService.getData as jest.Mock).mockReturnValue(
+        {
+            'monster_respawn_1': {
+                id: 'monster_respawn_1',
+                location: monsterLocation ?? { x: 150, y: 100 },
+                templateId: "1",
+                time: 4000,
+                walkingType: WalkingType.None,
+            },
+        }
+    );
+
+    const engineManager = new EngineManager();
+
+    const calculatedAmountOfPlayers = amountOfPlayers ?? 1;
+    const players = {};
+    for (let i = 0; i < calculatedAmountOfPlayers; i++) {
+        players[i + 1] = engineManager.preparePlayerWithCharacter({ name: 'character_' + (i + 1) })
+    }
+
+    engineManager.createSystemAction<MonsterRespawnsUpdatedEvent>({
+        type: MonsterEngineEvents.MonsterRespawnsUpdated,
+        respawnIds: _.range(amountOfMonsters ?? 1).map(() => 'monster_respawn_1')
+    });
+
+    const monsterDataPackage = engineManager.getLatestPlayerDataPackage(players[calculatedAmountOfPlayers].socketId);
+
+    return { engineManager, players, monsterDataPackage };
+};

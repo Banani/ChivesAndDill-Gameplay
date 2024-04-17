@@ -87,7 +87,7 @@ describe('PlayerTriesToTakeQuestFromNpc action', () => {
 
     it('Player should get error if he tries to start take quest from npc that is too far away', () => {
         const { players, engineManager } = setupEngine({
-            respawnLocation: { x: 151, y: 100 }
+            respawnLocation: { x: 251, y: 100 }
         });
 
         let dataPackage = engineManager.getLatestPlayerDataPackage(players['1'].socketId);

@@ -1,4 +1,5 @@
 import { AbsorbShieldTrack, CharacterType, ExperienceExternalTrack, GlobalStoreModule, PowerPointsTrack, PowerStackType, TimeEffect } from '@bananos/types';
+import { KeyBoardContext } from 'apps/chives-and-dill/src/contexts/KeyBoardContext';
 import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { useContext, useEffect, useState } from 'react';
 import { GameControllerContext } from '../../../contexts/GameController';
@@ -16,7 +17,8 @@ interface CharacterFramesData {
     combatState: Record<string, boolean>,
     timeEffects: Record<string, TimeEffect>,
     absorbShields: Record<string, AbsorbShieldTrack>,
-    lastUpdate: string
+    lastUpdate: string,
+    setActiveTarget: (targetId: string) => void,
 }
 
 export const CharacterFramesContext = React.createContext<CharacterFramesData>(null);
@@ -31,6 +33,7 @@ export const CharacterFrames = () => {
     const { data: timeEffects, lastUpdateTime: timeEffectsLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.TIME_EFFECTS);
     const { data: absorbShields, lastUpdateTime: absorbShieldsLastUpdateTime } = useEngineModuleReader(GlobalStoreModule.ABSORB_SHIELDS);
     const { activeTargetId, setActiveTarget } = useContext(GameControllerContext);
+    const keyBoardContext = useContext(KeyBoardContext);
 
     // Player gets automatic focus, he clears the target, adn we don't want to set the target again if nothing in combat changed.
     const [lastTargetUpdate, setLastTargetUpdate] = useState(0);
@@ -56,6 +59,19 @@ export const CharacterFrames = () => {
 
     }, [combatStateLastUpdateTime, activeTargetId, characters]);
 
+    useEffect(() => {
+        if (activeTargetId) {
+            keyBoardContext.addKeyHandler({
+                id: 'ClearActiveTargetEscape',
+                matchRegex: '^Escape$',
+                keydown: () => setActiveTarget(null),
+            });
+        }
+
+        return () => {
+            keyBoardContext.removeKeyHandler('ClearActiveTargetEscape');
+        }
+    }, [activeTargetId])
 
     return <CharacterFramesInternal
         activeTargetId={activeTargetId}
@@ -67,6 +83,7 @@ export const CharacterFrames = () => {
         combatState={combatState as Record<string, boolean>}
         timeEffects={timeEffects as Record<string, TimeEffect>}
         absorbShields={absorbShields as Record<string, AbsorbShieldTrack>}
+        setActiveTarget={setActiveTarget}
         lastUpdate={
             lastUpdateTimeCharacterPowerPoints + "#" +
             experienceLastUpdateTime + "#" +
@@ -79,13 +96,15 @@ export const CharacterFrames = () => {
     />
 }
 
-
-
 const CharacterFramesInternal = React.memo((characterFramesData: CharacterFramesData) => {
     return (
         <CharacterFramesContext.Provider value={characterFramesData}>
             <div className={styles.CharacterFrames}>
-                {characterFramesData.activeCharacterId ? <PlayerIcon playerId={characterFramesData.activeCharacterId} /> : null}
+                {characterFramesData.activeCharacterId ? (
+                    <div onClick={() => characterFramesData.setActiveTarget(characterFramesData.activeCharacterId)}>
+                        <PlayerIcon playerId={characterFramesData.activeCharacterId} />
+                    </div>
+                ) : null}
                 <TargetIcon />
             </div>
         </CharacterFramesContext.Provider >

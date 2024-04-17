@@ -1,0 +1,1 @@
+export const NPC_TALK_DISTANCE = 200;

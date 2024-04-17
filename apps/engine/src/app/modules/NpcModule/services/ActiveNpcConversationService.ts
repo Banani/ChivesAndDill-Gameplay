@@ -8,6 +8,7 @@ import {
     ConversationWithNpcStartedEvent,
     NpcEngineEvents
 } from '../Events';
+import { NPC_TALK_DISTANCE } from '../consts';
 
 export class ActiveNpcConversationService extends EventParser {
     // character_id => npc_id
@@ -30,7 +31,7 @@ export class ActiveNpcConversationService extends EventParser {
         }
 
         const character = services.characterService.getCharacterById(event.requestingCharacterId);
-        if (distanceBetweenTwoPoints(npc.location, character.location) > 200) {
+        if (distanceBetweenTwoPoints(npc.location, character.location) > NPC_TALK_DISTANCE) {
             this.sendErrorMessage(event.requestingCharacterId, 'You are too far away.');
             return;
         }

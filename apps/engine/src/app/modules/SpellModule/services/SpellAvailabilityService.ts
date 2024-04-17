@@ -28,7 +28,6 @@ export class SpellAvailabilityService extends EventParser {
 
     handlePlayerTriesToCastASpell: EngineActionHandler<CastSpell> = ({ event, services }) => {
         const character = services.characterService.getCharacterById(event.requestingCharacterId) as PlayerCharacter;
-
         if (!character) {
             return;
         }

@@ -31,6 +31,7 @@ export class SpellEffectApplierService extends EventParser {
                     caster: event.caster,
                     target: event.caster,
                     effect: spellEffect,
+                    effectMultiplier: 1
                 });
             });
         }
@@ -51,6 +52,7 @@ export class SpellEffectApplierService extends EventParser {
                 caster: event.caster,
                 target: event.target,
                 effect: spellEffect,
+                effectMultiplier: event.effectMultiplier ?? 1
             });
         });
     };

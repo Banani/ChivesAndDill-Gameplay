@@ -58,6 +58,7 @@ export interface SpellReachedTargetEvent extends EngineEvent {
     spell: Spell | SubSpell;
     caster: Character;
     target: Character;
+    effectMultiplier?: number;
 }
 
 export interface SpellLandedEvent extends EngineEvent {
@@ -246,6 +247,7 @@ export interface ApplyTargetSpellEffectEvent extends EngineEvent {
     caster: Monster | Character;
     target: Monster | Character;
     effect: AllEffects;
+    effectMultiplier: number;
 }
 
 export interface ApplyLocationSpellEffectEvent extends EngineEvent {

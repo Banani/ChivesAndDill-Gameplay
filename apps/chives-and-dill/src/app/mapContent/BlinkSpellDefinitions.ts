@@ -11,6 +11,11 @@ export const BlinkSpellDefinitions: Record<string, BlinkSpellDefinition> = {
         color: 0x000000,
         alpha: 0.25,
     },
+    Area: {
+        type: 'Area',
+        color: 0xff0000,
+        alpha: 0.25,
+    },
     HolyCone2: {
         type: 'AngleBlast',
         color: 0x900603,

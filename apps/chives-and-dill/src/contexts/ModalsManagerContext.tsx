@@ -4,7 +4,8 @@ import { KeyBoardContext } from './KeyBoardContext';
 export enum GlobalModal {
     ChatChannelModal = 'ChatChannelModal',
     Backpack = "Backpack",
-    Equipment = "Equipment"
+    Equipment = "Equipment",
+    QuestLog = "QuestLog"
 }
 
 interface ModalsManagerContextMethods {
@@ -20,33 +21,47 @@ export const ModalsManagerContextProvider = ({ children }) => {
 
     useEffect(() => {
         keyBoardContext.addKeyHandler({
-            id: 'ModalsManagerEscape',
-            matchRegex: 'Escape',
-            keydown: () => setActiveGlobalModal(null),
-        });
-        keyBoardContext.addKeyHandler({
             id: 'ModalsManagerO',
-            matchRegex: 'o',
+            matchRegex: '^o$',
             keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.ChatChannelModal ? null : GlobalModal.ChatChannelModal),
         });
         keyBoardContext.addKeyHandler({
             id: 'ModalsManagerB',
-            matchRegex: 'b',
+            matchRegex: '^b$',
             keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.Backpack ? null : GlobalModal.Backpack),
         });
         keyBoardContext.addKeyHandler({
             id: 'ModalsManagerC',
-            matchRegex: 'c',
+            matchRegex: '^c$',
             keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.Equipment ? null : GlobalModal.Equipment),
+        });
+        keyBoardContext.addKeyHandler({
+            id: 'ModalsManagerL',
+            matchRegex: '^l$',
+            keydown: () => setActiveGlobalModal(prev => prev === GlobalModal.QuestLog ? null : GlobalModal.QuestLog),
         });
 
         return () => {
-            keyBoardContext.removeKeyHandler('ModalsManagerEscape');
             keyBoardContext.removeKeyHandler('ModalsManagerO');
             keyBoardContext.removeKeyHandler('ModalsManagerB');
             keyBoardContext.removeKeyHandler('ModalsManagerC');
+            keyBoardContext.removeKeyHandler('ModalsManagerL');
         }
     }, []);
+
+    useEffect(() => {
+        if (activeGlobalModal !== null) {
+            keyBoardContext.addKeyHandler({
+                id: 'ModalsManagerEscape',
+                matchRegex: '^Escape$',
+                keydown: () => setActiveGlobalModal(null),
+            });
+        }
+
+        return () => {
+            keyBoardContext.removeKeyHandler('ModalsManagerEscape');
+        }
+    }, [activeGlobalModal])
 
     return (
         <ModalsManagerContext.Provider

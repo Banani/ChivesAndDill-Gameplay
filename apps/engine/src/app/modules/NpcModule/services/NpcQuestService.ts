@@ -3,6 +3,7 @@ import { EventParser } from '../../../EventParser';
 import { distanceBetweenTwoPoints } from '../../../math';
 import { EngineActionHandler } from '../../../types';
 import { QuestCompletedEvent, QuestEngineEvents, StartQuestEvent } from '../../QuestModule/Events';
+import { NPC_TALK_DISTANCE } from '../consts';
 
 export class NpcQuestService extends EventParser {
     constructor() {
@@ -21,7 +22,7 @@ export class NpcQuestService extends EventParser {
         }
 
         const character = services.characterService.getCharacterById(event.requestingCharacterId);
-        if (distanceBetweenTwoPoints(npc.location, character.location) > 100) {
+        if (distanceBetweenTwoPoints(npc.location, character.location) > NPC_TALK_DISTANCE) {
             this.sendErrorMessage(event.requestingCharacterId, 'You are too far away.');
             return;
         }
