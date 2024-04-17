@@ -6,7 +6,7 @@ import { useEngineModuleReader } from 'apps/chives-and-dill/src/hooks';
 import React, { useContext, useEffect, useRef } from 'react';
 import styles from './OptionsModal.module.scss';
 
-export const OptionsModal = ({ optionsVisible, setOptionsVisible, playerId }) => {
+export const OptionsModal = ({ openTooltipContainer, optionsVisible, setOptionsVisible, playerId }) => {
     const { data: party } = useEngineModuleReader(GlobalStoreModule.PARTY);
     const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data
 
@@ -52,7 +52,7 @@ export const OptionsModal = ({ optionsVisible, setOptionsVisible, playerId }) =>
     }
 
     const handleClickOutside = (event: MouseEvent) => {
-        if (ref.current && !ref.current.contains(event.target as Node)) {
+        if (ref.current && !ref.current.contains(event.target as Node) && !openTooltipContainer.current.contains(event.target as Node)) {
             setOptionsVisible(false);
         }
     };

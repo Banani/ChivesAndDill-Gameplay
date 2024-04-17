@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { GetAbsorbsValue } from '../../../player/GetPlayerAbsorbs';
 import { CharacterFramesContext } from '../CharacterFrames';
 import { OptionsModal } from '../optionsModal/OptionsModal';
@@ -16,6 +16,8 @@ export const PlayerIcon = ({ playerId }) => {
     const HolyPower = powerStacks?.[playerId]?.HolyPower;
     const playerPoints = characterPowerPoints[playerId] ?? { maxHp: 0, currentHp: 0, currentSpellPower: 0, maxSpellPower: 0 };
     const { maxHp, currentHp, currentSpellPower, maxSpellPower } = playerPoints;
+
+    const avatarContainer = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!playerPoints) {
@@ -39,12 +41,17 @@ export const PlayerIcon = ({ playerId }) => {
     const avatarClick = (e) => {
         e.preventDefault();
         setOptionsVisible(prevState => !prevState);
-    }
+    };
 
     return (
         <div>
             <div className={styles.playerIconContainer}>
-                <div onContextMenu={(e) => avatarClick(e)} className={styles.playerAvatar + " " + (combatState[playerId] ? styles.combatBorder : "")} style={{ backgroundImage: `url(${avatar})` }}></div>
+                <div
+                    onContextMenu={(e) => avatarClick(e)}
+                    className={styles.playerAvatar + " " + (combatState[playerId] ? styles.combatBorder : "")}
+                    style={{ backgroundImage: `url(${avatar})` }}
+                    ref={avatarContainer}
+                ></div>
                 <div className={styles.combatSwords} style={combatState[playerId] ? { visibility: "visible", opacity: '1' } : null}></div>
                 <div className={styles.playerLvl}>{experience[playerId]?.level}</div>
                 <div className={styles.playerRole} />
@@ -64,7 +71,7 @@ export const PlayerIcon = ({ playerId }) => {
                     <div className={styles.powerStacks}>{renderPowerStacks('HolyPower', HolyPower)}</div>
                 </div>
             </div>
-            {optionsVisible && player.type === 'Player' ? <OptionsModal optionsVisible={optionsVisible} setOptionsVisible={setOptionsVisible} playerId={playerId} /> : null}
+            {optionsVisible && player.type === 'Player' ? <OptionsModal openTooltipContainer={avatarContainer} optionsVisible={optionsVisible} setOptionsVisible={setOptionsVisible} playerId={playerId} /> : null}
         </div >
     );
 };

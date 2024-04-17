@@ -69,7 +69,7 @@ export const PartyMember = ({ playerId, activeGroup }) => {
             style={{ color: playerId === activeCharacterId ? 'gold' : 'white', }}
           >{player.name}</div>
           {activeGroup.leader === playerId ? <img className={styles.LeaderIcon} src={leaderIcon} alt='leader' /> : null}
-          {optionsVisible ? <OptionsModal optionsVisible={optionsVisible} setOptionsVisible={setOptionsVisible} playerId={playerId} /> : null}
+          {optionsVisible ? <OptionsModal openTooltipContainer={ref} optionsVisible={optionsVisible} setOptionsVisible={setOptionsVisible} playerId={playerId} /> : null}
         </div>
       </div>
     </>
