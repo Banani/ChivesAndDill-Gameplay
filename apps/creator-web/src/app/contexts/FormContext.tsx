@@ -125,7 +125,7 @@ const Validators: Record<FormFieldConditions, (value: string, conditionParameter
 
 const ValueParsers: Partial<Record<SchemaFieldType, (value: string) => any>> = {
     [SchemaFieldType.Number]: (value: string) => {
-        return value != "" ? parseInt(value) : value;
+        return isNaN(parseInt(value, 10)) ? value : parseInt(value, 10);
     }
 }
 
@@ -151,9 +151,10 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
                 return value;
             }
 
-            if (errors[path] !== "") {
-                return value;
-            }
+            // Zakomentowane bo jesli mamy error, user zmienia na inna wartosc, error pozostaje wiec nie mozemy podac nowej wartosci
+            // if (errors[path] !== "") {
+            //     return value;
+            // }
 
             value = ValueParsers[propertyDefintion.type]?.(obj) ?? obj
 
@@ -242,7 +243,6 @@ export const FormContextProvider: FunctionComponent<FormContextProps> = ({ child
         const dividedPath = path.split(".");
         dividedPath.pop();
         const parentPath = dividedPath.join(".");
-
         if (!parentPath) {
             return true;
         }

@@ -404,7 +404,7 @@ export const SpellDialog = () => {
                 type: SchemaFieldType.Number,
                 conditions: [{ type: FormFieldConditions.Required }, { type: FormFieldConditions.Number }, { type: FormFieldConditions.PositiveNumber },],
                 defaultValue: (defaultSpell as AreaSpell).radius,
-                prerequisite: ({ areaType }) => areaType === AreaType.Circle
+                prerequisite: ({ type }) => type === SpellType.Area
             },
             casterImpact: {
                 label: "Caster Impact",
