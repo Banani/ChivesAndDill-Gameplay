@@ -1,124 +1,125 @@
-.backpacksContainer {
-   width: 250px;
+.backpacksComponentContainer {
    position: absolute;
-   bottom: 20px;
+   bottom: 50px;
    right: 0;
-   display: flex;
-   justify-content: right;
-   align-items: center;
-
-   .backpackIcon {
-      height: 30px;
-      width: 30px;
-      background-image: url(https://wotlk.evowow.com/static/images/wow/icons/large/inv_misc_bag_08.jpg);
-      background-repeat: no-repeat;
-      background-size: contain;
-      margin: 4px;
-      border-radius: 50%;
-      border: 3px solid #dab744;
-      transform: 0.5s;
-
-      &:hover {
-         border-color: gold;
-      }
-
-      &:last-child {
-         width: 40px;
-         height: 40px;
-         margin-left: 20px;
-      }
-   }
-}
-
-.availableSlots {
-   position: absolute;
-   right: 8px;
-   bottom: 12px;
-   color: #fff;
-   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-   width: 40px;
-   text-align: center;
-}
-
-.expandBackpacksIcon {
-   background-color: transparent;
-   border: none;
-   transform: scale(1.2);
-   position: absolute;
-   right: 50px;
-   bottom: 30px;
-   color: #dab744;
-   padding: 0;
-}
-
-.backpackContainer {
-   background-color: #3F3229;
-   width: 230px;
-   position: absolute;
-   right: 0;
-   bottom: 72px;
-   display: flex;
-   flex-direction: column;
-   border: 1px solid #878683;
-   border-radius: 2px;
-
-   .backpackHeader {
+   .backpacksContainer {
       display: flex;
-      padding: 3px;
-      justify-content: flex-end;
-      background-color: #171616;
+      justify-content: right;
+      align-items: center;
+      width: 250px;
 
-      .headerImage {
+      .backpackIcon {
+         height: 30px;
+         width: 30px;
          background-image: url(https://wotlk.evowow.com/static/images/wow/icons/large/inv_misc_bag_08.jpg);
-         border-radius: 50%;
-         border: 3px solid gold;
-         width: 45px;
-         height: 45px;
-         position: absolute;
-         top: -15px;
-         left: -15px;
+         background-repeat: no-repeat;
          background-size: contain;
-      }
-   }
+         margin: 4px;
+         border-radius: 50%;
+         border: 3px solid #dab744;
+         transition: border-color 0.5s;
 
-   .slot {
-      width: 50px;
-      height: 50px;
-      border-radius: 5px;
-      background-color: #dab744;
-      z-index: 1;
-   }
+         &:hover {
+            border-color: gold;
+         }
 
-   .slotsBackgroundContainer {
-      display: flex;
-      flex-wrap: wrap;
-      padding: 3px;
-
-      .itemSlotsContainer {
-         position: absolute;
-         top: 36px;
-         left: 0;
-         margin: 3px;
-         flex-wrap: wrap;
-         display: flex;
-
-         .slot {
-            margin: 3px;
+         &:last-of-type {
+            width: 40px;
+            height: 40px;
+            margin-left: 20px;
          }
       }
 
-      .slotBackground {
+      .availableSlots {
+         position: absolute;
+         right: 8px;
+         bottom: -12px;
+         color: #fff;
+         text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+         width: 40px;
+         text-align: center;
+      }
+
+      .expandBackpacksIcon {
+         position: absolute;
+         right: 50px;
+         bottom: 12px;
+         padding: 0;
+         border: none;
+         background-color: transparent;
+         transform: scale(1.2);
+         color: gold;
+      }
+   }
+
+   .backpackContainer {
+      background-color: #3f3229;
+      width: 230px;
+      position: absolute;
+      right: 10px;
+      bottom: 55px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #878683;
+      border-radius: 2px;
+
+      .backpackHeader {
+         display: flex;
+         padding: 3px;
+         justify-content: flex-end;
+         background-color: #171616;
+
+         .headerImage {
+            background-image: url(https://wotlk.evowow.com/static/images/wow/icons/large/inv_misc_bag_08.jpg);
+            border-radius: 50%;
+            border: 3px solid gold;
+            width: 45px;
+            height: 45px;
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            background-size: contain;
+         }
+      }
+
+      .slot {
          width: 50px;
          height: 50px;
          border-radius: 5px;
-         margin: 3px;
-         background-color: rgba(0, 0, 0, 0.5);
+         background-color: #dab744;
+         z-index: 1;
       }
 
-      .emptySlot {
-         opacity: 0.5;
-         background: black;
+      .slotsBackgroundContainer {
+         display: flex;
+         flex-wrap: wrap;
+         padding: 3px;
+
+         .itemSlotsContainer {
+            position: absolute;
+            top: 36px;
+            left: 0;
+            margin: 3px;
+            flex-wrap: wrap;
+            display: flex;
+
+            .slot {
+               margin: 3px;
+            }
+         }
+
+         .slotBackground {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            margin: 3px;
+            background-color: rgba(0, 0, 0, 0.5);
+         }
+
+         .emptySlot {
+            opacity: 0.5;
+            background: black;
+         }
       }
    }
 }
-
