@@ -3,8 +3,8 @@
     border: 1px solid rgb(83, 83, 83);
     background: #29292980;
     border-radius: 4px;
-    margin-bottom: 4px;
     transition: 0.15s;
+    height: 100%;
 
     &:nth-child(odd) {
         margin-right: 2px;
@@ -31,10 +31,8 @@
             color: white;
             display: flex;
             text-shadow: 1px 1px black;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: center;
-            font-size: 13px;
+            overflow: hidden;
+            font-size: 10px;
         }
     }
 }
