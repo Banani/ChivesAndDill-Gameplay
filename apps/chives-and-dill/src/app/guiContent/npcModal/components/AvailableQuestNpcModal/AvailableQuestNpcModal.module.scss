@@ -2,8 +2,8 @@
 
 .NpcModal {
    position: absolute;
-   width: 346px;
-   height: 507px;
+   width: 418px;
+   height: 610px;
    top: variables.$modal-top;
    left: 5%;
    background: url('../../../../../assets/spritesheets/backgrounds/npcModal.png');
@@ -11,9 +11,10 @@
    display: flex;
    flex-direction: column;
    z-index: variables.$modal-index;
+   background-size: contain;
 
    .ContentWrapper {
-      padding: 20px 40px 0 25px;
+      padding: 55px 40px 0 30px;
       flex: 1;
       display: flex;
       overflow: hidden;
@@ -27,6 +28,7 @@
 
          h3 {
             font-family: 'Morpheus';
+            margin-top: 0;
          }
       }
 
