@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { QueryModalManager } from './guiContent/QueryModalManager';
 import { ActivePlayerTimeEffects } from './guiContent/activePlayerTimeEffects/ActivePlayerTimeEffects';
@@ -12,22 +11,24 @@ import { LootModal } from './guiContent/lootModal/LootModal';
 import { NpcModal } from './guiContent/npcModal/NpcModal';
 import { PartyModal } from './guiContent/party/Party';
 import { QuestManager } from './guiContent/quests';
+import { ModalIconsPanel } from './guiContent/modalIconsPanel/ModalIconsPanel';
 
 export function GameUserInterface() {
-    return (
-        <>
-            <LootModal />
-            <CharacterFrames />
-            <ChatManager />
-            <Details />
-            <QueryModalManager />
-            <QuestManager />
-            <PartyModal />
-            <BottomBar />
-            <NpcModal />
-            <ActivePlayerTimeEffects />
-            <CharacterEq />
-            <Backpacks />
-        </>
-    );
+   return (
+      <>
+         <LootModal />
+         <CharacterFrames />
+         <ChatManager />
+         <Details />
+         <QueryModalManager />
+         <QuestManager />
+         <PartyModal />
+         <BottomBar />
+         <NpcModal />
+         <ActivePlayerTimeEffects />
+         <CharacterEq />
+         <Backpacks />
+         <ModalIconsPanel />
+      </>
+   );
 }

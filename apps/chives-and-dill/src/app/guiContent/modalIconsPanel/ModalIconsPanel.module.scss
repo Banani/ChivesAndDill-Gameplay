@@ -1,0 +1,15 @@
+.modalIconsPanelContainer {
+   display: flex;
+   position: absolute;
+   bottom: 10px;
+   right: 10px;
+   cursor: url(../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
+
+   .modalIcon {
+      img {
+         margin: 0 5px;
+         height: 30px;
+         width: 20px;
+      }
+   }
+}
