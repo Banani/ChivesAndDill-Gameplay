@@ -47,16 +47,8 @@ export const CharacterEq = () => {
    const basic = ['armor', 'stamina', 'agility', 'intelect', 'strength', 'spirit'];
    const advance = ['haste', 'criticalStrike', 'dodge', 'block'];
 
-   let basicAttributes = {};
-   let advanceAttributes = {};
-
-   for (let key in activePlayerAttributes) {
-      if (basic.includes(key)) {
-         basicAttributes[key] = activePlayerAttributes[key];
-      } else if (advance.includes(key)) {
-         advanceAttributes[key] = activePlayerAttributes[key];
-      }
-   }
+   const basicAttributes = _.pickBy(_.pick(activePlayerAttributes, basic), _.identity);
+   const advanceAttributes = _.pickBy(_.pick(activePlayerAttributes, advance), _.identity);
 
    const generateStats = (attributes, isAdvanced = false) => {
       return _.chain(attributes)
@@ -64,7 +56,7 @@ export const CharacterEq = () => {
          .map((value, key) => (
             <p key={key}>
                <span className={styles.ChangeColor}>{`${key}: `}</span>
-               {isAdvanced ? `${value / 10}.0 %` : value}
+               {isAdvanced ? `${value % 10 === 0 ? value / 10 + '.0' : value / 10} %` : value}
             </p>
          ))
          .value();
