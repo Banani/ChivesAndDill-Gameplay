@@ -22,13 +22,16 @@ interface ChatInternalProps {
     chatChannels: Record<string, ChatChannel>,
     chatMessages: Record<string, ChatMessage>,
     getChannelNumberById: (channelId: string) => string;
+    recentData: Record<string, any>,
+    activeCharacterId: string;
 }
 
 export const Chat = () => {
     const channelNumeratorContext = useContext(ChannelNumeratorContext);
     const { data: characters, lastUpdateTime: lastUpdateTimeCharacters } = useEngineModuleReader(GlobalStoreModule.CHARACTER);
     const { data: chatChannels, lastUpdateTime: lastUpdateTimeChatChannels } = useEngineModuleReader(GlobalStoreModule.CHAT_CHANNEL);
-    const { data: chatMessages, lastUpdateTime: lastUpdateTimeChatMessages } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
+    const { data: chatMessages, lastUpdateTime: lastUpdateTimeChatMessages, recentData } = useEngineModuleReader(GlobalStoreModule.CHAT_MESSAGES);
+    const activeCharacterId = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER)?.data?.activeCharacterId;
 
     return <ChatInternal
         lastUpdateTime={lastUpdateTimeCharacters + "#" + lastUpdateTimeChatChannels + "#" + lastUpdateTimeChatMessages}
@@ -36,6 +39,8 @@ export const Chat = () => {
         chatChannels={chatChannels as Record<string, ChatChannel>}
         chatMessages={chatMessages as Record<string, ChatMessage>}
         getChannelNumberById={channelNumeratorContext.getNumberById}
+        recentData={recentData}
+        activeCharacterId={activeCharacterId}
     />
 }
 
@@ -44,7 +49,8 @@ const ChatInternal = React.memo(({
     chatChannels,
     chatMessages,
     getChannelNumberById,
-    lastUpdateTime,
+    recentData,
+    activeCharacterId,
 }: ChatInternalProps) => {
     const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
     const menuContext = useContext(MenuContext);
@@ -119,8 +125,12 @@ const ChatInternal = React.memo(({
     }, [chatMessages]);
 
     useEffect(() => {
-        lastMessage.current.scrollIntoView();
-    }, [chatMessages, lastUpdateTime]);
+        forEach(recentData, (value, key) => {
+            if (value.authorId === activeCharacterId) {
+                lastMessage.current.scrollIntoView();
+            }
+        });
+    }, [recentData]);
 
     return (
         <>
