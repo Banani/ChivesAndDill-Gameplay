@@ -35,7 +35,7 @@ export const EquipmentTooltip: React.FunctionComponent<EquipmentTooltipProps> = 
             {renderPrimaryStat(itemTemplate.spirit, 'Spirit')}
             {renderPrimaryStat(itemTemplate.stamina, 'Stamina')}
             {renderPrimaryStat(itemTemplate.haste, 'Haste', true)}
-            {renderPrimaryStat(itemTemplate.criticalStrike, 'Critical Strike', true)}
+            {renderPrimaryStat(itemTemplate.criticalStrike, 'Crit Chance', true)}
             {renderPrimaryStat(itemTemplate.dodge, 'Dodge', true)}
             {renderPrimaryStat(itemTemplate.block, 'Block', true)}
          </div>

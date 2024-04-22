@@ -53,12 +53,16 @@ export const CharacterEq = () => {
    const generateStats = (attributes, isAdvanced = false) => {
       return _.chain(attributes)
          .pickBy((value, key) => value > 0)
-         .map((value, key) => (
-            <p key={key}>
-               <span className={styles.ChangeColor}>{`${key}: `}</span>
-               {isAdvanced ? `${value % 10 === 0 ? value / 10 + '.0' : value / 10} %` : value}
-            </p>
-         ))
+         .map((value, key) => {
+            const advancedAttrValue = (value / 10).toFixed(2);
+
+            return (
+               <p key={key}>
+                  <span className={styles.ChangeColor}>{`${key}: `}</span>
+                  {isAdvanced ? `${advancedAttrValue} %` : value}
+               </p>
+            );
+         })
          .value();
    };
 
