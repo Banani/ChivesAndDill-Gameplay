@@ -1,0 +1,52 @@
+.modalIconsPanelContainer {
+   display: flex;
+   position: absolute;
+   bottom: 8px;
+   right: 10px;
+   cursor: url(../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
+
+   .modalIcon {
+      display: flex;
+      margin: 0 5px;
+      padding: 5px 0;
+      border-radius: 5px;
+      background-color: rgba($color: #000000, $alpha: 0.6);
+      box-shadow: 3px 2px 2px black;
+      transition: all 0.4s;
+
+      &:last-of-type {
+         border-bottom: 1px solid #1eff00;
+      }
+
+      img {
+         margin: 0 5px;
+         height: 25px;
+         width: 17px;
+         object-fit: contain;
+      }
+
+      &.filterIcon:hover img {
+         filter: brightness(1.75);
+      }
+
+      .modalIconsPopup {
+         position: absolute;
+         top: -45px;
+         left: -60px;
+         border: 2px solid #ccc;
+         padding: 10px 15px;
+         border-radius: 5px;
+         background-color: rgba($color: #000000, $alpha: 0.9);
+         color: #fff;
+         display: none;
+
+         span {
+            color: gold;
+         }
+      }
+
+      &:hover .modalIconsPopup {
+         display: block;
+      }
+   }
+}

@@ -14,106 +14,112 @@ import { SquareButton } from '../components/squareButton/SquareButton';
 import styles from './Backpacks.module.scss';
 
 export const Backpacks = () => {
-    const { data: backpackSchema } = useEngineModuleReader(GlobalStoreModule.BACKPACK_SCHEMA);
-    const { data: backpackItems, lastUpdateTime: lastBackpackItemsUpdateTime } = useEngineModuleReader(GlobalStoreModule.BACKPACK_ITEMS);
-    const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
+   const { data: backpackSchema } = useEngineModuleReader(GlobalStoreModule.BACKPACK_SCHEMA);
+   const { data: backpackItems, lastUpdateTime: lastBackpackItemsUpdateTime } = useEngineModuleReader(GlobalStoreModule.BACKPACK_ITEMS);
+   const { activeCharacterId } = useEngineModuleReader(GlobalStoreModule.ACTIVE_CHARACTER).data;
 
-    const [backpacksVisibility, setBackpacksVisibility] = useState(true);
-    const { callEngineAction } = useContext(EngineContext);
-    const { activeGlobalModal, setActiveGlobalModal } = useContext(ModalsManagerContext);
+   const [backpacksVisibility, setBackpacksVisibility] = useState(true);
+   const { callEngineAction } = useContext(EngineContext);
+   const { activeGlobalModal, setActiveGlobalModal } = useContext(ModalsManagerContext);
 
-    const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
+   const { itemTemplates, requestItemTemplate } = useContext(ItemTemplateContext);
 
-    const [availableSlotsAmount, setAvailableSlotsAmount] = useState(0);
+   const [availableSlotsAmount, setAvailableSlotsAmount] = useState(0);
 
-    useEffect(() => {
-        if (activeGlobalModal !== GlobalModal.Backpack) {
-            return;
-        }
+   useEffect(() => {
+      if (activeGlobalModal !== GlobalModal.Backpack) {
+         return;
+      }
 
-        forEach(backpackItems[activeCharacterId], (backpack) => {
-            forEach(backpack, backpackSlot => {
-                if (!itemTemplates[backpackSlot.itemTemplateId]) {
-                    requestItemTemplate(backpackSlot.itemTemplateId);
-                }
-            })
-        });
-    }, [itemTemplates, lastBackpackItemsUpdateTime, requestItemTemplate, activeGlobalModal]);
-
-    useEffect(() => {
-        let availableSlots = 0;
-        forEach(backpackSchema[activeCharacterId], (slots) => {
-            availableSlots += slots;
-        });
-        forEach(backpackItems[activeCharacterId], (backpack) => {
-
-            availableSlots -= Object.keys(backpack).length;
-        });
-        setAvailableSlotsAmount(availableSlots);
-    }, [lastBackpackItemsUpdateTime]);
-
-    const renderBackpackContent = (backpack, bagSize) => {
-        return _.range(bagSize).map(index => {
-            if (backpack[index] && itemTemplates[backpack[index].itemTemplateId]) {
-                return <div className={styles.slotBackground}>
-                    <ItemIconPreview
-                    handleItemRightClick={() => {
-                        if (itemTemplates[backpack[index].itemTemplateId].type === ItemTemplateType.Equipment) {
-                            callEngineAction({
-                                type: ItemClientActions.EquipItem,
-                                itemInstanceId: backpack[index].itemId
-                            })
-                        }
-
-                    }}
-                    itemTemplate={itemTemplates[backpack[index].itemTemplateId]}
-                    highlight={ItemPreviewHighlight.icon}
-                    showMoney={true}
-                    amount={backpack[index].amount}
-                />;
-                </div>
+      forEach(backpackItems[activeCharacterId], (backpack) => {
+         forEach(backpack, (backpackSlot) => {
+            if (!itemTemplates[backpackSlot.itemTemplateId]) {
+               requestItemTemplate(backpackSlot.itemTemplateId);
             }
+         });
+      });
+   }, [itemTemplates, lastBackpackItemsUpdateTime, requestItemTemplate, activeGlobalModal]);
 
-            return <div key={index} className={`${styles.slotBackground} ${styles.emptySlot}`}></div>
-        });
-    }
+   useEffect(() => {
+      let availableSlots = 0;
+      forEach(backpackSchema[activeCharacterId], (slots) => {
+         availableSlots += slots;
+      });
+      forEach(backpackItems[activeCharacterId], (backpack) => {
+         availableSlots -= Object.keys(backpack).length;
+      });
+      setAvailableSlotsAmount(availableSlots);
+   }, [lastBackpackItemsUpdateTime]);
 
-    const backpackIcons = _.map(backpackSchema[activeCharacterId], (backpack, key) => {
-        if (key !== '1' && !backpacksVisibility) {
-            return;
-        };
+   const renderBackpackContent = (backpack, bagSize) => {
+      return _.range(bagSize).map((index) => {
+         if (backpack[index] && itemTemplates[backpack[index].itemTemplateId]) {
+            return (
+               <div className={styles.slotBackground}>
+                  <ItemIconPreview
+                     handleItemRightClick={() => {
+                        if (itemTemplates[backpack[index].itemTemplateId].type === ItemTemplateType.Equipment) {
+                           callEngineAction({
+                              type: ItemClientActions.EquipItem,
+                              itemInstanceId: backpack[index].itemId,
+                           });
+                        }
+                     }}
+                     itemTemplate={itemTemplates[backpack[index].itemTemplateId]}
+                     highlight={ItemPreviewHighlight.icon}
+                     showMoney={true}
+                     amount={backpack[index].amount}
+                  />
+                  ;
+               </div>
+            );
+         }
 
-        return <div
+         return <div key={index} className={`${styles.slotBackground} ${styles.emptySlot}`}></div>;
+      });
+   };
+
+   const backpackIcons = _.map(backpackSchema[activeCharacterId], (backpack, key) => {
+      if (key !== '1' && !backpacksVisibility) {
+         return;
+      }
+
+      return (
+         <div
             key={key}
             className={styles.backpackIcon}
             onClick={() => setActiveGlobalModal(activeGlobalModal === GlobalModal.Backpack ? null : GlobalModal.Backpack)}
-        >
-        </div>;
-    });
+         ></div>
+      );
+   });
 
-    return (
-        <div>
-            <div className={styles.backpacksContainer}>
-                {backpackIcons}
-            </div>
+   return (
+      <div className={styles.backpacksComponentContainer}>
+         <div className={styles.backpacksContainer}>
+            {backpackIcons}
             <p className={styles.availableSlots}>({availableSlotsAmount})</p>
             <button className={styles.expandBackpacksIcon} onClick={() => setBackpacksVisibility(!backpacksVisibility) as any}>
-                {backpacksVisibility === false ? <ArrowRightIcon /> : <ArrowLeftIcon />}
+               {backpacksVisibility === false ? <ArrowLeftIcon /> : <ArrowRightIcon />}
             </button>
-            {activeGlobalModal === GlobalModal.Backpack ? <div className={styles.backpackContainer}>
-                <div className={styles.backpackHeader}>
-                    <div className={styles.headerImage}></div>
-                    <SquareButton onClick={() => setActiveGlobalModal(null)}><CloseIcon /></SquareButton>
-                </div>
-                <div className={styles.slotsBackgroundContainer}>
-                    {_.map(backpackItems[activeCharacterId], (backpack, bagSlot) => {
-                        if (!backpack) {
-                            return null;
-                        }
-                        return renderBackpackContent(backpack, backpackSchema[activeCharacterId][bagSlot]);
-                    })}
-                </div>
-            </div> : null}
-        </div>
-    )
-}
+         </div>
+         {activeGlobalModal === GlobalModal.Backpack ? (
+            <div className={styles.backpackContainer}>
+               <div className={styles.backpackHeader}>
+                  <div className={styles.headerImage}></div>
+                  <SquareButton onClick={() => setActiveGlobalModal(null)}>
+                     <CloseIcon />
+                  </SquareButton>
+               </div>
+               <div className={styles.slotsBackgroundContainer}>
+                  {_.map(backpackItems[activeCharacterId], (backpack, bagSlot) => {
+                     if (!backpack) {
+                        return null;
+                     }
+                     return renderBackpackContent(backpack, backpackSchema[activeCharacterId][bagSlot]);
+                  })}
+               </div>
+            </div>
+         ) : null}
+      </div>
+   );
+};
