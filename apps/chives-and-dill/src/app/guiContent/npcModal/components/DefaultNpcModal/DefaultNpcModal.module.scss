@@ -2,8 +2,8 @@
 
 .NpcModal {
    position: absolute;
-   width: 346px;
-   height: 507px;
+   width: 418px;
+   height: 610px;
    top: variables.$modal-top;
    left: 5%;
    background: url('../../../../../assets/spritesheets/backgrounds/npcModal.png');
@@ -11,9 +11,10 @@
    display: flex;
    flex-direction: column;
    z-index: variables.$modal-index;
+   background-size: contain;
 
    .ContentWrapper {
-      padding: 35px 40px 0 24px;
+      padding: 55px 40px 0 30px;
       overflow: scroll;
       flex: 1;
       margin-bottom: 30px;
@@ -51,6 +52,7 @@
 
       .SectionText {
          font-size: 16px;
+         margin-bottom: 16px;
       }
 
       .SectionHeader {

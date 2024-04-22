@@ -1,7 +1,7 @@
 .Item {
     display: flex;
     border: 1px solid rgb(83, 83, 83);
-    background: #29292980;
+    background: rgba(41, 41, 41, 0.25);
     border-radius: 4px;
     transition: 0.15s;
     height: 100%;
@@ -32,7 +32,7 @@
             display: flex;
             text-shadow: 1px 1px black;
             overflow: hidden;
-            font-size: 10px;
+            font-size: 13px;
         }
     }
 }
