@@ -3,15 +3,15 @@
    position: absolute;
    bottom: 8px;
    right: 10px;
-   cursor: url(../../../assets/spritesheets/cursors/defaultCursorActive.png), auto;
 
    .modalIcon {
       display: flex;
+      position: relative;
       margin: 0 5px;
-      padding: 5px 0;
+      padding: 4px 0;
       border-radius: 5px;
-      background-color: rgba($color: #000000, $alpha: 0.6);
-      box-shadow: 3px 2px 2px black;
+      background-color: rgba(45, 44, 42, 0.8);
+      box-shadow: 2px 2px 2px rgb(9, 9, 9);
       transition: all 0.4s;
 
       &:last-of-type {
@@ -19,7 +19,7 @@
       }
 
       img {
-         margin: 0 5px;
+         margin: 0 3px;
          height: 25px;
          width: 17px;
          object-fit: contain;
@@ -31,14 +31,15 @@
 
       .modalIconsPopup {
          position: absolute;
-         top: -45px;
-         left: -60px;
+         bottom: 50px;
+         right: -25px;
          border: 2px solid #ccc;
          padding: 10px 15px;
          border-radius: 5px;
-         background-color: rgba($color: #000000, $alpha: 0.9);
+         background-color: rgba($color: #000000, $alpha: 0.8);
          color: #fff;
          display: none;
+         white-space: nowrap;
 
          span {
             color: gold;
