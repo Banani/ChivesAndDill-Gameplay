@@ -77,7 +77,7 @@ export const DetailsInternal = React.memo(
             if (!combatState[activeCharacterId] && isFightPending) {
                 setIsFightPending(false);
             }
-        }, [combatState, activeCharacterId, isFightPending]);
+        }, [combatState[activeCharacterId], activeCharacterId, isFightPending]);
 
         useEffect(() => {
             if (isFightPending) {
