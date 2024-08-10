@@ -1,20 +1,16 @@
 .ExperienceBar {
-   height: 10px;
-   background-color: black;
-   border: 1px solid #7f7d78;
-   position: absolute;
-   bottom: 54px;
-   margin-right: auto;
-   margin-left: auto;
-   left: 0;
-   right: 0;
    display: flex;
    justify-content: center;
    align-items: center;
+   border: 1px solid #7f7d78;
+   margin: 10px auto;
    border-radius: 10px;
-   width: 1285px;
+   height: 10px;
+   width: 50vw;
+   background-color: black;
 
    .ProgressBarDetails {
+      font-size: 10px;
       z-index: 9;
       color: white;
       visibility: hidden;
