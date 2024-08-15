@@ -7,8 +7,8 @@ export const BottomBar = () => {
 
   return (
     <div className={styles.BottomBar}>
-      <ExperienceBar />
       <SpellsBar />
+      <ExperienceBar />
     </div>
   )
 }
