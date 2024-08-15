@@ -24,7 +24,7 @@
 
          .ItemContainer {
             width: 48%;
-            height: 52px;
+            height: auto;
             margin-bottom: 10px;
          }
       }
@@ -45,11 +45,12 @@
          left: 0;
          right: 0;
          bottom: 95px;
+         bottom: 120px;
 
          .RightPaginationSide {
             position: absolute;
             right: -8px;
-            bottom: 35px;
+            bottom: 0;
          }
 
          .PaginationSide {
