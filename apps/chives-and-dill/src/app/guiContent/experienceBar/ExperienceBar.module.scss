@@ -5,18 +5,13 @@
    position: relative;
    bottom: -25px;
    margin: 10px auto;
-   border: 1px solid #7f7d78;
+   border: 2px solid #7f7d78;
    border-radius: 10px;
    height: 13px;
    width: 675px;
-   background: repeating-linear-gradient(
-      to right,
-      transparent,
-      transparent 90%,
-      rgba(255, 255, 255, 0.3) 90%,
-      rgba(255, 255, 255, 0.3) 91%
-   );
+   background: repeating-linear-gradient(to left, transparent, transparent 98%, rgba(108, 106, 98, 1) 98%, rgba(255, 255, 255, 1) 100%);
    background-size: 10% 100%;
+   background-color: rgba(0, 0, 0, 0.4);
    z-index: 1;
 
    .ProgressBarDetails {
