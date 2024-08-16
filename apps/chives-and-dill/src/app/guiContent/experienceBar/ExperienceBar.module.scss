@@ -1,34 +1,36 @@
 .ExperienceBar {
-   height: 10px;
-   background-color: black;
-   border: 1px solid #7f7d78;
-   position: absolute;
-   bottom: 54px;
-   margin-right: auto;
-   margin-left: auto;
-   left: 0;
-   right: 0;
    display: flex;
    justify-content: center;
    align-items: center;
+   position: relative;
+   bottom: -25px;
+   margin: 10px auto;
+   border: 2px solid #7f7d78;
    border-radius: 10px;
-   width: 1285px;
+   height: 13px;
+   width: 675px;
+   background: repeating-linear-gradient(to left, transparent, transparent 98%, rgba(108, 106, 98, 1) 98%, rgba(255, 255, 255, 1) 100%);
+   background-size: 10% 100%;
+   background-color: rgba(0, 0, 0, 0.4);
+   z-index: 1;
 
    .ProgressBarDetails {
-      z-index: 9;
+      font-size: 10px;
+      z-index: 2;
       color: white;
       visibility: hidden;
    }
 
-   &:hover > div {
+   &:hover > .ProgressBarDetails {
       visibility: visible;
    }
 
    .ProgressBar {
-      background-color: #340f4a;
+      background-image: linear-gradient(#0c1c5b, #0e2fa3, #0c1c5b);
       position: absolute;
       left: 0;
       bottom: 0;
       height: 100%;
+      border-radius: 10px 0 0 10px;
    }
 }
