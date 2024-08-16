@@ -70,13 +70,15 @@ const InternalSpellsBar: React.FunctionComponent<SpellsBarProps> = React.memo(
       for (const spellId of Object.keys(availableSpells)) {
          spellSlots[index] = spellId;
          index++;
-         if (index >= totalSpells) break;
-      };
+         if (index >= totalSpells) {
+            break;
+         }
+      }
 
       return (
          <div className={styles.spellsBarContainer}>
             {spellSlots.map((spellId, counter) => {
-                const activeSpell = spellDefinitions[spellId] ?? {};
+               const activeSpell = spellDefinitions[spellId] ?? {};
 
                return (
                   <div key={counter} className={styles.spellContainer}>
