@@ -20,7 +20,7 @@ export interface ItemPreviewProps {
 
 export const ItemPreview: FunctionComponent<ItemPreviewProps> = ({ itemTemplate, handleItemClick, showMoney, highlight, amount }) => {
     return (
-        <div className={styles.Item + ` ${highlight === ItemPreviewHighlight.full ? styles.highlight : null}`} onClick={() => handleItemClick()}>
+        <div className={styles.Item + ` ${highlight === ItemPreviewHighlight.full ? styles.highlight : null}`} onClick={handleItemClick}>
             <ItemIconPreview itemTemplate={itemTemplate} highlight={ItemPreviewHighlight.icon} showMoney={false} amount={amount} />
             <div className={styles.ItemInfoWrapper}>
                 <div className={styles.ItemText}>{itemTemplate.name}</div>

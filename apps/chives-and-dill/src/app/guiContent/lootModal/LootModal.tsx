@@ -133,7 +133,7 @@ export const LootModal = () => {
                 const item = activeLoot.items[corpseItemId];
                 const itemTemplate = itemTemplates[item.itemTemplateId];
 
-                return <div className={styles.ItemContainer}>
+                return <div className={styles.ItemContainer} key={corpseItemId}>
                     <ItemPreview
                         itemTemplate={itemTemplate}
                         handleItemClick={() => handleItemClick(corpseItemId)}

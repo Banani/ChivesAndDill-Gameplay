@@ -140,6 +140,7 @@ export const DetailsInternal = React.memo(
                             fightTime={fightTime}
                             detailsStat={damageStat}
                             playerCharacter={characters[damageStat.id]}
+                            key={index}
                             index={index + 1}
                             characterClass={characterClasses[characters[damageStat.id].characterClassId]}
                         />

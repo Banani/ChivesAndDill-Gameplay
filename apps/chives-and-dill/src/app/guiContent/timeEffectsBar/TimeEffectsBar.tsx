@@ -11,14 +11,14 @@ export const TimeEffectsBar = ({ playerId }) => {
     const debuffs = _.map(timeEffects, (debuff, i) => {
         if (debuff.targetId === playerId) {
             return (
-                <>
-                    <div key={debuff.id} className={styles.debuffImage} style={{ backgroundImage: `url(${debuff.iconImage})` }}></div>
+                <React.Fragment key={debuff.id}>
+                    <div className={styles.debuffImage} style={{ backgroundImage: `url(${debuff.iconImage})` }}></div>
                     <div className={styles.spellTooltip}>
                         <div>{debuff.name}</div>
                         <div>Period: {debuff.period / 1000} sec</div>
                         <div className={styles.spellDesc}>{debuff.description}</div>
                     </div>
-                </>
+                </React.Fragment>
             );
         }
     });
@@ -26,14 +26,14 @@ export const TimeEffectsBar = ({ playerId }) => {
     const buffs = _.map(absorbShields, (buff, i) => {
         if (buff.ownerId === playerId) {
             return (
-                <>
-                    <div key={buff.id} className={styles.debuffImage} style={{ backgroundImage: `url(${buff.iconImage})` }}></div>
+                <React.Fragment key={buff.id}>
+                    <div className={styles.debuffImage} style={{ backgroundImage: `url(${buff.iconImage})` }}></div>
                     <div className={styles.spellTooltip}>
                         <div>{buff.name}</div>
                         <div>Period: {buff.period / 1000} sec</div>
                         <div className={styles.spellDesc}>{'value: ' + buff.value}</div>
                     </div>
-                </>
+                </React.Fragment>
             );
         }
     });
