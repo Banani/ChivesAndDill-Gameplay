@@ -1,8 +1,9 @@
-import { CharacterType, GlobalStore } from "@bananos/types";
-import { forEach } from "lodash";
+import { CharacterType, GlobalStore } from '@bananos/types';
+import { forEach } from 'lodash';
 import * as PIXI from 'pixi.js';
 import exclamationMark from '../../assets/spritesheets/questNpc/exclamationMark.png';
 import questionMark from '../../assets/spritesheets/questNpc/questionMark.png';
+import questionMarkGray from '../../assets/spritesheets/questNpc/questionMarkGray.png';
 import { Renderer } from './Renderer';
 
 export class NpcQuestMarkRenderer implements Renderer {
@@ -31,6 +32,18 @@ export class NpcQuestMarkRenderer implements Renderer {
          this.questMarks[npcId].y = store.characterMovements.data[npcId].location.y - 95;
          this.container.addChild(this.questMarks[npcId]);
       });
+
+      forEach(this.questMarks, (_, npcId) => {
+         const npc = store.character.data[npcId];
+         const templateId = (npc as any).templateId;
+
+         if (Object.keys(store.npcQuests.data[templateId] ?? {}).length !== 0) {
+            return;
+         }
+
+         this.container.removeChild(this.questMarks[npcId]);
+         delete this.questMarks[npcId];
+      });
    }
 
    render(store: GlobalStore) {
@@ -39,8 +52,10 @@ export class NpcQuestMarkRenderer implements Renderer {
          forEach(store.npcQuests.data[templateId], (_, questId) => {
             if (store.questProgress.data[questId]?.allStagesCompleted) {
                this.questMarks[npcId].texture = PIXI.Texture.from(questionMark);
-            } else {
+            } else if (!store.questProgress?.data[questId]) {
                this.questMarks[npcId].texture = PIXI.Texture.from(exclamationMark);
+            } else if (store.questProgress?.data[questId]) {
+               this.questMarks[npcId].texture = PIXI.Texture.from(questionMarkGray);
             }
          });
       });
