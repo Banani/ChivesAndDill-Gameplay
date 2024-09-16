@@ -183,6 +183,11 @@ export class PlayerRenderer implements Renderer {
         const direction = characterMovement.direction;
         const selectedCharacter = this.characters[character.id];
 
+        if (character.isDead) {
+           selectedCharacter.texture = spriteAssignment.dead[0];
+           return;
+        }
+
         if (characterMovement.isInMove) {
             if (direction === CharacterDirection.DOWN) {
                 selectedCharacter.texture = spriteAssignment.movementDown[timeDifference % spriteAssignment.movementDown.length];
